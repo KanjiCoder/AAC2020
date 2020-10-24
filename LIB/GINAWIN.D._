@@ -17,6 +17,42 @@
 //:             in a different file.                         ://
 //:----------------------------------------------------------://
 
+//:FUNCTION_AS_DATA_TREATED_LIKE_MACRO:======================://
+
+    char*
+    AAC2020_GINAWIND_MakeIntResourceA( int i ){
+
+        /** THIS FUNCTION TAKEN FROM: V:\VG\03\F.09 **/
+        /** Original name: F09_MakeIntResourceA **/
+
+        #define MACRO_16BITS unsigned short
+        #define MACRO_64BITS unsigned long long
+       
+        MACRO_16BITS  wword = (MACRO_16BITS)i    ; //:TRUNCATE
+        MACRO_64BITS  qword = (MACRO_64BITS)wword; //:ZERO_EXT 
+        char* ret_out=(char*)qword; //://////////////:CAST
+
+        #define T unsigned short     //:TRUNCATE
+        #define E unsigned __int64   //:ZERO_EXTEND
+        #define C char*              //:CAST
+
+        //: stackoverflow.com/questions/3610565
+        char* ret_chk=((C)((E)((T)(i))));
+
+        assert( ret_chk == ret_out );
+
+        return( ret_out );
+
+        #undef  MACRO_16BITS  //////////////////////////////////
+        #undef  MACRO_64BITS  //////////////////////////////////
+                              //////////////////////////////////
+        #undef  C  /////////////////////////////////////////////
+        #undef  E  /////////////////////////////////////////////
+        #undef  T  /////////////////////////////////////////////
+    }//[;]//
+
+//:======================:FUNCTION_AS_DATA_TREATED_LIKE_MACRO://
+
 //:COPIED_FROM[ VG04 ]:======================================://
 
     //[  COPIED_FROM:VG04:AND_EDITED:DATE[ 2020_10_24 ]      ]//
@@ -309,20 +345,29 @@ typedef           void* v_LPVOID;
 //:--------------------------------------------://
 
  
-TODO: Resolve tagMSG members
+//:UGLY_VARIABLE_NAMES_COULD_USE_NORMILIZATION:--------------://
+
     //:COPIED_FROM[ wtypes.h ]:------------------------------://
-    typedef struct tagMSG {
-        HWND hwnd;
-        UINT message;
-        WPARAM wParam;
-        LPARAM lParam;
-        DWORD time;
-        POINT pt;
+    struct AAC2020_GINAWIN_tagMSG {
+        void*                     hwnd;  /** HWND   **/
+        unsigned   int         message;  /** UINT   **/
+        unsigned __int64        wParam;  /** WPARAM **/
+                 __int64        lParam;  /** LPARAM **/
+        unsigned  long            time;  /** DWORD  **/
+
+        struct
+        AAC2020_GINAWIN_WIN32POINT  pt;  /** POINT  **/
     };
     //:------------------------------:COPIED_FROM[ wtypes.h ]://
+    //:ONE_IS_A_POINTER_THE_OTHER_IS_NOT:--------------------://
 
-    typedef struct tagMSG * AAC2020_GINAWIN_LPMSG;
-    typedef struct tagMSG   MSG_48B;
+    typedef struct AAC2020_GINAWIN_tagMSG * 
+                                  AAC2020_GINAWIN_LPMSG    ;
+    typedef struct AAC2020_GINAWIN_tagMSG           MSG_48B;
+
+    //:--------------------:ONE_IS_A_POINTER_THE_OTHER_IS_NOT://
+
+//:--------------:UGLY_VARIABLE_NAMES_COULD_USE_NORMILIZATION://
 
 typedef 
     struct   _SECURITY_ATTRIBUTES  
@@ -828,7 +873,10 @@ typedef                                   //[DT]//
 typedef                                   //[DT]//
     BOOL_i32_4B                           //[DT]//
     (*gleb_swin_pfn_PeekMessageW)(        //[DT]//
-    /**/      LPMSG  lpMsg                //[DT]//
+    /**/  
+        AAC2020_GINAWIN_LPMSG  
+                    lpMsg          
+       
     ,        v_HWND  hWnd                 //[DT]//
     ,   UINT_u32_4B  wMsgFilterMin        //[DT]//
     ,   UINT_u32_4B  wMsgFilterMax        //[DT]//
@@ -853,9 +901,9 @@ typedef                                   //[DT]//
              v_HWND  hWnd                 //[DT]//
     );                                    //[DT]//
 typedef
-    BOOL 
+    int /** BOOL **/ 
     (*gleb_swin_pfn_SetPixelFormat)(
-        HDC                                    hdc
+        void*                                  hdc
     ,   
         int                                 format
     ,   
@@ -873,7 +921,7 @@ typedef                                   //[DT]//
 typedef
     BOOL_i32_4B
     (*gleb_swin_pfn_SwapBuffers)(
-        HDC Arg1
+        void*    Arg1
     );
    
 //:[T]-----------------------------------------://
@@ -1293,11 +1341,11 @@ void  init_gleb_SWIN_FUNCTION_POINTERS( void ){
                                          //[U32]//
     U32D -> A.idi_application=(          //[U32]//
         //: [0111][1111][0000][0000]     //[U32]//
-        MAKEINTRESOURCEA( 32512 )        //[U32]//
+        AAC2020_GINAWIND_MakeIntResourceA( 32512 )        //[U32]//
     );;                                  //[U32]//
     U32D -> A.idc_arrow=(                //[U32]//
         //: [0111][1111][0000][0000]     //[U32]//
-        MAKEINTRESOURCEA( 32512 )        //[U32]//
+        AAC2020_GINAWIND_MakeIntResourceA( 32512 )        //[U32]//
     );;                                  //[U32]//
                                          //[U32]//
     //+----------------------------------------+//
@@ -1505,8 +1553,8 @@ gleb_swin_global_state{                   //|GS|//
             AAC2020_GINAWIN_PIXELFORMATDESCRIPTOR          
                             pixel_format_descriptor;       
                                            
-           HWND handle_to_window     ;     
-            HDC window_device_context;     
+           void*  handle_to_window      ; //:HWND  
+           void*  window_device_context ; //:HDC
                                            
     //!This thread only handles window       GS!//
     //!display and window input. We do       GS!//
@@ -1599,20 +1647,27 @@ gleb_swin_InitPixelFormatDescriptor(      //|GS|//
     struct
     AAC2020_GINAWIN_PIXELFORMATDESCRIPTOR                  
     pixel_format_descriptor ={            //|GS|//
-        sizeof(PIXELFORMATDESCRIPTOR),    //|GS|//
+        sizeof( 
+            struct 
+            AAC2020_GINAWIN_PIXELFORMATDESCRIPTOR 
+        )
+        ,
         1,                                //|GS|//
                                           //|GS|//
         (   //! Flags________!//          //|GS|//
-            PFD_DRAW_TO_WINDOW |          //|GS|//
-            PFD_SUPPORT_OPENGL |          //|GS|//
-            PFD_DOUBLEBUFFER   |          //|GS|//
+        0
+        |   0x00000004 /** PFD_DRAW_TO_WINDOW:wingdi.h **/           
+        |   0x00000020 /** PFD_SUPPORT_OPENGL          **/           
+        |   0x00000001 /** PFD_DOUBLEBUFFER:wingdi.h   **/  
+        |
         0)                                //|GS|//
                                           //|GS|//
         ,                                 //|GS|//
                                           //|GS|//
         //! The kind of framebuffer.         GS!//
         //! RGBA or palette.                 GS!//
-        PFD_TYPE_RGBA,                    //|GS|//
+        0 /** PFD_TYPE_RGBA:wingdi.h **/
+        ,
                                           //|GS|//
         //! Colordepth of the framebuffer.   GS!//
         32,                               //|GS|//
@@ -1633,7 +1688,7 @@ gleb_swin_InitPixelFormatDescriptor(      //|GS|//
         //! in the framebuffer.              GS!//
         0,                                //|GS|//
                                           //|GS|//
-        PFD_MAIN_PLANE,                   //|GS|//
+        0 /** PFD_MAIN_PLANE **/,         //|GS|//
         0,                                //|GS|//
         0, 0, 0                           //|GS|//
     };;                                   //|GS|//
@@ -1788,7 +1843,7 @@ gleb_swin_WIN_MSG_HAN_WND_POC(
     };;
 
     switch(Msg){ //:- - - - - - - - - - - - - -://
-    case WM_SIZE:{
+    case unfuck-WM_SIZE:{
 
         printf("[GLEB_SWIN:WM_SIZE]\n");
         fflush(stdout);
@@ -2005,7 +2060,7 @@ gleb_swin_AssertPeekFunctionExists(){
 BOOL_i32_4B
 gleb_swin_TakeOrLookMessage( 
 /**/
-    LPMSG 
+    AAC2020_GINAWIN_LPMSG /** Pointer To Message Struct **/
     dont_prefix_message_with_and_symbol
 
 ,   
@@ -2049,7 +2104,7 @@ gleb_swin_TakeOrLookMessage(
 } //[gleb_swin_TakeOrLookMessage]//
 BOOL_i32_4B
 gleb_swin_LookMessage(
-    LPMSG msg
+    AAC2020_GINAWIN_LPMSG msg /** PointerToMessageStruct **/
 ){
     BOOL_i32_4B ret;
     const int look = 0;
@@ -2058,7 +2113,7 @@ gleb_swin_LookMessage(
 } //[gleb_swin_LookMessage]//
 BOOL_i32_4B
 gleb_swin_TakeMessage(
-    LPMSG msg
+    AAC2020_GINAWIN_LPMSG msg /** PointerToMessageStruct **/
 ){
     BOOL_i32_4B ret;
     const int take = 1;
