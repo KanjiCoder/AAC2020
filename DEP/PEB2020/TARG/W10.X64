@@ -1,0 +1,1236 @@
+//#FILE_REGION[ W32/DLLL/TARG/W10.X64 ]BEG####################//
+
+#if( COMPILE_FOR_windows_10_64bit >= 1 ) //:=================://
+
+//:PS2_3: Pebwalk_Substitution
+//: "_3": More Widdling Away.
+//:       Moved from _2 to _3 in order to remove
+//:       large chunks of code that are never
+//:       executed. (And thus I cannot test the)
+//:       (validity of.)
+
+//| 0x00: IMAGE_DATA_DIRECTORY    . VirtualAddress           |//
+//| 0x70: IMAGE_OPTIONAL_HEADER   . DataDirectory            |//
+//| 0x1C: IMAGE_EXPORT_DIRECTORY  . AddressOfFunctions       |//
+//| 0x20: IMAGE_EXPORT_DIRECTORY  . AddressOfNames           |//
+//| 0x24: IMAGE_EXPORT_DIRECTORY  . AddressOfNameOrdinals    |//
+//| 0x18: IMAGE_EXPORT_DIRECTORY  . NumberOfNames            |//
+//| 0x18: IMAGE_NT_HEADERS        . OptionalHeader           |//
+//| 0x3C: IMAGE_DOS_HEADER        . e_lfanew                 |//
+//| 0x00: LIST_ENTRY              . Flink                    |//
+//| 0x20: LDR_DATA_TABLE_ENTRY    .Reserved2[0]              |//
+//|                                                          |//
+//| 0x48: LDR_DATA_TABLE_ENTRY    .FullDllName               |//
+//| 0x08:                          FullDllName.Buffer        |//
+//|                                                          |//
+//| 0x18: PEB.Ldr                                            |//
+//| 0x20:     Ldr.InMemoryOrderModuleList                    |//
+//| 0x00:         InMemoryOrderModuleList.Flink              |//
+
+#include <string.h> //: strcmp
+
+//:NON_LOCAL_MACROS:=========================================://
+
+    //:See MSDN documentation on:
+    //:"ImageDirectoryEntryToDataEx"
+    #define MACRO_x_IMAGE_DIRECTORY_ENTRY_EXPORT 0
+
+    //:IMAGE_DATA_DIRECTORY struct is 128 bytes.
+    //:When doing address indexing math, multiply
+    //:by this value.
+    #define MACRO_sizeof_IMAGE_DATA_DIRECTORY 128
+
+    #define MACRO_WINAPI __stdcall
+    #define MACRO_WINDOWS_xxx_MB_OK 0x00000000L
+
+//:=========================================:NON_LOCAL_MACROS://
+//:TYPE_DEFINITIONS:=========================================://
+
+    //:TYPE_DEFINITIONS.DATA:--------------------------------://
+
+        typedef
+            const char* //:<--ImmutableStringPointer
+            TYPEDEF_LPCSTR;
+
+        typedef
+            unsigned long //:32 bits, unsigned
+            TYPEDEF_ULONG;
+
+        typedef
+            unsigned long long //:64 bits, unsigned.
+            TYPEDEF_DWORD_PTR;
+
+        typedef 
+            const unsigned short *  TYPEDEF_LPCWSTR;
+
+        //: Though "HMODULE" is a void*, you cannot mix      ://
+        //: "void*" with window's HMODULE because HMODULE    ://
+        //: is declared using DECLARE_HANDLE hack. Which     ://
+        //: creates a pointer to a dummy struct.             ://
+        typedef 
+            void* TYPEDEF_HMODULE;
+
+    //:--------------------------------:TYPE_DEFINITIONS.DATA://
+    //:TYPE_DEFINITIONS.FUNC:--------------------------------://
+
+    typedef 
+        TYPEDEF_HMODULE                  //:RETURNS
+        (MACRO_WINAPI   *LoadLibraryAF)  //:CC+NAME
+        (TYPEDEF_LPCSTR lpFileName    ); //:PARAM_L
+
+    typedef
+        unsigned long long               //:RETURNS
+        ( __stdcall  *TYPEDEF_FARPROC )  //:NAME
+        ( /**NOT_SPECIFIED != void**/ ); //:PARAMS
+
+    typedef 
+        TYPEDEF_FARPROC
+        (MACRO_WINAPI *GetProcAddressF)
+        (
+            TYPEDEF_HMODULE hModule
+        ,   TYPEDEF_LPCSTR lpProcName
+        );
+
+    //:--------------------------------:TYPE_DEFINITIONS.FUNC://
+//:=========================================:TYPE_DEFINITIONS://
+
+//////////////////////////////////////////////////
+
+LoadLibraryAF
+dll_LoadLibraryA   =NULL;
+
+GetProcAddressF
+dll_GetProcAddress =NULL;
+//////////////////////////////////////////////////
+
+
+
+#include <stdlib.h> //: exit()
+#include <stdio.h> //:printf(...)
+
+//:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX://  //[CWSI:2019_11_28]//
+                                                    //[CWSI:2019_11_28]//
+                                                    //[CWSI:2019_11_28]//
+    //:PERMA:SHORTCUT[ PASTE_COM_WID_STR_INS ]      //[CWSI:2019_11_28]//
+                                                    //[CWSI:2019_11_28]//
+//:CWSI: Compare_Wide_Strings_Insensitive           //[CWSI:2019_11_28]//
+                                                    //[CWSI:2019_11_28]//
+#include <stdio.h> //:for: printf(...)              //[CWSI:2019_11_28]//
+#include <assert.h>                                 //[CWSI:2019_11_28]//
+                                                    //[CWSI:2019_11_28]//
+int                                                 //[CWSI:2019_11_28]//
+JMIM_lstrcmpiW( //[lstrcmpiW]//                     //[CWSI:2019_11_28]//
+    const unsigned short* str_1                     //[CWSI:2019_11_28]//
+,   const unsigned short* str_2                     //[CWSI:2019_11_28]//
+){                                                  //[CWSI:2019_11_28]//
+    void JMIM_lstrcmpiW_LAZYTEST();                 //[CWSI:2019_11_28]//
+         JMIM_lstrcmpiW_LAZYTEST();                 //[CWSI:2019_11_28]//
+                                                    //[CWSI:2019_11_28]//
+    #define U unsigned short /////////////////////  //[CWSI:2019_11_28]//
+    #define S   signed short /////////////////////  //[CWSI:2019_11_28]//
+                                                    //[CWSI:2019_11_28]//
+    int dex =(0-1);                                 //[CWSI:2019_11_28]//
+    U r_e_s_u_l_t ;                                 //[CWSI:2019_11_28]//
+    U chr_1       ;                                 //[CWSI:2019_11_28]//
+    U chr_2       ;            //: 97 - 65          //[CWSI:2019_11_28]//
+    U       sub_to_get_uppercase = 'a'-'A';         //[CWSI:2019_11_28]//
+    assert( sub_to_get_uppercase > 0 );             //[CWSI:2019_11_28]//
+                                                    //[CWSI:2019_11_28]//
+    #undef  U ////////////////////////////////////  //[CWSI:2019_11_28]//
+    #undef  S ////////////////////////////////////  //[CWSI:2019_11_28]//
+                                                    //[CWSI:2019_11_28]//
+    while( 1 ){                                     //[CWSI:2019_11_28]//
+        dex++;                                      //[CWSI:2019_11_28]//
+                                                    //[CWSI:2019_11_28]//
+        chr_1=str_1[ dex ];                         //[CWSI:2019_11_28]//
+        chr_2=str_2[ dex ];                         //[CWSI:2019_11_28]//
+                                                    //[CWSI:2019_11_28]//
+        //:Convert both characters to uppercase:    //[CWSI:2019_11_28]//
+        //////////////////////////////////////////  //[CWSI:2019_11_28]//
+        if( chr_1 >= 'a' && chr_1 <= 'z' ){         //[CWSI:2019_11_28]//
+            chr_1 = chr_1 - sub_to_get_uppercase;   //[CWSI:2019_11_28]//
+        };;                                         //[CWSI:2019_11_28]//
+        if( chr_2 >= 'a' && chr_2 <= 'z' ){         //[CWSI:2019_11_28]//
+            chr_2 = chr_2 - sub_to_get_uppercase;   //[CWSI:2019_11_28]//
+        };;                                         //[CWSI:2019_11_28]//
+        //////////////////////////////////////////  //[CWSI:2019_11_28]//
+                                                    //[CWSI:2019_11_28]//
+                 r_e_s_u_l_t = (chr_1 - chr_2);     //[CWSI:2019_11_28]//
+        if( 0 != r_e_s_u_l_t ){ break; };           //[CWSI:2019_11_28]//
+                                                    //[CWSI:2019_11_28]//
+        //:Null terminator found. Exit.             //[CWSI:2019_11_28]//
+        if(0==chr_1 || 0==chr_2){                   //[CWSI:2019_11_28]//
+            break;                                  //[CWSI:2019_11_28]//
+        };;                                         //[CWSI:2019_11_28]//
+    };;                                             //[CWSI:2019_11_28]//
+                                                    //[CWSI:2019_11_28]//
+    return( (int)r_e_s_u_l_t );                     //[CWSI:2019_11_28]//
+}//[;]//                                            //[CWSI:2019_11_28]//
+                                                    //[CWSI:2019_11_28]//
+//////////////////////////////////////////////////  //[CWSI:2019_11_28]//
+static char JMIM_lstrcmpiW_TESTED = 0;              //[CWSI:2019_11_28]//
+static char JMIM_lstrcmpiW_TESTIN = 0;              //[CWSI:2019_11_28]//
+                                                    //[CWSI:2019_11_28]//
+void                                                //[CWSI:2019_11_28]//
+JMIM_lstrcmpiW_TESTIT(){                            //[CWSI:2019_11_28]//
+    //////////////////////////////////////////////  //[CWSI:2019_11_28]//
+    JMIM_lstrcmpiW_TESTED=0;                        //[CWSI:2019_11_28]//
+    JMIM_lstrcmpiW_TESTIN=1;                        //[CWSI:2019_11_28]//
+    //////////////////////////////////////////////  //[CWSI:2019_11_28]//
+                                                    //[CWSI:2019_11_28]//
+    int res;                                        //[CWSI:2019_11_28]//
+                                                    //[CWSI:2019_11_28]//
+    const unsigned short* A1=L"WIDE";               //[CWSI:2019_11_28]//
+    const unsigned short* B1=L"wide";               //[CWSI:2019_11_28]//
+                                                    //[CWSI:2019_11_28]//
+    res = JMIM_lstrcmpiW(A1,B1);                    //[CWSI:2019_11_28]//
+    assert( 0==res );                               //[CWSI:2019_11_28]//
+                                                    //[CWSI:2019_11_28]//
+    // ---------------------------------------- //  //[CWSI:2019_11_28]//
+                                                    //[CWSI:2019_11_28]//
+    const unsigned short* A2=L"JEFF";               //[CWSI:2019_11_28]//
+    const unsigned short* B2=L"PAUL";               //[CWSI:2019_11_28]//
+                                                    //[CWSI:2019_11_28]//
+    res = JMIM_lstrcmpiW(A2,B2);                    //[CWSI:2019_11_28]//
+    assert( 0!=res );                               //[CWSI:2019_11_28]//
+                                                    //[CWSI:2019_11_28]//
+    //////////////////////////////////////////////  //[CWSI:2019_11_28]//
+    JMIM_lstrcmpiW_TESTIN=0;                        //[CWSI:2019_11_28]//
+    JMIM_lstrcmpiW_TESTED=1;                        //[CWSI:2019_11_28]//
+    //////////////////////////////////////////////  //[CWSI:2019_11_28]//
+}//[;]//                                            //[CWSI:2019_11_28]//
+                                                    //[CWSI:2019_11_28]//
+void                                                //[CWSI:2019_11_28]//
+JMIM_lstrcmpiW_LAZYTEST(){                          //[CWSI:2019_11_28]//
+    if( 0 == 0                                      //[CWSI:2019_11_28]//
+    &&  0 >= JMIM_lstrcmpiW_TESTED //:NOT_TESTED    //[CWSI:2019_11_28]//
+    &&  0 >= JMIM_lstrcmpiW_TESTIN //:NOT_TESTING   //[CWSI:2019_11_28]//
+    ){       JMIM_lstrcmpiW_TESTIT(); };            //[CWSI:2019_11_28]//
+}//[;]//                                            //[CWSI:2019_11_28]//
+                                                    //[CWSI:2019_11_28]//
+//////////////////////////////////////////////////  //[CWSI:2019_11_28]//
+                                                    //[CWSI:2019_11_28]//
+//:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX://  //[CWSI:2019_11_28]//
+
+
+
+
+
+void*
+VOID_T16B( //:TruncatePointerTo16Bits (2bytes)
+
+    void* addr
+
+){
+
+    #define U unsigned long long /////////////////
+
+    /////////0xR_G_B_AA==4bytes,  32bits
+    U mask = 0x0000FFFF ;     //: 16bits
+    U addr_u = (U)addr;       //: Unsigned Long
+    U addr_t = addr_u & mask; //: Truncated
+    
+    return( (void*)addr_t );
+
+    #undef  U ////////////////////////////////////
+
+}//[;]//
+
+void*
+VOID_T32B( //:TruncatePointerTo32Bits (4bytes)
+    void* addr
+){
+    #define U unsigned long long /////////////////
+
+    /////////0xR_G_B_AA==4bytes,32bits
+    U mask = 0xFFFFFFFF ;
+    U addr_u = (U)addr;       //:Unsigned Long
+    U addr_t = addr_u & mask; //:Truncated
+    
+    return( (void*)addr_t );
+
+    #undef  U ////////////////////////////////////
+}//[;]//
+
+//:Add two addresses together.
+void*
+VOID_Plus(
+/**/    void* addr_01
+,       void* addr_02
+){
+
+    #define U unsigned char //////////////////////
+    #define L unsigned long long /////////////////
+
+        //:addr_01 is casted to a byte pointer
+        //:so that offsets from adding addr_02
+        //:will be multiplied by 1 (sizeof byte)
+        //:rather than 4 or 8.
+
+        U* A_1=(U*)addr_01;
+        L  A_2=(L )addr_02;
+        U* A_3=( A_1 + A_2 );
+        return( (void*)A_3 );
+
+    #undef  U ////////////////////////////////////
+    #undef  L ////////////////////////////////////
+
+}//[;]//
+
+//:Perform: (addr_01 - addr_02 )
+void*
+VOID_Minu(
+/**/    void* addr_01
+,       void* addr_02
+){
+
+    #define U unsigned char //////////////////////
+    #define L unsigned long long /////////////////
+
+    U* A_1=(U*)addr_01;
+    L  A_2=(L )addr_02;
+    U* A_3=( A_1 - A_2 );
+    return( (void*)A_3 );
+
+    #undef  U ////////////////////////////////////
+    #undef  L ////////////////////////////////////
+
+}//[;]//
+
+
+//|Example Usage:                              |//
+//|Find the relative offset in bytes from      |//
+//|the base address "pOptionalHeader"          |//
+//|to the member "DataDirectory"               |//
+//|ANSWER: (0x70)                              |//
+//|--------------------------------------------|//
+//|  VOID_PROS(                                |//
+//|      pOptionalHeader                       |//
+//|  , &(pOptionalHeader->DataDirectory)       |//
+//|  ,  "pOptionalHeader .DataDirectory"       |//
+//|  );;                                       |//
+void
+VOID_PROS( //:PROS:Print_Relative_OffSet
+/**/    void* base_address
+,       void* seek_address
+,       const char*    msg
+){
+    if( base_address > seek_address ){
+        printf("[Bad_Ordering]\n");
+        fflush(stdout);
+        exit(666);
+    };;
+
+    //:   os:offset/delta:
+    void* os = VOID_Minu(
+        seek_address //:<----LARGER_VALUE
+    ,   //  -     //
+        base_address //:<----SMALLER_VALUE
+    );;
+
+    printf(
+        "[PROS:msg]:%s\n[PROS:os]:%p\n"
+    ,    msg,os
+    );;
+
+}//[;]//
+
+void* 
+VOID_Seek( 
+
+/**/    void* data
+,       int byte_offset 
+
+){
+
+    //:In order to have the correct byte offset
+    //:applied to the pointers, you have to make
+    //:sure they are casted to byte pointers
+    //:first. Casting to void* seems to work
+    //:as well. But I wouldn't trust that. Since
+    //:the size of a pointer is either 4 or
+    //:8 bytes, so offsets being multiplied by
+    //:4 or 8 with void* would not suprise me
+    //:depending on the C compiler.
+
+    #define U unsigned char //////////////////////
+
+        //:A_0: Start_Address
+        //:A_1: End___Address
+
+        U* A_0=(U*)data;  
+        U* A_1=( A_0 + byte_offset );
+
+        return( (void*)A_1 );
+
+    #undef  U ////////////////////////////////////
+
+}//[;]//
+
+void* 
+VOID_Load( 
+
+/**/    void* data 
+
+){
+
+    //:Assumming the data is a pointer,
+    //:it holds the address to some object
+    //:somewhere else. We want to load that
+    //:address.
+
+    void** ptr = (void**)data; //:POINTER
+    void*  aod = *(ptr);       //:ADDRESS_OR_DATA
+
+    return( aod );
+}//[;]//
+
+
+//:Perform a series of memory offsets on an
+//:address until you get to whatever destination
+//:you are looking for.
+//:
+//:NOTE: Add 'A' and Seek 'S' instructions
+//:      have the same result. But Add('A') was
+//:      originally written for adding an address
+//:      and Seek('S') was originally for a
+//:      hexadecimal relative offset from the
+//:      base address of a struct.
+void*
+VOID_Inst(
+/**/    void*          initial_address  
+,       unsigned long long* instruction_arr
+){
+    //:Instructions come in pairs:
+    //:1: Instruction Type (Op-code)
+    //:2: Instruction Data
+
+    //: 0x00:     :  Terminate_Instruction_Stream
+    //: 0x53: 'S' :  SEEK (takes an offset)
+    //: 0x4C: 'L' :  LOAD
+    //:              DATA==0: Load Full Address
+    //:              DATA==4: Truncate to 4 bytes.
+    //: 0x41: 'A' :  ADD  (Add addresses  )
+    //: 0x54: 'T' :  Truncate to n bytes.(data==n)
+
+
+    int code_index = (0-1);
+    int data_index = (0-1);
+    int pair_index = (0-1);
+
+    unsigned long long  code;
+    unsigned long long  data;
+
+    void*  p = initial_address;
+    void** pp= NULL;
+
+    while(1){
+        pair_index++;
+
+        code_index = pair_index*2;
+        data_index = code_index+1;
+        
+        code = instruction_arr[ code_index ];
+        data = instruction_arr[ data_index ];
+
+        if( 'S' == code ){ //:SEEK
+
+            #define U unsigned long long /////////
+            void* base_address = p;
+            U     byte_offset  =(U)data;
+            #undef  U ////////////////////////////
+
+            #define U unsigned char //////////////
+
+                //:A_0: Start_Address
+                //:A_1: End___Address
+
+                U* A_0=(U*)    base_address ;  
+                U* A_1=( A_0 + byte_offset );
+
+                p=(void*)A_1;
+
+            #undef  U ////////////////////////////
+            
+
+        }else
+        if( 'L' == code ){ //:LOAD
+            if(data==0x00){
+                //:LEA(Load Affective Address)
+                //:by de-referencing the pointer.
+                pp=(void**)p;
+                p=(*pp);
+            }else{
+
+                //:LEA(Load Affective Address)
+                //:by de-referencing the pointer.
+                pp=(void**)p;
+                p=(*pp);
+
+
+                //:TRUNCATE address AFTER loading:
+
+
+                #define U unsigned long long ///////////|------------|//
+                                                      //| 2019_11_28 |//
+                void* addr = p;                       //| 2019_11_28 |//
+                                                      //| 2019_11_28 |//
+                //:addr_f: Address_Full               //| 2019_11_28 |//
+                //:addr_t: Address_Truncated          //| 2019_11_28 |//
+                                                      //| 2019_11_28 |//
+                ///////////0x1234567812345678         //| 2019_11_28 |//
+                U mask_8 = 0xFFFFFFFFFFFFFFFF;//64bits//| 2019_11_28 |//
+                ///////////0xR_G_B_AA == 4bytes,32bits//| 2019_11_28 |//
+                U mask_4 = 0xFFFFFFFF;//:4bytes,32bits//| 2019_11_28 |//
+                U mask_2 = 0xFFFF    ;//:2bytes,16bits//| 2019_11_28 |//
+                U mask   = 0;                         //| 2019_11_28 |//
+                if( 2 == data ){ mask = mask_2; };    //| 2019_11_28 |//
+                if( 4 == data ){ mask = mask_4; };    //| 2019_11_28 |//
+                if( 8 == data ){ mask = mask_8; };    //| 2019_11_28 |//
+                                                      //| 2019_11_28 |//
+                U addr_f = (U)addr;       //:All_Bits //| 2019_11_28 |//
+                U addr_t = addr_f & mask; //:32__Bits //| 2019_11_28 |//
+                                                      //| 2019_11_28 |//
+                p=( (void*)addr_t );                  //| 2019_11_28 |//
+                                                      //| 2019_11_28 |//
+                #undef  U //////////////////////////////|____________|//
+
+            };;
+
+        }else
+        if( 'T'  == code ){ //:TRUNCATE_4:
+        //:Truncate address to first T bytes,
+        //:The rest will be zeros.
+
+            #define U unsigned long long ///////////|------------|//
+                                                  //| 2019_11_28 |//
+            void* addr = p;                       //| 2019_11_28 |//
+                                                  //| 2019_11_28 |//
+            //:addr_f: Address_Full               //| 2019_11_28 |//
+            //:addr_t: Address_Truncated          //| 2019_11_28 |//
+                                                  //| 2019_11_28 |//
+            ///////////0x1234567812345678         //| 2019_11_28 |//
+            U mask_8 = 0xFFFFFFFFFFFFFFFF;//64bits//| 2019_11_28 |//
+            ///////////0xR_G_B_AA == 4bytes,32bits//| 2019_11_28 |//
+            U mask_4 = 0xFFFFFFFF;//:4bytes,32bits//| 2019_11_28 |//
+            U mask_2 = 0xFFFF    ;//:2bytes,16bits//| 2019_11_28 |//
+            U mask   = 0;                         //| 2019_11_28 |//
+            if( 2 == data ){ mask = mask_2; };    //| 2019_11_28 |//
+            if( 4 == data ){ mask = mask_4; };    //| 2019_11_28 |//
+            if( 8 == data ){ mask = mask_8; };    //| 2019_11_28 |//
+                                                  //| 2019_11_28 |//
+            U addr_f = (U)addr;       //:All_Bits //| 2019_11_28 |//
+            U addr_t = addr_f & mask; //:32__Bits //| 2019_11_28 |//
+                                                  //| 2019_11_28 |//
+            p=( (void*)addr_t );                  //| 2019_11_28 |//
+                                                  //| 2019_11_28 |//
+            #undef  U //////////////////////////////|____________|//
+
+        }else
+        if( 'A' == code ){  //:ADD address
+
+            #define U unsigned char ////////////// 
+            #define L unsigned long long ///////// 
+            
+                //|addr_01 is casted to a byte |//
+                //|pointer so that offsets from|//
+                //|adding addr_02 will be      |//
+                //|multiplied by 1 (sizeof     |//
+                //|byte) rather than 4 or 8.   |//
+            
+                void* addr_01 = p;
+                void* addr_02 = (void*)data;
+            
+                U* A_1=(U*)addr_01;
+                L  A_2=(L )addr_02;
+                U* A_3=( A_1 + A_2 );
+            
+                p = ( (void*)A_3 );
+            
+            #undef  U //////////////////////////// 
+            #undef  L //////////////////////////// 
+
+        }else
+        if( 0x00 == code ){ //:END_OF_STREAM
+
+            break;
+        
+        }else{
+            printf("[INVALID_OP_CODE]\n");
+            fflush(stdout);
+            exit(666);
+        };;
+
+    };;
+    
+    //:Return the resulting address from all
+    //:of the operations:
+    return( p );
+
+}//[;]//
+
+
+//:Like VOID_Inst, but the instruction stream
+//:first instruction is always an intitial('I')
+//:start address to load. Thus only one argument
+//:is needed instead of two.
+void*
+VOID_Oper(
+    unsigned long long* instruction_arr
+){
+    if( 'I' != instruction_arr[0] ){
+        printf("[I:ShouldBeFirstInstruction]\n");
+        fflush(stdout);
+        exit(666);
+    };;
+
+    //:Change first instruction to "add"
+    instruction_arr[0]='A';
+   
+    //:Starting at address 0 essentially
+    //:will load initial start address.
+    void* p = VOID_Inst( 0x00, instruction_arr );
+
+    //:Change the first instruction back to
+    //:'I' so calling code is unaware of our
+    //:hacky ways.
+    instruction_arr[0]='I';
+
+    return( p );
+
+}//[;]//
+
+
+//|_M_IX86 Defined as the integer literal value|//
+//|600 for compilations that target x86        |//
+//|processors. This macro isn't defined for x64|//
+//|or ARM compilation targets.                 |//
+//|SOURCE[ M_IX86-url ]                        |//
+#ifdef _M_IX86 ///////////////////////////////////
+
+    #error NOT_SUPPORTING_X86
+
+#endif ///////////////////////////////////////////
+
+
+static void* 
+JMIM_ASM_GetBaseAddr_PEB_x64()
+{
+    void* base_address = 0;
+    unsigned long long var_out = 0;
+
+    __asm__(
+        " movq %%gs:0x60, %[sym_out]  ; \n\t"
+        :[sym_out] "=r"  (var_out) //:OUTPUTS
+    );
+
+    //: printf("[var_out]:%d\n", (int)var_out);
+
+    base_address=(void*)var_out;
+    return( base_address );
+}
+
+TYPEDEF_HMODULE MACRO_WINAPI 
+JMIM_GetModuleBaseAddress(
+    TYPEDEF_LPCWSTR moduleName
+){
+
+    //:Void pointers:
+    //:void* p;
+    void* p1;
+    void* p2;
+    //:void* p3; 
+
+    //:Using void* instead of the actual types,
+    //:so that we don't need to include the
+    //:headers for these window's structs.
+    //:SOURCES:
+    //: https://www.codemachine.com/downloads/win80/winnt.h
+    //: https://msdn.microsoft.com/en-us/windows/desktop/aa813706
+    //: https://docs.microsoft.com/en-us/windows/win32/api/winternl/ns-winternl-peb_ldr_data
+    //////////////////////////////////////////////
+	void* //:PEB*        
+    pPeb = NULL;
+
+	void* //:LIST_ENTRY* 
+    pListEntry = NULL;
+
+	void* //:LDR_DATA_TABLE_ENTRY* 
+    pLdrDataTableEntry = NULL;
+    //////////////////////////////////////////////
+
+    //:pPeb = (PPEB)JMIM_ASM_GetBaseAddr_PEB_x64();
+    pPeb = JMIM_ASM_GetBaseAddr_PEB_x64();
+
+	if (pPeb == NULL){
+		return NULL;
+    };;
+
+
+    //:pPeb->Ldr->InMemoryOrderModuleList.Flink
+    //////////////////////////////////////////////
+    unsigned long long 
+    instructions_to_Flink[] ={ 
+
+        //:____________ Ldr ___________________://
+        'S' , 0x18  //: PTR
+    ,   'L' ,  0    //: OBJ
+
+        //:____________ InMemoryOrderModuleList://
+    ,   'S' , 0x20  //: PTR
+    ,   'L' ,  0    //: OBJ
+
+        //:____________ Flink
+    ,   'S' , 0x00  //: PTR
+    ,   0x00, 0x00  
+
+    };;
+    void* 
+    first_link_in_list=(
+        VOID_Inst( pPeb, instructions_to_Flink )
+    );;
+    //////////////////////////////////////////////
+        
+
+
+    
+    
+    pLdrDataTableEntry=( first_link_in_list );
+    pListEntry        =( first_link_in_list );
+
+    int we_wrapped_around_stop_looping = 0;
+    
+	do
+	{
+
+        //:pLdrDataTableEntry->FullDllName.Buffer
+        //////////////////////////////////////////
+        unsigned long long 
+        instructions_to_Buffer[]={
+            'S', 0x48  //:FullDllName:PTR
+        ,   'S', 0x08  //:Buffer     :PTR
+        ,   'L',  0    //:Buffer     :OBJ
+        ,   0x00,0x00
+        };;
+        unsigned short* 
+        full_dll_name_buffer=VOID_Inst( 
+            pLdrDataTableEntry
+            ,
+            instructions_to_Buffer
+        );;
+        //////////////////////////////////////////
+        
+         
+		if(0 ==
+            JMIM_lstrcmpiW(
+
+                //:"unsigned short"=="wide char"
+                full_dll_name_buffer
+            , 
+                moduleName
+            )
+        ){
+    
+            //: Q:QUESTION:
+            //:----------------------------------------------://
+            //: No clue why, but the base address            ://
+            //: of the DLL seems to be at:                   ://
+            //: "pLdrDataTableEntry->Reserved2[0]"           ://
+            //: which is the member right before             ://
+            //: "pLdrDataTableEntry->DllBase"                ://
+            //:                                              ://
+            //: A:ANSWER:                                    ://
+            //: The linked list is NOT embedded              ://
+            //: at the base of the _LDR_DATA_TABLE_ENTRY.    ://
+            //: InMemoryOrderLinks starts at offset 0x10.    ://
+            //: So your 0x20 is effectively: 0x10+0x20==0x30.://
+            //: And 0x30 IS DllBase!                         ://
+            //:                                              ://
+            //: NOTE: Figured this out while working on      ://
+            //: my PEB_BASE.C11 code. I do not plan on       ://
+            //: fixing or maintaining W10.X64.               ://
+            //:----------------------------------------------://
+
+            //: pLdrDataTableEntry -> Reserved2[0]
+            //////////////////////////////////////
+
+            unsigned long long
+            instructions_to_dll_module[]={
+                'S', 0x20 //:Reserved2[0]:PTR
+            ,   'L',  0   //:Reserved2[0]:OBJ
+            ,   0x00,0x00
+            };;
+
+            void* 
+            dll_module=VOID_Inst(
+                pLdrDataTableEntry
+            ,   instructions_to_dll_module
+            );;
+
+            return( dll_module );
+
+            //////////////////////////////////////
+        };;
+
+
+
+        //: pListEntry = pListEntry -> Flink
+        p1 = (void*)pListEntry;
+        p1 = VOID_Seek( p1, 0x00 ); //:Flink:PTR
+        p1 = VOID_Load( p1       ); //:Flink:OBJ
+        pListEntry =    p1;
+
+
+
+        //:pLdrDataTableEntry=pListEntry->Flink
+        p2 = p1;
+        p2 = VOID_Seek( p2, 0x00 ); //:Flink:PTR
+        p2 = VOID_Load( p2       ); //:Flink:OBJ
+        pLdrDataTableEntry = p2;
+
+
+
+        if( pListEntry == first_link_in_list ){
+            we_wrapped_around_stop_looping = 1;
+        }else{
+            we_wrapped_around_stop_looping = 0;
+        };;
+
+
+
+	}while( 0 == we_wrapped_around_stop_looping );
+
+	return NULL;
+}
+
+TYPEDEF_FARPROC __stdcall 
+JMIM_GetExportAddress(
+    TYPEDEF_HMODULE hMod
+,   const char *lpProcName
+){
+
+    void* p;
+
+    //: printf("[helllooooo]");
+
+	char *pBaseAddress = (char *)hMod;
+
+    //|  Can be found in winnt.h header file.  |//
+    //|----------------------------------------|//
+
+
+
+    //////////////////////////////////////////////
+	//| IMAGE_DOS_HEADER                       |//
+    //| *pDosHeader =(                         |//
+    //|         (IMAGE_DOS_HEADER *)           |//
+    //|          pBaseAddress                  |//
+    //| );;                                    |//
+                                            //||//
+    void*                                   //||//
+    pDosHeader = pBaseAddress;              //||//
+                                            //||//
+    //////////////////////////////////////////////
+
+
+    #define U unsigned long long /////////////////
+
+    //| IMAGE_NT_HEADERS                       |//
+    //| *pNtHeaders == pBaseAddress            |//
+    //|                +                       |//
+    //|                pDosHeader -> e_lfanew  |//
+
+    unsigned long long oper_pNtHeaders[]={
+        'I' , (U)pDosHeader   //:Initial_Address
+    ,   'S' , 0x3C            //:e_lfanew:PTR
+    ,   'L' ,  4              //:e_lfanew:OBJ
+    ,   'A' , (U)pBaseAddress //:IMAGE_NT_HEADERS
+    ,   0x00,0x00
+    };;
+    void* pNtHeaders=VOID_Oper(
+        oper_pNtHeaders
+    );;
+
+    #undef  U ////////////////////////////////////
+    #define U unsigned long long /////////////////
+    
+    U oper_OptionalHeader[]={
+        'I' , (U)pNtHeaders
+    ,   'S' , 0x18 //:OptionalHeader:PTR
+    ,   0x00, 0x00
+    };;
+    void* //:IMAGE_OPTIONAL_HEADER
+    pOptionalHeader =VOID_Oper( 
+        oper_OptionalHeader
+    );;
+
+    #undef  U ////////////////////////////////////
+    #define U unsigned long long /////////////////
+
+    //| IMAGE_DATA_DIRECTORY                   |//
+    //|*pDataDirectory=(                       |//
+    //|    &(pOptionalHeader -> DataDirectory[ |//
+    //|         IMAGE_DIRECTORY_ENTRY_EXPORT   |//
+    //|     ])                                 |//
+    //| );;                                    |//
+
+    U oper_pDataDirectory[]={
+        'I', (U)pOptionalHeader
+    ,   'S', 0x70 //:DataDirectory[ 0 ]
+
+        //: I_D_E_E:IMAGE_DIRECTORY_ENTRY_EXPORT
+        //: DataDirectory[ I_D_E_E ]
+    ,   'S', MACRO_x_IMAGE_DIRECTORY_ENTRY_EXPORT
+             *
+             MACRO_sizeof_IMAGE_DATA_DIRECTORY
+
+        //:Dont load address. Keep as pointer.
+       
+    ,   0x00,0x00
+    };;
+    void*
+    pDataDirectory=VOID_Oper( 
+        oper_pDataDirectory 
+    );;
+
+    #undef  U ////////////////////////////////////
+    
+
+    //:pDataDirectory -> VirtualAddress
+    p = pDataDirectory;
+    p = VOID_Seek( p, 0x00 );//:VirtualAddress:PTR
+    p = VOID_Load( p       );//:VirtualAddress:OBJ
+    void* virtual_address = p;
+
+
+
+        #define U unsigned long long /////////////
+        
+        U base = (U)pBaseAddress;
+        
+        U inst_to_image_export_directory[]={
+            'T',  4   //:truncate to 4 bytes
+        ,   'A', base //:Add base addr
+        ,  0x00, 0x00 //:END
+        };;
+        void* 
+        added_addresses=VOID_Inst(
+            virtual_address
+        ,   inst_to_image_export_directory
+        );;
+        
+        #undef  U ////////////////////////////////
+
+        void* //:IMAGE_EXPORT_DIRECTORY*
+        pExportDirectory = added_addresses;
+
+
+      // VOID_PROS(
+      //     pExportDirectory
+      // , &(pExportDirectory->NumberOfFunctions)
+      // ,  "pExportDirectory .NumberOfFunctions"
+      // );;
+
+    //: data_directory_size==
+    //: pDataDirectory -> Size
+    p = pDataDirectory;
+    p = VOID_Seek( p, 0x04 ); //:Size:PTR
+    p = VOID_Load( p       ); //:Size:OBJ
+    size_t data_directory_size=(size_t)( p );
+    
+
+
+    //|----------------------------------------|//
+
+
+
+    #define U unsigned long long /////////////////
+
+    //| ppFunctions=(                          |//
+    //|    pBaseAddress                        |//
+    //|    +                                   |//
+    //|    pExportDirectory->AddressOfFunctions|//
+    //| );;                                    |//
+    
+//x   U inst_to_ppFunctions[]={
+//x       'S' , 0x1C      //:AddressOfFunctions:PTR
+//x   ,   'L' ,  0        //:AddressOfFunctions:OBJ
+//x   ,   'T' ,  4        //:Truncate to 4 bytes
+//x   ,   'A' ,  (U)pBaseAddress //:Add base address
+//x   ,   0x00,0x00
+//x   };;
+//x   void**
+//x   ppFunctions=VOID_Inst(
+//x       pExportDirectory
+//x   ,   inst_to_ppFunctions
+//x   );;
+
+    #undef  U ////////////////////////////////////
+    #define U unsigned long long /////////////////
+    
+    //|                                        |//
+    //|         pOrdinals                      |//
+    //|         ===                            |//
+    //|         pBaseAddress                   |//
+    //|         +                              |//
+    //|         pExportDirectory               |//
+    //|         ->AddressOfNameOrdinals        |//
+    
+    unsigned long long oper_pOrdinals[]={
+    /**/'I' , (U)pExportDirectory
+    ,   'S' , 0x24 //:AddressOfNameOrdinals:PTR
+    ,   'L' ,  4   //:AddressOfNameOrdinals:OBJ  
+    ,   'A' , (U)pBaseAddress //:pOrdinals
+    ,   0x00,0x00  //:END_OF_INSTRUCTIONS
+    };;
+    unsigned short //:WORD* 
+    *pOrdinals=VOID_Oper( oper_pOrdinals );
+    
+    #undef  U ////////////////////////////////////
+    #define U unsigned long long /////////////////
+
+    U oper_pNames[]={
+    /**/'I' , (U)pExportDirectory
+    ,   'S' , 0x20 //:AddressOfNames:PTR
+    ,   'L' ,  4   //:AddressOfNames:OBJ  
+    ,   'A' , (U)pBaseAddress //:pNames
+    ,   0x00,0x00  //:END_OF_INSTRUCTIONS
+    };;
+    TYPEDEF_ULONG*
+    pNames=VOID_Oper( oper_pNames );
+
+
+    #undef  U ////////////////////////////////////
+
+
+	void *pAddress = NULL;
+
+
+
+	unsigned long i; //:DWORD
+
+	if (((TYPEDEF_DWORD_PTR)lpProcName >> 16) == 0)
+	{
+        //:The pointer only contains 16 bits.
+        //:Why does this require different code?
+        //:Don't know. SEE: PS2_2.C11 for
+        //:reference.
+        
+        printf("[ERROR:2019_11_28:09_32AM]\n");
+        fflush(stdout); 
+        exit(666);
+	}
+	else
+	{
+        //: printf("[BOT:SELECTED]");
+
+        #define U unsigned long long /////////////
+
+        //| pExportDirectory -> NumberOfNames  |//
+
+        U oper_NumberOfNames[]={
+            'I' , (U)pExportDirectory
+        ,   'S' , 0x18 //:NumberOfNames:PTR
+        ,   'L' ,  4   //:NumberOfNames:OBJ
+        ,   0x00,0x00
+        };; 
+        unsigned long
+        number_of_names=(
+            (unsigned long)
+            (unsigned long long)
+            VOID_Oper( oper_NumberOfNames )
+        );;
+
+        // ------------------------------------ //
+
+        //| pExportDirectory                   |//
+        //| -> AddressOfFunctions              |//
+
+        U oper_AddressOfFunctions[]={
+            'I' , (U)pExportDirectory
+        ,   'S' , 0x1C //:AddressOfFunctions:PTR
+        ,   'L' ,  4   //:AddressOfFunctions:OBJ
+        ,   0x00,0x00 
+        };; 
+        unsigned long
+        address_of_functions=(
+            (unsigned long)
+            (unsigned long long)
+            VOID_Oper( oper_AddressOfFunctions )
+        );;
+
+        #undef  U ////////////////////////////////
+
+
+        unsigned long
+        *absolute_address_of_functions=(
+            (unsigned long *)
+            (
+                pBaseAddress
+                +
+                address_of_functions
+            )
+        );;
+
+		for(
+            i = 0
+            ; 
+            i < number_of_names
+            ; 
+            i++
+        ){
+			char *szName =(
+                (  char*  )pBaseAddress 
+              + (TYPEDEF_DWORD_PTR)pNames[i]
+            );;
+
+			if (strcmp(lpProcName, szName) == 0)
+			{
+				pAddress =(
+                    (void*)( //:(TYPEDEF_FARPROC)
+                        pBaseAddress
+                        +
+                        absolute_address_of_functions
+                        [pOrdinals[i]]
+                    )
+                );;
+
+				break;
+			};;
+		}
+	}
+
+	if(
+        (char *)pAddress
+        >= 
+        (char *)pExportDirectory 
+
+        && 
+
+        (char *)pAddress 
+        < 
+        (char *)pExportDirectory 
+              + data_directory_size
+    ){
+        //:Not going to re-write dead
+        //:code path until error is hit.
+       
+        printf("[ERROR:2019_11_28:09_37AM]\n");
+        fflush(stdout); 
+        exit(666);
+
+	}
+
+    //:https://stackoverflow.com/questions/14134245/
+    //:iso-c-void-and-function-pointers
+	//:return pAddress;
+    TYPEDEF_FARPROC ret;
+    *(void **)(&ret) = pAddress;
+    return( ret );
+}
+
+
+
+
+//|////////////////////////////////////////////|//
+//|     -///-                        -///-     |//
+//|....(( 0 ))|| ||_ _--  --_ _|| ||(( 0 ))....|//
+//|_  __      __  __  __  __  __  __      __  _|//
+//| \/  \    /  \/  \/  \/  \/  \/  \    /  \/ |//
+//|      \  /                        \  /      |//
+//|       \/                          \/       |//
+//+ BEG: #BOTTOM_OF_FILE_COMMENTS_SECTION#     +//
+//|           /\                  /\           |//
+//|          /  \                /  \          |//
+//|_--__--__/    \__/\__/\__/\__/    \__--__--_|//
+//|                                            |//
+//|       ______________________________       |//
+//|______/                              \______|//
+#if(BOTTOM_OF_FILE_COMMENTS_SECTION) /////////////
+/** ****************************************** |||
+                                                   
+    typedef struct _UNICODE_STRING {
+      USHORT Length;
+      USHORT MaximumLength;
+      PWSTR  Buffer;
+    } UNICODE_STRING, *PUNICODE_STRING;
+
+
+
+    typedef struct _LIST_ENTRY {
+       struct _LIST_ENTRY *Flink;
+       struct _LIST_ENTRY *Blink;
+    } LIST_ENTRY, *PLIST_ENTRY, *RESTRICTED_POINTER PRLIST_ENTRY;
+
+
+
+    typedef struct _LDR_DATA_TABLE_ENTRY {
+        PVOID Reserved1[2];
+        LIST_ENTRY InMemoryOrderLinks;
+        PVOID Reserved2[2];
+        PVOID DllBase;
+        PVOID EntryPoint;
+        PVOID Reserved3;
+        UNICODE_STRING FullDllName;
+        BYTE Reserved4[8];
+        PVOID Reserved5[3];
+        union {
+            ULONG CheckSum;
+            PVOID Reserved6;
+        };
+        ULONG TimeDateStamp;
+    } LDR_DATA_TABLE_ENTRY, *PLDR_DATA_TABLE_ENTRY;
+
+
+
+    typedef struct _PEB {
+        BYTE                          Reserved1[2];
+        BYTE                          BeingDebugged;
+        BYTE                          Reserved2[1];
+        PVOID                         Reserved3[2];
+        PPEB_LDR_DATA                 Ldr;
+        PRTL_USER_PROCESS_PARAMETERS  ProcessParameters;
+        BYTE                          Reserved4[104];
+        PVOID                         Reserved5[52];
+        PPS_POST_PROCESS_INIT_ROUTINE PostProcessInitRoutine;
+        BYTE                          Reserved6[128];
+        PVOID                         Reserved7[1];
+        ULONG                         SessionId;
+    } PEB, *PPEB;
+
+
+IMAGE_DATA_DIRECTORY
+
+    typedef struct _IMAGE_DATA_DIRECTORY {
+      DWORD VirtualAddress;
+      DWORD Size;
+    } IMAGE_DATA_DIRECTORY, *PIMAGE_DATA_DIRECTORY;
+                                                
+||| ****************************************** **/ 
+#endif ///////////////////////////////////////////
+//|______                                ______|//
+//|||||||\______________________________/|||||||//
+//|                                            |//
+//|....(( 0 ))|| ||_ _--  --_ _|| ||(( 0 ))....|//
+//|_  __      __  __  __  __  __  __      __  _|//
+//| \/  \    /  \/  \/  \/  \/  \/  \    /  \/ |//
+//|      \  /                        \  /      |//
+//|       \/                          \/       |//
+//+ END: #BOTTOM_OF_FILE_COMMENTS_SECTION#     +//
+//|           /\                  /\           |//
+//|          /  \                /  \          |//
+//|_--__--__/    \__/\__/\__/\__/    \__--__--_|//
+//|                                            |//
+//|____________________________________________|//
+
+
+#else   //:COMPILE_FOR_windows_10_64bit : NO:================://
+       
+    //:The include gaurd should NOT be tripped if the file
+    //:is NOT in use. An extra redundancy to ensure proper
+    //:configuration. DATE[ 2020_10_24 ]
+    #error "[FATAL_ERROR:DO_NOT_INCLUDE_THIS_FILE_IF_NOT_USED]"
+        
+#endif  //:COMPILE_FOR_windows_10_64bit : ??:================://
+
+//#FILE_REGION[ W32/DLLL/TARG/W10.X64 ]END####################//
