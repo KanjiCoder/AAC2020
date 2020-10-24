@@ -24,7 +24,7 @@
     gcc -o EXE.exe object_file.o    ####                    ####                
     rm             object_file.o    ####                    ####     
          ./EXE.exe                  ####                    ####
-    rm     EXE.exe                  ####                    ####
+### rm     EXE.exe                  ####                    ####
                                     ####                    ####
     read -p "[ENTER_TO_EXIT]:"      ####                    ####
     ############################################################

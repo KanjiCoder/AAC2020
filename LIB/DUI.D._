@@ -1,0 +1,39 @@
+    
+    //:DUI.D: Dialog_User_Interfaces.DATA
+
+    //:DATA_TO_GET:COLOR_PICKER:-----------------------------://
+
+        //:ADDED[DATE[2020_10_24]]TO_GET[ #COLOR_PICKER# ]
+        typedef 
+            unsigned __int64 //:UINT_PTR         //: RET_VAL ://
+            (__stdcall *AAC2020_DUI_LPCCHOOKPROC)//: FUN_NAM ://
+            (                                    //:         ://
+            /**/  void*            //: HWND      //: ARG_001 ://
+            ,     unsigned   int   //: UINT      //: ARG_002 ://
+            ,     unsigned __int64 //: WPARAM    //: ARG_003 ://
+            ,              __int64 //: LPARAM    //: ARG_004 ://
+            );
+
+        //:ADDED[DATE[2020_10_24]]TO_GET[ #COLOR_PICKER# ]
+        typedef 
+            unsigned long * 
+            AAC2020_DUI_COLORREF 
+        ;
+
+        //:ADDED[DATE[2020_10_24]]TO_GET[ #COLOR_PICKER# ]
+        /** Common dialog box structure **/
+        struct AAC2020_DUI_CHOOSECOLORA{         //: - - - - ://
+            unsigned long        lStructSize   ; //: DWORD   ://
+            void           *     hwndOwner     ; //: HWND    ://
+            void           *     hInstance     ; //: HWND    ://
+            unsigned long        rgbResult     ; //: COLORREF://
+            unsigned long  *     lpCustColors  ; //: COLORREF://
+            unsigned long        Flags         ; //: DWORD   ://
+            __int64              lCustData     ; //: LPARAM  ://
+
+            AAC2020_DUI_LPCCHOOKPROC lpfnHook  ; //: ******  ://
+
+            const char     *     lpTemplateName; //: LPCSTR  ://
+        };                                       //: - - - - ://
+
+    //:-----------------------------:DATA_TO_GET:COLOR_PICKER://

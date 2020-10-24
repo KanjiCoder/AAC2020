@@ -1,0 +1,3176 @@
+
+//:----------------------------------------------------------://
+//:     123_123                                              ://
+//:     GINAWIN.F: GraphicsINit_And_WINdow.DATA              ://
+//:     1234567                                              ://
+//:                                                          ://
+//:             I don't want to re-write all code from       ://
+//:             scratch so we are taking "GLEB_SWIN" and     ://
+//:             editing it.                                  ://
+//:                                                          ://
+//:     GINAWIN only handles:                                ://
+//:                                                          ://
+//:             1. Creation of OpenGL Context                ://
+//:             2. Creation of a NATVIE Win32 Window         ://
+//:                                                          ://
+//:             Any other graphics operations belong         ://
+//:             in a different file.                         ://
+//:----------------------------------------------------------://
+
+//:COPIED_FROM[ VG04 ]:======================================://
+
+    //[  COPIED_FROM:VG04:AND_EDITED:DATE[ 2020_10_24 ]      ]//
+    //[  SEE[ VG03.ALL's F09_STRUCT_PIXELFORMATDESCRIPTOR ]  ]//
+    //[  docs.microsoft.com/en-us/windows/win32/api/wingdi   ]//
+    //[  /ns-wingdi-pixelformatdescriptor                    ]//
+    #define B_04 unsigned long  /**DWORD **/  //:////////////://
+    #define B_02 unsigned short /** WORD **/  //:////////////://
+    #define B_01 unsigned char  /** BYTE **/  //:////////////://
+    struct AAC2020_GINAWIN_PIXELFORMATDESCRIPTOR{  
+    /**  01  **/    B_02  nSize;             
+    /**  02  **/    B_02  nVersion;          
+    /**  --  **/                          
+    /**  03  **/    B_04  dwFlags;            
+    /**  --  **/                          
+    /**  04  **/    B_01  iPixelType;        
+    /**  05  **/    B_01  cColorBits;        
+    /**  06  **/    B_01  cRedBits;          
+    /**  07  **/    B_01  cRedShift;         
+    /**  08  **/    B_01  cGreenBits;        
+    /**  09  **/    B_01  cGreenShift;       
+    /**  10  **/    B_01  cBlueBits;         
+    /**  11  **/    B_01  cBlueShift;        
+    /**  12  **/    B_01  cAlphaBits;        
+    /**  13  **/    B_01  cAlphaShift;       
+    /**  14  **/    B_01  cAccumBits;        
+    /**  15  **/    B_01  cAccumRedBits;     
+    /**  16  **/    B_01  cAccumGreenBits;   
+    /**  17  **/    B_01  cAccumBlueBits;    
+    /**  18  **/    B_01  cAccumAlphaBits;   
+    /**  19  **/    B_01  cDepthBits;        
+    /**  20  **/    B_01  cStencilBits;      
+    /**  21  **/    B_01  cAuxBuffers;       
+    /**  22  **/    B_01  iLayerType;        
+    /**  23  **/    B_01  bReserved;         
+    /**  --  **/                          
+    /**  24  **/    B_04  dwLayerMask;        
+    /**  25  **/    B_04  dwVisibleMask;      
+    /**  26  **/    B_04  dwDamageMask;       
+    /**  --  **/
+    };//[struct]//
+    #undef  B_04 ////////////// /**DWORD **/  //:////////////://
+    #undef  B_02 ////////////// /** WORD **/  //:////////////://
+    #undef  B_01 ////////////// /** BYTE **/  //:////////////://
+
+    //:winuser.h
+    struct AAC2020_GINAWIN_WIN32POINT{
+    //:---:123_123_123_123:- - - - - - - - - - - - - - - - - ://
+    //:---:123456789012345:- - - - - - - - - - - - - - - - - ://
+
+        long x;         //:TAKEN_FROM:VGK03.ALL:
+        long y;         //:F09_STRUCT_POINT && F09_STRUCT_MSG
+
+    }aac2020_ginawin_win32point_instance={ /** PRIVATE **/
+        0
+    };
+
+    //:winuser.h
+    struct AAC2020_GINAWIN_WINMSG{  //:WINDOW's "MSG" type:
+
+        void*                    hwnd    ;  //: HWND    ://
+        unsigned   int           message ;  //: UINT    ://
+        unsigned __int64         wParam  ;  //: WPARAM  ://
+
+                 __int64         lParam  ;  //: LPARAM  ://
+        unsigned    long         time    ;  //: DWORD   ://
+
+        struct                              //: POINT   ://
+        AAC2020_GINAWIN_WIN32POINT          //: POINT   ://
+                                 pt      ;  //: POINT   ://
+
+        unsigned    long         lPrivate;  //: DWORD   ://
+
+    }aac2020_ginawin_winmsg_instance={ /** PRIVATE **/
+        0
+    };
+
+//:======================================:COPIED_FROM[ VG04 ]://
+
+
+
+
+
+
+
+
+//|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//
+//|PUBLIC Functions:                           |//
+//|_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _   |//
+int   GLEB_SWIN_Demo(          void );      //||//
+int   GLEB_SWIN_Demonstration( void );      //||//
+                                            //||//
+void  GLEB_SWIN_Init(       /**void**/  );  //||//
+void  GLEB_SWIN_Initialize( /**void**/  );  //||//
+                                            //||//
+void* GLEB_SWIN_GetWindowDeviceContext();   //||//
+void* GLEB_SWIN_GetWinDC();                 //||//
+                                            //||//
+void  GLEB_SWIN_Wait(         /**void**/  );//||//
+void  GLEB_SWIN_WaitForUserToCloseWindow( );//||//
+                                            //||//
+int   GLEB_SWIN_IsWindowStillOpen( );       //||//
+                                            //||//
+//| So we don't have to return "RECT"       //||//
+//| Structures, use 4 calls instead of      //||//
+//| making "GLEB_SWIN_GetClientArea"        //||//
+int   GLEB_SWIN_GetClient_X(  );            //||//
+int   GLEB_SWIN_GetClient_Y(  );            //||//
+int   GLEB_SWIN_GetClient_WID();            //||//
+int   GLEB_SWIN_GetClient_HIG();            //||//
+                                            //||//
+void  GLEB_SWIN_PutRenderTickFunction(
+    void(*function_name)( void )
+);
+
+void  GLEB_SWIN_SwapBuffers( void );
+//|____________________________________________|//
+
+//:KEY/PREFIXES:
+//:    gleb_swin_:
+//:    The namespace prefix for all functions
+//:    that belong to this section of code.
+//:
+//:    gleb: open_GL_Easy_Bindings
+//:    
+//:    swin:
+//:    SWIN=="SILKWIN"==="THREADED_WINDOW"
+//:    The idea is a "window made of silk" 
+//:    because threads can be made of silk.
+//:    I am thinking the window was woven
+//:    by a spider's threads.
+//:
+//:    pfn: Pointer_to_FuNction
+//:         (Convention take from Vulkan)
+//:
+//:CONVENTIONS:
+//:
+//:  1. Non-terminal objects of library
+//:     structs are ALL_CAPITAL.
+//:
+//:  2. Terminal objects of library struct are:
+//:     A: CamelCaseIfFunction
+//:     B: snake_case_if_variable
+//:     C: OR: Written in convention of whatever
+//:        I am trying to wrap that exists from
+//:        some other library I don't own.
+//:
+//:  3. Includes often are put near where
+//:     they are needed, rather than all at
+//:     the top of the file. Standard headers
+//:     have include gaurds, so this shouldn't
+//:     be a problem.
+//:
+//:  4. Global Windows Functions Allowed:
+//:     1. LoadLibraryA
+//:     2. GetProcAddress
+//:     Anything else should be wrapped in
+//:     a library struct that tells us the
+//:     .dll file of origin.
+//:
+//:     Convoluted and rigid and a pain to
+//:     port to another operating system?
+//:
+//:     I'll worry about porting after I've made
+//:     a million dollars off of something.
+//:     Otherwise, not worth the hassel.
+
+
+int GLEB_SWIN_show_okay_message = 1;
+
+
+#include <stdio.h> //:printf(...)
+void
+gleb_swin_OK( const char* ok_message ){
+
+    if( GLEB_SWIN_show_okay_message ){
+
+        printf(
+            "[GLEB_SWIN:OK]:%s\n"
+        ,  ok_message 
+        );;
+
+    };;
+} //[gleb_swin_OK]//
+
+
+
+//: #include <stdio.h> //:printf(...)
+//: #include <stdio.h> //:fflush(stdout)
+//: #include <Windows.h> //:for: GetProcAddress
+#include <stdint.h> //: uintptr_t
+
+
+
+
+//:Typedefs for MY types:
+//:TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT://
+ 
+//:¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯://
+//:                                            ://
+//:  Attempt to do the following with          ://
+//:  windows's platform types:                 ://
+//:                                            ://
+//:  1. Reduce mental indirection.             ://
+//:  2. Quickly deduce size of types.          ://
+//:                                            ://
+//:  Microsoft hungarian notation is kind of   ://
+//:  like a hungarian notation that could not  ://
+//:  decide if it was apps hungarian or        ://
+//:  systems hungarian. Usually I am fan of    ://
+//:  APPS hungarian ant NOT a fan of           ://
+//:  systems hungarian. But because of all     ://
+//:  the indirection with microsoft types,     ://
+//:  I will add my own SYSTEMS hungarian       ://
+//:  notation to the types. The variable       ://
+//:  names can use APPS hungarian if I need    ://
+//:  it.                                       ://
+//:                                            ://
+//:-  --  --  --  --  --  --  --  --  --  --  -://
+//:typedef unsigned long DWORD;
+//:typedef unsigned int UINT;
+
+//:Prefix at beginning of type:
+//:----------------------------------://
+//:p_: pointer type                  ://
+//:v_: pointer to void.              ://
+//:f_: pointer to function.          ://
+//:c_: pointer to character          ://
+//:s_: pointer to struct (or class)  ://
+//:u_: pointer to unsigned integer   ://
+//:i_: pointer to signed integer.    ://
+//:----------------------------------://
+
+//: i##:
+//: i08: integer (signed   ) 08 bits.
+//: i16: integer (signed   ) 16 bits.
+//: i32: integer (signed   ) 32 bits.
+//: i64: integer (signed   ) 64 bits.
+
+//: u##:
+//: u08: integer (UN-signed) 08 bits.
+//: u16: integer (UN-signed) 16 bits.
+//: u32: integer (UN-signed) 32 bits.
+//: u64: integer (UN-signed) 64 bits.
+
+//: b##:
+//: b08: class, struct, any char type: 08 bits.
+//: b16: class, struct, any char type: 16 bits.
+//: b32: class, struct, any char type: 32 bits.
+//: b64: class, struct, any char type: 64 bits.
+
+//: #B:
+//: 1B: 1 BYTES
+//: 2B: 2 BYTES
+//: 4B: 4 BYTES
+//: 8B: 8 BYTES
+
+typedef  int32_t              BOOL_i32_4B   ;
+typedef  unsigned  long int  DWORD_u32_4B   ;
+typedef  uint32_t             UINT_u32_4B   ;
+typedef  unsigned   short     WORD_u16_2B   ;
+typedef  unsigned   short     ATOM_u16_2B   ;
+typedef             char      CHAR_b08_1B   ;
+typedef  unsigned __int64   SIZE_T_u64_8B   ;
+typedef           __int64  LRESULT_i64_8B   ;
+typedef  unsigned __int64   WPARAM_u64_8B   ;
+typedef           __int64   LPARAM_i64_8B   ;
+//:
+
+//:pointers to character: (c_)
+//:--------------------------------------------://
+typedef const    char*    c_LPCSTR_b08_1B   ;  
+typedef const wchar_t*   c_LPCWSTR_b16_2B   ;
+//:--------------------------------------------://
+
+//:pointers to void: (v_)
+//:--------------------------------------------://
+typedef              void* v_HANDLE   ;
+typedef              void* v_HMODULE  ;   
+typedef              void* v_HINSTANCE;
+typedef struct  HGDIOBJ__* v_HGDIOBJ  ;
+typedef struct     HWND__* v_HWND     ;
+typedef struct    HICON__* v_HICON    ;
+typedef struct    HMENU__* v_HMENU    ;
+typedef struct   HBRUSH__* v_HBRUSH   ;
+//:Not a mistake. windef.h says:
+//:typedef HICON HCURSOR;
+typedef struct HICON__* v_HCURSOR;
+typedef           void* v_LPVOID;
+//:--------------------------------------------://
+
+ 
+TODO: Resolve tagMSG members
+    //:COPIED_FROM[ wtypes.h ]:------------------------------://
+    typedef struct tagMSG {
+        HWND hwnd;
+        UINT message;
+        WPARAM wParam;
+        LPARAM lParam;
+        DWORD time;
+        POINT pt;
+    };
+    //:------------------------------:COPIED_FROM[ wtypes.h ]://
+
+    typedef struct tagMSG * AAC2020_GINAWIN_LPMSG;
+    typedef struct tagMSG   MSG_48B;
+
+typedef 
+    struct   _SECURITY_ATTRIBUTES  
+    *s_LPSECURITY_ATTRIBUTES;
+
+typedef  struct tagRECT*  s_RECT;
+
+//: You cannot use void* as a generic function
+//: pointer so windows has "FARPROC".
+//: We point to intptr_t, a signed integer
+//: that is large enough to hold a pointer.
+typedef intptr_t (__stdcall *f_FARPROC) ( void );
+
+typedef 
+    LRESULT_i64_8B
+    (__stdcall *f_WNDPROC)(
+        v_HWND
+    ,   UINT_u32_4B
+    ,   WPARAM_u64_8B
+    ,   LPARAM_i64_8B
+    );
+
+//: This struct should be a byte-for-byte
+//: re-creation of the windows
+//: WNDCLASSEXW struct. On my 64bit
+//: system, sizeof(WNDCLASSEXW) is
+//: 80 bytes.
+//: I've decided NOT to support 32bit.
+typedef struct gleb_swin_tagWNDCLASSEXW {
+        UINT_u32_4B  cbSize       ;
+        UINT_u32_4B  style        ;
+          f_WNDPROC  lpfnWndProc  ;
+                int  cbClsExtra   ;
+                int  cbWndExtra   ;
+        v_HINSTANCE  hInstance    ;
+            v_HICON  hIcon        ;
+          v_HCURSOR  hCursor      ;
+           v_HBRUSH  hbrBackground;
+   c_LPCWSTR_b16_2B  lpszMenuName ;
+   c_LPCWSTR_b16_2B  lpszClassName;
+            v_HICON  hIconSm      ;
+} gleb_swin_WNDCLASSEXW;
+
+//: Windows Coding Conventions Say,
+//: The following are always the size of
+//: a pointer. 32bit on 32 bit windows.
+//: 64bit on 64bit windows.
+//: DWORD_PTR
+//: INT_PTR
+//: LONG_PTR
+//: ULONG_PTR
+//: UINT_PTR
+//:
+//: So the original hungarian notation was
+//: apps hungarian?
+//: BEG:QUOTE:
+//: In its original form, Hungarian notation 
+//: gives semantic information about a variable
+//: END:QUOTE:
+//:____________________________________________://
+
+void
+gleb_swin_AssertCorrectSizesOfTypes(){
+
+    int size_errors=0;
+    int wrong_sign =0;
+
+    
+    if(sizeof(   BOOL_i32_4B) != 4 ){
+        printf("[BOOL_i32_4B]");
+        size_errors++;
+    };;
+    if(sizeof(  DWORD_u32_4B) != 4 ){
+        printf("[DWORD_u32_4B]");
+        size_errors++;
+    };;
+    if(sizeof(   UINT_u32_4B) != 4 ){
+        printf("[UINT_u32_4B]");
+        size_errors++;
+    };;
+    if(sizeof(   WORD_u16_2B) != 2 ){
+        printf("[WORD_u16_2B]");
+        size_errors++;
+    };;
+    //:I recall windows returning negative
+    //:characters to flag status codes or
+    //:something. So pretty sure CHAR
+    //:is a signed type.
+    if(sizeof(   CHAR_b08_1B) != 1 ){
+        printf("[CHAR_b08_1B]");
+        size_errors++;
+    };;
+    {
+        //:assume if this works, c_LPCSTR_b08_1B
+        //:is correctly defined.
+        //:"i08_1B" refers to size of 
+        //:POINTED TO type, not the size of
+        //:the pointer.
+        const char pointed_to_value = 'e';
+        c_LPCSTR_b08_1B pointer = &(
+            pointed_to_value
+        );;
+        if( *pointer == 'e' ){
+            //:okay
+        }else{
+            printf("[WTF]");
+        };;
+    }
+
+    //////////////////////////////////////////////
+    ;{
+         BOOL_i32_4B v =(
+        (BOOL_i32_4B)(-1) );;
+        if( v >= 0 ){ 
+            wrong_sign++;
+            printf("[WS:BOOL_i32_4B]");
+        }
+    }{
+         DWORD_u32_4B v =(
+        (DWORD_u32_4B)(-1) );;
+        if( v <= 0 ){ 
+            wrong_sign++; 
+            printf("[WS:DWORD_u32_4B]");
+        }
+    }{
+         UINT_u32_4B v =(
+        (UINT_u32_4B)(-1) );;
+        if( v <= 0 ){ 
+            wrong_sign++; 
+            printf("[WS:UINT_u32_4B]");
+        }
+    }{
+         WORD_u16_2B v =(
+        (WORD_u16_2B)(-1) );;
+        if( v <= 0 ){ 
+            wrong_sign++; 
+            printf("[WS:WORD_u16_2B]");
+        }
+    }{
+         CHAR_b08_1B v =(
+        (CHAR_b08_1B)(-1) );;
+        if( v > 0 ){ 
+            //:Turns out that character type
+            //:signedness is compiler dependent,
+            //:so... Dont test this.
+            wrong_sign++; 
+            printf("[WS:CHAR_b08_1B]");
+        }
+    };;
+
+    //////////////////////////////////////////////
+
+    if(wrong_sign  > 0){
+        printf(
+            "[TypesOfWrongSign]:%d\n"
+        ,   wrong_sign
+        );;
+    };;
+    if(size_errors > 0){
+        printf("[GLEB_SWIN:AssertFailed]\n");
+        printf(
+            "[TypesNotCorrectBitWidth]:%d\n"
+        ,   size_errors
+        );;
+    };;
+    if( size_errors > 0 || wrong_sign > 0 ){
+        printf("[GLEB_SWIN:AssertFailed]\n");
+        fflush( stdout );
+        exit( 666 );
+    };;
+
+} //[gleb_swin_AssertCorrectSizesOfTypes]//
+//:____________________________________________://
+
+
+//:¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯://
+//: Generic function pointer for library:      ://
+//:                                            ://
+//:     GLEB_SWIN                              ://
+//:     (Sub Library Of "GLEB")                ://
+//:     (The Window Wrangling Part)            ://
+//:                                            ://
+//: Used for strict compilation in C99 when    ://
+//: casting result of "GetProcAddress"         ://
+//: The "C Language" only guarantees           ://
+//:                                            ://
+//:     DATA pointers                          ://
+//:                                            ://
+//: can be safely casted back and              ://
+//: forth between (void*) without change.      ://
+//: This contract is NOT the case for          ://
+//:                                            ://
+//:     FUNCTION pointers.                     ://
+//:                                            ://
+typedef                                     //:://
+    void                                    //:://
+    (*GLEB_SWIN_FUNC)(                      //:://
+        void                                //:://
+    );                                      //:://
+//:____________________________________________://
+
+
+//:Pointer to: "gleb_swin_GPA"
+typedef
+    GLEB_SWIN_FUNC
+    (*gleb_swin_pfn_GPA)(
+    /**/c_LPCSTR_b08_1B  function_name
+    ,         v_HMODULE  dll_containing_function
+    ); 
+
+
+
+//:TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT://
+
+//////////////////////////////////////////////////
+//| Create a mini library for the function     |//
+//| pointers you need to create your window.   |//
+//////////////////////////////////////////////////
+
+typedef
+    void
+    (*A_D_A_N_Z_gleb_swin_function_pointer)(
+    /**/void*  ptr_01
+    ,   void*  ptr_02
+    ); 
+
+void
+gleb_swin_AssertDifferentAndNonZero(
+/**/void* ptr_01
+,   void* ptr_02
+){
+    int has_error = 0;
+
+    if(NULL==ptr_01){
+        has_error++;
+        printf("[ptr_01:NULL]");
+    };;
+    if(NULL==ptr_02){
+        has_error++;
+        printf("[ptr_02:NULL]");
+    };;
+    if( 0 != has_error ){
+        printf(
+            "[FAIL:AssertDifferentAndNonZero]\n"
+        );;
+        fflush( stdout );
+        exit( 666 );
+    };;
+
+    if( ptr_01 == ptr_02 ){
+        has_error++;
+        printf("[FAIL:ptr_01==ptr_02]");
+        fflush( stdout );
+        exit( 666 );
+    };;
+
+} //[gleb_swin_AssertDifferentAndNonZero]//
+
+v_HINSTANCE
+gleb_swin_LoadLibrary( 
+    const char* dll_name //:Example: "user32.dll"
+){
+    v_HINSTANCE dll_handle =(
+        PEB2020_LoadLibraryA( dll_name )
+    );;
+    if(NULL==dll_handle){
+        printf("[gleb_swin:Failed_To_Load_DLL]");
+        printf("[dll_name]:%s", dll_name );
+        fflush(stdout);
+        exit(666);
+    };;
+    
+    return( dll_handle );
+} //[gleb_swin_LoadLibrary]//
+
+//:GPA=="GetProcAddress"
+GLEB_SWIN_FUNC
+gleb_swin_GPA(
+/**/c_LPCSTR_b08_1B                 function_name
+,   v_HMODULE   dll_containing_function
+){
+    if(NULL==dll_containing_function){
+        printf("[null:dll_containing_function]");
+        fflush( stdout );
+        exit( 666 );
+    };;
+
+    f_FARPROC function_pointer =(f_FARPROC)(
+        PEB2020_GetProcAddress(
+        /**/dll_containing_function
+        ,   function_name
+        )
+    );;
+
+    if(NULL==function_pointer){
+        printf("[gleb_swin:null:fn_ptr]");
+        fflush( stdout );
+        exit( 666 );
+    };;
+
+    return( (GLEB_SWIN_FUNC)function_pointer );
+} //[gleb_swin_GPA]//
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+//[BEG: function_pointer_typedefs_for_dll_funcs]//
+//|DT=="DLL_TYPEDEFS"                  |////[DT]//
+//|[A][B]                              |////[DT]//
+//:[C]-----------------------------------------://
+
+
+typedef
+    int 
+    (*gleb_swin_pfn_ChoosePixelFormat)(
+
+        void*                                   hdc
+    ,   
+        const 
+        struct
+        AAC2020_GINAWIN_PIXELFORMATDESCRIPTOR 
+                                               *ppfd
+    );
+
+typedef                                    
+    BOOL_i32_4B                            
+    (*gleb_swin_pfn_CloseHandle)(          
+        v_HANDLE hObject                   
+    );                                     
+
+//:TAKEN_FROM[ VG03.ALL ]ON_DATE[ 2020_10_24 ]
+//:And_Re_Worded_To_Be_More_verbose
+typedef 
+    unsigned long 
+    (   __stdcall 
+        *AAC2020_GINAWIN_LPTHREAD_START_ROUTINE 
+    ) (  
+        void* lpThreadParameter  
+    );
+
+typedef                                   //[DT]//
+    v_HANDLE                              //[DT]//
+    (*gleb_swin_pfn_CreateThread)(        //[DT]//
+                                          //[DT]//
+    /**/s_LPSECURITY_ATTRIBUTES           //[DT]//
+        lpThreadAttributes                //[DT]//
+                                          //[DT]//
+    ,   SIZE_T_u64_8B                     //[DT]//
+        dwStackSize                       //[DT]//
+                                          //[DT]//
+    ,   AAC2020_GINAWIN_LPTHREAD_START_ROUTINE             
+        lpStartAddress                    //[DT]//
+                                          //[DT]//
+    ,   v_HINSTANCE                       //[DT]//
+        lpParameter                       //[DT]//
+                                          //[DT]//
+    ,   DWORD_u32_4B                      //[DT]//
+        dwCreationFlags                   //[DT]//
+                                          //[DT]//
+    ,   unsigned long *  /** LPDWORD **/  //[DT]//
+        lpThreadId                        //[DT]//
+                                          //[DT]//
+    );                                    //[DT]//
+typedef                                   //[DT]//
+    v_HWND                                //[DT]//
+    (*gleb_swin_pfn_CreateWindowExW)(     //[DT]//
+                                          //[DT]//
+    /**/ DWORD_u32_4B dwExStyle   //|01|////[DT]//
+    ,c_LPCWSTR_b16_2B lpClassName //|02|////[DT]//
+    ,c_LPCWSTR_b16_2B lpWindowName//|03|////[DT]//
+    ,    DWORD_u32_4B dwStyle     //|04|////[DT]//
+    ,             int X           //|05|////[DT]//
+    ,             int Y           //|06|////[DT]//
+    ,             int nWidth      //|07|////[DT]//
+    ,             int nHeight     //|08|////[DT]//
+    ,          v_HWND hWndParent  //|09|////[DT]//
+    ,         v_HMENU hMenu       //|10|////[DT]//
+    ,     v_HINSTANCE hInstance   //|11|////[DT]//
+    ,     v_HINSTANCE lpParam     //|12|////[DT]//
+    );                                    //[DT]//
+//:[D]-----------------------------------------://
+typedef                                   //[DT]//
+    LRESULT_i64_8B                        //[DT]//
+    (*gleb_swin_pfn_DefWindowProcW)(      //[DT]//
+    /**/          v_HWND  hWnd            //[DT]//
+    ,        UINT_u32_4B  Msg             //[DT]//
+    ,      WPARAM_u64_8B  wParam          //[DT]//
+    ,      LPARAM_i64_8B  lParam          //[DT]//
+    );                                    //[DT]//
+typedef                                   //[DT]//
+    LRESULT_i64_8B                        //[DT]//
+    (*gleb_swin_pfn_DispatchMessageW)(    //[DT]//
+        const MSG_48B *lpMsg              //[DT]//
+    );                                    //[DT]//
+typedef                                   //[DT]//
+    BOOL_i32_4B                           //[DT]//
+    (*gleb_swin_pfn_DestroyWindow)(       //[DT]//
+        v_HWND hWnd                       //[DT]//
+    );                                    //[DT]//
+//:[E][F]                                 //[DT]//
+//:[G]-----------------------------------------://
+typedef
+    BOOL_i32_4B
+    (*gleb_swin_pfn_GetClientRect)(
+    /**/v_HWND      hWnd
+    ,   s_RECT    lpRect
+    );
+
+typedef                                   //[DT]//
+    v_HWND                                //[DT]//
+    (*gleb_swin_pfn_GetDesktopWindow)(    //[DT]//
+        void                              //[DT]//
+    );                                    //[DT]//
+typedef                                   //[DT]//
+    f_FARPROC                             //[DT]//
+    (*gleb_swin_pfn_GetProcAddress)(      //[DT]//
+    /**/       v_HMODULE  hModule         //[DT]//
+    ,    c_LPCSTR_b08_1B  lpProcName      //[DT]//
+    );                                    //[DT]//
+typedef                                   //[DT]//
+    v_HANDLE                              //[DT]//
+    (*gleb_swin_pfn_GetProcessHeap)(      //[DT]//
+        void                              //[DT]//
+    );                                    //[DT]//
+typedef                                   //[DT]//
+    v_HGDIOBJ                             //[DT]//
+    (*gleb_swin_pfn_GetStockObject)(      //[DT]//
+        int                               //[DT]//
+    );                                    //[DT]//
+
+
+typedef
+    void* /** HDC : Handleto_Device_Context **/
+    (*gleb_swin_pfn_GetWindowDC)(
+        void*  hWnd /** HWND:Handleto_Window **/
+    );
+
+typedef
+    void*  /** HMODULE **/
+    (*gleb_swin_pfn_GetModuleHandleW)(
+        const unsigned short * /** LPCWSTR **/
+        lpModuleName
+    );
+
+
+
+
+
+//:[H]-----------------------------------------://
+typedef                                   //[DT]//
+    v_HINSTANCE                           //[DT]//
+    (*gleb_swin_pfn_HeapAlloc)(           //[DT]//
+    /**/        v_HANDLE  hHeap           //[DT]//
+    ,       DWORD_u32_4B  dwFlags         //[DT]//
+    ,      SIZE_T_u64_8B  dwBytes         //[DT]//
+    );                                    //[DT]//
+typedef                                   //[DT]//
+    BOOL_i32_4B                           //[DT]//
+    (*gleb_swin_pfn_HeapFree)(            //[DT]//
+    /**/        v_HANDLE  hHeap           //[DT]//
+    ,       DWORD_u32_4B  dwFlags         //[DT]//
+    ,        v_HINSTANCE  lpMem           //[DT]//
+    );                                    //[DT]//
+//:[I][J][K]                              //[DT]//
+//:[L]-----------------------------------------://
+typedef                                   //[DT]//
+    v_HCURSOR                             //[DT]//
+    (*gleb_swin_pfn_LoadCursorA)(         //[DT]//
+    /**/     v_HINSTANCE  hInstance       //[DT]//
+    ,    c_LPCSTR_b08_1B  lpCursorName    //[DT]//
+    );                                    //[DT]//
+typedef                                   //[DT]//
+    v_HICON                               //[DT]//
+    (*gleb_swin_pfn_LoadIconA)(           //[DT]//
+    /**/     v_HINSTANCE  hInstance       //[DT]//
+    ,    c_LPCSTR_b08_1B  lpIconName      //[DT]//
+    );                                    //[DT]//
+//:[M]-----------------------------------------://
+typedef                                   //[DT]//
+    int                                   //[DT]//
+    (*gleb_swin_pfn_MessageBoxW)(         //[DT]//
+    /**/          v_HWND  hWnd            //[DT]//
+    ,   c_LPCWSTR_b16_2B  lpText          //[DT]//
+    ,   c_LPCWSTR_b16_2B  lpCaption       //[DT]//
+    ,        UINT_u32_4B  uType           //[DT]//
+    );                                    //[DT]//
+//:[N][O]                                 //[DT]//
+//:[P]-----------------------------------------://
+typedef                                   //[DT]//
+    BOOL_i32_4B                           //[DT]//
+    (*gleb_swin_pfn_PeekMessageW)(        //[DT]//
+    /**/      LPMSG  lpMsg                //[DT]//
+    ,        v_HWND  hWnd                 //[DT]//
+    ,   UINT_u32_4B  wMsgFilterMin        //[DT]//
+    ,   UINT_u32_4B  wMsgFilterMax        //[DT]//
+    ,   UINT_u32_4B  wRemoveMsg           //[DT]//
+    );                                    //[DT]//
+typedef                                   //[DT]//
+    void                                  //[DT]//
+    (*gleb_swin_pfn_PostQuitMessage)(     //[DT]//
+                int  nExitCode            //[DT]//
+    );                                    //[DT]//
+//:[Q]                                    //[DT]//
+//:[R]-----------------------------------------://
+typedef                                   //[DT]//
+    ATOM_u16_2B                           //[DT]//
+    (*gleb_swin_pfn_RegisterClassExW)(    //[DT]//
+        const gleb_swin_WNDCLASSEXW *Arg1 //[DT]//
+    );                                    //[DT]//
+//:[S]-----------------------------------------://
+typedef                                   //[DT]//
+    v_HWND                                //[DT]//
+    (*gleb_swin_pfn_SetFocus)(            //[DT]//
+             v_HWND  hWnd                 //[DT]//
+    );                                    //[DT]//
+typedef
+    BOOL 
+    (*gleb_swin_pfn_SetPixelFormat)(
+        HDC                                    hdc
+    ,   
+        int                                 format
+    ,   
+        const 
+        struct 
+        AAC2020_GINAWIN_PIXELFORMATDESCRIPTOR  
+                                             *ppfd
+    );
+typedef                                   //[DT]//
+    BOOL_i32_4B                           //[DT]//
+    (*gleb_swin_pfn_ShowWindow)(          //[DT]//
+    /**/     v_HWND  hWnd                 //[DT]//
+    ,           int  nCmdShow             //[DT]//
+    );                                    //[DT]//
+typedef
+    BOOL_i32_4B
+    (*gleb_swin_pfn_SwapBuffers)(
+        HDC Arg1
+    );
+   
+//:[T]-----------------------------------------://
+typedef                                   //[DT]//
+    BOOL_i32_4B                           //[DT]//
+    (*gleb_swin_pfn_TranslateMessage)(    //[DT]//
+        const MSG_48B *lpMsg              //[DT]//
+    );                                    //[DT]//
+//:[U]-----------------------------------------://
+typedef                                   //[DT]//
+    BOOL_i32_4B                           //[DT]//
+    (*gleb_swin_pfn_UpdateWindow)(        //[DT]//
+        v_HWND hWnd                       //[DT]//
+    );                                    //[DT]//
+//:[V]                                    //[DT]//
+//:[W]-----------------------------------------://
+typedef                                   //[DT]//
+    DWORD_u32_4B                          //[DT]//
+    (*gleb_swin_pfn_WaitForSingleObject)( //[DT]//
+    /**/    v_HANDLE  hHandle             //[DT]//
+    ,   DWORD_u32_4B  dwMilliseconds      //[DT]//
+    );                                    //[DT]//
+//:[X][Y][Z]                              //[DT]//
+//[END: function_pointer_typedefs_for_dll_funcs]//
+//[____________________________________________]//
+
+struct gleb_SWIN_FUNCTION_POINTERS {
+  
+    struct GLEB_SWIN_LOADED_DLLS {
+
+        v_HINSTANCE gdi32   ; //[07(g|G)]//
+        v_HINSTANCE kernel32; //[11(k|K)]//
+        v_HINSTANCE user32  ; //[21(u|U)]//
+        
+    }DLL;
+
+    //:functions from gdi32.dll
+    struct gleb_swin_functions_GDI32{
+
+        struct  gleb_swin_data_GDI32{
+            struct gleb_swin_brushes_GDI32{
+
+                int BLACK; //:BLACK_BRUSH
+
+            }BRUSH ;
+        }DATA ;
+
+        gleb_swin_pfn_ChoosePixelFormat
+                      ChoosePixelFormat;
+
+        gleb_swin_pfn_GetStockObject
+                      GetStockObject;
+
+        gleb_swin_pfn_SetPixelFormat
+                      SetPixelFormat;
+
+        gleb_swin_pfn_SwapBuffers
+                      SwapBuffers;
+
+    }GDI32;
+
+    //:Functions from kernel32.dll
+    struct gleb_swin_functions_KERNEL32{
+
+        struct  gleb_swin_data_KERNEL32{
+
+            
+            DWORD_u32_4B heap_zero_memory;
+            DWORD_u32_4B wait_failed;
+            DWORD_u32_4B infinite;
+            
+
+        }DATA;
+
+        //:[A][B]
+        //:[C]---------------------------------://
+        gleb_swin_pfn_CreateThread
+                      CreateThread   ;
+
+        gleb_swin_pfn_CloseHandle
+                      CloseHandle   ;
+
+        //:[D][E][F]---------------------------://
+        //:[G]---------------------------------://
+
+        gleb_swin_pfn_GetModuleHandleW
+                      GetModuleHandleW;
+
+        gleb_swin_pfn_GetProcessHeap
+                      GetProcessHeap ;
+       
+        //:[H]---------------------------------://
+        gleb_swin_pfn_HeapAlloc 
+                      HeapAlloc ;
+
+        gleb_swin_pfn_HeapFree  
+                      HeapFree ;
+
+        //:[I][J][K][L][M][N][O][P][Q][R][S][T]://
+        //:[U][V]------------------------------://
+        //:[W]---------------------------------://
+        gleb_swin_pfn_WaitForSingleObject
+                      WaitForSingleObject   ;
+    
+    }KERNEL32;
+
+    //:Functions from user32.dll
+    struct gleb_swin_functions_USER32{
+
+        struct  gleb_swin_data_USER32{
+
+            int sw_show;
+
+            UINT_u32_4B       wm_quit;
+            uintptr_t     pm_noremove;
+            uintptr_t       pm_remove;
+
+            //|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//
+            //| MessageBox Values     |//
+            //|- - - - - - - - - - - -|//
+            //|                       |//
+            //|0x00000030L         //||//
+                UINT_u32_4B        //||//
+                mb_iconexclamation;//||//
+            //|                       |//
+            //|0x00000000L         //||//
+                UINT_u32_4B        //||//
+                mb_ok          ;   //||//
+            //|_______________________|//
+
+            UINT_u32_4B cs_owndc;
+
+            UINT_u32_4B ws_ex_topmost;
+
+            //: #define U32 GLEB_DWORD_UINT32;
+            //:--------------------------+  
+            UINT_u32_4B ws_overlappedwindow; // |  
+            UINT_u32_4B      ws_tiledwindow; // |  
+            //:-------------------:// // |  
+            UINT_u32_4B      ws_caption    ; // |  
+            UINT_u32_4B      ws_maximizebox; // |  
+            UINT_u32_4B      ws_minimizebox; // |  
+            UINT_u32_4B      ws_overlapped ; // |  
+            UINT_u32_4B      ws_sysmenu    ; // |  
+            UINT_u32_4B      ws_thickframe ; // |  
+            //:--------------------------+  
+            
+
+            //:"ASC" and "UNI" instead of
+            //:"ASCII" and "UNICODE" because
+            //: afraid of collision with macros.
+            struct 
+            gleb_swin_data_ASCII_USER32{
+
+                c_LPCSTR_b08_1B idi_application  ;
+                c_LPCSTR_b08_1B idc_arrow        ;
+
+            }A; //:ASCII
+            struct 
+            gleb_swin_data_UNICODE_USER32{
+        
+                //[NOT_IMPLEMENTED]//
+                int unused;
+
+            }W; //:UNICODE/WIDE
+        }DATA;
+
+        //:[A][B]
+        //:[C]---------------------------------://
+        gleb_swin_pfn_CreateWindowExW
+                      CreateWindowExW;
+        //:[D]---------------------------------://
+        gleb_swin_pfn_DefWindowProcW
+                      DefWindowProcW;
+
+        gleb_swin_pfn_DestroyWindow
+                      DestroyWindow;
+
+        gleb_swin_pfn_DispatchMessageW
+                      DispatchMessageW;
+        //:[E][F]
+        //:[G]---------------------------------://
+        gleb_swin_pfn_GetClientRect
+                      GetClientRect;
+
+        gleb_swin_pfn_GetDesktopWindow
+                      GetDesktopWindow;
+
+        gleb_swin_pfn_GetWindowDC
+                      GetWindowDC;
+        //:[H][I][J][K]
+        //:[L]---------------------------------://
+        gleb_swin_pfn_LoadCursorA
+                      LoadCursorA;
+
+        gleb_swin_pfn_LoadIconA
+                      LoadIconA;
+        //:[M]---------------------------------://
+        gleb_swin_pfn_MessageBoxW
+                      MessageBoxW;
+
+        //:[N][O]
+        //:[P]---------------------------------://
+        gleb_swin_pfn_PeekMessageW
+                      PeekMessageW;
+
+        gleb_swin_pfn_PostQuitMessage
+                      PostQuitMessage;
+        //:[Q]
+        //:[R]---------------------------------://
+        gleb_swin_pfn_RegisterClassExW
+                      RegisterClassExW;
+        //:[S]---------------------------------://
+        gleb_swin_pfn_SetFocus
+                      SetFocus;
+
+        gleb_swin_pfn_ShowWindow
+                      ShowWindow;
+        //:[T]---------------------------------://
+        gleb_swin_pfn_TranslateMessage
+                      TranslateMessage;
+        //:[U]---------------------------------://
+        gleb_swin_pfn_UpdateWindow
+                      UpdateWindow;
+        //:[V][W][X][Y][Z]
+
+
+        
+
+    }USER32;
+
+}gleb_swin_function_pointers;
+typedef 
+    struct gleb_SWIN_FUNCTION_POINTERS
+    struct_gleb_SWIN_FUNCTION_POINTERS;
+void  init_gleb_SWIN_FUNCTION_POINTERS( void ){
+
+    struct_gleb_SWIN_FUNCTION_POINTERS*
+    FP=&(gleb_swin_function_pointers);
+
+    //:Load DLLS:
+    //////////////////////////////////////////////
+
+    FP->DLL.gdi32=gleb_swin_LoadLibrary(
+           "gdi32" );;
+
+    FP->DLL.kernel32=gleb_swin_LoadLibrary(
+           "kernel32" );;
+
+    FP->DLL.user32=gleb_swin_LoadLibrary(
+           "user32" );;
+
+    //:Make sure you didn't accidentially swap
+    //:any function pointer addresses:
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    A_D_A_N_Z_gleb_swin_function_pointer
+    A_D_A_N_Z=&( 
+        gleb_swin_AssertDifferentAndNonZero 
+    );;
+
+    A_D_A_N_Z( FP->DLL.gdi32,
+               FP->DLL.kernel32  );;
+
+    A_D_A_N_Z( FP->DLL.kernel32,
+               FP->DLL.user32    );;
+
+    A_D_A_N_Z( FP->DLL.user32,
+               FP->DLL.gdi32     );;
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+
+    //////////////////////////////////////////////
+
+    //:Load FUNCTIONS from DLLS:
+    //////////////////////////////////////////////
+
+    gleb_swin_pfn_GPA
+    G=&(gleb_swin_GPA);
+
+    //:G: GDI32:
+    //:GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG://
+                                           //[G]//
+    //:DATA:                               //[G]//
+    FP->GDI32.DATA.BRUSH.BLACK = 4;        //[G]//
+                                           //[G]//
+    #define T(n) typedef gleb_swin_pfn_ ## n
+    T( ChoosePixelFormat ) G_01;           //[G]//
+    T( GetStockObject    ) G_02;           //[G]//
+    T( SetPixelFormat    ) G_03;           //[G]//
+    T( SwapBuffers       ) G_04;           //[G]//
+    #undef T                               //[G]//
+                                           //[G]//
+    FP->/**/GDI32                          //[G]//
+        .ChoosePixelFormat=(G_01)(G(       //[G]//
+        "ChoosePixelFormat" ,              //[G]//
+    FP->DLL.gdi32 ));;                     //[G]//
+                                           //[G]//
+    FP->/**/GDI32                          //[G]//
+        .GetStockObject   =(G_02)(G(       //[G]//
+        "GetStockObject" ,                 //[G]//
+    FP->DLL.gdi32 ));;                     //[G]//
+                                           //[G]//
+    FP->/**/GDI32                          //[G]//
+        .SetPixelFormat   =(G_03)(G(       //[G]//
+        "SetPixelFormat" ,                 //[G]//
+    FP->DLL.gdi32 ));;                     //[G]//
+                                           //[G]//
+    FP->/**/GDI32                          //[G]//
+        .SwapBuffers      =(G_04)(G(       //[G]//
+        "SwapBuffers" ,                    //[G]//
+    FP->DLL.gdi32 ));;                     //[G]//
+                                           //[G]//
+    //:GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG://
+    //:K: KERNEL32:
+    //:KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK://
+
+
+    struct gleb_swin_data_KERNEL32*
+    K32D = &(         
+        FP->KERNEL32.DATA 
+    );;
+              
+    K32D -> heap_zero_memory = 0x00000008;
+    K32D -> wait_failed      = 0xFFFFFFFF;
+    K32D -> infinite         = 0xffffffff;
+
+    #define T(n) typedef gleb_swin_pfn_ ## n
+    T( CloseHandle         ) K_01;       //[K32]//
+    T( CreateThread        ) K_02;       //[K32]//
+    T( HeapAlloc           ) K_03;       //[K32]//
+    T( HeapFree            ) K_04;       //[K32]//
+    T( GetModuleHandleW    ) K_05; 
+    T( GetProcessHeap      ) K_06;       //[K32]//
+    T( WaitForSingleObject ) K_07;       //[K32]//
+    #undef T                             //[K32]//
+                                         //[K32]//
+    FP->/**/KERNEL32                     //[K32]//
+        .CloseHandle        =(K_01)(G(   //[K32]//
+        "CloseHandle" ,                  //[K32]//
+    FP->DLL.kernel32 ));;                //[K32]//
+                                         //[K32]//
+    FP->/**/KERNEL32                     //[K32]//
+        .CreateThread       =(K_02)(G(   //[K32]//
+        "CreateThread" ,                 //[K32]//
+    FP->DLL.kernel32 ));;                //[K32]//
+                                         //[K32]//
+    FP->/**/KERNEL32                     //[K32]//
+        .HeapAlloc          =(K_03)(G(   //[K32]//
+        "HeapAlloc" ,                    //[K32]//
+    FP->DLL.kernel32 ));;                //[K32]//
+                                         //[K32]//
+    FP->/**/KERNEL32                     //[K32]//
+        .HeapFree           =(K_04)(G(   //[K32]//
+        "HeapFree" ,                     //[K32]//
+    FP->DLL.kernel32 ));;                //[K32]//
+                                         //[K32]//
+    FP->/**/KERNEL32                     //[K32]//
+        .GetModuleHandleW   =(K_05)(G(   //[K32]//
+        "GetModuleHandleW" ,             //[K32]//
+    FP->DLL.kernel32 ));;                //[K32]//
+
+    FP->/**/KERNEL32                     //[K32]//
+        .GetProcessHeap     =(K_06)(G(   //[K32]//
+        "GetProcessHeap" ,               //[K32]//
+    FP->DLL.kernel32 ));;                //[K32]//
+                                         //[K32]//
+    FP->/**/KERNEL32                     //[K32]//
+        .WaitForSingleObject=(K_07)(G(   //[K32]//
+        "WaitForSingleObject" ,          //[K32]//
+    FP->DLL.kernel32 ));;                //[K32]//
+                                         //[K32]//
+    //:U: USER32:                        //[K32]//
+    //:UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU://
+                                         //[U32]//
+    struct gleb_swin_data_USER32*        //[U32]//
+    U32D = &(                            //[U32]//
+        FP->USER32.DATA                  //[U32]//
+    );;                                  //[U32]//
+                                         //[U32]//
+    U32D -> sw_show     = 5;             //[U32]//
+                                         //[U32]//
+    U32D -> wm_quit     = 0x0012;        //[U32]//
+    U32D -> pm_noremove = 0x0000;        //[U32]//
+    U32D -> pm_remove   = 0x0001;        //[U32]//
+                                         //[U32]//
+                                         //[U32]//
+    U32D -> mb_iconexclamation =(        //[U32]//
+                    0x00000030L          //[U32]//
+    );;                                  //[U32]//
+    U32D -> mb_ok =(                     //[U32]//
+                    0x00000000L          //[U32]//
+    );;                                  //[U32]//
+                                         //[U32]//
+    U32D -> cs_owndc    = 0x0020;        //[U32]//
+                                         //[U32]//
+    U32D -> ws_ex_topmost  = 0x00000008L;//[U32]//
+                                         //[U32]//
+    U32D -> ws_caption     = 0x00C00000L;//[U32]//
+    U32D -> ws_maximizebox = 0x00010000L;//[U32]//
+    U32D -> ws_minimizebox = 0x00020000L;//[U32]//
+    U32D -> ws_overlapped  = 0x00000000L;//[U32]//
+    U32D -> ws_sysmenu     = 0x00080000L;//[U32]//
+    U32D -> ws_thickframe  = 0x00040000L;//[U32]//
+                                         //[U32]//
+    UINT_u32_4B                          //[U32]//
+    same =(                              //[U32]//
+        U32D -> ws_overlapped  |         //[U32]//
+        U32D -> ws_caption     |         //[U32]//
+        U32D -> ws_sysmenu     |         //[U32]//
+        U32D -> ws_thickframe  |         //[U32]//
+        U32D -> ws_minimizebox |         //[U32]//
+        U32D -> ws_maximizebox |         //[U32]//
+    0);;                                 //[U32]//
+                                         //[U32]//
+    //:Both are the same exact style:    //[U32]//
+    U32D -> ws_overlappedwindow = same;  //[U32]//
+    U32D -> ws_tiledwindow      = same;  //[U32]//
+                                         //[U32]//
+    U32D -> A.idi_application=(          //[U32]//
+        //: [0111][1111][0000][0000]     //[U32]//
+        MAKEINTRESOURCEA( 32512 )        //[U32]//
+    );;                                  //[U32]//
+    U32D -> A.idc_arrow=(                //[U32]//
+        //: [0111][1111][0000][0000]     //[U32]//
+        MAKEINTRESOURCEA( 32512 )        //[U32]//
+    );;                                  //[U32]//
+                                         //[U32]//
+    //+----------------------------------------+//
+    //|EXAMPLE_MACRO_USAGE:                 U32|//
+    //|T( Update ) U_99;                    U32|//
+    //|                                     U32|//
+    //|AFTER_PRE_PROCESSING:                U32|//
+    //|typedef gleb_swin_pfn_Update U_99;   U32|//
+    //+----------------------------------------+//
+    #define T(n) typedef gleb_swin_pfn_ ## n
+    T( CreateWindowExW  )  U_01;         //[U32]//
+    T( DefWindowProcW   )  U_02;         //[U32]//
+    T( DestroyWindow    )  U_03;         //[U32]//
+    T( DispatchMessageW )  U_04;         //[U32]//
+    T( GetClientRect    )  U_05;         //[U32]//
+    T( GetDesktopWindow )  U_06;         //[U32]//
+    T( GetWindowDC      )  U_07;         //[U32]//
+    T( LoadCursorA      )  U_08;         //[U32]//
+    T( LoadIconA        )  U_09;         //[U32]//
+    T( MessageBoxW      )  U_10;         //[U32]//
+    T( PeekMessageW     )  U_11;         //[U32]//
+    T( PostQuitMessage  )  U_12;         //[U32]//
+    T( RegisterClassExW )  U_13;         //[U32]//
+    T( SetFocus         )  U_14;         //[U32]//
+    T( ShowWindow       )  U_15;         //[U32]//
+    T( TranslateMessage )  U_16;         //[U32]//
+    T( UpdateWindow     )  U_17;         //[U32]//
+    #undef T                             //[U32]//
+    //                                   //[U32]//
+    FP->/**/USER32                       //[U32]//
+        .CreateWindowExW   =(U_01)(G(    //[U32]//
+        "CreateWindowExW" ,              //[U32]//
+    FP->DLL.user32 ));;                  //[U32]//
+    //                                   //[U32]//
+    FP->/**/USER32                       //[U32]//
+        .DefWindowProcW    =(U_02)(G(    //[U32]//
+        "DefWindowProcW" ,               //[U32]//
+    FP->DLL.user32 ));;                  //[U32]//
+    //                                   //[U32]//
+    FP->/**/USER32                       //[U32]//
+        .DestroyWindow     =(U_03)(G(    //[U32]//
+        "DestroyWindow" ,                //[U32]//
+    FP->DLL.user32 ));;                  //[U32]//
+    //                                   //[U32]//
+    FP->/**/USER32                       //[U32]//
+        .DispatchMessageW  =(U_04)(G(    //[U32]//
+        "DispatchMessageW",              //[U32]//
+    FP->DLL.user32 ));;                  //[U32]//
+    //                                   //[U32]//
+    FP->/**/USER32                       //[U32]//
+        .GetClientRect     =(U_05)(G(    //[U32]//
+        "GetClientRect",                 //[U32]//
+    FP->DLL.user32 ));;                  //[U32]//
+    //                                   //[U32]//
+    FP->/**/USER32                       //[U32]//
+        .GetDesktopWindow  =(U_06)(G(    //[U32]//
+        "GetDesktopWindow",              //[U32]//
+    FP->DLL.user32 ));;                  //[U32]//
+    //                                   //[U32]//
+    FP->/**/USER32                       //[U32]//
+        .GetWindowDC       =(U_07)(G(    //[U32]//
+        "GetWindowDC",                   //[U32]//
+    FP->DLL.user32 ));;                  //[U32]//
+    //                                   //[U32]//
+    FP->/**/USER32                       //[U32]//
+        .LoadCursorA       =(U_08)(G(    //[U32]//
+        "LoadCursorA" ,                  //[U32]//
+    FP->DLL.user32 ));;                  //[U32]//
+    //                                   //[U32]//
+    FP->/**/USER32                       //[U32]//
+        .LoadIconA         =(U_09)(G(    //[U32]//
+        "LoadIconA" ,                    //[U32]//
+    FP->DLL.user32 ));;                  //[U32]//
+    //                                   //[U32]//
+    FP->/**/USER32                       //[U32]//
+        .MessageBoxW       =(U_10)(G(    //[U32]//
+        "MessageBoxW" ,                  //[U32]//
+    FP->DLL.user32 ));;                  //[U32]//
+    //                                   //[U32]//
+    FP->/**/USER32                       //[U32]//
+        .PeekMessageW      =(U_11)(G(    //[U32]//
+        "PeekMessageW" ,                 //[U32]//
+    FP->DLL.user32 ));;                  //[U32]//
+    //                                   //[U32]//
+    FP->/**/USER32                       //[U32]//
+        .PostQuitMessage   =(U_12)(G(    //[U32]//
+        "PostQuitMessage" ,              //[U32]//
+    FP->DLL.user32 ));;                  //[U32]//
+    //                                   //[U32]//
+    FP->/**/USER32                       //[U32]//
+        .RegisterClassExW  =(U_13)(G(    //[U32]//
+        "RegisterClassExW" ,             //[U32]//
+    FP->DLL.user32 ));;                  //[U32]//
+    //                                   //[U32]//
+    FP->/**/USER32                       //[U32]//
+        .SetFocus          =(U_14)(G(    //[U32]//
+        "SetFocus" ,                     //[U32]//
+    FP->DLL.user32 ));;                  //[U32]//
+    //                                   //[U32]//
+    FP->/**/USER32                       //[U32]//
+        .ShowWindow        =(U_15)(G(    //[U32]//
+        "ShowWindow" ,                   //[U32]//
+    FP->DLL.user32 ));;                  //[U32]//
+    //                                   //[U32]//
+    FP->/**/USER32                       //[U32]//
+        .TranslateMessage  =(U_16)(G(    //[U32]//
+        "TranslateMessage",              //[U32]//
+    FP->DLL.user32 ));;                  //[U32]//
+    //                                   //[U32]//
+    FP->/**/USER32                       //[U32]//
+        .UpdateWindow      =(U_17)(G(    //[U32]//
+        "UpdateWindow" ,                 //[U32]//
+    FP->DLL.user32 ));;                  //[U32]//
+    //:UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU://
+                                           //[P]//
+    //[ [NICE_TO_HAVE]:                      [P]//
+    //[ Every block should add function      [P]//
+    //[ pointer to a temporary array then    [P]//
+    //[ do simple n * n loop to make sure    [P]//
+    //[ all addresses are unique. Also       [P]//
+    //[ check for non-null while at it.      [P]//
+                                           //[P]//
+} //[init_gleb_SWIN_FUNCTION_POINTERS]//   //[P]//
+//[PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP]//
+
+
+
+//[GSGSGSGSGSGSGSGSGSGSGSGSGSGSGSGSGSGSGSGSGSGS]//
+//! Sample custom data structure for threads GS!//
+//! to use. This is passed by void pointer   GS!//
+//! so it can be any data type that can be   GS!//
+//! passed using a single void pointer       GS!//
+//! (LPVOID).                                GS!//
+typedef struct gleb_swin_MyData {         //|GS|//
+    int val1;                             //|GS|//
+    int val2;                             //|GS|//
+}  gleb_swin_MYDATA                       //|GS|//
+, *gleb_swin_PMYDATA                      //|GS|//
+; //[gleb_swin_MyData]//                  //|GS|//
+                                          //|GS|//
+//!GS.PW.W32.<SomeWindowVariable>            GS!//
+struct 
+gleb_swin_global_state{                   //|GS|//
+                                          //|GS|//
+             int         init_called ;    //|GS|//   
+             int       init_finished ;    //|GS|//   
+    volatile int      window_created ;    //|GS|//
+     
+    
+    //: WE ARE NOT GOING TO THREAD THE WINDOW. Multithreading
+    //: code results in strange and hard to find bugs. 
+    //: keep it simple!
+    //:
+    //: struct //:#notification_flags#
+    //: gleb_swin_thread_safe_notify_flags_x64{
+    //: 
+    //:     #define T64 LONG64 volatile //:64bit int.
+    //:     T64  resize_message_count;
+    //:     T64  redraw_message_count;
+    //:     #undef  T64
+    //: 
+    //: }THREAD_SAFE_FLAGS;
+
+    //+ Use a mutex instead to signal to other    +//
+    //+ threads when certain events have happened.+//
+    //- struct                                    -//
+    //- gleb_swin_optional_callback_funcs{        -//
+    //-                                           -//
+    //-     void(  *render_tick_function)(void);  -//
+    //-     int     render_tick_function_has;     -//
+    //-                                           -//
+    //-     void(  *resize_function)(void);       -//
+    //-     int     resize_function_has;          -//
+    //-                                           -//
+    //-                                           -//
+    //- }OPTIONAL_CALLBACKS;                      -//
+                                          
+                                          //|GS|//
+    //|"just_closed" because the window      GS|//
+    //|thread has not been terminated and    GS|//
+    //|no resources have been cleaned        GS|//
+    //|up yet.                               GS|//
+    volatile int  window_just_closed ;    //|GS|//
+                                          //|GS|//
+    //!Window Position And Size:             GS!//
+    int X  ;                              //|GS|//
+    int Y  ;                              //|GS|//
+    int WID;                              //|GS|//
+    int HIG;                              //|GS|//
+                                          //|GS|//
+    //!PW:PLATFORM_WINDOW                    GS!//
+    struct gleb_swin_PLATFORM_WINDOW{     //|GS|//
+                                          //|GS|//
+    //!Eventually, windows and linux         GS!//
+    //!structs should be wrapped in          GS!//
+    //!#ifdef blocks:                        GS!//
+    //!(This will probably never happen)     GS!//
+    //!(I think I'll keep it simple and)     GS!//
+    //!(stick to windows only.         )     GS!//
+    //!_                                     GS!//
+    //! |                                    GS!//
+        struct gleb_swin_PW_WINDOWS{       
+                                           
+            struct 
+            AAC2020_GINAWIN_PIXELFORMATDESCRIPTOR          
+                            pixel_format_descriptor;       
+                                           
+           HWND handle_to_window     ;     
+            HDC window_device_context;     
+                                           
+    //!This thread only handles window       GS!//
+    //!display and window input. We do       GS!//
+    //!this so we can keep tutorial code     GS!//
+    //!written in a linear way even after    GS!//
+    //!the window is created.                GS!//
+    //!                                      GS!//
+    //!If window was on same thread as       GS!//
+    //!tutorial, we would have to juggle     GS!//
+    //!calling the window update loop        GS!//
+    //!code while at the same time           GS!//
+    //!calling tutorial functions.           GS!//
+    //!____                                  GS!//
+    //!    |                                 GS!//
+            v_HANDLE                      //|GS|//
+            platform_window_thread;       //|GS|//
+                                          //|GS|//
+    //!Thread is closed using the HANDLE.    GS!//
+    //!So not sure what the point of         GS!//
+    //!the thread_id is.                     GS!//
+    //!                                      GS!//
+    //!StackOverflow:                        GS!//
+    //!Under Windows, the thread handle      GS!//
+    //!is different from the thread ID,      GS!//
+    //!in the same way that a file handle    GS!//
+    //!is different from a file name.        GS!//
+    //!____                                  GS!//
+    //!    |                                 GS!//
+            long unsigned int             //|GS|//
+            thread_id;                    //|GS|//
+                                          //|GS|//
+    //!custom data object that can be        GS!//
+    //!passed to the thread creation         GS!//
+    //!function.                             GS!//
+    //!____                                  GS!//
+    //!    |                                 GS!//
+            gleb_swin_PMYDATA             //|GS|//
+            custom_data;                  //|GS|//
+                                          //|GS|//
+        }W32;                             //|GS|//
+        struct gleb_swin_PW_LINUX{        //|GS|//
+                                          //|GS|//
+            //!It's a nice thought,          GS!//
+            //!But I'll probably never       GS!//
+            //!make this code flexible       GS!//
+            //!enough to also compile        GS!//
+            //!on linux.                     GS!//
+            int unused;                   //|GS|//
+                                          //|GS|//
+        }LIN;                             //|GS|//
+                                          //|GS|//
+    }PW;                                  //|GS|//
+                                          //|GS|//
+    //| StructAdded[DATE[2019_06_18]]       |GS|//
+    //| GLEB_SWIN.GetClient.X(   void );    |GS|//
+    //| GLEB_SWIN.GetClient.Y(   void );    |GS|//
+    //| GLEB_SWIN.GetClient.WID( void );    |GS|//
+    //| GLEB_SWIN.GetClient.HIG( void );    |GS|//
+    struct GLEB_SWIN_GetClient{
+
+        int (*  X)( void );
+        int (*  Y)( void );
+        int (*WID)( void );
+        int (*HIG)( void );
+
+    }GetClient;
+
+
+}GLEB_SWIN={0}; 
+             
+typedef                                   //|GS|//
+    struct gleb_swin_global_state         //|GS|//
+    struct_gleb_swin_global_state;        //|GS|//
+                                          //|GS|//
+//! Its not just enough to create a window,  GS!//
+//! the window must have the proper pixel    GS!//
+//! format descriptor associated with it's   GS!//
+//! device context for open gl to work.      GS!//
+//!                                          GS!//
+//!  YOU ONLY GET ONE SHOT!                  GS!//
+//!  YOU CAN ONLY SET IT ONCE!               GS!//
+//!                                          GS!//
+//!  https://www.khronos.org/opengl/wiki     GS!//
+//!  /Creating_an_OpenGL_Context_(WGL)       GS!//
+void                                      //|GS|//
+gleb_swin_InitPixelFormatDescriptor(      //|GS|//
+    void                                  //|GS|//
+){                                        //|GS|//
+                                           
+    struct
+    AAC2020_GINAWIN_PIXELFORMATDESCRIPTOR                  
+    pixel_format_descriptor ={            //|GS|//
+        sizeof(PIXELFORMATDESCRIPTOR),    //|GS|//
+        1,                                //|GS|//
+                                          //|GS|//
+        (   //! Flags________!//          //|GS|//
+            PFD_DRAW_TO_WINDOW |          //|GS|//
+            PFD_SUPPORT_OPENGL |          //|GS|//
+            PFD_DOUBLEBUFFER   |          //|GS|//
+        0)                                //|GS|//
+                                          //|GS|//
+        ,                                 //|GS|//
+                                          //|GS|//
+        //! The kind of framebuffer.         GS!//
+        //! RGBA or palette.                 GS!//
+        PFD_TYPE_RGBA,                    //|GS|//
+                                          //|GS|//
+        //! Colordepth of the framebuffer.   GS!//
+        32,                               //|GS|//
+                                          //|GS|//
+        0, 0, 0, 0, 0, 0,                 //|GS|//
+        0,                                //|GS|//
+        0,                                //|GS|//
+        0,                                //|GS|//
+        0, 0, 0, 0,                       //|GS|//
+                                          //|GS|//
+        //! Number_Of_Bits: depthbuffer      GS!//
+        24,                               //|GS|//
+                                          //|GS|//
+        //! Number_Of_Bits: stencilbuffer    GS!//
+        8,                                //|GS|//
+                                          //|GS|//
+        //! Number of Aux buffers            GS!//
+        //! in the framebuffer.              GS!//
+        0,                                //|GS|//
+                                          //|GS|//
+        PFD_MAIN_PLANE,                   //|GS|//
+        0,                                //|GS|//
+        0, 0, 0                           //|GS|//
+    };;                                   //|GS|//
+                                          //|GS|//
+    //! Copy memory. For a brief moment We   GS!//
+    //! are using double memory for the      GS!//
+    //! pixel format descriptor,but easiest  GS!//
+    //! way I can think of to get it         GS!//
+    //! properly initialized and put into    GS!//
+    //! global state container as            GS!//
+    //! NON-Pointer.                         GS!//
+    GLEB_SWIN.PW.W32                      //|GS|//
+    .pixel_format_descriptor=(            //|GS|//
+        pixel_format_descriptor           //|GS|//
+    );;                                   //|GS|//
+                                          //|GS|//
+} //[InitPixelFormatDescriptor]//         //|GS|//
+                                          //|GS|//
+void                                      //|GS|//
+gleb_swin_InitGlobalStateContainer(       //|GS|//
+    void                                  //|GS|//
+){                                        //|GS|//
+    //+---------------------------+-++-+////|GS|//
+    //+---------------------------+-++-+////|GS|//   
+    //+ Convinience Methods to help    +////|GS|//
+    //+ with formatting of code that   +////|GS|//
+    //+ [[USES]] GLEB_SWIN             +////|GS|//
+    //+---------------------------+-++-+////|GS|//
+    //+---------------------------+-++-+////|GS|//
+    GLEB_SWIN.GetClient.X   =&( //+ || +////|GS|//
+    GLEB_SWIN_GetClient_X);     //+ || +////|GS|//
+                                //+ || +////|GS|//
+    GLEB_SWIN.GetClient.Y   =&( //+ || +////|GS|//
+    GLEB_SWIN_GetClient_Y);     //+ || +////|GS|//
+                                //+ || +////|GS|//
+    GLEB_SWIN.GetClient.WID =&( //+ || +////|GS|//
+    GLEB_SWIN_GetClient_WID);   //+ || +////|GS|//
+                                //+ || +////|GS|//
+    GLEB_SWIN.GetClient.HIG =&( //+ || +////|GS|//
+    GLEB_SWIN_GetClient_HIG);   //+ || +////|GS|//
+    //+---------------------------+-++-+////|GS|//
+    //+---------------------------+-++-+////|GS|//
+                                          //|GS|//
+    gleb_swin_InitPixelFormatDescriptor();//|GS|//
+                                          //|GS|//
+} //[gleb_swin_InitGlobalStateContainer]////|GS|//
+                                          //|GS|//
+//[GSGSGSGSGSGSGSGSGSGSGSGSGSGSGSGSGSGSGSGSGSGS]//
+
+//:NULFUN:NullFunctionPointerError
+void
+gleb_swin_NULFUN( 
+    const char* name_of_null_function
+){
+    printf(
+        "[GLEB.SWIN:Null_Func_Pointer_Found]\n"
+    );;
+    printf( "Null:%s\n", name_of_null_function );
+    fflush(stdout);
+    exit( 666 );
+} //[gleb_swin_NULFUN]//
+void
+gleb_swin_Halt( 
+    const char* error_message_string
+){
+    printf(
+        "[GLEB.SWIN:Fatal_Error_Encountered]\n"
+    );;
+    printf( "[EMS]:%s\n", error_message_string );
+    fflush(stdout);
+    exit( 666 );
+} //[gleb_swin_Halt]//
+
+
+int 
+gleb_swin_Alert( 
+    const char* msg 
+){
+
+    printf(
+        "[WhatWentWrong]:%s\n", msg
+    );;fflush(stdout);
+
+    struct_gleb_SWIN_FUNCTION_POINTERS*
+    FP=&(gleb_swin_function_pointers);
+
+    if(NULL==FP->USER32.MessageBoxW){
+        const char* msg = "[ForgotToInitMsgBoxW]";
+        gleb_swin_Halt( msg  );
+    };;
+
+    struct gleb_swin_data_USER32*         
+    U32D = &(                             
+        FP->USER32.DATA                   
+    );;
+
+    int msgboxID =(
+    FP->USER32.MessageBoxW(
+        NULL
+    ,
+        L"You forgot to do something in code.\n"
+        L"strcat is a lot of work to make a  \n"
+        L"custom message. So check the       \n"
+        L"console for what went wrong.       \n"
+    ,
+        L"[!!CHECK_THE_CONSOLE!!]"
+    ,
+        (
+            U32D -> mb_iconexclamation | 
+            U32D -> mb_ok              |
+        0)
+    ));;
+
+    return msgboxID;    
+} //[gleb_swin_Alert]//
+
+
+//| Section:WINDOW_CODE:start -----------------|//
+//|WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW|//
+
+//:WINDOW_MESSAGE_HANDLER_WNDPROC
+//:WIN:WINDOW
+//:MSG:MESSAGE
+//:HAN:HANDLER
+//:WND:WIND
+//:POC:PROC
+//:WND_POC:WNDPROC
+__stdcall
+LRESULT_i64_8B   
+gleb_swin_WIN_MSG_HAN_WND_POC(
+/**/       v_HWND   Hw  
+,     UINT_u32_4B   Msg
+,   WPARAM_u64_8B   wParam  
+,   LPARAM_i64_8B   lParam
+){
+    //:An LRESULT tells us what we did
+    //:with the message. If handled it
+    //:should return zero.
+    LRESULT_i64_8B return_this_result = 0;
+    BOOL_i32_4B ok = 0;
+
+    struct_gleb_SWIN_FUNCTION_POINTERS*
+    FP = &(gleb_swin_function_pointers);
+    if(NULL==FP->USER32.DestroyWindow){
+        gleb_swin_Halt("[U32.DW]");
+    };;
+    if(NULL==FP->USER32.PostQuitMessage){
+        gleb_swin_Halt("[U32.PQM]");
+    };;
+    if(NULL==FP->USER32.DefWindowProcW){
+        gleb_swin_Halt("[U32.DWPW]");
+    };;
+
+    switch(Msg){ //:- - - - - - - - - - - - - -://
+    case WM_SIZE:{
+
+        printf("[GLEB_SWIN:WM_SIZE]\n");
+        fflush(stdout);
+
+        //: ENGETHER.THREADING.InterlockedIncrement64(
+        //:     &( GLEB_SWIN.THREAD_SAFE_FLAGS.
+        //:        resize_message_count )
+        //: );;
+
+        //: #define C_B GLEB_SWIN.OPTIONAL_CALLBACKS
+        //: if(C_B.resize_function_has){
+        //:    C_B.resize_function();
+        //: };;
+        //: #undef  C_B
+
+        
+
+    }break;
+    case WM_KEYDOWN:{
+        if(wParam==VK_ESCAPE){
+
+            ok = FP->USER32.DestroyWindow(Hw);
+            if(0==ok){gleb_swin_Halt("[0OK_1]");}
+
+        }else{
+
+            //: KEBO_DOWN_HandleVirtualKey( wParam );
+            printf("[WM_KEYDOWN]");
+        };;
+
+    }break;
+
+    case WM_KEYUP:{
+        
+            //: KEBO_UPPP_HandleVirtualKey( wParam );
+            printf("[WM_KEYUP]");
+    }break;
+
+    //:WM_CLOSE: The "[X]" button was clicked.
+    case WM_CLOSE:
+        ok = FP->USER32.DestroyWindow(Hw); 
+        if(0==ok){gleb_swin_Halt("[0OK_2]");}
+
+    //:WM_DESTROY: ( DESTROYED|DESTROYING )
+    case WM_DESTROY:  
+        //: Send "WM_QUIT" to exit msg loop.
+        FP->USER32.PostQuitMessage(0);
+
+    case WM_PAINT:
+        //:[TODO]:Something to pace the updating
+        //:of graphics.
+
+
+        //+ DELETE THIS BLOCK +//
+        //- //:I dont think this is needed:         -//
+        //- //: You may use the same HDC in both    -//
+        //- //: threads, but not at the same time.  -//
+        //- //: SEE[ gl-hdc-thread-quote ]          -//
+        //- if(GLEB_SWIN.render_tick_function_has){ -//
+        //-    GLEB_SWIN.render_tick_function();    -//
+        //- };;                                     -//
+
+        //: This might be better done setting a flag
+        //: than using a callback. In order to prevent
+        //: drawing code from being invoked on the
+        //: wrong thread.
+
+        //: With that said, setting a flag:
+    //: ENGETHER.THREADING.InterlockedIncrement64(
+    //:     &( GLEB_SWIN.THREAD_SAFE_FLAGS.
+    //:        redraw_message_count )
+    //: );;
+
+        
+        //+ This call needs to be made from    +//
+        //+ the same thread as your OpenGL     +//
+        //+ calls.                             +//
+        //# DONT_HERE:GLEB_SWIN_SwapBuffers(); #//
+
+
+
+
+
+    //:Keep window responsive:
+    default: 
+        return_this_result=(
+            FP->USER32.DefWindowProcW(
+                Hw,Msg,wParam,lParam
+            )
+        );;
+    };;//:- - - - - - - - - - - - - - - - - - -://
+
+    return( return_this_result );
+} //[gleb_swin_WIN_MSG_HAN_WND_POC]//
+
+
+
+
+BOOL_i32_4B 
+gleb_swin_RegisterWindow(
+//+-------------------------+[ ]+//
+/**/v_HINSTANCE           //+[1]+//
+    hin                   //+[1]+//
+                          //+[ ]+//
+//+ (UNICODE_STRING)         [ ]+//
+,   c_LPCWSTR_b16_2B      //+[2]+//
+    unique_window_name    //+[2]+//
+//+-------------------------+[ ]+//
+){
+
+    struct_gleb_SWIN_FUNCTION_POINTERS*
+    FP = &(gleb_swin_function_pointers);
+
+    if(NULL==FP->GDI32.GetStockObject){
+        gleb_swin_Halt("[G32.GSO]");
+    };;
+
+
+
+
+    //:Before using re-creation of
+    //:WNDCLASSEXW, make sure correct size
+    //:as a basic smoke test.
+    size_t struct_size =(
+        sizeof( gleb_swin_WNDCLASSEXW )
+    );;
+    if( struct_size != 80 ){
+        gleb_swin_Halt("[BadStructSize]");
+    };;
+    
+
+
+    
+    //: WNDCLASSEXW W;
+    gleb_swin_WNDCLASSEXW W = {0};
+
+    W.cbSize=sizeof( gleb_swin_WNDCLASSEXW);
+    W.style=(
+        CS_HREDRAW | //| Copied from glfw's:   |//
+        CS_VREDRAW | //| win32_window.c        |//
+        CS_OWNDC   | //| _gflwRegisterWindow   |//
+                     //| ...ClassWin32         |//
+    0);;
+    W.lpfnWndProc=gleb_swin_WIN_MSG_HAN_WND_POC;
+    W.cbClsExtra=0;
+    W.cbWndExtra=0;
+    W.hInstance=hin;
+
+    W.hIcon  =FP->USER32.LoadIconA(
+        NULL
+    ,   FP->USER32.DATA.A.idi_application
+    );;
+    W.hCursor=FP->USER32.LoadCursorA(
+        NULL
+    ,   FP->USER32.DATA.A.idc_arrow
+    );;
+
+    //| Looking at:                            |//
+    //| https://github.com/glfw/glfw/blob/     |//
+    //| master/src/win32_window.c              |//
+    //| does not look like background          |//
+    //| brush color eneds to be set.           |//
+    //|                                        |//
+    //| Code here specifically says:           |//
+    //| "No Background Required For GL"        |//
+    //| http://nehe.gamedev.net/tutorial       |//
+    //| /creating_an_opengl_window_(win32)     |//
+    //| /13001/                                |//
+    //- W.hbrBackground=(                      -//
+    //-     /**/(HBRUSH)                       -// 
+    //-     /**/ FP->GDI32.GetStockObject(     -// 
+    //-     /**/     FP->GDI32.DATA.BRUSH.BLACK-// 
+    //-     /**/)                              -// 
+    //- );;                                    -//
+    W.hbrBackground=NULL;
+
+    W.lpszMenuName=NULL;
+    W.lpszClassName=unique_window_name;
+    W.hIconSm=(
+        FP->USER32.LoadIconA(
+            NULL
+        ,   FP->USER32.DATA.A.idi_application
+        )
+    );;
+
+    //|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//
+    //! If you forget to register your         !//
+    //! window class, the observable effect    !//
+    //! is the window never opening, and the   !//
+    //! wait loop exiting immediately.         !//
+    //|________________________________________|//
+    return(
+        FP->USER32.RegisterClassExW(
+            &( W )
+        )
+    );;
+} //[Register]//
+
+void
+gleb_swin_AssertPeekFunctionExists(){
+
+    struct_gleb_SWIN_FUNCTION_POINTERS*
+    FP = &(gleb_swin_function_pointers);
+
+    if(NULL==FP){ 
+        gleb_swin_Halt("[FP]");
+    };;
+    if(NULL==FP->USER32.PeekMessageW){ 
+        gleb_swin_Halt("[PM]");
+    };;
+
+} //[gleb_swin_AssertPeekFunctionExists]//
+
+BOOL_i32_4B
+gleb_swin_TakeOrLookMessage( 
+/**/
+    LPMSG 
+    dont_prefix_message_with_and_symbol
+
+,   
+
+    int take_the_message
+){
+
+    gleb_swin_AssertPeekFunctionExists();
+
+    struct_gleb_SWIN_FUNCTION_POINTERS*
+    FP = &(gleb_swin_function_pointers);
+
+    UINT_u32_4B look;
+    UINT_u32_4B take;
+    UINT_u32_4B look_or_take;
+
+    look = FP->USER32.DATA.pm_noremove;
+    take = FP->USER32.DATA.pm_remove;
+    look_or_take =(777);
+
+    if( take_the_message > 0 ){
+        look_or_take = take;
+    }else
+    if( 0 == take_the_message ){
+        look_or_take = look;
+    }else{
+        gleb_swin_Halt("[Exp:Pos|Or|Zero]");
+    };;
+
+    BOOL_i32_4B ret =(
+    FP->USER32.PeekMessageW(
+    /**/dont_prefix_message_with_and_symbol
+    ,   NULL
+    ,   0
+    ,   0
+    ,   look_or_take
+    ));;
+
+    return( ret );
+
+} //[gleb_swin_TakeOrLookMessage]//
+BOOL_i32_4B
+gleb_swin_LookMessage(
+    LPMSG msg
+){
+    BOOL_i32_4B ret;
+    const int look = 0;
+    ret=gleb_swin_TakeOrLookMessage(msg,look);
+    return( ret );
+} //[gleb_swin_LookMessage]//
+BOOL_i32_4B
+gleb_swin_TakeMessage(
+    LPMSG msg
+){
+    BOOL_i32_4B ret;
+    const int take = 1;
+    ret=gleb_swin_TakeOrLookMessage(msg,take);
+    return( ret );
+} //[gleb_swin_TakeMessage]//
+
+//|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//
+//| Since you are discussing threads here,     |//
+//| you are aware that GL commands can only    |//
+//| be issued from a thread that has an        |//
+//| active GL context,correct? And that a      |//
+//| context can only be active in 0 or 1       |//
+//| threads at a time. If you ever tried to    |//
+//| issue commands from a different thread     |//
+//| than the one that created your context,    |//
+//| and you do not understand this then        |//
+//| confusing run-time behvior would ensue;    |//
+//| multi-threading is fine in GL,but you      |//
+//| have to mind which threads have active     |//
+//| contexts.                                  |//
+//| stackoverflow.com/questions/21685932/      |//
+//|____________________________________________|//
+//# Might want to call update here by          #//
+//# adding a render update callback?           #//
+//# That would get it to fire during WM_PAINT  #//
+//# AND get it on same thread, alleviating     #//
+//# two possible problems.                     #//
+MSG_48B
+gleb_swin_WindowLoop(
+    v_HWND Hw
+){
+
+    struct gleb_swin_functions_USER32*
+    U32F = &(
+        gleb_swin_function_pointers
+       .USER32
+    );;
+
+    struct gleb_swin_data_USER32* 
+    U32DATA = &( U32F -> DATA);
+
+    int sw_show = U32DATA -> sw_show;
+    U32F ->  ShowWindow(  Hw,sw_show); 
+    U32F ->  UpdateWindow(Hw        ); 
+    U32F ->  SetFocus(    Hw        );
+
+    UINT_u32_4B          wm_quit     ;                
+    wm_quit = U32DATA -> wm_quit     ;
+
+    MSG_48B M;
+    gleb_swin_LookMessage( &M );
+    while(
+        M.message
+        !=
+        wm_quit
+    ){
+        if( gleb_swin_TakeMessage(    &M )){
+            U32F -> TranslateMessage( &M );
+            U32F -> DispatchMessageW( &M );
+        };;
+
+    };;
+
+    GLEB_SWIN
+    .window_just_closed = ('t'|'r'|'u'|'e');
+
+    //# [HACK]:Sleep a bit so other threads    #//
+    //#        see "window_just_closed" update.#//
+    //# You really should use a proper mutex.  #//
+    Sleep(64);
+
+    return( M );
+} //[gleb_swin_WindowLoop]//
+
+
+void
+gleb_swin_MakeWindowCompatibleWith_GL(
+    v_HWND  Hw
+){
+
+    struct_gleb_SWIN_FUNCTION_POINTERS*
+    FP = &(gleb_swin_function_pointers);
+
+    // - // - // - // - // - // - // - // - //
+
+    struct gleb_swin_PW_WINDOWS*
+    W32 = &(
+        GLEB_SWIN.PW.W32
+    );;
+
+    HDC 
+    window_device_context =(
+        FP->USER32.GetWindowDC( Hw )
+    );;
+    int
+    pixel_format_number=(
+        FP->GDI32.ChoosePixelFormat(
+            window_device_context
+        , &( W32 -> pixel_format_descriptor )
+        )
+    );;
+    BOOL 
+    setting_pixel_format_worked=(
+    FP->GDI32.SetPixelFormat(
+    /**/  window_device_context
+    ,     pixel_format_number
+    ,   &( W32 -> pixel_format_descriptor )
+    ));;
+    if( setting_pixel_format_worked ){
+        //: printf("[SPF:OK]\n");
+    }else{
+        gleb_swin_Halt("[SPF:FAIL]\n");
+    };;
+
+    GLEB_SWIN.PW.W32
+    .window_device_context=(
+        window_device_context
+    );;
+
+} //[gleb_swin_MakeWindowCompatibleWith_GL]//
+
+//: typedef UINT_PTR WPARAM;
+//: typedef unsigned (64bit?int64:int) UINT_PTR
+//: Call this function on a separate thread!
+WPARAM_u64_8B 
+gleb_swin_OPEN_WINDOW_LOOP_FOREVER(
+    //:UNICODE_STRING
+    c_LPCWSTR_b16_2B 
+    unique_window_name
+){
+    struct_gleb_SWIN_FUNCTION_POINTERS*
+    FP = &(gleb_swin_function_pointers);
+
+    v_HMODULE 
+    hin=(
+        FP -> KERNEL32
+        .GetModuleHandleW(
+            NULL
+        )
+    );;
+
+    if(NULL==hin){
+        gleb_swin_Halt(
+            "[FailedToGetModuleHandle]"
+        );;
+    };;
+
+    //:FreeConsole();
+
+    struct gleb_swin_data_USER32* 
+    U32DATA = &( FP->USER32.DATA);
+
+    v_HWND   Hw;
+    MSG_48B      Msg;
+
+    if(!
+
+        gleb_swin_RegisterWindow(
+            hin
+        ,   unique_window_name
+        )
+
+    ){ 
+
+        gleb_swin_Alert(
+            "[FailedToRegisterWindow]"
+        );;
+        return 0; 
+
+    };;
+
+    int X   = GLEB_SWIN.X   ;
+    int Y   = GLEB_SWIN.Y   ;
+    int WID = GLEB_SWIN.WID ;
+    int HIG = GLEB_SWIN.HIG ;
+
+    Hw=FP->USER32.CreateWindowExW(
+        //: dwExStyle   (EXT-窓style)
+    /**/U32DATA -> ws_ex_topmost 
+
+        //: lpClassName (窓class    )
+    ,   unique_window_name    
+
+        //: lpWindowName(窓titlebar )
+    ,   L"[GLEB_TITLE_BAR](題圌)"       
+
+        //: (窓style)
+    ,   (
+            U32DATA -> ws_overlappedwindow  | 
+            U32DATA -> cs_owndc             |
+        0)
+
+        //: x,y,w,h
+    ,   X,Y,WID,HIG       
+
+        //: hWndParent(parent窓)
+    ,   FP->USER32.GetDesktopWindow() 
+
+        //: hMenu(HandleToMenu)
+    ,   NULL        
+
+        //: hInstance(柯to例)
+    ,   hin                
+
+        //: lpParam( ??? )
+    ,   NULL               
+    );;
+    if(Hw==NULL){
+        gleb_swin_Halt("[WindowCreateFail]");
+        return 0;
+    };;
+
+    //:Store the handle to window in global state:
+    GLEB_SWIN.PW.W32.handle_to_window=Hw;
+
+    //:Modifications to make window opengl
+    //:compatible:
+    //////////////////////////////////////////////
+    gleb_swin_MakeWindowCompatibleWith_GL(
+        Hw
+    );;
+
+    //|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯MC|//
+    //!PUT AFTER device context has been     MC!//
+    //!set, or your device context fetching  MC!//
+    //!function waiting on this flag to be   MC!//
+    //!set in this thread will end up        MC!//
+    //!with a NULL device context.           MC!//
+    //!Speaking Of:                          MC!//
+    //!GLEB_SWIN_GetWindowDeviceContext();   MC!//
+    GLEB_SWIN                //|MC|//
+    .window_created=1;                    //|MC|//
+    //|______________________________________MC|//
+
+    //////////////////////////////////////////////
+
+    Msg = gleb_swin_WindowLoop( Hw );
+
+    return Msg.wParam;
+} //[gleb_swin_OPEN_WINDOW_LOOP_FOREVER]//
+
+
+void
+gleb_swin_ForgotToInitWindowSize(){
+
+    gleb_swin_Alert(
+        "[You_Forgot_To_Init_Window_Size]"
+    );;
+
+} //[gleb_swin_ForgotToInitWindowSize]//
+
+//:Change window dimensions if they
+//:are NOT okay.
+int
+gleb_swin_ChangeWinDimsIfNotOkay(){
+
+    struct_gleb_swin_global_state*
+    GS = &(GLEB_SWIN);
+
+    int window_size_changed = 0;
+
+    if( 
+        0 >= GS -> X   &&
+        0 >= GS -> Y   &&
+        0 >= GS -> WID &&
+        0 >= GS -> HIG &&
+    1){
+        gleb_swin_ForgotToInitWindowSize();
+
+        GS -> X   =  0;
+        GS -> Y   =  0;
+        GS -> WID = 1024;
+        GS -> HIG = 64;
+        window_size_changed=1;
+    }else
+    if( 
+        0 >= GS -> WID || 
+        0 >= GS -> HIG ||
+    0){
+        printf(
+            "[XY Set, but window]\n"
+            "[size not__________]\n"
+        );;
+
+        if( GS -> WID <= 0 ){
+            printf("[ForgotToSet:WID]\n");
+            GS -> WID = 1024;
+            window_size_changed=2;
+        };; 
+        if( GS -> HIG <= 0 ){
+            printf("[ForgotToSet:HIG]\n");
+            GS -> HIG =  128;
+            window_size_changed=3;
+        };;
+    };;
+
+    return( window_size_changed );
+} //[gleb_swin_ChangeWinDimsIfNotOkay]//
+
+//|WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW|//
+//| Section:WINDOW_CODE:end -------------------|//
+//- 〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓 -//
+
+
+//| Section:MULTI_THREADING_CODE:beg __________|//
+//|MCMCMCMCMCMCMCMCMCMCMCMCMCMCMCMCMCMCMCMCMCMC|//
+                                          //|MC|//
+void                                      //|MC|//
+gleb_swin_PrintCustomThreadData(          //|MC|//
+                                          //|MC|//
+    v_HINSTANCE custom_data               //|MC|//
+                                          //|MC|//
+){                                        //|MC|//
+                                          //|MC|//
+    struct_gleb_swin_global_state*        //|MC|//
+    GS = &(GLEB_SWIN);       //|MC|//
+                                          //|MC|//
+    //!Both will print the same thing:       MC!//
+    ///////////////////////////////////// //|MC|//
+    printf(                            // //|MC|//
+        "[PARAMS]:( %d, %d )\n"        // //|MC|//
+    ,   ((gleb_swin_PMYDATA)           // //|MC|//
+        GS->PW.W32.custom_data)->val1  // //|MC|//
+                                       // //|MC|//
+    ,   ((gleb_swin_PMYDATA)           // //|MC|//
+        GS->PW.W32.custom_data)->val2  // //|MC|//
+    );                                 // //|MC|//
+                                       // //|MC|//
+    printf(                            // //|MC|//
+        "[PARAMS]:( %d, %d )\n"        // //|MC|//
+    ,   ((gleb_swin_PMYDATA)           // //|MC|//
+        custom_data)->val1             // //|MC|//
+                                       // //|MC|//
+    ,   ((gleb_swin_PMYDATA)           // //|MC|//
+        custom_data)->val2             // //|MC|//
+    );                                 // //|MC|//
+    ///////////////////////////////////// //|MC|//
+                                          //|MC|//
+} //[gleb_swin_PrintCustomThreadData]//   //|MC|//
+                                          //|MC|//
+DWORD_u32_4B WINAPI                       //|MC|//
+gleb_swin_THREAD_FUNCTION(                //|MC|//
+                                          //|MC|//
+    v_HINSTANCE  custom_data              //|MC|//
+                                          //|MC|//
+){                                        //|MC|//
+    gleb_swin_PrintCustomThreadData(      //|MC|//
+        custom_data                       //|MC|//
+    );;                                   //|MC|//
+                                          //|MC|//
+    //!UNICODE_STRING                        MC!//
+    c_LPCWSTR_b16_2B                      //|MC|//
+    unique_window_name=(                  //|MC|//
+        L"GLEB_SWIN_UNIQUE_WINDOW_NAME"   //|MC|//
+    );;                                   //|MC|//
+    gleb_swin_OPEN_WINDOW_LOOP_FOREVER(   //|MC|//
+        unique_window_name                //|MC|//
+    );;                                   //|MC|//
+                                          //|MC|//
+    return 0;                             //|MC|//
+} //[gleb_swin_THREAD_FUNCTION]//         //|MC|//
+                                          //|MC|//
+void                                      //|MC|//
+gleb_swin_AssertThreadCreated(){          //|MC|//
+    struct_gleb_swin_global_state*        //|MC|//
+    GS = &(GLEB_SWIN);       //|MC|//
+                                          //|MC|//
+    //!If thread NULL, creation failed:      MC!//
+    if(                                   //|MC|//
+        NULL                              //|MC|//
+        ==                                //|MC|//
+        GS->PW.W32.platform_window_thread //|MC|//
+    ){                                    //|MC|//
+        printf(                           //|MC|//
+            "[GLEB:THREAD_CREATE_FAIL]\n" //|MC|//
+        );;                               //|MC|//
+        fflush(stdout);                   //|MC|//
+        exit( 666 );                      //|MC|//
+    };;                                   //|MC|//
+} //[gleb_swin_AssertThreadCreated]//     //|MC|//
+                                          //|MC|//
+void                                      //|MC|//
+gleb_swin_CreateThread(){                 //|MC|//
+                                          //|MC|//
+    struct_gleb_swin_global_state*        //|MC|//
+    GS = &(GLEB_SWIN);       //|MC|//
+                                          //|MC|//
+    struct_gleb_SWIN_FUNCTION_POINTERS*   //|MC|//
+    FP = &(gleb_swin_function_pointers);  //|MC|//
+                                          //|MC|//
+    struct gleb_swin_functions_KERNEL32*  //|MC|//
+    K32F = &(FP -> KERNEL32);             //|MC|//
+                                          //|MC|//
+    if(NULL==K32F -> HeapAlloc){          //|MC|//
+        gleb_swin_NULFUN(                 //|MC|//
+            "[HeapAlloc]"                 //|MC|//
+        );;                               //|MC|//
+    };;                                   //|MC|//
+    if(NULL==K32F -> GetProcessHeap){     //|MC|//
+        gleb_swin_NULFUN(                 //|MC|//
+            "[GetProcessHeap]"            //|MC|//
+        );;                               //|MC|//
+    };;                                   //|MC|//
+                                          //|MC|//
+    v_HANDLE                              //|MC|//
+    process_heap=(                        //|MC|//
+        FP->KERNEL32.GetProcessHeap()     //|MC|//
+    );;if(NULL==process_heap){            //|MC|//
+        gleb_swin_Halt("process_heap");   //|MC|//
+    };;                                   //|MC|//
+                                          //|MC|//
+    //!Allocate memory for thread data.      MC!//
+    GS->PW.W32.custom_data =(             //|MC|//
+        (gleb_swin_PMYDATA)               //|MC|//
+        FP->KERNEL32.HeapAlloc(           //|MC|//
+                                          //|MC|//
+            process_heap                  //|MC|//
+                                          //|MC|//
+        ,   FP->KERNEL32.DATA             //|MC|//
+           .heap_zero_memory              //|MC|//
+                                          //|MC|//
+        ,   sizeof(gleb_swin_MYDATA)      //|MC|//
+                                          //|MC|//
+        )                                 //|MC|//
+    );                                    //|MC|//
+                                          //|MC|//
+    //|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯//|MC|//
+    //! System if out of memory, you will    MC!//
+    //! be unable to print error message.    MC!//
+    //! But what about error code?           MC!//
+    //|___________________________________//|MC|//
+    if( GS->PW.W32.custom_data == NULL ){ //|MC|//
+        exit( 9873 );                     //|MC|//
+    };;                                   //|MC|//
+                                          //|MC|//
+    //! Set Some Custom Data           !////|MC|//
+    GS->PW.W32.custom_data->val1 = 333;   //|MC|//
+    GS->PW.W32.custom_data->val2 = 777;   //|MC|//
+                                          //|MC|//
+    if(NULL==FP->KERNEL32.CreateThread){  //|MC|//
+        gleb_swin_NULFUN("CreateThread"); //|MC|//
+    };;                                   //|MC|//
+                                          //|MC|//
+    //|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|////|MC|//
+    //| Create the thread to begin     |////|MC|//
+    //| execution on its own.          |////|MC|//
+    //|________________________________|////|MC|//
+    GS->PW.W32.platform_window_thread=(   //|MC|//
+    FP->KERNEL32.CreateThread( //|¯¯¯¯¯|////|MC|//
+    //+ default_security ------------_1+////|MC|//
+    /**/NULL                      //[01]////|MC|//
+                                  //|  |////|MC|//
+    //+ default_stack_size ----------_2+////|MC|//
+    ,   0                         //[02]////|MC|//
+                                  //|  |////|MC|//
+    //+ lpStartAddress --------------_3+////|MC|//
+    ,   gleb_swin_THREAD_FUNCTION //[03]////|MC|//
+                                  //|  |////|MC|//
+    //+ thread_func_arg -------------_4+////|MC|//
+    ,   GS->PW.W32.custom_data    //[04]////|MC|//
+                                  //|  |////|MC|//
+    //+ use default creation flags---_5+////|MC|//
+    ,   0                         //[05]////|MC|//
+                                  //|  |////|MC|//
+    //+ Output_Param ----------------_6+////|MC|//
+    ,   &GS->PW.W32.thread_id     //[06]////|MC|//
+    ));;//|____________________________|////|MC|//
+                                          //|MC|//
+} //[gleb_swin_CreateThread]//            //|MC|//
+                                          //|MC|//
+//|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯ MC|//
+//! If the user of this library improperly   MC!//
+//! set the window size (or forgot)          MC!//
+//! before calling the intialize function,   MC!//
+//! we will warn the user with an alert      MC!//
+//! box and attempt to fix the problem.      MC!//
+//|-  --  --  --  --  --  --  --  --  --  -- MC|//
+void                                      //|MC|//
+gleb_swin_CorrectWindowIfNeeded(){        //|MC|//
+                                          //|MC|//
+    int r=0;                              //|MC|//
+    r=gleb_swin_ChangeWinDimsIfNotOkay(); //|MC|//
+    r=gleb_swin_ChangeWinDimsIfNotOkay(); //|MC|//
+    if( 0 != r ){                         //|MC|//
+        gleb_swin_Halt(                   //|MC|//
+            "[WindowDimFixFail]"          //|MC|//
+        );;                               //|MC|//
+    };;                                   //|MC|//
+                                          //|MC|//
+} //[gleb_swin_CorrectWindowIfNeeded]//   //|MC|//
+                                          //|MC|//
+void GLEB_SWIN_Init(){                    //|MC|//
+                                          //|MC|//
+
+    GLEB_SWIN
+    .init_called = 1;
+
+    gleb_swin_InitGlobalStateContainer(); //|MC|//
+
+    //! NEAR_TOP:                      !////|MC|//
+    gleb_swin_AssertCorrectSizesOfTypes();//|MC|//
+                                          //|MC|//
+    //! NEAR_TOP:                      !////|MC|//
+    //! MessageBox(...)                !////|MC|//
+    //! loaded from User32.dll.        !////|MC|//
+    init_gleb_SWIN_FUNCTION_POINTERS();   //|MC|//
+                                          //|MC|//
+    gleb_swin_CorrectWindowIfNeeded();    //|MC|//
+                                          //|MC|//
+    gleb_swin_CreateThread();             //|MC|//
+    gleb_swin_AssertThreadCreated();      //|MC|//
+                                         
+
+    GLEB_SWIN
+    .init_finished = 1;
+
+} //[GLEB_SWIN_Init]//                    //|MC|//
+void GLEB_SWIN_Initialize(){              //|MC|//
+     GLEB_SWIN_Init();                    //|MC|//
+} //[GLEB_SWIN_Initialize]//              //|MC|//
+                                          //|MC|//
+void                                      //|MC|//
+gleb_swin_HeapFreeFail(){                 //|MC|//
+                                          //|MC|//
+    printf(                               //|MC|//
+        "[GLEBSWIN:HeapFreeFail]\n"       //|MC|//
+    );;                                   //|MC|//
+                                          //|MC|//
+    fflush( stdout );                     //|MC|//
+    exit(666);                            //|MC|//
+                                          //|MC|//
+}                                         //|MC|//
+                                          //|MC|//
+//! af=="assert function"              !////|MC|//
+void                                      //|MC|//
+gleb_swin_af_HeapFreeSuccess(             //|MC|//
+    int was_heap_free_success             //|MC|//
+){                                        //|MC|//
+    if(0==was_heap_free_success){         //|MC|//
+                                          //|MC|//
+        gleb_swin_HeapFreeFail();         //|MC|//
+                                          //|MC|//
+    }                                     //|MC|//
+                                          //|MC|//
+}                                         //|MC|//
+                                          //|MC|//
+void                                      //|MC|//
+gleb_swin_FreeCustomDataIfExists(){       //|MC|//
+                                          //|MC|//
+    struct_gleb_swin_global_state*        //|MC|//
+    GS = &(GLEB_SWIN);       //|MC|//
+                                          //|MC|//
+    if( NULL == GS->PW.W32.custom_data ){ //|MC|//
+        return;                           //|MC|//
+    };;                                   //|MC|//
+                                          //|MC|//
+    struct_gleb_SWIN_FUNCTION_POINTERS*   //|MC|//
+    FP = &(gleb_swin_function_pointers);  //|MC|//
+                                          //|MC|//
+    //|--------------------------------|////|MC|//
+                                          //|MC|//
+    if(NULL==FP->KERNEL32.HeapFree){      //|MC|//
+        printf(                           //|MC|//
+            "[ERROR:4gotFetch:HeapFree]\n"//|MC|//
+        );;                               //|MC|//
+        fflush( stdout );                 //|MC|//
+        exit( 666 );                      //|MC|//
+    };;                                   //|MC|//
+                                          //|MC|//
+    //|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|////|MC|//
+    //|Kernel32.dll                    |////|MC|//
+    //|Frees a memory block alloced    |////|MC|//
+    //|from a heap by the HeapAlloc    |////|MC|//
+    //|or HeapReAlloc function.        |////|MC|//
+    BOOL_i32_4B                   //|  |////|MC|//
+    was_heap_free_success;        //|  |////|MC|//
+    was_heap_free_success=(       //|  |////|MC|//
+    FP->KERNEL32.HeapFree(        //|  |////|MC|//
+                                  //|  |////|MC|//
+        //|Heap where memory block     |////|MC|//
+        //|you want to free lives.     |////|MC|//
+    /**/FP->KERNEL32              //|  |////|MC|//
+       .GetProcessHeap()          //|  |////|MC|//
+                                  //|  |////|MC|//
+        //|DWORD dwFlags:              |////|MC|//
+        //|(heap free opts)            |////|MC|//
+    ,   0                         //|  |////|MC|//
+                                  //|  |////|MC|//
+        //|Pointer to memory           |////|MC|//
+        //|block to free:              |////|MC|//
+    ,   GS->PW.W32.custom_data    //|  |////|MC|//
+    ));;                          //|  |////|MC|//
+                                  //|  |////|MC|//
+    gleb_swin_af_HeapFreeSuccess( //|  |////|MC|//
+        was_heap_free_success     //|  |////|MC|//
+    );;                           //|  |////|MC|//
+                                  //|  |////|MC|//
+    //| Ensure address is              |////|MC|//
+    //| NOT reused.                    |////|MC|//
+    GS->PW.W32.custom_data = NULL;//|  |////|MC|//
+                                  //|  |////|MC|//
+    //|________________________________|////|MC|//
+                                          //|MC|//
+    gleb_swin_OK("[CustomDataFreed]");    //|MC|//
+                                          //|MC|//
+} //[gleb_swin_FreeCustomDataIfExists]//  //|MC|//
+                                          //|MC|//
+//! Close window thread and free       !////|MC|//
+//! custom data                        !////|MC|//
+void                                      //|MC|//
+gleb_swin_ShutWinThread_FreeData(){       //|MC|//
+                                          //|MC|//
+    struct_gleb_swin_global_state*        //|MC|//
+    GS = &(GLEB_SWIN);       //|MC|//
+                                          //|MC|//
+    struct_gleb_SWIN_FUNCTION_POINTERS*   //|MC|//
+    FP = &(gleb_swin_function_pointers);  //|MC|//
+                                          //|MC|//
+    //|-  --  --  --  --  --  --  --  --  -- MC|//
+                                          //|MC|//
+    //!Close all thread handles and    !////|MC|//
+    //!free memory allocations.        !////|MC|//
+    BOOL_i32_4B ok = 0;                   //|MC|//
+                                          //|MC|//
+    if(NULL==FP->KERNEL32.CloseHandle){   //|MC|//
+        gleb_swin_Halt(                   //|MC|//
+            "[null:CloseHandle]"          //|MC|//
+        );;                               //|MC|//
+    };;                                   //|MC|//
+    ok = FP->KERNEL32.CloseHandle(        //|MC|//
+        GS->PW.W32.platform_window_thread //|MC|//
+    );;if( 0 == ok ){                     //|MC|//
+        gleb_swin_Halt(                   //|MC|//
+            "[CloseHandleFail]"           //|MC|//
+        );;                               //|MC|//
+    };;                                   //|MC|//
+                                          //|MC|//
+    gleb_swin_FreeCustomDataIfExists();   //|MC|//
+                                          //|MC|//
+} //[function]//                          //|MC|//
+                                          //|MC|//
+                                          //|MC|//
+//!fe: "function exists"               !////|MC|//
+void                                      //|MC|//
+gleb_swin_fe_WaitForSingleObject(){       //|MC|//
+                                          //|MC|//
+    struct_gleb_SWIN_FUNCTION_POINTERS*   //|MC|//
+    FP = &(gleb_swin_function_pointers);  //|MC|//
+                                          //|MC|//
+    if(                                   //|MC|//
+        NULL                              //|MC|//
+        ==                                //|MC|//
+        FP->KERNEL32                      //|MC|//
+        .WaitForSingleObject              //|MC|//
+    ){                                    //|MC|//
+        gleb_swin_Halt("[Null:WFSO:PTR]");//|MC|//
+    };;                                   //|MC|//
+                                          //|MC|//
+} //[gleb_swin_fe_WaitForSingleObject]//  //|MC|//
+                                          //|MC|//
+void                                      //|MC|//
+gleb_swin_WaitUntilWindowClosed(){        //|MC|//
+                                          //|MC|//
+    struct_gleb_swin_global_state*        //|MC|//
+    GS = &(GLEB_SWIN);       //|MC|//
+                                          //|MC|//
+    struct_gleb_SWIN_FUNCTION_POINTERS*   //|MC|//
+    FP = &(gleb_swin_function_pointers);  //|MC|//
+                                          //|MC|//
+    gleb_swin_fe_WaitForSingleObject();   //|MC|//
+                                          //|MC|//
+    //!Wait until all threads          !////|MC|//
+    //!have terminated.                !////|MC|//
+    struct gleb_swin_data_KERNEL32*       //|MC|//
+    K32D = &(                             //|MC|//
+        FP->KERNEL32.DATA                 //|MC|//
+    );;                                   //|MC|//
+                                          //|MC|//
+    DWORD_u32_4B dont_fail_me=(           //|MC|//
+    FP->KERNEL32.WaitForSingleObject(     //|MC|//
+    /**/GS->PW.W32.platform_window_thread //|MC|//
+    ,       K32D -> infinite              //|MC|//
+    ));;                                  //|MC|//
+    if( K32D -> wait_failed               //|MC|//
+        ==                                //|MC|//
+        dont_fail_me                      //|MC|//
+    ){                                    //|MC|//
+                                          //|MC|//
+        printf(                           //|MC|//
+            "[ThreadedWindowWaitFail]"    //|MC|//
+        );;                               //|MC|//
+                                          //|MC|//
+    }else{                                //|MC|//
+                                          //|MC|//
+        gleb_swin_OK(                     //|MC|//
+            "[ThreadedWindowClosed]"      //|MC|//
+        );;                               //|MC|//
+                                          //|MC|//
+    };;                                   //|MC|//
+                                          //|MC|//
+}                                         //|MC|//
+                                          //|MC|//
+//|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//
+//! A blocking call that loops forever.      MC!//
+//! Put it outside of your main loop to      MC!//
+//! make sure program does not exit until    MC!//
+//! window is closed.                        MC!//
+//!                                          MC!//
+//! Do NOT put before main loop in code.     MC!//
+//!                                          MC!//
+//! Wait on:                                 MC!//
+//! SWIN(SilkWindow/ThreadedWindow)          MC!//
+//|-  --  --  --  --  --  --  --  --  --  --  -|//
+void GLEB_SWIN_Wait(){                    //|MC|//
+                                          //|MC|//
+    gleb_swin_WaitUntilWindowClosed();    //|MC|//
+    gleb_swin_ShutWinThread_FreeData();   //|MC|//
+                                          //|MC|//
+} //[GLEB_SWIN_Wait]//                    //|MC|//
+void                                      //|MC|//
+GLEB_SWIN_WaitForUserToCloseWindow(){     //|MC|//
+    GLEB_SWIN_Wait();                     //|MC|//
+}                                         //|MC|//
+//|MCMCMCMCMCMCMCMCMCMCMCMCMCMCMCMCMCMCMCMCMCMC|//
+//| Section:MULTI_THREADING_CODE:end ¯¯¯¯¯¯¯¯¯¯|//
+
+
+
+void
+gleb_swin_WaitHereUntilWindowExists(){
+
+    struct_gleb_swin_global_state*
+    GS = &(GLEB_SWIN);
+
+    int hackish_timer = 0;
+    while( GS -> window_created <= 0 ){
+
+        hackish_timer++;
+        if( hackish_timer > 1024*1024*32 ){
+            gleb_swin_OK(
+                "[Waiting_On_Window_Creation]"
+            );;
+            fflush( stdout );
+            hackish_timer = 0;
+        };; 
+    };;
+
+    gleb_swin_OK(
+        "[DONE_WAITING_ON_WINDOW_CREATION]"
+    );;fflush(stdout);
+
+} //[gleb_swin_WaitHereUntilWindowExists]//
+
+
+//|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//
+//| Added: DATE[2019_06_14]                    |//
+//| Currently trying to get triangle to        |//
+//| show up on screen in GA.H of GAKU.H        |//
+//| project. Think problem is:                 |//
+//| 1. A threading problem.                    |//
+//| 2. Screwed up opengl drawing code.         |//
+void*                                       //||//
+GLEB_SWIN_GetWinDC_ExistsNoWait(){          //||//
+    if(                                     //||//
+        NULL==GLEB_SWIN.PW.W32 //||//
+        .window_device_context              //||//
+    ){                                      //||//
+        gleb_swin_Halt(                     //||//
+            "[FAIL:GetWinDC_ExistsNoWait]"  //||//
+        );;                                 //||//
+    };;                                     //||//
+    return( GLEB_SWIN.PW.W32   //||//
+            .window_device_context );       //||//
+} //[GLEB_SWIN_GetWinDC_ExistsNoWait]//     //||//
+//|____________________________________________|//
+
+//:Returns a (void*) instead of an HDC because:
+//: 1. Want to get rid of windows.h eventually.
+//: 2. Want to make sure that if this library
+//:    is in a project that uses windows.h,
+//:    it can still compile.
+void*
+GLEB_SWIN_GetWinDC(){
+    struct_gleb_swin_global_state*
+    GS = &(GLEB_SWIN);
+    
+
+    //:If you forget to initialize,
+    //:then the waiting on window creation
+    //:loop will execute forever because
+    //:no window creation is happening
+    //:on a different thread.
+    if( 0 == GS -> init_called ){
+        gleb_swin_Halt(
+            "[YouForgot:GLEB_SWIN_Init()!]"
+        );;
+    };;
+
+    gleb_swin_WaitHereUntilWindowExists();
+
+
+    if( 0 == 
+        GS -> PW.W32
+        .window_device_context
+    ){
+        gleb_swin_Halt(
+            "[WindowWaitMechanismFailed]"
+        );;
+    };;
+
+
+    HDC ret = GS -> PW.W32.window_device_context;
+    return( (void*)ret );
+    
+} //[GLEB_SWIN_GetWindowDeviceContext]//
+void* GLEB_SWIN_GetWindowDeviceContext(){
+    return(
+        GLEB_SWIN_GetWinDC()
+    );;
+}
+int 
+GLEB_SWIN_Demo( void ){
+    printf(
+        "[BEG:GLEB_SWIN_Demonstration]\n"
+    );;
+    fflush(stdout);
+    
+    GLEB_SWIN.X   = 22  ;
+    GLEB_SWIN.Y   = 22  ;
+    GLEB_SWIN.WID = 1024;
+    GLEB_SWIN.HIG = 512 ;
+
+
+    //:This creates our window:
+    GLEB_SWIN_Init();
+   
+    //:This gets our window's device
+    //:context, which can be used to
+    //:create OpenGL context.
+    //:GL=="Graphics Library"
+    GLEB_SWIN_GetWinDC();
+
+    int X   = GLEB_SWIN_GetClient_X  ();
+    int Y   = GLEB_SWIN_GetClient_Y  ();
+    int WID = GLEB_SWIN_GetClient_WID();
+    int HIG = GLEB_SWIN_GetClient_HIG();
+    printf(
+    /**/"[CLIENT_DIMS]\n"
+    /**/" X  :%d\n"
+    /**/" Y  :%d\n"
+    /**/" WID:%d\n"
+    /**/" HIG:%d\n"
+    ,X,Y,WID,HIG
+    );;
+
+    //: Uncomment this line if you want
+    //: to observe proof that the window's
+    //: loop is off in another thread.
+    //: while( 1 ){ };
+   
+    //:Put this after your game loop
+    //:so that program does not exit
+    //:until window is closed.
+    GLEB_SWIN_Wait();
+
+    printf(
+        "[END:GLEB_SWIN_Demonstration]\n"
+    );;
+    fflush(stdout);
+
+    return 0;
+} //[main]//
+int
+GLEB_SWIN_Demonstration( void ){
+    return(
+        GLEB_SWIN_Demo()
+    );;
+} 
+
+
+//|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//
+//| We will use this for testing if game loop  |//
+//| should still be running. Do NOT create     |//
+//| a function called "IsWindowOpen".          |//
+//| We need to be more pedantic than that.     |//
+//|-  --  --  --  --  --  --  --  --  --  --  -|//
+int                                         //||//
+GLEB_SWIN_IsWindowStillOpen( void ){        //||//
+                                            //||//
+    int is_window_still_open = (0-666);     //||//
+                                            //||//
+    if(                                     //||//
+        GLEB_SWIN              //||//
+        .window_created                     //||//
+        <= 0                                //||//
+    ){                                      //||//
+        gleb_swin_Halt(                     //||//
+            "[ObjectionYourHonor________]\n"//||//
+            "[TheStatementAssumesAWindow]\n"//||//
+            "[WasOpenToBeginWith________]\n"//||//
+        );;                                 //||//
+    };;                                     //||//
+                                            //||//
+    if(                                     //||//
+        GLEB_SWIN              //||//
+        .window_just_closed                 //||//
+        > 0                                 //||//
+    ){                                      //||//
+        is_window_still_open = 0;           //||//
+    }else{                                  //||//
+        is_window_still_open = 1;           //||//
+    };;                                     //||//
+                                            //||//
+    if(                                     //||//
+        is_window_still_open != 0 &&        //||//
+        is_window_still_open != 1 &&        //||//
+    1){                                     //||//
+        gleb_swin_Halt("[Exp:(1|0):IWSO]"); //||//
+    };;                                     //||//
+                                            //||//
+    return( is_window_still_open );         //||//
+                                            //||//
+}                                           //||//
+//|____________________________________________|//
+
+int
+GLEB_SWIN_GetClient_X(){
+
+    RECT r; //:TempRect
+    v_HWND handle_to_window=(
+           GLEB_SWIN.PW.W32.handle_to_window
+    );;
+
+    gleb_swin_function_pointers
+    .USER32
+    .GetClientRect(
+    /**/   handle_to_window
+    ,    &(r)
+    );;
+
+    int X = r.left;
+    return( X );
+}
+int
+GLEB_SWIN_GetClient_Y(){
+    RECT r; //:TempRect
+    v_HWND handle_to_window=(
+           GLEB_SWIN.PW.W32.handle_to_window
+    );;
+
+    gleb_swin_function_pointers
+    .USER32
+    .GetClientRect(
+    /**/   handle_to_window
+    ,    &(r)
+    );;
+
+    int Y = r.top;
+    return( Y );
+}
+int
+GLEB_SWIN_GetClient_WID(){
+    RECT r; //:TempRect
+    v_HWND handle_to_window=(
+           GLEB_SWIN.PW.W32.handle_to_window
+    );;
+
+    gleb_swin_function_pointers
+    .USER32
+    .GetClientRect(
+    /**/   handle_to_window
+    ,    &(r)
+    );;
+
+    //:No need for +1 because right exclusive.
+    int WID = ( r.right - r.left ) + 0;
+    return( WID );
+}
+int
+GLEB_SWIN_GetClient_HIG(){
+    RECT r; //:TempRect
+    v_HWND handle_to_window=(
+           GLEB_SWIN.PW.W32.handle_to_window
+    );;
+
+    gleb_swin_function_pointers
+    .USER32
+    .GetClientRect(
+    /**/   handle_to_window
+    ,    &(r)
+    );;
+
+    //:No need for +1 because bottom exclusive.
+    int HIG =( r.bottom - r.top ) + 0;
+    return( HIG );
+}
+
+
+
+//: For parallel processing and keeping the
+//: window loop responsive, it makes more sense
+//: to signal with a mutex that can be checked.
+//////////////////////////////////////////////////////////////
+//-  //:Because I think code is not rendering because      -//
+//-  //:the calls are on the wrong thread:                 -//
+//-  //:I MIGHT end up not using this, but need to         -//
+//-  //:troubleshoot why opengl is not showing             -//
+//-  //:anything.                                          -//
+//-  void                                                  -//
+//-  GLEB_SWIN_PutRenderTickFunction(                      -//
+//-      void(*function_name)( void )                      -//
+//-  ){                                                    -//
+//-                                                        -//
+//-  /*01*/  #define C_B GLEB_SWIN.OPTIONAL_CALLBACKS      -//
+//-  /*02*/  #define X_X gleb_swin_Halt                    -//
+//-  /*03*/  #define HAS render_tick_function_has          -//
+//-  /*04*/  #define FUN render_tick_function              -//
+//-  /*05*/  #define M_1 "[RenderTickFuncAlreadySet]"      -//
+//-  /*06*/  #define M_2 "[Input_RTF_NULL]"                -//
+//-                                                        -//
+//-      if(C_B.HAS || (C_B.FUN!=NULL)){ X_X( M_1 );};     -//
+//-      if(NULL==function_name){        X_X( M_2 );};     -//
+//-      C_B.FUN=(function_name);                          -//
+//-      C_B.HAS=1;                                        -//
+//-                                                        -//
+//-  /*01*/  #undef C_B  //|01 ----------------- 01 |//    -//
+//-  /*02*/  #undef X_X  //|02 ----------------- 02 |//    -//
+//-  /*03*/  #undef HAS  //|03 ----------------- 03 |//    -//
+//-  /*04*/  #undef FUN  //|04 ----------------- 04 |//    -//
+//-  /*05*/  #undef M_1  //|05 ----------------- 05 |//    -//
+//-  /*06*/  #undef M_2  //|06 ----------------- 06 |//    -//
+//-                                                        -//
+//-  }                                                     -//
+//-                                                        -//
+//-  void                                                  -//
+//-  GLEB_SWIN_PutResizeFunction(                          -//
+//-      void(*function_name)( void )                      -//
+//-  ){                                                    -//
+//-                                                        -//
+//-  /*01*/  #define C_B GLEB_SWIN.OPTIONAL_CALLBACKS      -//
+//-  /*02*/  #define X_X gleb_swin_Halt                    -//
+//-  /*03*/  #define HAS resize_function_has               -//
+//-  /*04*/  #define FUN resize_function                   -//
+//-  /*05*/  #define M_1 "[ResizeFuncAlreadySet]"          -//
+//-  /*06*/  #define M_2 "[PRF:NullInput]"                 -//
+//-                                                        -//
+//-      if(C_B.HAS || (C_B.FUN!=NULL)){ X_X( M_1 );};     -//
+//-      if(NULL==function_name){        X_X( M_2 );};     -//
+//-      C_B.FUN=(function_name);                          -//
+//-      C_B.HAS=1;                                        -//
+//-                                                        -//
+//-  /*01*/  #undef C_B  //|01 ----------------- 01 |//    -//
+//-  /*02*/  #undef X_X  //|02 ----------------- 02 |//    -//
+//-  /*03*/  #undef HAS  //|03 ----------------- 03 |//    -//
+//-  /*04*/  #undef FUN  //|04 ----------------- 04 |//    -//
+//-  /*05*/  #undef M_1  //|05 ----------------- 05 |//    -//
+//-  /*06*/  #undef M_2  //|06 ----------------- 06 |//    -//
+//-                                                        -//
+//-  }                                                     -//
+//////////////////////////////////////////////////////////////
+
+void
+GLEB_SWIN_SwapBuffers( void ){
+
+    if(NULL==GLEB_SWIN.PW.W32
+    .window_device_context){
+
+        gleb_swin_Halt(
+            "[CantSwapBuffersWithNullDevice]"
+        );;
+
+    };;
+
+    gleb_swin_function_pointers
+    .GDI32.SwapBuffers(
+        GLEB_SWIN.PW.W32
+        .window_device_context
+    );;
+
+}
+
+//|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//
+//|PUBLIC Functions:                           |//
+//|_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _   |//
+int   GLEB_SWIN_Demo(          void );      //||//
+int   GLEB_SWIN_Demonstration( void );      //||//
+                                            //||//
+void  GLEB_SWIN_Init(       /**void**/  );  //||//
+void  GLEB_SWIN_Initialize( /**void**/  );  //||//
+                                            //||//
+void* GLEB_SWIN_GetWindowDeviceContext();   //||//
+void* GLEB_SWIN_GetWinDC();                 //||//
+                                            //||//
+void  GLEB_SWIN_Wait(         /**void**/  );//||//
+void  GLEB_SWIN_WaitForUserToCloseWindow( );//||//
+                                            //||//
+int   GLEB_SWIN_IsWindowStillOpen( );       //||//
+                                            //||//
+//:So we don't have to return "RECT"        //||//
+//:Structures, use 4 calls instead of       //||//
+//:making "GLEB_SWIN_GetClientArea"         //||//
+int   GLEB_SWIN_GetClient_X(  );            //||//
+int   GLEB_SWIN_GetClient_Y(  );            //||//
+int   GLEB_SWIN_GetClient_WID();            //||//
+int   GLEB_SWIN_GetClient_HIG();            //||//
+
+void  GLEB_SWIN_PutRenderTickFunction(
+    void(*function_name)( void )
+);
+
+void  GLEB_SWIN_SwapBuffers( void );
+
+//|____________________________________________|//
+

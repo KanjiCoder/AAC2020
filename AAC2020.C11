@@ -23,18 +23,40 @@
 //:=======================================:INCLUDE_DIRECTIVES://
 //:DATA_BEFORE_FUNCTIONS:====================================://
 
-    //:TODO:
+    #include "LIB/DUI.D._"     //:AAC2020_DUI_*_Dialog_UI_Data
+    #include "LIB/GINAWIN.D._" //:Graphics_Init_And_Window
+    #include "LIB/GRA.D._"     //:AAC2020_GRA_*_Graphics_Data
 
 //:====================================:DATA_BEFORE_FUNCTIONS://
 //:FUNCTIONS_AFTER_DATA:=====================================://
 
-int 
-main( void )
-{
-
-    printf("[hello_world_!!]\n");
-    PEB2020_LibraryDemo();
-
-}
+    #include "LIB/DUI.F._"     //:AAC2020_DUI_*_Dialog_UI_Funcs
+    #include "LIB/GINAWIN.F._" //:Graphics_Init_And_Window
+    #include "LIB/GRA.F._"     //:AAC2020_GRA_*_Graphics_Funcs
 
 //:=====================================:FUNCTIONS_AFTER_DATA://
+//:MAIN_ENTRY_POINT.DATA:====================================://
+
+    //:This section also known as [global/filescope] variables:
+
+
+//:====================================:MAIN_ENTRY_POINT.DATA://
+//:MAIN_ENTRY_POINT.FUNC:====================================://
+
+    int 
+    main( void )
+    {
+        AAC2020_DUI_ErrorCheckSizeOfTypes_WINDOWS_10_64BIT();
+
+        printf("[ALL_THIS_DOES_IS_OPEN_A_COLOR_PICKER]\n");
+        printf("[TODO:Change Background Color]\n");
+        printf("[TODO:Proper Window Code Instead Of Console]\n");
+    //: PEB2020_LibraryDemo();
+
+        unsigned long hex = AAC2020_DUI_AskUserToPickColor();
+        AAC2020_DUI_MessageBoxForHexValue(
+            "[!YOU_ABSOLUTE_LEGEND!]" , hex );;
+
+    }
+
+//:====================================:MAIN_ENTRY_POINT.FUNC://
