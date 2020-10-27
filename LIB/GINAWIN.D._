@@ -1843,7 +1843,7 @@ gleb_swin_WIN_MSG_HAN_WND_POC(
     };;
 
     switch(Msg){ //:- - - - - - - - - - - - - -://
-    case unfuck-WM_SIZE:{
+    case 0x0005 /** WM_SIZE **/:{ 
 
         printf("[GLEB_SWIN:WM_SIZE]\n");
         fflush(stdout);
@@ -1862,8 +1862,8 @@ gleb_swin_WIN_MSG_HAN_WND_POC(
         
 
     }break;
-    case WM_KEYDOWN:{
-        if(wParam==VK_ESCAPE){
+    case 0x0100 /** WM_KEYDOWN **/:{
+        if(wParam==0x1B /** VK_ESCAPE **/){
 
             ok = FP->USER32.DestroyWindow(Hw);
             if(0==ok){gleb_swin_Halt("[0OK_1]");}
@@ -1876,23 +1876,23 @@ gleb_swin_WIN_MSG_HAN_WND_POC(
 
     }break;
 
-    case WM_KEYUP:{
+    case 0x0101 /** WM_KEYUP **/:{
         
             //: KEBO_UPPP_HandleVirtualKey( wParam );
             printf("[WM_KEYUP]");
     }break;
 
     //:WM_CLOSE: The "[X]" button was clicked.
-    case WM_CLOSE:
+    case 0x0010 /** WM_CLOSE **/:
         ok = FP->USER32.DestroyWindow(Hw); 
         if(0==ok){gleb_swin_Halt("[0OK_2]");}
 
     //:WM_DESTROY: ( DESTROYED|DESTROYING )
-    case WM_DESTROY:  
+    case 0x0002 /** WM_DESTROY **/:  
         //: Send "WM_QUIT" to exit msg loop.
         FP->USER32.PostQuitMessage(0);
 
-    case WM_PAINT:
+    case 0x000F /** WM_PAINT **/:
         //:[TODO]:Something to pace the updating
         //:of graphics.
 
@@ -1980,12 +1980,20 @@ gleb_swin_RegisterWindow(
     //: WNDCLASSEXW W;
     gleb_swin_WNDCLASSEXW W = {0};
 
+    
+
     W.cbSize=sizeof( gleb_swin_WNDCLASSEXW);
-    W.style=(
-        CS_HREDRAW | //| Copied from glfw's:   |//
-        CS_VREDRAW | //| win32_window.c        |//
-        CS_OWNDC   | //| _gflwRegisterWindow   |//
-                     //| ...ClassWin32         |//
+    W.style=(0
+        //: THIS_BITMASK: - - - ://
+        //: Copied from glfw's: ://
+        //: win32_window.c      ://
+        //: _gflwRegisterWindow ://
+        //: ...ClassWin32       ://
+        //: - - - - - - - - - - ://
+    |   0x0002 /** CS_HREDRAW : TODO:DOUBLE_CHECK_THIS **/ 
+    |   0x0001 /** CS_VREDRAW : TODO:DOUBLE_CHECK_THIS **/
+    |   0x0020 /** CS_OWNDC   : TODO:DOUBLE_CHECK_THIS **/
+    |                
     0);;
     W.lpfnWndProc=gleb_swin_WIN_MSG_HAN_WND_POC;
     W.cbClsExtra=0;
@@ -2184,7 +2192,10 @@ gleb_swin_WindowLoop(
     //# [HACK]:Sleep a bit so other threads    #//
     //#        see "window_just_closed" update.#//
     //# You really should use a proper mutex.  #//
-    Sleep(64);
+    /** Sleep(64); TODO: Uncomment when you find the  **/
+    /**                  .DLL file with "Sleep" in it **/
+    /**                   because I am NOT including  **/
+    /**                   windows.h                   **/
 
     return( M );
 } //[gleb_swin_WindowLoop]//
@@ -2205,7 +2216,7 @@ gleb_swin_MakeWindowCompatibleWith_GL(
         GLEB_SWIN.PW.W32
     );;
 
-    HDC 
+    void* /** HDC **/
     window_device_context =(
         FP->USER32.GetWindowDC( Hw )
     );;
@@ -2216,7 +2227,8 @@ gleb_swin_MakeWindowCompatibleWith_GL(
         , &( W32 -> pixel_format_descriptor )
         )
     );;
-    BOOL 
+    
+    int /** BOOL **/
     setting_pixel_format_worked=(
     FP->GDI32.SetPixelFormat(
     /**/  window_device_context
@@ -2454,8 +2466,9 @@ gleb_swin_PrintCustomThreadData(          //|MC|//
     ///////////////////////////////////// //|MC|//
                                           //|MC|//
 } //[gleb_swin_PrintCustomThreadData]//   //|MC|//
-                                          //|MC|//
-DWORD_u32_4B WINAPI                       //|MC|//
+                                           
+DWORD_u32_4B 
+__stdcall /** WINAPI calling convention **/                      
 gleb_swin_THREAD_FUNCTION(                //|MC|//
                                           //|MC|//
     v_HINSTANCE  custom_data              //|MC|//
@@ -2926,8 +2939,8 @@ GLEB_SWIN_GetWinDC(){
     };;
 
 
-    HDC ret = GS -> PW.W32.window_device_context;
-    return( (void*)ret );
+    void* /** HCD **/ ret = GS -> PW.W32.window_device_context;
+    return(    (void*)ret );
     
 } //[GLEB_SWIN_GetWindowDeviceContext]//
 void* GLEB_SWIN_GetWindowDeviceContext(){
