@@ -52,6 +52,19 @@
     }//[;]//
 
 //:======================:FUNCTION_AS_DATA_TREATED_LIKE_MACRO://
+//:GINAWIN_STRUCTS:==========================================://
+
+    /** You can change the name of a struct just as long as  **/
+    /** you have the same underlying data format. Same thing **/
+    /** for re-naming the members of the struct as well.     **/
+    struct AAC2020_GINAWIN_RECT{
+        signed int /** __LONG32 **/ lef  /** left   **/ ;
+        signed int /** __LONG32 **/ top  /** top    **/ ;
+        signed int /** __LONG32 **/ rig  /** right  **/ ;
+        signed int /** __LONG32 **/ bot  /** bottom **/ ;
+    };
+
+//:==========================================:GINAWIN_STRUCTS://
 
 //:COPIED_FROM[ VG04 ]:======================================://
 
@@ -373,7 +386,13 @@ typedef
     struct   _SECURITY_ATTRIBUTES  
     *s_LPSECURITY_ATTRIBUTES;
 
-typedef  struct tagRECT*  s_RECT;
+    //: DATE[ 2020_10_27 ]
+    //: typedef  struct tagRECT*  s_RECT;
+    //: REFACTOR: s_RECT --> AAC2020_GINAWIN_RECT
+    typedef 
+        struct AAC2020_GINAWIN_RECT*
+        s_RECT /** s_RECT IS A POINTER! **/ ;
+    
 
 //: You cannot use void* as a generic function
 //: pointer so windows has "FARPROC".
@@ -786,8 +805,8 @@ typedef                                   //[DT]//
 typedef
     BOOL_i32_4B
     (*gleb_swin_pfn_GetClientRect)(
-    /**/v_HWND      hWnd
-    ,   s_RECT    lpRect
+    /**/v_HWND                         hWnd
+    ,   struct AAC2020_GINAWIN_RECT* lpRect
     );
 
 typedef                                   //[DT]//
@@ -3056,7 +3075,7 @@ GLEB_SWIN_IsWindowStillOpen( void ){        //||//
 int
 GLEB_SWIN_GetClient_X(){
 
-    RECT r; //:TempRect
+    struct AAC2020_GINAWIN_RECT r; //:TempRect
     v_HWND handle_to_window=(
            GLEB_SWIN.PW.W32.handle_to_window
     );;
@@ -3068,12 +3087,12 @@ GLEB_SWIN_GetClient_X(){
     ,    &(r)
     );;
 
-    int X = r.left;
+    int X = r.lef; /** r.left **/
     return( X );
 }
 int
 GLEB_SWIN_GetClient_Y(){
-    RECT r; //:TempRect
+    struct AAC2020_GINAWIN_RECT r; //:TempRect
     v_HWND handle_to_window=(
            GLEB_SWIN.PW.W32.handle_to_window
     );;
@@ -3085,12 +3104,12 @@ GLEB_SWIN_GetClient_Y(){
     ,    &(r)
     );;
 
-    int Y = r.top;
+    int Y = r.top; /** r.top **/
     return( Y );
 }
 int
 GLEB_SWIN_GetClient_WID(){
-    RECT r; //:TempRect
+    struct AAC2020_GINAWIN_RECT r; //:TempRect
     v_HWND handle_to_window=(
            GLEB_SWIN.PW.W32.handle_to_window
     );;
@@ -3103,12 +3122,13 @@ GLEB_SWIN_GetClient_WID(){
     );;
 
     //:No need for +1 because right exclusive.
-    int WID = ( r.right - r.left ) + 0;
+//: int WID = ( r.right - r.left ) + 0;
+    int WID = ( r.rig   - r.lef  ) + 0;
     return( WID );
 }
 int
 GLEB_SWIN_GetClient_HIG(){
-    RECT r; //:TempRect
+    struct AAC2020_GINAWIN_RECT r; //:TempRect
     v_HWND handle_to_window=(
            GLEB_SWIN.PW.W32.handle_to_window
     );;
@@ -3121,7 +3141,8 @@ GLEB_SWIN_GetClient_HIG(){
     );;
 
     //:No need for +1 because bottom exclusive.
-    int HIG =( r.bottom - r.top ) + 0;
+//: int HIG =( r.bottom - r.top ) + 0;
+    int HIG =( r.bot    - r.top ) + 0;
     return( HIG );
 }
 
