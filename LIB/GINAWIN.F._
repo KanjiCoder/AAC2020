@@ -903,18 +903,11 @@ aac2020_ginawin_OPEN_WINDOW(
 
         FP = &(aac2020_ginawin_function_pointers);
 
-        hin=(
-            FP -> KERNEL32
-            .GetModuleHandleW(
-                NULL
-            )
-        );;
+        //:hin: AKA[ handle_to_instance / handle_to_exe ]
+        hin=( FP -> KERNEL32.GetModuleHandleW( ((void*)0) ) );;
 
-        if(NULL==hin){
-            aac2020_ginawin_Halt(
-                "[FailedToGetModuleHandle]"
-            );;
-        };;
+        //: FTG_MODHAN: FailedToGetModuleHandle
+        if(NULL==hin){ aac2020_ginawin_Halt( "[FTG_MODHAN]" );};
 
         //:FreeConsole();
 
