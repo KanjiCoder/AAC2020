@@ -10,6 +10,16 @@
     //: ---------------------------------------------------- ://
 
 //:=======================================:ABOUT_THIS_PROJECT://
+//:DEBUG_CONFIGURATION:======================================://
+
+    #define AAC2020_INCLUDE_GINAWIN ( 1 )
+
+//:==========================================================://
+//:NON_DEBUG_CONFIGURATION:==================================://
+
+    #define AAC2020_IS_MULTI_THREADED ( 1 )
+
+//:==================================:NON_DEBUG_CONFIGURATION://
 //:INCLUDE_DIRECTIVES:=======================================://
 
     #include "DEP/lodepng.h"  /** https://lodev.org/lodepng/ **/
@@ -18,23 +28,59 @@
     #include "DEP/PEB2020/PEB2020.H" /* PEB2020_LoadLibraryA  */
     #include "DEP/PEB2020/PEB2020.H" /* PEB2020_GetProcAddress*/
 
-    #include <stdio.h> /** printf(...) **/
+    //:INCLUDE_DIRECTIVES:STANDARD_LIBRARIES:----------------://
+
+        #include <stdio.h>  /**  printf(...) **/
+        #include <stdint.h> /**  uintptr_t   **/
+
+    //:----------------:INCLUDE_DIRECTIVES:STANDARD_LIBRARIES://
 
 //:=======================================:INCLUDE_DIRECTIVES://
-//:DATA_BEFORE_FUNCTIONS:====================================://
+//:DATA:DATA_BEFORE_FUNCTIONS:===============================://
+
+    #if( AAC2020_INCLUDE_GINAWIN >= 1 )
+    #include "LIB/GINAWIN.D._" //:Graphics_Init_And_Window
+    #endif
 
     #include "LIB/DUI.D._"     //:AAC2020_DUI_*_Dialog_UI_Data
-    #include "LIB/GINAWIN.D._" //:Graphics_Init_And_Window
+
     #include "LIB/GRA.D._"     //:AAC2020_GRA_*_Graphics_Data
 
-//:====================================:DATA_BEFORE_FUNCTIONS://
-//:FUNCTIONS_AFTER_DATA:=====================================://
+//:===============================:DATA:DATA_BEFORE_FUNCTIONS://
+//:FUNC:FUNCTIONS_AFTER_DATA:================================://
+
+    
+    #if( AAC2020_INCLUDE_GINAWIN >= 1 )
+    #include "LIB/GINAWIN.F._" //:Graphics_Init_And_Window
+    #endif
 
     #include "LIB/DUI.F._"     //:AAC2020_DUI_*_Dialog_UI_Funcs
-    #include "LIB/GINAWIN.F._" //:Graphics_Init_And_Window
+
     #include "LIB/GRA.F._"     //:AAC2020_GRA_*_Graphics_Funcs
 
-//:=====================================:FUNCTIONS_AFTER_DATA://
+//:================================:FUNC:FUNCTIONS_AFTER_DATA://
+//:CLASS:CLASSES_AFTER_FUNCTIONS_AND_DATA:===================://
+
+    //:TRY TO AVOID CLASSES UNLESS ABSOLUTELY NECESSARY.
+    //:Pretty sure they are NEVER necessary.
+    //:KEEP THIS SECTION EMPTY. DATE[ 2020_10_27 ]
+
+//:===================:CLASS:CLASSES_AFTER_FUNCTIONS_AND_DATA://
+//:PUBLIC:PUBLIC_FUNCTIONS_BELOW_DATA_FUNCS_AND_CLASSES:=====://
+
+    //+------------------------------------------------------+//
+    //|    Public interface is LAST so that we don't         |//
+    //|    accidentially use these files as forward          |//
+    //|    declarations. We want a strict ordering of        |//
+    //|    functions and data that avoids the need for       |//
+    //|    forward declarations.                             |//
+    //+------------------------------------------------------+//
+    
+    #if( AAC2020_INCLUDE_GINAWIN >= 1 )
+    #include "LIB/GINAWIN.P._"
+    #endif
+
+//:=====:PUBLIC:PUBLIC_FUNCTIONS_BELOW_DATA_FUNCS_AND_CLASSES://
 //:MAIN_ENTRY_POINT.DATA:====================================://
 
     //:This section also known as [global/filescope] variables:
@@ -53,9 +99,79 @@
         printf("[TODO:Proper Window Code Instead Of Console]\n");
     //: PEB2020_LibraryDemo();
 
-        unsigned long hex = AAC2020_DUI_AskUserToPickColor();
-        AAC2020_DUI_MessageBoxForHexValue(
-            "[!YOU_ABSOLUTE_LEGEND!]" , hex );;
+        #if( AAC2020_INCLUDE_GINAWIN >= 1 ) //:##############://
+
+            AAC2020_GINAWIN.X   = 22  ;
+            AAC2020_GINAWIN.Y   = 22  ;
+            AAC2020_GINAWIN.WID = 1024;
+            AAC2020_GINAWIN.HIG = 512 ;
+
+            AAC2020_GINAWIN_Init( 
+                #if(       AAC2020_IS_MULTI_THREADED >= 1 )
+                     AAC2020_GINAWIN__MULTI_THREADED
+                #endif
+                #if(       AAC2020_IS_MULTI_THREADED <= 0 )
+                     AAC2020_GINAWIN_SINGLE_THREADED
+                #endif
+            );;
+
+        #endif //:###########################################://
+    
+    //   printf("[Ask_User_To_Pick_Color]");
+    //   unsigned long hex = AAC2020_DUI_AskUserToPickColor();
+    //   AAC2020_DUI_MessageBoxForHexValue(
+    //       "[!YOU_ABSOLUTE_LEGEND!]" , hex );;
+
+
+        #if( AAC2020_INCLUDE_GINAWIN >= 1 ) //:##############://
+
+           
+
+
+            if( AAC2020_GINAWIN.type_of_threading 
+            ==  AAC2020_GINAWIN__MULTI_THREADED
+            ){
+
+                AAC2020_GINAWIN_Wait();
+
+            }else
+            if( AAC2020_GINAWIN.type_of_threading 
+            ==  AAC2020_GINAWIN_SINGLE_THREADED
+            ){
+
+                while( AAC2020_GINAWIN_IsWindowStillOpen() ){
+
+                    /** AAC2020_GINAWIN_LoopTick(); **/
+                        AAC2020_GINAWIN_WindowTick(
+                            AAC2020_GINAWIN_SINGLE_THREADED
+                        );;
+                
+                    #if( AAC2020_GINAWIN_DEBUGIN_WINDOW_REGISTRATION >= 1 )
+                
+                        static int counter=( 0 );
+                        counter++;
+                        if( counter % ( 512*512 ) == 0 ){
+                            printf("YOLO\n");
+                        };;
+                
+                    #endif
+
+              //  void*   Hw  = ((void*)0); /** HandleToWindow **/
+              //  MSG_48B Msg = {0};        /** MessageObject  **/
+              //
+              //  Hw = aac2020_ginawin_OPEN_WINDOW( L"AAC2020_GINAWIN_UNIQUE_WINDOW_NAME" );
+              //  Msg = aac2020_ginawin_WindowLoop( Hw );
+              //
+              //  if( Msg.message > 0 ){ /** NOOP **/ };
+              //
+
+
+
+
+                };;
+
+            };;
+        #endif //:###########################################://
 
     }
 

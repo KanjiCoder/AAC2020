@@ -55,77 +55,101 @@ AAC2020_DUI_AskUserToPickColor()
 
     //:LOAD_DLL_FILES:---------------------------------------://
 
+    #if( AAC2020_INCLUDE_GINAWIN <= 0 )
+
+        PEB2020_DLIB 
+        dll_User32=(PEB2020_LoadLibraryA("User32.dll"));
+
+    #endif
+
         PEB2020_DLIB
         dll_Comdlg32=( PEB2020_LoadLibraryA("Comdlg32.dll") );
 
         PEB2020_DLIB
         dll_Gdi32=( PEB2020_LoadLibraryA("Gdi32.dll"));
 
-        PEB2020_DLIB
-        dll_User32=(PEB2020_LoadLibraryA("User32.dll"));
-
     //:---------------------------------------:LOAD_DLL_FILES://
+    //:LOAD_FUNCTIONS:---------------------------------------://
 
-    PEB2020_FUNC
-    fun_GetDesktopWindow=( PEB2020_GetProcAddress(
-        dll_User32 , "GetDesktopWindow"
-    ));;
+    #if( AAC2020_INCLUDE_GINAWIN <= 0 )
 
-    PEB2020_FUNC
-    fun_ChooseColorA=( PEB2020_GetProcAddress(
-        dll_Comdlg32 , "ChooseColorA" ));;
+        PEB2020_FUNC
+        fun_GetDesktopWindow=( PEB2020_GetProcAddress(
+            dll_User32 , "GetDesktopWindow"
+        ));;
 
-    if( (void*)0 == fun_ChooseColorA ){
-        assert("[FAIL:ChooseColor:PTR]");
-    };;
+    #endif
 
-    PEB2020_FUNC
-    fun_CreateSolidBrush=(PEB2020_GetProcAddress(
-        dll_Gdi32 , "CreateSolidBrush" ));;
+        PEB2020_FUNC
+        fun_ChooseColorA=( PEB2020_GetProcAddress(
+            dll_Comdlg32 , "ChooseColorA" ));;
 
-    if( (void*)0 == fun_CreateSolidBrush ){
-        assert("[FAIL:CreateSolidBrush:PTR]");
-    };;
+        if( (void*)0 == fun_ChooseColorA ){
+            assert("[FAIL:ChooseColor:PTR]");
+        };;
 
+        PEB2020_FUNC
+        fun_CreateSolidBrush=(PEB2020_GetProcAddress(
+            dll_Gdi32 , "CreateSolidBrush" ));;
 
-    /** Common dialog box structure **/
-    struct AAC2020_DUI_CHOOSECOLORA cc ={0}; 
-    
-    /** array of custom colors **/
-    static AAC2020_DUI_COLORREF acrCustClr[16]; 
-    
-    void*  
-        hwnd  =(void*)fun_GetDesktopWindow(); // owner window
-    
-    void*  hbrush; // brush handle
-    
-    static unsigned long 
-        rgbCurrent = 0x808080;   // initial color selection
-                                        
-    // Initialize AAC2020_DUI_CHOOSECOLORA 
-    cc.lStructSize  = sizeof(cc);
-    cc.hwndOwner    = hwnd;
-    cc.lpCustColors = ( unsigned long *) acrCustClr;
-    cc.rgbResult    = rgbCurrent;
-    cc.Flags        = ( 0 | 0x00002 /** CC_FULLOPEN **/ 
-                          | 0x00001 /** CC_RGBINIT  **/ );
-    
-    /** #COLOR_PICKER# **/
-    if (fun_ChooseColorA(&cc)== 1 /** TRUE **/ ) 
-    {
-        hbrush = (void*)fun_CreateSolidBrush(cc.rgbResult);
-        rgbCurrent = cc.rgbResult; 
+        if( (void*)0 == fun_CreateSolidBrush ){
+            assert("[FAIL:CreateSolidBrush:PTR]");
+        };;
 
-        if( hbrush ){ /** NOOP **/ };
+    //:---------------------------------------:LOAD_FUNCTIONS://
+    //:GET_PARENT_WINDOW:####################################://
+    //:######################################################://
+    #if( AAC2020_INCLUDE_GINAWIN <= 0 )
 
-        printf("[RETURNED_TRUTH]");
-    }else{
-        printf("[RETURNED_FALSE]");
-    };;
+        void*  hwnd  =(void*)fun_GetDesktopWindow(); 
 
-    if( 0 == rgbCurrent ){
-        printf("[ARE_WE_SURE_BLACK_WAS_SELECTED?]");
-    };;
+    #endif
+    #if( AAC2020_INCLUDE_GINAWIN >= 1 )
+
+        void*  hwnd  =(void*)AAC2020_GINAWIN_GetWinDC(); 
+
+    #endif
+    //:######################################################://
+    //:####################################:GET_PARENT_WINDOW://
+    //:STUFF_I_DONT_FEEL_LIKE_ORGANIZING:--------------------://
+
+        /** Common dialog box structure **/
+        struct AAC2020_DUI_CHOOSECOLORA cc ={0}; 
+        
+        /** array of custom colors **/
+        static AAC2020_DUI_COLORREF acrCustClr[16]; 
+        
+        void*  hbrush; // brush handle
+        
+        static unsigned long 
+            rgbCurrent = 0x808080;   // initial color selection
+                                            
+        // Initialize AAC2020_DUI_CHOOSECOLORA 
+        cc.lStructSize  = sizeof(cc);
+        cc.hwndOwner    = hwnd;
+        cc.lpCustColors = ( unsigned long *) acrCustClr;
+        cc.rgbResult    = rgbCurrent;
+        cc.Flags        = ( 0 | 0x00002 /** CC_FULLOPEN **/ 
+                              | 0x00001 /** CC_RGBINIT  **/ );
+        
+        /** #COLOR_PICKER# **/
+        if (fun_ChooseColorA(&cc)== 1 /** TRUE **/ ) 
+        {
+            hbrush = (void*)fun_CreateSolidBrush(cc.rgbResult);
+            rgbCurrent = cc.rgbResult; 
+
+            if( hbrush ){ /** NOOP **/ };
+
+            printf("[OKAY!:fun_ChooseColorA:RETURNED_TRUTH]");
+        }else{
+            printf("[ERROR:fun_ChooseColorA:RETURNED_FALSE]");
+        };;
+
+        if( 0 == rgbCurrent ){
+            printf("[ARE_WE_SURE_BLACK_WAS_SELECTED?]");
+        };;
+
+    //:--------------------:STUFF_I_DONT_FEEL_LIKE_ORGANIZING://
 
     return( rgbCurrent );
 

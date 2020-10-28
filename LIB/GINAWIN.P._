@@ -1,0 +1,48 @@
+
+    //:PUBLIC FUNCTIONS:
+    //:(For configuration see top of GINAWIN.D._)
+
+
+    //:WHAT_TYPE_OF_THREADING:-------------------------------://
+
+    //:MUTLI_THREADED:
+
+        void  AAC2020_GINAWIN_Wait(         /**void**/  ); 
+        //:   AAC2020_GINAWIN_WaitForUserToCloseWindow( ); 
+
+    //:SINGLE_THREADED:
+
+        int  AAC2020_GINAWIN_WindowTick( int );
+
+    //:-------------------------------:WHAT_TYPE_OF_THREADING://
+    //:EVERYTHING_ELSE:--------------------------------------://
+
+        int   AAC2020_GINAWIN_Demo(          void );       
+        //:   AAC2020_GINAWIN_Demonstration( void );       
+                                                           
+        void  AAC2020_GINAWIN_Init(       /**void**/  );   
+        //:   AAC2020_GINAWIN_Initialize( /**void**/  );   
+                                                       
+        void* AAC2020_GINAWIN_GetWinDC();           
+        //:   ACC2020_GINAWIN_GetWindowHDC()       
+        //:   AAC2020_GINAWIN_GetWindowDeviceContext(); 
+              
+
+                                                           
+        int   AAC2020_GINAWIN_IsWindowStillOpen( ); 
+                                                    
+        //:So we don't have to return "RECT"         
+        //:Structures, use 4 calls instead of        
+        //:making "AAC2020_GINAWIN_GetClientArea"    
+        int   AAC2020_GINAWIN_GetClient_X(  );       
+        int   AAC2020_GINAWIN_GetClient_Y(  );       
+        int   AAC2020_GINAWIN_GetClient_WID();       
+        int   AAC2020_GINAWIN_GetClient_HIG();       
+
+        void  AAC2020_GINAWIN_PutRenderTickFunction(
+            void(*function_name)( void )
+        );
+
+        void  AAC2020_GINAWIN_SwapBuffers( void );
+
+    //:--------------------------------------:EVERYTHING_ELSE://
