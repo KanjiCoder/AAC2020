@@ -376,17 +376,18 @@ aac2020_ginawin_WIN_MSG_HAN_WND_POC(
     LRESULT_i64_8B return_this_result = 0;
     BOOL_i32_4B ok = 0;
 
-    aac2020_ginawin_FUNCTION_POINTERS_struct*
-    FP = &(aac2020_ginawin_function_pointers);
-    if(NULL==FP->USER32.DestroyWindow){
-        aac2020_ginawin_Halt("[U32.DW]");
-    };;
-    if(NULL==FP->USER32.PostQuitMessage){
-        aac2020_ginawin_Halt("[U32.PQM]");
-    };;
-    if(NULL==FP->USER32.DefWindowProcW){
-        aac2020_ginawin_Halt("[U32.DWPW]");
-    };;
+    //:ASSERT_SATED_FUNCTION_POINTERS:-----------------------://
+    #define H aac2020_ginawin_Halt
+
+        aac2020_ginawin_FUNCTION_POINTERS_struct*
+        FP = &(aac2020_ginawin_function_pointers);
+
+        if(NULL==FP->USER32.DestroyWindow  ){ H("[U32.DW]"  );};
+        if(NULL==FP->USER32.PostQuitMessage){ H("[U32.PQM]" );};
+        if(NULL==FP->USER32.DefWindowProcW ){ H("[U32.DWPW]");};
+  
+    #undef H
+    //:-----------------------:ASSERT_SATED_FUNCTION_POINTERS://
 
     switch(Msg){ //:- - - - - - - - - - - - - -://
     case 0x0005 /** WM_SIZE **/:{ 
@@ -499,7 +500,7 @@ aac2020_ginawin_RegisterWindow(
     unique_window_name    //+[2]+//
 //+-------------------------+[ ]+//
 ){
-    #if( AAC2020_GINAWIN_DEBUGIN_WINDOW_REGISTRATION >= 1 )
+    #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 )
 
         //:RWIN:RegisterWindow
         wprintf( L"[RWIN:unique_window_name]%s\n" 
@@ -735,7 +736,7 @@ aac2020_ginawin_WindowTick_private(
                 U32F -> DispatchMessageW(    ptr_M /** &M **/ );
             };;
 
-            #if( AAC2020_GINAWIN_DEBUGIN_WINDOW_REGISTRATION >= 1 )
+            #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 )
             
                 static int counter=( 0 );
                 counter++;
@@ -748,6 +749,13 @@ aac2020_ginawin_WindowTick_private(
             keep_looping = ( 1 );
         }else{
             keep_looping = ( 0 );
+
+            #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 )
+
+                //:WTF_KLZ:WindowTickFunction_KeepLoopingZero
+                printf("[DEBUG#1:WTP_KLZ]\n");fflush(stdout);
+                
+            #endif
         };;
 
     //:---------------:WAS_MESSAGE_WHILE_LOOP_BEFORE_REFACTOR://
@@ -872,7 +880,7 @@ aac2020_ginawin_OPEN_WINDOW(
 )
 {
 
-    #if( AAC2020_GINAWIN_DEBUGIN_WINDOW_REGISTRATION >= 1 )
+    #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 )
 
         //:OWIN:OPEN_WINDOW
         wprintf( L"[OWIN:unique_window_name]%s\n" 
@@ -1019,7 +1027,7 @@ aac2020_ginawin_OPEN_WINDOW_LOOP_FOREVER(
     unique_window_name
 ){
 
-    #if( AAC2020_GINAWIN_DEBUGIN_WINDOW_REGISTRATION >= 1 )
+    #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 )
 
         //:OWLF:OPEN_WINDOW_LOOP_FOREVER
         wprintf( L"[OWLF:unique_window_name]%s\n" 
@@ -1464,7 +1472,7 @@ aac2020_ginawin_THREAD_FUNCTION(                //|MC|//
         L"AAC2020_GINAWIN_UNIQUE_WINDOW_NAME"    
     );;                                  
 
-    #if( AAC2020_GINAWIN_DEBUGIN_WINDOW_REGISTRATION >= 1 )
+    #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 )
 
         //:TFUN:THREAD_FUNCTION
         wprintf( L"[TFUN:unique_window_name]%s\n" 
