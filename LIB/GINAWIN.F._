@@ -283,31 +283,39 @@ aac2020_ginawin_GPA(
 } //[aac2020_ginawin_GPA]//
 
 
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
 
-//:NULFUN:NullFunctionPointerError
 void
 aac2020_ginawin_NULFUN( 
     const char* name_of_null_function
 ){
+    /** aac2020_ginawin_NULFUN MEANS:   **/
+    /** NULFUN:NullFunctionPointerError **/
+
     printf(
-        "[GLEB.SWIN:Null_Func_Pointer_Found]\n"
+        "[AAC2020_GINAWIN :Null_Func_Pointer_Found]\n"
     );;
     printf( "Null:%s\n", name_of_null_function );
     fflush(stdout);
     exit( 666 );
-} //[aac2020_ginawin_NULFUN]//
+} 
+
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+
 void
 aac2020_ginawin_Halt( 
     const char* error_message_string
 ){
     printf(
-        "[GLEB.SWIN:Fatal_Error_Encountered]\n"
+        "[AAC2020_GINAWIN :Fatal_Error_Encountered]\n"
     );;
-    printf( "[EMS]:%s\n", error_message_string );
+    printf( "[AAC2020_GINAWIN:error_message_string]:%s\n"
+                            , error_message_string );;
     fflush(stdout);
     exit( 666 );
-} //[aac2020_ginawin_Halt]//
+} 
 
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
 
 int 
 aac2020_ginawin_Alert( 
@@ -431,11 +439,39 @@ aac2020_ginawin_WIN_MSG_HAN_WND_POC(
 
     //:WM_CLOSE: The "[X]" button was clicked.
     case 0x0010 /** WM_CLOSE **/:
+
+        /** SC[ WM_DESTROY_VS_WM_CLOSE ] ******************* **/
+        /** WM_DESTROY: CANNOT BE STOPPED, must cleanup.     **/
+        /** WM_CLOSE  : CAN CHOOSE TO IGNORE AND NOT CLOSE   **/
+        /**             stackoverflow.com/questions/3155782/ **/
+        /** ************************************************ **/
+
+        #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 ) //:##########://
+        #define OK aac2020_ginawin_OK
+        OK("[OK:WM_CLOSE:About_To_DestroyWindow]");
+        #undef  OK 
+        #endif //:###########################################://
+
         ok = FP->USER32.DestroyWindow(Hw); 
         if(0==ok){aac2020_ginawin_Halt("[0OK_2]");}
 
+        
+
     //:WM_DESTROY: ( DESTROYED|DESTROYING )
     case 0x0002 /** WM_DESTROY **/:  
+
+        /** SC[ WM_DESTROY_VS_WM_CLOSE ] ******************* **/
+        /** WM_DESTROY: CANNOT BE STOPPED, must cleanup.     **/
+        /** WM_CLOSE  : CAN CHOOSE TO IGNORE AND NOT CLOSE   **/
+        /**             stackoverflow.com/questions/3155782/ **/
+        /** ************************************************ **/
+
+        #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 ) //:##########://
+        #define OK aac2020_ginawin_OK
+        OK("[OK:WM_DESTROY:Handling_Destroy_Window_Message]");
+        #undef  OK 
+        #endif //:###########################################://
+
         //: Send "WM_QUIT" to exit msg loop.
         FP->USER32.PostQuitMessage(0);
 
@@ -691,25 +727,69 @@ aac2020_ginawin_WindowTick_private(
     v_HWND       Hw  /** HandleToWindow **/
 ,   MSG_48B*  ptr_M  /** MessageStructPassedByPointer **/
 ){
+    #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 ) //:##############://
+    #define H aac2020_ginawin_Halt
+
+        if( ((void*)0) ==    Hw ){ H("[BAD_HAN_WIN]"); };
+        if( ((void*)0) == ptr_M ){ H("[BAD_MSG_OBJ]"); };
+
+    #undef  H
+    #endif //:###############################################://
+
+
     int keep_looping=( 0 - 48221 ); //:ReturnThisFlag
 
     /** WindowTick function added DATE[ 2020_10_27 ]     **/
     /** To add SINGLE THREADING support for this window  **/
     /** class.                                           **/
 
-    struct aac2020_ginawin_functions_USER32*
-    U32F = &(
-        aac2020_ginawin_function_pointers
-       .USER32
-    );;
+    //:GET:U32F:---------------------------------------------://
 
-    struct aac2020_ginawin_data_USER32* 
-    U32DATA = &( U32F -> DATA);
+        struct aac2020_ginawin_functions_USER32*
+        U32F = &(
+            aac2020_ginawin_function_pointers
+           .USER32
+        );;
 
-    int sw_show = U32DATA -> sw_show;
-    U32F ->  ShowWindow(  Hw,sw_show); 
-    U32F ->  UpdateWindow(Hw        ); 
-    U32F ->  SetFocus(    Hw        ); //:<<<<<<<<<<<<<<<<<<<<<<<<<< TODO:IS_THIS_WHY_WINDOW_IS_ALWAYS_ON_TOP?
+        struct aac2020_ginawin_data_USER32* 
+        U32DATA = &( U32F -> DATA);
+
+        #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 ) //:##########://    
+        #define H aac2020_ginawin_Halt
+
+            if( ((void*)0) == U32F    ){ H("[NO:U32F]"); };
+            if( ((void*)0) == U32DATA ){ H("[NO:DATA]"); };
+
+        #undef  H
+        #endif //:###########################################://
+
+    //:---------------------------------------------:GET:U32F://
+
+    { //:SCOPE::::::::::::::::::::::::::::::::::::::::::SCOPE://
+    #define H aac2020_ginawin_Halt
+        
+        int sw_show = U32DATA -> sw_show;
+        int   SW = U32F ->  ShowWindow(  Hw,sw_show); 
+        int   UW = U32F ->  UpdateWindow(Hw        ); 
+        void* SF = U32F ->  SetFocus(    Hw        ); //:<<<<<<<<<<<<<<<<<<<<<<<<<< TODO:IS_THIS_WHY_WINDOW_IS_ALWAYS_ON_TOP?
+
+        if(         0  == SW ){ /** NOT AN ERROR **/ };
+        if(         0  != SW ){ /** NOT AN ERROR **/ };
+
+        if(         0  == UW ){ H("[UpdateWindow:FAIL]"); };
+        if( ((void*)0) == SF ){ H("[SetFocus:::::FAIL]"); };
+
+        #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 ) //:##########://
+
+            static int counter = 0; counter++;
+            if( counter % 1024 == 0 ){
+            printf("[SHOWING_WINDOW]"); fflush(stdout);
+            };;
+
+        #endif //:###########################################://
+
+    #undef  H
+    } //:SCOPE::::::::::::::::::::::::::::::::::::::::::SCOPE://
 
     UINT_u32_4B          wm_quit     ;                
     wm_quit = U32DATA -> wm_quit     ;
@@ -982,7 +1062,7 @@ aac2020_ginawin_OPEN_WINDOW(
             //: lpParam( ??? )
         ,   NULL               
         );;
-        if(Hw==NULL){
+        if( ((void*)0) == Hw ){
             aac2020_ginawin_Halt("[WindowCreateFail]");
             ok =( 0 );
             /** return( (void*)0 ); #ONE_EXIT_POINT_NOW# **/
@@ -1010,6 +1090,9 @@ aac2020_ginawin_OPEN_WINDOW(
         //|________________________________________________MC|//
 
     };; //:---------------------------------------:( ok > 0 )://
+
+    //:Fail_Fast_If_Window_Is_Null:
+    if( ((void*)0) == Hw ){ aac2020_ginawin_Halt("[ER1122]");};
     
     /** #ONE_EXIT_POINT_NOW# **/
     return( ok > 0 ? Hw : ((void*)0) );
@@ -1864,6 +1947,10 @@ aac2020_ginawin_WaitHereUntilWindowExists(){
         };; 
     };;
 
+    if( ((void*)0) == AAC2020_GINAWIN.PW.W32.handle_to_window ){
+        aac2020_ginawin_Halt("[YOUSAYYOUEXISTBUTYOUDONT]");
+    };;
+
     aac2020_ginawin_OK(
         "[DONE_WAITING_ON_WINDOW_CREATION]"
     );;fflush(stdout);
@@ -2319,69 +2406,75 @@ void AAC2020_GINAWIN_Init(
     int SINGLE_THREADED__or__MULTI_THREADED
 
 ){               
-                                           
+     
+    //:DONE_IN_BOTH_THREADING_MODES:-------------------------://
 
-    AAC2020_GINAWIN
-    .init_called = 1;
+        AAC2020_GINAWIN.init_called = 1;
 
-    aac2020_ginawin_InitGlobalStateContainer();  
-                                                 
-    aac2020_ginawin_AssertCorrectSizesOfTypes(); 
-                                                 
-    aac2020_ginawin_FUNCTION_POINTERS_init();    
-                                                 
-    aac2020_ginawin_CorrectWindowIfNeeded();     
-                         
-    switch( SINGLE_THREADED__or__MULTI_THREADED ){
-    case AAC2020_GINAWIN__MULTI_THREADED:{
+        aac2020_ginawin_InitGlobalStateContainer();  
+                                                     
+        aac2020_ginawin_AssertCorrectSizesOfTypes(); 
+                                                     
+        aac2020_ginawin_FUNCTION_POINTERS_init();    
+                                                     
+        aac2020_ginawin_CorrectWindowIfNeeded();     
 
-        AAC2020_GINAWIN.type_of_threading=(
-            AAC2020_GINAWIN__MULTI_THREADED
-        );;
+    //:-------------------------:DONE_IN_BOTH_THREADING_MODES://
+    //:PICK_INIT_LOGIC_FOR_THREADING_TYPE:-------------------://
 
-        aac2020_ginawin_CreateThread();              
-        aac2020_ginawin_AssertThreadCreated();      
+        switch( SINGLE_THREADED__or__MULTI_THREADED ){
+        case AAC2020_GINAWIN__MULTI_THREADED:{
 
-    };break;
-    case AAC2020_GINAWIN_SINGLE_THREADED:{
+            AAC2020_GINAWIN.type_of_threading=(
+                AAC2020_GINAWIN__MULTI_THREADED
+            );;
 
-        AAC2020_GINAWIN.type_of_threading=(
-            AAC2020_GINAWIN_SINGLE_THREADED
-        );;
+            aac2020_ginawin_CreateThread();              
+            aac2020_ginawin_AssertThreadCreated();      
 
-        /** Directly create window in this thread.           **/
-        /** As apposed to : "aac2020_ginawin_CreateThread()" **/
-        c_LPCWSTR_b16_2B 
-        unique_window_name=( 
-            //: L"SINGLE_THREADED_WINDOW" 
-                L"AAC2020_GINAWIN_UNIQUE_WINDOW_NAME"
-        );;
+        };break;
+        case AAC2020_GINAWIN_SINGLE_THREADED:{
 
-        void* han_win=(
-        aac2020_ginawin_OPEN_WINDOW( unique_window_name ));;
-        if( ((void*)0) == han_win ){
-            //:FTC_STW:FAILED_TO_CREATE___SINGLE_THREADED_WINDOW
-            aac2020_ginawin_Halt("[FTC_STW]");
-        };;
+            AAC2020_GINAWIN.type_of_threading=(
+                AAC2020_GINAWIN_SINGLE_THREADED
+            );;
+
+            /** Directly create window in this thread...     **/
+            /**,apposed to : "aac2020_ginawin_CreateThread()"**/
+            c_LPCWSTR_b16_2B 
+            unique_window_name=( 
+                //: L"SINGLE_THREADED_WINDOW" 
+                    L"AAC2020_GINAWIN_UNIQUE_WINDOW_NAME"
+            );;
+
+            void* han_win=(
+            aac2020_ginawin_OPEN_WINDOW( unique_window_name ));;
+
+            if( ((void*)0) == han_win ){
+                //:FTC_STW:
+                //:         FTC:FAILED_TO_CREATE
+                //:         STW:SINGLE_THREADED_WINDOW
+                aac2020_ginawin_Halt("[FTC_STW]");
+            };;
 
 
-        aac2020_ginawin_WaitHereUntilWindowExists();
+            aac2020_ginawin_WaitHereUntilWindowExists();
 
-        //: aac2020_ginawin_Halt("[TODO:2394723473289]");
+            //: aac2020_ginawin_Halt("[TODO:2394723473289]");
 
-    };break;
-    default:{
+        };break;
+        default:{
 
-        aac2020_ginawin_Halt("[BAD_THREADING_CODE]");
+            aac2020_ginawin_Halt("[BAD_THREADING_CODE]");
 
-    };;};;
+        };;};;
 
-  
+    //:-------------------:PICK_INIT_LOGIC_FOR_THREADING_TYPE://
+    //:COMMON_TAIL_LOGIC:------------------------------------://
 
-                                                 
-                                                 
-    AAC2020_GINAWIN                              
-    .init_finished = 1;                          
+        AAC2020_GINAWIN.init_finished = 1;
+
+    //:------------------------------------:COMMON_TAIL_LOGIC://
                                                  
 } //[AAC2020_GINAWIN_Init]//                     
                                                  
