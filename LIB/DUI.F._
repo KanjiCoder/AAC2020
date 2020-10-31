@@ -106,7 +106,9 @@ AAC2020_DUI_AskUserToPickColor()
     #endif
     #if( AAC2020_INCLUDE_GINAWIN >= 1 )
 
-        void*  hwnd  =(void*)AAC2020_GINAWIN_GetWinDC(); 
+        //+Handle to window is NOT a windows device context! +//
+        //- void*  hwnd  =(void*)AAC2020_GINAWIN_GetWinDC(); -//
+        void* hwnd=( AAC2020_GINAWIN_GET_han_win() );
 
     #endif
     //:######################################################://

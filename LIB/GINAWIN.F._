@@ -1,5 +1,12 @@
 
 
+//:TODO: This needs to be re-written so the only difference
+//:      between the threaded an non-threaded version is
+//:      where our infinite loop function is called.
+//:
+//:      The middle of the window loop will be done using
+//:      function pointers.
+
 //:Trying to figure out why window does not show up:
 //: 
 //:Possible fixes/problems:
@@ -357,7 +364,9 @@ aac2020_ginawin_Alert(
     ));;
 
     return msgboxID;    
-} //[aac2020_ginawin_Alert]//
+} 
+
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
 
 
 //| Section:WINDOW_CODE:start -----------------|//
@@ -724,9 +733,14 @@ aac2020_ginawin_TakeMessage(
 
 int 
 aac2020_ginawin_WindowTick_private(
-    v_HWND       Hw  /** HandleToWindow **/
-,   MSG_48B*  ptr_M  /** MessageStructPassedByPointer **/
+    
+    /** Get this using a member variable  **/
+    /** v_HWND       Hw  : HandleToWindow **/
+
+    MSG_48B*  ptr_M  /** MessageStructPassedByPointer **/
 ){
+    v_HWND Hw = ( AAC2020_GINAWIN.PW.W32.handle_to_window );
+
     #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 ) //:##############://
     #define H aac2020_ginawin_Halt
 
@@ -767,17 +781,23 @@ aac2020_ginawin_WindowTick_private(
 
     { //:SCOPE::::::::::::::::::::::::::::::::::::::::::SCOPE://
     #define H aac2020_ginawin_Halt
+
+        //:NOTE: SetFocus: Will FAIL when other dialogs are
+        //:                opened as children of the main
+        //:                window. SetFocus probably should
+        //:                NOT be used in our 
+        //:               [ window_loop / window_tick ]
         
         int sw_show = U32DATA -> sw_show;
         int   SW = U32F ->  ShowWindow(  Hw,sw_show); 
         int   UW = U32F ->  UpdateWindow(Hw        ); 
-        void* SF = U32F ->  SetFocus(    Hw        ); //:<<<<<<<<<<<<<<<<<<<<<<<<<< TODO:IS_THIS_WHY_WINDOW_IS_ALWAYS_ON_TOP?
+    //  void* SF = U32F ->  SetFocus(    Hw        ); //:<<<<<<<<<<<<<<<<<<<<<<<<<< TODO:IS_THIS_WHY_WINDOW_IS_ALWAYS_ON_TOP?
 
         if(         0  == SW ){ /** NOT AN ERROR **/ };
         if(         0  != SW ){ /** NOT AN ERROR **/ };
 
         if(         0  == UW ){ H("[UpdateWindow:FAIL]"); };
-        if( ((void*)0) == SF ){ H("[SetFocus:::::FAIL]"); };
+    //  if( ((void*)0) == SF ){ H("[SetFocus:::::FAIL]"); };
 
         #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 ) //:##########://
 
@@ -869,13 +889,19 @@ aac2020_ginawin_WindowTick_private(
 //# two possible problems.                     #//
 MSG_48B
 aac2020_ginawin_WindowLoop(
-    v_HWND Hw
+   /**  v_HWND Hw **/
 ){
+
+    v_HWND  Hw = AAC2020_GINAWIN.PW.W32.handle_to_window;
+    if( ((void*)0)==Hw ){ aac2020_ginawin_Halt("[454PM.F]");};
 
     MSG_48B M; /** Message Object. 48 Bytes In Size **/
 
     //:SPINLOCK:---------------------------------------------://
-    while( 1 == aac2020_ginawin_WindowTick_private( Hw, &M ) ){
+    while( 1 == aac2020_ginawin_WindowTick_private( 
+        /** Hw : Will be getting this from member variable **/
+            &M 
+    ) ){
 
         //: CANDO: (NOT: T-o-d-o ):
         //: Could call a function pointer here.
@@ -1122,11 +1148,29 @@ aac2020_ginawin_OPEN_WINDOW_LOOP_FOREVER(
     MSG_48B Msg = {0};        /** MessageObject  **/
 
     Hw = aac2020_ginawin_OPEN_WINDOW( unique_window_name );
-    Msg = aac2020_ginawin_WindowLoop( Hw );
+
+    #define N ((void*)0)  //:################################://
+    #define H aac2020_ginawin_Halt  //:######################://
+    #define W AAC2020_GINAWIN.PW.W32.handle_to_window  //:###://
+
+        if( N == Hw ){ H("[NULLWIN:ONE:2020_10_30]"); };
+        if( N == W  ){ H("[NULLWIN:TWO:2020_10_30]"); };
+
+    #undef  N  //:###########################################://
+    #undef  H  //:###########################################://
+    #undef  W  //:###########################################://
+
+    /** DATE[ 2020_10_30 ] ********************************* **/
+    /** GINAWIN is only meant for ONE window. So we should   **/
+    /** make as many variables FILESCOPE as possible to avoid**/
+    /** problems resulting from passing around variables.    **/
+    /** HENCE: "Hw" commented out in the call below.         **/
+    Msg = aac2020_ginawin_WindowLoop( /** Hw **/ );
 
     return Msg.wParam;
-} //[aac2020_ginawin_OPEN_WINDOW_LOOP_FOREVER]//
+} 
 
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
 
 void
 aac2020_ginawin_ForgotToInitWindowSize(){
@@ -2015,10 +2059,7 @@ AAC2020_GINAWIN_GetWinDC(){
         };;
     //:------------------------------:GAURDED_WAIT_FOR_WINDOW://
 
-    if( 0 == 
-        GS -> PW.W32
-        .window_device_context
-    ){
+    if( 0 == GS -> PW.W32.window_device_context ){
         aac2020_ginawin_Halt(
             "[WindowWaitMechanismFailed]"
         );;
@@ -2064,18 +2105,33 @@ AAC2020_GINAWIN_WindowTick(
     
     //:--------------------------:ASSERT_SINGLE_THREADED_MODE://
 
-    /** Static because we only want to fetch these ONCE.     **/
-    /** Unfortunately, "han_win" cannot be static because    **/
-    /** it is a non-const expresion.                         **/
-            v_HWND han_win = AAC2020_GINAWIN_GetWinDC();
-    static MSG_48B msg_48b = {0};
 
-    if( ((void*)0)==han_win ){
-        aac2020_ginawin_Halt("[NULL_HWND:2020_10_28]");
-    };;
+
+    //: static MSG_48B msg_48b = {0}; //:<--Dirty_re_use
+    MSG_48B msg_48b = {0}; //:<--Expecting clean slate?
+
+    #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 )
+    #define H       aac2020_ginawin_Halt
+    #define HAN_WIN AAC2020_GINAWIN.PW.W32.handle_to_window
+
+        //: END_OF_THE_BUG_HUNT!                             ://
+        //: PROBLEM: You for some reason thought that        ://
+        //: GetWinDC returned "handle_to_window"             ://
+        //: when it does NOT. Type Error.                    ://
+
+        void* con_win = AAC2020_GINAWIN_GetWinDC();
+        if( ((void*)0)== HAN_WIN ){ H("[2020_10_30:E1]"); }; 
+        if( con_win   == HAN_WIN ){ H("[2020_10_30:E2]"); }; 
+        
+    #undef H
+    #undef HAN_WIN
+    #endif
 
     keep_looping=(
-        aac2020_ginawin_WindowTick_private( han_win, &msg_48b )
+        aac2020_ginawin_WindowTick_private( 
+            /** han_win : Get using member variable **/
+            &msg_48b 
+        )
     );;
 
     return( keep_looping );
@@ -2476,8 +2532,27 @@ void AAC2020_GINAWIN_Init(
 
     //:------------------------------------:COMMON_TAIL_LOGIC://
                                                  
-} //[AAC2020_GINAWIN_Init]//                     
-                                                 
+} //[AAC2020_GINAWIN_Init]//    
+
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+
+    void*
+    AAC2020_GINAWIN_GET_han_win(){
+//: AAC2020_GINAWIN_GetHandleToWindow
+
+        void* han_win = AAC2020_GINAWIN.PW.W32.handle_to_window;
+        int   win_exi = AAC2020_GINAWIN.window_created;
+
+        #define H aac2020_ginawin_Halt
+        if(        1  != win_exi ){   H("[WIN_EXI]"); };
+        if(((void*)0) == han_win ){   H("[HAN_WIN]"); };
+        #undef  H
+
+        return( han_win );
+    }    
+
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://     
+                                                     
 int 
 AAC2020_GINAWIN_Demo( void ){
     printf(

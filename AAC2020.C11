@@ -17,7 +17,9 @@
 //:==========================================================://
 //:NON_DEBUG_CONFIGURATION:==================================://
 
-    #define AAC2020_IS_MULTI_THREADED ( 1 )
+    #define AAC2020_IS_MULTI_THREADED ( 0 )
+
+    #define AAC2020_LAUNCH_COLOR_PICKER_ON_STARTUP ( 1 )
 
 //:==================================:NON_DEBUG_CONFIGURATION://
 //:INCLUDE_DIRECTIVES:=======================================://
@@ -87,6 +89,39 @@
 
 
 //:====================================:MAIN_ENTRY_POINT.DATA://
+//:MAIN_ENTRY_POINT.LAUNCH_COLOR_PICKER:=====================://
+    int
+    AAC2020_MAYBEE_LaunchColorPickerOnStartup(){
+
+        //:##################################################://
+        #if( AAC2020_LAUNCH_COLOR_PICKER_ON_STARTUP >= 1 ) 
+
+            printf("[Ask_User_To_Pick_Color]");
+            unsigned long hex = AAC2020_DUI_AskUserToPickColor();
+            AAC2020_DUI_MessageBoxForHexValue(
+                "[!YOU_ABSOLUTE_LEGEND!]" , hex );;
+
+        #endif //:###########################################://
+        //:##################################################://
+
+        return( 0 );
+    }
+//:=====================:MAIN_ENTRY_POINT.LAUNCH_COLOR_PICKER://
+//:MAIN_ENTRY_POINT.FUNC.GAME_LOOP:==========================://
+    int 
+    AAC2020_GameLoop()
+    { //:FUNCTION_BODY
+
+
+
+
+        //:TODO: Game update stuff.
+
+
+
+        return( 0 );
+    } //:FUNCTION_BODY
+//:==========================:MAIN_ENTRY_POINT.FUNC.GAME_LOOP://
 //:MAIN_ENTRY_POINT.FUNC:====================================://
 
     int 
@@ -99,6 +134,11 @@
         printf("[TODO:Proper Window Code Instead Of Console]\n");
     //: PEB2020_LibraryDemo();
 
+        #if( AAC2020_INCLUDE_GINAWIN <= 0 ) //:##############://
+
+            AAC2020_MAYBEE_LaunchColorPickerOnStartup();
+
+        #endif //:###########################################://
         #if( AAC2020_INCLUDE_GINAWIN >= 1 ) //:##############://
 
             AAC2020_GINAWIN.X   = 22  ;
@@ -115,22 +155,25 @@
                 #endif
             );;
 
+
+            if( AAC2020_IS_MULTI_THREADED >= 1 ){
+
+                aac2020_ginawin_WaitHereUntilWindowExists();
+
+            };;
+
         #endif //:###########################################://
-    
-    //   printf("[Ask_User_To_Pick_Color]");
-    //   unsigned long hex = AAC2020_DUI_AskUserToPickColor();
-    //   AAC2020_DUI_MessageBoxForHexValue(
-    //       "[!YOU_ABSOLUTE_LEGEND!]" , hex );;
-
-
         #if( AAC2020_INCLUDE_GINAWIN >= 1 ) //:##############://
 
+            //:Regardless of single or double threaded:
+            AAC2020_MAYBEE_LaunchColorPickerOnStartup();
+
            
-
-
             if( AAC2020_GINAWIN.type_of_threading 
             ==  AAC2020_GINAWIN__MULTI_THREADED
             ){
+
+                
 
                 AAC2020_GINAWIN_Wait();
 
@@ -141,35 +184,23 @@
 
                 while( AAC2020_GINAWIN_IsWindowStillOpen() ){
 
+                    AAC2020_GameLoop();
+
                     /** AAC2020_GINAWIN_LoopTick(); **/
                         AAC2020_GINAWIN_WindowTick(
                             AAC2020_GINAWIN_SINGLE_THREADED
                         );;
                 
-                    #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 )
-                
-                        static int counter=( 0 );
-                        counter++;
-                        if( counter % ( 512*512 ) == 0 ){
-                            printf("YOLO\n");
-                        };;
-                
-                    #endif
-
-              //  void*   Hw  = ((void*)0); /** HandleToWindow **/
-              //  MSG_48B Msg = {0};        /** MessageObject  **/
-              //
-              //  Hw = aac2020_ginawin_OPEN_WINDOW( L"AAC2020_GINAWIN_UNIQUE_WINDOW_NAME" );
-              //  Msg = aac2020_ginawin_WindowLoop( Hw );
-              //
-              //  if( Msg.message > 0 ){ /** NOOP **/ };
-              //
-
-
-
-
+                        #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 )
+                    
+                            static int counter=( 0 );
+                            counter++;
+                            if( counter % ( 512*512 ) == 0 ){
+                                printf("YOLO\n");
+                            };;
+                    
+                        #endif
                 };;
-
             };;
         #endif //:###########################################://
 
