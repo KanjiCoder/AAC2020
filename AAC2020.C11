@@ -87,26 +87,128 @@
 
     //:This section also known as [global/filescope] variables:
 
+    /** Always store as RGBA. Do not store other formats     **/
+    /** in game code. Normalization of data keeps things     **/
+    /** simple.                                              **/
+    unsigned long AAC2020_last_picked_color_hex=( 0x808080FF );
 
 //:====================================:MAIN_ENTRY_POINT.DATA://
+//:MAIN_ENTRY_POINT.TEST_SAVE_PNG_FILE:======================://
+    int
+    AAC2020_TestSaveFile_PNG()
+    {
+
+        /**  Try saving a 512x512 png image using the        **/
+        /**  color picker value to set color of all pixels.  **/
+
+        unsigned char pix_arr[512*512*4]; //:AKA[ image ]
+        unsigned int  pix_wid=( 512 );
+        unsigned int  pix_hig=( 512 );
+
+        //:Extract RGBA:
+        #define U32 uint32_t /** unsigned long **/
+        #define HEX AAC2020_last_picked_color_hex
+
+            U32 R = (HEX >> 24) & 0xFF;
+            U32 G = (HEX >> 16) & 0xFF;
+            U32 B = (HEX >>  8) & 0xFF;
+            U32 A = (HEX >>  0) & 0xFF;
+     
+        #undef  HEX
+        #undef  U32
+
+        //:Make all alpha 100%:
+        for( int i = 0 ; i < (512*512) ; i++ ){
+            int pixel_base_address=( i * 4 );
+            int r = pixel_base_address + 0;
+            int g = pixel_base_address + 1;
+            int b = pixel_base_address + 2;
+            int a = pixel_base_address + 3;
+            pix_arr[ r ]=(    R  );
+            pix_arr[ g ]=(    G  );
+            pix_arr[ b ]=(    B  );
+            pix_arr[ a ]=(    A  );
+        };;
+
+        unsigned int result=( 
+            lodepng_encode32_file( 
+                "FILE.PNG" 
+            ,   pix_arr  //:AKA[ image ]
+            ,   pix_wid 
+            ,   pix_hig
+            )
+        );;
+
+        return( result );
+    }
 //:MAIN_ENTRY_POINT.LAUNCH_COLOR_PICKER:=====================://
+#define PICKCOLOR_BWO  AAC2020_DUI_AskUserToPickColor_BWO
     int
     AAC2020_MAYBEE_LaunchColorPickerOnStartup(){
 
+    
         //:##################################################://
         #if( AAC2020_LAUNCH_COLOR_PICKER_ON_STARTUP >= 1 ) 
-
+        #define G(a,b,c) a##_##b##_##c
             printf("[Ask_User_To_Pick_Color]");
-            unsigned long hex = AAC2020_DUI_AskUserToPickColor();
-            AAC2020_DUI_MessageBoxForHexValue(
-                "[!YOU_ABSOLUTE_LEGEND!]" , hex );;
+            
+            //:  //: Doing it this way will be impossible
+            //:  //: to easily GREP search for.
+            //:  unsigned long hex =(
+            //:      G(AAC2020_DUI
+            //:      , AskUserToPickColor
+            //:      , BEFORE_MAIN_WINDOW_OPENS
+            //:      )()
+            //:  );;
 
+            unsigned long hex=PICKCOLOR_BWO( );
+
+            //:Window's color picker uses BGR (no alpha).
+            //:We need to get it into RGBA format.
+            AAC2020_last_picked_color_hex=(  0
+            |
+                ( ( hex >>  0  ) & 0xFF ) << 24 //:RED
+            |
+                ( ( hex >>  8  ) & 0xFF ) << 16 //:GREEN
+            |
+                ( ( hex >> 16  ) & 0xFF ) <<  8 //:BLUE
+            |
+                ( ( 0xFF /** ALPHA **/ )) <<  0 //:ALPHA
+            );;
+
+            AAC2020_DUI_MessageBoxForHexValue(
+                "[!YOU_ABSOLUTE_LEGEND!]" 
+            ,    AAC2020_last_picked_color_hex
+            );;
+        #undef G
         #endif //:###########################################://
         //:##################################################://
 
         return( 0 );
     }
+#undef PICKCOLOR_BWO
 //:=====================:MAIN_ENTRY_POINT.LAUNCH_COLOR_PICKER://
+//:MAIN_ENTRY_POINT.TASKS:===================================://
+
+
+    int
+    AAC2020_AFTER__WINDOW_OPENS_TASKS()
+    {
+
+        return( 0 );
+    }
+
+    int
+    AAC2020_BEFORE_WINDOW_OPENS_TASKS()
+    {
+        AAC2020_DUI_ErrorCheckSizeOfTypes_WINDOWS_10_64BIT();
+        AAC2020_MAYBEE_LaunchColorPickerOnStartup();
+        AAC2020_TestSaveFile_PNG();
+        return( 0 );
+    }
+
+
+//:===================================:MAIN_ENTRY_POINT.TASKS://
 //:MAIN_ENTRY_POINT.FUNC.GAME_LOOP:==========================://
     int 
     AAC2020_GameLoop()
@@ -127,18 +229,25 @@
     int 
     main( void )
     {
-        AAC2020_DUI_ErrorCheckSizeOfTypes_WINDOWS_10_64BIT();
-
-        printf("[ALL_THIS_DOES_IS_OPEN_A_COLOR_PICKER]\n");
-        printf("[TODO:Change Background Color]\n");
-        printf("[TODO:Proper Window Code Instead Of Console]\n");
-    //: PEB2020_LibraryDemo();
-
+        
+        //:MAIN_SECTION:001:=================================://
+        //:##################################################://
         #if( AAC2020_INCLUDE_GINAWIN <= 0 ) //:##############://
 
-            AAC2020_MAYBEE_LaunchColorPickerOnStartup();
+            AAC2020_BEFORE_WINDOW_OPENS_TASKS();
+            AAC2020_AFTER__WINDOW_OPENS_TASKS();
 
         #endif //:###########################################://
+        #if( AAC2020_INCLUDE_GINAWIN >= 1 ) //:##############://
+
+            AAC2020_BEFORE_WINDOW_OPENS_TASKS();
+
+        #endif //:###########################################://
+        //:##################################################://
+        //:=================================:MAIN_SECTION:001://
+        //:MAIN_SECTION:002:=================================://
+        //:( AAC2020_INCLUDE_GINAWIN >= 1 ):#################://
+        #if( AAC2020_INCLUDE_GINAWIN >= 1 ) //:##############://
         #if( AAC2020_INCLUDE_GINAWIN >= 1 ) //:##############://
 
             AAC2020_GINAWIN.X   = 22  ;
@@ -162,12 +271,11 @@
 
             };;
 
-        #endif //:###########################################://
-        #if( AAC2020_INCLUDE_GINAWIN >= 1 ) //:##############://
+        #endif //:- - - - - - - - - - - - - - - - - - - - - -://
+        #if( AAC2020_INCLUDE_GINAWIN >= 1 )  //:- - - - - - -://
 
-            //:Regardless of single or double threaded:
-            AAC2020_MAYBEE_LaunchColorPickerOnStartup();
-
+            
+            AAC2020_AFTER__WINDOW_OPENS_TASKS();
            
             if( AAC2020_GINAWIN.type_of_threading 
             ==  AAC2020_GINAWIN__MULTI_THREADED
@@ -203,7 +311,9 @@
                 };;
             };;
         #endif //:###########################################://
-
+        #endif //:###########################################://
+        //:#################:( AAC2020_INCLUDE_GINAWIN >= 1 )://
+        //:=================================:MAIN_SECTION:002://
     }
 
 //:====================================:MAIN_ENTRY_POINT.FUNC://
