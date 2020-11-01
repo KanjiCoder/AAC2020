@@ -1,3 +1,7 @@
+
+//:TODO:
+    //: 2: GRABIND //:Graphics Calls Bindings
+
 //:ABOUT_THIS_PROJECT:=======================================://
 
     //: PREVIOUS_LIBRARY: A2_JC.JS ------------------------- ://
@@ -10,11 +14,6 @@
     //: ---------------------------------------------------- ://
 
 //:=======================================:ABOUT_THIS_PROJECT://
-//:DEBUG_CONFIGURATION:======================================://
-
-    #define AAC2020_INCLUDE_GINAWIN ( 1 )
-
-//:==========================================================://
 //:NON_DEBUG_CONFIGURATION:==================================://
 
     #define AAC2020_IS_MULTI_THREADED ( 0 )
@@ -35,31 +34,108 @@
         #include <stdio.h>  /**  printf(...) **/
         #include <stdint.h> /**  uintptr_t   **/
 
+        /** stackoverflow.com/questions/230062 **/
+        #include <fcntl.h> /** #SEE_IF_FILE_EXISTS_THEN_USE# **/
+        #include <errno.h> /** #SEE_IF_FILE_EXISTS_THEN_USE# **/
+
     //:----------------:INCLUDE_DIRECTIVES:STANDARD_LIBRARIES://
 
 //:=======================================:INCLUDE_DIRECTIVES://
+//:LIBRARY_CHAIN:============================================://
+
+    /** Library chain is used as a hackish way to debug      **/
+    /** code by divide and conquer. Any                      **/
+    /** AAC2020_MAC_LIBCHAN_CUR value between [ 0 -to- MAX ] **/
+    /** (inclusive range) should yeild a working             **/
+    /** executable.                                          **/
+    /**                                                      **/
+    /** This requires being a bit meticulous with your       **/
+    /** dependencies. But you should understand your         **/
+    /** dependencies well enough to pull this off anyhow.    **/
+    /**                                                      **/
+    /** Dependency injection or dependency resolvers are for **/
+    /** people who are writing clusterfucks. We want to      **/
+    /** actually have a clear idea of what our code is doing.**/
+    /**                                                      **/
+    /** John Mark Isaac Madison DATE[2020_11_01]             **/
+
+    #define AAC2020_MAC_LIBCHAN_CUR ( 3 )
+
+    #define AAC2020_MAC_LIBCHAN_001 ( 1 )
+    #define AAC2020_MAC_LIBCHAN_002 ( 2 )
+    #define AAC2020_MAC_LIBCHAN_003 ( 3 )
+
+    #define AAC2020_MAC_LIBCHAN_MAX ( 3 )
+
+//:============================================:LIBRARY_CHAIN://
 //:DATA:DATA_BEFORE_FUNCTIONS:===============================://
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_001 )
 
-    #if( AAC2020_INCLUDE_GINAWIN >= 1 )
+    #define AAC2020_INCLUDE_GINAWIN ( 1 )
     #include "LIB/GINAWIN.D._" //:Graphics_Init_And_Window
-    #endif
-
+#else
+    #define AAC2020_INCLUDE_GINAWIN ( 0 )
+#endif
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_002 )
+    
+    #define AAC2020_INCLUDE_DUI ( 2 )
     #include "LIB/DUI.D._"     //:AAC2020_DUI_*_Dialog_UI_Data
 
-    #include "LIB/GRA.D._"     //:AAC2020_GRA_*_Graphics_Data
+#endif
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_003 )
+
+        #define AAC2020_INCLUDE_GLEBIND ( 3 )
+        #include "LIB/GLEBIND.D._"   
+
+    #else
+
+        #define AAC2020_INCLUDE_GLEBIND ( 0 )
+
+    #endif
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_004 )
+
+    #include "LIB/GRAQUAD.D._"   
+
+#endif
+#if( AAC2020_MAC_LIBCHAN_CUR > AAC2020_MAC_LIBCHAN_MAX  )
+
+    #error "[DATA:EXCEEDING_LIBCHAN_MAX:DATA]"
+
+#endif   
 
 //:===============================:DATA:DATA_BEFORE_FUNCTIONS://
 //:FUNC:FUNCTIONS_AFTER_DATA:================================://
 
-    
-    #if( AAC2020_INCLUDE_GINAWIN >= 1 )
-    #include "LIB/GINAWIN.F._" //:Graphics_Init_And_Window
-    #endif
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_001 )
 
+    #define AAC2020_INCLUDE_GINAWIN ( 1 )
+    #include "LIB/GINAWIN.F._" //:Graphics_Init_And_Window
+#else
+    #define AAC2020_INCLUDE_GINAWIN ( 0 )
+#endif
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_002 )
+     
+    #define AAC2020_INCLUDE_DUI ( 2 )
     #include "LIB/DUI.F._"     //:AAC2020_DUI_*_Dialog_UI_Funcs
 
-    #include "LIB/GRA.F._"     //:AAC2020_GRA_*_Graphics_Funcs
+#endif
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_003 )
 
+
+    #include "LIB/GLEBIND.F._"      
+
+#endif
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_004 )
+
+
+    #include "LIB/GRAQUAD.F._"      
+
+#endif
+#if( AAC2020_MAC_LIBCHAN_CUR > AAC2020_MAC_LIBCHAN_MAX  )
+
+    #error "[FUNC:EXCEEDING_LIBCHAN_MAX:FUNC]"
+
+#endif
 //:================================:FUNC:FUNCTIONS_AFTER_DATA://
 //:CLASS:CLASSES_AFTER_FUNCTIONS_AND_DATA:===================://
 
@@ -78,9 +154,11 @@
     //|    forward declarations.                             |//
     //+------------------------------------------------------+//
     
-    #if( AAC2020_INCLUDE_GINAWIN >= 1 )
-    #include "LIB/GINAWIN.P._"
-    #endif
+    #if( AAC2020_INCLUDE_GINAWIN >= 1 )//:###################://
+
+        #include "LIB/GINAWIN.P._"
+
+    #endif //:###############################################://
 
 //:=====:PUBLIC:PUBLIC_FUNCTIONS_BELOW_DATA_FUNCS_AND_CLASSES://
 //:MAIN_ENTRY_POINT.DATA:====================================://
@@ -146,7 +224,9 @@
     int
     AAC2020_MAYBEE_LaunchColorPickerOnStartup(){
 
-    
+        int return_status=( 0 - 666 );
+
+        #if( AAC2020_INCLUDE_DUI ) //:#######################://
         //:##################################################://
         #if( AAC2020_LAUNCH_COLOR_PICKER_ON_STARTUP >= 1 ) 
         #define G(a,b,c) a##_##b##_##c
@@ -162,6 +242,7 @@
             //:  );;
 
             unsigned long hex=PICKCOLOR_BWO( );
+            return_status=( 0 /** No error **/ );
 
             //:Window's color picker uses BGR (no alpha).
             //:We need to get it into RGBA format.
@@ -181,10 +262,10 @@
             ,    AAC2020_last_picked_color_hex
             );;
         #undef G
-        #endif //:###########################################://
-        //:##################################################://
+        #endif //:####:AAC2020_LAUNCH_COLOR_PICKER_ON_STARTUP://
+        #endif //:#######################:AAC2020_INCLUDE_DUI://
 
-        return( 0 );
+        return( return_status );
     }
 #undef PICKCOLOR_BWO
 //:=====================:MAIN_ENTRY_POINT.LAUNCH_COLOR_PICKER://
@@ -201,8 +282,14 @@
     int
     AAC2020_BEFORE_WINDOW_OPENS_TASKS()
     {
-        AAC2020_DUI_ErrorCheckSizeOfTypes_WINDOWS_10_64BIT();
-        AAC2020_MAYBEE_LaunchColorPickerOnStartup();
+
+        #if( AAC2020_INCLUDE_DUI ) //:#######################://
+
+            AAC2020_DUI_ErrorCheckSizeOfTypes_WIN_10_64BIT();
+            AAC2020_MAYBEE_LaunchColorPickerOnStartup();
+
+        #endif //:###########################################://
+
         AAC2020_TestSaveFile_PNG();
         return( 0 );
     }
@@ -264,12 +351,38 @@
                 #endif
             );;
 
-
             if( AAC2020_IS_MULTI_THREADED >= 1 ){
 
                 aac2020_ginawin_WaitHereUntilWindowExists();
 
             };;
+
+            #if( AAC2020_INCLUDE_GLEBIND >= 1 ) //:##########://
+
+                //: If "OPEN_GL_SEARCH_PATHS.TXT" does not   ://
+                //: exist, create it now and populate it     ://
+                //: with some default values.                ://
+                /** #SEE_IF_FILE_EXISTS_THEN_USE# ** ******* **/
+                int fd = open(
+                    "OPEN_GL_SEARCH_PATHS.TXT"
+                , O_CREAT | O_WRONLY | O_EXCL, S_IRUSR | S_IWUSR
+                );;
+
+                if (fd < 0) {
+                  /* failure */
+                  if (errno == EEXIST) {
+                    /* the file already existed */
+                    ...
+                  }
+                } else {
+                  /* now you can use the file */
+                }
+
+                printf("[ABOUT_TO_INIT_OPEN_GL_BINDINGS]\n");   
+                fflush(stdout);
+                GLEB_Init();
+
+            #endif //:#######################################://
 
         #endif //:- - - - - - - - - - - - - - - - - - - - - -://
         #if( AAC2020_INCLUDE_GINAWIN >= 1 )  //:- - - - - - -://
@@ -314,6 +427,9 @@
         #endif //:###########################################://
         //:#################:( AAC2020_INCLUDE_GINAWIN >= 1 )://
         //:=================================:MAIN_SECTION:002://
+
+
+        printf("[LAST_LINE_OF_MAIN_FUNCTION]\n");
     }
 
 //:====================================:MAIN_ENTRY_POINT.FUNC://

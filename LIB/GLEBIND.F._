@@ -1,0 +1,4076 @@
+
+//[][][][][][][][][][][][][][][][][][][][][][][]//  //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+#define GLEB_MV_DEBUGPRINT_01 0                     //[HELPER_FUNCTIONS]//
+#if(GLEB_MV_DEBUGPRINT_01 <= 0)                     //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+    //: emp_mac_arg:empty_macro_arg                 //[HELPER_FUNCTIONS]//
+    #define GLEB_MM_DEBUGPRINT_01( emp_mac_arg )    //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+#else                                               //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+    void GLEB_MM_DEBUGPRINT_01( const char* m ){    //[HELPER_FUNCTIONS]//
+        printf("[GLEB:DP_01]:%s\n",m);              //[HELPER_FUNCTIONS]//
+        fflush(stdout);                             //[HELPER_FUNCTIONS]//
+    }                                               //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+#endif                                              //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+//[][][][][][][][][][][][][][][][][][][][][][][]//  //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+//: Like GLEB_DebugPrint but NOT used for           //[HELPER_FUNCTIONS]//
+//: [trouble shooting/searching for] bugs.          //[HELPER_FUNCTIONS]//
+void                                                //[HELPER_FUNCTIONS]//
+GLEB_InfoPrint(                                     //[HELPER_FUNCTIONS]//
+/**/const char* message_to_print                    //[HELPER_FUNCTIONS]//
+){                                                  //[HELPER_FUNCTIONS]//
+    if( GLEB_no_news_is_good_news <= 0 ){           //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+        printf(                                     //[HELPER_FUNCTIONS]//
+        /**/"[GLEB_IP........]:%s\n"                //[HELPER_FUNCTIONS]//
+        ,   message_to_print                        //[HELPER_FUNCTIONS]//
+        );;                                         //[HELPER_FUNCTIONS]//
+        fflush(stdout);                             //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+    };;                                             //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+} //[[GLEB_InfoPrint]]//                            //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+//[][][][][][][][][][][][][][][][][][][][][][][]//  //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+void                                                //[HELPER_FUNCTIONS]//
+GLEB_InfoPrint_STR(                                 //[HELPER_FUNCTIONS]//
+/**/const char* message_to_print                    //[HELPER_FUNCTIONS]//
+,   const char* string_var_to_print                 //[HELPER_FUNCTIONS]//
+){                                                  //[HELPER_FUNCTIONS]//
+    if( GLEB_no_news_is_good_news <= 0 ){           //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+        printf(                                     //[HELPER_FUNCTIONS]//
+        /**/"[GLEB_IP_STR.MSG]:%s\n"                //[HELPER_FUNCTIONS]//
+        ,   message_to_print                        //[HELPER_FUNCTIONS]//
+        );;                                         //[HELPER_FUNCTIONS]//
+        printf(                                     //[HELPER_FUNCTIONS]//
+        /**/"[GLEB_IP_STR.VAL]:%s\n"                //[HELPER_FUNCTIONS]//
+        ,   string_var_to_print                     //[HELPER_FUNCTIONS]//
+        );;                                         //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+        fflush(stdout);                             //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+    };;                                             //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+} //[[GLEB_InfoPrint_STR]]//                        //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+//[][][][][][][][][][][][][][][][][][][][][][][]//  //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+void                                                //[HELPER_FUNCTIONS]//
+GLEB_InfoPrint_INT(                                 //[HELPER_FUNCTIONS]//
+/**/const char* message_to_print                    //[HELPER_FUNCTIONS]//
+,   int         value_to_print                      //[HELPER_FUNCTIONS]//
+){                                                  //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+    if( GLEB_no_news_is_good_news <= 0 ){           //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+        printf(                                     //[HELPER_FUNCTIONS]//
+        /**/"[GLEB_IP_INT.MSG]:%s\n"                //[HELPER_FUNCTIONS]//
+        ,   message_to_print                        //[HELPER_FUNCTIONS]//
+        );;                                         //[HELPER_FUNCTIONS]//
+        printf(                                     //[HELPER_FUNCTIONS]//
+        /**/"[GLEB_IP_STR.VAL]:%d\n"                //[HELPER_FUNCTIONS]//
+        ,   value_to_print                          //[HELPER_FUNCTIONS]//
+        );;                                         //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+        fflush(stdout);                             //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+    };;                                             //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+} //[[GLEB_InfoPrint_INT]]//                        //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+//[][][][][][][][][][][][][][][][][][][][][][][]//  //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+#include <stdio.h> //:printf(...)                   //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+void                                                //[HELPER_FUNCTIONS]//
+GLEB_Error(                                         //[HELPER_FUNCTIONS]//
+/**/const char* whats_wrong_message //:Stringc      //[HELPER_FUNCTIONS]//
+,   int   crash_the_program         //:Boolean      //[HELPER_FUNCTIONS]//
+){                                                  //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+    const char* BEG_error_section =(                //[HELPER_FUNCTIONS]//
+    //:          10        20   25                  //[HELPER_FUNCTIONS]//
+    //:::1234567890123456789012345                  //[HELPER_FUNCTIONS]//
+        "[BEG::GLEB(LIBRARY)ERROR]\n"               //[HELPER_FUNCTIONS]//
+    );;                                             //[HELPER_FUNCTIONS]//
+    const char* END_error_section =(                //[HELPER_FUNCTIONS]//
+    //:          10        20   25                  //[HELPER_FUNCTIONS]//
+    //:::1234567890123456789012345                  //[HELPER_FUNCTIONS]//
+        "[END::GLEB(LIBRARY)ERROR]\n"               //[HELPER_FUNCTIONS]//
+    );;                                             //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+    printf( BEG_error_section );                    //[HELPER_FUNCTIONS]//
+    printf("\n\n");                                 //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+    //:************************://                  //[HELPER_FUNCTIONS]//
+    printf(whats_wrong_message);                    //[HELPER_FUNCTIONS]//
+    //:************************://                  //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+    printf("\n\n\n");                               //[HELPER_FUNCTIONS]//
+    printf(END_error_section);;                     //[HELPER_FUNCTIONS]//
+    fflush(stdout);                                 //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+    if( crash_the_program ){                        //[HELPER_FUNCTIONS]//
+        exit(666);                                  //[HELPER_FUNCTIONS]//
+    };;                                             //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+} //[[GLEB_Error]]//                                //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+//[][][][][][][][][][][][][][][][][][][][][][][]//  //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+/**!!!!WRONG_CASE!!!!**/ void GLEB_HALT( void ){    //[HELPER_FUNCTIONS]//
+    printf(                                         //[HELPER_FUNCTIONS]//
+        "[WRONG_CASE:GLEB_Halt:NOT:GLEB_HALT]"      //[HELPER_FUNCTIONS]//
+    );;                                             //[HELPER_FUNCTIONS]//
+} //[]//                                            //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+void gleb_Halt(                                     //[HELPER_FUNCTIONS]//
+    const char* whats_wrong_message                 //[HELPER_FUNCTIONS]//
+){                                                  //[HELPER_FUNCTIONS]//
+    //:Let user know originated in gleb_Halt,       //[HELPER_FUNCTIONS]//
+    //:not "GLEB_Error".                            //[HELPER_FUNCTIONS]//
+    printf("[gleb_Halt:JustCalled]\n");             //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+    static int CRASH_THE_PROGRAM = 1;               //[HELPER_FUNCTIONS]//
+    GLEB_Error(                                     //[HELPER_FUNCTIONS]//
+    /**/whats_wrong_message                         //[HELPER_FUNCTIONS]//
+    ,   CRASH_THE_PROGRAM                           //[HELPER_FUNCTIONS]//
+    );;                                             //[HELPER_FUNCTIONS]//
+}                                                   //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+/**!!!!WRONG_CASE!!!!**/void GLEB_OK( void ){       //[HELPER_FUNCTIONS]//
+    printf(                                         //[HELPER_FUNCTIONS]//
+        "[WRONG_CASE:gleb_OK:NOT:GLEB_OK]"          //[HELPER_FUNCTIONS]//
+        "[Its_A_Private_Function________]"          //[HELPER_FUNCTIONS]//
+    );;                                             //[HELPER_FUNCTIONS]//
+}                                                   //[HELPER_FUNCTIONS]//
+void                                                //[HELPER_FUNCTIONS]//
+gleb_OK( const char* okay_message ){                //[HELPER_FUNCTIONS]//
+    printf(                                         //[HELPER_FUNCTIONS]//
+        "[gleb_OK]:%s\n", okay_message              //[HELPER_FUNCTIONS]//
+    );;                                             //[HELPER_FUNCTIONS]//
+} //[gleb_OK]//                                     //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+//[][][][][][][][][][][][][][][][][][][][][][][]//  //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+//|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//  //[HELPER_FUNCTIONS]//
+//! Used to make sure function pointer is NOT  !//  //[HELPER_FUNCTIONS]//
+//! null. Hopefully can swap out for macro in  !//  //[HELPER_FUNCTIONS]//
+//! the future to remove this overhead when in !//  //[HELPER_FUNCTIONS]//
+//! a release mode.                            !//  //[HELPER_FUNCTIONS]//
+void                                            //  //[HELPER_FUNCTIONS]//
+GLEB_FuncPointerSated(                          //  //[HELPER_FUNCTIONS]//
+/**/const char* function_pointer_name           //  //[HELPER_FUNCTIONS]//
+,   GLEB_FUNC   function_pointer                //  //[HELPER_FUNCTIONS]//
+){                                              //  //[HELPER_FUNCTIONS]//
+    if(NULL==function_pointer){                 //  //[HELPER_FUNCTIONS]//
+        printf("[GLEB:ForgotToInitLibrary?]\n");//  //[HELPER_FUNCTIONS]//
+        printf("[USE::GLEB_GetFuncsFromDLL]\n");//  //[HELPER_FUNCTIONS]//
+        printf(                                 //  //[HELPER_FUNCTIONS]//
+        /**/"[function_pointer_name]:%s\n"      //  //[HELPER_FUNCTIONS]//
+        ,     function_pointer_name             //  //[HELPER_FUNCTIONS]//
+        );;                                     //  //[HELPER_FUNCTIONS]//
+        fflush(stdout);exit(666);               //  //[HELPER_FUNCTIONS]//
+    };;                                         //  //[HELPER_FUNCTIONS]//
+} //[[GLEB_FuncPointerSated]]//                 //  //[HELPER_FUNCTIONS]//
+//|____________________________________________|//  //[HELPER_FUNCTIONS]//
+                                                    //[HELPER_FUNCTIONS]//
+//[][][][][][][][][][][][][][][][][][][][][][][]//  //[HELPER_FUNCTIONS]//
+
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+
+
+
+//|BEG[CODE_TOLD_FAST_02]¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//  //[CTF]//
+//|02|02|02|02|02|02|02|02|02|02|02|02|02|02|02|//  //[CTF]//
+                                                    //[CTF]//
+
+                                                    //[CTF]//
+int                                                 //[CTF]//
+GLEB_OpenFileAndProcessLines(                       //[CTF]//
+    const char* file_name //:path_to_file           //[CTF]//
+,   GLEB_PFN_line_processor line_processor          //[CTF]//
+){                                                  //[CTF]//
+    GLEB_MM_DEBUGPRINT_01(                          //[CTF]//
+        "[BEG:GLEB_OpenFileAndProcessLines]"        //[CTF]//
+    );;                                             //[CTF]//
+                                                    //[CTF]//
+    int num_non_empty_lines_found = 0;              //[CTF]//
+    FILE* file_pointer = NULL;                      //[CTF]//
+    file_pointer = fopen( file_name, "r" );         //[CTF]//
+                                                    //[CTF]//
+    //: SEE VIDEO #1 for comments:                  //[CTF]//
+    #define JOHN_MARKS_MAX_LINE_2019_03_03 256      //[CTF]//
+    char single_line[                               //[CTF]//
+        JOHN_MARKS_MAX_LINE_2019_03_03              //[CTF]//
+    ] = "\0";                                       //[CTF]//
+    int max_line = JOHN_MARKS_MAX_LINE_2019_03_03;  //[CTF]//
+    #undef  JOHN_MARKS_MAX_LINE_2019_03_03          //[CTF]//
+                                                    //[CTF]//
+    //: SEE VIDEO #1 for comments:                  //[CTF]//
+    GLEB_MM_DEBUGPRINT_01(                          //[CTF]//
+        "[CheckForEmptyFilePointer]"                //[CTF]//
+    );                                              //[CTF]//
+    if(NULL==file_pointer){                         //[CTF]//
+        GLEB_Error("[CheckFileNameSpelling]",0);    //[CTF]//
+        return( 1 );                                //[CTF]//
+    };;                                             //[CTF]//
+                                                    //[CTF]//
+    //: SEE VIDEO #1 for comments:                  //[CTF]//
+    GLEB_MM_DEBUGPRINT_01("[fgets_loop]");          //[CTF]//
+    while(fgets(                                    //[CTF]//
+    /**/single_line  //: store_string_here          //[CTF]//
+    ,   max_line     //: max_size_of_buffer         //[CTF]//
+    ,   file_pointer //: read_chars_from_here       //[CTF]//
+    )){                                             //[CTF]//
+        num_non_empty_lines_found+=(                //[CTF]//
+            line_processor( single_line )           //[CTF]//
+        );;                                         //[CTF]//
+    };;                                             //[CTF]//
+                                                    //[CTF]//
+    GLEB_MM_DEBUGPRINT_01("[WhatDidWeFind]");       //[CTF]//
+    if(num_non_empty_lines_found<1){                //[CTF]//
+        GLEB_InfoPrint(                             //[CTF]//
+            "[WARNING:FileWasEmpty]"                //[CTF]//
+        );;                                         //[CTF]//
+        GLEB_InfoPrint_STR(                         //[CTF]//
+        /**/"[EmptyFileName]"                       //[CTF]//
+        ,   file_name                               //[CTF]//
+        );;                                         //[CTF]//
+        fflush(stdout);                             //[CTF]//
+    }else{                                          //[CTF]//
+        GLEB_InfoPrint(                             //[CTF]//
+            "[ONE_OR_MORE_FOUND]"                   //[CTF]//
+        );;                                         //[CTF]//
+        GLEB_InfoPrint_INT(                         //[CTF]//
+        /**/"[num_non_empty_lines_found]"           //[CTF]//
+        ,   num_non_empty_lines_found               //[CTF]//
+        );;                                         //[CTF]//
+    };;                                             //[CTF]//
+                                                    //[CTF]//
+    //|========================================|//  //[CTF]//
+    GLEB_MM_DEBUGPRINT_01(                          //[CTF]//
+        "[BEG:fclose(file_pointer)]"                //[CTF]//
+    );;                                             //[CTF]//
+    if(NULL==file_pointer){                         //[CTF]//
+        gleb_Halt("[FilePtrSomehowNull]");          //[CTF]//
+    }else{                                          //[CTF]//
+        GLEB_MM_DEBUGPRINT_01(                      //[CTF]//
+            "[FilePointerOkay]"                     //[CTF]//
+        );;                                         //[CTF]//
+    };;                                             //[CTF]//
+    fclose(file_pointer);                           //[CTF]//
+    GLEB_MM_DEBUGPRINT_01(                          //[CTF]//
+        "[END:fclose(file_pointer)]"                //[CTF]//
+    );;                                             //[CTF]//
+    //|========================================|//  //[CTF]//
+                                                    //[CTF]//
+    GLEB_MM_DEBUGPRINT_01(                          //[CTF]//
+        "[END:GLEB_OpenFileAndProcessLines]"        //[CTF]//
+    );;                                             //[CTF]//
+    return( 0 );                                    //[CTF]//
+                                                    //[CTF]//
+} //:END[OpenFileAndProcessLines]                   //[CTF]//
+//|02|02|02|02|02|02|02|02|02|02|02|02|02|02|02|//  //[CTF]//
+//|END[CODE_TOLD_FAST_02]______________________|//  //[CTF]//
+//|BEG[CODE_TOLD_FAST_03]¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//  //[CTF]//
+//|03|03|03|03|03|03|03|03|03|03|03|03|03|03|03|//  //[CTF]//
+//:TCTH: Trim_Copy_To_Heap                          //[CTF]//
+//:                                                 //[CTF]//
+
+                                                    //[CTF]//
+//:Trim a string on the stack by copying over       //[CTF]//
+//:the non whitespace characters to space on        //[CTF]//
+//:the heap.                                        //[CTF]//
+char*                                               //[CTF]//
+GLEB_TrimCopyToHeap(                                //[CTF]//
+    //:Make sas constant(const) as contract that    //[CTF]//
+    //:we will not be editing sas in this           //[CTF]//
+    //:function.                                    //[CTF]//
+    const char* sas //:string_on_stack              //[CTF]//
+){                                                  //[CTF]//
+                                                    //[CTF]//
+    //|Step1: Mark INCLUSIVE bounds of string. |//  //[CTF]//
+    //:----------------------------------------://  //[CTF]//
+    //: Get pointers to first & last character ://  //[CTF]//
+    //: of string. EXCLUDING null terminator,  ://  //[CTF]//
+    //: but INCLUDING the whitespace.          ://  //[CTF]//
+    int32_t i0 = 0  ; //:first_char_always_0        //[CTF]//
+    int32_t i1 = 0-1; //:last_char_must_be_found    //[CTF]//
+    while( sas[++i1] ){ };                          //[CTF]//
+    //: |-1| _0  1  2  3  4  5  6  7  _8  <-DEX     //[CTF]//
+    //: |OB|[  ][ ][C][A][K][E][ ][ ][\0]      ://  //[CTF]//
+    //:      i0                       i1       ://  //[CTF]//
+    //:                                        ://  //[CTF]//
+    i1--; //:back off the null terminator.     ://  //[CTF]//
+    //: |-1| _0  1  2  3  4  5  6  7  _8 <-DEX      //[CTF]//
+    //: |OB|[  ][ ][C][A][K][E][ ][ ][\0]      ://  //[CTF]//
+    //:      i0                       i1       ://  //[CTF]//
+    //:----------------------------------------://  //[CTF]//
+                                                    //[CTF]//
+    //|Step2: Check for errors:                |//  //[CTF]//
+    //:----------------------------------------://  //[CTF]//
+    if( i1 < 0 ){                                   //[CTF]//
+        //:This would happen if our char array      //[CTF]//
+        //:was only one character, that character   //[CTF]//
+        //:being a null terminator (\0) char.       //[CTF]//
+        //:           [\0] <--Our Char Array        //[CTF]//
+        //:            i0                           //[CTF]//
+        //:       i1<--i1                           //[CTF]//
+                                                    //[CTF]//
+        //:I don't want to deal with this           //[CTF]//
+        //:edge case or think about it. I am just   //[CTF]//
+        //:not going to allow it.                   //[CTF]//
+        fprintf(stderr,"[ERR:EMPTY_STRING]");       //[CTF]//
+        fflush(stderr); exit(666);                  //[CTF]//
+    };;                                             //[CTF]//
+    //:----------------------------------------://  //[CTF]//
+                                                    //[CTF]//
+    //|Step3: Backup one to make life easier.  |//  //[CTF]//
+    //:----------------------------------------://  //[CTF]//
+    //: Back-up/reverse i0 and i1 by                //[CTF]//
+    //: one spot in case they are currently         //[CTF]//
+    //: resting on non-whitespace chars.            //[CTF]//
+    //: This will make loop entry easier.           //[CTF]//
+    //:                                             //[CTF]//
+    //: [Ｘ] : Denotes possibility of a              //[CTF]//
+    //:        non-whitespace character.            //[CTF]//
+    //:                                             //[CTF]//
+    //: |-1| _0  1  2  3  4  5  6   7  _8  <-DEX    //[CTF]//
+    //: |OB|[  ][ ][C][A][K][E][ ][  ][\0]          //[CTF]//
+    //: |OB|[ x][ ][C][A][K][E][ ][ x][\0]          //[CTF]//
+    //:  ||  i0                    i1  ||           //[CTF]//
+    //:  i0                            i1           //[CTF]//
+       --i0;                           i1++;        //[CTF]//
+    //:---------------------------------------://   //[CTF]//
+                                                    //[CTF]//
+    //|Step4: Scan inward till you hit a wall. |//  //[CTF]//
+    //:----------------------------------------://  //[CTF]//
+    //: Move i0 forward   until it hits a      ://  //[CTF]//
+    //: non-whitespace character.              ://  //[CTF]//
+    //: Move i1 backwards until it hits a      ://  //[CTF]//
+    //: non whitespace character.              ://  //[CTF]//
+    //:                                             //[CTF]//
+    //: |-1| 0  1  2   3  4   5  6  7  _8  <-INDEX  //[CTF]//
+    //: |OB|[ ][ ][C ][A][K][ E][ ][ ][\0]          //[CTF]//
+    //:  i0 ------>i0        i1<-------i1           //[CTF]//
+    int                                             //[CTF]//
+    GLEB_Wrapper_isspace(                           //[CTF]//
+        const char ascii_char                       //[CTF]//
+    );;                                             //[CTF]//
+    while( GLEB_Wrapper_isspace( sas[++i0] ) ){};   //[CTF]//
+    while( GLEB_Wrapper_isspace( sas[--i1] ) ){};   //[CTF]//
+    //:----------------------------------------://  //[CTF]//
+                                                    //[CTF]//
+    //|Step5: Get length of trimmed string.    |//  //[CTF]//
+    //:----------------------------------------://  //[CTF]//
+    //: |-1| 0  1  2   3  4   5  6  7  _8  <-INDEX  //[CTF]//
+    //: |OB|[ ][ ][C ][A][K][ E][ ][ ][\0]          //[CTF]//
+    //:            ||        ||                     //[CTF]//
+    //:    abs_val(_2  minus _5 ) == 3              //[CTF]//
+    //:                     3 + 1 == 4              //[CTF]//
+    //:           Example str_len == 4              //[CTF]//
+    //:                                             //[CTF]//
+    //:Take delta of i0 and i1 to get               //[CTF]//
+    //:length of trimmed string.                    //[CTF]//
+    int32_t str_len = i1-i0+1; //:inclusive_range   //[CTF]//
+    //:----------------------------------------://  //[CTF]//
+                                                    //[CTF]//
+    //|Step6: Allocate Memory, Create Markers. |//  //[CTF]//
+    //:----------------------------------------://  //[CTF]//
+    //!Allocate memory on heap. Need one       !//  //[CTF]//
+    //!extra character for null terminator.    !//  //[CTF]//
+    //!Then create inclusive markers for       !//  //[CTF]//
+    //!start and end characters.               !//  //[CTF]//
+    int32_t num_chr = str_len+1;                //  //[CTF]//
+    char* out = malloc(sizeof(char)*num_chr);   //  //[CTF]//
+    out[ str_len ] = 0; //:null terminate.      //  //[CTF]//
+    int32_t d0,d1;                              //  //[CTF]//
+    //|                       str_len          |//  //[CTF]//
+    //|                         |              |//  //[CTF]//
+    //|            0  1  2  3   4              |//  //[CTF]//
+    //|           [ ][ ][ ][ ][\0]             |//  //[CTF]//
+    //|            |        |                  |//  //[CTF]//
+                  d0=0;    d1=str_len-1;     //://  //[CTF]//
+    //:----------------------------------------://  //[CTF]//
+                                                    //[CTF]//
+    //|Step7: Loop from i0 to i1 and copy data.|//  //[CTF]//
+    //:----------------------------------------://  //[CTF]//
+    //|  0  1  2  3  4  5  6  7  8             |//  //[CTF]//
+    //| [ ][ ][C][A][K][E][ ][ ][\0] <--(sas)  |//  //[CTF]//
+    //|       //  |  |  \\                     |//  //[CTF]//
+    //|      i0   |  |   i1   i = [i0 to i1]   |//  //[CTF]//
+    //|      d0   |  |   d1   d = [d0 to d1]   |//  //[CTF]//
+    //|       \\  |  |  //                     |//  //[CTF]//
+    //|       [C][A][K][E][\0] <--------(out)  |//  //[CTF]//
+    //|        0  1  2  3   4                  |//  //[CTF]//
+    int32_t i = (i0 - 1); //: <-- EasyLoopEntry://  //[CTF]//
+    int32_t d = (d0 - 1); //: <-- EasyLoopEntry://  //[CTF]//
+    int32_t  loop_number = 0;                //://  //[CTF]//
+    while( ++loop_number <= str_len ){       //://  //[CTF]//
+        i++; //:Increment_Input                ://  //[CTF]//
+        d++; //:Increment_Destination          ://  //[CTF]//
+        out[ d ] = sas[ i ]; //:copy.          ://  //[CTF]//
+    };;                                      //://  //[CTF]//
+    //:----------------------------------------://  //[CTF]//
+                                                    //[CTF]//
+    //|Step8: Check error in program logic:    |//  //[CTF]//
+    //:----------------------------------------://  //[CTF]//
+    //:There are obviously more compact and    ://  //[CTF]//
+    //:concise ways to write this function.    ://  //[CTF]//
+    //:BUT... the redundant variables help:    ://  //[CTF]//
+    //:1. Conceptualize problem easier.        ://  //[CTF]//
+    //:2. Weave a web of relationships between ://  //[CTF]//
+    //:   variables that helps error checking. ://  //[CTF]//
+    if( i != i1 || d != d1 ){                //://  //[CTF]//
+        fprintf(stderr,"[WeMessedUpOurLogic]\n");   //[CTF]//
+        fprintf(stderr,"[i]:%d [i1]:%d\n",i,i1);    //[CTF]//
+        fprintf(stderr,"[d]:%d [d1]:%d\n",d,d1);    //[CTF]//
+        fflush(stderr);exit(666);            //://  //[CTF]//
+    };;                                      //://  //[CTF]//
+    //:----------------------------------------://  //[CTF]//
+                                                    //[CTF]//
+    return( out );                                  //[CTF]//
+} //:END[ TrimCopyToHeap ]/////////////////////://  //[CTF]//
+                                                    //[CTF]//
+//|--------------------------------------------|//  //[CTF]//
+//|Using isspace with char will cause undefined|//  //[CTF]//
+//|behavior. So we create this wrapper:        |//  //[CTF]//
+//|SOURCE:                                     |//  //[CTF]//
+//[  stackoverflow.com/questions/28654792      ]//  //[CTF]//
+//|QUOTE:                                      |//  //[CTF]//
+//|"Passing values to character handling"      |//  //[CTF]//
+//|"functions that cannot be represented"      |//  //[CTF]//
+//|"as an unsigned char to character handling" |//  //[CTF]//
+//|"functions is undefined behavior."          |//  //[CTF]//
+//|SOURCE:                                     |//  //[CTF]//
+//[  https://wiki.sei.cmu.edu/confluence       ]//  //[CTF]//
+//[        /display/c/STR37-C.                 ]//  //[CTF]//
+//[  +Arguments+to+character-handling+functions]//  //[CTF]//
+//[  +must+be+representable+as+an+unsigned+char]//  //[CTF]//
+//|--------------------------------------------|//  //[CTF]//
+int GLEB_Wrapper_isspace(                           //[CTF]//
+    const char ascii_char                           //[CTF]//
+){                                                  //[CTF]//
+    return( isspace( (unsigned char)ascii_char) );  //[CTF]//
+} //:END[ Wrapper_isspace ]                         //[CTF]//
+//|--------------------------------------------|//  //[CTF]//
+//|03|03|03|03|03|03|03|03|03|03|03|03|03|03|03|//  //[CTF]//
+//|END[CODE_TOLD_FAST_03]______________________|//  //[CTF]//
+//|BEG[CODE_TOLD_FAST_05]¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//  //[CTF]//
+//|05|05|05|05|05|05|05|05|05|05|05|05|05|05|05|//  //[CTF]//
+                                                    //[CTF]//
+//:SL is for "String List"                          //[CTF]//
+//:SLSLSLSLSLSLSLSLSLSLSLSLSLSLSLSLSLSLSLSLSLSL://  //[CTF]//
+                                                    //[CTF]//
+char**                                              //[CTF]//
+GLEB_StringListMalloc(                              //[CTF]//
+    int num_strings //:num_strings_in_list          //[CTF]//
+){                                                  //[CTF]//
+    char**                                          //[CTF]//
+    output_string_list =(malloc(                    //[CTF]//
+        sizeof(char*) //:"char*" not "char"         //[CTF]//
+        *                                           //[CTF]//
+        num_strings                                 //[CTF]//
+    ));;                                            //[CTF]//
+                                                    //[CTF]//
+    //:You could use calloc instead. But I like     //[CTF]//
+    //:to stick to malloc and free so I don't       //[CTF]//
+    //:have to CTRL+F for both "malloc" and         //[CTF]//
+    //:"calloc" when I am looking around my code.   //[CTF]//
+    for(int i = 0; i < num_strings; i++ ){          //[CTF]//
+        output_string_list[i] = NULL;               //[CTF]//
+    };;                                             //[CTF]//
+                                                    //[CTF]//
+    return( output_string_list );                   //[CTF]//
+} //[[GLEB_StringListMalloc]]//                     //[CTF]//
+//:Helpfull, but non optimal. Pre-populate          //[CTF]//
+//:all of the strings.                              //[CTF]//
+void                                                //[CTF]//
+GLEB_StringListPopulate(                            //[CTF]//
+/**/      char** string_list                        //[CTF]//
+,   int          num_strings                        //[CTF]//
+,   const char*  default_tex                        //[CTF]//
+,   int          str_max_len                        //[CTF]//
+){                                                  //[CTF]//
+    if(                                             //[CTF]//
+        NULL==string_list ||                        //[CTF]//
+        0   >=num_strings ||                        //[CTF]//
+        NULL==default_tex ||                        //[CTF]//
+        0   >=str_max_len ||                        //[CTF]//
+    0){                                             //[CTF]//
+       printf("[StringListPopulate:BadInput]\n");   //[CTF]//
+       fflush(stdout);exit(666);                    //[CTF]//
+    };;                                             //[CTF]//
+                                                    //[CTF]//
+    int def_len = strlen( default_tex );            //[CTF]//
+    if( def_len > str_max_len ){                    //[CTF]//
+        printf("[DefaultTextWontFit]\n");           //[CTF]//
+        fflush(stdout);exit(666);                   //[CTF]//
+    };;                                             //[CTF]//
+                                                    //[CTF]//
+    //:TODO: StringListPopulateWithIndexLabel       //[CTF]//
+    //:      Example: "DEFAULT_TEXT_04"             //[CTF]//
+    char* cur = NULL;                               //[CTF]//
+    int num_chr = str_max_len+1; //:+1 terminator   //[CTF]//
+    for( int i = 0; i < num_strings; i++ ){         //[CTF]//
+        cur = malloc(sizeof(char)*num_chr);         //[CTF]//
+        cur[ num_chr-1 ] = 0; //:<-----To_Be_Safe   //[CTF]//
+        //:                                 |       //[CTF]//
+        //:                            TO_BE_SAFE   //[CTF]//
+        //:          END_OF_STRING          |       //[CTF]//
+        //:                 |               |       //[CTF]//
+        //|[A][P][P][L][E][\0][_][_][_][_][\0] |//  //[CTF]//
+        //#                    ?  ?  ?  ?      #//  //[CTF]//
+        //| 0  1  2  3  4  05  6  7  8  9  10  |//  //[CTF]//
+        //:Copy over default text:                  //[CTF]//
+        for( int j = 0; j < def_len; j++ ){         //[CTF]//
+            cur[j]=default_tex[j];                  //[CTF]//
+        };;                                         //[CTF]//
+        cur[ def_len ] = 0; //:END_OF_STRING        //[CTF]//
+                                                    //[CTF]//
+        //:Place current copy into list:            //[CTF]//
+        string_list[i] = cur;                       //[CTF]//
+    };;                                             //[CTF]//
+} //[[GLEB_StringListPopulate]]//                   //[CTF]//
+void                                                //[CTF]//
+GLEB_StringListPrint(                               //[CTF]//
+/**/char** string_list                              //[CTF]//
+,   int    string_length                            //[CTF]//
+){                                                  //[CTF]//
+    printf("[BEG:StringListPrint]\n");              //[CTF]//
+    for(int i = 0; i < string_length; i++){         //[CTF]//
+        printf("#(%3d):(%s)\n", i,string_list[i]);  //[CTF]//
+    };;                                             //[CTF]//
+    printf("[END:StringListPrint]\n");              //[CTF]//
+} //[[GLEB_StringListPrint]]//                      //[CTF]//
+void                                                //[CTF]//
+GLEB_StringListFree(                                //[CTF]//
+/**/char**  *BYREF_string_list                      //[CTF]//
+,   int            num_strings                      //[CTF]//
+){                                                  //[CTF]//
+    //:References should NEVER be null.             //[CTF]//
+    if(NULL==BYREF_string_list){                    //[CTF]//
+        printf("[StringListFree:Null_Ref]\n");      //[CTF]//
+        fflush(stdout);exit(666);                   //[CTF]//
+    };;                                             //[CTF]//
+                                                    //[CTF]//
+    //:Personal preference. An empty list is        //[CTF]//
+    //:likely a mistake, so crash.                  //[CTF]//
+    if( 0 >= num_strings ){                         //[CTF]//
+        printf("[IDontAllowEmptyListsInCode]\n");   //[CTF]//
+        fflush(stdout);exit(666);                   //[CTF]//
+    };;                                             //[CTF]//
+                                                    //[CTF]//
+    //:De-reference to make easier to work with:    //[CTF]//
+    char** string_list =(                           //[CTF]//
+    *BYREF_string_list   );                         //[CTF]//
+                                                    //[CTF]//
+    //:Free each string in list.                    //[CTF]//
+    char* cur_str; //:current_string.               //[CTF]//
+    for( int i = 0; i < num_strings; i++ ){         //[CTF]//
+        cur_str = string_list[i];                   //[CTF]//
+        if(NULL==cur_str){                          //[CTF]//
+            //:I expect the list to have been       //[CTF]//
+            //:populated after allocated,           //[CTF]//
+            //:otherwise, I assume a mistake        //[CTF]//
+            //:was made.                            //[CTF]//
+            printf(                                 //[CTF]//
+            /**/"%s%s\n"                            //[CTF]//
+            ,   "[StringListFree:ERR]"              //[CTF]//
+            ,   "[NullEntryFoundInList]"            //[CTF]//
+            );;fflush(stdout);exit(666);            //[CTF]//
+        }else{                                      //[CTF]//
+            free( cur_str );                        //[CTF]//
+            cur_str = NULL;                         //[CTF]//
+            string_list[i] = NULL;                  //[CTF]//
+        };;                                         //[CTF]//
+    };;                                             //[CTF]//
+                                                    //[CTF]//
+    //:Free list itself after children destroyed.   //[CTF]//
+    //:Then, null out the pointer.                  //[CTF]//
+    free( string_list );                            //[CTF]//
+    (*BYREF_string_list) = NULL;                    //[CTF]//
+                                                    //[CTF]//
+} //[[GLEB_StringListFree]]//                       //[CTF]//
+//:SLSLSLSLSLSLSLSLSLSLSLSLSLSLSLSLSLSLSLSLSLSL://  //[CTF]//
+                                                    //[CTF]//
+//|05|05|05|05|05|05|05|05|05|05|05|05|05|05|05|//  //[CTF]//
+//|END[CODE_TOLD_FAST_05]______________________|//  //[CTF]//
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+//:BEG[ Search_Path_Loading_Code ]:::::::::::::://
+//:SPSPSPSPSPSPSPSPSPSPSPSPSPSPSPSPSPSPSPSPSPSP://
+//:                                            ://
+//: Not sure how I feel about this code.       ://
+//: It seems kind of spaghetti. You really     ://
+//: need a version of                          ://
+//:"GLEB_OpenFileAndProcessLines"              ://
+//: that takes an                              ://
+//:"early bail-out-of-loop" function that      ://
+//:determines when to stop looping over file.  ://
+//:That function would be the function trying  ://
+//:to load the DLL.                            ://
+//:                                            ://
+//:RELATED TO THIS NOTE:                       ://
+//:SEE SHORTCUT: SC[ todo-2019-03-04 ]         ://
+//:                                            ://
+//#¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯#//
+//# JMIM_NOTE:DATE[2019_06_05]TIME[0711PM]     #//
+//# Sometimes perfection is the enemy of       #//
+//# progress. Dirty working code can be        #//
+//# cleaned up later. Clean code that          #//
+//# doesn't actually work is useless.          #//
+//#____________________________________________#//
+//:                                            ://
+//:SPSPSPSPSPSPSPSPSPSPSPSPSPSPSPSPSPSPSPSPSPSP://
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+
+extern int          GLEB_next_search_path_index ;
+extern int          GLEB_num_search_paths       ;
+extern const char** GLEB_p_search_paths         ;
+int  GLEB_IsLineFull(const char* single_line){
+    if( strcmp(single_line,"\n"  ) != 0 &&
+        strcmp(single_line,"\r\n") != 0 &&
+        strcmp(single_line,"\0"  ) != 0 &&
+    1){
+        return 1;
+    }else{
+        if( GLEB_tell_me_about_empty_lines ){
+            printf("[LINE_IS_EMPTY]\n");
+        };;
+        return 0; //:was "continue" in video#1
+    };;
+    return( 0-1); //:error
+} //[[GLEB_IsLineFull]]//
+
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+
+void GLEB_SearchPathInit(){
+    if(NULL != GLEB_p_search_paths){
+        gleb_Halt( "[DesignedOnlyToRunOnce]" );
+    };;
+    //:Next index to store search path at:
+    //:If not zero, sign that function was ran 2X.
+    if(0 != GLEB_next_search_path_index){
+        gleb_Halt( "[2019_06_05_6340PM]" );
+    };;
+    //:If not zero, sign that function was ran 2X.
+    if(0 != GLEB_num_search_paths){
+        gleb_Halt( "[2019_06_05_0642PM]" );
+    };;
+   
+} //[[GLEB_SearchPathInit]]//
+
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+
+//:Implements: GLEB_PFN_line_processor
+int GLEB_SearchPathCount(
+    const char* single_line
+){
+    //:Only tally if line is NOT empty:
+    if( GLEB_IsLineFull( single_line ) ){
+        GLEB_num_search_paths++;
+        return( 1 );
+    };;
+    return( 0 );
+} //[[GLEB_SearchPathCount]]//
+
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+
+//:Implements: GLEB_PFN_line_processor
+int GLEB_SearchPathStore(
+    const char* single_line
+){
+
+    //:Exit if line is empty:
+    if( !GLEB_IsLineFull( single_line ) ){
+        return 0;
+    };;
+    
+    GLEB_MM_DEBUGPRINT_01( 
+        "[NonEmptyLine_Storing]"
+    );;
+
+    const char* str =(
+        GLEB_TrimCopyToHeap( single_line )
+    );;
+
+    GLEB_MM_DEBUGPRINT_01(
+        "[TheTrimmedString_dot_dot_dot]"
+    );;
+
+    GLEB_InfoPrint_STR( 
+    /**/"[PATH]"
+    ,   str
+    );;
+    
+    //:si:"storage_index"
+    int si = GLEB_next_search_path_index;
+    GLEB_p_search_paths[ si ] = str;
+    GLEB_next_search_path_index++;
+    
+    return( 1 );
+} //[[GLEB_SearchPathStore]]//
+
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+
+//:Get a list of search paths for finding
+//:the OpenCL dll.
+const char**
+GLEB_GetSearchPathsFromFile(
+    int   *BYREF_num_paths
+){
+    GLEB_MM_DEBUGPRINT_01(
+        "[BEG:GLEB_GetSearchPathsFromFile]"
+    );;
+    
+    //:References can never be null:
+    if(NULL==BYREF_num_paths){
+        gleb_Halt("[2019_06_05_0652PM]");
+    };;
+
+    //:In case we run GLEB_GetSearchPathsFromFile
+    //:multiple times, use this INIT function:
+    GLEB_SearchPathInit();
+    
+    //:Pass #1: Figure out memory allocation:
+    GLEB_OpenFileAndProcessLines(
+        GLEB_name_of_search_path_file
+    ,   &GLEB_SearchPathCount
+    );;
+    
+    GLEB_InfoPrint_INT(
+    /**/"[NumSearchPaths]"
+    ,   GLEB_num_search_paths
+    );;
+    
+    //:Set aside memory for pass #2:
+    //:Gaurd if num search paths not positive
+    //:since malloc(0) is implementation defined.
+    if(GLEB_num_search_paths>0){
+     
+    //- GLEB_p_search_paths =(malloc(          -//
+    //-     sizeof(char*) //:"char*" not "char"-//
+    //-     *                                  -//
+    //-     GLEB_num_search_paths              -//
+    //- ));;                                   -//
+    //+ Because the above memory allocation    +//
+    //+ was wrong, I decided to create a util  +//
+    //+ function for the allocation so I never +//
+    //+ screw this up ever again.              +//
+        { ///////////////////////////////+ --- +//
+        char** str_lis=(               //+ --- +//
+            GLEB_StringListMalloc(     //+ --- +//
+                GLEB_num_search_paths  //+ --- +//
+            )                          //+ --- +//
+        );GLEB_p_search_paths=(        //+ --- +//
+            (const char**)str_lis      //+ --- +//
+        );;                            //+ --- +//
+        } ///////////////////////////////+ --- +//
+    //+----------------------------------------+//
+        
+    }else{
+        GLEB_p_search_paths=NULL;
+    };;
+    
+    //:Pass #2: Collect strings.
+    GLEB_MM_DEBUGPRINT_01("[CollectStrings]");
+    GLEB_OpenFileAndProcessLines(
+        GLEB_name_of_search_path_file
+    ,   &GLEB_SearchPathStore
+    );;
+    
+    //:Set reference to num_search_paths:
+    GLEB_MM_DEBUGPRINT_01(
+        "[SetRefToNumSearchPaths]"
+    );;
+    (*BYREF_num_paths) = GLEB_num_search_paths;
+    GLEB_MM_DEBUGPRINT_01(
+        "[END:GLEB_GetSearchPathsFromFile]"
+    );;
+    return( GLEB_p_search_paths );
+} //[[GLEB_GetSearchPathsFromFile]_____________]//
+
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+//[SPSPSPSPSPSPSPSPSPSPSPSPSPSPSPSPSPSPSPSPSPSP]//
+//[END[ Search_Path_Loading_Code ]:::::::::::::]//
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+
+HMODULE
+GLEB_TryOpenDLL( void ){
+    GLEB_MM_DEBUGPRINT_01(
+        "[BEG:GLEB_TryOpenDLL]"
+    );;
+
+    const char* dll_path   = NULL;
+    HMODULE open_gl_handle = NULL;
+
+    int num_paths = 0;
+    const char** dll_path_array=(
+        GLEB_GetSearchPathsFromFile( &num_paths )
+    );;
+    
+    if(0==num_paths){
+        printf("[GLEB:ERR:2019_03_04_1243AM]\n");
+        printf("[GLEB:zero_search_paths]\n");
+        printf("[GLEB:add_paths_to]:%s\n",
+        GLEB_name_of_search_path_file);
+        fflush(stdout);exit(666);
+    }else{
+        GLEB_MM_DEBUGPRINT_01(
+            "[SearchPathsFound]"
+        );;
+        #if( GLEB_MV_DEBUGPRINT_01 > 0 )
+            printf("[num_paths]:%d\n", num_paths);
+            fflush(stdout);
+        #endif
+    };;
+    
+    //:Loop through search paths, exit on the
+    //:first path that successfully loads DLL:
+    for(int i = 0; i < num_paths; i++){
+        //:sleep(1);
+        dll_path = dll_path_array[i];
+        GLEB_InfoPrint_STR(
+        /**/"[GLEB:TRYING_PATH]"
+        ,   dll_path 
+        );
+        open_gl_handle = LoadLibrary( dll_path );
+        if(NULL != open_gl_handle){ 
+            GLEB_InfoPrint(
+                "[GLEB:OPENED_THAT_DLL]\n"
+            );;
+            break; 
+        }else{
+            GLEB_InfoPrint(
+                "[GLEB:FAILED_THAT_DLL]\n"
+            );;
+        };;
+    };;
+    
+    if(NULL==open_gl_handle){
+        GLEB_InfoPrint_STR(
+        /**/"[Failed_To_Load_DLL]"
+        ,   dll_path
+        );;
+        fflush(stdout);exit(666);
+    };;
+    
+    GLEB_MM_DEBUGPRINT_01(
+        "[END:GLEB_TryOpenDLL]"
+    );;
+    return( open_gl_handle );
+} //[[GLEB_TryOpenDLL]]//
+
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+
+
+
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+
+//# ONLY_USE_FOR_OPENGL_FUNCTIONS_THAT_DO      #//
+//# NOT_REQUIRE_AN_EXISTING_CONTEXT_TO_WORK    #//
+GLEB_FUNC
+GLEB_LoadFunc(
+    const char* name_of_open_gl_function  
+){
+    GLEB_MM_DEBUGPRINT_01(
+        "[BEG:GLEB_LoadFunc]"
+    );;
+    
+    //:Lazily load OpenCL.dll the first time
+    //:it is needed.
+    if(NULL==GLEB_open_gl_handle){
+        GLEB_open_gl_handle =(
+            GLEB_TryOpenDLL()
+        );;
+    };;
+    if(NULL==GLEB_open_gl_handle){
+        gleb_Halt("[GL_DLL_HANDLE_STILL_NULL]");
+    };;
+    
+    GLEB_MM_DEBUGPRINT_01("[has_open_cl_handle]");
+    
+    GLEB_FUNC function_pointer = 
+   (GLEB_FUNC)GetProcAddress( //:<<<<<<<<<<<<<<<NOTICE_ME_SENPAI
+        GLEB_open_gl_handle
+        ,name_of_open_gl_function
+    );if(NULL==function_pointer){
+        printf(
+        /**/"[GLEB_LoadFunc:Fail]:%s\n"
+        ,   name_of_open_gl_function
+        );;
+        fflush(stdout);
+        exit(666);
+    };;
+    
+    GLEB_MM_DEBUGPRINT_01("[END:GLEB_LoadFunc]");
+    return( function_pointer );
+} //[[GLEB_LoadFunc]]//
+
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+
+//|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//
+//|GOAL: [OpenGL]<===>[OpenCL] Interopability. |//
+//|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx|//
+//|OpenGL types so I don't have to include     |//
+//|OpenGL header. My intention is to only bind |//
+//|enough of OpenGL to get a context I can use |//
+//|with OpenCL.                                |//
+//+ #gltypes# #gltype# #gltypedefs#            +//
+//|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx|//
+
+
+#ifndef    GL_VERSION
+
+    typedef int GLsizei; 
+    typedef unsigned int GLuint;
+
+    //:glcoarearb.h:
+    typedef unsigned int GLenum;
+
+    //: glcorearb.h:
+    //: typedef khronos_ssize_t GLsizeiptr;
+    //:
+    //: khronos.org/opengl/wiki/OpenGL_Type:
+    //: Non-negative binary integer size, 
+    //: for memory offsets and ranges	
+    //:
+    //:Assuming compilation in 64bit mode:
+    typedef unsigned __int64 GLsizeiptr;
+
+    typedef void GLvoid;
+
+    //:glcorearb.h:
+    typedef int GLint;
+
+    //:glcorearb.h:
+    typedef unsigned char GLboolean;
+
+    //:glcorearb.h
+    typedef char GLchar;
+
+    //:glcorearb.h
+    typedef unsigned int GLbitfield;
+
+    //|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//
+    //| On a platfrom that supports IEEE-754   |//
+    //| float it's going to be 32 bit. On      |//
+    //| platforms that don't,different width   |//
+    //| will probably be the least of your     |//
+    //| problems. Bottom line - use float and  |//
+    //| don't worry.                           |//
+    //| stackoverflow.com/questions/18705192   |//
+    //|                                        |//
+    //|glcoarearb.h:                           |//
+    //|     typedef khronos_float_t GLfloat;   |//
+    //|khrplatform.h:                          |//
+    //|     typedef float khronos_float_t;     |//
+    typedef float GLfloat;                  //||//
+    //|                                        |//
+    //|________________________________________|//
+
+
+    //////////////////////////////////////////////
+    //| glcore.h:                              |//
+    //| typedef khronos_uint8_t GLubyte;       |//
+    //|                                        |//
+    //| khrplatform.h                          |//
+    //| khronos.org/registry/EGL/api/KHR       |//
+    //| /khrplatform.h                         |//
+    //| [BEG:QUOTE]                            |//
+    //| "Types that are (so far) the same "    |//
+    //| "on all platforms                 "    |//
+    //| [END:QUOTE]                            |//
+    //| typedef unsigned char khronos_uint8_t; |//
+    typedef unsigned char GLubyte; //:         ://
+    //////////////////////////////////////////////
+
+#endif /** GL_VERSION **/
+
+
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+
+/////////[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]/////////
+////////[]                              []////////
+///////[]                                []///////
+//////[]                                  []//////
+/////[]                                    []/////
+////[]                                      []////
+///[]                                        []///
+//[]                                          []//
+//[                                            ]//
+//[XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]//
+//[XX This one is special.                   XX]//
+//[XX The wrapper function is called         XX]//
+//[XX GLEB_wglGetProcAddress instead of      XX]//
+//[XX      wglGetProcAddress to avoid        XX]//
+//[XX      conflicts with Windows.h.         XX]//
+//[XX The "wglGetProcAddress" function       XX]//
+//[XX does NOT work "out of the box" like    XX]//
+//[XX "GetProcAddress".                      XX]//
+//[XX                                        XX]//
+//[XX I am sure if I knew more               XX]//
+//[XX about linkers I could fix this.        XX]//
+//[XX But messing with linkers would destroy XX]//
+//[XX the point of this library being an     XX]//
+//[XX                                        XX]//
+//[XX "easy bindings"                        XX]//
+//[XX                                        XX]//
+//[XX library. The whole point is to just    XX]//
+//[XX include this file and get access to    XX]//
+//[XX openGL functions.                      XX]//
+//[XX                                        XX]//
+//[XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]//
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]   XX]//
+PROC                                //[  ]   XX]//
+(*PFN_wglGetProcAddress)            //[  ]   XX]//
+(                                   //[  ]   XX]//
+/**/LPCSTR    Arg1                  //[01]   XX]//
+); //[- - - - - - - - - - - - - -]////[  ]   XX]//
+                                    //[  ]   XX]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯]////[  ]   XX]//
+                                    //[  ]   XX]//
+PFN_wglGetProcAddress               //[  ]   XX]//
+pfn_wglGetProcAddress;              //[  ]   XX]//
+                                    //[  ]   XX]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_]////[  ]   XX]//
+PROC                                //[  ]   XX]//
+GLEB_wglGetProcAddress              //[  ]   XX]//
+(                                   //[  ]   XX]//
+/**/LPCSTR    Arg1                  //[01]   XX]//
+){                                  //[  ]   XX]//                 
+    GLEB_FuncPointerSated(          //[  ]   XX]//
+    /**/ "[pfn_wglGetProcAddress]", //[  ]   XX]//
+(GLEB_FUNC)pfn_wglGetProcAddress );;//[  ]   XX]//         
+    return(pfn_wglGetProcAddress(   //[  ]   XX]//
+    /**/      Arg1                  //[01]   XX]//
+    ));;                            //[  ]   XX]//           
+} //[[GLEB_wglGetProcAddress]____________]   XX]//
+//[XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]//
+//[XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]//
+//[XX                                        XX]//
+//[XX Also does NOT need an openGL context   XX]//
+//[XX in order to fetch it.                  XX]//
+//[XX                                        XX]//
+//[XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]//
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]   XX]//
+HGLRC                               //[  ]   XX]//
+(*PFN_wglGetCurrentContext)         //[  ]   XX]//
+(                                   //[  ]   XX]//
+                             void   //[00]   XX]//
+); //[- - - - - - - - - - - - - -]////[  ]   XX]//
+                                    //[  ]   XX]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯]////[  ]   XX]//
+                                    //[  ]   XX]//
+PFN_wglGetCurrentContext            //[  ]   XX]//
+pfn_wglGetCurrentContext;           //[  ]   XX]//
+                                    //[  ]   XX]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_]////[  ]   XX]//
+HGLRC                               //[  ]   XX]//
+GLEB_wglGetCurrentContext           //[  ]   XX]//
+(                                   //[  ]   XX]//
+                             void   //[00]   XX]//
+){                                  //[  ]   XX]//                 
+    GLEB_FuncPointerSated(          //[__ ¯¯]XX]//
+    /**/ "[pfn_wglGetCurrentContext]", //[  ]XX]//
+(GLEB_FUNC)pfn_wglGetCurrentContext );;//[  ]XX]//         
+    return(pfn_wglGetCurrentContext(   //[  ]XX]//
+                                    //[¯¯ __]XX]//
+                          //[void]////[00]   XX]//
+    ));;                            //[  ]   XX]//           
+} //[[GLEB_wglGetCurrentContext]____________]XX]//
+//[XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]//
+//[XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]//
+//[XX                                        XX]//
+//[XX Also does NOT need an openGL context   XX]//
+//[XX in order to fetch it.                  XX]//
+//[XX                                        XX]//
+//[XX wglCreateContext:                      XX]//
+//[XX                                        XX]//
+//[XX RCTX:Rendering_Context                 XX]//
+//[XX H_DC:Hardware Device Context (HDC).    XX]//
+//[XX PIXF:Pixel_Format                      XX]//
+//[XX                                        XX]//
+//[XX RCTX for drawin on H_DC.               XX]//
+//[XX RCTX PIXF === H_DC PIXF                XX]//
+//[XX                                        XX]//
+//[XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]//
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]   XX]//
+HGLRC                               //[  ]   XX]//
+(*PFN_wglCreateContext)             //[  ]   XX]//
+(                                   //[  ]   XX]//
+/**/HDC                     Arg1    //[01]   XX]//
+); //[- - - - - - - - - - - - - -]////[  ]   XX]//
+                                    //[  ]   XX]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯]////[  ]   XX]//
+                                    //[  ]   XX]//
+PFN_wglCreateContext                //[  ]   XX]//
+pfn_wglCreateContext;               //[  ]   XX]//
+                                    //[  ]   XX]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_]////[  ]   XX]//
+HGLRC                               //[  ]   XX]//
+GLEB_wglCreateContext               //[  ]   XX]//
+(                                   //[  ]   XX]//
+/**/HDC                     Arg1    //[01]   XX]//
+){                                  //[  ]   XX]//                 
+    GLEB_FuncPointerSated(          //[__ ¯¯]XX]//
+    /**/ "[pfn_wglCreateContext]",     //[  ]XX]//
+(GLEB_FUNC)pfn_wglCreateContext );;    //[  ]XX]//         
+    return(pfn_wglCreateContext(       //[  ]XX]//
+                                    //[¯¯ __]XX]//
+                            Arg1    //[01]   XX]//
+    ));;                            //[  ]   XX]//           
+} //[[GLEB_wglCreateContext]________________]XX]//
+//[XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]//
+//[XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]//
+//[XX                                        XX]//
+//[XX Also does NOT need an openGL context   XX]//
+//[XX in order to fetch it.                  XX]//
+//[XX                                        XX]//
+//[XX The wglMakeCurrent function makes a    XX]//
+//[XX specified OpenGL rendering context the XX]//
+//[XX calling thread's current rendering     XX]//
+//[XX context. All subsequent OpenGL calls   XX]//
+//[XX made by the thread are drawn on the    XX]//
+//[XX device identified by hdc. You can also XX]//
+//[XX use wglMakeCurrent to change the       XX]//
+//[XX calling thread's current rendering     XX]//
+//[XX context so it's no longer current.     XX]//
+//[XX                                        XX]//
+//[XX SC[ wingdi-wglmakecurrent-msdn-url ]   XX]//
+//[XX                                        XX]//
+//[XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]//
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]   XX]//
+BOOL                                //[  ]   XX]//
+(*PFN_wglMakeCurrent)               //[  ]   XX]//
+(                                   //[  ]   XX]//
+/**/HDC                input_HDC    //[01]   XX]//
+,   HGLRC              input_HGLRC  //[02]   XX]//
+); //[- - - - - - - - - - - - - -]////[  ]   XX]//
+                                    //[  ]   XX]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯]////[  ]   XX]//
+                                    //[  ]   XX]//
+PFN_wglMakeCurrent                  //[  ]   XX]//
+pfn_wglMakeCurrent;                 //[  ]   XX]//
+                                    //[  ]   XX]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_]////[  ]   XX]//
+BOOL                                //[  ]   XX]//
+GLEB_wglMakeCurrent                 //[  ]   XX]//
+(                                   //[  ]   XX]//
+/**/HDC                input_HDC    //[01]   XX]//
+,   HGLRC              input_HGLRC  //[02]   XX]//
+){                                  //[  ]   XX]//                 
+    GLEB_FuncPointerSated(          //[__ ¯¯]XX]//
+    /**/ "[pfn_wglMakeCurrent]",       //[  ]XX]//
+(GLEB_FUNC)pfn_wglMakeCurrent );;      //[  ]XX]//         
+    return(pfn_wglMakeCurrent(         //[  ]XX]//
+                                    //[¯¯ __]XX]//
+    /**/               input_HDC    //[01]   XX]//
+    ,                  input_HGLRC  //[02]   XX]//
+    ));;                            //[  ]   XX]//           
+} //[[GLEB_wglMakeCurrent]__________________]XX]//
+//[XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]//
+
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+
+//! wglGetProcAddress will not return function !//
+//! pointers from any OpenGL functions that    !//
+//! are directly exported by the OpenGL32.DLL  !//
+//! itself. This means the old ones from       !//
+//! OpenGL version 1.1. Fortunately those      !//
+//! functions can be obtained by the Win32's   !//
+//! GetProcAddress. On the other hand          !//
+//! GetProcAddress will not work for the       !//
+//! functions for which wglGetProcAddress      !//
+//! works. So in order to get the address of   !//
+//! any GL function one can try with           !//
+//! wglGetProcAddress and if it fails,try      !//
+//! again with the Win32's GetProcAddress:     !//
+//! SOURCE[ URL[                               !//
+//!                                            !//
+//!     https://www.khronos.org/opengl         !//
+//!     /wiki/Load_OpenGL_Functions            !//
+//!                                            !//
+//! ]URL]SOURCE                                !//
+GLEB_FUNC
+GLEB_GetAnyGLFuncAddress(
+    const char* name_of_open_gl_function
+){
+    
+    GLEB_FUNC p =(
+        (GLEB_FUNC)GLEB_wglGetProcAddress(    
+            name_of_open_gl_function   
+        )
+    );;                                   
+    
+    if(
+        (p ==        0        ) ||
+        (p == ( GLEB_FUNC )0x1) || 
+        (p == ( GLEB_FUNC )0x2) ||
+        (p == ( GLEB_FUNC )0x3) ||
+        (p == ( GLEB_FUNC ) -1) ||
+    0){
+        //: HMODULE module =(
+        //:     LoadLibraryA("opengl32.dll")
+        //: );;
+        //: p = (void *)GetProcAddress(
+        //:     module
+        //: ,   name_of_open_gl_function
+        //: );;
+
+        //:You were supposed to check for this
+        //:Before using the function!
+        if(NULL==GLEB_open_gl_handle){
+            gleb_Halt("[2019_06_06_1248AM]");
+        };;
+
+        p = (GLEB_FUNC)GetProcAddress(
+        /**/GLEB_open_gl_handle
+        ,   name_of_open_gl_function
+        );;
+
+        if(NULL==p){
+            //:DispiteYourBestEffortsYouFail
+            gleb_Halt(
+                "[DispiteYourBestEfforsYouFail]"
+            );;
+        };;
+    };;
+
+    if(NULL==p){
+        gleb_Halt("[2019_06_06_1250AM]");;
+    };;
+
+    return( p );
+}
+
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+
+//#BEG[ FUNCTION_PROTOTYPES_AND_WRAPPERS ]=====#//
+
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+void                                      //[  ]//
+(*PFN_glGenBuffers)                       //[  ]//
+(                                         //[  ]//
+/**/GLsizei                            n  //[01]//
+,   GLuint*                      buffers  //[02]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glGenBuffers                          //[  ]//
+pfn_glGenBuffers;                         //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+void                                      //[  ]//
+glGenBuffers                              //[  ]//
+(                                         //[  ]//
+/**/GLsizei                            n  //[01]//
+,   GLuint*                      buffers  //[02]//
+){                                        //[  ]//                            
+    GLEB_FuncPointerSated(                //[  ]//
+    /**/ "[pfn_glGenBuffers]",            //[  ]//
+(GLEB_FUNC)pfn_glGenBuffers );;           //[  ]//                    
+    /*void*/(pfn_glGenBuffers(            //[  ]//
+    /**/                               n  //[01]//
+    ,                            buffers  //[02]//
+    ));;                                  //[  ]//                      
+} //[[glGenBuffers]____________________________]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+void                                      //[  ]//
+(*PFN_glBindBuffer)                       //[  ]//
+(                                         //[  ]//
+/**/GLenum                        target  //[01]//
+,   GLuint                        buffer  //[02]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glBindBuffer                          //[  ]//
+pfn_glBindBuffer;                         //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+void                                      //[  ]//
+glBindBuffer                              //[  ]//
+(                                         //[  ]//
+/**/GLenum                        target  //[01]//
+,   GLuint                        buffer  //[02]//
+){                                        //[  ]//                            
+    GLEB_FuncPointerSated(                //[  ]//
+      /**/ "[pfn_glBindBuffer]",          //[  ]//
+  (GLEB_FUNC)pfn_glBindBuffer );;         //[  ]//                    
+    /*VOID*/(pfn_glBindBuffer(            //[  ]//
+    /**/                          target  //[01]//
+    ,                             buffer  //[02]//
+    ));;                                  //[  ]//                      
+} //[[glBindBuffer]____________________________]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+void                                      //[  ]//
+(*PFN_glBufferData)                       //[  ]//
+(                                         //[  ]//
+/**/GLenum         target                 //[01]//
+,   GLsizeiptr       size                 //[02]//
+,   const GLvoid*    data                 //[03]//
+,   GLenum          usage                 //[04]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glBufferData                          //[  ]//
+pfn_glBufferData;                         //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+void                                      //[  ]//
+glBufferData                              //[  ]//
+(                                         //[  ]//
+/**/GLenum         target                 //[01]//
+,   GLsizeiptr       size                 //[02]//
+,   const GLvoid*    data                 //[03]//
+,   GLenum          usage                 //[04]//
+){                                        //[  ]//                            
+    GLEB_FuncPointerSated(                //[  ]//
+    /**/   "[pfn_glBufferData]",          //[  ]//
+  (GLEB_FUNC)pfn_glBufferData );;         //[  ]//                    
+    /*VOID*/(pfn_glBufferData(            //[  ]//
+    /**/           target                 //[  ]//
+    ,                size                 //[  ]//
+    ,                data                 //[  ]//
+    ,               usage                 //[  ]//
+    ));;                                  //[  ]//                      
+} //[[glBufferData]____________________________]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+GLenum                                    //[  ]//
+(*PFN_glGetError)                         //[  ]//
+(                                         //[  ]//
+            void                          //[00]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glGetError                            //[  ]//
+pfn_glGetError;                           //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+GLenum                                    //[  ]//
+glGetError                                //[  ]//
+(                                         //[  ]//
+            void                          //[00]//
+){                                        //[  ]//                            
+    GLEB_FuncPointerSated(                //[  ]//
+    /**/   "[pfn_glGetError]",            //[  ]//
+  (GLEB_FUNC)pfn_glGetError );;           //[  ]//                    
+      return(pfn_glGetError(              //[  ]//
+        /** VOID **/                      //[  ]//
+    ));;                                  //[  ]//                      
+} //[[glGetError]______________________________]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+void                                      //[  ]//
+(*PFN_glEnableVertexAttribArray)          //[  ]//
+(                                         //[  ]//
+            GLuint index                  //[00]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glEnableVertexAttribArray             //[  ]//
+pfn_glEnableVertexAttribArray;            //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+void                                      //[  ]//
+glEnableVertexAttribArray                 //[  ]//
+(                                         //[  ]//
+            GLuint index                  //[00]//
+){                                        //[  ]//                            
+    GLEB_FuncPointerSated(                //[  ]//
+    /**/   "[pfn_glEnableVertexAttribArray]",   //
+  (GLEB_FUNC)pfn_glEnableVertexAttribArray );;  //                  
+/*X_return*/(pfn_glEnableVertexAttribArray(     //
+                   index                  //[  ]//
+    ));;                                  //[  ]//                      
+} //[[glEnableVertexAttribArray]_______________]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+void                                      //[  ]//
+(*PFN_glVertexAttribPointer)              //[  ]//
+(                                         //[  ]//
+/**/GLuint           index                //[01]//
+,   GLint             size                //[02]//
+                                          //[  ]//
+,   GLenum            type                //[03]//
+,   GLboolean   normalized                //[04]//
+                                          //[  ]//
+,   GLsizei         stride                //[05]//
+,   const GLvoid*  pointer                //[06]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glVertexAttribPointer                 //[  ]//
+pfn_glVertexAttribPointer;                //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+void                                      //[  ]//
+glVertexAttribPointer                     //[  ]//
+(                                         //[  ]//
+/**/GLuint           index                //[01]//
+,   GLint             size                //[02]//
+                                          //[  ]//
+,   GLenum            type                //[03]//
+,   GLboolean   normalized                //[04]//
+                                          //[  ]//
+,   GLsizei         stride                //[05]//
+,   const GLvoid*  pointer                //[06]//
+){                                        //[  ]//                            
+    GLEB_FuncPointerSated(                //[  ]//
+    /**/   "[pfn_glVertexAttribPointer]", //[  ]//
+  (GLEB_FUNC)pfn_glVertexAttribPointer );;//[  ]//           
+/*X_return*/(pfn_glVertexAttribPointer(   //[  ]//
+                                          //[  ]//
+    /**/            index                 //[01]//
+    ,                size                 //[02]//
+    //                 //                 //[  ]//
+    ,                type                 //[03]//
+    ,          normalized                 //[04]//
+    //                 //                 //[  ]//
+    ,              stride                 //[05]//
+    ,             pointer                 //[06]//
+    ));;                                  //[  ]//                      
+} //[[glVertexAttribPointer]___________________]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+void                                      //[  ]//
+(*PFN_glDrawArrays)                       //[  ]//
+(                                         //[  ]//
+/**/                        GLenum   mode //[01]//
+,                           GLint   first //[02]//
+,                           GLsizei count //[03]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glDrawArrays                          //[  ]//
+pfn_glDrawArrays;                         //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+void                                      //[  ]//
+glDrawArrays                              //[  ]//
+(                                         //[  ]//
+/**/                        GLenum   mode //[01]//
+,                           GLint   first //[02]//
+,                           GLsizei count //[03]//
+){                                        //[  ]//                            
+    GLEB_FuncPointerSated(                //[  ]//
+    /**/   "[pfn_glDrawArrays]",          //[  ]//
+  (GLEB_FUNC)pfn_glDrawArrays );;         //[  ]//           
+/*X_return*/(pfn_glDrawArrays(            //[  ]//
+    /**/                             mode //[01]//
+    ,                               first //[02]//
+    ,                               count //[03]//
+    ));;                                  //[  ]//                      
+} //[[glDrawArrays]____________________________]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+void                                      //[  ]//
+(*PFN_glDisableVertexAttribArray)         //[  ]//
+(                                         //[  ]//
+                            GLuint index  //[01]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glDisableVertexAttribArray            //[  ]//
+pfn_glDisableVertexAttribArray;           //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+void                                      //[  ]//
+glDisableVertexAttribArray                //[  ]//
+(                                         //[  ]//
+                            GLuint index  //[01]//  
+){                                        //[  ]//                            
+    GLEB_FuncPointerSated(                //[  ]//
+    /**/   "[pfn_glDisableVertexAttribArray]",  //
+  (GLEB_FUNC)pfn_glDisableVertexAttribArray );; //           
+/*X_return*/(pfn_glDisableVertexAttribArray(    //
+                                   index  //[01]//
+    ));;                                  //[  ]//                      
+} //[[glDisableVertexAttribArray]______________]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+GLuint                                    //[  ]//
+(*PFN_glCreateShader)                     //[  ]//
+(                                         //[  ]//
+                        GLenum shaderType //[01]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glCreateShader                        //[  ]//
+pfn_glCreateShader;                       //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+GLuint                                    //[  ]//
+glCreateShader                            //[  ]//
+(                                         //[  ]//
+                        GLenum shaderType //[01]//
+){                                        //[  ]//                           
+    GLEB_FuncPointerSated(                //[  ]//
+    /**/   "[pfn_glCreateShader]",  //    //[  ]//
+  (GLEB_FUNC)pfn_glCreateShader );; //    //[  ]//
+    return(  pfn_glCreateShader(    //    //[  ]//
+                               shaderType //[01]//
+    ));;                                  //[  ]//                     
+} //[[glCreateShader]__________________]////[  ]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+void                                      //[  ]//
+(*PFN_glShaderSource)                     //[  ]//
+(                                         //[  ]//
+/**/            GLuint            shader  //[01]//
+,               GLsizei            count  //[02]//
+,               const GLchar**    string  //[03]//
+,               const GLint*      length  //[04]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glShaderSource                        //[  ]//
+pfn_glShaderSource;                       //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+void                                      //[  ]//
+glShaderSource                            //[  ]//
+(                                         //[  ]//
+/**/            GLuint            shader  //[01]//
+,               GLsizei            count  //[02]//
+,               const GLchar**    string  //[03]//
+,               const GLint*      length  //[04]//
+){                                        //[  ]//                           
+    GLEB_FuncPointerSated(                //[  ]//
+    /**/   "[pfn_glShaderSource]",        //[  ]//
+  (GLEB_FUNC)pfn_glShaderSource );;       //[  ]//
+  /*X_RET*/( pfn_glShaderSource(          //[  ]//
+    /**/                          shader  //[01]//
+    ,                              count  //[02]//
+    ,                             string  //[03]//
+    ,                             length  //[04]//
+    ));;                                  //[  ]//                     
+} //[[glShaderSource]__________________]////[  ]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+void                                      //[  ]//
+(*PFN_glCompileShader)                    //[  ]//
+(                                         //[  ]//
+/**/            GLuint            shader  //[01]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glCompileShader                       //[  ]//
+pfn_glCompileShader;                      //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+void                                      //[  ]//
+glCompileShader                           //[  ]//
+(                                         //[  ]//
+/**/            GLuint            shader  //[01]//
+){                                        //[  ]//                           
+    GLEB_FuncPointerSated(                //[  ]//
+    /**/   "[pfn_glCompileShader]",       //[  ]//
+  (GLEB_FUNC)pfn_glCompileShader );;      //[  ]//
+  /*X_RET*/( pfn_glCompileShader(         //[  ]//
+    /**/                          shader  //[01]//
+    ));;                                  //[  ]//                     
+} //[[glCompileShader]_________________]////[  ]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+void                                      //[  ]//
+(*PFN_glGetShaderiv)                      //[  ]//
+(                                         //[  ]//
+/**/                        GLuint shader //[01]//
+,                           GLenum  pname //[02]//
+,                           GLint* params //[03]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glGetShaderiv                         //[  ]//
+pfn_glGetShaderiv;                        //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+void                                      //[  ]//
+glGetShaderiv                             //[  ]//
+(                                         //[  ]//
+/**/                        GLuint shader //[01]//
+,                           GLenum  pname //[02]//
+,                           GLint* params //[03]//
+){                                        //[  ]//                           
+    GLEB_FuncPointerSated(                //[  ]//
+    /**/   "[pfn_glGetShaderiv]",         //[  ]//
+  (GLEB_FUNC)pfn_glGetShaderiv );;        //[  ]//
+  /*X_RET*/( pfn_glGetShaderiv(           //[  ]//
+    /**/                           shader //[01]//
+    ,                               pname //[02]//
+    ,                              params //[03]//
+    ));;                                  //[  ]//                     
+} //[[glGetShaderiv]___________________]////[  ]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+void                                      //[  ]//
+(*PFN_glGetShaderInfoLog)                 //[  ]//
+(                                         //[  ]//
+/**/                GLuint       shader   //[01]//
+,	                GLsizei   maxLength   //[02]//
+,	                GLsizei*     length   //[03]//
+,	                GLchar*     infoLog   //[04]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glGetShaderInfoLog                    //[  ]//
+pfn_glGetShaderInfoLog;                   //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+void                                      //[  ]//
+glGetShaderInfoLog                        //[  ]//
+(                                         //[  ]//
+/**/                GLuint       shader   //[01]//
+,	                GLsizei   maxLength   //[02]//
+,	                GLsizei*     length   //[03]//
+,	                GLchar*     infoLog   //[04]//
+){                                        //[  ]//                           
+    GLEB_FuncPointerSated(                //[  ]//
+    /**/   "[pfn_glGetShaderInfoLog]",    //[  ]//
+  (GLEB_FUNC)pfn_glGetShaderInfoLog );;   //[  ]//
+  /*X_RET*/( pfn_glGetShaderInfoLog(      //[  ]//
+    /**/                         shader   //[01]//
+    ,                         maxLength   //[02]//
+    ,                            length   //[03]//
+    ,                           infoLog   //[04]//
+    ));;                                  //[  ]//                     
+} //[[glGetShaderInfoLog]______________]////[  ]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+GLuint                                    //[  ]//
+(*PFN_glCreateProgram)                    //[  ]//
+(                                         //[  ]//
+                                   void   //[00]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glCreateProgram                       //[  ]//
+pfn_glCreateProgram;                      //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+GLuint                                    //[  ]//
+glCreateProgram                           //[  ]//
+(                                         //[  ]//
+                                   void   //[00]//
+){                                        //[  ]//                           
+    GLEB_FuncPointerSated(                //[  ]//
+    /**/   "[pfn_glCreateProgram]",       //[  ]//
+  (GLEB_FUNC)pfn_glCreateProgram );;      //[  ]//
+    return(  pfn_glCreateProgram(         //[  ]//
+                                //|void|////[00]//
+    ));;                                  //[  ]//                     
+} //[[glCreateProgram]_________________]////[  ]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+void                                      //[  ]//
+(*PFN_glAttachShader)                     //[  ]//
+(                                         //[  ]//
+/**/                    GLuint  program   //[01]//
+,                       GLuint   shader   //[02]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glAttachShader                        //[  ]//
+pfn_glAttachShader;                       //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+void                                      //[  ]//
+glAttachShader                            //[  ]//
+(                                         //[  ]//
+/**/                    GLuint  program   //[01]//
+,                       GLuint   shader   //[02]//
+){                                        //[  ]//                           
+    GLEB_FuncPointerSated(                //[  ]//
+    /**/   "[pfn_glAttachShader]",        //[  ]//
+  (GLEB_FUNC)pfn_glAttachShader );;       //[  ]//
+    /*NO*/(  pfn_glAttachShader(          //[  ]//
+    /**/                        program   //[01]//
+    ,                            shader   //[02]//
+    ));;                                  //[  ]//                     
+} //[[glAttachShader]__________________]////[  ]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+void                                      //[  ]//
+(*PFN_glLinkProgram)                      //[  ]//
+(                                         //[  ]//
+/**/                    GLuint  program   //[01]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glLinkProgram                         //[  ]//
+pfn_glLinkProgram;                        //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+void                                      //[  ]//
+glLinkProgram                             //[  ]//
+(                                         //[  ]//
+/**/                    GLuint  program   //[01]//
+){                                        //[  ]//                           
+    GLEB_FuncPointerSated(                //[  ]//
+    /**/   "[pfn_glLinkProgram]",         //[  ]//
+  (GLEB_FUNC)pfn_glLinkProgram );;        //[  ]//
+    /*NO*/(  pfn_glLinkProgram(           //[  ]//
+    /**/                        program   //[01]//
+    ));;                                  //[  ]//                     
+} //[[glLinkProgram]___________________]////[  ]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+void                                      //[  ]//
+(*PFN_glGetProgramiv)                     //[  ]//
+(                                         //[  ]//
+/**/                    GLuint   program  //[01]//
+,                       GLenum     pname  //[02]//
+,                       GLint*    params  //[03]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glGetProgramiv                        //[  ]//
+pfn_glGetProgramiv;                       //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+void                                      //[  ]//
+glGetProgramiv                            //[  ]//
+(                                         //[  ]//
+/**/                    GLuint   program  //[01]//
+,                       GLenum     pname  //[02]//
+,                       GLint*    params  //[03]//
+){                                        //[  ]//                           
+    GLEB_FuncPointerSated(                //[  ]//
+    /**/   "[pfn_glGetProgramiv]",        //[  ]//
+  (GLEB_FUNC)pfn_glGetProgramiv );;       //[  ]//
+    /*NO*/(  pfn_glGetProgramiv(          //[  ]//
+    /**/                         program  //[01]//
+    ,                              pname  //[02]//
+    ,                             params  //[03]//
+    ));;                                  //[  ]//                     
+} //[[glGetProgramiv]__________________]////[  ]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+void                                      //[  ]//
+(*PFN_glGetProgramInfoLog)                //[  ]//
+(                                         //[  ]//
+/**/                GLuint       program  //[01]//
+,                   GLsizei    maxLength  //[02]//
+,                   GLsizei*      length  //[03]//
+,                   GLchar*      infoLog  //[04]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glGetProgramInfoLog                   //[  ]//
+pfn_glGetProgramInfoLog;                  //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+void                                      //[  ]//
+glGetProgramInfoLog                       //[  ]//
+(                                         //[  ]//
+/**/                GLuint       program  //[01]//
+,                   GLsizei    maxLength  //[02]//
+,                   GLsizei*      length  //[03]//
+,                   GLchar*      infoLog  //[04]//
+){                                        //[  ]//                           
+    GLEB_FuncPointerSated(                //[  ]//
+    /**/   "[pfn_glGetProgramInfoLog]",   //[  ]//
+  (GLEB_FUNC)pfn_glGetProgramInfoLog );;  //[  ]//
+    /*NO*/(  pfn_glGetProgramInfoLog(     //[  ]//
+    /**/                         program  //[01]//
+    ,                          maxLength  //[02]//
+    ,                             length  //[03]//
+    ,                            infoLog  //[04]//
+    ));;                                  //[  ]//                     
+} //[[glGetProgramInfoLog]_____________]////[  ]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+void                                      //[  ]//
+(*PFN_glDetachShader)                     //[  ]//
+(                                         //[  ]//
+/**/                GLuint       program  //[01]//
+,                   GLuint        shader  //[02]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glDetachShader                        //[  ]//
+pfn_glDetachShader;                       //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+void                                      //[  ]//
+glDetachShader                            //[  ]//
+(                                         //[  ]//
+/**/                GLuint       program  //[01]//
+,                   GLuint        shader  //[02]//
+){                                        //[  ]//                           
+    GLEB_FuncPointerSated(                //[  ]//
+    /**/   "[pfn_glDetachShader]",        //[  ]//
+  (GLEB_FUNC)pfn_glDetachShader );;       //[  ]//
+    /*NO*/(  pfn_glDetachShader(          //[  ]//
+    /**/                         program  //[01]//
+    ,                             shader  //[02]//
+    ));;                                  //[  ]//                     
+} //[[glDetachShader]__________________]////[  ]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+void                                      //[  ]//
+(*PFN_glDeleteShader)                     //[  ]//
+(                                         //[  ]//
+/**/                GLuint        shader  //[01]//      
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glDeleteShader                        //[  ]//
+pfn_glDeleteShader;                       //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+void                                      //[  ]//
+glDeleteShader                            //[  ]//
+(                                         //[  ]//
+/**/                GLuint        shader  //[01]// 
+){                                        //[  ]//                           
+    GLEB_FuncPointerSated(                //[  ]//
+    /**/   "[pfn_glDeleteShader]",        //[  ]//
+  (GLEB_FUNC)pfn_glDeleteShader );;       //[  ]//
+    /*NO*/(  pfn_glDeleteShader(          //[  ]//
+    /**/                          shader  //[01]//
+    ));;                                  //[  ]//                     
+} //[[glDeleteShader]__________________]////[  ]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+void                                      //[  ]//
+(*PFN_glClear)                            //[  ]//
+(                                         //[  ]//
+/**/                    GLbitfield  mask  //[01]//      
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glClear                               //[  ]//
+pfn_glClear;                              //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+void                                      //[  ]//
+glClear                                   //[  ]//
+(                                         //[  ]//
+/**/                    GLbitfield  mask  //[01]// 
+){                                        //[  ]//                           
+    GLEB_FuncPointerSated(                //[  ]//
+    /**/   "[pfn_glClear]",               //[  ]//
+  (GLEB_FUNC)pfn_glClear );;              //[  ]//
+    /*NO*/(  pfn_glClear(                 //[  ]//
+    /**/                            mask  //[01]//
+    ));;                                  //[  ]//                     
+} //[[glClear]_________________________]////[  ]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+void                                      //[  ]//
+(*PFN_glUseProgram)                       //[  ]//
+(                                         //[  ]//
+/**/                    GLuint   program  //[01]//      
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glUseProgram                          //[  ]//
+pfn_glUseProgram;                         //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+void                                      //[  ]//
+glUseProgram                              //[  ]//
+(                                         //[  ]//
+/**/                    GLuint   program  //[01]//
+){                                        //[  ]//                           
+    GLEB_FuncPointerSated(                //[  ]//
+    /**/   "[pfn_glUseProgram]",          //[  ]//
+  (GLEB_FUNC)pfn_glUseProgram );;         //[  ]//
+    /*NO*/(  pfn_glUseProgram(            //[  ]//
+    /**/                         program  //[01]//
+    ));;                                  //[  ]//                     
+} //[[glUseProgram]____________________]////[  ]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+void                                      //[  ]//
+(*PFN_glViewport)                         //[  ]//
+(                                         //[  ]//
+/**/                    GLint        x    //[01]//
+,                       GLint        y    //[02]//
+,                       GLsizei  width    //[03]//
+,                       GLsizei height    //[04]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glViewport                            //[  ]//
+pfn_glViewport;                           //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+void                                      //[  ]//
+glViewport                                //[  ]//
+(                                         //[  ]//
+/**/                    GLint        x    //[01]//
+,                       GLint        y    //[02]//
+,                       GLsizei  width    //[03]//
+,                       GLsizei height    //[04]//
+){                                        //[  ]//                           
+    GLEB_FuncPointerSated(                //[  ]//
+    /**/   "[pfn_glViewport]",            //[  ]//
+  (GLEB_FUNC)pfn_glViewport );;           //[  ]//
+    /*NO*/(  pfn_glViewport(              //[  ]//
+    /**/                             x    //[01]//
+    ,                                y    //[02]//
+    ,                            width    //[03]//
+    ,                           height    //[04]//
+    ));;                                  //[  ]//                     
+} //[[glViewport]______________________]////[  ]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+void                                      //[  ]//
+(*PFN_glClearColor)                       //[  ]//
+(                                         //[  ]//
+/**/                    GLfloat  R_ed     //[01]//
+,                       GLfloat  G_reen   //[02]//
+,                       GLfloat  B_lue    //[03]//
+,                       GLfloat  A_alpha  //[04]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glClearColor                          //[  ]//
+pfn_glClearColor;                         //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+void                                      //[  ]//
+glClearColor                              //[  ]//
+(                                         //[  ]//
+/**/                    GLfloat  R_ed     //[01]//
+,                       GLfloat  G_reen   //[02]//
+,                       GLfloat  B_lue    //[03]//
+,                       GLfloat  A_alpha  //[04]//
+){                                        //[  ]//                           
+    GLEB_FuncPointerSated(                //[  ]//
+    /**/   "[pfn_glClearColor]",          //[  ]//
+  (GLEB_FUNC)pfn_glClearColor );;         //[  ]//
+    /*NO*/(  pfn_glClearColor(            //[  ]//
+    /**/                         R_ed     //[01]//
+    ,                            G_reen   //[02]//
+    ,                            B_lue    //[03]//
+    ,                            A_alpha  //[04]//
+    ));;                                  //[  ]//           
+} //[[glClearColor]____________________]////[  ]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+void                                      //[  ]//
+(*PFN_glGenVertexArrays)                  //[  ]//
+(                                         //[  ]//
+/**/                    GLsizei       n   //[01]//
+,                       GLuint*  arrays   //[02]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glGenVertexArrays                     //[  ]//
+pfn_glGenVertexArrays;                    //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+void                                      //[  ]//
+glGenVertexArrays                         //[  ]//
+(                                         //[  ]//
+/**/                    GLsizei       n   //[01]//
+,                       GLuint*  arrays   //[02]//
+){                                        //[  ]//                           
+    GLEB_FuncPointerSated(                //[  ]//
+    /**/   "[pfn_glGenVertexArrays]",     //[  ]//
+  (GLEB_FUNC)pfn_glGenVertexArrays );;    //[  ]//
+    /*NO*/(  pfn_glGenVertexArrays(       //[  ]//
+    /**/                              n   //[01]//
+    ,                            arrays   //[02]//
+    ));;                                  //[  ]//           
+} //[[glGenVertexArrays]_______________]////[  ]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+void                                      //[  ]//
+(*PFN_glBindVertexArray)                  //[  ]//
+(                                         //[  ]//
+                            GLuint array  //[01]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glBindVertexArray                     //[  ]//
+pfn_glBindVertexArray;                    //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+void                                      //[  ]//
+glBindVertexArray                         //[  ]//
+(                                         //[  ]//
+                            GLuint array  //[01]//
+){                                        //[  ]//                           
+    GLEB_FuncPointerSated(                //[  ]//
+    /**/   "[pfn_glBindVertexArray]",     //[  ]//
+  (GLEB_FUNC)pfn_glBindVertexArray );;    //[  ]//
+    /*NO*/(  pfn_glBindVertexArray(       //[  ]//
+                                   array  //[01]//
+    ));;                                  //[  ]//           
+} //[[glBindVertexArray]_______________]////[  ]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+void                                      //[  ]//
+(*PFN_glGenTextures)                      //[  ]//
+(                                         //[  ]//
+/**/GLsizei n_number_of_textures_to_make  //[01]//
+,   GLuint*        texture_names_pointer  //[02]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glGenTextures                         //[  ]//
+pfn_glGenTextures;                        //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+void                                      //[  ]//
+glGenTextures                             //[  ]//
+(                                         //[  ]//
+/**/GLsizei n_number_of_textures_to_make  //[01]//
+,   GLuint*        texture_names_pointer  //[02]//
+){                                        //[  ]//                           
+    GLEB_FuncPointerSated(                //[  ]//
+    /**/   "[pfn_glGenTextures]",         //[  ]//
+  (GLEB_FUNC)pfn_glGenTextures );;        //[  ]//
+    /*NO*/(  pfn_glGenTextures(           //[  ]//
+    /**/    n_number_of_textures_to_make  //[01]//
+    ,              texture_names_pointer  //[02]//
+    ));;                                  //[  ]//           
+} //[[glGenTextures]___________________]////[  ]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+void                                      //[  ]//
+(*PFN_glBindTexture)                      //[  ]//
+(                                         //[  ]//
+/**/        GLenum  texture_binding_target//[01]//
+,           GLuint texture_name_aka_handle//[02]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glBindTexture                         //[  ]//
+pfn_glBindTexture;                        //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+void                                      //[  ]//
+glBindTexture                             //[  ]//
+(                                         //[  ]//
+/**/        GLenum  texture_binding_target//[01]//
+,           GLuint texture_name_aka_handle//[02]//
+){                                        //[  ]//                           
+    GLEB_FuncPointerSated(                //[  ]//
+    /**/   "[pfn_glBindTexture]",         //[  ]//
+  (GLEB_FUNC)pfn_glBindTexture );;        //[  ]//
+    /*NO*/(  pfn_glBindTexture(           //[  ]//
+    /**/            texture_binding_target//[01]//
+    ,              texture_name_aka_handle//[02]//
+    ));;                                  //[  ]//           
+} //[[glBindTexture]___________________]////[  ]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+void                                      //[  ]//
+(*PFN_glTexParameteri)                    //[  ]//
+(                                         //[  ]//
+/**/                        GLenum target //[01]//
+,                           GLenum  pname //[02]//
+,                           GLint   param //[03]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glTexParameteri                       //[  ]//
+pfn_glTexParameteri;                      //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+void                                      //[  ]//
+glTexParameteri                           //[  ]//
+(                                         //[  ]//
+/**/                        GLenum target //[01]//
+,                           GLenum  pname //[02]//
+,                           GLint   param //[03]//
+){                                        //[  ]//                           
+    GLEB_FuncPointerSated(                //[  ]//
+    /**/   "[pfn_glTexParameteri]",       //[  ]//
+  (GLEB_FUNC)pfn_glTexParameteri );;      //[  ]//
+    /*NO*/(  pfn_glTexParameteri(         //[  ]//
+    /**/                           target //[01]//
+    ,                               pname //[02]//
+    ,                               param //[03]//
+    ));;                                  //[  ]//           
+} //[[glTexParameteri]_________________]////[  ]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+void                                      //[  ]//
+(*PFN_glTexImage2D)                       //[  ]//
+(                                         //[  ]//
+/**/            GLenum            target  //[01]//
+,	            GLint              level  //[02]//
+,	            GLint     internalformat  //[03]//
+,	            GLsizei            width  //[04]//
+,	            GLsizei           height  //[05]//
+,	            GLint             border  //[06]//
+,	            GLenum            format  //[07]//
+,	            GLenum              type  //[08]//
+,	            const GLvoid*       data  //[09]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glTexImage2D                          //[  ]//
+pfn_glTexImage2D;                         //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+void                                      //[  ]//
+glTexImage2D                              //[  ]//
+(                                         //[  ]//
+/**/            GLenum            target  //[01]//
+,	            GLint              level  //[02]//
+,	            GLint     internalformat  //[03]//
+,	            GLsizei            width  //[04]//
+,	            GLsizei           height  //[05]//
+,	            GLint             border  //[06]//
+,	            GLenum            format  //[07]//
+,	            GLenum              type  //[08]//
+,	            const GLvoid*       data  //[09]//
+){                                        //[  ]//                           
+    GLEB_FuncPointerSated(                //[  ]//
+    /**/   "[pfn_glTexImage2D]",          //[  ]//
+  (GLEB_FUNC)pfn_glTexImage2D );;         //[  ]//
+    /*NO*/(  pfn_glTexImage2D(            //[  ]//
+    /**/                          target  //[01]//
+    ,	                           level  //[02]//
+    ,	                  internalformat  //[03]//
+    ,	                           width  //[04]//
+    ,	                          height  //[05]//
+    ,	                          border  //[06]//
+    ,	                          format  //[07]//
+    ,	                            type  //[08]//
+    ,	                            data  //[09]//
+    ));;                                  //[  ]//           
+} //[[glTexImage2D]____________________]////[  ]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+void                                      //[  ]//
+(*PFN_glActiveTexture)                    //[  ]//
+(                                         //[  ]//
+/**/                    GLenum   texture  //[01]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glActiveTexture                       //[  ]//
+pfn_glActiveTexture;                      //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+void                                      //[  ]//
+glActiveTexture                           //[  ]//
+(                                         //[  ]//
+/**/                    GLenum   texture  //[01]//
+){                                        //[  ]//                           
+    GLEB_FuncPointerSated(                //[  ]//
+    /**/   "[pfn_glActiveTexture]",       //[  ]//
+  (GLEB_FUNC)pfn_glActiveTexture );;      //[  ]//
+    /*NO*/(  pfn_glActiveTexture(         //[  ]//
+    /**/                         texture  //[01]//
+    ));;                                  //[  ]//           
+} //[[glActiveTexture]_________________]////[  ]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+GLint                                     //[  ]//
+(*PFN_glGetUniformLocation)               //[  ]//
+(                                         //[  ]//
+/**/                GLuint         program//[01]//
+,                   const GLchar*     name//[02]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glGetUniformLocation                  //[  ]//
+pfn_glGetUniformLocation;                 //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+GLint                                     //[  ]//
+glGetUniformLocation                      //[  ]//
+(                                         //[  ]//
+/**/                GLuint         program//[01]//
+,                   const GLchar*     name//[02]//
+){                                        //[  ]//   
+    GLint ret;                            //[  ]//
+                                          //[  ]//
+    GLEB_FuncPointerSated(                //[  ]//
+    //[[[[[[[pfn]]]]]]]////[___________]////[  ]//
+    /**/   "[pfn_glGetUniformLocation]",  //[  ]//
+  (GLEB_FUNC)pfn_glGetUniformLocation );; //[  ]//
+    ret=(    pfn_glGetUniformLocation(    //[  ]//
+    /**/                           program//[01]//
+    ,                                 name//[02]//
+    ));;                                  //[  ]//
+                                          //[  ]//
+    return( ret );                        //[  ]//
+                                          //[  ]//
+} //[[glGetUniformLocation]____________]////[  ]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+void                                      //[  ]//
+(*PFN_glUniform1i)                        //[  ]//
+(                                         //[  ]//
+/**/                        GLint location//[01]//
+,                           GLint       v0//[02]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glUniform1i                           //[  ]//
+pfn_glUniform1i;                          //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+void                                      //[  ]//
+glUniform1i                               //[  ]//
+(                                         //[  ]//
+/**/                        GLint location//[01]//
+,                           GLint       v0//[02]//
+){                                        //[  ]//   
+    /**VOID ret;**/                       //[  ]//
+                                          //[  ]//
+    GLEB_FuncPointerSated(                //[  ]//
+    //[[[[[[[pfn]]]]]]]////[___________]////[  ]//
+    /**/   "[pfn_glUniform1i]",           //[  ]//
+  (GLEB_FUNC)pfn_glUniform1i );;          //[  ]//
+   /*NO*/(   pfn_glUniform1i(             //[  ]//
+    /**/                          location//[01]//
+    ,                                   v0//[02]//
+    ));;                                  //[  ]//
+                                          //[  ]//
+    /**return( ret );**/                  //[  ]//
+                                          //[  ]//
+} //[[glUniform1i]_____________________]////[  ]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+void                                      //[  ]//
+(*PFN_glPixelStorei)                      //[  ]//
+(                                         //[  ]//
+/**/                        GLenum  pname //[01]//
+,                           GLint   param //[02]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glPixelStorei                         //[  ]//
+pfn_glPixelStorei;                        //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+void                                      //[  ]//
+glPixelStorei                             //[  ]//
+(                                         //[  ]//
+/**/                        GLenum  pname //[01]//
+,                           GLint   param //[02]//
+){                                        //[  ]//   
+    /**VOID ret;**/                       //[  ]//
+                                          //[  ]//
+    GLEB_FuncPointerSated(                //[  ]//
+    //[[[[[[[pfn]]]]]]]////[___________]////[  ]//
+    /**/   "[pfn_glPixelStorei]",         //[  ]//
+  (GLEB_FUNC)pfn_glPixelStorei );;        //[  ]//
+   /*NO*/(   pfn_glPixelStorei(
+    /**/                            pname //[01]//
+    ,                               param //[02]//
+    ));;                                  //[  ]//
+                                          //[  ]//
+    /**return( ret );**/                  //[  ]//
+                                          //[  ]//
+} //[[glPixelStorei]___________________]////[  ]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+void                                      //[  ]//
+(*PFN_glEnable)                           //[  ]//
+(                                         //[  ]//
+/**/        GLenum  cap_is_for_capability //[01]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glEnable                              //[  ]//
+pfn_glEnable;                             //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+void                                      //[  ]//
+glEnable                                  //[  ]//
+(                                         //[  ]//
+/**/        GLenum  cap_is_for_capability //[01]//
+){                                        //[  ]//   
+    /**VOID ret;**/                       //[  ]//
+                                          //[  ]//
+    GLEB_FuncPointerSated(                //[  ]//
+    //[[[[[[[pfn]]]]]]]////[___________]////[  ]//
+    /**/   "[pfn_glEnable]",              //[  ]//
+  (GLEB_FUNC)pfn_glEnable );;             //[  ]//
+   /*NO*/(   pfn_glEnable(                //[  ]//
+    /**/            cap_is_for_capability //[01]//
+    ));;                                  //[  ]//
+                                          //[  ]//
+    /**return( ret );**/                  //[  ]//
+                                          //[  ]//
+} //[[glEnable]________________________]////[  ]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+void                                      //[  ]//
+(*PFN_glFinish)                           //[  ]//
+(                                         //[  ]//
+        /** ZERO_PARAMETERS **/           //[00]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glFinish                              //[  ]//
+pfn_glFinish;                             //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+void                                      //[  ]//
+glFinish                                  //[  ]//
+(                                         //[  ]//
+        /** ZERO_PARAMETERS **/           //[00]//
+){                                        //[  ]//   
+    /**VOID ret;**/                       //[  ]//
+                                          //[  ]//
+    GLEB_FuncPointerSated(                //[  ]//
+    //[[[[[[[pfn]]]]]]]////[___________]////[  ]//
+    /**/   "[pfn_glFinish]",              //[  ]//
+  (GLEB_FUNC)pfn_glFinish );;             //[  ]//
+   /*NO*/(   pfn_glFinish(                //[  ]//
+        /** ZERO_PARAMETERS **/           //[00]//
+    ));;                                  //[  ]//
+                                          //[  ]//
+    /**return( ret );**/                  //[  ]//
+                                          //[  ]//
+} //[[glFinish]________________________]////[  ]//
+//:--------------------------------------------://
+//:--------------------------------------------://
+typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
+void                                      //[  ]//
+(*PFN_glGetIntegerv )                     //[  ]//
+(                                         //[  ]//
+/**/                        GLenum  pname //[01]//
+,                           GLint*   data //[02]//
+); //[- - - - - - - - - - - - - - - - -]////[  ]//
+                                          //[  ]//
+//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
+                                          //[  ]//
+PFN_glGetIntegerv                         //[  ]//
+pfn_glGetIntegerv ;                       //[  ]//
+                                          //[  ]//
+//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
+void                                      //[  ]//
+glGetIntegerv                             //[  ]//
+(                                         //[  ]//
+/**/                        GLenum  pname //[01]//
+,                           GLint*   data //[02]//
+){                                        //[  ]//   
+    /**VOID ret;**/                       //[  ]//
+                                          //[  ]//
+    GLEB_FuncPointerSated(                //[  ]//
+    //[[[[[[[pfn]]]]]]]////[___________]////[  ]//
+    /**/   "[pfn_glGetIntegerv ]",        //[  ]//
+  (GLEB_FUNC)pfn_glGetIntegerv  );;       //[  ]//
+   /*NO*/(   pfn_glGetIntegerv (          //[  ]//
+    /**/                            pname //[01]//
+    ,                                data //[02]//
+    ));;                                  //[  ]//
+                                          //[  ]//
+    /**return( ret );**/                  //[  ]//
+                                          //[  ]//
+} //[[glGetIntegerv ]__________________]////[  ]//
+//:--------------------------------------------://
+
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+
+//#END[ FUNCTION_PROTOTYPES_AND_WRAPPERS ]=====#//
+
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+
+int
+gleb_Alert( const char* alert_message ){
+
+    //:WhatWentWrong?
+    printf( "[gleb_Alert:alert_message]:%s\n"
+                        ,alert_message );;
+    fflush(stdout);
+
+
+    //:CUT_AND_PASTED_FROM:AAC2020_GINAWIN:==================://
+
+        aac2020_ginawin_FUNCTION_POINTERS_struct*
+        FP=&(aac2020_ginawin_function_pointers);
+
+        if(NULL==FP->USER32.MessageBoxW){
+            #define H aac2020_ginawin_Halt
+            H( "[GLEBIND:ForgotToInitMsgBoxW]"  );
+            #undef  H
+        };;
+
+        struct aac2020_ginawin_data_USER32*         
+        U32D = &(                             
+            FP->USER32.DATA                   
+        );;
+
+        int msgboxID =(
+        FP->USER32.MessageBoxW(
+            NULL
+        ,
+            L"You forgot to do something in code.\n"
+            L"strcat is a lot of work to make a  \n"
+            L"custom message. So check the       \n"
+            L"console for what went wrong.       \n"
+        ,
+            L"[!!CHECK_THE_CONSOLE!!]"
+        ,
+            (
+                U32D -> mb_iconexclamation | 
+                U32D -> mb_ok              |
+            0)
+        ));;
+
+        return msgboxID;    
+
+    //:==================:CUT_AND_PASTED_FROM:AAC2020_GINAWIN://
+
+} 
+
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+
+
+
+struct
+gleb_library_container{
+
+    HGLRC
+    handle_to_gl_rendering_context;
+
+    struct 
+    gleb_BBT_is_BUFFER_BINDING_TARGET{
+
+        GLenum gl_array_buffer; //: 0x8892
+
+    }BBT;struct gleb_BBT_is_BUFFER_BINDING_TARGET*
+                            BUFFER_BINDING_TARGET;
+
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+
+    struct
+    gleb_BD_is_BUFFER_DATA{
+        
+        //: The data store contents will be
+        //: modified once and used many times as
+        //: the source for GL drawing commands.
+        GLenum gl_static_draw; //: 0x88E4
+
+    }BD;struct gleb_BD_is_BUFFER_DATA*
+                          BUFFER_DATA;
+
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+
+    struct
+    gleb_ERR_is_ERROR_FLAGS{
+
+        GLenum gl_no_error; //: 0
+
+    }ERR;struct gleb_ERR_is_ERROR_FLAGS*
+                            ERROR_FLAGS;
+
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    //|                                        |//
+    //|  Reason I am calling them:             |//
+    //|  "Common Enum Types"                   |//
+    //|  khronos.org/opengl/wiki/OpenGL_Type   |//
+    //|___                                  ___|//
+    struct 
+    gleb_TYP_is_COMMON_ENUM_TYPES{
+
+        GLenum gl_float; //: 0x1406
+
+    }TYP;struct gleb_TYP_is_COMMON_ENUM_TYPES*
+                            COMMON_ENUM_TYPES;
+
+    //|========================================|//
+    struct 
+    gleb_BOL_is_BOOLEAN_CONSTANTS{
+
+        GLboolean  gl_true ; //:  1
+        GLboolean  gl_false; //:  0
+
+    }BOL;struct gleb_BOL_is_BOOLEAN_CONSTANTS*
+                            BOOLEAN_CONSTANTS;
+    //|========================================|//
+
+    struct 
+    gleb_MOD_is_DRAW_MODES{
+
+        GLenum gl_triangles     ; //:0x0004
+        GLenum gl_triangle_fan  ; //:0x0006
+        GLenum gl_triangle_strip; //:0x0005
+
+    }MOD;struct gleb_MOD_is_DRAW_MODES*
+                            DRAW_MODES;
+
+    //|========================================|//
+
+    struct 
+    gleb_ST_is_SHADER_TYPES{
+
+        GLenum gl_vertex_shader  ; //:??
+        GLenum gl_fragment_shader; //:??
+
+    }ST;struct gleb_ST_is_SHADER_TYPES*
+                          SHADER_TYPES;
+
+    //:Functions:
+    //|========================================|//
+
+    struct
+    gleb_SPN_is_SHADER_PARAM_NAMES{
+
+        GLenum gl_compile_status ;
+        GLenum gl_info_log_length;
+
+    }SPN;struct gleb_SPN_is_SHADER_PARAM_NAMES*
+                            SHADER_PARAM_NAMES;
+
+    //|========================================|//
+
+    struct
+    gleb_PPN_is_PROGRAM_PARAM_NAMES{
+
+        GLenum gl_link_status;
+        GLenum gl_info_log_length;
+
+    }PPN;struct gleb_PPN_is_PROGRAM_PARAM_NAMES*
+                            PROGRAM_PARAM_NAMES;
+
+    //|========================================|//
+    struct
+    gleb_MAS_is_BITFIELD_MASKS{
+
+        GLbitfield gl_color_buffer_bit;
+
+    }MAS;struct gleb_MAS_is_BITFIELD_MASKS*
+                            BITFIELD_MASKS;
+
+    //|========================================|//
+    //|Lets stop making shorthand and longhand |//
+    //|ways to access structs. Use longhanded. |// 
+    //|If you need shorthand, use a macro      |// 
+    //|at the site where you need it.          |//
+    //|Synonyms make it harder to find         |//
+    //|references in the code.                 |//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    struct
+    gleb_TEXTURE_is_for_TEXTURE{
+        
+        struct
+        gleb_SLOT_if_for_TEXTURE_UNIT_SLOT{
+    
+            //:We only need this one. To get
+            //:other slots simply add an
+            //:offset. All slots are contiguously
+            //:numbered.
+            GLenum gl_texture0; //:0x84C0
+
+        }SLOT;
+        
+        //+ Moved to:                          +//
+        //+ TEXTURE.TEX_TYP.GPU_DEV            +//
+        //- struct                                 -//
+        //- gleb_texture_BINDING_TARGETS{          -//
+        //-                                        -//
+        //-     GLenum gl_texture_2d; //: 0x0DE1   -//
+        //-                                        -//
+        //- }BINDING_TARGETS;                      -//
+
+        #include "GLEBIND/MACRO/TEXTURE_STRUCT.BEG._"
+        L0(gleb_TEX_LOD_is_LEVEL_OF_DETAIL){
+        L1(gleb_TEX_LOD_is_LEVEL_OF_DETAIL,gpu){
+        //:LODsUsedBy:openGL/device/gpu
+        
+            int zero;
+        
+        }GPU_DEV;
+        L1(gleb_TEX_LOD_is_LEVEL_OF_DETAIL,cpu){
+        //:LODsUsedBy:client/host/cpu
+
+            int unused;
+
+        }CPU_HOS;
+        }TEX_LOD;
+        #include "GLEBIND/MACRO/TEXTURE_STRUCT.MID._" 
+        L0(gleb_TEX_TYP_is_for_TEXTURE_TYPE){
+        L1(gleb_TEX_TYP_is_for_TEXTURE_TYPE,gpu){
+        //:TextureTypesUsedBy:openGL/device/gpu
+        
+            GLenum gl_texture_2d; //: 0x0DE1
+        
+        }GPU_DEV;
+        L1(gleb_TEX_TYP_is_for_TEXTURE_TYPE,cpu){
+        //:TextureTypesUsedBy:client/host/cpu
+
+            int unused;
+
+        }CPU_HOS;
+        }TEX_TYP;
+        #include "GLEBIND/MACRO/TEXTURE_STRUCT.MID._"
+        L0(gleb_PIX_FMT_is_for_PIXEL_FORMAT){
+        L1(gleb_PIX_FMT_is_for_PIXEL_FORMAT,gpu){
+        //:PixelFormatsUsedBy:openGL/device/gpu
+        //:(Also known as "Internal_Format")
+        //:(Also known as "Internal Format")
+        
+            //- GLint gl_rgba8; //: 0x8058     -//
+
+            GLint gl_rgba8ui; //: 0x8D7C
+        
+        }GPU_DEV;
+        L1(gleb_PIX_FMT_is_for_PIXEL_FORMAT,cpu){
+        //:PixelFormatsUsedBy:client/host/cpu
+
+            //- GLint gl_rgba; //: 0x1908      -//
+            
+            GLint gl_rgba_integer; //: 0x8D99
+
+        }CPU_HOS;
+        }PIX_FMT;
+        #include "GLEBIND/MACRO/TEXTURE_STRUCT.MID._"
+        L0(gleb_PIX_TYP_is_for_PIXEL_TYPE){
+        L1(gleb_PIX_TYP_is_for_PIXEL_TYPE,gpu){
+        //:PixelTypesUsedBy:openGL/device/gpu
+
+        
+            int unused;
+        
+        }GPU_DEV;
+        L1(gleb_PIX_TYP_is_for_PIXEL_TYPE,cpu){
+        //:PixelTypesUsedBy:client/host/cpu
+
+            GLenum gl_unsigned_byte; //:0x1401
+
+        }CPU_HOS;
+        }PIX_TYP;
+        #include "GLEBIND/MACRO/TEXTURE_STRUCT.MID._"
+        L0(gleb_PIX_DAT_is_for_PIXEL_DATA){
+        L1(gleb_PIX_DAT_is_for_PIXEL_DATA,gpu){
+        //:PixelTypesUsedBy:openGL/device/gpu
+
+        
+            int unused;
+        
+        }GPU_DEV;
+        L1(gleb_PIX_DAT_is_for_PIXEL_DATA,cpu){
+        //:PixelTypesUsedBy:client/host/cpu
+
+            GLvoid* pix_nul; //:Null_Data
+
+        }CPU_HOS;
+        }PIX_DAT;
+        #include "GLEBIND/MACRO/TEXTURE_STRUCT.MID._"
+        L0(gleb_BORDER_is_for_TEXTURE_BORDER){
+            GLint must_be_zero_for_teximage2d;
+        }BORDER;
+        #include "GLEBIND/MACRO/TEXTURE_STRUCT.MID._"
+        L0(gleb_texture_PARAMETERS){
+
+            struct
+            gleb_texture_parameter_NAMES{
+
+                #define T GLenum 
+                T gl_texture_min_filter; //:0x2801
+                T gl_texture_mag_filter; //:0x2800
+                T gl_texture_wrap_s    ; //:0x2802
+                T gl_texture_wrap_t    ; //:0x2803
+                #undef T
+            }NAM;
+
+            struct
+            gleb_texture_parameter_VALUES{
+                GLint gl_nearest       ;//:0x2600
+                GLint gl_clamp_to_edge ;//:0x812F
+            }VAL;
+
+        }PARAMETER;
+        #include "GLEBIND/MACRO/TEXTURE_STRUCT.END._"
+
+        //:Example Usage:
+        //+    GLint which_texture_iid;        +//
+        //+    glGetIntegerv(                  +//
+        //+       GLEB.TEXTURE.QUERY.          +//
+        //+       gl_texture_binding_2d        +//
+        //+    ,                               +//
+        //+       &(which_texture_iid)         +//
+        //+    );;                             +//
+        struct
+        gleb_texture_parameters_QUERY{
+            
+            //:Thought I wanted this for use
+            //:with "GL_TEXTURE_BINDING_2D".
+            //:But that gives me the
+            //:texture's iid, and NOT the
+            //:active texture unit.
+
+            #define T GLenum
+            T gl_texture_binding_2d; //:0x8069
+            T gl_active_texture;     //:0x84E0
+            #undef  T
+
+            //[ exout:"example_output"_________]//
+            //! You want what texture handle   !//
+            //! was currently bound to texture !//
+            //! [slot/unit] using:             !//
+            //! glBindTexture                  !//
+            //| query: GL_TEXTURE_BINDING_2D   |//
+            //| exout: texture int id handle.  |//
+            //[-  --  --  --  --  --  --  --  -]//
+            //! You want what texture uint was !//
+            //! last set with: glActiveTexture !//
+            //| query: GL_ACTIVE_TEXTURE       |//
+            //| exout: GL_TEXTURE0             |//
+
+            //[ DOCUMENTATION QUOTE:           ]//
+            //[ GL_ACTIVE_TEXTURE:             ]//
+            //| data returns a single value    |//
+            //| indicating the active          |//
+            //| multitexture unit. The initial |//
+            //| value is GL_TEXTURE0.          |//
+
+        }QUERY;
+
+    }TEXTURE;
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    
+    struct gleb_UNIFORM_is_for_UNIFORMS{
+
+        //: Though it is "0x826E" in my glcore.arb
+        //: header, I will define it as the
+        //: minimum gauranteed value of 1024
+        //: according to:
+        //| www.khronos.org/opengl/wiki/       |//
+        //| Layout_Qualifier_(GLSL)|//         |//
+
+        GLint gl_max_uniform_locations; //:0x826E
+
+    }UNIFORM; //| <--Try to keep everything    |//
+              //|    SINGULAR grammatically.   |//
+
+    struct gleb_ALIGNMENT_is_for_ALIGNMENT{
+        
+        //:For use with:
+        //: glPixelStorei
+
+        GLenum gl_unpack_alignment; //:0x0CF5
+        
+    }ALIGNMENT;
+
+    //:Some constants are duplicated in different
+    //:areas. But I like how it is more explicit
+    //:about the usage of the value.
+    struct gleb_CAPABILITIES_you_can_enable{
+
+        GLenum gl_texture_2d; //: 0x0DE1
+
+    }CAPABILITY; //:<--SINGULAR plurality!
+
+
+
+        PFN_glGenBuffers 
+            glGenBuffers;
+
+        PFN_glBindBuffer
+            glBindBuffer;
+
+        PFN_glBufferData
+            glBufferData;
+
+        PFN_glGetError
+            glGetError;
+
+        PFN_glEnableVertexAttribArray
+            glEnableVertexAttribArray;
+
+        PFN_glVertexAttribPointer
+            glVertexAttribPointer;
+
+        PFN_glDrawArrays
+            glDrawArrays;
+
+        PFN_glDisableVertexAttribArray
+            glDisableVertexAttribArray;
+
+        PFN_glCreateShader
+            glCreateShader;
+
+        PFN_glShaderSource
+            glShaderSource;
+
+        PFN_glCompileShader
+            glCompileShader;
+
+        PFN_glGetShaderiv
+            glGetShaderiv;
+
+        PFN_glGetShaderInfoLog
+            glGetShaderInfoLog;
+
+        PFN_glCreateProgram
+            glCreateProgram;
+
+        PFN_glAttachShader
+            glAttachShader;
+
+        PFN_glLinkProgram
+            glLinkProgram;
+
+        PFN_glGetProgramiv
+            glGetProgramiv;
+
+        PFN_glGetProgramInfoLog
+            glGetProgramInfoLog;
+
+        PFN_glDetachShader
+            glDetachShader;
+
+        PFN_glDeleteShader
+            glDeleteShader;
+
+        PFN_glClear
+            glClear;
+
+        PFN_glUseProgram
+            glUseProgram;
+
+        PFN_glViewport
+            glViewport;
+    
+        PFN_glClearColor
+            glClearColor;
+
+        PFN_glGenVertexArrays
+            glGenVertexArrays;
+
+        PFN_glBindVertexArray
+            glBindVertexArray;
+
+        PFN_glGenTextures
+            glGenTextures;
+
+        PFN_glBindTexture
+            glBindTexture;
+
+        PFN_glTexParameteri
+            glTexParameteri;
+
+        PFN_glTexImage2D
+            glTexImage2D;
+
+        PFN_glActiveTexture
+            glActiveTexture;
+
+        PFN_glGetUniformLocation
+            glGetUniformLocation;
+
+        PFN_glUniform1i
+            glUniform1i;
+
+        PFN_glPixelStorei
+            glPixelStorei;
+
+        PFN_glEnable  //:Maybe I need this to get
+            glEnable; //:texture sampler working?
+
+        PFN_glFinish
+            glFinish;
+
+        PFN_glGetIntegerv
+            glGetIntegerv;
+
+    //|========================================|//
+
+}GLEB={
+    .BUFFER_BINDING_TARGET=&( GLEB.BBT  )
+   ,.BUFFER_DATA          =&( GLEB.BD   )
+   ,.ERROR_FLAGS          =&( GLEB.ERR  )
+   ,.COMMON_ENUM_TYPES    =&( GLEB.TYP  )
+   ,.BOOLEAN_CONSTANTS    =&( GLEB.BOL  )
+   ,.DRAW_MODES           =&( GLEB.MOD  )
+   ,.SHADER_TYPES         =&( GLEB.ST   )
+   ,.SHADER_PARAM_NAMES   =&( GLEB.SPN  )
+   ,.PROGRAM_PARAM_NAMES  =&( GLEB.PPN  )
+   ,.BITFIELD_MASKS       =&( GLEB.MAS  )
+    
+   ,.BBT.gl_array_buffer    = 0x8892 //|IIIIIII|//
+   ,.BD .gl_static_draw     = 0x88E4 //|IIIIIII|//
+   ,.ERR.gl_no_error        = 0x0    //|IIIIIII|//
+   ,.TYP.gl_float           = 0x1406 //|IIIIIII|//
+   ,.BOL.gl_true            = 1      //|IIIIIII|//
+   ,.BOL.gl_false           = 0      //|IIIIIII|//
+   ,.MOD.gl_triangles       = 0x0004 //|IIIIIII|//
+   ,.MOD.gl_triangle_fan    = 0x0006 //|IIIIIII|//
+   ,.MOD.gl_triangle_strip  = 0x0005 //|IIIIIII|//
+   ,.ST .gl_vertex_shader   = 0x8B31 //|IIIIIII|//
+   ,.ST .gl_fragment_shader = 0x8B30 //|IIIIIII|//
+   ,.SPN.gl_compile_status  = 0x8B81 //|IIIIIII|//
+   ,.SPN.gl_info_log_length = 0x8B84 //|IIIIIII|//
+   ,.PPN.gl_link_status     = 0x8B82 //|IIIIIII|//
+   ,.PPN.gl_info_log_length = 0x8B84 //|IIIIIII|//
+   ,.MAS.gl_color_buffer_bit= 0x00004000 //|III|//
+                              //|IIIIIIIIIIIIII|//
+   ,.TEXTURE.TEX_TYP.GPU_DEV  //|IIIIIIIIIIIIII|//
+    .gl_texture_2d = 0x0DE1   //|IIIIIIIIIIIIII|//
+
+   ,.TEXTURE.TEX_LOD.GPU_DEV.zero = 0
+
+   //- ,.TEXTURE.PIX_FMT.GPU_DEV               -//
+   //-  .gl_rgba8=0x8058                       -//
+   ,.TEXTURE.PIX_FMT.GPU_DEV.
+     gl_rgba8ui =0x8D7C 
+
+   //- ,.TEXTURE.PIX_FMT.CPU_HOS.              -//
+   //-   gl_rgba =0x1908                       -//
+
+   ,.TEXTURE.PIX_FMT.CPU_HOS.            
+     gl_rgba_integer = 0x8D99              
+
+   ,.TEXTURE.PIX_TYP.CPU_HOS.
+     gl_unsigned_byte = 0x1401
+
+   ,.TEXTURE.PIX_DAT.CPU_HOS.pix_nul=NULL
+
+   ,.TEXTURE.BORDER
+    .must_be_zero_for_teximage2d = 0
+
+                                         //|III|//
+    #define TPN TEXTURE.PARAMETER.NAM    //|III|//
+   ,.TPN.gl_texture_min_filter = 0x2801  //|III|//
+   ,.TPN.gl_texture_mag_filter = 0x2800  //|III|//
+   ,.TPN.gl_texture_wrap_s     = 0x2802  //|III|//
+   ,.TPN.gl_texture_wrap_t     = 0x2803  //|III|//
+    #undef TPN                           //|III|//
+    #define TPV TEXTURE.PARAMETER.VAL    //|III|//
+   ,.TPV.gl_nearest            = 0x2600  //|III|//
+   ,.TPV.gl_clamp_to_edge      = 0x812F  //|III|//
+    #undef TPV                           //|III|//
+
+   ,.TEXTURE.SLOT.gl_texture0  = 0x84C0  //|III|//
+
+   ,.UNIFORM.gl_max_uniform_locations = 1024
+
+   ,.ALIGNMENT.gl_unpack_alignment = 0x0CF5
+
+   ,.CAPABILITY.gl_texture_2d = 0x0DE1
+
+   ,.TEXTURE.QUERY.gl_texture_binding_2d=0x8069
+   ,.TEXTURE.QUERY.gl_active_texture    =0x84E0
+
+    ,//[comma]//
+
+    .glGenBuffers=&(  //|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//
+     glGenBuffers   ) //|______________________|//
+
+    ,//[comma]//
+
+    .glBindBuffer=&(  //|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//
+     glBindBuffer   ) //|______________________|//
+
+    ,//[comma]//
+
+    .glBufferData=&(  //|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//
+     glBufferData   ) //|______________________|//
+
+    ,//[comma]//
+
+    .glGetError  =&(  //|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//
+     glGetError     ) //|______________________|//
+
+    ,//[comma]//
+
+    .glEnableVertexAttribArray =&(  //|¯¯¯¯¯¯¯¯|//
+     glEnableVertexAttribArray    ) //|________|//
+
+    ,//[comma]//
+
+    .glVertexAttribPointer     =&(  //|¯¯¯¯¯¯¯¯|//
+     glVertexAttribPointer        ) //|________|//
+
+    ,//[comma]//
+
+    .glDrawArrays              =&(  //|¯¯¯¯¯¯¯¯|//
+     glDrawArrays                 ) //|________|//
+
+    ,//[comma]//
+
+    .glDisableVertexAttribArray=&(  //|¯¯¯¯¯¯¯¯|//
+     glDisableVertexAttribArray   ) //|________|//
+
+    ,//[comma]//
+
+    .glCreateShader            =&(  //|¯¯¯¯¯¯¯¯|//
+     glCreateShader               ) //|________|//
+
+    ,//[comma]//
+
+    .glShaderSource            =&(  //|¯¯¯¯¯¯¯¯|//
+     glShaderSource               ) //|________|//
+
+    ,//[comma]//
+
+    .glCompileShader           =&(  //|¯¯¯¯¯¯¯¯|//
+     glCompileShader              ) //|________|//
+
+    ,//[comma]//
+
+    .glGetShaderiv             =&(  //|¯¯¯¯¯¯¯¯|//
+     glGetShaderiv                ) //|________|//
+
+    ,//[comma]//
+
+    .glGetShaderInfoLog        =&(  //|¯¯¯¯¯¯¯¯|//
+     glGetShaderInfoLog           ) //|________|//
+
+    ,//[comma]//
+
+    .glCreateProgram           =&(  //|¯¯¯¯¯¯¯¯|//
+     glCreateProgram              ) //|________|//
+
+    ,//[comma]//
+
+    .glAttachShader            =&(  //|¯¯¯¯¯¯¯¯|//
+     glAttachShader               ) //|________|//
+
+    ,//[comma]//
+
+    .glLinkProgram             =&(  //|¯¯¯¯¯¯¯¯|//
+     glLinkProgram                ) //|________|//
+    
+    ,//[comma]//
+
+    .glGetProgramiv            =&(  //|¯¯¯¯¯¯¯¯|//
+     glGetProgramiv               ) //|________|//
+
+    ,//[comma]//
+
+    .glGetProgramInfoLog       =&(  //|¯¯¯¯¯¯¯¯|//
+     glGetProgramInfoLog          ) //|________|//
+
+    ,//[comma]//
+
+    .glDetachShader            =&(  //|¯¯¯¯¯¯¯¯|//
+     glDetachShader               ) //|________|//
+
+    ,//[comma]//
+
+    .glDeleteShader            =&(  //|¯¯¯¯¯¯¯¯|//
+     glDeleteShader               ) //|________|//
+
+    ,//[comma]//
+
+    .glClear                   =&(  //|¯¯¯¯¯¯¯¯|//
+     glClear                      ) //|________|//
+
+    ,//[comma]//
+
+    .glUseProgram              =&(  //|¯¯¯¯¯¯¯¯|//
+     glUseProgram                 ) //|________|//
+
+    ,//[comma]//
+
+    .glViewport                =&(  //|¯¯¯¯¯¯¯¯|//
+     glViewport                   ) //|________|//
+
+    ,//[comma]//
+
+    .glClearColor              =&(  //|¯¯¯¯¯¯¯¯|//
+     glClearColor                 ) //|________|//
+
+    ,//[comma]//
+
+    .glGenVertexArrays         =&(  //|¯¯¯¯¯¯¯¯|//
+     glGenVertexArrays            ) //|________|//
+
+    ,//[comma]//
+
+    .glBindVertexArray         =&(  //|¯¯¯¯¯¯¯¯|//
+     glBindVertexArray            ) //|________|//
+
+    ,//[comma]//
+
+    .glGenTextures             =&(  //|¯¯¯¯¯¯¯¯|//
+     glGenTextures                ) //|________|//
+
+    ,//[comma]//
+
+    .glBindTexture             =&(  //|¯¯¯¯¯¯¯¯|//
+     glBindTexture                ) //|________|//
+
+    ,//[comma]//
+
+    .glTexParameteri           =&(  //|¯¯¯¯¯¯¯¯|//
+     glTexParameteri              ) //|________|//
+
+    ,//[comma]//
+
+    .glTexImage2D              =&(  //|¯¯¯¯¯¯¯¯|//
+     glTexImage2D                 ) //|________|//
+
+    ,//[comma]//
+
+    .glActiveTexture           =&(  //|¯¯¯¯¯¯¯¯|//
+     glActiveTexture              ) //|________|//
+
+    ,//[comma]//
+
+    .glGetUniformLocation      =&(  //|¯¯¯¯¯¯¯¯|//
+     glGetUniformLocation         ) //|________|//
+
+    ,//[comma]//
+
+    .glUniform1i               =&(  //|¯¯¯¯¯¯¯¯|//
+     glUniform1i                  ) //|________|//
+
+    ,//[comma]//
+
+    .glPixelStorei             =&(  //|¯¯¯¯¯¯¯¯|//
+     glPixelStorei                ) //|________|//
+
+    ,//[comma]//
+
+    .glEnable                  =&(  //|¯¯¯¯¯¯¯¯|//
+     glEnable                     ) //|________|//
+
+    ,//[comma]//
+
+    .glFinish                  =&(  //|¯¯¯¯¯¯¯¯|//
+     glFinish                     ) //|________|//
+
+    ,//[comma]//
+
+    .glGetIntegerv             =&(  //|¯¯¯¯¯¯¯¯|//
+     glGetIntegerv                ) //|________|//
+};
+
+HGLRC
+GLEB_GetRenderingContext(){
+
+    //:windef.h: DECLARE_HANDLE(HGLRC);
+    HGLRC 
+    ren_con=(
+        GLEB.handle_to_gl_rendering_context
+    );;
+    if(NULL==ren_con){
+        gleb_Halt("[Null:HGLRC]");
+    };;
+
+    return( ren_con );
+} //[GLEB_GetRenderingContext]//
+
+HDC
+GLEB_GetDeviceContext(){
+    HDC
+    window_associated_with_rendering_context=(
+        AAC2020_GINAWIN_GetWinDC()
+    );;
+
+    if(
+        NULL
+        ==
+        window_associated_with_rendering_context
+    ){
+        gleb_Halt("[Null:HDC]");
+    };;
+
+    return(
+        window_associated_with_rendering_context
+    );;
+} //[GLEB_GetDeviceContext]//
+
+
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+
+void GLEB_GetFuncsFromDLL(){
+
+    //:So we can use shorthand variable:
+    typedef
+    GLEB_FUNC (*F)(const char*);
+    F f = &(GLEB_LoadFunc);
+
+
+        pfn_wglGetProcAddress=(
+        PFN_wglGetProcAddress)f(
+           "wglGetProcAddress"  );;
+
+        pfn_wglGetCurrentContext=(
+        PFN_wglGetCurrentContext)f(
+           "wglGetCurrentContext"  );;
+
+        pfn_wglCreateContext=(
+        PFN_wglCreateContext)f(
+           "wglCreateContext"  );;
+
+        pfn_wglMakeCurrent=(
+        PFN_wglMakeCurrent)f(
+           "wglMakeCurrent"  );;
+
+
+    //|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//
+    //|You must call wglMakeCurrent after      |//
+    //|m_hDC has been setup.                   |//
+    //|stackoverflow.com/questions/2348332     |//
+    //|SC[ mc-after-dc-url ]                   |//
+    //|                                        |//
+    //|Before you can use OpenGL, the context  |//
+    //|you created must be made current. This  |//
+    //|is done with the wglMakeCurrent         |//
+    //|function.                               |//
+    //|                                        |//
+    //|https://www.khronos.org/opengl/wiki/    |//
+    //|Creating_an_OpenGL_Context_(WGL)        |//
+    //|#Simple_Context_Creation                |//
+    //|                                        |//
+    //|SC[ make-context-current-you-must-url ] |//
+    //|                                        |//
+    //|________________________________________|//
+
+    //////////////////////////////////////////////
+
+    typedef
+    GLEB_FUNC (*G)(const char*);
+    G g = &(GLEB_GetAnyGLFuncAddress);
+
+    //# The OpenGL context must already be     #//
+    //# created before calling                 #//
+    //# wglGetProcAddress.                     #//
+    //# URL[                                   #//
+    //#   https://                             #//
+    //#   www.gamedev.net/forums/topic/678493  #//
+    //#   -manually-loading-opengl             #//
+    //#   -functions-on-windows/               #//
+    //# ]URL                                   #//
+    //# SHORTCUT_ID[ manlofow-url ]            #//
+
+    
+    /** **************************************************** **/
+    //:POSSIBLE_SOURCE_OF_REFACTOR_PROBLEMS:=================://
+
+        /** This might be okay. The vital piece is that a    **/
+        /** window must exist before you are able to create  **/
+        /** an openGL context. AAC2020_GINAWIN_Init(...)     **/
+        /** will do this. However, calling it here goes      **/
+        /** against the LIBCHAN (library chain) code         **/
+        /** structure we are trying to make.                 **/
+        /** -John Mark Isaac Madison DATE[ 2020_11_01 ]      **/
+
+        //: AAC2020_GINAWIN_Init(); <------ Commented out.
+
+        printf("*********************************\n");
+        printf(
+        "[DEBUG_NOTE:Originally_GLEB_Inited_GLEB_SWIN_here]\n"
+        );;
+        printf("*********************************\n");
+
+    //:=================:POSSIBLE_SOURCE_OF_REFACTOR_PROBLEMS://
+    /** **************************************************** **/
+
+    HDC 
+    windows_handle_to_device_context=(
+        AAC2020_GINAWIN_GetWinDC() 
+    );;
+    HGLRC 
+    handle_to_gl_rendering_context=(
+        pfn_wglCreateContext(
+            windows_handle_to_device_context
+        )
+    );;
+    if(NULL==handle_to_gl_rendering_context){
+        gleb_Alert("[HGLRC:Fail]");
+    }else{
+        printf("[HGLRC:Pass]\n");
+    };;
+
+    //# Context must be made current before    #//
+    //# We can fetch other functions!          #//
+    BOOL make_current_worked = (0-777);
+    make_current_worked=(
+    GLEB_wglMakeCurrent(
+        windows_handle_to_device_context
+    ,   handle_to_gl_rendering_context
+    ));;
+
+    if(1 == make_current_worked ){
+        gleb_OK("[make_current_worked]");
+    }else{
+        gleb_Alert("[FailedToMakeCurrent]");
+    };;
+
+    GLEB.handle_to_gl_rendering_context=(
+         handle_to_gl_rendering_context
+    );;
+    
+
+    //|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//
+    pfn_glGenBuffers               =(       //||//
+    PFN_glGenBuffers                 )g(    //||//
+       "glGenBuffers"                   );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glBindBuffer               =(       //||//
+    PFN_glBindBuffer                 )g(    //||//
+       "glBindBuffer"                   );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//                               
+    pfn_glBufferData               =(       //||//
+    PFN_glBufferData                 )g(    //||//
+       "glBufferData"                   );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//                               
+    pfn_glGetError                 =(       //||//
+    PFN_glGetError                   )g(    //||//
+       "glGetError"                     );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glEnableVertexAttribArray  =(       //||//
+    PFN_glEnableVertexAttribArray    )g(    //||//
+       "glEnableVertexAttribArray"      );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glVertexAttribPointer      =(       //||//
+    PFN_glVertexAttribPointer        )g(    //||//
+       "glVertexAttribPointer"          );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glDrawArrays               =(       //||//
+    PFN_glDrawArrays                 )g(    //||//
+       "glDrawArrays"                   );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glDisableVertexAttribArray =(       //||//
+    PFN_glDisableVertexAttribArray   )g(    //||//
+       "glDisableVertexAttribArray"     );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glCreateShader             =(       //||//
+    PFN_glCreateShader               )g(    //||//
+       "glCreateShader"                 );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glShaderSource             =(       //||//
+    PFN_glShaderSource               )g(    //||//
+       "glShaderSource"                 );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glCompileShader            =(       //||//
+    PFN_glCompileShader              )g(    //||//
+       "glCompileShader"                );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glGetShaderiv              =(       //||//
+    PFN_glGetShaderiv                )g(    //||//
+       "glGetShaderiv"                  );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glGetShaderInfoLog         =(       //||//
+    PFN_glGetShaderInfoLog           )g(    //||//
+       "glGetShaderInfoLog"             );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glCreateProgram            =(       //||//
+    PFN_glCreateProgram              )g(    //||//
+       "glCreateProgram"                );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glAttachShader             =(       //||//
+    PFN_glAttachShader               )g(    //||//
+       "glAttachShader"                 );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glLinkProgram              =(       //||//
+    PFN_glLinkProgram                )g(    //||//
+       "glLinkProgram"                  );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glGetProgramiv             =(       //||//
+    PFN_glGetProgramiv               )g(    //||//
+       "glGetProgramiv"                 );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glGetProgramInfoLog        =(       //||//
+    PFN_glGetProgramInfoLog          )g(    //||//
+       "glGetProgramInfoLog"            );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glDetachShader             =(       //||//
+    PFN_glDetachShader               )g(    //||//
+       "glDetachShader"                 );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glDeleteShader             =(       //||//
+    PFN_glDeleteShader               )g(    //||//
+       "glDeleteShader"                 );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glClear                    =(       //||//
+    PFN_glClear                      )g(    //||//
+       "glClear"                        );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glUseProgram               =(       //||//
+    PFN_glUseProgram                 )g(    //||//
+       "glUseProgram"                   );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glViewport                 =(       //||//
+    PFN_glViewport                   )g(    //||//
+       "glViewport"                     );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glClearColor               =(       //||//
+    PFN_glClearColor                 )g(    //||//
+       "glClearColor"                   );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glGenVertexArrays          =(       //||//
+    PFN_glGenVertexArrays            )g(    //||//
+       "glGenVertexArrays"              );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glBindVertexArray          =(       //||//
+    PFN_glBindVertexArray            )g(    //||//
+       "glBindVertexArray"              );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glGenTextures              =(       //||//
+    PFN_glGenTextures                )g(    //||//
+       "glGenTextures"                  );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glBindTexture              =(       //||//
+    PFN_glBindTexture                )g(    //||//
+       "glBindTexture"                  );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glTexParameteri            =(       //||//
+    PFN_glTexParameteri              )g(    //||//
+       "glTexParameteri"                );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glTexImage2D               =(       //||//
+    PFN_glTexImage2D                 )g(    //||//
+       "glTexImage2D"                   );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glActiveTexture            =(       //||//
+    PFN_glActiveTexture              )g(    //||//
+       "glActiveTexture"                );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glGetUniformLocation       =(       //||//
+    PFN_glGetUniformLocation         )g(    //||//
+       "glGetUniformLocation"           );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glUniform1i                =(       //||//
+    PFN_glUniform1i                  )g(    //||//
+       "glUniform1i"                    );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glPixelStorei              =(       //||//
+    PFN_glPixelStorei                )g(    //||//
+       "glPixelStorei"                  );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glEnable                   =(       //||//
+    PFN_glEnable                     )g(    //||//
+       "glEnable"                       );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glFinish                   =(       //||//
+    PFN_glFinish                     )g(    //||//
+       "glFinish"                       );; //||//
+    //|-  --  --  --  --  --  --  --  --  --  -|//
+    pfn_glGetIntegerv              =(       //||//
+    PFN_glGetIntegerv                )g(    //||//
+       "glGetIntegerv"                  );; //||//
+    //|________________________________________|//
+
+
+     
+
+} //[[GLEB_GetFuncsFromDLL]]//
+
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+
+//:Meant to be a quick test to give us a bit
+//:of certainty that we didn't make any stupid
+//:mistakes, but not at all comprehensive.
+void gleb_LibraryAliasSmokeTest(){
+
+    GLenum a;
+    GLenum b;
+
+    GLenum c;
+    GLenum d;
+
+    GLenum e;
+    GLenum f;
+
+    GLenum g;
+    GLenum h;
+
+    GLboolean i1, i2;
+    GLboolean j1, j2;
+
+    GLenum k;
+    GLenum l;
+
+    GLenum m;
+    GLenum n;
+    
+    GLenum o;
+    GLenum p;
+
+    GLenum q,r,s,t;
+
+    GLenum u,v;
+
+    GLenum w,x;
+
+    GLbitfield y,z;
+
+
+    //
+
+    a = GLEB.BUFFER_BINDING_TARGET  
+        -> gl_array_buffer;
+    
+    b = GLEB.BBT
+        .  gl_array_buffer;
+
+    //
+
+    c = GLEB.BUFFER_DATA  
+        -> gl_static_draw;
+    
+    d = GLEB.BD
+        .  gl_static_draw;
+
+    //
+
+    e = GLEB.ERROR_FLAGS  
+        -> gl_no_error;
+    
+    f = GLEB.ERR
+        .  gl_no_error;
+
+    //
+
+    g = GLEB.COMMON_ENUM_TYPES  
+        -> gl_float;
+    
+    h = GLEB.TYP
+        .  gl_float;
+
+    //
+
+    i1 = GLEB.BOOLEAN_CONSTANTS
+        -> gl_false;
+    i2 = GLEB.BOOLEAN_CONSTANTS
+        -> gl_true;
+
+    j1 = GLEB.BOL
+        . gl_false;
+    j2 = GLEB.BOL
+        .  gl_true;
+
+    //
+
+    k = GLEB.DRAW_MODES
+        -> gl_triangles;
+
+    l = GLEB.MOD
+        .  gl_triangles;
+
+    //
+
+    m = GLEB.SHADER_TYPES
+        -> gl_vertex_shader;
+
+    n = GLEB.ST
+        .  gl_vertex_shader;
+
+    //
+
+    o = GLEB.SHADER_TYPES
+        -> gl_fragment_shader;
+
+    p = GLEB.ST
+        .  gl_fragment_shader;
+
+    //
+
+    q = GLEB.SHADER_PARAM_NAMES
+        -> gl_compile_status;
+
+    r = GLEB.SPN
+        .  gl_compile_status;
+
+    //
+
+    s = GLEB.SHADER_PARAM_NAMES
+        -> gl_info_log_length;
+
+    t = GLEB.SPN
+        .  gl_info_log_length;
+
+    //
+
+    u = GLEB.PROGRAM_PARAM_NAMES
+        -> gl_link_status;
+
+    v = GLEB.PPN
+        .  gl_link_status;
+
+    //
+
+    w = GLEB.PROGRAM_PARAM_NAMES
+        -> gl_info_log_length;
+
+    x = GLEB.PPN
+        .  gl_info_log_length;
+
+    //
+
+    y = GLEB.BITFIELD_MASKS
+        -> gl_color_buffer_bit;
+
+    z = GLEB.MAS
+        .  gl_color_buffer_bit;
+
+    //
+
+    //:Fetched from "." or "->" is same:
+    //|========================================|//
+    if(a !=b ){ gleb_Halt("[LibSmokeTest:AB]"); }
+    if(c !=d ){ gleb_Halt("[LibSmokeTest:CD]"); }
+    if(e !=f ){ gleb_Halt("[LibSmokeTest:EF]"); }
+    if(g !=h ){ gleb_Halt("[LibSmokeTest:GH]"); }
+    if(i1!=j1){ gleb_Halt("[SMOKETEST:G1H1:]"); }
+    if(i2!=j2){ gleb_Halt("[SMOKETEST:G2H2:]"); }
+    if(k !=l ){ gleb_Halt("[LibSmokeTest:KL]"); }
+    if(m !=n ){ gleb_Halt("[LibSmokeTest:MN]"); }
+    if(o !=p ){ gleb_Halt("[LibSmokeTest:OP]"); }
+    if(q !=r ){ gleb_Halt("[LibSmokeTest:QR]"); }
+    if(s !=t ){ gleb_Halt("[LibSmokeTest:ST]"); }
+    if(u !=v ){ gleb_Halt("[LibSmokeTest:UV]"); }
+    if(w !=x ){ gleb_Halt("[LibSmokeTest:WX]"); }
+    if(y !=z ){ gleb_Halt("[LibSmokeTest:YZ]"); }
+    //|========================================|//
+
+    //:Make sure not accidentially same value:
+    //|========================================|//
+    if( a ==c ){ gleb_Halt("[LibSmokeTest:AC]"); }
+    if( b ==d ){ gleb_Halt("[LibSmokeTest:BD]"); }      
+    if( c ==e ){ gleb_Halt("[LibSmokeTest:CE]"); }
+    if( d ==f ){ gleb_Halt("[LibSmokeTest:DF]"); }
+    if( e ==g ){ gleb_Halt("[LibSmokeTest:EG]"); }
+    if( f ==h ){ gleb_Halt("[LibSmokeTest:FH]"); }
+    if( g ==i1){ gleb_Halt("[LibSmokeTest:GI]"); }
+    if( h ==j1){ gleb_Halt("[LibSmokeTest:HJ]"); }
+    if( i1==k ){ gleb_Halt("[LibSmokeTest:IK]"); }
+    if( j1==l ){ gleb_Halt("[LibSmokeTest:JL]"); }
+    if( m ==o ){ gleb_Halt("[LibSmokeTest:MO]"); }
+    if( n ==p ){ gleb_Halt("[LibSmokeTest:NP]"); }
+    if( q ==s ){ gleb_Halt("[LibSmokeTest:QS]"); }
+    if( t ==r ){ gleb_Halt("[LibSmokeTest:TR]"); }
+    if( m ==q ){ gleb_Halt("[LibSmokeTest:MQ]"); }
+    if( o ==s ){ gleb_Halt("[LibSmokeTest:OS]"); }
+    if( p ==q ){ gleb_Halt("[LibSmokeTest:PQ]"); }
+    if( r ==s ){ gleb_Halt("[LibSmokeTest:RS]"); }
+    if( t ==u ){ gleb_Halt("[LibSmokeTest:TU]"); }
+    if( v ==x ){ gleb_Halt("[LibSmokeTest:TU]"); }
+    if( e ==i2){ gleb_Halt("[LibSmokeTST:EI2]"); }
+    if( f ==j2){ gleb_Halt("[LibSmokeTST:FJ2]"); }
+    if( x == y){ gleb_Halt("[LibSmokeTest:XY]"); }
+    //|========================================|//
+
+    //|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//
+    //|Synonyms should be equal:               |//
+    //|AKA:Different paths to copies of same   |//
+    //|    value.                              |//
+    if( w != s ){ gleb_Halt("[SmokeT:WS]");}
+    if( t != x ){ gleb_Halt("[SmokeT:TX]");}
+    //|________________________________________|//
+
+    //|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//
+    //| Pattern breaking, but keep since       |//
+    //| you already wrote it:                  |//
+    //+ e<>i1 by co-incidence only.            +//
+    //+ f<>j1 by co-incidence only.            +//
+    if( e!=i1){ gleb_Halt("[LibSmokeTest:EI1]"); }
+    if( f!=j1){ gleb_Halt("[LibSmokeTest:FJ1]"); }    
+    //|________________________________________|//
+
+    //:For extra saftey, re-look up values from
+    //:header file and make sure correct:
+    if( GLEB.SHADER_TYPES -> gl_fragment_shader
+                   != 0x8B30
+    ){ gleb_Halt("[FS:0x8B30]"); }
+
+    if( GLEB.SHADER_TYPES -> gl_vertex_shader
+                   != 0x8B31
+    ){ gleb_Halt("[VS:0x8B31]"); }
+
+
+    //:Double Check More hardcoded values:
+    ; ;if( GLEB.SHADER_PARAM_NAMES
+        -> gl_compile_status  !=   0x8B81
+    ){
+                    gleb_Halt("[SPN:0x8B81]");
+    };;if( GLEB.SHADER_PARAM_NAMES
+        -> gl_info_log_length !=   0x8B84
+    ){
+                    gleb_Halt("[SPN:0x8B84]");
+    };;
+
+    //:Double check. Use online docs.
+    //:錶/本/OpenGL/api/GL/glcorearb.h
+    if( GLEB.PROGRAM_PARAM_NAMES
+        -> gl_link_status !=       0x8B82
+    ){
+                   gleb_Halt("[PPN:0x8B82]");
+    };;
+
+    //:Double-check online docs:
+    if( GLEB.PROGRAM_PARAM_NAMES
+        -> gl_info_log_length !=   0x8B84
+    ){
+                   gleb_Halt("[PPN:0x8B84]");
+    };;
+
+    //:Double-check online docs:
+    if( GLEB.BITFIELD_MASKS
+        -> gl_color_buffer_bit != 0x00004000
+    ){
+                  gleb_Halt("[MAS:0x00004000]");
+    };;
+
+    
+    //:Make sure drawing mode constants
+    //:are correct. Do "==" comparison FIRST
+    //:in case you accidentially use "="
+    //:instead of "==" in comparison.
+    //|========================================|//
+    if(
+        GLEB.DRAW_MODES -> gl_triangles
+                        ==
+        GLEB.DRAW_MODES -> gl_triangle_fan
+    ){
+        gleb_Halt("[TRI==FAN]"); 
+    };;
+    if(
+        GLEB.DRAW_MODES -> gl_triangles
+                        ==
+        GLEB.DRAW_MODES -> gl_triangle_strip
+    ){
+        gleb_Halt("[TRI==STRIP]"); 
+    };;
+    if(
+        GLEB.DRAW_MODES -> gl_triangle_fan
+                        ==
+        GLEB.DRAW_MODES -> gl_triangle_strip
+    ){
+        gleb_Halt("[FAN==STRIP]"); 
+    };;
+    if( GLEB.DRAW_MODES -> gl_triangles
+                        != 0x0004
+    ){   gleb_Halt("[TRIS!=0x0004]"); }
+    if( GLEB.DRAW_MODES -> gl_triangle_fan 
+                         != 0x0006
+    ){  gleb_Halt("[TRIFAN!=0x0006]"); }
+    if( GLEB.DRAW_MODES -> gl_triangle_strip 
+                           != 0x0005
+    ){  gleb_Halt("[TRISTRIP!=0x0005]"); }
+    //|========================================|//
+
+    if( GLEB.TEXTURE.TEX_TYP.GPU_DEV
+                  .gl_texture_2d!=0x0DE1
+    ){ gleb_Halt("[gl_texture_2d!=0x0DE1]"); }
+
+
+    //:Testing texture parameter values
+    //:and texture parameter names used to
+    //:setup integer texture.
+    #define TPN GLEB.TEXTURE.PARAMETER.NAM
+    if( TPN.gl_texture_min_filter != 0x2801 ){
+                         gleb_Halt("[0x2801]");};;
+
+    if( TPN.gl_texture_mag_filter != 0x2800 ){
+                         gleb_Halt("[0x2800]");};;
+
+    if( TPN.gl_texture_wrap_s     != 0x2802 ){
+                         gleb_Halt("[0x2802]");};;
+
+    if( TPN.gl_texture_wrap_t     != 0x2803 ){
+                         gleb_Halt("[0x2803]");};;
+    #undef TPN
+    #define TPV GLEB.TEXTURE.PARAMETER.VAL
+    if( TPV.gl_nearest            != 0x2600 ){
+                         gleb_Halt("[0x2600]");};;
+
+    if( TPV.gl_clamp_to_edge      != 0x812F ){
+                         gleb_Halt("[0x812F]");};;
+    #undef TPV
+
+    //:Added: DATE[ 2019_06_18 ]
+    //////////////////////////////////////////////
+    if(GLEB.TEXTURE.TEX_LOD.GPU_DEV.zero 
+    != 0){ gleb_Halt("[2019_06_18_0518PM"); }
+  
+
+    //- if(GLEB.TEXTURE.PIX_FMT.GPU_DEV        -//
+    //- .gl_rgba8 != 0x8058){                  -//
+    //-     gleb_Halt("[0x8058]");             -//
+    //- };;                                    -//
+
+
+    //- if( GLEB.TEXTURE.PIX_FMT.CPU_HOS       -//
+    //- .gl_rgba   !=   0x1908){               -//
+    //-     gleb_Halt("[0x1908]");             -//
+    //- };;                                    -//
+
+    if( GLEB.TEXTURE.PIX_TYP.CPU_HOS
+    .gl_unsigned_byte
+    !=0x1401){ gleb_Halt("[0x1401]"); }
+
+    if( GLEB.TEXTURE.PIX_DAT.CPU_HOS.pix_nul
+    != 0 ){ gleb_Halt("[pix_nul:NotNull]"); }
+
+    if( GLEB.TEXTURE.BORDER
+    .must_be_zero_for_teximage2d
+    != 0 ){ gleb_Halt("[must_be_0_for_TI2D]");}
+
+    if(GLEB.TEXTURE.PIX_FMT.CPU_HOS        
+    .gl_rgba_integer                       
+    != 0x8D99 ){ gleb_Halt("[0x8D99]"); }  
+
+    if(GLEB.TEXTURE.PIX_FMT.GPU_DEV        
+    .gl_rgba8ui !=  0x8D7C ){ 
+        gleb_Halt("[0x8D7C]");
+    };;
+
+    if(GLEB.TEXTURE.SLOT.
+    gl_texture0 !=  0x84C0){
+        gleb_Halt("[0x84C0]");
+    };;
+
+    if(GLEB.UNIFORM.gl_max_uniform_locations
+    != 1024 ){
+        gleb_Halt("[USE:1024(NOT:0x826E)]");
+    };;
+
+    if(GLEB.ALIGNMENT.gl_unpack_alignment
+    != 0x0CF5 ){
+        gleb_Halt("[0x0CF5]");
+    };;
+    
+    if(GLEB.CAPABILITY.gl_texture_2d
+    != 0x0DE1 ){
+        gleb_Halt("[CAP:0x0DE1]");
+    };;
+
+    GLenum CAP_gl_texture_2d =(
+        GLEB.CAPABILITY.gl_texture_2d
+    );;
+    GLenum TEX_gl_texture_2d =(
+        GLEB.TEXTURE.TEX_TYP.GPU_DEV
+        .gl_texture_2d
+    );;
+    if( CAP_gl_texture_2d  
+    !=  TEX_gl_texture_2d ){
+        gleb_Halt("[CAP_T2D!=TEX_T2D]");
+    };;
+  
+    if(GLEB.TEXTURE.QUERY.gl_texture_binding_2d
+    !=0x8069){
+        gleb_Halt("[0x8069]");
+    };;
+    if(GLEB.TEXTURE.QUERY.gl_active_texture 
+    !=0x84E0){
+        gleb_Halt("[0x84E0]");
+    };;
+
+    //////////////////////////////////////////////
+
+    gleb_OK("[LibSmokeTest]");
+    
+
+} //[gleb_LibraryAliasSmokeTest]//
+
+void GLEB_Wait(){
+
+    AAC2020_GINAWIN_Wait();
+
+}
+
+void GLEB_Init(){ //:Initialize
+    GLEB_GetFuncsFromDLL();
+
+    gleb_LibraryAliasSmokeTest();
+    
+
+} //[[GLEB_Init]]//
+
+void GLEB_Demo(){
+
+    AAC2020_GINAWIN.X    =   0  ;
+    AAC2020_GINAWIN.Y    =   0  ;
+    AAC2020_GINAWIN.WID  = 256  ;
+    AAC2020_GINAWIN.HIG  = 512  ;
+
+    GLEB_Init();
+    GLEB_Wait();
+
+} //[GLEB_Demo]//
+void GLEB_Demonstration( void ){
+     GLEB_Demo();
+} //[GLEB_Demonstration]//
+
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+
+void GLEB_Term(){ //:Terminate
+    //:Put any cleanup logic here.
+} //[[GLEB_Term]_______________________________]//
+
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+
+
+//!:Added_For_Libraries_Further_Down_The_Chain:!//
+//////////////////////////////////////////////////
+
+void
+GLEB_FitViewportToWindow( void ){
+
+    //:Set size of viewport:
+    int X   = AAC2020_GINAWIN_GetClient_X  ();
+    int Y   = AAC2020_GINAWIN_GetClient_Y  ();
+    int WID = AAC2020_GINAWIN_GetClient_WID();
+    int HIG = AAC2020_GINAWIN_GetClient_HIG();
+    GLEB.glViewport(
+    /**/(GLint) X
+    ,   (GLint) Y
+    ,   (GLint) WID
+    ,   (GLint) HIG
+    );;
+
+}
+
+//////////////////////////////////////////////////
+
+//+ BOTTOM_OF_FILE:DOCUMENTATION:BEG + + + + + +//
+
+//+NO_RGBA_INT_01||||||||||||||||||||||||||||||+//
+//|The reason GL_RGBA_INTEGER is not legal in  |//
+//|this case that there are rules about which  |//
+//|conversions between format and              |//
+//|internalFormat are supported. In this case, |//
+//|GL_RGBA for the internalFormat specifies a  |//
+//|normalized format,while GL_RGBA_INTEGER for |//
+//|format specifies that the input consists of |//
+//|values that should be used as integers.     |//
+//|There is no conversion defined between these|//
+//|two.                                        |//
+//|stackoverflow.com/questions/34497195/       |//
+//||||||||||||||||||||||||||||||||||||||||||||||//
+
+
+//+ BOTTOM_OF_FILE:DOCUMENTATION:END + + + + + +//

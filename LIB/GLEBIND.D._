@@ -1,0 +1,96 @@
+
+
+//:REFACTOR_NOTE: GLEB_SWIN ===> AAC2020_GINAWIN
+//:REFACTOR_NOTE:      GLEB ===> AAC2020_GLEBIND
+
+
+//:////////////////////////////////////////////://  //[CTF]//
+//# Before you judge, include gaurds exist.    #//  //[CTF]//
+//:////////////////////////////////////////////://  //[CTF]//
+#include <stdint.h> //:int32_t               //://  //[CTF]//
+                                             //://  //[CTF]//
+#include <stdlib.h> //:malloc(....)          //://  //[CTF]//
+#include <stdlib.h> //:free(......)          //://  //[CTF]//
+                                             //://  //[CTF]//
+#include <stdio.h>  //:printf(....)          //://  //[CTF]//
+#include <stdio.h>  //:fprintf(...)          //://  //[CTF]//
+#include <stdio.h>  //:fflush(....)          //://  //[CTF]//
+                                             //://  //[CTF]//
+#include <ctype.h>  //:isspace(...)          //://  //[CTF]//
+//:////////////////////////////////////////////://  //[CTF]//
+
+
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+//[ GLEB: openGL_Easy_Bindings                 ]//
+//[ For use with C99 and Windows.              ]//
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+//[CONFIGURATION][-----------------------------]//
+                                             
+//!  When 1, will omit "info" messages.        !// 
+//!  Info messages are not problems. And if    !// 
+//!  you have a linux mentality, they are      !// 
+//!  just an annoyance.                        !// 
+int GLEB_no_news_is_good_news      = 1;
+int GLEB_tell_me_about_empty_lines = 0;
+int GLEB_show_user_print_statements_DEBUG = 0;
+int GLEB_show_user_print_statements_INFO  = 1;
+int GLEB_unit_test_verbose_echo           = 0;
+
+const char* 
+GLEB_name_of_search_path_file=(
+    "OPEN_GL_SEARCH_PATHS.TXT"
+); //[]//
+
+int          GLEB_next_search_path_index = 0   ;
+int          GLEB_num_search_paths       = 0   ;
+const char** GLEB_p_search_paths         = NULL;
+
+
+//:Pointer to a function (PFN) that takes a         //[CTF]//
+//:string (const char*) and does stuff with it.     //[CTF]//
+//:Returns an integer for status code.              //[CTF]//
+//:Return value convention:                         //[CTF]//
+//:   Positive: Line was not blank.                 //[CTF]//
+//:       Zero: Line was blank.                     //[CTF]//
+//:   Negative: Some error happened.                //[CTF]//
+typedef                                             //[CTF]//
+int(*GLEB_PFN_line_processor)(const char*);         //[CTF]//
+
+//[-----------------------------][CONFIGURATION]//
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+//[DOCUMENTATION_CRASH_COURSE][----------------]//
+
+//: Prefixes:
+//: GLEB_   :Library namespace prefix.
+//: MV_     :Macro Variable / Value
+//: MM_     :Maybe A Macro (MV_ value will decide)
+
+//: Function Names:
+//: DEBUGPRINT_01: Print ONE(01) string.
+
+//[----------------][DOCUMENTATION_CRASH_COURSE]//
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+//[INCLUDES][----------------------------------]//
+
+//:Windows.h for:
+//:  1. LoadLibrary
+//:  2. GetProcAddress
+//:  3. FreeLibrary
+#include <Windows.h>  
+#include <string.h> //: strcmp
+
+//[----------------------------------][INCLUDES]//
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+//[TYPEDEFS_AND_GLOBALS][----------------------]//
+
+    //:Generic function pointer for GLEB library.
+    //:Used for strict compilation in C99 when
+    //:casting result of "GetProcAddress"
+    typedef void (*GLEB_FUNC)(void);
+
+    HMODULE GLEB_open_gl_handle = NULL;
+
+//[----------------------][TYPEDEFS_AND_GLOBALS]//
+//[][][][][][][][][][][][][][][][][][][][][][][]//
+
+
