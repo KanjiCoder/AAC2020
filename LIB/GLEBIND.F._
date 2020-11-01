@@ -1,4 +1,80 @@
 
+    int
+    AAC2020_GLEBIND_TouchFile_OPEN_GL_SEARCH_PATHS(
+        /** If the file did not exist before we touched it,  **/
+        /** should we initialize it's contents with some     **/
+        /** default search paths for where we can expect     **/
+        /** OpenGL32.dll to be?                              **/
+        int if_not_exist_add_default_contents
+    )
+    {
+    //:======================================================://
+        //:BEFORE_EXTRACTION_ORIGINAL_NEST_LEVEL:====://
+
+        assert( 0x0100 == 00400 );
+        assert( 0x0080 == 00200 );
+    
+        //: If "OPEN_GL_SEARCH_PATHS.TXT" does not   ://
+        //: exist, create it now and populate it     ://
+        //: with some default values.                ://
+        /** #SEE_IF_FILE_EXISTS_THEN_USE# ** ******* **/
+        /** stackoverflow.com/questions/230062       **/
+        int fd = open(
+            "OPEN_GL_SEARCH_PATHS.TXT"
+        , 
+        0   //:FOUNDIN[ <mingw/gcc>/../include/fcntl.h ]
+        |   0x0100 /** O_CREAT  : Create if not exist**/
+        |   0x0001 /** O_WRONLY : NO_EXPLICIT_DOC    **/
+        |   0x0400 /** O_EXCL   : Ensure create file **/
+        ,
+            0
+            /** User has read permission **/
+            |   0x0100  /** 00400 S_IRUSR , stat.h **/
+    
+            /** User has write permission **/
+            |   0x0080  /** 00200 S_IWUSR , stat.h **/
+        );;
+    
+        int ok =( 1 );
+    
+        if (fd < 0) {
+            /* failure */
+            if( errno == 17 /** EEXIST : errno.h **/ ){
+    
+                /* the file already existed */
+                ok = 1 ;
+            }else{
+                /** unexpected error. **/
+                ok = 0;
+            };;
+        }else{
+            /* now you can use the file */
+                ok = 1;
+
+            if( if_not_exist_add_default_contents > 0 ){
+
+                const char* buf =(
+                //: "C:\Windows\System32\opengl32.dll"
+                //: "C:/Windows/System32/opengl32.dll"
+                    "C:\\Windows\\System32\\opengl32.dll"
+                );;
+                int nob=( strlen( buf ) + 0 );
+                write( fd, buf, nob );
+            };;
+        };;
+    
+        if( 1 == ok ){ printf("[File_Access_OK]\n"); };
+        if( 0 == ok ){ printf("[File_Problem_s]\n"); };
+
+        close( fd );
+
+        //:====:BEFORE_EXTRACTION_ORIGINAL_NEST_LEVEL://
+
+    return( 0 );
+    //:======================================================://
+    }
+
+
 //[][][][][][][][][][][][][][][][][][][][][][][]//  //[HELPER_FUNCTIONS]//
                                                     //[HELPER_FUNCTIONS]//
 #define GLEB_MV_DEBUGPRINT_01 0                     //[HELPER_FUNCTIONS]//
@@ -4003,8 +4079,22 @@ void GLEB_Wait(){
 }
 
 void GLEB_Init(){ //:Initialize
+
+    printf("[ABOUT_TO:TouchFile_OPEN_GL_SEARCH_PATHS]");
+    fflush(stdout);
+    AAC2020_GLEBIND_TouchFile_OPEN_GL_SEARCH_PATHS(
+        1  /** if_not_exist_add_default_contents **/ );;
+
+
+
+    printf("[ABOUT_TO:GLEB_GetFuncsFromDLL(...)]\n");
+    fflush(stdout);
     GLEB_GetFuncsFromDLL();
 
+
+
+    printf("[ABOUT_TO:gleb_LibraryAliasSmokeTest(...)]\n");
+    fflush(stdout);
     gleb_LibraryAliasSmokeTest();
     
 

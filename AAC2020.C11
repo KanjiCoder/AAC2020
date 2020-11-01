@@ -359,25 +359,9 @@
 
             #if( AAC2020_INCLUDE_GLEBIND >= 1 ) //:##########://
 
-                //: If "OPEN_GL_SEARCH_PATHS.TXT" does not   ://
-                //: exist, create it now and populate it     ://
-                //: with some default values.                ://
-                /** #SEE_IF_FILE_EXISTS_THEN_USE# ** ******* **/
-                int fd = open(
-                    "OPEN_GL_SEARCH_PATHS.TXT"
-                , O_CREAT | O_WRONLY | O_EXCL, S_IRUSR | S_IWUSR
-                );;
 
-                if (fd < 0) {
-                  /* failure */
-                  if (errno == EEXIST) {
-                    /* the file already existed */
-                    ...
-                  }
-                } else {
-                  /* now you can use the file */
-                }
-
+                    
+               
                 printf("[ABOUT_TO_INIT_OPEN_GL_BINDINGS]\n");   
                 fflush(stdout);
                 GLEB_Init();
