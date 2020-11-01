@@ -359,11 +359,14 @@
 
             #if( AAC2020_INCLUDE_GLEBIND >= 1 ) //:##########://
 
+                if( GLEB_no_news_is_good_news >= 1 ){
+                    //:Say nothing. No news, good news.
+                }else{
+                    printf("[ABOUT_TO:CALL:GLEB_Init]\n");  
+                };;
 
-                    
-               
-                printf("[ABOUT_TO_INIT_OPEN_GL_BINDINGS]\n");   
-                fflush(stdout);
+                //:Load OpenGL bindings and create
+                //:an OpenGL context.
                 GLEB_Init();
 
             #endif //:#######################################://

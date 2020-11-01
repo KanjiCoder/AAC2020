@@ -9,7 +9,6 @@
     )
     {
     //:======================================================://
-        //:BEFORE_EXTRACTION_ORIGINAL_NEST_LEVEL:====://
 
         assert( 0x0100 == 00400 );
         assert( 0x0080 == 00200 );
@@ -63,12 +62,22 @@
             };;
         };;
     
-        if( 1 == ok ){ printf("[File_Access_OK]\n"); };
-        if( 0 == ok ){ printf("[File_Problem_s]\n"); };
+        //:REPORT_BACK_SUCCESS_OR_FAILURE:-------------------://
+        #define P_F printf
+
+            ;;;if( GLEB_no_news_is_good_news <= 0 ){
+
+                if( 1 == ok ){ P_F("[File_Access_OK]\n"); };
+
+            };;if(  0 == 0  ){
+
+                if( 0 == ok ){ P_F("[File_Problem_s]\n"); };
+            };;
+
+        #undef P_F
+        //:-------------------:REPORT_BACK_SUCCESS_OR_FAILURE://
 
         close( fd );
-
-        //:====:BEFORE_EXTRACTION_ORIGINAL_NEST_LEVEL://
 
     return( 0 );
     //:======================================================://
@@ -938,56 +947,109 @@ GLEB_TryOpenDLL( void ){
     const char* dll_path   = NULL;
     HMODULE open_gl_handle = NULL;
 
-    int num_paths = 0;
-    const char** dll_path_array=(
-        GLEB_GetSearchPathsFromFile( &num_paths )
-    );;
-    
-    if(0==num_paths){
-        printf("[GLEB:ERR:2019_03_04_1243AM]\n");
-        printf("[GLEB:zero_search_paths]\n");
-        printf("[GLEB:add_paths_to]:%s\n",
-        GLEB_name_of_search_path_file);
-        fflush(stdout);exit(666);
-    }else{
-        GLEB_MM_DEBUGPRINT_01(
-            "[SearchPathsFound]"
+    //:GET_SEARCH_PATHS_FROM_FILE:---------------------------://
+
+        GLEB_InfoPrint(
+        "[ABOUT_TO_TRY:GET_SEARCH_PATHS_FROM_FILE]\n");;
+
+        int num_paths = 0;
+        const char** dll_path_array=(
+            GLEB_GetSearchPathsFromFile( &num_paths )
         );;
-        #if( GLEB_MV_DEBUGPRINT_01 > 0 )
-            printf("[num_paths]:%d\n", num_paths);
-            fflush(stdout);
-        #endif
-    };;
     
-    //:Loop through search paths, exit on the
-    //:first path that successfully loads DLL:
-    for(int i = 0; i < num_paths; i++){
-        //:sleep(1);
-        dll_path = dll_path_array[i];
-        GLEB_InfoPrint_STR(
-        /**/"[GLEB:TRYING_PATH]"
-        ,   dll_path 
-        );
-        open_gl_handle = LoadLibrary( dll_path );
-        if(NULL != open_gl_handle){ 
-            GLEB_InfoPrint(
-                "[GLEB:OPENED_THAT_DLL]\n"
+    //:---------------------------:GET_SEARCH_PATHS_FROM_FILE://
+    //:USE_PATHS_IF_YOU_GOT_THEM:----------------------------://
+    #define P_F  printf             //:######################://
+    #define I_P  GLEB_InfoPrint     //:######################://
+    #define I_S  GLEB_InfoPrint_STR //:######################://
+    #define I_I  GLEB_InfoPrint_INT //:######################://
+
+        I_P( "[ABOUT_TO:USE_PATHS_IF_YOU_GOT_THEM\n" );;
+
+        if(0==num_paths){
+            P_F("[GLEB:ERR:2019_03_04_1243AM]\n");
+            P_F("[GLEB:zero_search_paths]\n    ");
+            P_F("[GLEB:add_paths_to]:%s\n      ",
+                GLEB_name_of_search_path_file
             );;
-            break; 
+ 
+            /** Without search paths, we will fail to load   **/
+            /** the DLL. Best to stop here so the console    **/
+            /** output's last message is the ROOT problem.   **/
+            fflush(stdout);exit(666);
+      
+        }else
+        if( num_paths >= 1 ){
+            GLEB_InfoPrint(
+                "[AT_LEAST_ONE(LINE/PATH)FOUND_IN_FILE]\n");
+
+            GLEB_MM_DEBUGPRINT_01(
+                "[SearchPathsFound]"
+            );;
+            #if( GLEB_MV_DEBUGPRINT_01 > 0 )
+                I_I("[num_paths]:", num_paths);
+                fflush(stdout);
+            #endif
         }else{
-            GLEB_InfoPrint(
-                "[GLEB:FAILED_THAT_DLL]\n"
-            );;
+            printf("[INVALID_NUMBER_OF_PATHS]\n");
         };;
-    };;
     
-    if(NULL==open_gl_handle){
-        GLEB_InfoPrint_STR(
-        /**/"[Failed_To_Load_DLL]"
-        ,   dll_path
-        );;
-        fflush(stdout);exit(666);
-    };;
+    #undef P_F //:###########################################://
+    #undef I_I //:###########################################://
+    #undef I_S //:###########################################://
+    #undef I_P //:###########################################://
+    //:----------------------------:USE_PATHS_IF_YOU_GOT_THEM://
+    //:ATTEMPT_TO_LOAD_LIBRARY_FROM_PATHS:-------------------://
+    #define I_P GLEB_InfoPrint
+
+        I_P("[ABOUT_TO:ATTEMPT_TO_LOAD_LIBRARY_FROM_PATHS\n" ); 
+
+        //:Loop through search paths, exit on the
+        //:first path that successfully loads DLL:
+        for(int i = 0; i < num_paths; i++){
+            //:sleep(1);
+            dll_path = dll_path_array[i];
+            GLEB_InfoPrint_STR(
+            /**/"[GLEB:TRYING_PATH]"
+            ,   dll_path 
+            );
+            open_gl_handle = LoadLibrary( dll_path );
+            if(NULL != open_gl_handle){ 
+                I_P( "[GLEB:OPENED_THAT_DLL]\n" );
+                break; 
+            }else{
+                I_P( "[GLEB:FAILED_THAT_DLL]\n" );
+            };;
+        };;
+
+    #undef I_P
+    //:-------------------:ATTEMPT_TO_LOAD_LIBRARY_FROM_PATHS://
+    //:REPORT_RESULT_OF_OUR_EFFORTS:-------------------------://
+    #define I_P GLEB_InfoPrint
+
+        I_P("[ABOUT_TO:REPORT_RESULT_OF_OUR_EFFORTS]\n");
+
+        if(NULL==open_gl_handle){
+
+            /** [Failed_To_Load_DLL]                         **/
+            /** No news is good news. And if you get         **/
+            /** this news, it is bad news.                   **/
+            /** #GLEB_no_news_is_good_news#                  **/
+            printf("[FATAL_ERROR:OPENGL_DLL_HANDLE_IS_NULL]\n");
+            printf("[If_You_Are_Seeing_This_It_Means_None_]\n");
+            printf("[Of_Your_Paths_Pointed_To_OpenGL32.dll]\n");
+            fflush(stdout);exit(666);
+        }else{
+            if( GLEB_no_news_is_good_news >= 1 ){
+                //: Do nothing. No news is good news.
+            }else{
+                I_P("[OK:DLL_HANDLE_IS_SATED]\n");
+                fflush(stdout);
+            };;
+        };;
+    
+    #undef I_P
+    //:-------------------------:REPORT_RESULT_OF_OUR_EFFORTS://
     
     GLEB_MM_DEBUGPRINT_01(
         "[END:GLEB_TryOpenDLL]"
@@ -1007,38 +1069,51 @@ GLEB_FUNC
 GLEB_LoadFunc(
     const char* name_of_open_gl_function  
 ){
-    GLEB_MM_DEBUGPRINT_01(
-        "[BEG:GLEB_LoadFunc]"
-    );;
+#define I_P GLEB_InfoPrint
+    //:LAZY_LOAD_OPEN_GL_DLL:--------------------------------://
+
+        GLEB_MM_DEBUGPRINT_01( "[BEG:GLEB_LoadFunc]" );
+
+        //:Lazily load OpenCL.dll the first time
+        //:it is needed.
+        if(NULL==GLEB_open_gl_handle){
+
+            I_P("[About_To_Attempt:GLEB_TryOpenDLL()]\n");
+            GLEB_open_gl_handle =( GLEB_TryOpenDLL() );
+
+        };;
+        if(NULL==GLEB_open_gl_handle){
+
+            gleb_Halt("[GL_DLL_HANDLE_STILL_NULL]");
+
+        };;
     
-    //:Lazily load OpenCL.dll the first time
-    //:it is needed.
-    if(NULL==GLEB_open_gl_handle){
-        GLEB_open_gl_handle =(
-            GLEB_TryOpenDLL()
-        );;
-    };;
-    if(NULL==GLEB_open_gl_handle){
-        gleb_Halt("[GL_DLL_HANDLE_STILL_NULL]");
-    };;
-    
-    GLEB_MM_DEBUGPRINT_01("[has_open_cl_handle]");
-    
-    GLEB_FUNC function_pointer = 
-   (GLEB_FUNC)GetProcAddress( //:<<<<<<<<<<<<<<<NOTICE_ME_SENPAI
-        GLEB_open_gl_handle
-        ,name_of_open_gl_function
-    );if(NULL==function_pointer){
-        printf(
-        /**/"[GLEB_LoadFunc:Fail]:%s\n"
-        ,   name_of_open_gl_function
-        );;
-        fflush(stdout);
-        exit(666);
-    };;
-    
-    GLEB_MM_DEBUGPRINT_01("[END:GLEB_LoadFunc]");
-    return( function_pointer );
+        GLEB_MM_DEBUGPRINT_01("[has_open_cl_handle]");
+
+    //:--------------------------------:LAZY_LOAD_OPEN_GL_DLL://
+    //:GET_FUNCTION_ADDRESS_FROM_OPEN_GL_DLL:----------------://
+
+        GLEB_FUNC function_pointer = 
+       (GLEB_FUNC)GetProcAddress( //:<<<<<<<<<<<<<<<NOTICE_ME_SENPAI
+            GLEB_open_gl_handle
+            ,name_of_open_gl_function
+        );if(NULL==function_pointer){
+            printf(
+            /**/"[GLEB_LoadFunc:Fail]:%s\n"
+            ,   name_of_open_gl_function
+            );;
+            fflush(stdout);
+            exit(666);
+        };;
+
+    //:----------------:GET_FUNCTION_ADDRESS_FROM_OPEN_GL_DLL://
+    //:RETURN_FUNCTION_POINTER:------------------------------://
+
+        GLEB_MM_DEBUGPRINT_01("[END:GLEB_LoadFunc]");
+        return( function_pointer );
+
+    //:------------------------------:RETURN_FUNCTION_POINTER://
+#undef I_P
 } //[[GLEB_LoadFunc]]//
 
 //[][][][][][][][][][][][][][][][][][][][][][][]//
@@ -3462,7 +3537,9 @@ void GLEB_GetFuncsFromDLL(){
         /** structure we are trying to make.                 **/
         /** -John Mark Isaac Madison DATE[ 2020_11_01 ]      **/
 
-        //: AAC2020_GINAWIN_Init(); <------ Commented out.
+        //[ ************************************************ ]//
+        //- AAC2020_GINAWIN_Init(); <------ Commented out.   -//
+        //[ ************************************************ ]//
 
         printf("*********************************\n");
         printf(
@@ -4079,25 +4156,19 @@ void GLEB_Wait(){
 }
 
 void GLEB_Init(){ //:Initialize
+#define I_P GLEB_InfoPrint
 
-    printf("[ABOUT_TO:TouchFile_OPEN_GL_SEARCH_PATHS]");
-    fflush(stdout);
+    I_P("[ABOUT_TO:TouchFile_OPEN_GL_SEARCH_PATHS]");
     AAC2020_GLEBIND_TouchFile_OPEN_GL_SEARCH_PATHS(
         1  /** if_not_exist_add_default_contents **/ );;
 
-
-
-    printf("[ABOUT_TO:GLEB_GetFuncsFromDLL(...)]\n");
-    fflush(stdout);
+    I_P("[ABOUT_TO:GLEB_GetFuncsFromDLL(...)]\n");
     GLEB_GetFuncsFromDLL();
 
-
-
-    printf("[ABOUT_TO:gleb_LibraryAliasSmokeTest(...)]\n");
-    fflush(stdout);
+    I_P("[ABOUT_TO:gleb_LibraryAliasSmokeTest(...)]\n");
     gleb_LibraryAliasSmokeTest();
     
-
+#undef I_P
 } //[[GLEB_Init]]//
 
 void GLEB_Demo(){
