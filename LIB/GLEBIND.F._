@@ -320,9 +320,25 @@ GLEB_OpenFileAndProcessLines(                       //[CTF]//
     ,   max_line     //: max_size_of_buffer         //[CTF]//
     ,   file_pointer //: read_chars_from_here       //[CTF]//
     )){                                             //[CTF]//
-        num_non_empty_lines_found+=(                //[CTF]//
-            line_processor( single_line )           //[CTF]//
-        );;                                         //[CTF]//
+
+        #if( GLEB_BUGHUNT_WHITE_SPACE_PATH >= 1 ) //:########://
+
+            printf("[BUGHUNT_001:About_To:line_processor()]\n");
+            fflush(stdout);
+
+        #endif //:###########################################://
+
+        num_non_empty_lines_found+=(                 
+            line_processor( single_line )            
+        );;     
+
+        #if( GLEB_BUGHUNT_WHITE_SPACE_PATH >= 1 ) //:########://
+
+            printf("[BUGHUNT_001:Did_DoIt:line_processor()]\n");
+            fflush(stdout);
+
+        #endif //:###########################################://
+                                     
     };;                                             //[CTF]//
                                                     //[CTF]//
     GLEB_MM_DEBUGPRINT_01("[WhatDidWeFind]");       //[CTF]//
@@ -767,7 +783,46 @@ int  GLEB_IsLineFull(const char* single_line){
         strcmp(single_line,"\r\n") != 0 &&
         strcmp(single_line,"\0"  ) != 0 &&
     1){
-        return 1;
+
+        //:BUGFIX:non_blank_found:---------------------------://
+        //:BUGFIX:There is the possibility of nothing
+        //:       but white space characters. Treat that
+        //:       as an empty line as well.
+        //:- - - - - - - - - - - - - - - - - - - - - - - - - ://
+
+            #if( GLEB_BUGHUNT_WHITE_SPACE_PATH >= 1 ) //:####://
+                printf("[BUGHUNT_001:FIX_SITE_HERE]\n");
+                fflush(stdout);
+            #endif //:#######################################://
+
+            int non_blank_found=( 0 );
+            int str_len = strlen( single_line );
+            for( int i = 0; i < str_len; i++ ){
+                if( 
+                    single_line[i] == '\r' || //:caRRiage CR
+                    single_line[i] == '\n' || //:Newline  LF
+                    single_line[i] == '\0' || //:null_terminator
+                    single_line[i] == '\t' || //:tab
+                    single_line[i] == ' '  || //:space
+                0){
+                    //:blank_character
+                }else{
+                    non_blank_found++;
+                };;
+            };;
+
+        //:---------------------------:BUGFIX:non_blank_found://
+
+        if( non_blank_found <= 0 ){
+
+            printf("[LINE_WAS_FULL_OF_WHITESPACE_CHARS]\n");
+            fflush(stdout);
+            return( 0 ); //:line is NOT full.
+
+        }else{
+
+            return 1;
+        };;
     }else{
         if( GLEB_tell_me_about_empty_lines ){
             printf("[LINE_IS_EMPTY]\n");
@@ -816,10 +871,30 @@ int GLEB_SearchPathStore(
     const char* single_line
 ){
 
-    //:Exit if line is empty:
-    if( !GLEB_IsLineFull( single_line ) ){
-        return 0;
+    if( ((void*)0) == single_line ){
+        printf("[ERROR:single_line:NULL]\n");
+        fflush(stdout);exit(666);
     };;
+    
+    //:DETERMINE_IF_LINE_IS_FULL:============================://
+    #if( GLEB_BUGHUNT_WHITE_SPACE_PATH /**BUGHUNT_001 **/ >= 1) 
+    printf("[IS_THE_LINE_FULL...]\n");fflush(stdout);
+    #endif //:###############################################://
+
+        //:Exit if line is empty:
+        if( !GLEB_IsLineFull( single_line ) ){
+
+            #if( GLEB_BUGHUNT_WHITE_SPACE_PATH  >= 1 ) 
+            printf("[EXITING,line_is_empty]\n");fflush(stdout);
+            #endif //:#######################################://
+
+            return 0;
+        };;
+
+    #if( GLEB_BUGHUNT_WHITE_SPACE_PATH /**BUGHUNT_001 **/ >= 1) 
+    printf("[THE_LINE_IS_FULL!]\n");fflush(stdout);
+    #endif //:###############################################://
+    //:============================:DETERMINE_IF_LINE_IS_FULL://
     
     GLEB_MM_DEBUGPRINT_01( 
         "[NonEmptyLine_Storing]"
@@ -872,11 +947,25 @@ GLEB_GetSearchPathsFromFile(
         GLEB_name_of_search_path_file
     ,   &GLEB_SearchPathCount
     );;
+
+    #if( GLEB_BUGHUNT_WHITE_SPACE_PATH >= 1 ) //:############://
+
+        printf("[BUGHUNT_001:Lines_Processed]\n");
+        fflush(stdout);
+
+    #endif //:###############################################://
     
     GLEB_InfoPrint_INT(
     /**/"[NumSearchPaths]"
     ,   GLEB_num_search_paths
     );;
+    #if( GLEB_BUGHUNT_WHITE_SPACE_PATH >= 1 ) //:############://
+    
+        printf("[BUGHUNT_001:GLEB_num_search_paths]:%d\n"
+                            ,GLEB_num_search_paths);;
+        fflush(stdout);
+    
+    #endif //:###############################################://
     
     //:Set aside memory for pass #2:
     //:Gaurd if num search paths not positive
@@ -906,22 +995,41 @@ GLEB_GetSearchPathsFromFile(
     }else{
         GLEB_p_search_paths=NULL;
     };;
-    
-    //:Pass #2: Collect strings.
-    GLEB_MM_DEBUGPRINT_01("[CollectStrings]");
-    GLEB_OpenFileAndProcessLines(
-        GLEB_name_of_search_path_file
-    ,   &GLEB_SearchPathStore
-    );;
-    
-    //:Set reference to num_search_paths:
-    GLEB_MM_DEBUGPRINT_01(
-        "[SetRefToNumSearchPaths]"
-    );;
-    (*BYREF_num_paths) = GLEB_num_search_paths;
-    GLEB_MM_DEBUGPRINT_01(
-        "[END:GLEB_GetSearchPathsFromFile]"
-    );;
+
+    //:2ND_FILE_SCAN_PASS:COLLECTION:------------------------://
+
+        #if( GLEB_BUGHUNT_WHITE_SPACE_PATH >= 1 ) //:########://
+        
+            printf("[BUGHUNT_001:ABOUT_TO_DO_2ND_FILE_SCAN]\n");
+            fflush(stdout);
+        
+        #endif //:###########################################://
+        
+        //:Pass #2: Collect strings.
+        GLEB_MM_DEBUGPRINT_01("[CollectStrings]");
+        GLEB_OpenFileAndProcessLines(
+            GLEB_name_of_search_path_file
+        ,   &GLEB_SearchPathStore
+        );;
+        
+        //:Set reference to num_search_paths:
+        GLEB_MM_DEBUGPRINT_01(
+            "[SetRefToNumSearchPaths]"
+        );;
+        (*BYREF_num_paths) = GLEB_num_search_paths;
+        GLEB_MM_DEBUGPRINT_01(
+            "[END:GLEB_GetSearchPathsFromFile]"
+        );;
+
+        #if( GLEB_BUGHUNT_WHITE_SPACE_PATH >= 1 ) //:########://
+        
+            printf("[BUGHUNT_001:DONE_WITH_2ND_FILE_SCAN]\n");
+            fflush(stdout);
+        
+        #endif //:###########################################://
+
+    //:------------------------:2ND_FILE_SCAN_PASS:COLLECTION://
+
     return( GLEB_p_search_paths );
 } //[[GLEB_GetSearchPathsFromFile]_____________]//
 
@@ -951,6 +1059,11 @@ GLEB_TryOpenDLL( void ){
 
         GLEB_InfoPrint(
         "[ABOUT_TO_TRY:GET_SEARCH_PATHS_FROM_FILE]\n");;
+
+        #if( GLEB_BUGHUNT_WHITE_SPACE_PATH >= 1 ) //:########://
+            printf("[BUGHUNT:WHITE_SPACE_PATH:001]\n");
+            fflush(stdout);
+        #endif //:###########################################://
 
         int num_paths = 0;
         const char** dll_path_array=(
