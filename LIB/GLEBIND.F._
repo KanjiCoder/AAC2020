@@ -175,7 +175,6 @@ GLEB_InfoPrint_INT(                                 //[HELPER_FUNCTIONS]//
                                                     //[HELPER_FUNCTIONS]//
 //[][][][][][][][][][][][][][][][][][][][][][][]//  //[HELPER_FUNCTIONS]//
                                                     //[HELPER_FUNCTIONS]//
-#include <stdio.h> //:printf(...)                   //[HELPER_FUNCTIONS]//
                                                     //[HELPER_FUNCTIONS]//
 void                                                //[HELPER_FUNCTIONS]//
 GLEB_Error(                                         //[HELPER_FUNCTIONS]//
@@ -2959,9 +2958,18 @@ gleb_library_container{
     //|Synonyms make it harder to find         |//
     //|references in the code.                 |//
     //|-  --  --  --  --  --  --  --  --  --  -|//
+
+
     struct
     gleb_TEXTURE_is_for_TEXTURE{
-        
+
+        //: L0 == Nesting Level ZERO(0); ####################://
+        //: L1 == Nesting Level ONE(1);  ####################://
+        //: SL0:StructLevel0 ################################://
+        //: SL1:StructLevel1 ################################://
+        #define SL0( A     ) struct A            //:#########://
+        #define SL1( A , B ) struct A ## _ ## B  //:#########://
+
         struct
         gleb_SLOT_if_for_TEXTURE_UNIT_SLOT{
     
@@ -2982,39 +2990,36 @@ gleb_library_container{
         //-                                        -//
         //- }BINDING_TARGETS;                      -//
 
-        #include "GLEBIND/MACRO/TEXTURE_STRUCT.BEG._"
-        L0(gleb_TEX_LOD_is_LEVEL_OF_DETAIL){
-        L1(gleb_TEX_LOD_is_LEVEL_OF_DETAIL,gpu){
+        SL0(gleb_TEX_LOD_is_LEVEL_OF_DETAIL){
+        SL1(gleb_TEX_LOD_is_LEVEL_OF_DETAIL,gpu){
         //:LODsUsedBy:openGL/device/gpu
         
             int zero;
         
         }GPU_DEV;
-        L1(gleb_TEX_LOD_is_LEVEL_OF_DETAIL,cpu){
+        SL1(gleb_TEX_LOD_is_LEVEL_OF_DETAIL,cpu){
         //:LODsUsedBy:client/host/cpu
 
             int unused;
 
         }CPU_HOS;
         }TEX_LOD;
-        #include "GLEBIND/MACRO/TEXTURE_STRUCT.MID._" 
-        L0(gleb_TEX_TYP_is_for_TEXTURE_TYPE){
-        L1(gleb_TEX_TYP_is_for_TEXTURE_TYPE,gpu){
+        SL0(gleb_TEX_TYP_is_for_TEXTURE_TYPE){
+        SL1(gleb_TEX_TYP_is_for_TEXTURE_TYPE,gpu){
         //:TextureTypesUsedBy:openGL/device/gpu
         
             unsigned int /** GLenum **/ gl_texture_2d; //: 0x0DE1
         
         }GPU_DEV;
-        L1(gleb_TEX_TYP_is_for_TEXTURE_TYPE,cpu){
+        SL1(gleb_TEX_TYP_is_for_TEXTURE_TYPE,cpu){
         //:TextureTypesUsedBy:client/host/cpu
 
             int unused;
 
         }CPU_HOS;
         }TEX_TYP;
-        #include "GLEBIND/MACRO/TEXTURE_STRUCT.MID._"
-        L0(gleb_PIX_FMT_is_for_PIXEL_FORMAT){
-        L1(gleb_PIX_FMT_is_for_PIXEL_FORMAT,gpu){
+        SL0(gleb_PIX_FMT_is_for_PIXEL_FORMAT){
+        SL1(gleb_PIX_FMT_is_for_PIXEL_FORMAT,gpu){
         //:PixelFormatsUsedBy:openGL/device/gpu
         //:(Also known as "Internal_Format")
         //:(Also known as "Internal Format")
@@ -3024,7 +3029,7 @@ gleb_library_container{
             int /** GLint **/ gl_rgba8ui; //: 0x8D7C
         
         }GPU_DEV;
-        L1(gleb_PIX_FMT_is_for_PIXEL_FORMAT,cpu){
+        SL1(gleb_PIX_FMT_is_for_PIXEL_FORMAT,cpu){
         //:PixelFormatsUsedBy:client/host/cpu
 
             //- GLint gl_rgba; //: 0x1908      -//
@@ -3033,44 +3038,40 @@ gleb_library_container{
 
         }CPU_HOS;
         }PIX_FMT;
-        #include "GLEBIND/MACRO/TEXTURE_STRUCT.MID._"
-        L0(gleb_PIX_TYP_is_for_PIXEL_TYPE){
-        L1(gleb_PIX_TYP_is_for_PIXEL_TYPE,gpu){
+        SL0(gleb_PIX_TYP_is_for_PIXEL_TYPE){
+        SL1(gleb_PIX_TYP_is_for_PIXEL_TYPE,gpu){
         //:PixelTypesUsedBy:openGL/device/gpu
 
         
             int unused;
         
         }GPU_DEV;
-        L1(gleb_PIX_TYP_is_for_PIXEL_TYPE,cpu){
+        SL1(gleb_PIX_TYP_is_for_PIXEL_TYPE,cpu){
         //:PixelTypesUsedBy:client/host/cpu
 
             unsigned int /** GLenum **/ gl_unsigned_byte; //:0x1401
 
         }CPU_HOS;
         }PIX_TYP;
-        #include "GLEBIND/MACRO/TEXTURE_STRUCT.MID._"
-        L0(gleb_PIX_DAT_is_for_PIXEL_DATA){
-        L1(gleb_PIX_DAT_is_for_PIXEL_DATA,gpu){
+        SL0(gleb_PIX_DAT_is_for_PIXEL_DATA){
+        SL1(gleb_PIX_DAT_is_for_PIXEL_DATA,gpu){
         //:PixelTypesUsedBy:openGL/device/gpu
 
         
             int unused;
         
         }GPU_DEV;
-        L1(gleb_PIX_DAT_is_for_PIXEL_DATA,cpu){
+        SL1(gleb_PIX_DAT_is_for_PIXEL_DATA,cpu){
         //:PixelTypesUsedBy:client/host/cpu
 
             void* /** GLvoid:PTR **/ pix_nul; //:Null_Data
 
         }CPU_HOS;
         }PIX_DAT;
-        #include "GLEBIND/MACRO/TEXTURE_STRUCT.MID._"
-        L0(gleb_BORDER_is_for_TEXTURE_BORDER){
+        SL0(gleb_BORDER_is_for_TEXTURE_BORDER){
             int /** GLint **/ must_be_zero_for_teximage2d;
         }BORDER;
-        #include "GLEBIND/MACRO/TEXTURE_STRUCT.MID._"
-        L0(gleb_texture_PARAMETERS){
+        SL0(gleb_texture_PARAMETERS){
 
             struct
             gleb_texture_parameter_NAMES{
@@ -3090,7 +3091,6 @@ gleb_library_container{
             }VAL;
 
         }PARAMETER;
-        #include "GLEBIND/MACRO/TEXTURE_STRUCT.END._"
 
         //:Example Usage:
         //+    GLint which_texture_iid;        +//
@@ -3135,6 +3135,9 @@ gleb_library_container{
             //| value is GL_TEXTURE0.          |//
 
         }QUERY;
+
+        #undef  SL0  //:#####################################://
+        #undef  SL1  //:#####################################://
 
     }TEXTURE;
     //|-  --  --  --  --  --  --  --  --  --  -|//
