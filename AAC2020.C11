@@ -71,32 +71,40 @@
 //:DATA:DATA_BEFORE_FUNCTIONS:===============================://
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_001 )
 
-    #define AAC2020_INCLUDE_GINAWIN ( 1 )
-    #include "LIB/GINAWIN.D._" //:Graphics_Init_And_Window
-#else
-    #define AAC2020_INCLUDE_GINAWIN ( 0 )
-#endif
+        //:GINAWIN:GRAPHICS_INIT_AND_WINDOW:
+        #include           "LIB/GINAWIN.D._"  
+        #define AAC2020_INCLUDE_GINAWIN ( 1 )
+        #else   //:     INCLUDE_GINAWIN ( - )
+        #define AAC2020_INCLUDE_GINAWIN ( 0 )
+        #endif
+
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_002 )
     
-    #define AAC2020_INCLUDE_DUI ( 2 )
-    #include "LIB/DUI.D._"     //:AAC2020_DUI_*_Dialog_UI_Data
+        //:DUI:DIALOG_USER_INTERFACES:
+        #include           "LIB/DUI.D._"     
+        #define AAC2020_INCLUDE_DUI ( 2 )
+        #else   //:     INCLUDE_DUI ( - ) 
+        #define AAC2020_INCLUDE_DUI ( 0 )
+        #endif
 
-#endif
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_003 )
 
+        //:GLEBIND:GL_EASY_BINDINGS:
+        #include           "LIB/GLEBIND.D._"   
         #define AAC2020_INCLUDE_GLEBIND ( 3 )
-        #include "LIB/GLEBIND.D._"   
-
-    #else
-
+        #else   //:     INCLUDE_GLEBIND ( - )
         #define AAC2020_INCLUDE_GLEBIND ( 0 )
+        #endif
 
-    #endif
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_004 )
 
-    #include "LIB/GRAQUAD.D._"   
+        //:GRAQUAD:GRAPHICS_QUAD
+        #include "LIB/GRAQUAD.D._"   
+        #define AAC2020_INCLUDE_GRAQUAD ( 4 )
+        #else   //:     INCLUDE_GRAQUAD ( - )
+        #define AAC2020_INCLUDE_GRAQUAD ( 0 )
+        #endif
 
-#endif
 #if( AAC2020_MAC_LIBCHAN_CUR > AAC2020_MAC_LIBCHAN_MAX  )
 
     #error "[DATA:EXCEEDING_LIBCHAN_MAX:DATA]"
@@ -108,34 +116,47 @@
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_001 )
 
-    #define AAC2020_INCLUDE_GINAWIN ( 1 )
-    #include "LIB/GINAWIN.F._" //:Graphics_Init_And_Window
-#else
-    #define AAC2020_INCLUDE_GINAWIN ( 0 )
-#endif
+        //:GINAWIN:GRAPHICS_INIT_AND_WINDOW:
+        #include "LIB/GINAWIN.F._" 
+        #define AAC2020_INCLUDE_GINAWIN ( 1 )
+        #else   //:     INCLUDE_GINAWIN ( - )
+        #define AAC2020_INCLUDE_GINAWIN ( 0 )
+        #endif
+
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_002 )
      
-    #define AAC2020_INCLUDE_DUI ( 2 )
-    #include "LIB/DUI.F._"     //:AAC2020_DUI_*_Dialog_UI_Funcs
+        //:DUI:DIALOG_USER_INTERFACES:
+        #include "LIB/DUI.F._"   
+        #define AAC2020_INCLUDE_DUI ( 2 )
+        #else   //:     INCLUDE_DUI ( - )
+        #define AAC2020_INCLUDE_DUI ( 0 )
+        #endif
 
-#endif
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_003 )
 
+        //:GLEBIND:GL_EASY_BINDINGS:
+        #include "LIB/GLEBIND.F._"  
+        #define AAC2020_INCLUDE_GLEBIND ( 3 )
+        #else   //:     INCLUDE_GLEBIND ( - )
+        #define AAC2020_INCLUDE_GLEBIND ( 0 )
+        #endif
 
-    #include "LIB/GLEBIND.F._"      
-
-#endif
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_004 )
 
+        //:GRAQUAD:GRAPHICS_QUAD
+        #include "LIB/GRAQUAD.F._"    
+        #define AAC2020_INCLUDE_GRAQUAD ( 4 )
+        #else   //:     INCLUDE_GRAQUAD ( - )
+        #define AAC2020_INCLUDE_GRAQUAD ( 0 )
+        #endif
 
-    #include "LIB/GRAQUAD.F._"      
-
-#endif
 #if( AAC2020_MAC_LIBCHAN_CUR > AAC2020_MAC_LIBCHAN_MAX  )
 
-    #error "[FUNC:EXCEEDING_LIBCHAN_MAX:FUNC]"
+        
+        #error "[FUNC:EXCEEDING_LIBCHAN_MAX:FUNC]"
+        #endif
 
-#endif
+
 //:================================:FUNC:FUNCTIONS_AFTER_DATA://
 //:CLASS:CLASSES_AFTER_FUNCTIONS_AND_DATA:===================://
 
