@@ -1046,14 +1046,14 @@ GLEB_GetSearchPathsFromFile(
 
 //[][][][][][][][][][][][][][][][][][][][][][][]//
 
-HMODULE
+void* /** HMODULE **/
 GLEB_TryOpenDLL( void ){
     GLEB_MM_DEBUGPRINT_01(
         "[BEG:GLEB_TryOpenDLL]"
     );;
 
     const char* dll_path   = NULL;
-    HMODULE open_gl_handle = NULL;
+    void* /** HMODULE **/ open_gl_handle = NULL;
 
     //:GET_SEARCH_PATHS_FROM_FILE:---------------------------://
 
@@ -1126,7 +1126,7 @@ GLEB_TryOpenDLL( void ){
             /**/"[GLEB:TRYING_PATH]"
             ,   dll_path 
             );
-            open_gl_handle = LoadLibrary( dll_path );
+            open_gl_handle = PEB2020_LoadLibraryA( dll_path );
             if(NULL != open_gl_handle){ 
                 I_P( "[GLEB:OPENED_THAT_DLL]\n" );
                 break; 
@@ -1207,9 +1207,11 @@ GLEB_LoadFunc(
     //:GET_FUNCTION_ADDRESS_FROM_OPEN_GL_DLL:----------------://
 
         GLEB_FUNC function_pointer = 
-       (GLEB_FUNC)GetProcAddress( //:<<<<<<<<<<<<<<<NOTICE_ME_SENPAI
+       (GLEB_FUNC)PEB2020_GetProcAddress( 
+
             GLEB_open_gl_handle
             ,name_of_open_gl_function
+
         );if(NULL==function_pointer){
             printf(
             /**/"[GLEB_LoadFunc:Fail]:%s\n"
@@ -1242,73 +1244,75 @@ GLEB_LoadFunc(
 //|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx|//
 
 
-#ifndef    GL_VERSION
-
-    typedef int GLsizei; 
-    typedef unsigned int GLuint;
-
-    //:glcoarearb.h:
-    typedef unsigned int GLenum;
-
-    //: glcorearb.h:
-    //: typedef khronos_ssize_t GLsizeiptr;
-    //:
-    //: khronos.org/opengl/wiki/OpenGL_Type:
-    //: Non-negative binary integer size, 
-    //: for memory offsets and ranges	
-    //:
-    //:Assuming compilation in 64bit mode:
-    typedef unsigned __int64 GLsizeiptr;
-
-    typedef void GLvoid;
-
-    //:glcorearb.h:
-    typedef int GLint;
-
-    //:glcorearb.h:
-    typedef unsigned char GLboolean;
-
-    //:glcorearb.h
-    typedef char GLchar;
-
-    //:glcorearb.h
-    typedef unsigned int GLbitfield;
-
-    //|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//
-    //| On a platfrom that supports IEEE-754   |//
-    //| float it's going to be 32 bit. On      |//
-    //| platforms that don't,different width   |//
-    //| will probably be the least of your     |//
-    //| problems. Bottom line - use float and  |//
-    //| don't worry.                           |//
-    //| stackoverflow.com/questions/18705192   |//
-    //|                                        |//
-    //|glcoarearb.h:                           |//
-    //|     typedef khronos_float_t GLfloat;   |//
-    //|khrplatform.h:                          |//
-    //|     typedef float khronos_float_t;     |//
-    typedef float GLfloat;                  //||//
-    //|                                        |//
-    //|________________________________________|//
-
-
-    //////////////////////////////////////////////
-    //| glcore.h:                              |//
-    //| typedef khronos_uint8_t GLubyte;       |//
-    //|                                        |//
-    //| khrplatform.h                          |//
-    //| khronos.org/registry/EGL/api/KHR       |//
-    //| /khrplatform.h                         |//
-    //| [BEG:QUOTE]                            |//
-    //| "Types that are (so far) the same "    |//
-    //| "on all platforms                 "    |//
-    //| [END:QUOTE]                            |//
-    //| typedef unsigned char khronos_uint8_t; |//
-    typedef unsigned char GLubyte; //:         ://
-    //////////////////////////////////////////////
-
-#endif /** GL_VERSION **/
-
+//:OPEN_GL_TYPEDEFS:COMMENTED_OUT:===========================://
+//:    //:#GLEBIND_GLH_TYPES#://                         //: ://
+//:    #ifndef    GL_VERSION                                 ://
+//:                                                          ://
+//:        typedef int GLsizei;                              ://
+//:        typedef unsigned int GLuint;                      ://
+//:                                                          ://
+//:        //:glcoarearb.h:                                  ://
+//:        typedef unsigned int GLenum;                      ://
+//:                                                          ://
+//:        //: glcorearb.h:                                  ://
+//:        //: typedef khronos_ssize_t GLsizeiptr;           ://
+//:        //:                                               ://
+//:        //: khronos.org/opengl/wiki/OpenGL_Type:          ://
+//:        //: Non-negative binary integer size,             ://
+//:        //: for memory offsets and ranges	             ://
+//:        //:                                               ://
+//:        //:Assuming compilation in 64bit mode:            ://
+//:        typedef unsigned __int64 GLsizeiptr;              ://
+//:                                                          ://
+//:        typedef void GLvoid;                              ://
+//:                                                          ://
+//:        //:glcorearb.h:                                   ://
+//:        typedef int GLint;                                ://
+//:                                                          ://
+//:        //:glcorearb.h:                                   ://
+//:        typedef unsigned char GLboolean;                  ://
+//:                                                          ://
+//:        //:glcorearb.h                                    ://
+//:        typedef char GLchar;                              ://
+//:                                                          ://
+//:        //:glcorearb.h                                    ://
+//:        typedef unsigned int GLbitfield;                  ://
+//:                                                          ://
+//:        //|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//    ://
+//:        //| On a platfrom that supports IEEE-754   |//    ://
+//:        //| float it's going to be 32 bit. On      |//    ://
+//:        //| platforms that don't,different width   |//    ://
+//:        //| will probably be the least of your     |//    ://
+//:        //| problems. Bottom line - use float and  |//    ://
+//:        //| don't worry.                           |//    ://
+//:        //| stackoverflow.com/questions/18705192   |//    ://
+//:        //|                                        |//    ://
+//:        //|glcoarearb.h:                           |//    ://
+//:        //|     typedef khronos_float_t GLfloat;   |//    ://
+//:        //|khrplatform.h:                          |//    ://
+//:        //|     typedef float khronos_float_t;     |//    ://
+//:        typedef float GLfloat;                  //||//    ://
+//:        //|                                        |//    ://
+//:        //|________________________________________|//    ://
+//:                                                          ://
+//:                                                          ://
+//:        //////////////////////////////////////////////    ://
+//:        //| glcore.h:                              |//    ://
+//:        //| typedef khronos_uint8_t GLubyte;       |//    ://
+//:        //|                                        |//    ://
+//:        //| khrplatform.h                          |//    ://
+//:        //| khronos.org/registry/EGL/api/KHR       |//    ://
+//:        //| /khrplatform.h                         |//    ://
+//:        //| [BEG:QUOTE]                            |//    ://
+//:        //| "Types that are (so far) the same "    |//    ://
+//:        //| "on all platforms                 "    |//    ://
+//:        //| [END:QUOTE]                            |//    ://
+//:        //| typedef unsigned char khronos_uint8_t; |//    ://
+//:        typedef unsigned char GLubyte; //:         :////: ://
+//:        //////////////////////////////////////////////    ://
+//:                                                          ://
+//:    #endif /** GL_VERSION **/                             ://
+//:===========================:OPEN_GL_TYPEDEFS:COMMENTED_OUT://
 
 //[][][][][][][][][][][][][][][][][][][][][][][]//
 
@@ -1344,10 +1348,10 @@ GLEB_LoadFunc(
 //[XX                                        XX]//
 //[XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]//
 typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]   XX]//
-PROC                                //[  ]   XX]//
+GLEBIND_WIN32_PROC                               
 (*PFN_wglGetProcAddress)            //[  ]   XX]//
 (                                   //[  ]   XX]//
-/**/LPCSTR    Arg1                  //[01]   XX]//
+/**/const char* /**LPCSTR**/    Arg1                  
 ); //[- - - - - - - - - - - - - -]////[  ]   XX]//
                                     //[  ]   XX]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯]////[  ]   XX]//
@@ -1356,10 +1360,10 @@ PFN_wglGetProcAddress               //[  ]   XX]//
 pfn_wglGetProcAddress;              //[  ]   XX]//
                                     //[  ]   XX]//
 //[_|_|_|_|_|_|_|_|____|_|_|_|_|_]////[  ]   XX]//
-PROC                                //[  ]   XX]//
+GLEBIND_WIN32_PROC                  //[  ]   XX]//
 GLEB_wglGetProcAddress              //[  ]   XX]//
 (                                   //[  ]   XX]//
-/**/LPCSTR    Arg1                  //[01]   XX]//
+/**/const char*    Arg1                  //[01]   XX]//
 ){                                  //[  ]   XX]//                 
     GLEB_FuncPointerSated(          //[  ]   XX]//
     /**/ "[pfn_wglGetProcAddress]", //[  ]   XX]//
@@ -1376,7 +1380,7 @@ GLEB_wglGetProcAddress              //[  ]   XX]//
 //[XX                                        XX]//
 //[XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]//
 typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]   XX]//
-HGLRC                               //[  ]   XX]//
+void* /** HGLRC:Handle_GL_RenderingContext **/      
 (*PFN_wglGetCurrentContext)         //[  ]   XX]//
 (                                   //[  ]   XX]//
                              void   //[00]   XX]//
@@ -1388,7 +1392,7 @@ PFN_wglGetCurrentContext            //[  ]   XX]//
 pfn_wglGetCurrentContext;           //[  ]   XX]//
                                     //[  ]   XX]//
 //[_|_|_|_|_|_|_|_|____|_|_|_|_|_]////[  ]   XX]//
-HGLRC                               //[  ]   XX]//
+void* /** HGLRC:Handle_GL_RenderingContext **/                           
 GLEB_wglGetCurrentContext           //[  ]   XX]//
 (                                   //[  ]   XX]//
                              void   //[00]   XX]//
@@ -1418,10 +1422,10 @@ GLEB_wglGetCurrentContext           //[  ]   XX]//
 //[XX                                        XX]//
 //[XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]//
 typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]   XX]//
-HGLRC                               //[  ]   XX]//
+void* /** HGLRC:Handle_GL_RenderingContext **/                               
 (*PFN_wglCreateContext)             //[  ]   XX]//
 (                                   //[  ]   XX]//
-/**/HDC                     Arg1    //[01]   XX]//
+/**/ void* /** HDC **/      Arg1    //[01]   XX]//
 ); //[- - - - - - - - - - - - - -]////[  ]   XX]//
                                     //[  ]   XX]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯]////[  ]   XX]//
@@ -1430,10 +1434,10 @@ PFN_wglCreateContext                //[  ]   XX]//
 pfn_wglCreateContext;               //[  ]   XX]//
                                     //[  ]   XX]//
 //[_|_|_|_|_|_|_|_|____|_|_|_|_|_]////[  ]   XX]//
-HGLRC                               //[  ]   XX]//
+void* /** HGLRC:Handle_GL_RenderingContext **/                                
 GLEB_wglCreateContext               //[  ]   XX]//
 (                                   //[  ]   XX]//
-/**/HDC                     Arg1    //[01]   XX]//
+/**/ void* /** HDC **/      Arg1    //[01]   XX]//
 ){                                  //[  ]   XX]//                 
     GLEB_FuncPointerSated(          //[__ ¯¯]XX]//
     /**/ "[pfn_wglCreateContext]",     //[  ]XX]//
@@ -1463,11 +1467,11 @@ GLEB_wglCreateContext               //[  ]   XX]//
 //[XX                                        XX]//
 //[XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]//
 typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]   XX]//
-BOOL                                //[  ]   XX]//
+int /** BOOL **/                    //[  ]   XX]//
 (*PFN_wglMakeCurrent)               //[  ]   XX]//
 (                                   //[  ]   XX]//
-/**/HDC                input_HDC    //[01]   XX]//
-,   HGLRC              input_HGLRC  //[02]   XX]//
+/**/void* /** HDC   **/ input_HDC   //[01]   XX]//
+,   void* /** HGLRC **/ input_HGLRC //[02]   XX]//
 ); //[- - - - - - - - - - - - - -]////[  ]   XX]//
                                     //[  ]   XX]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯]////[  ]   XX]//
@@ -1476,11 +1480,11 @@ PFN_wglMakeCurrent                  //[  ]   XX]//
 pfn_wglMakeCurrent;                 //[  ]   XX]//
                                     //[  ]   XX]//
 //[_|_|_|_|_|_|_|_|____|_|_|_|_|_]////[  ]   XX]//
-BOOL                                //[  ]   XX]//
+int /** BOOL **/                    //[  ]   XX]//
 GLEB_wglMakeCurrent                 //[  ]   XX]//
 (                                   //[  ]   XX]//
-/**/HDC                input_HDC    //[01]   XX]//
-,   HGLRC              input_HGLRC  //[02]   XX]//
+/**/void* /** HDC   **/ input_HDC   //[01]   XX]//
+,   void* /** HGLRC **/ input_HGLRC //[02]   XX]//
 ){                                  //[  ]   XX]//                 
     GLEB_FuncPointerSated(          //[__ ¯¯]XX]//
     /**/ "[pfn_wglMakeCurrent]",       //[  ]XX]//
@@ -1546,7 +1550,7 @@ GLEB_GetAnyGLFuncAddress(
             gleb_Halt("[2019_06_06_1248AM]");
         };;
 
-        p = (GLEB_FUNC)GetProcAddress(
+        p = (GLEB_FUNC)PEB2020_GetProcAddress(
         /**/GLEB_open_gl_handle
         ,   name_of_open_gl_function
         );;
@@ -1574,11 +1578,11 @@ GLEB_GetAnyGLFuncAddress(
 
 //:--------------------------------------------://
 typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
-void                                      //[  ]//
-(*PFN_glGenBuffers)                       //[  ]//
-(                                         //[  ]//
-/**/GLsizei                            n  //[01]//
-,   GLuint*                      buffers  //[02]//
+void                                            //[  ]//
+(*PFN_glGenBuffers)                             //[  ]//
+(                                               //[  ]//
+/**/int            /** GLsizei    **/        n  //[01]//
+,   unsigned int*  /** GLuint:PTR **/  buffers  //[02]//
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -1590,8 +1594,8 @@ pfn_glGenBuffers;                         //[  ]//
 void                                      //[  ]//
 glGenBuffers                              //[  ]//
 (                                         //[  ]//
-/**/GLsizei                            n  //[01]//
-,   GLuint*                      buffers  //[02]//
+/**/int            /** GLsizei    **/        n  //[01]//
+,   unsigned int*  /** GLuint:PTR **/  buffers  //[02]//
 ){                                        //[  ]//                            
     GLEB_FuncPointerSated(                //[  ]//
     /**/ "[pfn_glGenBuffers]",            //[  ]//
@@ -1607,8 +1611,8 @@ typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯�
 void                                      //[  ]//
 (*PFN_glBindBuffer)                       //[  ]//
 (                                         //[  ]//
-/**/GLenum                        target  //[01]//
-,   GLuint                        buffer  //[02]//
+/**/unsigned int /** GLenum **/                        target  //[01]//
+,   unsigned int /** GLuint **/                        buffer  //[02]//
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -1620,8 +1624,8 @@ pfn_glBindBuffer;                         //[  ]//
 void                                      //[  ]//
 glBindBuffer                              //[  ]//
 (                                         //[  ]//
-/**/GLenum                        target  //[01]//
-,   GLuint                        buffer  //[02]//
+/**/unsigned int /** GLenum **/                        target  //[01]//
+,   unsigned int /** GLuint **/                        buffer  //[02]//
 ){                                        //[  ]//                            
     GLEB_FuncPointerSated(                //[  ]//
       /**/ "[pfn_glBindBuffer]",          //[  ]//
@@ -1637,10 +1641,10 @@ typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯�
 void                                      //[  ]//
 (*PFN_glBufferData)                       //[  ]//
 (                                         //[  ]//
-/**/GLenum         target                 //[01]//
-,   GLsizeiptr       size                 //[02]//
-,   const GLvoid*    data                 //[03]//
-,   GLenum          usage                 //[04]//
+/**/unsigned int /** GLenum **/         target                 //[01]//
+,   unsigned __int64 /** GLsizeiptr **/       size                 //[02]//
+,   const void* /** GLvoid:PTR **/    data                 //[03]//
+,   unsigned int /** GLenum **/          usage                 //[04]//
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -1652,10 +1656,10 @@ pfn_glBufferData;                         //[  ]//
 void                                      //[  ]//
 glBufferData                              //[  ]//
 (                                         //[  ]//
-/**/GLenum         target                 //[01]//
-,   GLsizeiptr       size                 //[02]//
-,   const GLvoid*    data                 //[03]//
-,   GLenum          usage                 //[04]//
+/**/unsigned int /** GLenum **/         target                 //[01]//
+,   unsigned __int64 /** GLsizeiptr **/       size                 //[02]//
+,   const void* /** GLvoid:PTR **/    data                 //[03]//
+,   unsigned int /** GLenum **/          usage                 //[04]//
 ){                                        //[  ]//                            
     GLEB_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glBufferData]",          //[  ]//
@@ -1670,7 +1674,7 @@ glBufferData                              //[  ]//
 //:--------------------------------------------://
 //:--------------------------------------------://
 typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
-GLenum                                    //[  ]//
+unsigned int /** GLenum **/                                    //[  ]//
 (*PFN_glGetError)                         //[  ]//
 (                                         //[  ]//
             void                          //[00]//
@@ -1682,7 +1686,7 @@ PFN_glGetError                            //[  ]//
 pfn_glGetError;                           //[  ]//
                                           //[  ]//
 //[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
-GLenum                                    //[  ]//
+unsigned int /** GLenum **/                                    //[  ]//
 glGetError                                //[  ]//
 (                                         //[  ]//
             void                          //[00]//
@@ -1700,7 +1704,7 @@ typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯�
 void                                      //[  ]//
 (*PFN_glEnableVertexAttribArray)          //[  ]//
 (                                         //[  ]//
-            GLuint index                  //[00]//
+            unsigned int /** GLuint **/ index                  //[00]//
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -1712,7 +1716,7 @@ pfn_glEnableVertexAttribArray;            //[  ]//
 void                                      //[  ]//
 glEnableVertexAttribArray                 //[  ]//
 (                                         //[  ]//
-            GLuint index                  //[00]//
+            unsigned int /** GLuint **/ index                  //[00]//
 ){                                        //[  ]//                            
     GLEB_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glEnableVertexAttribArray]",   //
@@ -1727,14 +1731,14 @@ typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯�
 void                                      //[  ]//
 (*PFN_glVertexAttribPointer)              //[  ]//
 (                                         //[  ]//
-/**/GLuint           index                //[01]//
-,   GLint             size                //[02]//
+/**/unsigned int /** GLuint **/           index                //[01]//
+,   int /** GLint **/             size                //[02]//
                                           //[  ]//
-,   GLenum            type                //[03]//
-,   GLboolean   normalized                //[04]//
+,   unsigned int /** GLenum **/            type                //[03]//
+,   unsigned char /** GLboolean **/   normalized                //[04]//
                                           //[  ]//
-,   GLsizei         stride                //[05]//
-,   const GLvoid*  pointer                //[06]//
+,   int /** GLsizei **/         stride                //[05]//
+,   const void* /** GLvoid:PTR **/  pointer                //[06]//
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -1746,14 +1750,14 @@ pfn_glVertexAttribPointer;                //[  ]//
 void                                      //[  ]//
 glVertexAttribPointer                     //[  ]//
 (                                         //[  ]//
-/**/GLuint           index                //[01]//
-,   GLint             size                //[02]//
+/**/unsigned int /** GLuint **/           index                //[01]//
+,   int /** GLint **/             size                //[02]//
                                           //[  ]//
-,   GLenum            type                //[03]//
-,   GLboolean   normalized                //[04]//
+,   unsigned int /** GLenum **/            type                //[03]//
+,   unsigned char /** GLboolean **/   normalized                //[04]//
                                           //[  ]//
-,   GLsizei         stride                //[05]//
-,   const GLvoid*  pointer                //[06]//
+,   int /** GLsizei **/         stride                //[05]//
+,   const void* /** GLvoid:PTR **/  pointer                //[06]//
 ){                                        //[  ]//                            
     GLEB_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glVertexAttribPointer]", //[  ]//
@@ -1776,9 +1780,9 @@ typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯�
 void                                      //[  ]//
 (*PFN_glDrawArrays)                       //[  ]//
 (                                         //[  ]//
-/**/                        GLenum   mode //[01]//
-,                           GLint   first //[02]//
-,                           GLsizei count //[03]//
+/**/                        unsigned int /** GLenum **/   mode //[01]//
+,                           int /** GLint **/   first //[02]//
+,                           int /** GLsizei **/ count //[03]//
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -1790,9 +1794,9 @@ pfn_glDrawArrays;                         //[  ]//
 void                                      //[  ]//
 glDrawArrays                              //[  ]//
 (                                         //[  ]//
-/**/                        GLenum   mode //[01]//
-,                           GLint   first //[02]//
-,                           GLsizei count //[03]//
+/**/                        unsigned int /** GLenum **/   mode //[01]//
+,                           int /** GLint **/   first //[02]//
+,                           int /** GLsizei **/ count //[03]//
 ){                                        //[  ]//                            
     GLEB_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glDrawArrays]",          //[  ]//
@@ -1809,7 +1813,7 @@ typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯�
 void                                      //[  ]//
 (*PFN_glDisableVertexAttribArray)         //[  ]//
 (                                         //[  ]//
-                            GLuint index  //[01]//
+                            unsigned int /** GLuint **/ index  //[01]//
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -1821,7 +1825,7 @@ pfn_glDisableVertexAttribArray;           //[  ]//
 void                                      //[  ]//
 glDisableVertexAttribArray                //[  ]//
 (                                         //[  ]//
-                            GLuint index  //[01]//  
+                            unsigned int /** GLuint **/ index  //[01]//  
 ){                                        //[  ]//                            
     GLEB_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glDisableVertexAttribArray]",  //
@@ -1833,10 +1837,10 @@ glDisableVertexAttribArray                //[  ]//
 //:--------------------------------------------://
 //:--------------------------------------------://
 typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
-GLuint                                    //[  ]//
+unsigned int /** GLuint **/                                    //[  ]//
 (*PFN_glCreateShader)                     //[  ]//
 (                                         //[  ]//
-                        GLenum shaderType //[01]//
+                        unsigned int /** GLenum **/ shaderType //[01]//
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -1845,10 +1849,10 @@ PFN_glCreateShader                        //[  ]//
 pfn_glCreateShader;                       //[  ]//
                                           //[  ]//
 //[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
-GLuint                                    //[  ]//
+unsigned int /** GLuint **/                                    //[  ]//
 glCreateShader                            //[  ]//
 (                                         //[  ]//
-                        GLenum shaderType //[01]//
+                        unsigned int /** GLenum **/ shaderType //[01]//
 ){                                        //[  ]//                           
     GLEB_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glCreateShader]",  //    //[  ]//
@@ -1863,10 +1867,10 @@ typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯�
 void                                      //[  ]//
 (*PFN_glShaderSource)                     //[  ]//
 (                                         //[  ]//
-/**/            GLuint            shader  //[01]//
-,               GLsizei            count  //[02]//
-,               const GLchar**    string  //[03]//
-,               const GLint*      length  //[04]//
+/**/            unsigned int /** GLuint **/            shader  //[01]//
+,               int /** GLsizei **/            count  //[02]//
+,               const char**  /** GLchar:PTR_PTR**/    string  //[03]//
+,               const int*  /** GLint:PTR **/      length  //[04]//
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -1878,10 +1882,10 @@ pfn_glShaderSource;                       //[  ]//
 void                                      //[  ]//
 glShaderSource                            //[  ]//
 (                                         //[  ]//
-/**/            GLuint            shader  //[01]//
-,               GLsizei            count  //[02]//
-,               const GLchar**    string  //[03]//
-,               const GLint*      length  //[04]//
+/**/            unsigned int /** GLuint **/            shader  //[01]//
+,               int /** GLsizei **/            count  //[02]//
+,               const char**  /** GLchar:PTR_PTR**/    string  //[03]//
+,               const int*  /** GLint:PTR **/      length  //[04]//
 ){                                        //[  ]//                           
     GLEB_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glShaderSource]",        //[  ]//
@@ -1899,7 +1903,7 @@ typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯�
 void                                      //[  ]//
 (*PFN_glCompileShader)                    //[  ]//
 (                                         //[  ]//
-/**/            GLuint            shader  //[01]//
+/**/            unsigned int /** GLuint **/            shader  //[01]//
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -1911,7 +1915,7 @@ pfn_glCompileShader;                      //[  ]//
 void                                      //[  ]//
 glCompileShader                           //[  ]//
 (                                         //[  ]//
-/**/            GLuint            shader  //[01]//
+/**/            unsigned int /** GLuint **/            shader  //[01]//
 ){                                        //[  ]//                           
     GLEB_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glCompileShader]",       //[  ]//
@@ -1926,9 +1930,9 @@ typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯�
 void                                      //[  ]//
 (*PFN_glGetShaderiv)                      //[  ]//
 (                                         //[  ]//
-/**/                        GLuint shader //[01]//
-,                           GLenum  pname //[02]//
-,                           GLint* params //[03]//
+/**/                        unsigned int /** GLuint **/ shader //[01]//
+,                           unsigned int /** GLenum **/  pname //[02]//
+,                           int*  /** GLint:PTR **/ params //[03]//
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -1940,9 +1944,9 @@ pfn_glGetShaderiv;                        //[  ]//
 void                                      //[  ]//
 glGetShaderiv                             //[  ]//
 (                                         //[  ]//
-/**/                        GLuint shader //[01]//
-,                           GLenum  pname //[02]//
-,                           GLint* params //[03]//
+/**/                        unsigned int /** GLuint **/ shader //[01]//
+,                           unsigned int /** GLenum **/  pname //[02]//
+,                           int*  /** GLint:PTR **/ params //[03]//
 ){                                        //[  ]//                           
     GLEB_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glGetShaderiv]",         //[  ]//
@@ -1959,10 +1963,10 @@ typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯�
 void                                      //[  ]//
 (*PFN_glGetShaderInfoLog)                 //[  ]//
 (                                         //[  ]//
-/**/                GLuint       shader   //[01]//
-,	                GLsizei   maxLength   //[02]//
-,	                GLsizei*     length   //[03]//
-,	                GLchar*     infoLog   //[04]//
+/**/                unsigned int /** GLuint **/       shader   //[01]//
+,	                int  /** GLsizei **/   maxLength   //[02]//
+,	                int* /** GLsizei **/      length   //[03]//
+,	                char*  /** GLchar:PTR **/     infoLog   //[04]//
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -1974,10 +1978,10 @@ pfn_glGetShaderInfoLog;                   //[  ]//
 void                                      //[  ]//
 glGetShaderInfoLog                        //[  ]//
 (                                         //[  ]//
-/**/                GLuint       shader   //[01]//
-,	                GLsizei   maxLength   //[02]//
-,	                GLsizei*     length   //[03]//
-,	                GLchar*     infoLog   //[04]//
+/**/                unsigned int /** GLuint **/       shader   //[01]//
+,	                int  /** GLsizei **/   maxLength   //[02]//
+,	                int* /** GLsizei **/      length   //[03]//
+,	                char*  /** GLchar:PTR **/     infoLog   //[04]//
 ){                                        //[  ]//                           
     GLEB_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glGetShaderInfoLog]",    //[  ]//
@@ -1992,7 +1996,7 @@ glGetShaderInfoLog                        //[  ]//
 //:--------------------------------------------://
 //:--------------------------------------------://
 typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
-GLuint                                    //[  ]//
+unsigned int /** GLuint **/                                    //[  ]//
 (*PFN_glCreateProgram)                    //[  ]//
 (                                         //[  ]//
                                    void   //[00]//
@@ -2004,7 +2008,7 @@ PFN_glCreateProgram                       //[  ]//
 pfn_glCreateProgram;                      //[  ]//
                                           //[  ]//
 //[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
-GLuint                                    //[  ]//
+unsigned int /** GLuint **/                                    //[  ]//
 glCreateProgram                           //[  ]//
 (                                         //[  ]//
                                    void   //[00]//
@@ -2022,8 +2026,8 @@ typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯�
 void                                      //[  ]//
 (*PFN_glAttachShader)                     //[  ]//
 (                                         //[  ]//
-/**/                    GLuint  program   //[01]//
-,                       GLuint   shader   //[02]//
+/**/                    unsigned int /** GLuint **/  program   //[01]//
+,                       unsigned int /** GLuint **/   shader   //[02]//
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -2035,8 +2039,8 @@ pfn_glAttachShader;                       //[  ]//
 void                                      //[  ]//
 glAttachShader                            //[  ]//
 (                                         //[  ]//
-/**/                    GLuint  program   //[01]//
-,                       GLuint   shader   //[02]//
+/**/                    unsigned int /** GLuint **/  program   //[01]//
+,                       unsigned int /** GLuint **/   shader   //[02]//
 ){                                        //[  ]//                           
     GLEB_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glAttachShader]",        //[  ]//
@@ -2052,7 +2056,7 @@ typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯�
 void                                      //[  ]//
 (*PFN_glLinkProgram)                      //[  ]//
 (                                         //[  ]//
-/**/                    GLuint  program   //[01]//
+/**/                    unsigned int /** GLuint **/  program   //[01]//
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -2064,7 +2068,7 @@ pfn_glLinkProgram;                        //[  ]//
 void                                      //[  ]//
 glLinkProgram                             //[  ]//
 (                                         //[  ]//
-/**/                    GLuint  program   //[01]//
+/**/                    unsigned int /** GLuint **/  program   //[01]//
 ){                                        //[  ]//                           
     GLEB_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glLinkProgram]",         //[  ]//
@@ -2079,9 +2083,9 @@ typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯�
 void                                      //[  ]//
 (*PFN_glGetProgramiv)                     //[  ]//
 (                                         //[  ]//
-/**/                    GLuint   program  //[01]//
-,                       GLenum     pname  //[02]//
-,                       GLint*    params  //[03]//
+/**/                    unsigned int /** GLuint **/   program  //[01]//
+,                       unsigned int /** GLenum **/     pname  //[02]//
+,                       int*  /** GLint:PTR **/    params  //[03]//
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -2093,9 +2097,9 @@ pfn_glGetProgramiv;                       //[  ]//
 void                                      //[  ]//
 glGetProgramiv                            //[  ]//
 (                                         //[  ]//
-/**/                    GLuint   program  //[01]//
-,                       GLenum     pname  //[02]//
-,                       GLint*    params  //[03]//
+/**/                    unsigned int /** GLuint **/   program  //[01]//
+,                       unsigned int /** GLenum **/     pname  //[02]//
+,                       int*  /** GLint:PTR **/    params  //[03]//
 ){                                        //[  ]//                           
     GLEB_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glGetProgramiv]",        //[  ]//
@@ -2112,10 +2116,10 @@ typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯�
 void                                      //[  ]//
 (*PFN_glGetProgramInfoLog)                //[  ]//
 (                                         //[  ]//
-/**/                GLuint       program  //[01]//
-,                   GLsizei    maxLength  //[02]//
-,                   GLsizei*      length  //[03]//
-,                   GLchar*      infoLog  //[04]//
+/**/                unsigned int /** GLuint **/       program  //[01]//
+,                   int  /** GLsizei **/    maxLength  //[02]//
+,                   int* /** GLsizei **/       length  //[03]//
+,                   char*  /** GLchar:PTR **/      infoLog  //[04]//
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -2127,10 +2131,10 @@ pfn_glGetProgramInfoLog;                  //[  ]//
 void                                      //[  ]//
 glGetProgramInfoLog                       //[  ]//
 (                                         //[  ]//
-/**/                GLuint       program  //[01]//
-,                   GLsizei    maxLength  //[02]//
-,                   GLsizei*      length  //[03]//
-,                   GLchar*      infoLog  //[04]//
+/**/                unsigned int /** GLuint **/       program  //[01]//
+,                   int  /** GLsizei **/    maxLength  //[02]//
+,                   int* /** GLsizei **/       length  //[03]//
+,                   char*  /** GLchar:PTR **/      infoLog  //[04]//
 ){                                        //[  ]//                           
     GLEB_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glGetProgramInfoLog]",   //[  ]//
@@ -2148,8 +2152,8 @@ typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯�
 void                                      //[  ]//
 (*PFN_glDetachShader)                     //[  ]//
 (                                         //[  ]//
-/**/                GLuint       program  //[01]//
-,                   GLuint        shader  //[02]//
+/**/                unsigned int /** GLuint **/       program  //[01]//
+,                   unsigned int /** GLuint **/        shader  //[02]//
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -2161,8 +2165,8 @@ pfn_glDetachShader;                       //[  ]//
 void                                      //[  ]//
 glDetachShader                            //[  ]//
 (                                         //[  ]//
-/**/                GLuint       program  //[01]//
-,                   GLuint        shader  //[02]//
+/**/                unsigned int /** GLuint **/       program  //[01]//
+,                   unsigned int /** GLuint **/        shader  //[02]//
 ){                                        //[  ]//                           
     GLEB_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glDetachShader]",        //[  ]//
@@ -2178,7 +2182,7 @@ typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯�
 void                                      //[  ]//
 (*PFN_glDeleteShader)                     //[  ]//
 (                                         //[  ]//
-/**/                GLuint        shader  //[01]//      
+/**/                unsigned int /** GLuint **/        shader  //[01]//      
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -2190,7 +2194,7 @@ pfn_glDeleteShader;                       //[  ]//
 void                                      //[  ]//
 glDeleteShader                            //[  ]//
 (                                         //[  ]//
-/**/                GLuint        shader  //[01]// 
+/**/                unsigned int /** GLuint **/        shader  //[01]// 
 ){                                        //[  ]//                           
     GLEB_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glDeleteShader]",        //[  ]//
@@ -2205,7 +2209,7 @@ typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯�
 void                                      //[  ]//
 (*PFN_glClear)                            //[  ]//
 (                                         //[  ]//
-/**/                    GLbitfield  mask  //[01]//      
+/**/                    unsigned int /** GLbitfield **/  mask  //[01]//      
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -2217,7 +2221,7 @@ pfn_glClear;                              //[  ]//
 void                                      //[  ]//
 glClear                                   //[  ]//
 (                                         //[  ]//
-/**/                    GLbitfield  mask  //[01]// 
+/**/                    unsigned int /** GLbitfield **/  mask  //[01]// 
 ){                                        //[  ]//                           
     GLEB_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glClear]",               //[  ]//
@@ -2232,7 +2236,7 @@ typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯�
 void                                      //[  ]//
 (*PFN_glUseProgram)                       //[  ]//
 (                                         //[  ]//
-/**/                    GLuint   program  //[01]//      
+/**/                    unsigned int /** GLuint **/   program  //[01]//      
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -2244,7 +2248,7 @@ pfn_glUseProgram;                         //[  ]//
 void                                      //[  ]//
 glUseProgram                              //[  ]//
 (                                         //[  ]//
-/**/                    GLuint   program  //[01]//
+/**/                    unsigned int /** GLuint **/   program  //[01]//
 ){                                        //[  ]//                           
     GLEB_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glUseProgram]",          //[  ]//
@@ -2259,10 +2263,10 @@ typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯�
 void                                      //[  ]//
 (*PFN_glViewport)                         //[  ]//
 (                                         //[  ]//
-/**/                    GLint        x    //[01]//
-,                       GLint        y    //[02]//
-,                       GLsizei  width    //[03]//
-,                       GLsizei height    //[04]//
+/**/                    int /** GLint **/        x    //[01]//
+,                       int /** GLint **/        y    //[02]//
+,                       int /** GLsizei **/  width    //[03]//
+,                       int /** GLsizei **/ height    //[04]//
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -2274,10 +2278,10 @@ pfn_glViewport;                           //[  ]//
 void                                      //[  ]//
 glViewport                                //[  ]//
 (                                         //[  ]//
-/**/                    GLint        x    //[01]//
-,                       GLint        y    //[02]//
-,                       GLsizei  width    //[03]//
-,                       GLsizei height    //[04]//
+/**/                    int /** GLint **/        x    //[01]//
+,                       int /** GLint **/        y    //[02]//
+,                       int /** GLsizei **/  width    //[03]//
+,                       int /** GLsizei **/ height    //[04]//
 ){                                        //[  ]//                           
     GLEB_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glViewport]",            //[  ]//
@@ -2295,10 +2299,10 @@ typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯�
 void                                      //[  ]//
 (*PFN_glClearColor)                       //[  ]//
 (                                         //[  ]//
-/**/                    GLfloat  R_ed     //[01]//
-,                       GLfloat  G_reen   //[02]//
-,                       GLfloat  B_lue    //[03]//
-,                       GLfloat  A_alpha  //[04]//
+/**/                    float /** GLfloat **/  R_ed     //[01]//
+,                       float /** GLfloat **/  G_reen   //[02]//
+,                       float /** GLfloat **/  B_lue    //[03]//
+,                       float /** GLfloat **/  A_alpha  //[04]//
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -2310,10 +2314,10 @@ pfn_glClearColor;                         //[  ]//
 void                                      //[  ]//
 glClearColor                              //[  ]//
 (                                         //[  ]//
-/**/                    GLfloat  R_ed     //[01]//
-,                       GLfloat  G_reen   //[02]//
-,                       GLfloat  B_lue    //[03]//
-,                       GLfloat  A_alpha  //[04]//
+/**/                    float /** GLfloat **/  R_ed     //[01]//
+,                       float /** GLfloat **/  G_reen   //[02]//
+,                       float /** GLfloat **/  B_lue    //[03]//
+,                       float /** GLfloat **/  A_alpha  //[04]//
 ){                                        //[  ]//                           
     GLEB_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glClearColor]",          //[  ]//
@@ -2331,8 +2335,8 @@ typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯�
 void                                      //[  ]//
 (*PFN_glGenVertexArrays)                  //[  ]//
 (                                         //[  ]//
-/**/                    GLsizei       n   //[01]//
-,                       GLuint*  arrays   //[02]//
+/**/                    int /** GLsizei **/       n   //[01]//
+,                       unsigned int*  /** GLuint:PTR **/   arrays   //[02]//
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -2344,8 +2348,8 @@ pfn_glGenVertexArrays;                    //[  ]//
 void                                      //[  ]//
 glGenVertexArrays                         //[  ]//
 (                                         //[  ]//
-/**/                    GLsizei       n   //[01]//
-,                       GLuint*  arrays   //[02]//
+/**/                    int /** GLsizei **/       n   //[01]//
+,                       unsigned int*  /** GLuint:PTR **/   arrays   //[02]//
 ){                                        //[  ]//                           
     GLEB_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glGenVertexArrays]",     //[  ]//
@@ -2361,7 +2365,7 @@ typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯�
 void                                      //[  ]//
 (*PFN_glBindVertexArray)                  //[  ]//
 (                                         //[  ]//
-                            GLuint array  //[01]//
+                            unsigned int /** GLuint **/ array  //[01]//
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -2373,7 +2377,7 @@ pfn_glBindVertexArray;                    //[  ]//
 void                                      //[  ]//
 glBindVertexArray                         //[  ]//
 (                                         //[  ]//
-                            GLuint array  //[01]//
+                            unsigned int /** GLuint **/ array  //[01]//
 ){                                        //[  ]//                           
     GLEB_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glBindVertexArray]",     //[  ]//
@@ -2388,8 +2392,8 @@ typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯�
 void                                      //[  ]//
 (*PFN_glGenTextures)                      //[  ]//
 (                                         //[  ]//
-/**/GLsizei n_number_of_textures_to_make  //[01]//
-,   GLuint*        texture_names_pointer  //[02]//
+/**/int /** GLsizei **/ n_number_of_textures_to_make  //[01]//
+,   unsigned int*  /** GLuint:PTR **/         texture_names_pointer  //[02]//
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -2401,8 +2405,13 @@ pfn_glGenTextures;                        //[  ]//
 void                                      //[  ]//
 glGenTextures                             //[  ]//
 (                                         //[  ]//
-/**/GLsizei n_number_of_textures_to_make  //[01]//
-,   GLuint*        texture_names_pointer  //[02]//
+/**/
+    int /** GLsizei **/                   //[01]//
+    n_number_of_textures_to_make          //[01]//
+,              
+    unsigned int*  /** GLuint:PTR **/                                //[02]//
+    texture_names_pointer                 //[02]//
+
 ){                                        //[  ]//                           
     GLEB_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glGenTextures]",         //[  ]//
@@ -2418,8 +2427,8 @@ typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯�
 void                                      //[  ]//
 (*PFN_glBindTexture)                      //[  ]//
 (                                         //[  ]//
-/**/        GLenum  texture_binding_target//[01]//
-,           GLuint texture_name_aka_handle//[02]//
+/**/        unsigned int /** GLenum **/  texture_binding_target//[01]//
+,           unsigned int /** GLuint **/ texture_name_aka_handle//[02]//
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -2431,8 +2440,8 @@ pfn_glBindTexture;                        //[  ]//
 void                                      //[  ]//
 glBindTexture                             //[  ]//
 (                                         //[  ]//
-/**/        GLenum  texture_binding_target//[01]//
-,           GLuint texture_name_aka_handle//[02]//
+/**/        unsigned int /** GLenum **/  texture_binding_target//[01]//
+,           unsigned int /** GLuint **/ texture_name_aka_handle//[02]//
 ){                                        //[  ]//                           
     GLEB_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glBindTexture]",         //[  ]//
@@ -2448,9 +2457,9 @@ typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯�
 void                                      //[  ]//
 (*PFN_glTexParameteri)                    //[  ]//
 (                                         //[  ]//
-/**/                        GLenum target //[01]//
-,                           GLenum  pname //[02]//
-,                           GLint   param //[03]//
+/**/                        unsigned int /** GLenum **/ target //[01]//
+,                           unsigned int /** GLenum **/  pname //[02]//
+,                           int /** GLint **/   param //[03]//
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -2462,9 +2471,9 @@ pfn_glTexParameteri;                      //[  ]//
 void                                      //[  ]//
 glTexParameteri                           //[  ]//
 (                                         //[  ]//
-/**/                        GLenum target //[01]//
-,                           GLenum  pname //[02]//
-,                           GLint   param //[03]//
+/**/                        unsigned int /** GLenum **/ target //[01]//
+,                           unsigned int /** GLenum **/  pname //[02]//
+,                           int /** GLint **/   param //[03]//
 ){                                        //[  ]//                           
     GLEB_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glTexParameteri]",       //[  ]//
@@ -2481,15 +2490,15 @@ typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯�
 void                                      //[  ]//
 (*PFN_glTexImage2D)                       //[  ]//
 (                                         //[  ]//
-/**/            GLenum            target  //[01]//
-,	            GLint              level  //[02]//
-,	            GLint     internalformat  //[03]//
-,	            GLsizei            width  //[04]//
-,	            GLsizei           height  //[05]//
-,	            GLint             border  //[06]//
-,	            GLenum            format  //[07]//
-,	            GLenum              type  //[08]//
-,	            const GLvoid*       data  //[09]//
+/**/            unsigned int /** GLenum **/            target  //[01]//
+,	            int /** GLint **/              level  //[02]//
+,	            int /** GLint **/     internalformat  //[03]//
+,	            int /** GLsizei **/            width  //[04]//
+,	            int /** GLsizei **/           height  //[05]//
+,	            int /** GLint **/             border  //[06]//
+,	            unsigned int /** GLenum **/            format  //[07]//
+,	            unsigned int /** GLenum **/              type  //[08]//
+,	            const void* /** GLvoid:PTR **/       data  //[09]//
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -2501,15 +2510,15 @@ pfn_glTexImage2D;                         //[  ]//
 void                                      //[  ]//
 glTexImage2D                              //[  ]//
 (                                         //[  ]//
-/**/            GLenum            target  //[01]//
-,	            GLint              level  //[02]//
-,	            GLint     internalformat  //[03]//
-,	            GLsizei            width  //[04]//
-,	            GLsizei           height  //[05]//
-,	            GLint             border  //[06]//
-,	            GLenum            format  //[07]//
-,	            GLenum              type  //[08]//
-,	            const GLvoid*       data  //[09]//
+/**/            unsigned int /** GLenum **/            target  //[01]//
+,	            int /** GLint **/              level  //[02]//
+,	            int /** GLint **/     internalformat  //[03]//
+,	            int /** GLsizei **/            width  //[04]//
+,	            int /** GLsizei **/           height  //[05]//
+,	            int /** GLint **/             border  //[06]//
+,	            unsigned int /** GLenum **/            format  //[07]//
+,	            unsigned int /** GLenum **/              type  //[08]//
+,	            const void* /** GLvoid:PTR **/       data  //[09]//
 ){                                        //[  ]//                           
     GLEB_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glTexImage2D]",          //[  ]//
@@ -2532,7 +2541,7 @@ typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯�
 void                                      //[  ]//
 (*PFN_glActiveTexture)                    //[  ]//
 (                                         //[  ]//
-/**/                    GLenum   texture  //[01]//
+/**/                    unsigned int /** GLenum **/   texture  //[01]//
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -2544,7 +2553,7 @@ pfn_glActiveTexture;                      //[  ]//
 void                                      //[  ]//
 glActiveTexture                           //[  ]//
 (                                         //[  ]//
-/**/                    GLenum   texture  //[01]//
+/**/                    unsigned int /** GLenum **/   texture  //[01]//
 ){                                        //[  ]//                           
     GLEB_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glActiveTexture]",       //[  ]//
@@ -2556,11 +2565,11 @@ glActiveTexture                           //[  ]//
 //:--------------------------------------------://
 //:--------------------------------------------://
 typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
-GLint                                     //[  ]//
+int /** GLint **/                                     //[  ]//
 (*PFN_glGetUniformLocation)               //[  ]//
 (                                         //[  ]//
-/**/                GLuint         program//[01]//
-,                   const GLchar*     name//[02]//
+/**/                unsigned int /** GLuint **/         program//[01]//
+,                   const char*  /** GLchar:PTR **/     name//[02]//
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -2569,13 +2578,13 @@ PFN_glGetUniformLocation                  //[  ]//
 pfn_glGetUniformLocation;                 //[  ]//
                                           //[  ]//
 //[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
-GLint                                     //[  ]//
+int /** GLint **/                                     //[  ]//
 glGetUniformLocation                      //[  ]//
 (                                         //[  ]//
-/**/                GLuint         program//[01]//
-,                   const GLchar*     name//[02]//
+/**/                unsigned int /** GLuint **/         program//[01]//
+,                   const char*  /** GLchar:PTR **/     name//[02]//
 ){                                        //[  ]//   
-    GLint ret;                            //[  ]//
+    int /** GLint **/ ret;                            //[  ]//
                                           //[  ]//
     GLEB_FuncPointerSated(                //[  ]//
     //[[[[[[[pfn]]]]]]]////[___________]////[  ]//
@@ -2595,8 +2604,8 @@ typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯�
 void                                      //[  ]//
 (*PFN_glUniform1i)                        //[  ]//
 (                                         //[  ]//
-/**/                        GLint location//[01]//
-,                           GLint       v0//[02]//
+/**/                        int /** GLint **/ location//[01]//
+,                           int /** GLint **/       v0//[02]//
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -2608,8 +2617,8 @@ pfn_glUniform1i;                          //[  ]//
 void                                      //[  ]//
 glUniform1i                               //[  ]//
 (                                         //[  ]//
-/**/                        GLint location//[01]//
-,                           GLint       v0//[02]//
+/**/                        int /** GLint **/ location//[01]//
+,                           int /** GLint **/       v0//[02]//
 ){                                        //[  ]//   
     /**VOID ret;**/                       //[  ]//
                                           //[  ]//
@@ -2631,8 +2640,8 @@ typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯�
 void                                      //[  ]//
 (*PFN_glPixelStorei)                      //[  ]//
 (                                         //[  ]//
-/**/                        GLenum  pname //[01]//
-,                           GLint   param //[02]//
+/**/                        unsigned int /** GLenum **/  pname //[01]//
+,                           int /** GLint **/   param //[02]//
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -2644,8 +2653,8 @@ pfn_glPixelStorei;                        //[  ]//
 void                                      //[  ]//
 glPixelStorei                             //[  ]//
 (                                         //[  ]//
-/**/                        GLenum  pname //[01]//
-,                           GLint   param //[02]//
+/**/                        unsigned int /** GLenum **/  pname //[01]//
+,                           int /** GLint **/   param //[02]//
 ){                                        //[  ]//   
     /**VOID ret;**/                       //[  ]//
                                           //[  ]//
@@ -2667,7 +2676,7 @@ typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯�
 void                                      //[  ]//
 (*PFN_glEnable)                           //[  ]//
 (                                         //[  ]//
-/**/        GLenum  cap_is_for_capability //[01]//
+/**/        unsigned int /** GLenum **/  cap_is_for_capability //[01]//
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -2679,7 +2688,7 @@ pfn_glEnable;                             //[  ]//
 void                                      //[  ]//
 glEnable                                  //[  ]//
 (                                         //[  ]//
-/**/        GLenum  cap_is_for_capability //[01]//
+/**/        unsigned int /** GLenum **/  cap_is_for_capability //[01]//
 ){                                        //[  ]//   
     /**VOID ret;**/                       //[  ]//
                                           //[  ]//
@@ -2733,8 +2742,8 @@ typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯�
 void                                      //[  ]//
 (*PFN_glGetIntegerv )                     //[  ]//
 (                                         //[  ]//
-/**/                        GLenum  pname //[01]//
-,                           GLint*   data //[02]//
+/**/                        unsigned int /** GLenum **/  pname //[01]//
+,                           int*  /** GLint:PTR **/   data //[02]//
 ); //[- - - - - - - - - - - - - - - - -]////[  ]//
                                           //[  ]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
@@ -2746,8 +2755,8 @@ pfn_glGetIntegerv ;                       //[  ]//
 void                                      //[  ]//
 glGetIntegerv                             //[  ]//
 (                                         //[  ]//
-/**/                        GLenum  pname //[01]//
-,                           GLint*   data //[02]//
+/**/                        unsigned int /** GLenum **/  pname //[01]//
+,                           int*  /** GLint:PTR **/   data //[02]//
 ){                                        //[  ]//   
     /**VOID ret;**/                       //[  ]//
                                           //[  ]//
@@ -2830,13 +2839,13 @@ gleb_Alert( const char* alert_message ){
 struct
 gleb_library_container{
 
-    HGLRC
+    void* /** HGLRC **/
     handle_to_gl_rendering_context;
 
     struct 
     gleb_BBT_is_BUFFER_BINDING_TARGET{
 
-        GLenum gl_array_buffer; //: 0x8892
+        unsigned int /** GLenum **/ gl_array_buffer; //: 0x8892
 
     }BBT;struct gleb_BBT_is_BUFFER_BINDING_TARGET*
                             BUFFER_BINDING_TARGET;
@@ -2849,7 +2858,7 @@ gleb_library_container{
         //: The data store contents will be
         //: modified once and used many times as
         //: the source for GL drawing commands.
-        GLenum gl_static_draw; //: 0x88E4
+        unsigned int /** GLenum **/ gl_static_draw; //: 0x88E4
 
     }BD;struct gleb_BD_is_BUFFER_DATA*
                           BUFFER_DATA;
@@ -2859,7 +2868,7 @@ gleb_library_container{
     struct
     gleb_ERR_is_ERROR_FLAGS{
 
-        GLenum gl_no_error; //: 0
+        unsigned int /** GLenum **/ gl_no_error; //: 0
 
     }ERR;struct gleb_ERR_is_ERROR_FLAGS*
                             ERROR_FLAGS;
@@ -2873,7 +2882,7 @@ gleb_library_container{
     struct 
     gleb_TYP_is_COMMON_ENUM_TYPES{
 
-        GLenum gl_float; //: 0x1406
+        unsigned int /** GLenum **/ gl_float; //: 0x1406
 
     }TYP;struct gleb_TYP_is_COMMON_ENUM_TYPES*
                             COMMON_ENUM_TYPES;
@@ -2882,8 +2891,8 @@ gleb_library_container{
     struct 
     gleb_BOL_is_BOOLEAN_CONSTANTS{
 
-        GLboolean  gl_true ; //:  1
-        GLboolean  gl_false; //:  0
+        unsigned char /** GLboolean **/  gl_true ; //:  1
+        unsigned char /** GLboolean **/  gl_false; //:  0
 
     }BOL;struct gleb_BOL_is_BOOLEAN_CONSTANTS*
                             BOOLEAN_CONSTANTS;
@@ -2892,9 +2901,9 @@ gleb_library_container{
     struct 
     gleb_MOD_is_DRAW_MODES{
 
-        GLenum gl_triangles     ; //:0x0004
-        GLenum gl_triangle_fan  ; //:0x0006
-        GLenum gl_triangle_strip; //:0x0005
+        unsigned int /** GLenum **/ gl_triangles     ; //:0x0004
+        unsigned int /** GLenum **/ gl_triangle_fan  ; //:0x0006
+        unsigned int /** GLenum **/ gl_triangle_strip; //:0x0005
 
     }MOD;struct gleb_MOD_is_DRAW_MODES*
                             DRAW_MODES;
@@ -2904,8 +2913,8 @@ gleb_library_container{
     struct 
     gleb_ST_is_SHADER_TYPES{
 
-        GLenum gl_vertex_shader  ; //:??
-        GLenum gl_fragment_shader; //:??
+        unsigned int /** GLenum **/ gl_vertex_shader  ; //:??
+        unsigned int /** GLenum **/ gl_fragment_shader; //:??
 
     }ST;struct gleb_ST_is_SHADER_TYPES*
                           SHADER_TYPES;
@@ -2916,8 +2925,8 @@ gleb_library_container{
     struct
     gleb_SPN_is_SHADER_PARAM_NAMES{
 
-        GLenum gl_compile_status ;
-        GLenum gl_info_log_length;
+        unsigned int /** GLenum **/ gl_compile_status ;
+        unsigned int /** GLenum **/ gl_info_log_length;
 
     }SPN;struct gleb_SPN_is_SHADER_PARAM_NAMES*
                             SHADER_PARAM_NAMES;
@@ -2927,8 +2936,8 @@ gleb_library_container{
     struct
     gleb_PPN_is_PROGRAM_PARAM_NAMES{
 
-        GLenum gl_link_status;
-        GLenum gl_info_log_length;
+        unsigned int /** GLenum **/ gl_link_status;
+        unsigned int /** GLenum **/ gl_info_log_length;
 
     }PPN;struct gleb_PPN_is_PROGRAM_PARAM_NAMES*
                             PROGRAM_PARAM_NAMES;
@@ -2937,7 +2946,7 @@ gleb_library_container{
     struct
     gleb_MAS_is_BITFIELD_MASKS{
 
-        GLbitfield gl_color_buffer_bit;
+        unsigned int /** GLbitfield **/ gl_color_buffer_bit;
 
     }MAS;struct gleb_MAS_is_BITFIELD_MASKS*
                             BITFIELD_MASKS;
@@ -2960,7 +2969,7 @@ gleb_library_container{
             //:other slots simply add an
             //:offset. All slots are contiguously
             //:numbered.
-            GLenum gl_texture0; //:0x84C0
+            unsigned int /** GLenum **/ gl_texture0; //:0x84C0
 
         }SLOT;
         
@@ -2969,7 +2978,7 @@ gleb_library_container{
         //- struct                                 -//
         //- gleb_texture_BINDING_TARGETS{          -//
         //-                                        -//
-        //-     GLenum gl_texture_2d; //: 0x0DE1   -//
+        //-     unsigned int /** GLenum **/ gl_texture_2d; //: 0x0DE1   -//
         //-                                        -//
         //- }BINDING_TARGETS;                      -//
 
@@ -2993,7 +3002,7 @@ gleb_library_container{
         L1(gleb_TEX_TYP_is_for_TEXTURE_TYPE,gpu){
         //:TextureTypesUsedBy:openGL/device/gpu
         
-            GLenum gl_texture_2d; //: 0x0DE1
+            unsigned int /** GLenum **/ gl_texture_2d; //: 0x0DE1
         
         }GPU_DEV;
         L1(gleb_TEX_TYP_is_for_TEXTURE_TYPE,cpu){
@@ -3012,7 +3021,7 @@ gleb_library_container{
         
             //- GLint gl_rgba8; //: 0x8058     -//
 
-            GLint gl_rgba8ui; //: 0x8D7C
+            int /** GLint **/ gl_rgba8ui; //: 0x8D7C
         
         }GPU_DEV;
         L1(gleb_PIX_FMT_is_for_PIXEL_FORMAT,cpu){
@@ -3020,7 +3029,7 @@ gleb_library_container{
 
             //- GLint gl_rgba; //: 0x1908      -//
             
-            GLint gl_rgba_integer; //: 0x8D99
+            int /** GLint **/ gl_rgba_integer; //: 0x8D99
 
         }CPU_HOS;
         }PIX_FMT;
@@ -3036,7 +3045,7 @@ gleb_library_container{
         L1(gleb_PIX_TYP_is_for_PIXEL_TYPE,cpu){
         //:PixelTypesUsedBy:client/host/cpu
 
-            GLenum gl_unsigned_byte; //:0x1401
+            unsigned int /** GLenum **/ gl_unsigned_byte; //:0x1401
 
         }CPU_HOS;
         }PIX_TYP;
@@ -3052,13 +3061,13 @@ gleb_library_container{
         L1(gleb_PIX_DAT_is_for_PIXEL_DATA,cpu){
         //:PixelTypesUsedBy:client/host/cpu
 
-            GLvoid* pix_nul; //:Null_Data
+            void* /** GLvoid:PTR **/ pix_nul; //:Null_Data
 
         }CPU_HOS;
         }PIX_DAT;
         #include "GLEBIND/MACRO/TEXTURE_STRUCT.MID._"
         L0(gleb_BORDER_is_for_TEXTURE_BORDER){
-            GLint must_be_zero_for_teximage2d;
+            int /** GLint **/ must_be_zero_for_teximage2d;
         }BORDER;
         #include "GLEBIND/MACRO/TEXTURE_STRUCT.MID._"
         L0(gleb_texture_PARAMETERS){
@@ -3066,7 +3075,7 @@ gleb_library_container{
             struct
             gleb_texture_parameter_NAMES{
 
-                #define T GLenum 
+                #define T unsigned int /** GLenum **/ 
                 T gl_texture_min_filter; //:0x2801
                 T gl_texture_mag_filter; //:0x2800
                 T gl_texture_wrap_s    ; //:0x2802
@@ -3076,8 +3085,8 @@ gleb_library_container{
 
             struct
             gleb_texture_parameter_VALUES{
-                GLint gl_nearest       ;//:0x2600
-                GLint gl_clamp_to_edge ;//:0x812F
+                int /** GLint **/ gl_nearest       ;//:0x2600
+                int /** GLint **/ gl_clamp_to_edge ;//:0x812F
             }VAL;
 
         }PARAMETER;
@@ -3100,7 +3109,7 @@ gleb_library_container{
             //:texture's iid, and NOT the
             //:active texture unit.
 
-            #define T GLenum
+            #define T unsigned int /** GLenum **/
             T gl_texture_binding_2d; //:0x8069
             T gl_active_texture;     //:0x84E0
             #undef  T
@@ -3139,7 +3148,7 @@ gleb_library_container{
         //| www.khronos.org/opengl/wiki/       |//
         //| Layout_Qualifier_(GLSL)|//         |//
 
-        GLint gl_max_uniform_locations; //:0x826E
+        int /** GLint **/ gl_max_uniform_locations; //:0x826E
 
     }UNIFORM; //| <--Try to keep everything    |//
               //|    SINGULAR grammatically.   |//
@@ -3149,7 +3158,7 @@ gleb_library_container{
         //:For use with:
         //: glPixelStorei
 
-        GLenum gl_unpack_alignment; //:0x0CF5
+        unsigned int /** GLenum **/ gl_unpack_alignment; //:0x0CF5
         
     }ALIGNMENT;
 
@@ -3158,7 +3167,7 @@ gleb_library_container{
     //:about the usage of the value.
     struct gleb_CAPABILITIES_you_can_enable{
 
-        GLenum gl_texture_2d; //: 0x0DE1
+        unsigned int /** GLenum **/ gl_texture_2d; //: 0x0DE1
 
     }CAPABILITY; //:<--SINGULAR plurality!
 
@@ -3539,11 +3548,11 @@ gleb_library_container{
      glGetIntegerv                ) //|________|//
 };
 
-HGLRC
+void* /** HGLRC **/
 GLEB_GetRenderingContext(){
 
     //:windef.h: DECLARE_HANDLE(HGLRC);
-    HGLRC 
+    void* /** HGLRC **/ 
     ren_con=(
         GLEB.handle_to_gl_rendering_context
     );;
@@ -3554,9 +3563,10 @@ GLEB_GetRenderingContext(){
     return( ren_con );
 } //[GLEB_GetRenderingContext]//
 
-HDC
+void* /** HDC **/
 GLEB_GetDeviceContext(){
-    HDC
+    
+    void* /** HDC **/
     window_associated_with_rendering_context=(
         AAC2020_GINAWIN_GetWinDC()
     );;
@@ -3663,11 +3673,11 @@ void GLEB_GetFuncsFromDLL(){
     //:=================:POSSIBLE_SOURCE_OF_REFACTOR_PROBLEMS://
     /** **************************************************** **/
 
-    HDC 
+    void* /** HDC **/ 
     windows_handle_to_device_context=(
         AAC2020_GINAWIN_GetWinDC() 
     );;
-    HGLRC 
+    void* /** HGLRC **/ 
     handle_to_gl_rendering_context=(
         pfn_wglCreateContext(
             windows_handle_to_device_context
@@ -3681,7 +3691,7 @@ void GLEB_GetFuncsFromDLL(){
 
     //# Context must be made current before    #//
     //# We can fetch other functions!          #//
-    BOOL make_current_worked = (0-777);
+    int /** BOOL **/ make_current_worked = (0-777);
     make_current_worked=(
     GLEB_wglMakeCurrent(
         windows_handle_to_device_context
@@ -3861,37 +3871,37 @@ void GLEB_GetFuncsFromDLL(){
 //:mistakes, but not at all comprehensive.
 void gleb_LibraryAliasSmokeTest(){
 
-    GLenum a;
-    GLenum b;
+    unsigned int /** GLenum **/ a;
+    unsigned int /** GLenum **/ b;
 
-    GLenum c;
-    GLenum d;
+    unsigned int /** GLenum **/ c;
+    unsigned int /** GLenum **/ d;
 
-    GLenum e;
-    GLenum f;
+    unsigned int /** GLenum **/ e;
+    unsigned int /** GLenum **/ f;
 
-    GLenum g;
-    GLenum h;
+    unsigned int /** GLenum **/ g;
+    unsigned int /** GLenum **/ h;
 
-    GLboolean i1, i2;
-    GLboolean j1, j2;
+    unsigned char /** GLboolean **/ i1, i2;
+    unsigned char /** GLboolean **/ j1, j2;
 
-    GLenum k;
-    GLenum l;
+    unsigned int /** GLenum **/ k;
+    unsigned int /** GLenum **/ l;
 
-    GLenum m;
-    GLenum n;
+    unsigned int /** GLenum **/ m;
+    unsigned int /** GLenum **/ n;
     
-    GLenum o;
-    GLenum p;
+    unsigned int /** GLenum **/ o;
+    unsigned int /** GLenum **/ p;
 
-    GLenum q,r,s,t;
+    unsigned int /** GLenum **/ q,r,s,t;
 
-    GLenum u,v;
+    unsigned int /** GLenum **/ u,v;
 
-    GLenum w,x;
+    unsigned int /** GLenum **/ w,x;
 
-    GLbitfield y,z;
+    unsigned int /** GLbitfield **/ y,z;
 
 
     //
@@ -4234,10 +4244,10 @@ void gleb_LibraryAliasSmokeTest(){
         gleb_Halt("[CAP:0x0DE1]");
     };;
 
-    GLenum CAP_gl_texture_2d =(
+    unsigned int /** GLenum **/ CAP_gl_texture_2d =(
         GLEB.CAPABILITY.gl_texture_2d
     );;
-    GLenum TEX_gl_texture_2d =(
+    unsigned int /** GLenum **/ TEX_gl_texture_2d =(
         GLEB.TEXTURE.TEX_TYP.GPU_DEV
         .gl_texture_2d
     );;
@@ -4320,10 +4330,10 @@ GLEB_FitViewportToWindow( void ){
     int WID = AAC2020_GINAWIN_GetClient_WID();
     int HIG = AAC2020_GINAWIN_GetClient_HIG();
     GLEB.glViewport(
-    /**/(GLint) X
-    ,   (GLint) Y
-    ,   (GLint) WID
-    ,   (GLint) HIG
+    /**/(int /** GLint **/) X
+    ,   (int /** GLint **/) Y
+    ,   (int /** GLint **/) WID
+    ,   (int /** GLint **/) HIG
     );;
 
 }

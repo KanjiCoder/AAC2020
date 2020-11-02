@@ -3,96 +3,122 @@
 //:REFACTOR_NOTE: GLEB_SWIN ===> AAC2020_GINAWIN
 //:REFACTOR_NOTE:      GLEB ===> AAC2020_GLEBIND
 
+//:CONFIGURATIONS:===========================================://
+    //:CONFIG.GENERAL:=======================================://
 
-//:////////////////////////////////////////////://  //[CTF]//
-//# Before you judge, include gaurds exist.    #//  //[CTF]//
-//:////////////////////////////////////////////://  //[CTF]//
-#include <stdint.h> //:int32_t               //://  //[CTF]//
-                                             //://  //[CTF]//
-#include <stdlib.h> //:malloc(....)          //://  //[CTF]//
-#include <stdlib.h> //:free(......)          //://  //[CTF]//
-                                             //://  //[CTF]//
-#include <stdio.h>  //:printf(....)          //://  //[CTF]//
-#include <stdio.h>  //:fprintf(...)          //://  //[CTF]//
-#include <stdio.h>  //:fflush(....)          //://  //[CTF]//
-                                             //://  //[CTF]//
-#include <ctype.h>  //:isspace(...)          //://  //[CTF]//
-//:////////////////////////////////////////////://  //[CTF]//
+    /** 0 for verbose information messages **/
+    int GLEB_no_news_is_good_news      = 1;  
 
+    int GLEB_show_user_print_statements_DEBUG = 0;
+    int GLEB_show_user_print_statements_INFO  = 1;
+    int GLEB_unit_test_verbose_echo           = 0;
 
-//[][][][][][][][][][][][][][][][][][][][][][][]//
-//[ GLEB: openGL_Easy_Bindings                 ]//
-//[ For use with C99 and Windows.              ]//
-//[][][][][][][][][][][][][][][][][][][][][][][]//
-//[CONFIGURATION][-----------------------------]//
-                                             
-//!  When 1, will omit "info" messages.        !// 
-//!  Info messages are not problems. And if    !// 
-//!  you have a linux mentality, they are      !// 
-//!  just an annoyance.                        !// 
-int GLEB_no_news_is_good_news      = 1;
-int GLEB_tell_me_about_empty_lines = 0;
-int GLEB_show_user_print_statements_DEBUG = 0;
-int GLEB_show_user_print_statements_INFO  = 1;
-int GLEB_unit_test_verbose_echo           = 0;
+    //:=======================================:CONFIG.GENERAL://
+    //:CONFIG:OPEN_GL_SEARCH_PATHS:==========================://
 
-#define GLEB_BUGHUNT_WHITE_SPACE_PATH ( 0 ) //:AKA:BUGHUNT_001
+        const char* 
+        GLEB_name_of_search_path_file=(
+            "OPEN_GL_SEARCH_PATHS.TXT" );
 
-const char* 
-GLEB_name_of_search_path_file=(
-    "OPEN_GL_SEARCH_PATHS.TXT"
-); //[]//
+        /** Tell me about empty lines in - - - - - - - - - - **/
+        /** OPEN_GL_SEARCH_PATHS.TXT - - - - - - - - - - - - **/
+        int GLEB_tell_me_about_empty_lines = 0;
 
-int          GLEB_next_search_path_index = 0   ;
-int          GLEB_num_search_paths       = 0   ;
-const char** GLEB_p_search_paths         = NULL;
+        int          GLEB_next_search_path_index = 0   ;
+        int          GLEB_num_search_paths       = 0   ;
+        const char** GLEB_p_search_paths         = NULL;
 
+    //:==========================:CONFIG:OPEN_GL_SEARCH_PATHS://
 
-//:Pointer to a function (PFN) that takes a         //[CTF]//
-//:string (const char*) and does stuff with it.     //[CTF]//
-//:Returns an integer for status code.              //[CTF]//
-//:Return value convention:                         //[CTF]//
-//:   Positive: Line was not blank.                 //[CTF]//
-//:       Zero: Line was blank.                     //[CTF]//
-//:   Negative: Some error happened.                //[CTF]//
-typedef                                             //[CTF]//
-int(*GLEB_PFN_line_processor)(const char*);         //[CTF]//
+//:===========================================:CONFIGURATIONS://
+//:BUGHUNT_DEFINES:==========================================://
 
-//[-----------------------------][CONFIGURATION]//
-//[][][][][][][][][][][][][][][][][][][][][][][]//
-//[DOCUMENTATION_CRASH_COURSE][----------------]//
+    #define GLEB_BUGHUNT_WHITE_SPACE_PATH ( 0 ) //:BUGHUNT_001
 
-//: Prefixes:
-//: GLEB_   :Library namespace prefix.
-//: MV_     :Macro Variable / Value
-//: MM_     :Maybe A Macro (MV_ value will decide)
+//:==========================================:BUGHUNT_DEFINES://
+//:TYPEDEFS:=================================================://
 
-//: Function Names:
-//: DEBUGPRINT_01: Print ONE(01) string.
-
-//[----------------][DOCUMENTATION_CRASH_COURSE]//
-//[][][][][][][][][][][][][][][][][][][][][][][]//
-//[INCLUDES][----------------------------------]//
-
-//:Windows.h for:
-//:  1. LoadLibrary
-//:  2. GetProcAddress
-//:  3. FreeLibrary
-#include <Windows.h>  
-#include <string.h> //: strcmp
-
-//[----------------------------------][INCLUDES]//
-//[][][][][][][][][][][][][][][][][][][][][][][]//
-//[TYPEDEFS_AND_GLOBALS][----------------------]//
+    //:  Pointer to a function (PFN) that takes a string     ://
+    //:  (const char*) and does stuff with it. Returns an    ://
+    //:  integer for status code.                            ://
+    //:                                                      ://
+    //:  Return value convention:                            ://
+    //:                                                      ://
+    //:     Positive: Line was not blank.                    ://
+    //:         Zero: Line was blank.                        ://
+    //:     Negative: Some error happened.                   ://
+    typedef                                            
+    int(*GLEB_PFN_line_processor)(const char*);        
 
     //:Generic function pointer for GLEB library.
     //:Used for strict compilation in C99 when
     //:casting result of "GetProcAddress"
     typedef void (*GLEB_FUNC)(void);
 
-    HMODULE GLEB_open_gl_handle = NULL;
+    //:TYPEDEFS.WINDOWS_DOT_H:===============================://
 
-//[----------------------][TYPEDEFS_AND_GLOBALS]//
-//[][][][][][][][][][][][][][][][][][][][][][][]//
+        typedef 
+        __int64                          //:Returns
+        (__stdcall *GLEBIND_WIN32_PROC ) //:Name+Convention
+        ( void );                        //:Arguments
 
 
+    //:================================:TYPEDES.WINDOWS_DOT_H://
+
+//:=================================================:TYPEDEFS://
+//:FILE_SCOPE_VARIABLES(GLOBALS):============================://
+
+    void* /** HMODULE **/ GLEB_open_gl_handle = NULL;
+
+//:============================:FILE_SCOPE_VARIABLES(GLOBALS)://
+//:NOTES:====================================================://
+/** :NOTES_DUMP: ******************************************* ***
+
+    PREDACESSOR: GLEB: openGL_Easy_Bindings
+    CURRENT_LIB: GLEBIND (GL_Easy_BINDings)
+    
+    Prefixes:
+    GLEB_   :Library namespace prefix.
+    MV_     :Macro Variable / Value
+    MM_     :Maybe A Macro (MV_ value will decide)
+    
+    Function Names:
+    DEBUGPRINT_01: Print ONE(01) string.
+
+*** ******************************************* :NOTES_DUMP: **/
+//:====================================================:NOTES://
+//:INCLUDES:=================================================://
+//://////////////////////////////////////////////////////////://   
+//# Before you judge, include gaurds exist.                  #//   
+//://////////////////////////////////////////////////////////://   
+                                                    //: ---- ://
+    #include <stdint.h> //:int32_t      ://         //: ---- ://
+                        //:             ://         //: ---- ://
+    #include <stdlib.h> //:malloc(....) ://         //: ---- ://
+    #include <stdlib.h> //:free(......) ://         //: ---- ://
+                        //:             ://         //: ---- ://
+    #include <string.h> //: strcmp      ://         //: ---- ://
+                        //:             ://         //: ---- ://
+    #include <stdio.h>  //:printf(....) ://         //: ---- ://
+    #include <stdio.h>  //:fprintf(...) ://         //: ---- ://
+    #include <stdio.h>  //:fflush(....) ://         //: ---- ://
+                        //:             ://         //: ---- ://
+    #include <ctype.h>  //:isspace(...) ://         //: ---- ://
+                                                    //: ---- ://
+    //[ Using: PEB20202_LoadLibrary    - - - - - ]////: ---- ://
+    //[ Using: PEB2020_GetProcAddress  - - - - - ]////: ---- ://
+    //-  Windows.h for:        - - - - - - - - - -////: ---- ://
+    //-  1. LoadLibrary        - - - - - - - - - -////: ---- ://
+    //-  2. GetProcAddress     - - - - - - - - - -////: ---- ://
+    //-  3. FreeLibrary        - - - - - - - - - -////: ---- ://
+    //-  #include <Windows.h>  - - - - - - - - - -////: ---- ://
+                                                    //: ---- ://
+//://////////////////////////////////////////////////////////://   
+//# Before you judge, include gaurds exist.                  #//   
+//://////////////////////////////////////////////////////////://   
+//:=================================================:INCLUDES://
+ 
+                                             
+
+
+ 
