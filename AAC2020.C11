@@ -12,7 +12,51 @@
     //: A2_JC:ANIM[ https://imgur.com/XiNdLvT          ]     ://
     //: A2_JC:GITH[ github.com/HeavyMetalCookies/A2_JC ]     ://
     //: ---------------------------------------------------- ://
-
+    /** **************************************************** ***   
+                                      
+    +-------------------------------------------+
+    |                                           |
+    |   Bare Basics                             |
+    |                                           |
+    |   lodepng                                 |
+    |   PEB2020 (PEB2002_LoadLibraryA)          |
+    |           (PEB2020_GetProcAddress)        |
+    |            PEB:PEB(file)Walker            |
+    |                                           |
+    +-------------------------------------------+
+    |                                           |
+    |   Windows & Dialogs Section               |
+    |                                           |
+    |   GINAWIN   : Graphics_INit_And_WINdow    |
+    |      |  |                                 |
+    |      |  V                                 |
+    |      |  DUI : Dialog_User_Interfaces      |
+    |      |                                    |
+    +------V------------------------------------+
+    |                                           |
+    |   Basic Grapics. (Just a colored Quad)    |
+    |   Advanced shaders & data come later.     |
+    |                                           |
+    |  (OpenGL)     (OpenCL)     (Vulkan)       |
+    |                MAYBEDO:    MAYBEDO:       |
+    |   GLEBIND      CLEBIND     VUEBIND        |
+    |      |            |        |              |
+    |      |            |        |              |
+    |      |            |        |              |
+    |      V            V        V              |
+    |      COG_THAT_DOES_NOT_EXIST(COG.H)       |
+    |      .            |                       |
+    |      .            |                       |
+    |      .            |                       |
+    |      .____________|                       |          
+    |      |                                    |
+    |      V                                    |
+    |   GRAQUAD       GRAQUAD: GRAphics_QUAD    |
+    |                 GLEBIND: GL_Easy_BINDings |
+    |                                           |
+    +-------------------------------------------+
+        
+    *** **************************************************** **/
 //:=======================================:ABOUT_THIS_PROJECT://
 //:NON_DEBUG_CONFIGURATION:==================================://
 
@@ -380,15 +424,15 @@
 
             #if( AAC2020_INCLUDE_GLEBIND >= 1 ) //:##########://
 
-                if( GLEB_no_news_is_good_news >= 1 ){
+                if( AAC2020_GLEBIND_no_news_is_good_news >= 1 ){
                     //:Say nothing. No news, good news.
                 }else{
-                    printf("[ABOUT_TO:CALL:GLEB_Init]\n");  
+                    printf("[ABOUT_TO:AAC2020_GLEBIND_Init]\n");  
                 };;
 
                 //:Load OpenGL bindings and create
                 //:an OpenGL context.
-                GLEB_Init();
+                AAC2020_GLEBIND_Init();
 
             #endif //:#######################################://
 

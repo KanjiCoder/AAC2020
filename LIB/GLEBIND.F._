@@ -1,6 +1,7 @@
 
     int
     AAC2020_GLEBIND_TouchFile_OPEN_GL_SEARCH_PATHS(
+
         /** If the file did not exist before we touched it,  **/
         /** should we initialize it's contents with some     **/
         /** default search paths for where we can expect     **/
@@ -9,6 +10,17 @@
     )
     {
     //:======================================================://
+
+        /** TouchFile function did not exist in GLEB.H       **/
+        /** Added to GLEBIND.F (GLEBIND_DOT_F) to make       **/
+        /** program a bit more user friendly.                **/
+        /**                                                  **/
+        /** GOAL: Program is a single .EXE file, no          **/
+        /**      supplimentary files need to be copied to    **/
+        /**      maintain a working executable.              **/
+        /**                                                  **/
+        /** This function makes it so you don't have to      **/
+        /** copy around OPEN_GL_SEARCH_PATHS.TXT             **/
 
         assert( 0x0100 == 00400 );
         assert( 0x0080 == 00200 );
@@ -65,7 +77,7 @@
         //:REPORT_BACK_SUCCESS_OR_FAILURE:-------------------://
         #define P_F printf
 
-            ;;;if( GLEB_no_news_is_good_news <= 0 ){
+            ;;;if( AAC2020_GLEBIND_no_news_is_good_news <= 0 ){
 
                 if( 1 == ok ){ P_F("[File_Access_OK]\n"); };
 
@@ -84,196 +96,193 @@
     }
 
 
-//[][][][][][][][][][][][][][][][][][][][][][][]//  //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-#define GLEB_MV_DEBUGPRINT_01 0                     //[HELPER_FUNCTIONS]//
-#if(GLEB_MV_DEBUGPRINT_01 <= 0)                     //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-    //: emp_mac_arg:empty_macro_arg                 //[HELPER_FUNCTIONS]//
-    #define GLEB_MM_DEBUGPRINT_01( emp_mac_arg )    //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-#else                                               //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-    void GLEB_MM_DEBUGPRINT_01( const char* m ){    //[HELPER_FUNCTIONS]//
-        printf("[GLEB:DP_01]:%s\n",m);              //[HELPER_FUNCTIONS]//
-        fflush(stdout);                             //[HELPER_FUNCTIONS]//
-    }                                               //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-#endif                                              //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-//[][][][][][][][][][][][][][][][][][][][][][][]//  //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-//: Like GLEB_DebugPrint but NOT used for           //[HELPER_FUNCTIONS]//
-//: [trouble shooting/searching for] bugs.          //[HELPER_FUNCTIONS]//
-void                                                //[HELPER_FUNCTIONS]//
-GLEB_InfoPrint(                                     //[HELPER_FUNCTIONS]//
-/**/const char* message_to_print                    //[HELPER_FUNCTIONS]//
-){                                                  //[HELPER_FUNCTIONS]//
-    if( GLEB_no_news_is_good_news <= 0 ){           //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-        printf(                                     //[HELPER_FUNCTIONS]//
-        /**/"[GLEB_IP........]:%s\n"                //[HELPER_FUNCTIONS]//
-        ,   message_to_print                        //[HELPER_FUNCTIONS]//
-        );;                                         //[HELPER_FUNCTIONS]//
-        fflush(stdout);                             //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-    };;                                             //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-} //[[GLEB_InfoPrint]]//                            //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-//[][][][][][][][][][][][][][][][][][][][][][][]//  //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-void                                                //[HELPER_FUNCTIONS]//
-GLEB_InfoPrint_STR(                                 //[HELPER_FUNCTIONS]//
-/**/const char* message_to_print                    //[HELPER_FUNCTIONS]//
-,   const char* string_var_to_print                 //[HELPER_FUNCTIONS]//
-){                                                  //[HELPER_FUNCTIONS]//
-    if( GLEB_no_news_is_good_news <= 0 ){           //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-        printf(                                     //[HELPER_FUNCTIONS]//
-        /**/"[GLEB_IP_STR.MSG]:%s\n"                //[HELPER_FUNCTIONS]//
-        ,   message_to_print                        //[HELPER_FUNCTIONS]//
-        );;                                         //[HELPER_FUNCTIONS]//
-        printf(                                     //[HELPER_FUNCTIONS]//
-        /**/"[GLEB_IP_STR.VAL]:%s\n"                //[HELPER_FUNCTIONS]//
-        ,   string_var_to_print                     //[HELPER_FUNCTIONS]//
-        );;                                         //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-        fflush(stdout);                             //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-    };;                                             //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-} //[[GLEB_InfoPrint_STR]]//                        //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-//[][][][][][][][][][][][][][][][][][][][][][][]//  //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-void                                                //[HELPER_FUNCTIONS]//
-GLEB_InfoPrint_INT(                                 //[HELPER_FUNCTIONS]//
-/**/const char* message_to_print                    //[HELPER_FUNCTIONS]//
-,   int         value_to_print                      //[HELPER_FUNCTIONS]//
-){                                                  //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-    if( GLEB_no_news_is_good_news <= 0 ){           //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-        printf(                                     //[HELPER_FUNCTIONS]//
-        /**/"[GLEB_IP_INT.MSG]:%s\n"                //[HELPER_FUNCTIONS]//
-        ,   message_to_print                        //[HELPER_FUNCTIONS]//
-        );;                                         //[HELPER_FUNCTIONS]//
-        printf(                                     //[HELPER_FUNCTIONS]//
-        /**/"[GLEB_IP_STR.VAL]:%d\n"                //[HELPER_FUNCTIONS]//
-        ,   value_to_print                          //[HELPER_FUNCTIONS]//
-        );;                                         //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-        fflush(stdout);                             //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-    };;                                             //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-} //[[GLEB_InfoPrint_INT]]//                        //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-//[][][][][][][][][][][][][][][][][][][][][][][]//  //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-void                                                //[HELPER_FUNCTIONS]//
-GLEB_Error(                                         //[HELPER_FUNCTIONS]//
-/**/const char* whats_wrong_message //:Stringc      //[HELPER_FUNCTIONS]//
-,   int   crash_the_program         //:Boolean      //[HELPER_FUNCTIONS]//
-){                                                  //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-    const char* BEG_error_section =(                //[HELPER_FUNCTIONS]//
-    //:          10        20   25                  //[HELPER_FUNCTIONS]//
-    //:::1234567890123456789012345                  //[HELPER_FUNCTIONS]//
-        "[BEG::GLEB(LIBRARY)ERROR]\n"               //[HELPER_FUNCTIONS]//
-    );;                                             //[HELPER_FUNCTIONS]//
-    const char* END_error_section =(                //[HELPER_FUNCTIONS]//
-    //:          10        20   25                  //[HELPER_FUNCTIONS]//
-    //:::1234567890123456789012345                  //[HELPER_FUNCTIONS]//
-        "[END::GLEB(LIBRARY)ERROR]\n"               //[HELPER_FUNCTIONS]//
-    );;                                             //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-    printf( BEG_error_section );                    //[HELPER_FUNCTIONS]//
-    printf("\n\n");                                 //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-    //:************************://                  //[HELPER_FUNCTIONS]//
-    printf(whats_wrong_message);                    //[HELPER_FUNCTIONS]//
-    //:************************://                  //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-    printf("\n\n\n");                               //[HELPER_FUNCTIONS]//
-    printf(END_error_section);;                     //[HELPER_FUNCTIONS]//
-    fflush(stdout);                                 //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-    if( crash_the_program ){                        //[HELPER_FUNCTIONS]//
-        exit(666);                                  //[HELPER_FUNCTIONS]//
-    };;                                             //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-} //[[GLEB_Error]]//                                //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-//[][][][][][][][][][][][][][][][][][][][][][][]//  //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-/**!!!!WRONG_CASE!!!!**/ void GLEB_HALT( void ){    //[HELPER_FUNCTIONS]//
-    printf(                                         //[HELPER_FUNCTIONS]//
-        "[WRONG_CASE:GLEB_Halt:NOT:GLEB_HALT]"      //[HELPER_FUNCTIONS]//
-    );;                                             //[HELPER_FUNCTIONS]//
-} //[]//                                            //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-void gleb_Halt(                                     //[HELPER_FUNCTIONS]//
-    const char* whats_wrong_message                 //[HELPER_FUNCTIONS]//
-){                                                  //[HELPER_FUNCTIONS]//
-    //:Let user know originated in gleb_Halt,       //[HELPER_FUNCTIONS]//
-    //:not "GLEB_Error".                            //[HELPER_FUNCTIONS]//
-    printf("[gleb_Halt:JustCalled]\n");             //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-    static int CRASH_THE_PROGRAM = 1;               //[HELPER_FUNCTIONS]//
-    GLEB_Error(                                     //[HELPER_FUNCTIONS]//
-    /**/whats_wrong_message                         //[HELPER_FUNCTIONS]//
-    ,   CRASH_THE_PROGRAM                           //[HELPER_FUNCTIONS]//
-    );;                                             //[HELPER_FUNCTIONS]//
-}                                                   //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-/**!!!!WRONG_CASE!!!!**/void GLEB_OK( void ){       //[HELPER_FUNCTIONS]//
-    printf(                                         //[HELPER_FUNCTIONS]//
-        "[WRONG_CASE:gleb_OK:NOT:GLEB_OK]"          //[HELPER_FUNCTIONS]//
-        "[Its_A_Private_Function________]"          //[HELPER_FUNCTIONS]//
-    );;                                             //[HELPER_FUNCTIONS]//
-}                                                   //[HELPER_FUNCTIONS]//
-void                                                //[HELPER_FUNCTIONS]//
-gleb_OK( const char* okay_message ){                //[HELPER_FUNCTIONS]//
-    printf(                                         //[HELPER_FUNCTIONS]//
-        "[gleb_OK]:%s\n", okay_message              //[HELPER_FUNCTIONS]//
-    );;                                             //[HELPER_FUNCTIONS]//
-} //[gleb_OK]//                                     //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-//[][][][][][][][][][][][][][][][][][][][][][][]//  //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-//|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//  //[HELPER_FUNCTIONS]//
-//! Used to make sure function pointer is NOT  !//  //[HELPER_FUNCTIONS]//
-//! null. Hopefully can swap out for macro in  !//  //[HELPER_FUNCTIONS]//
-//! the future to remove this overhead when in !//  //[HELPER_FUNCTIONS]//
-//! a release mode.                            !//  //[HELPER_FUNCTIONS]//
-void                                            //  //[HELPER_FUNCTIONS]//
-GLEB_FuncPointerSated(                          //  //[HELPER_FUNCTIONS]//
-/**/const char* function_pointer_name           //  //[HELPER_FUNCTIONS]//
-,   GLEB_FUNC   function_pointer                //  //[HELPER_FUNCTIONS]//
-){                                              //  //[HELPER_FUNCTIONS]//
-    if(NULL==function_pointer){                 //  //[HELPER_FUNCTIONS]//
-        printf("[GLEB:ForgotToInitLibrary?]\n");//  //[HELPER_FUNCTIONS]//
-        printf("[USE::GLEB_GetFuncsFromDLL]\n");//  //[HELPER_FUNCTIONS]//
-        printf(                                 //  //[HELPER_FUNCTIONS]//
-        /**/"[function_pointer_name]:%s\n"      //  //[HELPER_FUNCTIONS]//
-        ,     function_pointer_name             //  //[HELPER_FUNCTIONS]//
-        );;                                     //  //[HELPER_FUNCTIONS]//
-        fflush(stdout);exit(666);               //  //[HELPER_FUNCTIONS]//
-    };;                                         //  //[HELPER_FUNCTIONS]//
-} //[[GLEB_FuncPointerSated]]//                 //  //[HELPER_FUNCTIONS]//
-//|____________________________________________|//  //[HELPER_FUNCTIONS]//
-                                                    //[HELPER_FUNCTIONS]//
-//[][][][][][][][][][][][][][][][][][][][][][][]//  //[HELPER_FUNCTIONS]//
-
-//[][][][][][][][][][][][][][][][][][][][][][][]//
+//:HFN:HELPER_FUNCTIONS:=====================================:////[ HFN ]//
+                                                                //[ HFN ]//
+#define AAC2020_GLEBIND_MV_DEBUGPRINT_01 0                      //[ HFN ]//
+#if(AAC2020_GLEBIND_MV_DEBUGPRINT_01 <= 0)                      //[ HFN ]//
+                                                                //[ HFN ]//
+    //: emp_mac_arg:empty_macro_arg ://                         //[ HFN ]//
+    #define AAC2020_GLEBIND_MM_DEBUGPRINT_01( emp_mac_arg )     //[ HFN ]//
+                                                                //[ HFN ]//
+#else                                                           //[ HFN ]//
+                                                                //[ HFN ]//
+    void AAC2020_GLEBIND_MM_DEBUGPRINT_01( const char* m ){     //[ HFN ]//
+        printf("[AAC2020_GLEBIND:DP_01]:%s\n",m);               //[ HFN ]//
+        fflush(stdout);                                         //[ HFN ]//
+    }                                                           //[ HFN ]//
+                                                                //[ HFN ]//
+#endif                                                          //[ HFN ]//
+                                                                //[ HFN ]//
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - :////[ HFN ]//
+                                                                //[ HFN ]//
+void                                                            //[ HFN ]//
+AAC2020_GLEBIND_InfoPrint(                                      //[ HFN ]//
+/**/const char* message_to_print                                //[ HFN ]//
+){                                                              //[ HFN ]//
+                                                                //[ HFN ]//
+    /** Like AAC2020_GLEBIND_DebugPrint but NOT used for **/    //[ HFN ]//
+    /** [trouble shooting/searching for] bugs.           **/    //[ HFN ]//
+                                                                //[ HFN ]//
+    if( AAC2020_GLEBIND_no_news_is_good_news <= 0 ){            //[ HFN ]//
+                                                                //[ HFN ]//
+        printf(                                                 //[ HFN ]//
+        /**/"[AAC2020_GLEBIND_IP........]:%s\n"                 //[ HFN ]//
+        ,   message_to_print                                    //[ HFN ]//
+        );;                                                     //[ HFN ]//
+        fflush(stdout);                                         //[ HFN ]//
+                                                                //[ HFN ]//
+    };;                                                         //[ HFN ]//
+                                                                //[ HFN ]//
+}                                                               //[ HFN ]//
+                                                                //[ HFN ]//
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - :////[ HFN ]//
+                                                                //[ HFN ]//
+void                                                            //[ HFN ]//
+AAC2020_GLEBIND_InfoPrint_STR(                                  //[ HFN ]//
+/**/const char* message_to_print                                //[ HFN ]//
+,   const char* string_var_to_print                             //[ HFN ]//
+){                                                              //[ HFN ]//
+    if( AAC2020_GLEBIND_no_news_is_good_news <= 0 ){            //[ HFN ]//
+                                                                //[ HFN ]//
+        printf(                                                 //[ HFN ]//
+        /**/"[AAC2020_GLEBIND_IP_STR.MSG]:%s\n"                 //[ HFN ]//
+        ,   message_to_print                                    //[ HFN ]//
+        );;                                                     //[ HFN ]//
+        printf(                                                 //[ HFN ]//
+        /**/"[AAC2020_GLEBIND_IP_STR.VAL]:%s\n"                 //[ HFN ]//
+        ,   string_var_to_print                                 //[ HFN ]//
+        );;                                                     //[ HFN ]//
+                                                                //[ HFN ]//
+        fflush(stdout);                                         //[ HFN ]//
+                                                                //[ HFN ]//
+    };;                                                         //[ HFN ]//
+}                                                               //[ HFN ]//
+                                                                //[ HFN ]//
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - :////[ HFN ]//
+                                                                //[ HFN ]//
+void                                                            //[ HFN ]//
+AAC2020_GLEBIND_InfoPrint_INT(                                  //[ HFN ]//
+/**/const char* message_to_print                                //[ HFN ]//
+,   int         value_to_print                                  //[ HFN ]//
+){                                                              //[ HFN ]//
+                                                                //[ HFN ]//
+    if( AAC2020_GLEBIND_no_news_is_good_news <= 0 ){            //[ HFN ]//
+                                                                //[ HFN ]//
+        printf(                                                 //[ HFN ]//
+        /**/"[AAC2020_GLEBIND_IP_INT.MSG]:%s\n"                 //[ HFN ]//
+        ,   message_to_print                                    //[ HFN ]//
+        );;                                                     //[ HFN ]//
+        printf(                                                 //[ HFN ]//
+        /**/"[AAC2020_GLEBIND_IP_STR.VAL]:%d\n"                 //[ HFN ]//
+        ,   value_to_print                                      //[ HFN ]//
+        );;                                                     //[ HFN ]//
+                                                                //[ HFN ]//
+        fflush(stdout);                                         //[ HFN ]//
+                                                                //[ HFN ]//
+    };;                                                         //[ HFN ]//
+}                                                               //[ HFN ]//
+                                                                //[ HFN ]//
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - :////[ HFN ]//
+                                                                //[ HFN ]//
+void                                                            //[ HFN ]//
+AAC2020_GLEBIND_Error(                                          //[ HFN ]//
+/**/const char* whats_wrong_message //: Stringc ://             //[ HFN ]//
+,   int   crash_the_program         //: Boolean ://             //[ HFN ]//
+){                                                              //[ HFN ]//
+                                                                //[ HFN ]//
+    const char* BEG_error_section =(                            //[ HFN ]//
+    //:          10        20   25 ://                          //[ HFN ]//
+    //:::1234567890123456789012345 ://                          //[ HFN ]//
+        "[BEG::AAC2020_GLEBIND(LIBRARY)ERROR]\n"                //[ HFN ]//
+    );;                                                         //[ HFN ]//
+    const char* END_error_section =(                            //[ HFN ]//
+    //:          10        20   25 ://                          //[ HFN ]//
+    //:::1234567890123456789012345 ://                          //[ HFN ]//
+        "[END::AAC2020_GLEBIND(LIBRARY)ERROR]\n"                //[ HFN ]//
+    );;                                                         //[ HFN ]//
+                                                                //[ HFN ]//
+    printf( BEG_error_section );                                //[ HFN ]//
+    printf("\n\n");                                             //[ HFN ]//
+                                                                //[ HFN ]//
+    //:************************://                              //[ HFN ]//
+    printf(whats_wrong_message);                                //[ HFN ]//
+    //:************************://                              //[ HFN ]//
+                                                                //[ HFN ]//
+    printf("\n\n\n");                                           //[ HFN ]//
+    printf(END_error_section);;                                 //[ HFN ]//
+    fflush(stdout);                                             //[ HFN ]//
+                                                                //[ HFN ]//
+    if( crash_the_program ){                                    //[ HFN ]//
+        exit(666);                                              //[ HFN ]//
+    };;                                                         //[ HFN ]//
+}                                                               //[ HFN ]//
+                                                                //[ HFN ]//
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - :////[ HFN ]//
+                                                                //[ HFN ]//
+/**!!!!WRONG_CASE!!!!**/ void AAC2020_GLEBIND_HALT( void ){     //[ HFN ]//
+    printf( "[AAC2020_GLEBIND:2020_11_02:0654AM]\n");           //[ HFN ]//
+    fflush(stdout);exit(666);                                   //[ HFN ]//
+}                                                               //[ HFN ]//
+                                                                //[ HFN ]//
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - :////[ HFN ]//
+                                                                //[ HFN ]//
+void aac2020_glebind_Halt(                                      //[ HFN ]//
+    const char* whats_wrong_message                             //[ HFN ]//
+){                                                              //[ HFN ]//
+    //:Let user know originated in aac2020_glebind_Halt, :::::////[ HFN ]//
+    //:not "AAC2020_GLEBIND_Error".                      :::::////[ HFN ]//
+    printf("[aac2020_glebind_Halt:JustCalled]\n");              //[ HFN ]//
+                                                                //[ HFN ]//
+    static int CRASH_THE_PROGRAM = 1;                           //[ HFN ]//
+    AAC2020_GLEBIND_Error(                                      //[ HFN ]//
+    /**/whats_wrong_message                                     //[ HFN ]//
+    ,   CRASH_THE_PROGRAM                                       //[ HFN ]//
+    );;                                                         //[ HFN ]//
+}                                                               //[ HFN ]//
+                                                                //[ HFN ]//
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - :////[ HFN ]// 
+                                                                //[ HFN ]//
+/**!!!!WRONG_CASE!!!!**/void AAC2020_GLEBIND_OK( void ){        //[ HFN ]//
+    printf(                                                     //[ HFN ]//
+        "[WRONG_CASE:aac2020_glebind_OK:NOT:AAC2020_GLEBIND_OK]"//[ HFN ]//
+        "[Its_A_Private_Function________]"                      //[ HFN ]//
+    );;                                                         //[ HFN ]//
+    fflush(stdout);exit(666);                                   //[ HFN ]//
+}                                                               //[ HFN ]//
+                                                                //[ HFN ]//
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - :////[ HFN ]//
+                                                                //[ HFN ]//
+void                                                            //[ HFN ]//
+aac2020_glebind_OK( const char* okay_message ){                 //[ HFN ]//
+    printf(                                                     //[ HFN ]//
+        "[aac2020_glebind_OK]:%s\n", okay_message               //[ HFN ]//
+    );;                                                         //[ HFN ]//
+}                                                               //[ HFN ]//
+                                                                //[ HFN ]//
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - :////[ HFN ]//
+                                                                //[ HFN ]//
+void                                                            //[ HFN ]//
+AAC2020_GLEBIND_FuncPointerSated(                               //[ HFN ]//
+/**/const char* function_pointer_name                           //[ HFN ]//
+,   AAC2020_GLEBIND_FUNC   function_pointer                     //[ HFN ]//
+){                                                              //[ HFN ]//
+                                                                //[ HFN ]//
+    /**  Used to make sure function pointer is NOT null.     **///[ HFN ]//
+    /**  Hopefully can swap out for macro in the future to   **///[ HFN ]//
+    /**  remove this overhead when in a release mode.        **///[ HFN ]//
+                                                                //[ HFN ]//
+    if(NULL==function_pointer){                                 //[ HFN ]//
+        printf("[AAC2020_GLEBIND:ForgotToInitLibrary?]\n");     //[ HFN ]//
+        printf("[USE::AAC2020_GLEBIND_GetFuncsFromDLL]\n");     //[ HFN ]//
+        printf(                                                 //[ HFN ]//
+        /**/"[function_pointer_name]:%s\n"                      //[ HFN ]//
+        ,     function_pointer_name                             //[ HFN ]//
+        );;                                                     //[ HFN ]//
+        fflush(stdout);exit(666);                               //[ HFN ]//
+    };;                                                         //[ HFN ]//
+}                                                               //[ HFN ]//
+                                                                //[ HFN ]//
+//:=====================================:HFN:HELPER_FUNCTIONS:////[ HFN ]//
 
 
 
@@ -283,12 +292,12 @@ GLEB_FuncPointerSated(                          //  //[HELPER_FUNCTIONS]//
 
                                                     //[CTF]//
 int                                                 //[CTF]//
-GLEB_OpenFileAndProcessLines(                       //[CTF]//
+AAC2020_GLEBIND_OpenFileAndProcessLines(                       //[CTF]//
     const char* file_name //:path_to_file           //[CTF]//
-,   GLEB_PFN_line_processor line_processor          //[CTF]//
+,   AAC2020_GLEBIND_PFN_line_processor line_processor          //[CTF]//
 ){                                                  //[CTF]//
-    GLEB_MM_DEBUGPRINT_01(                          //[CTF]//
-        "[BEG:GLEB_OpenFileAndProcessLines]"        //[CTF]//
+    AAC2020_GLEBIND_MM_DEBUGPRINT_01(                          //[CTF]//
+        "[BEG:AAC2020_GLEBIND_OpenFileAndProcessLines]"        //[CTF]//
     );;                                             //[CTF]//
                                                     //[CTF]//
     int num_non_empty_lines_found = 0;              //[CTF]//
@@ -304,23 +313,23 @@ GLEB_OpenFileAndProcessLines(                       //[CTF]//
     #undef  JOHN_MARKS_MAX_LINE_2019_03_03          //[CTF]//
                                                     //[CTF]//
     //: SEE VIDEO #1 for comments:                  //[CTF]//
-    GLEB_MM_DEBUGPRINT_01(                          //[CTF]//
+    AAC2020_GLEBIND_MM_DEBUGPRINT_01(                          //[CTF]//
         "[CheckForEmptyFilePointer]"                //[CTF]//
     );                                              //[CTF]//
     if(NULL==file_pointer){                         //[CTF]//
-        GLEB_Error("[CheckFileNameSpelling]",0);    //[CTF]//
+        AAC2020_GLEBIND_Error("[CheckFileNameSpelling]",0);    //[CTF]//
         return( 1 );                                //[CTF]//
     };;                                             //[CTF]//
                                                     //[CTF]//
     //: SEE VIDEO #1 for comments:                  //[CTF]//
-    GLEB_MM_DEBUGPRINT_01("[fgets_loop]");          //[CTF]//
+    AAC2020_GLEBIND_MM_DEBUGPRINT_01("[fgets_loop]");          //[CTF]//
     while(fgets(                                    //[CTF]//
     /**/single_line  //: store_string_here          //[CTF]//
     ,   max_line     //: max_size_of_buffer         //[CTF]//
     ,   file_pointer //: read_chars_from_here       //[CTF]//
     )){                                             //[CTF]//
 
-        #if( GLEB_BUGHUNT_WHITE_SPACE_PATH >= 1 ) //:########://
+        #if( AAC2020_GLEBIND_BUGHUNT_WHITE_SPACE_PATH >= 1 ) //:########://
 
             printf("[BUGHUNT_001:About_To:line_processor()]\n");
             fflush(stdout);
@@ -331,7 +340,7 @@ GLEB_OpenFileAndProcessLines(                       //[CTF]//
             line_processor( single_line )            
         );;     
 
-        #if( GLEB_BUGHUNT_WHITE_SPACE_PATH >= 1 ) //:########://
+        #if( AAC2020_GLEBIND_BUGHUNT_WHITE_SPACE_PATH >= 1 ) //:########://
 
             printf("[BUGHUNT_001:Did_DoIt:line_processor()]\n");
             fflush(stdout);
@@ -340,45 +349,45 @@ GLEB_OpenFileAndProcessLines(                       //[CTF]//
                                      
     };;                                             //[CTF]//
                                                     //[CTF]//
-    GLEB_MM_DEBUGPRINT_01("[WhatDidWeFind]");       //[CTF]//
+    AAC2020_GLEBIND_MM_DEBUGPRINT_01("[WhatDidWeFind]");       //[CTF]//
     if(num_non_empty_lines_found<1){                //[CTF]//
-        GLEB_InfoPrint(                             //[CTF]//
+        AAC2020_GLEBIND_InfoPrint(                             //[CTF]//
             "[WARNING:FileWasEmpty]"                //[CTF]//
         );;                                         //[CTF]//
-        GLEB_InfoPrint_STR(                         //[CTF]//
+        AAC2020_GLEBIND_InfoPrint_STR(                         //[CTF]//
         /**/"[EmptyFileName]"                       //[CTF]//
         ,   file_name                               //[CTF]//
         );;                                         //[CTF]//
         fflush(stdout);                             //[CTF]//
     }else{                                          //[CTF]//
-        GLEB_InfoPrint(                             //[CTF]//
+        AAC2020_GLEBIND_InfoPrint(                             //[CTF]//
             "[ONE_OR_MORE_FOUND]"                   //[CTF]//
         );;                                         //[CTF]//
-        GLEB_InfoPrint_INT(                         //[CTF]//
+        AAC2020_GLEBIND_InfoPrint_INT(                         //[CTF]//
         /**/"[num_non_empty_lines_found]"           //[CTF]//
         ,   num_non_empty_lines_found               //[CTF]//
         );;                                         //[CTF]//
     };;                                             //[CTF]//
                                                     //[CTF]//
     //|========================================|//  //[CTF]//
-    GLEB_MM_DEBUGPRINT_01(                          //[CTF]//
+    AAC2020_GLEBIND_MM_DEBUGPRINT_01(                          //[CTF]//
         "[BEG:fclose(file_pointer)]"                //[CTF]//
     );;                                             //[CTF]//
     if(NULL==file_pointer){                         //[CTF]//
-        gleb_Halt("[FilePtrSomehowNull]");          //[CTF]//
+        aac2020_glebind_Halt("[FilePtrSomehowNull]");          //[CTF]//
     }else{                                          //[CTF]//
-        GLEB_MM_DEBUGPRINT_01(                      //[CTF]//
+        AAC2020_GLEBIND_MM_DEBUGPRINT_01(                      //[CTF]//
             "[FilePointerOkay]"                     //[CTF]//
         );;                                         //[CTF]//
     };;                                             //[CTF]//
     fclose(file_pointer);                           //[CTF]//
-    GLEB_MM_DEBUGPRINT_01(                          //[CTF]//
+    AAC2020_GLEBIND_MM_DEBUGPRINT_01(                          //[CTF]//
         "[END:fclose(file_pointer)]"                //[CTF]//
     );;                                             //[CTF]//
     //|========================================|//  //[CTF]//
                                                     //[CTF]//
-    GLEB_MM_DEBUGPRINT_01(                          //[CTF]//
-        "[END:GLEB_OpenFileAndProcessLines]"        //[CTF]//
+    AAC2020_GLEBIND_MM_DEBUGPRINT_01(                          //[CTF]//
+        "[END:AAC2020_GLEBIND_OpenFileAndProcessLines]"        //[CTF]//
     );;                                             //[CTF]//
     return( 0 );                                    //[CTF]//
                                                     //[CTF]//
@@ -395,7 +404,7 @@ GLEB_OpenFileAndProcessLines(                       //[CTF]//
 //:the non whitespace characters to space on        //[CTF]//
 //:the heap.                                        //[CTF]//
 char*                                               //[CTF]//
-GLEB_TrimCopyToHeap(                                //[CTF]//
+AAC2020_GLEBIND_TrimCopyToHeap(                                //[CTF]//
     //:Make sas constant(const) as contract that    //[CTF]//
     //:we will not be editing sas in this           //[CTF]//
     //:function.                                    //[CTF]//
@@ -467,11 +476,11 @@ GLEB_TrimCopyToHeap(                                //[CTF]//
     //: |OB|[ ][ ][C ][A][K][ E][ ][ ][\0]          //[CTF]//
     //:  i0 ------>i0        i1<-------i1           //[CTF]//
     int                                             //[CTF]//
-    GLEB_Wrapper_isspace(                           //[CTF]//
+    AAC2020_GLEBIND_Wrapper_isspace(                           //[CTF]//
         const char ascii_char                       //[CTF]//
     );;                                             //[CTF]//
-    while( GLEB_Wrapper_isspace( sas[++i0] ) ){};   //[CTF]//
-    while( GLEB_Wrapper_isspace( sas[--i1] ) ){};   //[CTF]//
+    while( AAC2020_GLEBIND_Wrapper_isspace( sas[++i0] ) ){};   //[CTF]//
+    while( AAC2020_GLEBIND_Wrapper_isspace( sas[--i1] ) ){};   //[CTF]//
     //:----------------------------------------://  //[CTF]//
                                                     //[CTF]//
     //|Step5: Get length of trimmed string.    |//  //[CTF]//
@@ -561,7 +570,7 @@ GLEB_TrimCopyToHeap(                                //[CTF]//
 //[  +Arguments+to+character-handling+functions]//  //[CTF]//
 //[  +must+be+representable+as+an+unsigned+char]//  //[CTF]//
 //|--------------------------------------------|//  //[CTF]//
-int GLEB_Wrapper_isspace(                           //[CTF]//
+int AAC2020_GLEBIND_Wrapper_isspace(                           //[CTF]//
     const char ascii_char                           //[CTF]//
 ){                                                  //[CTF]//
     return( isspace( (unsigned char)ascii_char) );  //[CTF]//
@@ -576,7 +585,7 @@ int GLEB_Wrapper_isspace(                           //[CTF]//
 //:SLSLSLSLSLSLSLSLSLSLSLSLSLSLSLSLSLSLSLSLSLSL://  //[CTF]//
                                                     //[CTF]//
 char**                                              //[CTF]//
-GLEB_StringListMalloc(                              //[CTF]//
+AAC2020_GLEBIND_StringListMalloc(                              //[CTF]//
     int num_strings //:num_strings_in_list          //[CTF]//
 ){                                                  //[CTF]//
     char**                                          //[CTF]//
@@ -595,11 +604,11 @@ GLEB_StringListMalloc(                              //[CTF]//
     };;                                             //[CTF]//
                                                     //[CTF]//
     return( output_string_list );                   //[CTF]//
-} //[[GLEB_StringListMalloc]]//                     //[CTF]//
+} //[[AAC2020_GLEBIND_StringListMalloc]]//                     //[CTF]//
 //:Helpfull, but non optimal. Pre-populate          //[CTF]//
 //:all of the strings.                              //[CTF]//
 void                                                //[CTF]//
-GLEB_StringListPopulate(                            //[CTF]//
+AAC2020_GLEBIND_StringListPopulate(                            //[CTF]//
 /**/      char** string_list                        //[CTF]//
 ,   int          num_strings                        //[CTF]//
 ,   const char*  default_tex                        //[CTF]//
@@ -644,9 +653,9 @@ GLEB_StringListPopulate(                            //[CTF]//
         //:Place current copy into list:            //[CTF]//
         string_list[i] = cur;                       //[CTF]//
     };;                                             //[CTF]//
-} //[[GLEB_StringListPopulate]]//                   //[CTF]//
+} //[[AAC2020_GLEBIND_StringListPopulate]]//                   //[CTF]//
 void                                                //[CTF]//
-GLEB_StringListPrint(                               //[CTF]//
+AAC2020_GLEBIND_StringListPrint(                               //[CTF]//
 /**/char** string_list                              //[CTF]//
 ,   int    string_length                            //[CTF]//
 ){                                                  //[CTF]//
@@ -655,9 +664,9 @@ GLEB_StringListPrint(                               //[CTF]//
         printf("#(%3d):(%s)\n", i,string_list[i]);  //[CTF]//
     };;                                             //[CTF]//
     printf("[END:StringListPrint]\n");              //[CTF]//
-} //[[GLEB_StringListPrint]]//                      //[CTF]//
+} //[[AAC2020_GLEBIND_StringListPrint]]//                      //[CTF]//
 void                                                //[CTF]//
-GLEB_StringListFree(                                //[CTF]//
+AAC2020_GLEBIND_StringListFree(                                //[CTF]//
 /**/char**  *BYREF_string_list                      //[CTF]//
 ,   int            num_strings                      //[CTF]//
 ){                                                  //[CTF]//
@@ -704,39 +713,11 @@ GLEB_StringListFree(                                //[CTF]//
     free( string_list );                            //[CTF]//
     (*BYREF_string_list) = NULL;                    //[CTF]//
                                                     //[CTF]//
-} //[[GLEB_StringListFree]]//                       //[CTF]//
+} //[[AAC2020_GLEBIND_StringListFree]]//                       //[CTF]//
 //:SLSLSLSLSLSLSLSLSLSLSLSLSLSLSLSLSLSLSLSLSLSL://  //[CTF]//
                                                     //[CTF]//
 //|05|05|05|05|05|05|05|05|05|05|05|05|05|05|05|//  //[CTF]//
 //|END[CODE_TOLD_FAST_05]______________________|//  //[CTF]//
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -749,7 +730,7 @@ GLEB_StringListFree(                                //[CTF]//
 //: Not sure how I feel about this code.       ://
 //: It seems kind of spaghetti. You really     ://
 //: need a version of                          ://
-//:"GLEB_OpenFileAndProcessLines"              ://
+//:"AAC2020_GLEBIND_OpenFileAndProcessLines"              ://
 //: that takes an                              ://
 //:"early bail-out-of-loop" function that      ://
 //:determines when to stop looping over file.  ://
@@ -774,10 +755,10 @@ GLEB_StringListFree(                                //[CTF]//
 
 //[][][][][][][][][][][][][][][][][][][][][][][]//
 
-extern int          GLEB_next_search_path_index ;
-extern int          GLEB_num_search_paths       ;
-extern const char** GLEB_p_search_paths         ;
-int  GLEB_IsLineFull(const char* single_line){
+extern int          AAC2020_GLEBIND_next_search_path_index ;
+extern int          AAC2020_GLEBIND_num_search_paths       ;
+extern const char** AAC2020_GLEBIND_p_search_paths         ;
+int  AAC2020_GLEBIND_IsLineFull(const char* single_line){
     if( strcmp(single_line,"\n"  ) != 0 &&
         strcmp(single_line,"\r\n") != 0 &&
         strcmp(single_line,"\0"  ) != 0 &&
@@ -789,7 +770,7 @@ int  GLEB_IsLineFull(const char* single_line){
         //:       as an empty line as well.
         //:- - - - - - - - - - - - - - - - - - - - - - - - - ://
 
-            #if( GLEB_BUGHUNT_WHITE_SPACE_PATH >= 1 ) //:####://
+            #if( AAC2020_GLEBIND_BUGHUNT_WHITE_SPACE_PATH >= 1 ) //:####://
                 printf("[BUGHUNT_001:FIX_SITE_HERE]\n");
                 fflush(stdout);
             #endif //:#######################################://
@@ -823,50 +804,50 @@ int  GLEB_IsLineFull(const char* single_line){
             return 1;
         };;
     }else{
-        if( GLEB_tell_me_about_empty_lines ){
+        if( AAC2020_GLEBIND_tell_me_about_empty_lines ){
             printf("[LINE_IS_EMPTY]\n");
         };;
         return 0; //:was "continue" in video#1
     };;
     return( 0-1); //:error
-} //[[GLEB_IsLineFull]]//
+} //[[AAC2020_GLEBIND_IsLineFull]]//
 
 //[][][][][][][][][][][][][][][][][][][][][][][]//
 
-void GLEB_SearchPathInit(){
-    if(NULL != GLEB_p_search_paths){
-        gleb_Halt( "[DesignedOnlyToRunOnce]" );
+void AAC2020_GLEBIND_SearchPathInit(){
+    if(NULL != AAC2020_GLEBIND_p_search_paths){
+        aac2020_glebind_Halt( "[DesignedOnlyToRunOnce]" );
     };;
     //:Next index to store search path at:
     //:If not zero, sign that function was ran 2X.
-    if(0 != GLEB_next_search_path_index){
-        gleb_Halt( "[2019_06_05_6340PM]" );
+    if(0 != AAC2020_GLEBIND_next_search_path_index){
+        aac2020_glebind_Halt( "[2019_06_05_6340PM]" );
     };;
     //:If not zero, sign that function was ran 2X.
-    if(0 != GLEB_num_search_paths){
-        gleb_Halt( "[2019_06_05_0642PM]" );
+    if(0 != AAC2020_GLEBIND_num_search_paths){
+        aac2020_glebind_Halt( "[2019_06_05_0642PM]" );
     };;
    
-} //[[GLEB_SearchPathInit]]//
+} //[[AAC2020_GLEBIND_SearchPathInit]]//
 
 //[][][][][][][][][][][][][][][][][][][][][][][]//
 
-//:Implements: GLEB_PFN_line_processor
-int GLEB_SearchPathCount(
+//:Implements: AAC2020_GLEBIND_PFN_line_processor
+int AAC2020_GLEBIND_SearchPathCount(
     const char* single_line
 ){
     //:Only tally if line is NOT empty:
-    if( GLEB_IsLineFull( single_line ) ){
-        GLEB_num_search_paths++;
+    if( AAC2020_GLEBIND_IsLineFull( single_line ) ){
+        AAC2020_GLEBIND_num_search_paths++;
         return( 1 );
     };;
     return( 0 );
-} //[[GLEB_SearchPathCount]]//
+} //[[AAC2020_GLEBIND_SearchPathCount]]//
 
 //[][][][][][][][][][][][][][][][][][][][][][][]//
 
-//:Implements: GLEB_PFN_line_processor
-int GLEB_SearchPathStore(
+//:Implements: AAC2020_GLEBIND_PFN_line_processor
+int AAC2020_GLEBIND_SearchPathStore(
     const char* single_line
 ){
 
@@ -876,92 +857,92 @@ int GLEB_SearchPathStore(
     };;
     
     //:DETERMINE_IF_LINE_IS_FULL:============================://
-    #if( GLEB_BUGHUNT_WHITE_SPACE_PATH /**BUGHUNT_001 **/ >= 1) 
+    #if( AAC2020_GLEBIND_BUGHUNT_WHITE_SPACE_PATH /**BUGHUNT_001 **/ >= 1) 
     printf("[IS_THE_LINE_FULL...]\n");fflush(stdout);
     #endif //:###############################################://
 
         //:Exit if line is empty:
-        if( !GLEB_IsLineFull( single_line ) ){
+        if( !AAC2020_GLEBIND_IsLineFull( single_line ) ){
 
-            #if( GLEB_BUGHUNT_WHITE_SPACE_PATH  >= 1 ) 
+            #if( AAC2020_GLEBIND_BUGHUNT_WHITE_SPACE_PATH  >= 1 ) 
             printf("[EXITING,line_is_empty]\n");fflush(stdout);
             #endif //:#######################################://
 
             return 0;
         };;
 
-    #if( GLEB_BUGHUNT_WHITE_SPACE_PATH /**BUGHUNT_001 **/ >= 1) 
+    #if( AAC2020_GLEBIND_BUGHUNT_WHITE_SPACE_PATH /**BUGHUNT_001 **/ >= 1) 
     printf("[THE_LINE_IS_FULL!]\n");fflush(stdout);
     #endif //:###############################################://
     //:============================:DETERMINE_IF_LINE_IS_FULL://
     
-    GLEB_MM_DEBUGPRINT_01( 
+    AAC2020_GLEBIND_MM_DEBUGPRINT_01( 
         "[NonEmptyLine_Storing]"
     );;
 
     const char* str =(
-        GLEB_TrimCopyToHeap( single_line )
+        AAC2020_GLEBIND_TrimCopyToHeap( single_line )
     );;
 
-    GLEB_MM_DEBUGPRINT_01(
+    AAC2020_GLEBIND_MM_DEBUGPRINT_01(
         "[TheTrimmedString_dot_dot_dot]"
     );;
 
-    GLEB_InfoPrint_STR( 
+    AAC2020_GLEBIND_InfoPrint_STR( 
     /**/"[PATH]"
     ,   str
     );;
     
     //:si:"storage_index"
-    int si = GLEB_next_search_path_index;
-    GLEB_p_search_paths[ si ] = str;
-    GLEB_next_search_path_index++;
+    int si = AAC2020_GLEBIND_next_search_path_index;
+    AAC2020_GLEBIND_p_search_paths[ si ] = str;
+    AAC2020_GLEBIND_next_search_path_index++;
     
     return( 1 );
-} //[[GLEB_SearchPathStore]]//
+} //[[AAC2020_GLEBIND_SearchPathStore]]//
 
 //[][][][][][][][][][][][][][][][][][][][][][][]//
 
 //:Get a list of search paths for finding
 //:the OpenCL dll.
 const char**
-GLEB_GetSearchPathsFromFile(
+AAC2020_GLEBIND_GetSearchPathsFromFile(
     int   *BYREF_num_paths
 ){
-    GLEB_MM_DEBUGPRINT_01(
-        "[BEG:GLEB_GetSearchPathsFromFile]"
+    AAC2020_GLEBIND_MM_DEBUGPRINT_01(
+        "[BEG:AAC2020_GLEBIND_GetSearchPathsFromFile]"
     );;
     
     //:References can never be null:
     if(NULL==BYREF_num_paths){
-        gleb_Halt("[2019_06_05_0652PM]");
+        aac2020_glebind_Halt("[2019_06_05_0652PM]");
     };;
 
-    //:In case we run GLEB_GetSearchPathsFromFile
+    //:In case we run AAC2020_GLEBIND_GetSearchPathsFromFile
     //:multiple times, use this INIT function:
-    GLEB_SearchPathInit();
+    AAC2020_GLEBIND_SearchPathInit();
     
     //:Pass #1: Figure out memory allocation:
-    GLEB_OpenFileAndProcessLines(
-        GLEB_name_of_search_path_file
-    ,   &GLEB_SearchPathCount
+    AAC2020_GLEBIND_OpenFileAndProcessLines(
+        AAC2020_GLEBIND_name_of_search_path_file
+    ,   &AAC2020_GLEBIND_SearchPathCount
     );;
 
-    #if( GLEB_BUGHUNT_WHITE_SPACE_PATH >= 1 ) //:############://
+    #if( AAC2020_GLEBIND_BUGHUNT_WHITE_SPACE_PATH >= 1 ) //:#://
 
         printf("[BUGHUNT_001:Lines_Processed]\n");
         fflush(stdout);
 
     #endif //:###############################################://
     
-    GLEB_InfoPrint_INT(
+    AAC2020_GLEBIND_InfoPrint_INT(
     /**/"[NumSearchPaths]"
-    ,   GLEB_num_search_paths
+    ,   AAC2020_GLEBIND_num_search_paths
     );;
-    #if( GLEB_BUGHUNT_WHITE_SPACE_PATH >= 1 ) //:############://
+    #if( AAC2020_GLEBIND_BUGHUNT_WHITE_SPACE_PATH >= 1 ) //:#://
     
-        printf("[BUGHUNT_001:GLEB_num_search_paths]:%d\n"
-                            ,GLEB_num_search_paths);;
+        printf("[BUGHUNT_001:AAC2020_GLEBIND_num_search_paths]:%d\n"
+                            ,AAC2020_GLEBIND_num_search_paths);;
         fflush(stdout);
     
     #endif //:###############################################://
@@ -969,12 +950,12 @@ GLEB_GetSearchPathsFromFile(
     //:Set aside memory for pass #2:
     //:Gaurd if num search paths not positive
     //:since malloc(0) is implementation defined.
-    if(GLEB_num_search_paths>0){
+    if(AAC2020_GLEBIND_num_search_paths>0){
      
-    //- GLEB_p_search_paths =(malloc(          -//
+    //- AAC2020_GLEBIND_p_search_paths =(malloc(          -//
     //-     sizeof(char*) //:"char*" not "char"-//
     //-     *                                  -//
-    //-     GLEB_num_search_paths              -//
+    //-     AAC2020_GLEBIND_num_search_paths              -//
     //- ));;                                   -//
     //+ Because the above memory allocation    +//
     //+ was wrong, I decided to create a util  +//
@@ -982,22 +963,22 @@ GLEB_GetSearchPathsFromFile(
     //+ screw this up ever again.              +//
         { ///////////////////////////////+ --- +//
         char** str_lis=(               //+ --- +//
-            GLEB_StringListMalloc(     //+ --- +//
-                GLEB_num_search_paths  //+ --- +//
+            AAC2020_GLEBIND_StringListMalloc(     //+ --- +//
+                AAC2020_GLEBIND_num_search_paths  //+ --- +//
             )                          //+ --- +//
-        );GLEB_p_search_paths=(        //+ --- +//
+        );AAC2020_GLEBIND_p_search_paths=(        //+ --- +//
             (const char**)str_lis      //+ --- +//
         );;                            //+ --- +//
         } ///////////////////////////////+ --- +//
     //+----------------------------------------+//
         
     }else{
-        GLEB_p_search_paths=NULL;
+        AAC2020_GLEBIND_p_search_paths=NULL;
     };;
 
     //:2ND_FILE_SCAN_PASS:COLLECTION:------------------------://
 
-        #if( GLEB_BUGHUNT_WHITE_SPACE_PATH >= 1 ) //:########://
+        #if( AAC2020_GLEBIND_BUGHUNT_WHITE_SPACE_PATH >= 1 ) //:########://
         
             printf("[BUGHUNT_001:ABOUT_TO_DO_2ND_FILE_SCAN]\n");
             fflush(stdout);
@@ -1005,22 +986,22 @@ GLEB_GetSearchPathsFromFile(
         #endif //:###########################################://
         
         //:Pass #2: Collect strings.
-        GLEB_MM_DEBUGPRINT_01("[CollectStrings]");
-        GLEB_OpenFileAndProcessLines(
-            GLEB_name_of_search_path_file
-        ,   &GLEB_SearchPathStore
+        AAC2020_GLEBIND_MM_DEBUGPRINT_01("[CollectStrings]");
+        AAC2020_GLEBIND_OpenFileAndProcessLines(
+            AAC2020_GLEBIND_name_of_search_path_file
+        ,   &AAC2020_GLEBIND_SearchPathStore
         );;
         
         //:Set reference to num_search_paths:
-        GLEB_MM_DEBUGPRINT_01(
+        AAC2020_GLEBIND_MM_DEBUGPRINT_01(
             "[SetRefToNumSearchPaths]"
         );;
-        (*BYREF_num_paths) = GLEB_num_search_paths;
-        GLEB_MM_DEBUGPRINT_01(
-            "[END:GLEB_GetSearchPathsFromFile]"
+        (*BYREF_num_paths) = AAC2020_GLEBIND_num_search_paths;
+        AAC2020_GLEBIND_MM_DEBUGPRINT_01(
+            "[END:AAC2020_GLEBIND_GetSearchPathsFromFile]"
         );;
 
-        #if( GLEB_BUGHUNT_WHITE_SPACE_PATH >= 1 ) //:########://
+        #if( AAC2020_GLEBIND_BUGHUNT_WHITE_SPACE_PATH >= 1 ) //:########://
         
             printf("[BUGHUNT_001:DONE_WITH_2ND_FILE_SCAN]\n");
             fflush(stdout);
@@ -1029,8 +1010,8 @@ GLEB_GetSearchPathsFromFile(
 
     //:------------------------:2ND_FILE_SCAN_PASS:COLLECTION://
 
-    return( GLEB_p_search_paths );
-} //[[GLEB_GetSearchPathsFromFile]_____________]//
+    return( AAC2020_GLEBIND_p_search_paths );
+} //[[AAC2020_GLEBIND_GetSearchPathsFromFile]_____________]//
 
 //[][][][][][][][][][][][][][][][][][][][][][][]//
 
@@ -1046,9 +1027,9 @@ GLEB_GetSearchPathsFromFile(
 //[][][][][][][][][][][][][][][][][][][][][][][]//
 
 void* /** HMODULE **/
-GLEB_TryOpenDLL( void ){
-    GLEB_MM_DEBUGPRINT_01(
-        "[BEG:GLEB_TryOpenDLL]"
+AAC2020_GLEBIND_TryOpenDLL( void ){
+    AAC2020_GLEBIND_MM_DEBUGPRINT_01(
+        "[BEG:AAC2020_GLEBIND_TryOpenDLL]"
     );;
 
     const char* dll_path   = NULL;
@@ -1056,33 +1037,33 @@ GLEB_TryOpenDLL( void ){
 
     //:GET_SEARCH_PATHS_FROM_FILE:---------------------------://
 
-        GLEB_InfoPrint(
+        AAC2020_GLEBIND_InfoPrint(
         "[ABOUT_TO_TRY:GET_SEARCH_PATHS_FROM_FILE]\n");;
 
-        #if( GLEB_BUGHUNT_WHITE_SPACE_PATH >= 1 ) //:########://
+        #if( AAC2020_GLEBIND_BUGHUNT_WHITE_SPACE_PATH >= 1 ) //:########://
             printf("[BUGHUNT:WHITE_SPACE_PATH:001]\n");
             fflush(stdout);
         #endif //:###########################################://
 
         int num_paths = 0;
         const char** dll_path_array=(
-            GLEB_GetSearchPathsFromFile( &num_paths )
+            AAC2020_GLEBIND_GetSearchPathsFromFile( &num_paths )
         );;
     
     //:---------------------------:GET_SEARCH_PATHS_FROM_FILE://
     //:USE_PATHS_IF_YOU_GOT_THEM:----------------------------://
     #define P_F  printf             //:######################://
-    #define I_P  GLEB_InfoPrint     //:######################://
-    #define I_S  GLEB_InfoPrint_STR //:######################://
-    #define I_I  GLEB_InfoPrint_INT //:######################://
+    #define I_P  AAC2020_GLEBIND_InfoPrint     //:######################://
+    #define I_S  AAC2020_GLEBIND_InfoPrint_STR //:######################://
+    #define I_I  AAC2020_GLEBIND_InfoPrint_INT //:######################://
 
         I_P( "[ABOUT_TO:USE_PATHS_IF_YOU_GOT_THEM\n" );;
 
         if(0==num_paths){
-            P_F("[GLEB:ERR:2019_03_04_1243AM]\n");
-            P_F("[GLEB:zero_search_paths]\n    ");
-            P_F("[GLEB:add_paths_to]:%s\n      ",
-                GLEB_name_of_search_path_file
+            P_F("[AAC2020_GLEBIND:ERR:2019_03_04_1243AM]\n");
+            P_F("[AAC2020_GLEBIND:zero_search_paths]\n    ");
+            P_F("[AAC2020_GLEBIND:add_paths_to]:%s\n      ",
+                AAC2020_GLEBIND_name_of_search_path_file
             );;
  
             /** Without search paths, we will fail to load   **/
@@ -1092,13 +1073,13 @@ GLEB_TryOpenDLL( void ){
       
         }else
         if( num_paths >= 1 ){
-            GLEB_InfoPrint(
+            AAC2020_GLEBIND_InfoPrint(
                 "[AT_LEAST_ONE(LINE/PATH)FOUND_IN_FILE]\n");
 
-            GLEB_MM_DEBUGPRINT_01(
+            AAC2020_GLEBIND_MM_DEBUGPRINT_01(
                 "[SearchPathsFound]"
             );;
-            #if( GLEB_MV_DEBUGPRINT_01 > 0 )
+            #if( AAC2020_GLEBIND_MV_DEBUGPRINT_01 > 0 )
                 I_I("[num_paths]:", num_paths);
                 fflush(stdout);
             #endif
@@ -1112,7 +1093,7 @@ GLEB_TryOpenDLL( void ){
     #undef I_P //:###########################################://
     //:----------------------------:USE_PATHS_IF_YOU_GOT_THEM://
     //:ATTEMPT_TO_LOAD_LIBRARY_FROM_PATHS:-------------------://
-    #define I_P GLEB_InfoPrint
+    #define I_P AAC2020_GLEBIND_InfoPrint
 
         I_P("[ABOUT_TO:ATTEMPT_TO_LOAD_LIBRARY_FROM_PATHS\n" ); 
 
@@ -1121,23 +1102,23 @@ GLEB_TryOpenDLL( void ){
         for(int i = 0; i < num_paths; i++){
             //:sleep(1);
             dll_path = dll_path_array[i];
-            GLEB_InfoPrint_STR(
-            /**/"[GLEB:TRYING_PATH]"
+            AAC2020_GLEBIND_InfoPrint_STR(
+            /**/"[AAC2020_GLEBIND:TRYING_PATH]"
             ,   dll_path 
             );
             open_gl_handle = PEB2020_LoadLibraryA( dll_path );
             if(NULL != open_gl_handle){ 
-                I_P( "[GLEB:OPENED_THAT_DLL]\n" );
+                I_P( "[AAC2020_GLEBIND:OPENED_THAT_DLL]\n" );
                 break; 
             }else{
-                I_P( "[GLEB:FAILED_THAT_DLL]\n" );
+                I_P( "[AAC2020_GLEBIND:FAILED_THAT_DLL]\n" );
             };;
         };;
 
     #undef I_P
     //:-------------------:ATTEMPT_TO_LOAD_LIBRARY_FROM_PATHS://
     //:REPORT_RESULT_OF_OUR_EFFORTS:-------------------------://
-    #define I_P GLEB_InfoPrint
+    #define I_P AAC2020_GLEBIND_InfoPrint
 
         I_P("[ABOUT_TO:REPORT_RESULT_OF_OUR_EFFORTS]\n");
 
@@ -1146,13 +1127,13 @@ GLEB_TryOpenDLL( void ){
             /** [Failed_To_Load_DLL]                         **/
             /** No news is good news. And if you get         **/
             /** this news, it is bad news.                   **/
-            /** #GLEB_no_news_is_good_news#                  **/
+            /** #AAC2020_GLEBIND_no_news_is_good_news#                  **/
             printf("[FATAL_ERROR:OPENGL_DLL_HANDLE_IS_NULL]\n");
             printf("[If_You_Are_Seeing_This_It_Means_None_]\n");
             printf("[Of_Your_Paths_Pointed_To_OpenGL32.dll]\n");
             fflush(stdout);exit(666);
         }else{
-            if( GLEB_no_news_is_good_news >= 1 ){
+            if( AAC2020_GLEBIND_no_news_is_good_news >= 1 ){
                 //: Do nothing. No news is good news.
             }else{
                 I_P("[OK:DLL_HANDLE_IS_SATED]\n");
@@ -1163,11 +1144,11 @@ GLEB_TryOpenDLL( void ){
     #undef I_P
     //:-------------------------:REPORT_RESULT_OF_OUR_EFFORTS://
     
-    GLEB_MM_DEBUGPRINT_01(
-        "[END:GLEB_TryOpenDLL]"
+    AAC2020_GLEBIND_MM_DEBUGPRINT_01(
+        "[END:AAC2020_GLEBIND_TryOpenDLL]"
     );;
     return( open_gl_handle );
-} //[[GLEB_TryOpenDLL]]//
+} //[[AAC2020_GLEBIND_TryOpenDLL]]//
 
 //[][][][][][][][][][][][][][][][][][][][][][][]//
 
@@ -1177,43 +1158,43 @@ GLEB_TryOpenDLL( void ){
 
 //# ONLY_USE_FOR_OPENGL_FUNCTIONS_THAT_DO      #//
 //# NOT_REQUIRE_AN_EXISTING_CONTEXT_TO_WORK    #//
-GLEB_FUNC
-GLEB_LoadFunc(
+AAC2020_GLEBIND_FUNC
+AAC2020_GLEBIND_LoadFunc(
     const char* name_of_open_gl_function  
 ){
-#define I_P GLEB_InfoPrint
+#define I_P AAC2020_GLEBIND_InfoPrint
     //:LAZY_LOAD_OPEN_GL_DLL:--------------------------------://
 
-        GLEB_MM_DEBUGPRINT_01( "[BEG:GLEB_LoadFunc]" );
+        AAC2020_GLEBIND_MM_DEBUGPRINT_01( "[BEG:AAC2020_GLEBIND_LoadFunc]" );
 
         //:Lazily load OpenCL.dll the first time
         //:it is needed.
-        if(NULL==GLEB_open_gl_handle){
+        if(NULL==AAC2020_GLEBIND_open_gl_handle){
 
-            I_P("[About_To_Attempt:GLEB_TryOpenDLL()]\n");
-            GLEB_open_gl_handle =( GLEB_TryOpenDLL() );
+            I_P("[About_To_Attempt:AAC2020_GLEBIND_TryOpenDLL()]\n");
+            AAC2020_GLEBIND_open_gl_handle =( AAC2020_GLEBIND_TryOpenDLL() );
 
         };;
-        if(NULL==GLEB_open_gl_handle){
+        if(NULL==AAC2020_GLEBIND_open_gl_handle){
 
-            gleb_Halt("[GL_DLL_HANDLE_STILL_NULL]");
+            aac2020_glebind_Halt("[GL_DLL_HANDLE_STILL_NULL]");
 
         };;
     
-        GLEB_MM_DEBUGPRINT_01("[has_open_cl_handle]");
+        AAC2020_GLEBIND_MM_DEBUGPRINT_01("[has_open_cl_handle]");
 
     //:--------------------------------:LAZY_LOAD_OPEN_GL_DLL://
     //:GET_FUNCTION_ADDRESS_FROM_OPEN_GL_DLL:----------------://
 
-        GLEB_FUNC function_pointer = 
-       (GLEB_FUNC)PEB2020_GetProcAddress( 
+        AAC2020_GLEBIND_FUNC function_pointer = 
+       (AAC2020_GLEBIND_FUNC)PEB2020_GetProcAddress( 
 
-            GLEB_open_gl_handle
+            AAC2020_GLEBIND_open_gl_handle
             ,name_of_open_gl_function
 
         );if(NULL==function_pointer){
             printf(
-            /**/"[GLEB_LoadFunc:Fail]:%s\n"
+            /**/"[AAC2020_GLEBIND_LoadFunc:Fail]:%s\n"
             ,   name_of_open_gl_function
             );;
             fflush(stdout);
@@ -1223,12 +1204,12 @@ GLEB_LoadFunc(
     //:----------------:GET_FUNCTION_ADDRESS_FROM_OPEN_GL_DLL://
     //:RETURN_FUNCTION_POINTER:------------------------------://
 
-        GLEB_MM_DEBUGPRINT_01("[END:GLEB_LoadFunc]");
+        AAC2020_GLEBIND_MM_DEBUGPRINT_01("[END:AAC2020_GLEBIND_LoadFunc]");
         return( function_pointer );
 
     //:------------------------------:RETURN_FUNCTION_POINTER://
 #undef I_P
-} //[[GLEB_LoadFunc]]//
+} //[[AAC2020_GLEBIND_LoadFunc]]//
 
 //[][][][][][][][][][][][][][][][][][][][][][][]//
 
@@ -1244,7 +1225,7 @@ GLEB_LoadFunc(
 
 
 //:OPEN_GL_TYPEDEFS:COMMENTED_OUT:===========================://
-//:    //:#GLEBIND_GLH_TYPES#://                         //: ://
+//:    //:#AAC2020_GLEBIND_GLH_TYPES#://                         //: ://
 //:    #ifndef    GL_VERSION                                 ://
 //:                                                          ://
 //:        typedef int GLsizei;                              ://
@@ -1327,7 +1308,7 @@ GLEB_LoadFunc(
 //[XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]//
 //[XX This one is special.                   XX]//
 //[XX The wrapper function is called         XX]//
-//[XX GLEB_wglGetProcAddress instead of      XX]//
+//[XX AAC2020_GLEBIND_wglGetProcAddress instead of      XX]//
 //[XX      wglGetProcAddress to avoid        XX]//
 //[XX      conflicts with Windows.h.         XX]//
 //[XX The "wglGetProcAddress" function       XX]//
@@ -1347,7 +1328,7 @@ GLEB_LoadFunc(
 //[XX                                        XX]//
 //[XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]//
 typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]   XX]//
-GLEBIND_WIN32_PROC                               
+AAC2020_GLEBIND_WIN32_PROC                               
 (*PFN_wglGetProcAddress)            //[  ]   XX]//
 (                                   //[  ]   XX]//
 /**/const char* /**LPCSTR**/    Arg1                  
@@ -1359,18 +1340,18 @@ PFN_wglGetProcAddress               //[  ]   XX]//
 pfn_wglGetProcAddress;              //[  ]   XX]//
                                     //[  ]   XX]//
 //[_|_|_|_|_|_|_|_|____|_|_|_|_|_]////[  ]   XX]//
-GLEBIND_WIN32_PROC                  //[  ]   XX]//
-GLEB_wglGetProcAddress              //[  ]   XX]//
+AAC2020_GLEBIND_WIN32_PROC                  //[  ]   XX]//
+AAC2020_GLEBIND_wglGetProcAddress              //[  ]   XX]//
 (                                   //[  ]   XX]//
 /**/const char*    Arg1                  //[01]   XX]//
 ){                                  //[  ]   XX]//                 
-    GLEB_FuncPointerSated(          //[  ]   XX]//
+    AAC2020_GLEBIND_FuncPointerSated(          //[  ]   XX]//
     /**/ "[pfn_wglGetProcAddress]", //[  ]   XX]//
-(GLEB_FUNC)pfn_wglGetProcAddress );;//[  ]   XX]//         
+(AAC2020_GLEBIND_FUNC)pfn_wglGetProcAddress );;//[  ]   XX]//         
     return(pfn_wglGetProcAddress(   //[  ]   XX]//
     /**/      Arg1                  //[01]   XX]//
     ));;                            //[  ]   XX]//           
-} //[[GLEB_wglGetProcAddress]____________]   XX]//
+} //[[AAC2020_GLEBIND_wglGetProcAddress]____________]   XX]//
 //[XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]//
 //[XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]//
 //[XX                                        XX]//
@@ -1392,18 +1373,18 @@ pfn_wglGetCurrentContext;           //[  ]   XX]//
                                     //[  ]   XX]//
 //[_|_|_|_|_|_|_|_|____|_|_|_|_|_]////[  ]   XX]//
 void* /** HGLRC:Handle_GL_RenderingContext **/                           
-GLEB_wglGetCurrentContext           //[  ]   XX]//
+AAC2020_GLEBIND_wglGetCurrentContext           //[  ]   XX]//
 (                                   //[  ]   XX]//
                              void   //[00]   XX]//
 ){                                  //[  ]   XX]//                 
-    GLEB_FuncPointerSated(          //[__ ¯¯]XX]//
+    AAC2020_GLEBIND_FuncPointerSated(          //[__ ¯¯]XX]//
     /**/ "[pfn_wglGetCurrentContext]", //[  ]XX]//
-(GLEB_FUNC)pfn_wglGetCurrentContext );;//[  ]XX]//         
+(AAC2020_GLEBIND_FUNC)pfn_wglGetCurrentContext );;//[  ]XX]//         
     return(pfn_wglGetCurrentContext(   //[  ]XX]//
                                     //[¯¯ __]XX]//
                           //[void]////[00]   XX]//
     ));;                            //[  ]   XX]//           
-} //[[GLEB_wglGetCurrentContext]____________]XX]//
+} //[[AAC2020_GLEBIND_wglGetCurrentContext]____________]XX]//
 //[XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]//
 //[XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]//
 //[XX                                        XX]//
@@ -1434,18 +1415,18 @@ pfn_wglCreateContext;               //[  ]   XX]//
                                     //[  ]   XX]//
 //[_|_|_|_|_|_|_|_|____|_|_|_|_|_]////[  ]   XX]//
 void* /** HGLRC:Handle_GL_RenderingContext **/                                
-GLEB_wglCreateContext               //[  ]   XX]//
+AAC2020_GLEBIND_wglCreateContext               //[  ]   XX]//
 (                                   //[  ]   XX]//
 /**/ void* /** HDC **/      Arg1    //[01]   XX]//
 ){                                  //[  ]   XX]//                 
-    GLEB_FuncPointerSated(          //[__ ¯¯]XX]//
+    AAC2020_GLEBIND_FuncPointerSated(          //[__ ¯¯]XX]//
     /**/ "[pfn_wglCreateContext]",     //[  ]XX]//
-(GLEB_FUNC)pfn_wglCreateContext );;    //[  ]XX]//         
+(AAC2020_GLEBIND_FUNC)pfn_wglCreateContext );;    //[  ]XX]//         
     return(pfn_wglCreateContext(       //[  ]XX]//
                                     //[¯¯ __]XX]//
                             Arg1    //[01]   XX]//
     ));;                            //[  ]   XX]//           
-} //[[GLEB_wglCreateContext]________________]XX]//
+} //[[AAC2020_GLEBIND_wglCreateContext]________________]XX]//
 //[XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]//
 //[XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]//
 //[XX                                        XX]//
@@ -1480,20 +1461,20 @@ pfn_wglMakeCurrent;                 //[  ]   XX]//
                                     //[  ]   XX]//
 //[_|_|_|_|_|_|_|_|____|_|_|_|_|_]////[  ]   XX]//
 int /** BOOL **/                    //[  ]   XX]//
-GLEB_wglMakeCurrent                 //[  ]   XX]//
+AAC2020_GLEBIND_wglMakeCurrent                 //[  ]   XX]//
 (                                   //[  ]   XX]//
 /**/void* /** HDC   **/ input_HDC   //[01]   XX]//
 ,   void* /** HGLRC **/ input_HGLRC //[02]   XX]//
 ){                                  //[  ]   XX]//                 
-    GLEB_FuncPointerSated(          //[__ ¯¯]XX]//
+    AAC2020_GLEBIND_FuncPointerSated(          //[__ ¯¯]XX]//
     /**/ "[pfn_wglMakeCurrent]",       //[  ]XX]//
-(GLEB_FUNC)pfn_wglMakeCurrent );;      //[  ]XX]//         
+(AAC2020_GLEBIND_FUNC)pfn_wglMakeCurrent );;      //[  ]XX]//         
     return(pfn_wglMakeCurrent(         //[  ]XX]//
                                     //[¯¯ __]XX]//
     /**/               input_HDC    //[01]   XX]//
     ,                  input_HGLRC  //[02]   XX]//
     ));;                            //[  ]   XX]//           
-} //[[GLEB_wglMakeCurrent]__________________]XX]//
+} //[[AAC2020_GLEBIND_wglMakeCurrent]__________________]XX]//
 //[XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]//
 
 //[][][][][][][][][][][][][][][][][][][][][][][]//
@@ -1517,23 +1498,23 @@ GLEB_wglMakeCurrent                 //[  ]   XX]//
 //!     /wiki/Load_OpenGL_Functions            !//
 //!                                            !//
 //! ]URL]SOURCE                                !//
-GLEB_FUNC
-GLEB_GetAnyGLFuncAddress(
+AAC2020_GLEBIND_FUNC
+AAC2020_GLEBIND_GetAnyGLFuncAddress(
     const char* name_of_open_gl_function
 ){
     
-    GLEB_FUNC p =(
-        (GLEB_FUNC)GLEB_wglGetProcAddress(    
+    AAC2020_GLEBIND_FUNC p =(
+        (AAC2020_GLEBIND_FUNC)AAC2020_GLEBIND_wglGetProcAddress(    
             name_of_open_gl_function   
         )
     );;                                   
     
     if(
         (p ==        0        ) ||
-        (p == ( GLEB_FUNC )0x1) || 
-        (p == ( GLEB_FUNC )0x2) ||
-        (p == ( GLEB_FUNC )0x3) ||
-        (p == ( GLEB_FUNC ) -1) ||
+        (p == ( AAC2020_GLEBIND_FUNC )0x1) || 
+        (p == ( AAC2020_GLEBIND_FUNC )0x2) ||
+        (p == ( AAC2020_GLEBIND_FUNC )0x3) ||
+        (p == ( AAC2020_GLEBIND_FUNC ) -1) ||
     0){
         //: HMODULE module =(
         //:     LoadLibraryA("opengl32.dll")
@@ -1545,25 +1526,25 @@ GLEB_GetAnyGLFuncAddress(
 
         //:You were supposed to check for this
         //:Before using the function!
-        if(NULL==GLEB_open_gl_handle){
-            gleb_Halt("[2019_06_06_1248AM]");
+        if(NULL==AAC2020_GLEBIND_open_gl_handle){
+            aac2020_glebind_Halt("[2019_06_06_1248AM]");
         };;
 
-        p = (GLEB_FUNC)PEB2020_GetProcAddress(
-        /**/GLEB_open_gl_handle
+        p = (AAC2020_GLEBIND_FUNC)PEB2020_GetProcAddress(
+        /**/AAC2020_GLEBIND_open_gl_handle
         ,   name_of_open_gl_function
         );;
 
         if(NULL==p){
             //:DispiteYourBestEffortsYouFail
-            gleb_Halt(
+            aac2020_glebind_Halt(
                 "[DispiteYourBestEfforsYouFail]"
             );;
         };;
     };;
 
     if(NULL==p){
-        gleb_Halt("[2019_06_06_1250AM]");;
+        aac2020_glebind_Halt("[2019_06_06_1250AM]");;
     };;
 
     return( p );
@@ -1596,9 +1577,9 @@ glGenBuffers                              //[  ]//
 /**/int            /** GLsizei    **/        n  //[01]//
 ,   unsigned int*  /** GLuint:PTR **/  buffers  //[02]//
 ){                                        //[  ]//                            
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     /**/ "[pfn_glGenBuffers]",            //[  ]//
-(GLEB_FUNC)pfn_glGenBuffers );;           //[  ]//                    
+(AAC2020_GLEBIND_FUNC)pfn_glGenBuffers );;           //[  ]//                    
     /*void*/(pfn_glGenBuffers(            //[  ]//
     /**/                               n  //[01]//
     ,                            buffers  //[02]//
@@ -1626,9 +1607,9 @@ glBindBuffer                              //[  ]//
 /**/unsigned int /** GLenum **/                        target  //[01]//
 ,   unsigned int /** GLuint **/                        buffer  //[02]//
 ){                                        //[  ]//                            
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
       /**/ "[pfn_glBindBuffer]",          //[  ]//
-  (GLEB_FUNC)pfn_glBindBuffer );;         //[  ]//                    
+  (AAC2020_GLEBIND_FUNC)pfn_glBindBuffer );;         //[  ]//                    
     /*VOID*/(pfn_glBindBuffer(            //[  ]//
     /**/                          target  //[01]//
     ,                             buffer  //[02]//
@@ -1660,9 +1641,9 @@ glBufferData                              //[  ]//
 ,   const void* /** GLvoid:PTR **/    data                 //[03]//
 ,   unsigned int /** GLenum **/          usage                 //[04]//
 ){                                        //[  ]//                            
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glBufferData]",          //[  ]//
-  (GLEB_FUNC)pfn_glBufferData );;         //[  ]//                    
+  (AAC2020_GLEBIND_FUNC)pfn_glBufferData );;         //[  ]//                    
     /*VOID*/(pfn_glBufferData(            //[  ]//
     /**/           target                 //[  ]//
     ,                size                 //[  ]//
@@ -1690,9 +1671,9 @@ glGetError                                //[  ]//
 (                                         //[  ]//
             void                          //[00]//
 ){                                        //[  ]//                            
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glGetError]",            //[  ]//
-  (GLEB_FUNC)pfn_glGetError );;           //[  ]//                    
+  (AAC2020_GLEBIND_FUNC)pfn_glGetError );;           //[  ]//                    
       return(pfn_glGetError(              //[  ]//
         /** VOID **/                      //[  ]//
     ));;                                  //[  ]//                      
@@ -1717,9 +1698,9 @@ glEnableVertexAttribArray                 //[  ]//
 (                                         //[  ]//
             unsigned int /** GLuint **/ index                  //[00]//
 ){                                        //[  ]//                            
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glEnableVertexAttribArray]",   //
-  (GLEB_FUNC)pfn_glEnableVertexAttribArray );;  //                  
+  (AAC2020_GLEBIND_FUNC)pfn_glEnableVertexAttribArray );;  //                  
 /*X_return*/(pfn_glEnableVertexAttribArray(     //
                    index                  //[  ]//
     ));;                                  //[  ]//                      
@@ -1758,9 +1739,9 @@ glVertexAttribPointer                     //[  ]//
 ,   int /** GLsizei **/         stride                //[05]//
 ,   const void* /** GLvoid:PTR **/  pointer                //[06]//
 ){                                        //[  ]//                            
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glVertexAttribPointer]", //[  ]//
-  (GLEB_FUNC)pfn_glVertexAttribPointer );;//[  ]//           
+  (AAC2020_GLEBIND_FUNC)pfn_glVertexAttribPointer );;//[  ]//           
 /*X_return*/(pfn_glVertexAttribPointer(   //[  ]//
                                           //[  ]//
     /**/            index                 //[01]//
@@ -1797,9 +1778,9 @@ glDrawArrays                              //[  ]//
 ,                           int /** GLint **/   first //[02]//
 ,                           int /** GLsizei **/ count //[03]//
 ){                                        //[  ]//                            
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glDrawArrays]",          //[  ]//
-  (GLEB_FUNC)pfn_glDrawArrays );;         //[  ]//           
+  (AAC2020_GLEBIND_FUNC)pfn_glDrawArrays );;         //[  ]//           
 /*X_return*/(pfn_glDrawArrays(            //[  ]//
     /**/                             mode //[01]//
     ,                               first //[02]//
@@ -1826,9 +1807,9 @@ glDisableVertexAttribArray                //[  ]//
 (                                         //[  ]//
                             unsigned int /** GLuint **/ index  //[01]//  
 ){                                        //[  ]//                            
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glDisableVertexAttribArray]",  //
-  (GLEB_FUNC)pfn_glDisableVertexAttribArray );; //           
+  (AAC2020_GLEBIND_FUNC)pfn_glDisableVertexAttribArray );; //           
 /*X_return*/(pfn_glDisableVertexAttribArray(    //
                                    index  //[01]//
     ));;                                  //[  ]//                      
@@ -1853,9 +1834,9 @@ glCreateShader                            //[  ]//
 (                                         //[  ]//
                         unsigned int /** GLenum **/ shaderType //[01]//
 ){                                        //[  ]//                           
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glCreateShader]",  //    //[  ]//
-  (GLEB_FUNC)pfn_glCreateShader );; //    //[  ]//
+  (AAC2020_GLEBIND_FUNC)pfn_glCreateShader );; //    //[  ]//
     return(  pfn_glCreateShader(    //    //[  ]//
                                shaderType //[01]//
     ));;                                  //[  ]//                     
@@ -1886,9 +1867,9 @@ glShaderSource                            //[  ]//
 ,               const char**  /** GLchar:PTR_PTR**/    string  //[03]//
 ,               const int*  /** GLint:PTR **/      length  //[04]//
 ){                                        //[  ]//                           
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glShaderSource]",        //[  ]//
-  (GLEB_FUNC)pfn_glShaderSource );;       //[  ]//
+  (AAC2020_GLEBIND_FUNC)pfn_glShaderSource );;       //[  ]//
   /*X_RET*/( pfn_glShaderSource(          //[  ]//
     /**/                          shader  //[01]//
     ,                              count  //[02]//
@@ -1916,9 +1897,9 @@ glCompileShader                           //[  ]//
 (                                         //[  ]//
 /**/            unsigned int /** GLuint **/            shader  //[01]//
 ){                                        //[  ]//                           
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glCompileShader]",       //[  ]//
-  (GLEB_FUNC)pfn_glCompileShader );;      //[  ]//
+  (AAC2020_GLEBIND_FUNC)pfn_glCompileShader );;      //[  ]//
   /*X_RET*/( pfn_glCompileShader(         //[  ]//
     /**/                          shader  //[01]//
     ));;                                  //[  ]//                     
@@ -1947,9 +1928,9 @@ glGetShaderiv                             //[  ]//
 ,                           unsigned int /** GLenum **/  pname //[02]//
 ,                           int*  /** GLint:PTR **/ params //[03]//
 ){                                        //[  ]//                           
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glGetShaderiv]",         //[  ]//
-  (GLEB_FUNC)pfn_glGetShaderiv );;        //[  ]//
+  (AAC2020_GLEBIND_FUNC)pfn_glGetShaderiv );;        //[  ]//
   /*X_RET*/( pfn_glGetShaderiv(           //[  ]//
     /**/                           shader //[01]//
     ,                               pname //[02]//
@@ -1982,9 +1963,9 @@ glGetShaderInfoLog                        //[  ]//
 ,	                int* /** GLsizei **/      length   //[03]//
 ,	                char*  /** GLchar:PTR **/     infoLog   //[04]//
 ){                                        //[  ]//                           
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glGetShaderInfoLog]",    //[  ]//
-  (GLEB_FUNC)pfn_glGetShaderInfoLog );;   //[  ]//
+  (AAC2020_GLEBIND_FUNC)pfn_glGetShaderInfoLog );;   //[  ]//
   /*X_RET*/( pfn_glGetShaderInfoLog(      //[  ]//
     /**/                         shader   //[01]//
     ,                         maxLength   //[02]//
@@ -2012,9 +1993,9 @@ glCreateProgram                           //[  ]//
 (                                         //[  ]//
                                    void   //[00]//
 ){                                        //[  ]//                           
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glCreateProgram]",       //[  ]//
-  (GLEB_FUNC)pfn_glCreateProgram );;      //[  ]//
+  (AAC2020_GLEBIND_FUNC)pfn_glCreateProgram );;      //[  ]//
     return(  pfn_glCreateProgram(         //[  ]//
                                 //|void|////[00]//
     ));;                                  //[  ]//                     
@@ -2041,9 +2022,9 @@ glAttachShader                            //[  ]//
 /**/                    unsigned int /** GLuint **/  program   //[01]//
 ,                       unsigned int /** GLuint **/   shader   //[02]//
 ){                                        //[  ]//                           
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glAttachShader]",        //[  ]//
-  (GLEB_FUNC)pfn_glAttachShader );;       //[  ]//
+  (AAC2020_GLEBIND_FUNC)pfn_glAttachShader );;       //[  ]//
     /*NO*/(  pfn_glAttachShader(          //[  ]//
     /**/                        program   //[01]//
     ,                            shader   //[02]//
@@ -2069,9 +2050,9 @@ glLinkProgram                             //[  ]//
 (                                         //[  ]//
 /**/                    unsigned int /** GLuint **/  program   //[01]//
 ){                                        //[  ]//                           
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glLinkProgram]",         //[  ]//
-  (GLEB_FUNC)pfn_glLinkProgram );;        //[  ]//
+  (AAC2020_GLEBIND_FUNC)pfn_glLinkProgram );;        //[  ]//
     /*NO*/(  pfn_glLinkProgram(           //[  ]//
     /**/                        program   //[01]//
     ));;                                  //[  ]//                     
@@ -2100,9 +2081,9 @@ glGetProgramiv                            //[  ]//
 ,                       unsigned int /** GLenum **/     pname  //[02]//
 ,                       int*  /** GLint:PTR **/    params  //[03]//
 ){                                        //[  ]//                           
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glGetProgramiv]",        //[  ]//
-  (GLEB_FUNC)pfn_glGetProgramiv );;       //[  ]//
+  (AAC2020_GLEBIND_FUNC)pfn_glGetProgramiv );;       //[  ]//
     /*NO*/(  pfn_glGetProgramiv(          //[  ]//
     /**/                         program  //[01]//
     ,                              pname  //[02]//
@@ -2135,9 +2116,9 @@ glGetProgramInfoLog                       //[  ]//
 ,                   int* /** GLsizei **/       length  //[03]//
 ,                   char*  /** GLchar:PTR **/      infoLog  //[04]//
 ){                                        //[  ]//                           
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glGetProgramInfoLog]",   //[  ]//
-  (GLEB_FUNC)pfn_glGetProgramInfoLog );;  //[  ]//
+  (AAC2020_GLEBIND_FUNC)pfn_glGetProgramInfoLog );;  //[  ]//
     /*NO*/(  pfn_glGetProgramInfoLog(     //[  ]//
     /**/                         program  //[01]//
     ,                          maxLength  //[02]//
@@ -2167,9 +2148,9 @@ glDetachShader                            //[  ]//
 /**/                unsigned int /** GLuint **/       program  //[01]//
 ,                   unsigned int /** GLuint **/        shader  //[02]//
 ){                                        //[  ]//                           
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glDetachShader]",        //[  ]//
-  (GLEB_FUNC)pfn_glDetachShader );;       //[  ]//
+  (AAC2020_GLEBIND_FUNC)pfn_glDetachShader );;       //[  ]//
     /*NO*/(  pfn_glDetachShader(          //[  ]//
     /**/                         program  //[01]//
     ,                             shader  //[02]//
@@ -2195,9 +2176,9 @@ glDeleteShader                            //[  ]//
 (                                         //[  ]//
 /**/                unsigned int /** GLuint **/        shader  //[01]// 
 ){                                        //[  ]//                           
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glDeleteShader]",        //[  ]//
-  (GLEB_FUNC)pfn_glDeleteShader );;       //[  ]//
+  (AAC2020_GLEBIND_FUNC)pfn_glDeleteShader );;       //[  ]//
     /*NO*/(  pfn_glDeleteShader(          //[  ]//
     /**/                          shader  //[01]//
     ));;                                  //[  ]//                     
@@ -2222,9 +2203,9 @@ glClear                                   //[  ]//
 (                                         //[  ]//
 /**/                    unsigned int /** GLbitfield **/  mask  //[01]// 
 ){                                        //[  ]//                           
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glClear]",               //[  ]//
-  (GLEB_FUNC)pfn_glClear );;              //[  ]//
+  (AAC2020_GLEBIND_FUNC)pfn_glClear );;              //[  ]//
     /*NO*/(  pfn_glClear(                 //[  ]//
     /**/                            mask  //[01]//
     ));;                                  //[  ]//                     
@@ -2249,9 +2230,9 @@ glUseProgram                              //[  ]//
 (                                         //[  ]//
 /**/                    unsigned int /** GLuint **/   program  //[01]//
 ){                                        //[  ]//                           
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glUseProgram]",          //[  ]//
-  (GLEB_FUNC)pfn_glUseProgram );;         //[  ]//
+  (AAC2020_GLEBIND_FUNC)pfn_glUseProgram );;         //[  ]//
     /*NO*/(  pfn_glUseProgram(            //[  ]//
     /**/                         program  //[01]//
     ));;                                  //[  ]//                     
@@ -2282,9 +2263,9 @@ glViewport                                //[  ]//
 ,                       int /** GLsizei **/  width    //[03]//
 ,                       int /** GLsizei **/ height    //[04]//
 ){                                        //[  ]//                           
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glViewport]",            //[  ]//
-  (GLEB_FUNC)pfn_glViewport );;           //[  ]//
+  (AAC2020_GLEBIND_FUNC)pfn_glViewport );;           //[  ]//
     /*NO*/(  pfn_glViewport(              //[  ]//
     /**/                             x    //[01]//
     ,                                y    //[02]//
@@ -2318,9 +2299,9 @@ glClearColor                              //[  ]//
 ,                       float /** GLfloat **/  B_lue    //[03]//
 ,                       float /** GLfloat **/  A_alpha  //[04]//
 ){                                        //[  ]//                           
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glClearColor]",          //[  ]//
-  (GLEB_FUNC)pfn_glClearColor );;         //[  ]//
+  (AAC2020_GLEBIND_FUNC)pfn_glClearColor );;         //[  ]//
     /*NO*/(  pfn_glClearColor(            //[  ]//
     /**/                         R_ed     //[01]//
     ,                            G_reen   //[02]//
@@ -2350,9 +2331,9 @@ glGenVertexArrays                         //[  ]//
 /**/                    int /** GLsizei **/       n   //[01]//
 ,                       unsigned int*  /** GLuint:PTR **/   arrays   //[02]//
 ){                                        //[  ]//                           
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glGenVertexArrays]",     //[  ]//
-  (GLEB_FUNC)pfn_glGenVertexArrays );;    //[  ]//
+  (AAC2020_GLEBIND_FUNC)pfn_glGenVertexArrays );;    //[  ]//
     /*NO*/(  pfn_glGenVertexArrays(       //[  ]//
     /**/                              n   //[01]//
     ,                            arrays   //[02]//
@@ -2378,9 +2359,9 @@ glBindVertexArray                         //[  ]//
 (                                         //[  ]//
                             unsigned int /** GLuint **/ array  //[01]//
 ){                                        //[  ]//                           
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glBindVertexArray]",     //[  ]//
-  (GLEB_FUNC)pfn_glBindVertexArray );;    //[  ]//
+  (AAC2020_GLEBIND_FUNC)pfn_glBindVertexArray );;    //[  ]//
     /*NO*/(  pfn_glBindVertexArray(       //[  ]//
                                    array  //[01]//
     ));;                                  //[  ]//           
@@ -2412,9 +2393,9 @@ glGenTextures                             //[  ]//
     texture_names_pointer                 //[02]//
 
 ){                                        //[  ]//                           
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glGenTextures]",         //[  ]//
-  (GLEB_FUNC)pfn_glGenTextures );;        //[  ]//
+  (AAC2020_GLEBIND_FUNC)pfn_glGenTextures );;        //[  ]//
     /*NO*/(  pfn_glGenTextures(           //[  ]//
     /**/    n_number_of_textures_to_make  //[01]//
     ,              texture_names_pointer  //[02]//
@@ -2442,9 +2423,9 @@ glBindTexture                             //[  ]//
 /**/        unsigned int /** GLenum **/  texture_binding_target//[01]//
 ,           unsigned int /** GLuint **/ texture_name_aka_handle//[02]//
 ){                                        //[  ]//                           
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glBindTexture]",         //[  ]//
-  (GLEB_FUNC)pfn_glBindTexture );;        //[  ]//
+  (AAC2020_GLEBIND_FUNC)pfn_glBindTexture );;        //[  ]//
     /*NO*/(  pfn_glBindTexture(           //[  ]//
     /**/            texture_binding_target//[01]//
     ,              texture_name_aka_handle//[02]//
@@ -2474,9 +2455,9 @@ glTexParameteri                           //[  ]//
 ,                           unsigned int /** GLenum **/  pname //[02]//
 ,                           int /** GLint **/   param //[03]//
 ){                                        //[  ]//                           
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glTexParameteri]",       //[  ]//
-  (GLEB_FUNC)pfn_glTexParameteri );;      //[  ]//
+  (AAC2020_GLEBIND_FUNC)pfn_glTexParameteri );;      //[  ]//
     /*NO*/(  pfn_glTexParameteri(         //[  ]//
     /**/                           target //[01]//
     ,                               pname //[02]//
@@ -2519,9 +2500,9 @@ glTexImage2D                              //[  ]//
 ,	            unsigned int /** GLenum **/              type  //[08]//
 ,	            const void* /** GLvoid:PTR **/       data  //[09]//
 ){                                        //[  ]//                           
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glTexImage2D]",          //[  ]//
-  (GLEB_FUNC)pfn_glTexImage2D );;         //[  ]//
+  (AAC2020_GLEBIND_FUNC)pfn_glTexImage2D );;         //[  ]//
     /*NO*/(  pfn_glTexImage2D(            //[  ]//
     /**/                          target  //[01]//
     ,	                           level  //[02]//
@@ -2554,9 +2535,9 @@ glActiveTexture                           //[  ]//
 (                                         //[  ]//
 /**/                    unsigned int /** GLenum **/   texture  //[01]//
 ){                                        //[  ]//                           
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     /**/   "[pfn_glActiveTexture]",       //[  ]//
-  (GLEB_FUNC)pfn_glActiveTexture );;      //[  ]//
+  (AAC2020_GLEBIND_FUNC)pfn_glActiveTexture );;      //[  ]//
     /*NO*/(  pfn_glActiveTexture(         //[  ]//
     /**/                         texture  //[01]//
     ));;                                  //[  ]//           
@@ -2585,10 +2566,10 @@ glGetUniformLocation                      //[  ]//
 ){                                        //[  ]//   
     int /** GLint **/ ret;                            //[  ]//
                                           //[  ]//
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     //[[[[[[[pfn]]]]]]]////[___________]////[  ]//
     /**/   "[pfn_glGetUniformLocation]",  //[  ]//
-  (GLEB_FUNC)pfn_glGetUniformLocation );; //[  ]//
+  (AAC2020_GLEBIND_FUNC)pfn_glGetUniformLocation );; //[  ]//
     ret=(    pfn_glGetUniformLocation(    //[  ]//
     /**/                           program//[01]//
     ,                                 name//[02]//
@@ -2621,10 +2602,10 @@ glUniform1i                               //[  ]//
 ){                                        //[  ]//   
     /**VOID ret;**/                       //[  ]//
                                           //[  ]//
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     //[[[[[[[pfn]]]]]]]////[___________]////[  ]//
     /**/   "[pfn_glUniform1i]",           //[  ]//
-  (GLEB_FUNC)pfn_glUniform1i );;          //[  ]//
+  (AAC2020_GLEBIND_FUNC)pfn_glUniform1i );;          //[  ]//
    /*NO*/(   pfn_glUniform1i(             //[  ]//
     /**/                          location//[01]//
     ,                                   v0//[02]//
@@ -2657,10 +2638,10 @@ glPixelStorei                             //[  ]//
 ){                                        //[  ]//   
     /**VOID ret;**/                       //[  ]//
                                           //[  ]//
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     //[[[[[[[pfn]]]]]]]////[___________]////[  ]//
     /**/   "[pfn_glPixelStorei]",         //[  ]//
-  (GLEB_FUNC)pfn_glPixelStorei );;        //[  ]//
+  (AAC2020_GLEBIND_FUNC)pfn_glPixelStorei );;        //[  ]//
    /*NO*/(   pfn_glPixelStorei(
     /**/                            pname //[01]//
     ,                               param //[02]//
@@ -2691,10 +2672,10 @@ glEnable                                  //[  ]//
 ){                                        //[  ]//   
     /**VOID ret;**/                       //[  ]//
                                           //[  ]//
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     //[[[[[[[pfn]]]]]]]////[___________]////[  ]//
     /**/   "[pfn_glEnable]",              //[  ]//
-  (GLEB_FUNC)pfn_glEnable );;             //[  ]//
+  (AAC2020_GLEBIND_FUNC)pfn_glEnable );;             //[  ]//
    /*NO*/(   pfn_glEnable(                //[  ]//
     /**/            cap_is_for_capability //[01]//
     ));;                                  //[  ]//
@@ -2724,10 +2705,10 @@ glFinish                                  //[  ]//
 ){                                        //[  ]//   
     /**VOID ret;**/                       //[  ]//
                                           //[  ]//
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     //[[[[[[[pfn]]]]]]]////[___________]////[  ]//
     /**/   "[pfn_glFinish]",              //[  ]//
-  (GLEB_FUNC)pfn_glFinish );;             //[  ]//
+  (AAC2020_GLEBIND_FUNC)pfn_glFinish );;             //[  ]//
    /*NO*/(   pfn_glFinish(                //[  ]//
         /** ZERO_PARAMETERS **/           //[00]//
     ));;                                  //[  ]//
@@ -2759,10 +2740,10 @@ glGetIntegerv                             //[  ]//
 ){                                        //[  ]//   
     /**VOID ret;**/                       //[  ]//
                                           //[  ]//
-    GLEB_FuncPointerSated(                //[  ]//
+    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
     //[[[[[[[pfn]]]]]]]////[___________]////[  ]//
     /**/   "[pfn_glGetIntegerv ]",        //[  ]//
-  (GLEB_FUNC)pfn_glGetIntegerv  );;       //[  ]//
+  (AAC2020_GLEBIND_FUNC)pfn_glGetIntegerv  );;       //[  ]//
    /*NO*/(   pfn_glGetIntegerv (          //[  ]//
     /**/                            pname //[01]//
     ,                                data //[02]//
@@ -2782,10 +2763,10 @@ glGetIntegerv                             //[  ]//
 //: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
 
 int
-gleb_Alert( const char* alert_message ){
+aac2020_glebind_Alert( const char* alert_message ){
 
     //:WhatWentWrong?
-    printf( "[gleb_Alert:alert_message]:%s\n"
+    printf( "[aac2020_glebind_Alert:alert_message]:%s\n"
                         ,alert_message );;
     fflush(stdout);
 
@@ -2797,7 +2778,7 @@ gleb_Alert( const char* alert_message ){
 
         if(NULL==FP->USER32.MessageBoxW){
             #define H aac2020_ginawin_Halt
-            H( "[GLEBIND:ForgotToInitMsgBoxW]"  );
+            H( "[AAC2020_GLEBIND:ForgotToInitMsgBoxW]"  );
             #undef  H
         };;
 
@@ -2836,40 +2817,40 @@ gleb_Alert( const char* alert_message ){
 
 
 struct
-gleb_library_container{
+aac2020_glebind_library_container{
 
     void* /** HGLRC **/
     handle_to_gl_rendering_context;
 
     struct 
-    gleb_BBT_is_BUFFER_BINDING_TARGET{
+    aac2020_glebind_BBT_is_BUFFER_BINDING_TARGET{
 
         unsigned int /** GLenum **/ gl_array_buffer; //: 0x8892
 
-    }BBT;struct gleb_BBT_is_BUFFER_BINDING_TARGET*
+    }BBT;struct aac2020_glebind_BBT_is_BUFFER_BINDING_TARGET*
                             BUFFER_BINDING_TARGET;
 
     //|-  --  --  --  --  --  --  --  --  --  -|//
 
     struct
-    gleb_BD_is_BUFFER_DATA{
+    aac2020_glebind_BD_is_BUFFER_DATA{
         
         //: The data store contents will be
         //: modified once and used many times as
         //: the source for GL drawing commands.
         unsigned int /** GLenum **/ gl_static_draw; //: 0x88E4
 
-    }BD;struct gleb_BD_is_BUFFER_DATA*
+    }BD;struct aac2020_glebind_BD_is_BUFFER_DATA*
                           BUFFER_DATA;
 
     //|-  --  --  --  --  --  --  --  --  --  -|//
 
     struct
-    gleb_ERR_is_ERROR_FLAGS{
+    aac2020_glebind_ERR_is_ERROR_FLAGS{
 
         unsigned int /** GLenum **/ gl_no_error; //: 0
 
-    }ERR;struct gleb_ERR_is_ERROR_FLAGS*
+    }ERR;struct aac2020_glebind_ERR_is_ERROR_FLAGS*
                             ERROR_FLAGS;
 
     //|-  --  --  --  --  --  --  --  --  --  -|//
@@ -2879,75 +2860,75 @@ gleb_library_container{
     //|  khronos.org/opengl/wiki/OpenGL_Type   |//
     //|___                                  ___|//
     struct 
-    gleb_TYP_is_COMMON_ENUM_TYPES{
+    aac2020_glebind_TYP_is_COMMON_ENUM_TYPES{
 
         unsigned int /** GLenum **/ gl_float; //: 0x1406
 
-    }TYP;struct gleb_TYP_is_COMMON_ENUM_TYPES*
+    }TYP;struct aac2020_glebind_TYP_is_COMMON_ENUM_TYPES*
                             COMMON_ENUM_TYPES;
 
     //|========================================|//
     struct 
-    gleb_BOL_is_BOOLEAN_CONSTANTS{
+    aac2020_glebind_BOL_is_BOOLEAN_CONSTANTS{
 
         unsigned char /** GLboolean **/  gl_true ; //:  1
         unsigned char /** GLboolean **/  gl_false; //:  0
 
-    }BOL;struct gleb_BOL_is_BOOLEAN_CONSTANTS*
+    }BOL;struct aac2020_glebind_BOL_is_BOOLEAN_CONSTANTS*
                             BOOLEAN_CONSTANTS;
     //|========================================|//
 
     struct 
-    gleb_MOD_is_DRAW_MODES{
+    aac2020_glebind_MOD_is_DRAW_MODES{
 
         unsigned int /** GLenum **/ gl_triangles     ; //:0x0004
         unsigned int /** GLenum **/ gl_triangle_fan  ; //:0x0006
         unsigned int /** GLenum **/ gl_triangle_strip; //:0x0005
 
-    }MOD;struct gleb_MOD_is_DRAW_MODES*
+    }MOD;struct aac2020_glebind_MOD_is_DRAW_MODES*
                             DRAW_MODES;
 
     //|========================================|//
 
     struct 
-    gleb_ST_is_SHADER_TYPES{
+    aac2020_glebind_ST_is_SHADER_TYPES{
 
         unsigned int /** GLenum **/ gl_vertex_shader  ; //:??
         unsigned int /** GLenum **/ gl_fragment_shader; //:??
 
-    }ST;struct gleb_ST_is_SHADER_TYPES*
+    }ST;struct aac2020_glebind_ST_is_SHADER_TYPES*
                           SHADER_TYPES;
 
     //:Functions:
     //|========================================|//
 
     struct
-    gleb_SPN_is_SHADER_PARAM_NAMES{
+    aac2020_glebind_SPN_is_SHADER_PARAM_NAMES{
 
         unsigned int /** GLenum **/ gl_compile_status ;
         unsigned int /** GLenum **/ gl_info_log_length;
 
-    }SPN;struct gleb_SPN_is_SHADER_PARAM_NAMES*
+    }SPN;struct aac2020_glebind_SPN_is_SHADER_PARAM_NAMES*
                             SHADER_PARAM_NAMES;
 
     //|========================================|//
 
     struct
-    gleb_PPN_is_PROGRAM_PARAM_NAMES{
+    aac2020_glebind_PPN_is_PROGRAM_PARAM_NAMES{
 
         unsigned int /** GLenum **/ gl_link_status;
         unsigned int /** GLenum **/ gl_info_log_length;
 
-    }PPN;struct gleb_PPN_is_PROGRAM_PARAM_NAMES*
+    }PPN;struct aac2020_glebind_PPN_is_PROGRAM_PARAM_NAMES*
                             PROGRAM_PARAM_NAMES;
 
     //|========================================|//
     struct
-    gleb_MAS_is_BITFIELD_MASKS{
+    aac2020_glebind_MAS_is_BITFIELD_MASKS{
 
         unsigned int /** GLbitfield **/ gl_color_buffer_bit;
 
-    }MAS;struct gleb_MAS_is_BITFIELD_MASKS*
+    }MAS;struct aac2020_glebind_MAS_is_BITFIELD_MASKS*
                             BITFIELD_MASKS;
 
     //|========================================|//
@@ -2961,7 +2942,7 @@ gleb_library_container{
 
 
     struct
-    gleb_TEXTURE_is_for_TEXTURE{
+    aac2020_glebind_TEXTURE_is_for_TEXTURE{
 
         //: L0 == Nesting Level ZERO(0); ####################://
         //: L1 == Nesting Level ONE(1);  ####################://
@@ -2971,7 +2952,7 @@ gleb_library_container{
         #define SL1( A , B ) struct A ## _ ## B  //:#########://
 
         struct
-        gleb_SLOT_if_for_TEXTURE_UNIT_SLOT{
+        aac2020_glebind_SLOT_if_for_TEXTURE_UNIT_SLOT{
     
             //:We only need this one. To get
             //:other slots simply add an
@@ -2984,42 +2965,42 @@ gleb_library_container{
         //+ Moved to:                          +//
         //+ TEXTURE.TEX_TYP.GPU_DEV            +//
         //- struct                                 -//
-        //- gleb_texture_BINDING_TARGETS{          -//
+        //- aac2020_glebind_texture_BINDING_TARGETS{          -//
         //-                                        -//
         //-     unsigned int /** GLenum **/ gl_texture_2d; //: 0x0DE1   -//
         //-                                        -//
         //- }BINDING_TARGETS;                      -//
 
-        SL0(gleb_TEX_LOD_is_LEVEL_OF_DETAIL){
-        SL1(gleb_TEX_LOD_is_LEVEL_OF_DETAIL,gpu){
+        SL0(aac2020_glebind_TEX_LOD_is_LEVEL_OF_DETAIL){
+        SL1(aac2020_glebind_TEX_LOD_is_LEVEL_OF_DETAIL,gpu){
         //:LODsUsedBy:openGL/device/gpu
         
             int zero;
         
         }GPU_DEV;
-        SL1(gleb_TEX_LOD_is_LEVEL_OF_DETAIL,cpu){
+        SL1(aac2020_glebind_TEX_LOD_is_LEVEL_OF_DETAIL,cpu){
         //:LODsUsedBy:client/host/cpu
 
             int unused;
 
         }CPU_HOS;
         }TEX_LOD;
-        SL0(gleb_TEX_TYP_is_for_TEXTURE_TYPE){
-        SL1(gleb_TEX_TYP_is_for_TEXTURE_TYPE,gpu){
+        SL0(aac2020_glebind_TEX_TYP_is_for_TEXTURE_TYPE){
+        SL1(aac2020_glebind_TEX_TYP_is_for_TEXTURE_TYPE,gpu){
         //:TextureTypesUsedBy:openGL/device/gpu
         
             unsigned int /** GLenum **/ gl_texture_2d; //: 0x0DE1
         
         }GPU_DEV;
-        SL1(gleb_TEX_TYP_is_for_TEXTURE_TYPE,cpu){
+        SL1(aac2020_glebind_TEX_TYP_is_for_TEXTURE_TYPE,cpu){
         //:TextureTypesUsedBy:client/host/cpu
 
             int unused;
 
         }CPU_HOS;
         }TEX_TYP;
-        SL0(gleb_PIX_FMT_is_for_PIXEL_FORMAT){
-        SL1(gleb_PIX_FMT_is_for_PIXEL_FORMAT,gpu){
+        SL0(aac2020_glebind_PIX_FMT_is_for_PIXEL_FORMAT){
+        SL1(aac2020_glebind_PIX_FMT_is_for_PIXEL_FORMAT,gpu){
         //:PixelFormatsUsedBy:openGL/device/gpu
         //:(Also known as "Internal_Format")
         //:(Also known as "Internal Format")
@@ -3029,7 +3010,7 @@ gleb_library_container{
             int /** GLint **/ gl_rgba8ui; //: 0x8D7C
         
         }GPU_DEV;
-        SL1(gleb_PIX_FMT_is_for_PIXEL_FORMAT,cpu){
+        SL1(aac2020_glebind_PIX_FMT_is_for_PIXEL_FORMAT,cpu){
         //:PixelFormatsUsedBy:client/host/cpu
 
             //- GLint gl_rgba; //: 0x1908      -//
@@ -3038,43 +3019,43 @@ gleb_library_container{
 
         }CPU_HOS;
         }PIX_FMT;
-        SL0(gleb_PIX_TYP_is_for_PIXEL_TYPE){
-        SL1(gleb_PIX_TYP_is_for_PIXEL_TYPE,gpu){
+        SL0(aac2020_glebind_PIX_TYP_is_for_PIXEL_TYPE){
+        SL1(aac2020_glebind_PIX_TYP_is_for_PIXEL_TYPE,gpu){
         //:PixelTypesUsedBy:openGL/device/gpu
 
         
             int unused;
         
         }GPU_DEV;
-        SL1(gleb_PIX_TYP_is_for_PIXEL_TYPE,cpu){
+        SL1(aac2020_glebind_PIX_TYP_is_for_PIXEL_TYPE,cpu){
         //:PixelTypesUsedBy:client/host/cpu
 
             unsigned int /** GLenum **/ gl_unsigned_byte; //:0x1401
 
         }CPU_HOS;
         }PIX_TYP;
-        SL0(gleb_PIX_DAT_is_for_PIXEL_DATA){
-        SL1(gleb_PIX_DAT_is_for_PIXEL_DATA,gpu){
+        SL0(aac2020_glebind_PIX_DAT_is_for_PIXEL_DATA){
+        SL1(aac2020_glebind_PIX_DAT_is_for_PIXEL_DATA,gpu){
         //:PixelTypesUsedBy:openGL/device/gpu
 
         
             int unused;
         
         }GPU_DEV;
-        SL1(gleb_PIX_DAT_is_for_PIXEL_DATA,cpu){
+        SL1(aac2020_glebind_PIX_DAT_is_for_PIXEL_DATA,cpu){
         //:PixelTypesUsedBy:client/host/cpu
 
             void* /** GLvoid:PTR **/ pix_nul; //:Null_Data
 
         }CPU_HOS;
         }PIX_DAT;
-        SL0(gleb_BORDER_is_for_TEXTURE_BORDER){
+        SL0(aac2020_glebind_BORDER_is_for_TEXTURE_BORDER){
             int /** GLint **/ must_be_zero_for_teximage2d;
         }BORDER;
-        SL0(gleb_texture_PARAMETERS){
+        SL0(aac2020_glebind_texture_PARAMETERS){
 
             struct
-            gleb_texture_parameter_NAMES{
+            aac2020_glebind_texture_parameter_NAMES{
 
                 #define T unsigned int /** GLenum **/ 
                 T gl_texture_min_filter; //:0x2801
@@ -3085,7 +3066,7 @@ gleb_library_container{
             }NAM;
 
             struct
-            gleb_texture_parameter_VALUES{
+            aac2020_glebind_texture_parameter_VALUES{
                 int /** GLint **/ gl_nearest       ;//:0x2600
                 int /** GLint **/ gl_clamp_to_edge ;//:0x812F
             }VAL;
@@ -3095,13 +3076,13 @@ gleb_library_container{
         //:Example Usage:
         //+    GLint which_texture_iid;        +//
         //+    glGetIntegerv(                  +//
-        //+       GLEB.TEXTURE.QUERY.          +//
+        //+       AAC2020_GLEBIND.TEXTURE.QUERY.          +//
         //+       gl_texture_binding_2d        +//
         //+    ,                               +//
         //+       &(which_texture_iid)         +//
         //+    );;                             +//
         struct
-        gleb_texture_parameters_QUERY{
+        aac2020_glebind_texture_parameters_QUERY{
             
             //:Thought I wanted this for use
             //:with "GL_TEXTURE_BINDING_2D".
@@ -3142,7 +3123,7 @@ gleb_library_container{
     }TEXTURE;
     //|-  --  --  --  --  --  --  --  --  --  -|//
     
-    struct gleb_UNIFORM_is_for_UNIFORMS{
+    struct aac2020_glebind_UNIFORM_is_for_UNIFORMS{
 
         //: Though it is "0x826E" in my glcore.arb
         //: header, I will define it as the
@@ -3156,7 +3137,7 @@ gleb_library_container{
     }UNIFORM; //| <--Try to keep everything    |//
               //|    SINGULAR grammatically.   |//
 
-    struct gleb_ALIGNMENT_is_for_ALIGNMENT{
+    struct aac2020_glebind_ALIGNMENT_is_for_ALIGNMENT{
         
         //:For use with:
         //: glPixelStorei
@@ -3168,7 +3149,7 @@ gleb_library_container{
     //:Some constants are duplicated in different
     //:areas. But I like how it is more explicit
     //:about the usage of the value.
-    struct gleb_CAPABILITIES_you_can_enable{
+    struct aac2020_glebind_CAPABILITIES_you_can_enable{
 
         unsigned int /** GLenum **/ gl_texture_2d; //: 0x0DE1
 
@@ -3289,17 +3270,17 @@ gleb_library_container{
 
     //|========================================|//
 
-}GLEB={
-    .BUFFER_BINDING_TARGET=&( GLEB.BBT  )
-   ,.BUFFER_DATA          =&( GLEB.BD   )
-   ,.ERROR_FLAGS          =&( GLEB.ERR  )
-   ,.COMMON_ENUM_TYPES    =&( GLEB.TYP  )
-   ,.BOOLEAN_CONSTANTS    =&( GLEB.BOL  )
-   ,.DRAW_MODES           =&( GLEB.MOD  )
-   ,.SHADER_TYPES         =&( GLEB.ST   )
-   ,.SHADER_PARAM_NAMES   =&( GLEB.SPN  )
-   ,.PROGRAM_PARAM_NAMES  =&( GLEB.PPN  )
-   ,.BITFIELD_MASKS       =&( GLEB.MAS  )
+}AAC2020_GLEBIND={
+    .BUFFER_BINDING_TARGET=&( AAC2020_GLEBIND.BBT  )
+   ,.BUFFER_DATA          =&( AAC2020_GLEBIND.BD   )
+   ,.ERROR_FLAGS          =&( AAC2020_GLEBIND.ERR  )
+   ,.COMMON_ENUM_TYPES    =&( AAC2020_GLEBIND.TYP  )
+   ,.BOOLEAN_CONSTANTS    =&( AAC2020_GLEBIND.BOL  )
+   ,.DRAW_MODES           =&( AAC2020_GLEBIND.MOD  )
+   ,.SHADER_TYPES         =&( AAC2020_GLEBIND.ST   )
+   ,.SHADER_PARAM_NAMES   =&( AAC2020_GLEBIND.SPN  )
+   ,.PROGRAM_PARAM_NAMES  =&( AAC2020_GLEBIND.PPN  )
+   ,.BITFIELD_MASKS       =&( AAC2020_GLEBIND.MAS  )
     
    ,.BBT.gl_array_buffer    = 0x8892 //|IIIIIII|//
    ,.BD .gl_static_draw     = 0x88E4 //|IIIIIII|//
@@ -3552,22 +3533,22 @@ gleb_library_container{
 };
 
 void* /** HGLRC **/
-GLEB_GetRenderingContext(){
+AAC2020_GLEBIND_GetRenderingContext(){
 
     //:windef.h: DECLARE_HANDLE(HGLRC);
     void* /** HGLRC **/ 
     ren_con=(
-        GLEB.handle_to_gl_rendering_context
+        AAC2020_GLEBIND.handle_to_gl_rendering_context
     );;
     if(NULL==ren_con){
-        gleb_Halt("[Null:HGLRC]");
+        aac2020_glebind_Halt("[Null:HGLRC]");
     };;
 
     return( ren_con );
-} //[GLEB_GetRenderingContext]//
+} //[AAC2020_GLEBIND_GetRenderingContext]//
 
 void* /** HDC **/
-GLEB_GetDeviceContext(){
+AAC2020_GLEBIND_GetDeviceContext(){
     
     void* /** HDC **/
     window_associated_with_rendering_context=(
@@ -3579,23 +3560,23 @@ GLEB_GetDeviceContext(){
         ==
         window_associated_with_rendering_context
     ){
-        gleb_Halt("[Null:HDC]");
+        aac2020_glebind_Halt("[Null:HDC]");
     };;
 
     return(
         window_associated_with_rendering_context
     );;
-} //[GLEB_GetDeviceContext]//
+} //[AAC2020_GLEBIND_GetDeviceContext]//
 
 
 //[][][][][][][][][][][][][][][][][][][][][][][]//
 
-void GLEB_GetFuncsFromDLL(){
+void AAC2020_GLEBIND_GetFuncsFromDLL(){
 
     //:So we can use shorthand variable:
     typedef
-    GLEB_FUNC (*F)(const char*);
-    F f = &(GLEB_LoadFunc);
+    AAC2020_GLEBIND_FUNC (*F)(const char*);
+    F f = &(AAC2020_GLEBIND_LoadFunc);
 
 
         pfn_wglGetProcAddress=(
@@ -3637,8 +3618,8 @@ void GLEB_GetFuncsFromDLL(){
     //////////////////////////////////////////////
 
     typedef
-    GLEB_FUNC (*G)(const char*);
-    G g = &(GLEB_GetAnyGLFuncAddress);
+    AAC2020_GLEBIND_FUNC (*G)(const char*);
+    G g = &(AAC2020_GLEBIND_GetAnyGLFuncAddress);
 
     //# The OpenGL context must already be     #//
     //# created before calling                 #//
@@ -3687,7 +3668,7 @@ void GLEB_GetFuncsFromDLL(){
         )
     );;
     if(NULL==handle_to_gl_rendering_context){
-        gleb_Alert("[HGLRC:Fail]");
+        aac2020_glebind_Alert("[HGLRC:Fail]");
     }else{
         printf("[HGLRC:Pass]\n");
     };;
@@ -3696,18 +3677,18 @@ void GLEB_GetFuncsFromDLL(){
     //# We can fetch other functions!          #//
     int /** BOOL **/ make_current_worked = (0-777);
     make_current_worked=(
-    GLEB_wglMakeCurrent(
+    AAC2020_GLEBIND_wglMakeCurrent(
         windows_handle_to_device_context
     ,   handle_to_gl_rendering_context
     ));;
 
     if(1 == make_current_worked ){
-        gleb_OK("[make_current_worked]");
+        aac2020_glebind_OK("[make_current_worked]");
     }else{
-        gleb_Alert("[FailedToMakeCurrent]");
+        aac2020_glebind_Alert("[FailedToMakeCurrent]");
     };;
 
-    GLEB.handle_to_gl_rendering_context=(
+    AAC2020_GLEBIND.handle_to_gl_rendering_context=(
          handle_to_gl_rendering_context
     );;
     
@@ -3865,14 +3846,14 @@ void GLEB_GetFuncsFromDLL(){
 
      
 
-} //[[GLEB_GetFuncsFromDLL]]//
+} //[[AAC2020_GLEBIND_GetFuncsFromDLL]]//
 
 //[][][][][][][][][][][][][][][][][][][][][][][]//
 
 //:Meant to be a quick test to give us a bit
 //:of certainty that we didn't make any stupid
 //:mistakes, but not at all comprehensive.
-void gleb_LibraryAliasSmokeTest(){
+void aac2020_glebind_LibraryAliasSmokeTest(){
 
     unsigned int /** GLenum **/ a;
     unsigned int /** GLenum **/ b;
@@ -3909,165 +3890,165 @@ void gleb_LibraryAliasSmokeTest(){
 
     //
 
-    a = GLEB.BUFFER_BINDING_TARGET  
+    a = AAC2020_GLEBIND.BUFFER_BINDING_TARGET  
         -> gl_array_buffer;
     
-    b = GLEB.BBT
+    b = AAC2020_GLEBIND.BBT
         .  gl_array_buffer;
 
     //
 
-    c = GLEB.BUFFER_DATA  
+    c = AAC2020_GLEBIND.BUFFER_DATA  
         -> gl_static_draw;
     
-    d = GLEB.BD
+    d = AAC2020_GLEBIND.BD
         .  gl_static_draw;
 
     //
 
-    e = GLEB.ERROR_FLAGS  
+    e = AAC2020_GLEBIND.ERROR_FLAGS  
         -> gl_no_error;
     
-    f = GLEB.ERR
+    f = AAC2020_GLEBIND.ERR
         .  gl_no_error;
 
     //
 
-    g = GLEB.COMMON_ENUM_TYPES  
+    g = AAC2020_GLEBIND.COMMON_ENUM_TYPES  
         -> gl_float;
     
-    h = GLEB.TYP
+    h = AAC2020_GLEBIND.TYP
         .  gl_float;
 
     //
 
-    i1 = GLEB.BOOLEAN_CONSTANTS
+    i1 = AAC2020_GLEBIND.BOOLEAN_CONSTANTS
         -> gl_false;
-    i2 = GLEB.BOOLEAN_CONSTANTS
+    i2 = AAC2020_GLEBIND.BOOLEAN_CONSTANTS
         -> gl_true;
 
-    j1 = GLEB.BOL
+    j1 = AAC2020_GLEBIND.BOL
         . gl_false;
-    j2 = GLEB.BOL
+    j2 = AAC2020_GLEBIND.BOL
         .  gl_true;
 
     //
 
-    k = GLEB.DRAW_MODES
+    k = AAC2020_GLEBIND.DRAW_MODES
         -> gl_triangles;
 
-    l = GLEB.MOD
+    l = AAC2020_GLEBIND.MOD
         .  gl_triangles;
 
     //
 
-    m = GLEB.SHADER_TYPES
+    m = AAC2020_GLEBIND.SHADER_TYPES
         -> gl_vertex_shader;
 
-    n = GLEB.ST
+    n = AAC2020_GLEBIND.ST
         .  gl_vertex_shader;
 
     //
 
-    o = GLEB.SHADER_TYPES
+    o = AAC2020_GLEBIND.SHADER_TYPES
         -> gl_fragment_shader;
 
-    p = GLEB.ST
+    p = AAC2020_GLEBIND.ST
         .  gl_fragment_shader;
 
     //
 
-    q = GLEB.SHADER_PARAM_NAMES
+    q = AAC2020_GLEBIND.SHADER_PARAM_NAMES
         -> gl_compile_status;
 
-    r = GLEB.SPN
+    r = AAC2020_GLEBIND.SPN
         .  gl_compile_status;
 
     //
 
-    s = GLEB.SHADER_PARAM_NAMES
+    s = AAC2020_GLEBIND.SHADER_PARAM_NAMES
         -> gl_info_log_length;
 
-    t = GLEB.SPN
+    t = AAC2020_GLEBIND.SPN
         .  gl_info_log_length;
 
     //
 
-    u = GLEB.PROGRAM_PARAM_NAMES
+    u = AAC2020_GLEBIND.PROGRAM_PARAM_NAMES
         -> gl_link_status;
 
-    v = GLEB.PPN
+    v = AAC2020_GLEBIND.PPN
         .  gl_link_status;
 
     //
 
-    w = GLEB.PROGRAM_PARAM_NAMES
+    w = AAC2020_GLEBIND.PROGRAM_PARAM_NAMES
         -> gl_info_log_length;
 
-    x = GLEB.PPN
+    x = AAC2020_GLEBIND.PPN
         .  gl_info_log_length;
 
     //
 
-    y = GLEB.BITFIELD_MASKS
+    y = AAC2020_GLEBIND.BITFIELD_MASKS
         -> gl_color_buffer_bit;
 
-    z = GLEB.MAS
+    z = AAC2020_GLEBIND.MAS
         .  gl_color_buffer_bit;
 
     //
 
     //:Fetched from "." or "->" is same:
     //|========================================|//
-    if(a !=b ){ gleb_Halt("[LibSmokeTest:AB]"); }
-    if(c !=d ){ gleb_Halt("[LibSmokeTest:CD]"); }
-    if(e !=f ){ gleb_Halt("[LibSmokeTest:EF]"); }
-    if(g !=h ){ gleb_Halt("[LibSmokeTest:GH]"); }
-    if(i1!=j1){ gleb_Halt("[SMOKETEST:G1H1:]"); }
-    if(i2!=j2){ gleb_Halt("[SMOKETEST:G2H2:]"); }
-    if(k !=l ){ gleb_Halt("[LibSmokeTest:KL]"); }
-    if(m !=n ){ gleb_Halt("[LibSmokeTest:MN]"); }
-    if(o !=p ){ gleb_Halt("[LibSmokeTest:OP]"); }
-    if(q !=r ){ gleb_Halt("[LibSmokeTest:QR]"); }
-    if(s !=t ){ gleb_Halt("[LibSmokeTest:ST]"); }
-    if(u !=v ){ gleb_Halt("[LibSmokeTest:UV]"); }
-    if(w !=x ){ gleb_Halt("[LibSmokeTest:WX]"); }
-    if(y !=z ){ gleb_Halt("[LibSmokeTest:YZ]"); }
+    if(a !=b ){ aac2020_glebind_Halt("[LibSmokeTest:AB]"); }
+    if(c !=d ){ aac2020_glebind_Halt("[LibSmokeTest:CD]"); }
+    if(e !=f ){ aac2020_glebind_Halt("[LibSmokeTest:EF]"); }
+    if(g !=h ){ aac2020_glebind_Halt("[LibSmokeTest:GH]"); }
+    if(i1!=j1){ aac2020_glebind_Halt("[SMOKETEST:G1H1:]"); }
+    if(i2!=j2){ aac2020_glebind_Halt("[SMOKETEST:G2H2:]"); }
+    if(k !=l ){ aac2020_glebind_Halt("[LibSmokeTest:KL]"); }
+    if(m !=n ){ aac2020_glebind_Halt("[LibSmokeTest:MN]"); }
+    if(o !=p ){ aac2020_glebind_Halt("[LibSmokeTest:OP]"); }
+    if(q !=r ){ aac2020_glebind_Halt("[LibSmokeTest:QR]"); }
+    if(s !=t ){ aac2020_glebind_Halt("[LibSmokeTest:ST]"); }
+    if(u !=v ){ aac2020_glebind_Halt("[LibSmokeTest:UV]"); }
+    if(w !=x ){ aac2020_glebind_Halt("[LibSmokeTest:WX]"); }
+    if(y !=z ){ aac2020_glebind_Halt("[LibSmokeTest:YZ]"); }
     //|========================================|//
 
     //:Make sure not accidentially same value:
     //|========================================|//
-    if( a ==c ){ gleb_Halt("[LibSmokeTest:AC]"); }
-    if( b ==d ){ gleb_Halt("[LibSmokeTest:BD]"); }      
-    if( c ==e ){ gleb_Halt("[LibSmokeTest:CE]"); }
-    if( d ==f ){ gleb_Halt("[LibSmokeTest:DF]"); }
-    if( e ==g ){ gleb_Halt("[LibSmokeTest:EG]"); }
-    if( f ==h ){ gleb_Halt("[LibSmokeTest:FH]"); }
-    if( g ==i1){ gleb_Halt("[LibSmokeTest:GI]"); }
-    if( h ==j1){ gleb_Halt("[LibSmokeTest:HJ]"); }
-    if( i1==k ){ gleb_Halt("[LibSmokeTest:IK]"); }
-    if( j1==l ){ gleb_Halt("[LibSmokeTest:JL]"); }
-    if( m ==o ){ gleb_Halt("[LibSmokeTest:MO]"); }
-    if( n ==p ){ gleb_Halt("[LibSmokeTest:NP]"); }
-    if( q ==s ){ gleb_Halt("[LibSmokeTest:QS]"); }
-    if( t ==r ){ gleb_Halt("[LibSmokeTest:TR]"); }
-    if( m ==q ){ gleb_Halt("[LibSmokeTest:MQ]"); }
-    if( o ==s ){ gleb_Halt("[LibSmokeTest:OS]"); }
-    if( p ==q ){ gleb_Halt("[LibSmokeTest:PQ]"); }
-    if( r ==s ){ gleb_Halt("[LibSmokeTest:RS]"); }
-    if( t ==u ){ gleb_Halt("[LibSmokeTest:TU]"); }
-    if( v ==x ){ gleb_Halt("[LibSmokeTest:TU]"); }
-    if( e ==i2){ gleb_Halt("[LibSmokeTST:EI2]"); }
-    if( f ==j2){ gleb_Halt("[LibSmokeTST:FJ2]"); }
-    if( x == y){ gleb_Halt("[LibSmokeTest:XY]"); }
+    if( a ==c ){ aac2020_glebind_Halt("[LibSmokeTest:AC]"); }
+    if( b ==d ){ aac2020_glebind_Halt("[LibSmokeTest:BD]"); }      
+    if( c ==e ){ aac2020_glebind_Halt("[LibSmokeTest:CE]"); }
+    if( d ==f ){ aac2020_glebind_Halt("[LibSmokeTest:DF]"); }
+    if( e ==g ){ aac2020_glebind_Halt("[LibSmokeTest:EG]"); }
+    if( f ==h ){ aac2020_glebind_Halt("[LibSmokeTest:FH]"); }
+    if( g ==i1){ aac2020_glebind_Halt("[LibSmokeTest:GI]"); }
+    if( h ==j1){ aac2020_glebind_Halt("[LibSmokeTest:HJ]"); }
+    if( i1==k ){ aac2020_glebind_Halt("[LibSmokeTest:IK]"); }
+    if( j1==l ){ aac2020_glebind_Halt("[LibSmokeTest:JL]"); }
+    if( m ==o ){ aac2020_glebind_Halt("[LibSmokeTest:MO]"); }
+    if( n ==p ){ aac2020_glebind_Halt("[LibSmokeTest:NP]"); }
+    if( q ==s ){ aac2020_glebind_Halt("[LibSmokeTest:QS]"); }
+    if( t ==r ){ aac2020_glebind_Halt("[LibSmokeTest:TR]"); }
+    if( m ==q ){ aac2020_glebind_Halt("[LibSmokeTest:MQ]"); }
+    if( o ==s ){ aac2020_glebind_Halt("[LibSmokeTest:OS]"); }
+    if( p ==q ){ aac2020_glebind_Halt("[LibSmokeTest:PQ]"); }
+    if( r ==s ){ aac2020_glebind_Halt("[LibSmokeTest:RS]"); }
+    if( t ==u ){ aac2020_glebind_Halt("[LibSmokeTest:TU]"); }
+    if( v ==x ){ aac2020_glebind_Halt("[LibSmokeTest:TU]"); }
+    if( e ==i2){ aac2020_glebind_Halt("[LibSmokeTST:EI2]"); }
+    if( f ==j2){ aac2020_glebind_Halt("[LibSmokeTST:FJ2]"); }
+    if( x == y){ aac2020_glebind_Halt("[LibSmokeTest:XY]"); }
     //|========================================|//
 
     //|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//
     //|Synonyms should be equal:               |//
     //|AKA:Different paths to copies of same   |//
     //|    value.                              |//
-    if( w != s ){ gleb_Halt("[SmokeT:WS]");}
-    if( t != x ){ gleb_Halt("[SmokeT:TX]");}
+    if( w != s ){ aac2020_glebind_Halt("[SmokeT:WS]");}
+    if( t != x ){ aac2020_glebind_Halt("[SmokeT:TX]");}
     //|________________________________________|//
 
     //|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//
@@ -4075,52 +4056,52 @@ void gleb_LibraryAliasSmokeTest(){
     //| you already wrote it:                  |//
     //+ e<>i1 by co-incidence only.            +//
     //+ f<>j1 by co-incidence only.            +//
-    if( e!=i1){ gleb_Halt("[LibSmokeTest:EI1]"); }
-    if( f!=j1){ gleb_Halt("[LibSmokeTest:FJ1]"); }    
+    if( e!=i1){ aac2020_glebind_Halt("[LibSmokeTest:EI1]"); }
+    if( f!=j1){ aac2020_glebind_Halt("[LibSmokeTest:FJ1]"); }    
     //|________________________________________|//
 
     //:For extra saftey, re-look up values from
     //:header file and make sure correct:
-    if( GLEB.SHADER_TYPES -> gl_fragment_shader
+    if( AAC2020_GLEBIND.SHADER_TYPES -> gl_fragment_shader
                    != 0x8B30
-    ){ gleb_Halt("[FS:0x8B30]"); }
+    ){ aac2020_glebind_Halt("[FS:0x8B30]"); }
 
-    if( GLEB.SHADER_TYPES -> gl_vertex_shader
+    if( AAC2020_GLEBIND.SHADER_TYPES -> gl_vertex_shader
                    != 0x8B31
-    ){ gleb_Halt("[VS:0x8B31]"); }
+    ){ aac2020_glebind_Halt("[VS:0x8B31]"); }
 
 
     //:Double Check More hardcoded values:
-    ; ;if( GLEB.SHADER_PARAM_NAMES
+    ; ;if( AAC2020_GLEBIND.SHADER_PARAM_NAMES
         -> gl_compile_status  !=   0x8B81
     ){
-                    gleb_Halt("[SPN:0x8B81]");
-    };;if( GLEB.SHADER_PARAM_NAMES
+                    aac2020_glebind_Halt("[SPN:0x8B81]");
+    };;if( AAC2020_GLEBIND.SHADER_PARAM_NAMES
         -> gl_info_log_length !=   0x8B84
     ){
-                    gleb_Halt("[SPN:0x8B84]");
+                    aac2020_glebind_Halt("[SPN:0x8B84]");
     };;
 
     //:Double check. Use online docs.
     //:錶/本/OpenGL/api/GL/glcorearb.h
-    if( GLEB.PROGRAM_PARAM_NAMES
+    if( AAC2020_GLEBIND.PROGRAM_PARAM_NAMES
         -> gl_link_status !=       0x8B82
     ){
-                   gleb_Halt("[PPN:0x8B82]");
+                   aac2020_glebind_Halt("[PPN:0x8B82]");
     };;
 
     //:Double-check online docs:
-    if( GLEB.PROGRAM_PARAM_NAMES
+    if( AAC2020_GLEBIND.PROGRAM_PARAM_NAMES
         -> gl_info_log_length !=   0x8B84
     ){
-                   gleb_Halt("[PPN:0x8B84]");
+                   aac2020_glebind_Halt("[PPN:0x8B84]");
     };;
 
     //:Double-check online docs:
-    if( GLEB.BITFIELD_MASKS
+    if( AAC2020_GLEBIND.BITFIELD_MASKS
         -> gl_color_buffer_bit != 0x00004000
     ){
-                  gleb_Halt("[MAS:0x00004000]");
+                  aac2020_glebind_Halt("[MAS:0x00004000]");
     };;
 
     
@@ -4130,193 +4111,193 @@ void gleb_LibraryAliasSmokeTest(){
     //:instead of "==" in comparison.
     //|========================================|//
     if(
-        GLEB.DRAW_MODES -> gl_triangles
+        AAC2020_GLEBIND.DRAW_MODES -> gl_triangles
                         ==
-        GLEB.DRAW_MODES -> gl_triangle_fan
+        AAC2020_GLEBIND.DRAW_MODES -> gl_triangle_fan
     ){
-        gleb_Halt("[TRI==FAN]"); 
+        aac2020_glebind_Halt("[TRI==FAN]"); 
     };;
     if(
-        GLEB.DRAW_MODES -> gl_triangles
+        AAC2020_GLEBIND.DRAW_MODES -> gl_triangles
                         ==
-        GLEB.DRAW_MODES -> gl_triangle_strip
+        AAC2020_GLEBIND.DRAW_MODES -> gl_triangle_strip
     ){
-        gleb_Halt("[TRI==STRIP]"); 
+        aac2020_glebind_Halt("[TRI==STRIP]"); 
     };;
     if(
-        GLEB.DRAW_MODES -> gl_triangle_fan
+        AAC2020_GLEBIND.DRAW_MODES -> gl_triangle_fan
                         ==
-        GLEB.DRAW_MODES -> gl_triangle_strip
+        AAC2020_GLEBIND.DRAW_MODES -> gl_triangle_strip
     ){
-        gleb_Halt("[FAN==STRIP]"); 
+        aac2020_glebind_Halt("[FAN==STRIP]"); 
     };;
-    if( GLEB.DRAW_MODES -> gl_triangles
+    if( AAC2020_GLEBIND.DRAW_MODES -> gl_triangles
                         != 0x0004
-    ){   gleb_Halt("[TRIS!=0x0004]"); }
-    if( GLEB.DRAW_MODES -> gl_triangle_fan 
+    ){   aac2020_glebind_Halt("[TRIS!=0x0004]"); }
+    if( AAC2020_GLEBIND.DRAW_MODES -> gl_triangle_fan 
                          != 0x0006
-    ){  gleb_Halt("[TRIFAN!=0x0006]"); }
-    if( GLEB.DRAW_MODES -> gl_triangle_strip 
+    ){  aac2020_glebind_Halt("[TRIFAN!=0x0006]"); }
+    if( AAC2020_GLEBIND.DRAW_MODES -> gl_triangle_strip 
                            != 0x0005
-    ){  gleb_Halt("[TRISTRIP!=0x0005]"); }
+    ){  aac2020_glebind_Halt("[TRISTRIP!=0x0005]"); }
     //|========================================|//
 
-    if( GLEB.TEXTURE.TEX_TYP.GPU_DEV
+    if( AAC2020_GLEBIND.TEXTURE.TEX_TYP.GPU_DEV
                   .gl_texture_2d!=0x0DE1
-    ){ gleb_Halt("[gl_texture_2d!=0x0DE1]"); }
+    ){ aac2020_glebind_Halt("[gl_texture_2d!=0x0DE1]"); }
 
 
     //:Testing texture parameter values
     //:and texture parameter names used to
     //:setup integer texture.
-    #define TPN GLEB.TEXTURE.PARAMETER.NAM
+    #define TPN AAC2020_GLEBIND.TEXTURE.PARAMETER.NAM
     if( TPN.gl_texture_min_filter != 0x2801 ){
-                         gleb_Halt("[0x2801]");};;
+                         aac2020_glebind_Halt("[0x2801]");};;
 
     if( TPN.gl_texture_mag_filter != 0x2800 ){
-                         gleb_Halt("[0x2800]");};;
+                         aac2020_glebind_Halt("[0x2800]");};;
 
     if( TPN.gl_texture_wrap_s     != 0x2802 ){
-                         gleb_Halt("[0x2802]");};;
+                         aac2020_glebind_Halt("[0x2802]");};;
 
     if( TPN.gl_texture_wrap_t     != 0x2803 ){
-                         gleb_Halt("[0x2803]");};;
+                         aac2020_glebind_Halt("[0x2803]");};;
     #undef TPN
-    #define TPV GLEB.TEXTURE.PARAMETER.VAL
+    #define TPV AAC2020_GLEBIND.TEXTURE.PARAMETER.VAL
     if( TPV.gl_nearest            != 0x2600 ){
-                         gleb_Halt("[0x2600]");};;
+                         aac2020_glebind_Halt("[0x2600]");};;
 
     if( TPV.gl_clamp_to_edge      != 0x812F ){
-                         gleb_Halt("[0x812F]");};;
+                         aac2020_glebind_Halt("[0x812F]");};;
     #undef TPV
 
     //:Added: DATE[ 2019_06_18 ]
     //////////////////////////////////////////////
-    if(GLEB.TEXTURE.TEX_LOD.GPU_DEV.zero 
-    != 0){ gleb_Halt("[2019_06_18_0518PM"); }
+    if(AAC2020_GLEBIND.TEXTURE.TEX_LOD.GPU_DEV.zero 
+    != 0){ aac2020_glebind_Halt("[2019_06_18_0518PM"); }
   
 
-    //- if(GLEB.TEXTURE.PIX_FMT.GPU_DEV        -//
+    //- if(AAC2020_GLEBIND.TEXTURE.PIX_FMT.GPU_DEV        -//
     //- .gl_rgba8 != 0x8058){                  -//
-    //-     gleb_Halt("[0x8058]");             -//
+    //-     aac2020_glebind_Halt("[0x8058]");             -//
     //- };;                                    -//
 
 
-    //- if( GLEB.TEXTURE.PIX_FMT.CPU_HOS       -//
+    //- if( AAC2020_GLEBIND.TEXTURE.PIX_FMT.CPU_HOS       -//
     //- .gl_rgba   !=   0x1908){               -//
-    //-     gleb_Halt("[0x1908]");             -//
+    //-     aac2020_glebind_Halt("[0x1908]");             -//
     //- };;                                    -//
 
-    if( GLEB.TEXTURE.PIX_TYP.CPU_HOS
+    if( AAC2020_GLEBIND.TEXTURE.PIX_TYP.CPU_HOS
     .gl_unsigned_byte
-    !=0x1401){ gleb_Halt("[0x1401]"); }
+    !=0x1401){ aac2020_glebind_Halt("[0x1401]"); }
 
-    if( GLEB.TEXTURE.PIX_DAT.CPU_HOS.pix_nul
-    != 0 ){ gleb_Halt("[pix_nul:NotNull]"); }
+    if( AAC2020_GLEBIND.TEXTURE.PIX_DAT.CPU_HOS.pix_nul
+    != 0 ){ aac2020_glebind_Halt("[pix_nul:NotNull]"); }
 
-    if( GLEB.TEXTURE.BORDER
+    if( AAC2020_GLEBIND.TEXTURE.BORDER
     .must_be_zero_for_teximage2d
-    != 0 ){ gleb_Halt("[must_be_0_for_TI2D]");}
+    != 0 ){ aac2020_glebind_Halt("[must_be_0_for_TI2D]");}
 
-    if(GLEB.TEXTURE.PIX_FMT.CPU_HOS        
+    if(AAC2020_GLEBIND.TEXTURE.PIX_FMT.CPU_HOS        
     .gl_rgba_integer                       
-    != 0x8D99 ){ gleb_Halt("[0x8D99]"); }  
+    != 0x8D99 ){ aac2020_glebind_Halt("[0x8D99]"); }  
 
-    if(GLEB.TEXTURE.PIX_FMT.GPU_DEV        
+    if(AAC2020_GLEBIND.TEXTURE.PIX_FMT.GPU_DEV        
     .gl_rgba8ui !=  0x8D7C ){ 
-        gleb_Halt("[0x8D7C]");
+        aac2020_glebind_Halt("[0x8D7C]");
     };;
 
-    if(GLEB.TEXTURE.SLOT.
+    if(AAC2020_GLEBIND.TEXTURE.SLOT.
     gl_texture0 !=  0x84C0){
-        gleb_Halt("[0x84C0]");
+        aac2020_glebind_Halt("[0x84C0]");
     };;
 
-    if(GLEB.UNIFORM.gl_max_uniform_locations
+    if(AAC2020_GLEBIND.UNIFORM.gl_max_uniform_locations
     != 1024 ){
-        gleb_Halt("[USE:1024(NOT:0x826E)]");
+        aac2020_glebind_Halt("[USE:1024(NOT:0x826E)]");
     };;
 
-    if(GLEB.ALIGNMENT.gl_unpack_alignment
+    if(AAC2020_GLEBIND.ALIGNMENT.gl_unpack_alignment
     != 0x0CF5 ){
-        gleb_Halt("[0x0CF5]");
+        aac2020_glebind_Halt("[0x0CF5]");
     };;
     
-    if(GLEB.CAPABILITY.gl_texture_2d
+    if(AAC2020_GLEBIND.CAPABILITY.gl_texture_2d
     != 0x0DE1 ){
-        gleb_Halt("[CAP:0x0DE1]");
+        aac2020_glebind_Halt("[CAP:0x0DE1]");
     };;
 
     unsigned int /** GLenum **/ CAP_gl_texture_2d =(
-        GLEB.CAPABILITY.gl_texture_2d
+        AAC2020_GLEBIND.CAPABILITY.gl_texture_2d
     );;
     unsigned int /** GLenum **/ TEX_gl_texture_2d =(
-        GLEB.TEXTURE.TEX_TYP.GPU_DEV
+        AAC2020_GLEBIND.TEXTURE.TEX_TYP.GPU_DEV
         .gl_texture_2d
     );;
     if( CAP_gl_texture_2d  
     !=  TEX_gl_texture_2d ){
-        gleb_Halt("[CAP_T2D!=TEX_T2D]");
+        aac2020_glebind_Halt("[CAP_T2D!=TEX_T2D]");
     };;
   
-    if(GLEB.TEXTURE.QUERY.gl_texture_binding_2d
+    if(AAC2020_GLEBIND.TEXTURE.QUERY.gl_texture_binding_2d
     !=0x8069){
-        gleb_Halt("[0x8069]");
+        aac2020_glebind_Halt("[0x8069]");
     };;
-    if(GLEB.TEXTURE.QUERY.gl_active_texture 
+    if(AAC2020_GLEBIND.TEXTURE.QUERY.gl_active_texture 
     !=0x84E0){
-        gleb_Halt("[0x84E0]");
+        aac2020_glebind_Halt("[0x84E0]");
     };;
 
     //////////////////////////////////////////////
 
-    gleb_OK("[LibSmokeTest]");
+    aac2020_glebind_OK("[LibSmokeTest]");
     
 
-} //[gleb_LibraryAliasSmokeTest]//
+} //[aac2020_glebind_LibraryAliasSmokeTest]//
 
-void GLEB_Wait(){
+void AAC2020_GLEBIND_Wait(){
 
     AAC2020_GINAWIN_Wait();
 
 }
 
-void GLEB_Init(){ //:Initialize
-#define I_P GLEB_InfoPrint
+void AAC2020_GLEBIND_Init(){ //:Initialize
+#define I_P AAC2020_GLEBIND_InfoPrint
 
     I_P("[ABOUT_TO:TouchFile_OPEN_GL_SEARCH_PATHS]");
     AAC2020_GLEBIND_TouchFile_OPEN_GL_SEARCH_PATHS(
         1  /** if_not_exist_add_default_contents **/ );;
 
-    I_P("[ABOUT_TO:GLEB_GetFuncsFromDLL(...)]\n");
-    GLEB_GetFuncsFromDLL();
+    I_P("[ABOUT_TO:AAC2020_GLEBIND_GetFuncsFromDLL(...)]\n");
+    AAC2020_GLEBIND_GetFuncsFromDLL();
 
-    I_P("[ABOUT_TO:gleb_LibraryAliasSmokeTest(...)]\n");
-    gleb_LibraryAliasSmokeTest();
+    I_P("[ABOUT_TO:aac2020_glebind_LibraryAliasSmokeTest(...)]\n");
+    aac2020_glebind_LibraryAliasSmokeTest();
     
 #undef I_P
-} //[[GLEB_Init]]//
+} //[[AAC2020_GLEBIND_Init]]//
 
-void GLEB_Demo(){
+void AAC2020_GLEBIND_Demo(){
 
     AAC2020_GINAWIN.X    =   0  ;
     AAC2020_GINAWIN.Y    =   0  ;
     AAC2020_GINAWIN.WID  = 256  ;
     AAC2020_GINAWIN.HIG  = 512  ;
 
-    GLEB_Init();
-    GLEB_Wait();
+    AAC2020_GLEBIND_Init();
+    AAC2020_GLEBIND_Wait();
 
-} //[GLEB_Demo]//
-void GLEB_Demonstration( void ){
-     GLEB_Demo();
-} //[GLEB_Demonstration]//
+} //[AAC2020_GLEBIND_Demo]//
+void AAC2020_GLEBIND_Demonstration( void ){
+     AAC2020_GLEBIND_Demo();
+} //[AAC2020_GLEBIND_Demonstration]//
 
 //[][][][][][][][][][][][][][][][][][][][][][][]//
 
-void GLEB_Term(){ //:Terminate
+void AAC2020_GLEBIND_Term(){ //:Terminate
     //:Put any cleanup logic here.
-} //[[GLEB_Term]_______________________________]//
+} //[[AAC2020_GLEBIND_Term]_______________________________]//
 
 //[][][][][][][][][][][][][][][][][][][][][][][]//
 
@@ -4325,14 +4306,14 @@ void GLEB_Term(){ //:Terminate
 //////////////////////////////////////////////////
 
 void
-GLEB_FitViewportToWindow( void ){
+AAC2020_GLEBIND_FitViewportToWindow( void ){
 
     //:Set size of viewport:
     int X   = AAC2020_GINAWIN_GetClient_X  ();
     int Y   = AAC2020_GINAWIN_GetClient_Y  ();
     int WID = AAC2020_GINAWIN_GetClient_WID();
     int HIG = AAC2020_GINAWIN_GetClient_HIG();
-    GLEB.glViewport(
+    AAC2020_GLEBIND.glViewport(
     /**/(int /** GLint **/) X
     ,   (int /** GLint **/) Y
     ,   (int /** GLint **/) WID

@@ -7,33 +7,40 @@
     //:CONFIG.GENERAL:=======================================://
 
     /** 0 for verbose information messages **/
-    int GLEB_no_news_is_good_news      = 1;  
+    int AAC2020_GLEBIND_no_news_is_good_news      = 1;  
 
-    int GLEB_show_user_print_statements_DEBUG = 0;
-    int GLEB_show_user_print_statements_INFO  = 1;
-    int GLEB_unit_test_verbose_echo           = 0;
+    int AAC2020_GLEBIND_show_user_print_statements_DEBUG = 0;
+    int AAC2020_GLEBIND_show_user_print_statements_INFO  = 1;
+    int AAC2020_GLEBIND_unit_test_verbose_echo           = 0;
 
     //:=======================================:CONFIG.GENERAL://
     //:CONFIG:OPEN_GL_SEARCH_PATHS:==========================://
 
         const char* 
-        GLEB_name_of_search_path_file=(
+        AAC2020_GLEBIND_name_of_search_path_file=(
             "OPEN_GL_SEARCH_PATHS.TXT" );
 
         /** Tell me about empty lines in - - - - - - - - - - **/
         /** OPEN_GL_SEARCH_PATHS.TXT - - - - - - - - - - - - **/
-        int GLEB_tell_me_about_empty_lines = 0;
+        int AAC2020_GLEBIND_tell_me_about_empty_lines = 0;
 
-        int          GLEB_next_search_path_index = 0   ;
-        int          GLEB_num_search_paths       = 0   ;
-        const char** GLEB_p_search_paths         = NULL;
+        #define INT int           //:########################://
+        #define STR const char**  //:########################://
+
+        INT     AAC2020_GLEBIND_next_search_path_index = 0   ;
+        INT     AAC2020_GLEBIND_num_search_paths       = 0   ;
+        STR     AAC2020_GLEBIND_p_search_paths         = NULL;
+
+        #undef  INT  //:#####################################://
+        #undef  STR  //:#####################################://
 
     //:==========================:CONFIG:OPEN_GL_SEARCH_PATHS://
 
 //:===========================================:CONFIGURATIONS://
 //:BUGHUNT_DEFINES:==========================================://
 
-    #define GLEB_BUGHUNT_WHITE_SPACE_PATH ( 0 ) //:BUGHUNT_001
+    //:BUGHUNT_001
+    #define AAC2020_GLEBIND_BUGHUNT_WHITE_SPACE_PATH ( 0 ) 
 
 //:==========================================:BUGHUNT_DEFINES://
 //:TYPEDEFS:=================================================://
@@ -48,19 +55,19 @@
     //:         Zero: Line was blank.                        ://
     //:     Negative: Some error happened.                   ://
     typedef                                            
-    int(*GLEB_PFN_line_processor)(const char*);        
+    int(*AAC2020_GLEBIND_PFN_line_processor)(const char*);        
 
-    //:Generic function pointer for GLEB library.
+    //:Generic function pointer for AAC2020_GLEBIND library.
     //:Used for strict compilation in C99 when
     //:casting result of "GetProcAddress"
-    typedef void (*GLEB_FUNC)(void);
+    typedef void (*AAC2020_GLEBIND_FUNC)(void);
 
     //:TYPEDEFS.WINDOWS_DOT_H:===============================://
 
         typedef 
-        __int64                          //:Returns
-        (__stdcall *GLEBIND_WIN32_PROC ) //:Name+Convention
-        ( void );                        //:Arguments
+        __int64                                  //:Returns
+        (__stdcall *AAC2020_GLEBIND_WIN32_PROC ) //:Name 
+        ( void );                                //:Arguments
 
 
     //:================================:TYPEDES.WINDOWS_DOT_H://
@@ -68,17 +75,17 @@
 //:=================================================:TYPEDEFS://
 //:FILE_SCOPE_VARIABLES(GLOBALS):============================://
 
-    void* /** HMODULE **/ GLEB_open_gl_handle = NULL;
+    void* /** HMODULE **/ AAC2020_GLEBIND_open_gl_handle = NULL;
 
 //:============================:FILE_SCOPE_VARIABLES(GLOBALS)://
 //:NOTES:====================================================://
 /** :NOTES_DUMP: ******************************************* ***
 
     PREDACESSOR: GLEB: openGL_Easy_Bindings
-    CURRENT_LIB: GLEBIND (GL_Easy_BINDings)
+    CURRENT_LIB: AAC2020_GLEBIND (GL_Easy_BINDings)
     
     Prefixes:
-    GLEB_   :Library namespace prefix.
+    AAC2020_GLEBIND_   :Library namespace prefix.
     MV_     :Macro Variable / Value
     MM_     :Maybe A Macro (MV_ value will decide)
     
