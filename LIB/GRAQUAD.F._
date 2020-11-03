@@ -1354,11 +1354,158 @@ RT(void)   AAC2020_GRAQUAD_Ping(      void ){
     //- //|DM|DM|DM|DM|DM|DM|DM|DM|DM|DM|DM|DM|DM|DM|DM|//   -//
 
 //:============:REMOVED_BECAUSE_NO_LONGER_A_PROJECT_IN_ITSELF://
+//:ALLOW_FOR_RE_LOADING_DIFFERENT_FRAGMENT_SHADERS:==========://
+
+    int
+    AAC2020_GRAQUAD_ReLoadFragShader(
+        const char* const frag_shader_str
+    ,   const  int        frag_shader_len
+    )
+    {
+        /** SUMMARY: Hackishly switch fragment shaders by:   **/
+        /**          1. Inject your own fragment shader.     **/
+        /**          2. Hijack relevant initializers.        **/
+        /**                                                  **/
+        /** One sentence summary:                            **/
+        /**     Re-use library initialization code to        **/
+        /**     load arbitrary fragment shader source.       **/
+
+        //:Make sure reported length of shader matches
+        //:the length we find when using strlen(...).
+        int len_chk=( strlen( frag_shader_str ));
+        if( len_chk        != frag_shader_len ){
+            aac2020_graquad_Halt("[SHADER_LEN_CHK_FAIL]");
+        };;
+
+        //: Alter shader reference set in: fn( Init_Data )( );
+        aac2020_graquad.data.FAG_SAD_SRC=(
+            frag_shader_str
+        );;
+
+        //:Re-build your entire shader pipeline:
+        fn( Init_NotSureWhatToCallThis_GLSetup )( );
+
+        return( 0 );
+    }
+
+    int
+    AAC2020_GRAQUAD_ReLoadFragShader_HACKTEST(void)
+    {
+        /** A hackish test of "ReLoadFragShader".  **/
+        /** If no visible effect when ran after    **/
+        /** library initialization, we will assume **/
+        /** it was successful.                     **/
+
+        AAC2020_GRAQUAD_ReLoadFragShader(
+                    aac2020_graquad_fag_sad_src
+        ,   strlen( aac2020_graquad_fag_sad_src )
+        );;
+
+        return( 0 );
+    }
+
+    int
+    AAC2020_GRAQUAD_ReLoadFragShader_StatusReady(void)
+    {
+        /**  Call ReLoadFragShader(...) with shader code     **/
+        /**  that notifies you things are okay.              **/
+
+        return( 0 );
+    }
+
+    int
+    AAC2020_GRAQUAD_ReLoadFragShader_StatusSyntaxError(void)
+    {
+        /**  Call ReLoadFragShader(...) with shader code     **/
+        /**  that notifies you things are [BAD/ERROR].       **/
+
+        const char* frag_shader_str=(
+                    //|(( VER ))_____________________________|//
+                    "#version 330 core  \n ///////////////// \n"
+                                                                  
+                    //|(( UNI ))_____________________________|//
+                    "uniform int unused_test_uniform;  \n"
+                                        
+                    //|(( INN ))_____________________________|//
+                    //:      fag_tec:FrAG_shader_TExture_Coord
+                    "in vec2 fag_tec;                        \n"    
+                                                              
+                    //|(( OUT ))_____________________________|//
+                    "out vec4 FragColor;                     \n"
+                                                                  
+                    //|(( FUN ))_____________________________|//
+                    "void main()                             \n"
+                    "{                                       \n"
+                                                                                                    
+                    " //:tic:texture_integer_color           \n"
+                    "uvec4 tic;                              \n"
+
+        //|ARRAY_SPELLING_OUT_TEXT:__________________________|//
+    "   #define U08 unsigned char                            \n"
+    "   #define _ 0                                          \n"
+    "   #define X 1                                          \n"
+    "   U08 msg_arr[ 24 * 5]=U08[ 24 * 5 ](                \n"
+    //:                  10                  20      24      ://
+    //: 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4      ://
+    "   X,X,X,_,X,_,X,_,X,X,X,_,X,X,X,_,X,X,X,_,X,X,X,_,     \n"
+    "   X,_,_,_,X,X,X,_,X,_,X,_,X,_,_,_,X,_,X,_,X,_,X,_,     \n"
+    "   X,X,X,_,_,X,_,_,X,_,X,_,X,X,_,_,X,_,_,_,X,_,_,_,     \n"
+    "   _,_,X,_,_,X,_,_,X,_,X,_,X,_,_,_,X,_,_,_,X,_,_,_,     \n"
+    "   X,X,X,_,_,X,_,_,X,_,X,_,X,X,X,_,X,_,_,_,X,_,_,_      \n"
+    //: SYNERR:Syntax_Error                                  \n"
+    "  );;                                                   \n"
+    "  #undef  _                                             \n"
+    "  #undef  X                                             \n"
+    "  #undef  U08                                           \n"
+
+    #error "[TODO:UseTileMapMathToDraw:SYNERR:Message]"
+                                                                                           
+                    //| Error_Pattern:_______________________|//
+                    "   int fc_x = int(gl_FragCoord.x);      \n"
+                    "   int fc_y = int(gl_FragCoord.y);      \n"
+                    "   int df00 =int(sqrt(   ////////////// \n"
+                    "       pow( (0-fc_x),2 ) // DISTANCE // \n"
+                    "     + pow( (0-fc_y),2 ) // DISTANCE // \n"
+                    "   ));;                  ////////////// \n"
+                    "                                        \n"
+                    "   uint r = uint( (fc_x*1) % 256 );     \n"
+                    "   uint g = uint( (fc_y*2) % 256 );     \n"
+                    "   uint b = uint( (df00*8) % 256 );     \n"
+                    "   uint a = uint(255);                  \n"
+                    "                                        \n"
+                    "   tic=uvec4( r,g,b,a );                \n"
+                    //|______________________________________|//
+                                                                                                         
+                        //|Normalize Pixel to 0-255 range:___|//
+                        " vec4  pix_f = vec4( tic ) / 255.0; \n"
+                                                                  
+                        //|Set output pixel color:___________|//
+                        "FragColor = vec4(                   \n"
+                        "   /**/pix_f.x                      \n"
+                        "   ,   pix_f.y                      \n"
+                        "   ,   pix_f.z                      \n"
+                        "   ,   1.0f                         \n"
+                        ");;                                 \n"
+                                                                  
+                    "}                                     \n\0"
+        );;
+        int frag_shader_len=( strlen( frag_shader_str ) );
+
+        AAC2020_GRAQUAD_ReLoadFragShader(
+            frag_shader_str
+        ,   frag_shader_len
+        );;
+
+        return( 0 );
+    }
 
 
+//:
+//:==========================================================://
+//::::::::::::NO_FUNCTIONS_BELONG_BELOW_THIS_POINT:::::::::::://
+//:==========================================================://
 
-
-#undef  MACRO_AAC2020_GRAQUAD_DEBUG_MODE ////////////////
+#undef  MACRO_AAC2020_GRAQUAD_DEBUG_MODE ///////////////////////
 
 //|////////////////////////////////////////////|//
 //|     -///-                        -///-     |//

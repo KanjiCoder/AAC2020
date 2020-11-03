@@ -466,10 +466,15 @@
 
             #endif //:#######################################://
             #if( AAC2020_INCLUDE_GRAQUAD >= 1 ) //:##########://
-    
-                //:TODO:REFACTOR: TESAWIND --> AAC2020_GRAQUAD
-                 AAC2020_GRAQUAD_Init();
+            #define call( f ) AAC2020_GRAQUAD_##f
+            #define CALL( f ) call( f )
+                 
+                CALL( Init                               )();
+                CALL( ReLoadFragShader_HACKTEST          )();
+                CALL( ReLoadFragShader_StatusSyntaxError )();
 
+            #undef  call
+            #undef  CALL
             #endif //:#######################################://
 
         #endif //:- - - - - - - - - - - - - - - - - - - - - -://
