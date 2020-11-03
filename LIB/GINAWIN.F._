@@ -394,16 +394,21 @@ aac2020_ginawin_WIN_MSG_HAN_WND_POC(
     BOOL_i32_4B ok = 0;
 
     //:ASSERT_SATED_FUNCTION_POINTERS:-----------------------://
-    #define H aac2020_ginawin_Halt
-
-        aac2020_ginawin_FUNCTION_POINTERS_struct*
-        FP = &(aac2020_ginawin_function_pointers);
-
-        if(NULL==FP->USER32.DestroyWindow  ){ H("[U32.DW]"  );};
-        if(NULL==FP->USER32.PostQuitMessage){ H("[U32.PQM]" );};
-        if(NULL==FP->USER32.DefWindowProcW ){ H("[U32.DWPW]");};
-  
-    #undef H
+    #define         HALT_BITCHES aac2020_ginawin_Halt     //:://
+                                                          //:://
+        aac2020_ginawin_FUNCTION_POINTERS_struct*         //:://
+        FP = &(aac2020_ginawin_function_pointers);        //:://
+                                                          //:://
+                if(NULL==FP->USER32.DestroyWindow  ){     //:://
+                    HALT_BITCHES("[U32.DW]"  );};;        //:://
+                                                          //:://
+                if(NULL==FP->USER32.PostQuitMessage){     //:://
+                    HALT_BITCHES("[U32.PQM]" );};;        //:://
+                                                          //:://
+                if(NULL==FP->USER32.DefWindowProcW ){     //:://
+                    HALT_BITCHES("[U32.DWPW]");};;        //:://
+                                                          //:://
+    #undef          HALT_BITCHES                          //:://
     //:-----------------------:ASSERT_SATED_FUNCTION_POINTERS://
 
     switch(Msg){ //:- - - - - - - - - - - - - -://
@@ -780,7 +785,7 @@ aac2020_ginawin_WindowTick_private(
     //:---------------------------------------------:GET:U32F://
 
     { //:SCOPE::::::::::::::::::::::::::::::::::::::::::SCOPE://
-    #define H aac2020_ginawin_Halt
+    #define FUK aac2020_ginawin_Halt
 
         //:NOTE: SetFocus: Will FAIL when other dialogs are
         //:                opened as children of the main
@@ -796,8 +801,8 @@ aac2020_ginawin_WindowTick_private(
         if(         0  == SW ){ /** NOT AN ERROR **/ };
         if(         0  != SW ){ /** NOT AN ERROR **/ };
 
-        if(         0  == UW ){ H("[UpdateWindow:FAIL]"); };
-    //  if( ((void*)0) == SF ){ H("[SetFocus:::::FAIL]"); };
+        if(         0  == UW ){ FUK("[UpdateWindow:FAIL]"); };
+    //  if( ((void*)0) == SF ){ FUK("[SetFocus:::::FAIL]"); };
 
         #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 ) //:##########://
 
@@ -808,7 +813,7 @@ aac2020_ginawin_WindowTick_private(
 
         #endif //:###########################################://
 
-    #undef  H
+    #undef  FUK
     } //:SCOPE::::::::::::::::::::::::::::::::::::::::::SCOPE://
 
     UINT_u32_4B          wm_quit     ;                
@@ -1149,16 +1154,16 @@ aac2020_ginawin_OPEN_WINDOW_LOOP_FOREVER(
 
     Hw = aac2020_ginawin_OPEN_WINDOW( unique_window_name );
 
-    #define N ((void*)0)  //:################################://
-    #define H aac2020_ginawin_Halt  //:######################://
-    #define W AAC2020_GINAWIN.PW.W32.handle_to_window  //:###://
+    #define NiL ((void*)0)  //:##############################://
+    #define HAL aac2020_ginawin_Halt  //:####################://
+    #define WiN AAC2020_GINAWIN.PW.W32.handle_to_window  //:#://
 
-        if( N == Hw ){ H("[NULLWIN:ONE:2020_10_30]"); };
-        if( N == W  ){ H("[NULLWIN:TWO:2020_10_30]"); };
+        if( NiL == Hw  ){ HAL("[NULLWIN:ONE:2020_10_30]"); };
+        if( NiL == WiN ){ HAL("[NULLWIN:TWO:2020_10_30]"); };
 
-    #undef  N  //:###########################################://
-    #undef  H  //:###########################################://
-    #undef  W  //:###########################################://
+    #undef  NiL  //:#########################################://
+    #undef  HAL  //:#########################################://
+    #undef  WiN  //:#########################################://
 
     /** DATE[ 2020_10_30 ] ********************************* **/
     /** GINAWIN is only meant for ONE window. So we should   **/

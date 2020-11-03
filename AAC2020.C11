@@ -103,13 +103,14 @@
     /**                                                      **/
     /** John Mark Isaac Madison DATE[2020_11_01]             **/
 
-    #define AAC2020_MAC_LIBCHAN_CUR ( 3 )
+    #define AAC2020_MAC_LIBCHAN_CUR ( 4 )
 
     #define AAC2020_MAC_LIBCHAN_001 ( 1 )
     #define AAC2020_MAC_LIBCHAN_002 ( 2 )
     #define AAC2020_MAC_LIBCHAN_003 ( 3 )
+    #define AAC2020_MAC_LIBCHAN_004 ( 4 )
 
-    #define AAC2020_MAC_LIBCHAN_MAX ( 3 )
+    #define AAC2020_MAC_LIBCHAN_MAX ( 4 )
 
 //:============================================:LIBRARY_CHAIN://
 //:DATA:DATA_BEFORE_FUNCTIONS:===============================://
@@ -207,6 +208,21 @@
     //:TRY TO AVOID CLASSES UNLESS ABSOLUTELY NECESSARY.
     //:Pretty sure they are NEVER necessary.
     //:KEEP THIS SECTION EMPTY. DATE[ 2020_10_27 ]
+
+    //:LEGACY_CLASS_FROM_REFACTOR_PORT_OF_TESAWIND:==========://
+    #if( AAC2020_INCLUDE_GRAQUAD >= 1 )//:###################://
+
+        /**   I'd rather NOT have a class object. But I am   **/
+        /**   re-using old TESAWIND.H code. Refactored as    **/
+        /**   "GRAQUAD.[D|F|C]" Maybe refactor this          **/
+        /**   library struct class out at later date.        **/
+        /**   -John Mark Isaac Madison. DATE[2020_11_03]     **/
+
+        #include "LIB/GRAQUAD.C._"
+
+    #endif //:###############################################://
+    //:==========:LEGACY_CLASS_FROM_REFACTOR_PORT_OF_TESAWIND://
+
 
 //:===================:CLASS:CLASSES_AFTER_FUNCTIONS_AND_DATA://
 //:PUBLIC:PUBLIC_FUNCTIONS_BELOW_DATA_FUNCS_AND_CLASSES:=====://
@@ -361,6 +377,20 @@
 
 
 //:===================================:MAIN_ENTRY_POINT.TASKS://
+//:MAIN_ENTRY_POINT.FUNC.GRAPHICS_UPDATE_TICK:===============://
+
+    int
+    AAC2020_GraphicsUpdateTick()
+    { //:FUNCTION_BODY
+
+        tesawind_LoopTick(); //:Update Painted Quad.
+
+
+        return( 0 );
+
+    } //:FUNCTION_BODY
+
+//:===============:MAIN_ENTRY_POINT.FUNC.GRAPHICS_UPDATE_TICK://
 //:MAIN_ENTRY_POINT.FUNC.GAME_LOOP:==========================://
     int 
     AAC2020_GameLoop()
@@ -435,6 +465,12 @@
                 AAC2020_GLEBIND_Init();
 
             #endif //:#######################################://
+            #if( AAC2020_INCLUDE_GRAQUAD >= 1 ) //:##########://
+    
+                //:TODO:REFACTOR: TESAWIND --> AAC2020_GRAQUAD
+                 TESAWIND_Init();
+
+            #endif //:#######################################://
 
         #endif //:- - - - - - - - - - - - - - - - - - - - - -://
         #if( AAC2020_INCLUDE_GINAWIN >= 1 )  //:- - - - - - -://
@@ -457,6 +493,7 @@
 
                 while( AAC2020_GINAWIN_IsWindowStillOpen() ){
 
+                    AAC2020_GraphicsUpdateTick();
                     AAC2020_GameLoop();
 
                     /** AAC2020_GINAWIN_LoopTick(); **/

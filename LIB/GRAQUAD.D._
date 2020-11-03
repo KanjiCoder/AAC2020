@@ -1,20 +1,586 @@
-
-    //:GRA.D: Graphics.DATA
-
-//:PUBLIC:===================================================://
-
-
-    //:No public vars yet.
-
-
-//:===================================================:PUBLIC://
-//:PRIVATE:==================================================://
-
-
-
-    PEB2020_DLIB
-    aac2020_gra_dll_openGL=(void*)0;
+//:----------------------------------------------------------://
+//:    GRAQUAD.D: GRAphics_QUAD.DATA                         ://
+//:    (Refactored from V:/TESAWIND/TESAWIND.H)              ://
+//:                                                          ://
+//:    Yes_The_Librarys_Job:                                 ://
+//:                                                          ://
+//:         #1: Setup QUAD and simple gradient shader.       ://
+//:         #2: #1 was it!                                   ://
+//:                                                          ://
+//:    NOT_THE_LIBRARYS_JOB: #1: Advanced Shaders.           ://
+//:    NOT_THE_LIBRARYS_JOB: #2: Atomic_Alice_2_Data_Structs ://
+//:----------------------------------------------------------://
+//:CONFIGURATION:============================================://
 
 
 
-//:==================================================:PRIVATE://
+    #define MACRO_TESAWIND_DEBUG_MODE 1
+
+
+
+//:============================================:CONFIGURATION://
+ 
+//| 12345678 TESA:TextureSampler WIND:Window:  |//
+//| TESAWIND:                                  |//
+//|                                            |//
+//| Texture Sampler Window: Really not a       |//
+//| "window" since it plugs into other code    |//
+//| that creates the window. But best if we    |//
+//| think of it as a special window type in    |//
+//| our chain of code.                         |//
+//| github.com/HeavyMetalCookies/TESAWIND.git  |//
+/** ****************************************** |||
+    v_01="git remote add GIT_HUB "
+    v_02="https://github.com/"
+    v_03="HeavyMetalCookies"
+    v_04="/TESAWIND.git"
+    my_cmd=$v_01$v_02$v_03$v_04
+    $my_cmd
+    git remote -v
+||| ****************************************** **/
+
+//:lets NOT pack away our own library deps
+//:into includes. I want to see immediatly where
+//:TESAWIND.H fits into system when opening
+//:this file.
+
+//:LIBRARY_CHAIN_INTEGRITY_CHECK:============================://
+
+    //:GINAWIN: AAC2020_GINAWIN_*
+    //:GLEBIND: AAC2020_GLEBIND_*
+
+    #if( AAC2020_INCLUDE_GINAWIN <= 0 )
+        #error "REQUIRE[GINAWIN--->GRAQUAD]"
+    #endif
+    #if( AAC2020_INCLUDE_GLEBIND <= 0 )
+        #error "REQUIRE[GLEBEND--->GRAQUAD]"
+    #endif
+
+    #ifndef AAC2020_INCLUDE_GINAWIN 
+        #error "GRAQUAD.SAYS[NOT_DEFINED_AND_REQUIRED:GINAWIN]"
+    #endif
+    #ifndef AAC2020_INCLUDE_GLEBIND 
+        #error "GRAQUAD.SAYS[NOT_DEFINED_AND_REQUIRED:GLEBEND]"
+    #endif
+
+//:============================:LIBRARY_CHAIN_INTEGRITY_CHECK://
+//:GRAQUAD_LIBRARY_MACROS:TOP:===============================://
+
+    //:LALODEX:LAyout_LOcation_inDEX
+
+    #define  MACRO_LALODEX_verpos ((0)) //:VERtex____POSition
+    #define  MACRO_LALODEX_texcoo ((1)) //:TEXture_COOrdinate
+
+    //: RTS: Resolve_Then_Stringify.
+    //: Injects macro values into hardcoded source strings.
+
+    #define macro_rts( s ) #s
+    #define MACRO_RTS( s ) macro_rts( s )
+
+    //:TD: TypeDef: For creating PFN types.
+    //:RT: FuncTyp: For creating FUN types.
+
+    #define TD(return_type) typedef return_type
+    #define RT(return_type)         return_type
+
+//:===============================:GRAQUAD_LIBRARY_MACROS:TOP://
+
+//:LSFD:LOOSE_FILE_SCOPE_DATA:===============================://
+//:LSFD:IS_NOT_PART_OF_LIBRARY_STRUCT:=======================://
+                                                      //[LSFD]//
+    //|TW.D._: TESAWIND data. Base on data         |////[LSFD]//
+    //|        stripped out of GAKU.H (GAKU #1)    |////[LSFD]//
+                                                      //[LSFD]//
+    ////////////////////////////////////////////////////[LSFD]//
+    //  Quad used to render OpenCL calculations.    ////[LSFD]//
+    //  OpenGL and OpenCL share a buffer. OpenCL    ////[LSFD]//
+    //  does rendering calculations. Then OpenGL    ////[LSFD]//
+    //  uses a simple fragment shader to 1:1 map    ////[LSFD]//
+    //  samples from buffer onto the screen.        ////[LSFD]//
+    ////////////////////////////////////////////////////[LSFD]//
+    //|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|////[LSFD]//
+    #define P ( 1.0f)  //|POSITIVE      | MACRO_01 |////[LSFD]//
+    #define N (-1.0f)  //|NEGATIVE      | MACRO_02 |////[LSFD]//
+    #define Z ( 0.0f)  //|ZERO          | MACRO_03 |////[LSFD]//
+    #define MACRO_NUMELM  20          //| MACRO_04 |////[LSFD]//
+                                                      //[LSFD]//
+    //:ga_vertex_buffer_data_num_actual               //[LSFD]//
+    static const int                                  //[LSFD]//
+    tesawind_vertex_buffer_data_num_actual=(          //[LSFD]//
+            MACRO_NUMELM                              //[LSFD]//
+    );                                                //[LSFD]//
+                                                      //[LSFD]//
+    //: ga_vertex_buffer_data                         //[LSFD]//
+    static const float /** GLfloat **/                //[LSFD]//
+    tesawind_vertex_buffer_data[                      //[LSFD]//
+        MACRO_NUMELM                                  //[LSFD]//
+    ]={ //| TEXCOORDS_INVERTED_Y_TO_DISPLAY_PIXELS |////[LSFD]//             
+        ///////////////////////////( X ) , ( Y )//||////[LSFD]//
+    /**/N,N,  Z/* BOT_LEF   3  */, (0.0) , (1.0)//||////[LSFD]//
+    ,   P,N,  Z/* BOT_RIG   6  */, (1.0) , (1.0)//||////[LSFD]//
+    ,   N,P,  Z/* TOP_LEF   9  */, (0.0) , (0.0)//||////[LSFD]//
+    ,   P,P,  Z/* TOP_RIG  12  */, (1.0) , (0.0)//||////[LSFD]//
+        ///////////////////////////( X ) , ( Y )//||////[LSFD]//
+    };  //| WITH_TOP_LEFT_GRAPHICAL_ORIGIN         |////[LSFD]//
+    #undef N                          //| MACRO_01 |////[LSFD]//
+    #undef Z                          //| MACRO_02 |////[LSFD]//
+    #undef P                          //| MACRO_03 |////[LSFD]//
+    #undef MACRO_NUMELM               //| MACRO_04 |////[LSFD]//
+    //|____________________________________________|////[LSFD]//
+                                                      //[LSFD]//
+                                                      //[LSFD]//
+    static const int                                  //[LSFD]//
+    tesawind_we_have_4_corner_verts_making_quad=(     //[LSFD]//
+    //:   ga_we_have_4_corner_verts_making_quad       //[LSFD]//
+        4                                             //[LSFD]//
+    );                                                //[LSFD]//
+                                                      //[LSFD]//
+                                                      //[LSFD]//
+    //- ga_num_corner_verts_in_screen_quad  ------ -////[LSFD]//
+    //- ga_data_points_per_vertex_location  ------ -////[LSFD]//
+    //- ga_data_points_per_vertex_texcoord  ------ -////[LSFD]//
+    //- ga_total_data_points_per_vertex     ------ -////[LSFD]//
+    #define C_I const int                             //[LSFD]//
+    C_I tesawind_num_corner_verts_in_screen_quad=4;   //[LSFD]//
+    C_I tesawind_data_points_per_vertex_location=3;   //[LSFD]//
+    C_I tesawind_data_points_per_vertex_texcoord=2;   //[LSFD]//
+    C_I tesawind_total_data_points_per_vertex   =(    //[LSFD]//
+        3 //:ga_data_points_per_vertex_location       //[LSFD]//
+        +                                             //[LSFD]//
+        2 //:ga_data_points_per_vertex_texcoord       //[LSFD]//
+    ); //[;]//                                        //[LSFD]//
+    #undef C_I                                        //[LSFD]//
+                                                      //[LSFD]//
+    //- ga_vertex_buffer_data_num -//                 //[LSFD]//
+    static const int                                  //[LSFD]//
+    tesawind_vertex_buffer_data_num =(                //[LSFD]//                          
+        4 //:ga_num_corner_verts_in_screen_quad       //[LSFD]//
+            *   //|__TOTAL_ELEMENTS_PER_VERTEX_|//    //[LSFD]//
+            (   //////////////////////////////////    //[LSFD]//
+                3//:ga_data_points_per_vertex_location//[LSFD]//
+            +                                         //[LSFD]//
+                2//:ga_data_points_per_vertex_texcoord//[LSFD]//
+            )   //////////////////////////////////    //[LSFD]//
+    ); //[;]//                                        //[LSFD]//
+    ////////////////////////////////////////////////////[LSFD]//
+                                                      //[LSFD]//
+                                                      //[LSFD]//
+    //|XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX|////[LSFD]//
+    //|____________________________________________|////[LSFD]//
+    //|                                            |////[LSFD]//
+    //|SHADER|SHADER|SHADER||||SHADER|SHADER|SHADER|////[LSFD]//
+                                                      //[LSFD]//
+                                                      //[LSFD]//
+    //+  #GLSL# #glslcode# #gcode# #throwshade#    +////[LSFD]//
+    //+  #SHADER_CODE# #shadercode# #shadecode#    +////[LSFD]//
+    //+  #TheShaderCode# #theshadercode#           +////[LSFD]//
+    //+                                            +////[LSFD]//
+    //+  ga_vertex_shader_source                   +////[LSFD]//
+    //+  ===tesawind_vet_sad_src                   +////[LSFD]//
+    //+                                            +////[LSFD]//
+    //+  ga_fragment_shader_source                 +////[LSFD]//
+    //+  ===tesawind_fag_sad_src                   +////[LSFD]//
+                                                      //[LSFD]//
+    #define macro_rts( s ) #s                         //[LSFD]//
+    #define MACRO_RTS( s ) macro_rts( s )             //[LSFD]//
+                                                      //[LSFD]//
+    //: fag_tec: fs_texcoord /                        //[LSFD]//
+    //:          fragment_shader_texture_coordinate   //[LSFD]//
+                                                      //[LSFD]//
+    //: vet_tec: vs_texcoord /                        //[LSFD]//
+    //:          vertex_shader_texture_coordinate     //[LSFD]//
+                                                      //[LSFD]//
+    ////////////////////////////////////////////////////[LSFD]//
+    const char* tesawind_vet_sad_src =(    /////////////[LSFD]//
+                                                      //[LSFD]//
+        //|(( VER ))_______________________________|////[LSFD]//
+        "#version 330 core  \n /////////////////// \n"//[LSFD]//
+                                                      //[LSFD]//
+        //|(( INN ))_______________________________|////[LSFD]//
+        "layout ( location=                        \n"//[LSFD]//
+        MACRO_RTS( MACRO_LALODEX_verpos )             //[LSFD]//
+        ") in vec3 aPos;;                          \n"//[LSFD]//
+        "layout ( location =                       \n"//[LSFD]//
+        MACRO_RTS( MACRO_LALODEX_texcoo )             //[LSFD]//
+        ") in vec2 vet_tec;;                       \n"//[LSFD]//
+                                                      //[LSFD]//
+        //|(( OUT ))_______________________________|////[LSFD]//
+        "out vec2 fag_tec;                         \n"//[LSFD]//
+                                                      //[LSFD]//
+        "void main()                               \n"//[LSFD]//
+        "{                                         \n"//[LSFD]//
+        "   fag_tec =(                             \n"//[LSFD]//
+        "   vet_tec   );;                          \n"//[LSFD]//
+        "                                          \n"//[LSFD]//
+        "   gl_Position = vec4(                    \n"//[LSFD]//
+        "       aPos.x                             \n"//[LSFD]//
+        "    ,  aPos.y                             \n"//[LSFD]//
+        "    ,  aPos.z                             \n"//[LSFD]//
+        "    ,  1.0                                \n"//[LSFD]//
+        "    );;                                   \n"//[LSFD]//
+        "}\0"///////////////////////////////////////////[LSFD]//
+                                                      //[LSFD]//
+        ////////////////////////////////////////////////[LSFD]//
+    );//;//;//;//;//;//;//;//;//;//;//;//;//;//;//;//;//[LSFD]//
+                                                      //[LSFD]//
+    #undef macro_rts  //////////////////////////////////[LSFD]//
+    #undef MACRO_RTS  //////////////////////////////////[LSFD]//
+                                                      //[LSFD]//
+    ////////////////////////////////////////////////////[LSFD]//
+    const char* tesawind_fag_sad_src =(      ///////////[LSFD]//
+        ////////////////////////////////////////////////[LSFD]//
+        ////////////////////////////////////////////////[LSFD]//
+                                                      //[LSFD]//
+        //|(( VER ))_______________________________|////[LSFD]//
+        "#version 330 core  \n /////////////////// \n"//[LSFD]//
+                                                      //[LSFD]//
+        //|(( UNI ))_______________________________|////[LSFD]//
+        "uniform int sampler_switchboard_uniform;  \n"//[LSFD]//
+        "#define UNI_SAM uniform usampler2D        \n"//[LSFD]//
+        "        UNI_SAM sam_s01_biz_L0;           \n"//[LSFD]//
+        "        UNI_SAM sam_s02_biz_R1;           \n"//[LSFD]//
+        "        UNI_SAM sam_s03_lon_R1;           \n"//[LSFD]//
+        "        UNI_SAM sam_s04_nek_R1;           \n"//[LSFD]//
+        "        UNI_SAM sam_s05_nek_L0;           \n"//[LSFD]//
+        "        UNI_SAM sam_s06_lon_L0;           \n"//[LSFD]//
+        "#undef  UNI_SAM ///////////////////////// \n"//[LSFD]//
+    //-  uniform usampler2D u_texture_ga_0;        -////[LSFD]//
+    //-  uniform usampler2D u_texture_ku_1;        -////[LSFD]//
+                                                      //[LSFD]//
+        //|(( INN ))_______________________________|////[LSFD]//
+        "in vec2 fag_tec;                      \n"    //[LSFD]//
+                                                      //[LSFD]//
+        //|(( OUT ))_______________________________|////[LSFD]//
+        "out vec4 FragColor;                       \n"//[LSFD]//
+                                                      //[LSFD]//
+        //|(( FUN ))_______________________________|////[LSFD]//
+        "void main()                               \n"//[LSFD]//
+        "{                                         \n"//[LSFD]//
+                                                      //[LSFD]//
+                                                      //[LSFD]//
+        " //:tic:texture_integer_color             \n"//[LSFD]//
+        "uvec4 tic;                                \n"//[LSFD]//
+                                                      //[LSFD]//
+        //|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|////[LSFD]//
+        //| Which_Texture_Does_OpenGL_Have?________|////[LSFD]//
+        "#define  SSU  sampler_switchboard_uniform \n"//[LSFD]//
+        "#define  TEX  texture                     \n"//[LSFD]//
+        "#define  FAG  fag_tec.st                  \n"//[LSFD]//
+                                                      //[LSFD]//
+        //| S01,S02,S03,S04,S05,S06: 速記変数名    |//  //[LSFD]//
+        "#define  S01  sam_s01_biz_L0              \n"//[LSFD]//
+        "#define  S02  sam_s02_biz_R1              \n"//[LSFD]//
+        "#define  S03  sam_s03_lon_R1              \n"//[LSFD]//
+        "#define  S04  sam_s04_nek_R1              \n"//[LSFD]//
+        "#define  S05  sam_s05_nek_L0              \n"//[LSFD]//
+        "#define  S06  sam_s06_lon_L0              \n"//[LSFD]//
+                                                      //[LSFD]//
+        "if( 0 == SSU ){                           \n"//[LSFD]//
+                                                      //[LSFD]//
+        //| Error_Pattern:_________________________|////[LSFD]//
+        //+ TODO: Modify the error pattern code    +////[LSFD]//
+        //+ copy here into some other type of      +////[LSFD]//
+        //+ pattern so DEFAULT and ERROR states    +////[LSFD]//
+        //+ are different.                         +////[LSFD]//
+        "   int fc_x = int(gl_FragCoord.x);        \n"//[LSFD]//
+        "   int fc_y = int(gl_FragCoord.y);        \n"//[LSFD]//
+        "                                          \n"//[LSFD]//
+        "   int tiz_wid = 32; //:tiz:TileSiZe      \n"//[LSFD]//
+        "   int tiz_hig = 32; //:tiz:TileSiZe      \n"//[LSFD]//
+        "                                          \n"//[LSFD]//
+        "   int t_x     = (fc_x / tiz_wid );       \n"//[LSFD]//
+        "   int t_y     = (fc_y / tiz_hig );       \n"//[LSFD]//
+        "                                          \n"//[LSFD]//
+        "       //:Wrap_Every_10_Tiles:            \n"//[LSFD]//
+        "       t_x     = (t_x % 10 );             \n"//[LSFD]//
+        "       t_y     = (t_y % 10 );             \n"//[LSFD]//
+        "                                          \n"//[LSFD]//
+        "   uint r = uint( t_x * 25 );             \n"//[LSFD]//
+        "   uint g = uint( t_y * 25 );             \n"//[LSFD]//
+        "   uint b = uint(  0       );             \n"//[LSFD]//
+        "   uint a = uint( 255      );             \n"//[LSFD]//
+        "                                          \n"//[LSFD]//
+        "   tic=uvec4( r,g,b,a );                  \n"//[LSFD]//
+        //|________________________________________|////[LSFD]//
+                                                      //[LSFD]//
+        "}else                                     \n"//[LSFD]//
+        "if( 1 == SSU ){ tic=TEX( S01,FAG ); }else \n"//[LSFD]//
+        "if( 2 == SSU ){ tic=TEX( S02,FAG ); }else \n"//[LSFD]//
+        "if( 3 == SSU ){ tic=TEX( S03,FAG ); }else \n"//[LSFD]//
+        "if( 4 == SSU ){ tic=TEX( S04,FAG ); }else \n"//[LSFD]//
+        "if( 5 == SSU ){ tic=TEX( S05,FAG ); }else \n"//[LSFD]//
+        "if( 6 == SSU ){ tic=TEX( S06,FAG ); }else{\n"//[LSFD]//
+                                                      //[LSFD]//
+        //| Error_Pattern:_________________________|////[LSFD]//
+        "   int fc_x = int(gl_FragCoord.x);        \n"//[LSFD]//
+        "   int fc_y = int(gl_FragCoord.y);        \n"//[LSFD]//
+        "   int df00 =int(sqrt(   //////////////// \n"//[LSFD]//
+        "       pow( (0-fc_x),2 ) //  DISTANCE  // \n"//[LSFD]//
+        "     + pow( (0-fc_y),2 ) //  DISTANCE  // \n"//[LSFD]//
+        "   ));;                  //////////////// \n"//[LSFD]//
+        "                                          \n"//[LSFD]//
+        "   uint r = uint( (fc_x*1) % 256 );       \n"//[LSFD]//
+        "   uint g = uint( (fc_y*2) % 256 );       \n"//[LSFD]//
+        "   uint b = uint( (df00*8) % 256 );       \n"//[LSFD]//
+        "   uint a = uint(255);                    \n"//[LSFD]//
+        "                                          \n"//[LSFD]//
+        "   tic=uvec4( r,g,b,a );                  \n"//[LSFD]//
+        "};;                                       \n"//[LSFD]//
+        //|________________________________________|////[LSFD]//
+                                                      //[LSFD]//
+        "#undef  SSU                               \n"//[LSFD]//
+        "#undef  TEX                               \n"//[LSFD]//
+        "#undef  FAG                               \n"//[LSFD]//
+                                                      //[LSFD]//
+        "#undef  S01                               \n"//[LSFD]//
+        "#undef  S02                               \n"//[LSFD]//
+        "#undef  S03                               \n"//[LSFD]//
+        "#undef  S04                               \n"//[LSFD]//
+        "#undef  S05                               \n"//[LSFD]//
+        "#undef  S06                               \n"//[LSFD]//
+                                                      //[LSFD]//
+            //|Normalize Pixel to 0-255 range:_____|////[LSFD]//
+            " vec4  pix_f = vec4( tic ) / 255.0;   \n"//[LSFD]//
+                                                      //[LSFD]//
+            //|Set output pixel color:_____________|////[LSFD]//
+            "FragColor = vec4(                     \n"//[LSFD]//
+            "   /**/pix_f.x                        \n"//[LSFD]//
+            "   ,   pix_f.y                        \n"//[LSFD]//
+            "   ,   pix_f.z                        \n"//[LSFD]//
+            "   ,   1.0f                           \n"//[LSFD]//
+            ");;                                   \n"//[LSFD]//
+                                                      //[LSFD]//
+        "}                                       \n\0"//[LSFD]//
+        //|(( FUN ))¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|////[LSFD]//
+                                                      //[LSFD]//
+    );//;//;//;//;//;//;//;//;//;//;//;//;//;//;//;//;//[LSFD]//
+    //|SHADER|SHADER|SHADER||||SHADER|SHADER|SHADER|////[LSFD]//
+    //|____________________________________________|////[LSFD]//
+    //|                                            |////[LSFD]//
+    //|XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX|////[LSFD]//
+                                                      //[LSFD]//
+    //#IF_YOU_ARE_HERE_YOU_ARE_SPELLING_IT_WRONG#//   //[LSFD]//
+    //+ tesawind   <--YES +//                         //[LSFD]//
+    //- tessawind  <--BAD -//                         //[LSFD]//
+    //- tessawind_vertex_buffer_data               -////[LSFD]//
+    //- tessawind_vertex_buffer_data_num           -////[LSFD]//
+    //- tessawind_num_corner_verts_in_screen_quad  -////[LSFD]//
+    //- tessawind_data_points_per_vertex_location  -////[LSFD]//
+    //- tessawind_data_points_per_vertex_texcoord  -////[LSFD]//
+    //- tessawind_total_data_points_per_vertex     -////[LSFD]//
+    //- tessawind_vertex_buffer_num                -////[LSFD]//
+                                                      //[LSFD]//
+//:===============================:LSFD:LOOSE_FILE_SCOPE_DATA://
+//:=======================:LSFD:IS_NOT_PART_OF_LIBRARY_STRUCT://
+
+//:MACROS:ROOT_LEVEL_OOP.TOP:================================://
+
+    //:INCLUDE AFTER ANY CLASSES (If any)
+    //: #include "00/OOP/ROOT_LEVEL_OOP.TOP._"
+    
+    #define                MACRO_GXY(x, y) x##y 
+    #define RL_FuNaM(x, y) MACRO_GXY(x, y)
+    #define      LIB_PFN  TESAWIND_PFN_ //:  PFN
+    #define      LIB_VIS  TESAWIND_ //:PUBLIC/VISIBLE
+    #define      lib_hid  tesawind_ //:PRIVATE/HIDDEN
+    #define POM( n )   RL_FuNaM( LIB_PFN, n    )
+    #define  PO( n ) (*RL_FuNaM( LIB_PFN, n    ) )
+    #define  FN( n )   RL_FuNaM( LIB_VIS, n    )   
+    #define  fn( n )   RL_FuNaM( lib_hid, n    )
+    #define   H(msg)   fn(   Halt   )(   msg   )  
+    #define  PRIVATE_FUNCTION( stuff ) stuff
+
+//:================================:MACROS:ROOT_LEVEL_OOP.TOP://
+//:PRIVATE_LIBRARY_STRUCT:===================================://
+
+    //|PRIVATE_LIBRARY_STRUCT:====================:|////[PLIB]//
+    //|____________________________________________|////[PLIB]//
+    //|                                            |////[PLIB]//
+    //! Private library pattern:                   !////[PLIB]//
+    //! tesawind.data.bla.bla.bla.TERMINAL_DATA;   !////[PLIB]//
+    struct     tesawind_lib_private{ int com_hak;     //[PLIB]//
+        //:Data is private: ://                       //[PLIB]//
+        struct tesawind_lib_data{    int com_hak;     //[PLIB]//
+                                                      //[PLIB]//
+            /** completed_loop_ticks **/              //[PLIB]//
+            int COM_LOP_TIK;                          //[PLIB]//
+                                                      //[PLIB]//
+            struct                                    //[PLIB]//
+            tesawind_triangle_data_for_screen_quad{   //[PLIB]//
+                struct tesawind_tri_CE{               //[PLIB]//
+                    #define GLF float /** GLfloat **/ //[PLIB]//
+                                                      //[PLIB]//
+                    const   GLF* ARR; //:arr://       //[PLIB]//
+                    int          NUM; //:num://       //[PLIB]//
+                                                      //[PLIB]//
+                    #undef  GLF       /** GLfloat **/ //[PLIB]//
+                }ce; //:CE means: C11/C99 ://         //[PLIB]//
+                struct tesawind_tri_GA{               //[PLIB]//
+                    #define GLU unsigned int          //[PLIB]//
+                    /**     GLU: GLuint **/           //[PLIB]//
+                            GLU VBO; //:VBO(Buffer):////[PLIB]//
+                            GLU VAO; //:VAO(Array ):////[PLIB]//
+                                                      //[PLIB]//
+                    #undef  GLU                       //[PLIB]//
+                }ga; //:GA means: OpenGL ://          //[PLIB]//
+            }tri;                                     //[PLIB]//
+                                                      //[PLIB]//
+            #define GLU unsigned int /** GLuint **/   //[PLIB]//
+            #define CHR const char   //:###########:////[PLIB]//
+                                                      //[PLIB]//
+                CHR*    VET_SAD_SRC; //:vet_sad_src:////[PLIB]//
+                CHR*    FAG_SAD_SRC; //:fag_sad_src:////[PLIB]//
+                                                      //[PLIB]//
+                GLU     VET_SAD_IID; //:vet_sad_iid:////[PLIB]//
+                GLU     FAG_SAD_IID; //:fag_sad_iid:////[PLIB]//
+                                                      //[PLIB]//
+                GLU POG_IID; //:program_integer_id :////[PLIB]//
+                                                      //[PLIB]//
+            #undef  CHR  //:#######################:////[PLIB]//
+            #undef  GLU  //:#######################:////[PLIB]//
+                                                      //[PLIB]//
+            //:Count:                              :////[PLIB]//
+            //:  Failures to make context current. :////[PLIB]//
+            //:USE:                                :////[PLIB]//
+            //:  Avoid alert when closing window.  :////[PLIB]//
+            struct                                    //[PLIB]//
+            //:ga_make_current_fail ://               //[PLIB]//
+            tesawind_make_current_fail{               //[PLIB]//
+                //: int com_hak ://                   //[PLIB]//
+                                                      //[PLIB]//
+                int     NUM; //:NumberOfFailures   :////[PLIB]//
+                int     MAX; //:MaxFailureTimes    :////[PLIB]//
+            }        make_current_fail;               //[PLIB]//
+                                                      //[PLIB]//
+    //-    struct                                  -////[PLIB]//
+    //-    tesawind_onn_window_resize_functions{   -////[PLIB]//
+    //-    //:      onn win    r  iz               -////[PLIB]//
+    //-                                            -////[PLIB]//
+    //-        //:TOP: As in before tesawind's     -////[PLIB]//
+    //-        //:resize logic.                    -////[PLIB]//
+    //-        struct tesawind_riz_fun_top{        -////[PLIB]//
+    //-            int   HAS_FUN;                  -////[PLIB]//
+    //-            void(*FUN_ADD)( void );         -////[PLIB]//
+    //-        }top;                               -////[PLIB]//
+    //-                                            -////[PLIB]//
+    //-        //:BOT: As in after tesawind's      -////[PLIB]//
+    //-        //:resize logic.                    -////[PLIB]//
+    //-        struct tesawind_riz_fun_bot{        -////[PLIB]//
+    //-            int   HAS_FUN;                  -////[PLIB]//
+    //-            void(*FUN_ADD)( void );         -////[PLIB]//
+    //-        }bot;                               -////[PLIB]//
+    //-                                            -////[PLIB]//
+    //-    }onn_win_riz;                           -////[PLIB]//
+                                                      //[PLIB]//
+            int we_have_4_corner_verts_making_quad;   //[PLIB]//
+                                                      //[PLIB]//
+        }data;                                        //[PLIB]//
+    }tesawind={.com_hak=0                             //[PLIB]//
+       ,.data={.com_hak=0                             //[PLIB]//
+                                                      //[PLIB]//
+                //:NS:NOT_SET://                      //[PLIB]//
+                                                      //[PLIB]//
+               ,.tri.ce.ARR =   0  //: NS:DATA     :////[PLIB]//
+               ,.tri.ce.NUM =   0  //: NS:LENGTH   :////[PLIB]//
+               ,.tri.ga.VBO =   0  //: NS:BUFFER   :////[PLIB]//
+               ,.tri.ga.VAO =   0  //: NS:ARRAY    :////[PLIB]//
+                                   //:             :////[PLIB]//
+               ,.FAG_SAD_SRC=NULL  //: NS:FRAGMENT :////[PLIB]//
+               ,.VET_SAD_SRC=NULL  //: NS:VERTEX   :////[PLIB]//
+                                   //:             :////[PLIB]//
+               ,.FAG_SAD_IID= 1441 //: NS:FRAGMENT :////[PLIB]//
+               ,.VET_SAD_IID= 2442 //: NS:VERTEX   :////[PLIB]//
+               ,.    POG_IID= 987654321               //[PLIB]//
+                                                      //[PLIB]//
+               ,.make_current_fail.NUM = 0            //[PLIB]//
+               ,.make_current_fail.MAX = 16           //[PLIB]//
+                                                      //[PLIB]//
+                //:completed_loop_ticks://            //[PLIB]//
+               ,.COM_LOP_TIK = 0                      //[PLIB]//
+                                                      //[PLIB]//
+        //-    ,.onn_win_riz.top.HAS_FUN=0         -////[PLIB]//
+        //-    ,.onn_win_riz.top.FUN_ADD=NULL      -////[PLIB]//
+        //-                                        -////[PLIB]//
+        //-    ,.onn_win_riz.bot.HAS_FUN=0         -////[PLIB]//
+        //-    ,.onn_win_riz.bot.FUN_ADD=NULL      -////[PLIB]//
+                                                      //[PLIB]//
+               ,.we_have_4_corner_verts_making_quad=( //[PLIB]//
+                    0-404                             //[PLIB]//
+                )                                     //[PLIB]//
+                                                      //[PLIB]//
+        }                                             //[PLIB]//
+    };                                                //[PLIB]//
+    //|____________________________________________|////[PLIB]//
+    //|                                            |////[PLIB]//
+    //|PRIVATE_LIBRARY_STRUCT:====================:|////[PLIB]//
+
+//:===================================:PRIVATE_LIBRARY_STRUCT://
+
+//:MACROS:ROOT_LEVEL_OOP.TOP:================================://
+
+    //:REDEFINE_REDUNDANCY_TO_ASSERT_CORRECT_VALUES:=========://
+
+    //:INCLUDE AFTER ANY CLASSES (If any)
+    //: #include "00/OOP/ROOT_LEVEL_OOP.TOP._"
+    
+    #define                MACRO_GXY(x, y) x##y 
+    #define RL_FuNaM(x, y) MACRO_GXY(x, y)
+    #define      LIB_PFN  TESAWIND_PFN_ //:  PFN
+    #define      LIB_VIS  TESAWIND_ //:PUBLIC/VISIBLE
+    #define      lib_hid  tesawind_ //:PRIVATE/HIDDEN
+    #define POM( n )   RL_FuNaM( LIB_PFN, n    )
+    #define  PO( n ) (*RL_FuNaM( LIB_PFN, n    ) )
+    #define  FN( n )   RL_FuNaM( LIB_VIS, n    )   
+    #define  fn( n )   RL_FuNaM( lib_hid, n    )
+    #define   H(msg)   fn(   Halt   )(   msg   )  
+    #define  PRIVATE_FUNCTION( stuff ) stuff
+
+    //:=========:REDEFINE_REDUNDANCY_TO_ASSERT_CORRECT_VALUES://
+    //:UNDEFINE_AFTER_HACKISH_REDEFINE_CHECK:================://
+
+    #undef  MACRO_GXY 
+    #undef  RL_FuNaM 
+
+    #undef  LIB_PFN  
+    #undef  LIB_VIS  
+    #undef  lib_hid  
+
+    #undef  POM 
+    #undef   PO 
+    #undef   FN 
+    #undef   fn 
+    #undef    H 
+    #undef   PRIVATE_FUNCTION 
+
+    //:================:UNDEFINE_AFTER_HACKISH_REDEFINE_CHECK://
+
+//:================================:MACROS:ROOT_LEVEL_OOP.TOP://
+//:GRAQUAD_LIBRARY_MACROS:BOT:===============================://
+
+    //:REDEFINE_REDUNDANCY_TO_ASSERT_CORRECT_VALUES:=========://
+
+    #define  MACRO_LALODEX_verpos ((0)) //:VERtex____POSition
+    #define  MACRO_LALODEX_texcoo ((1)) //:TEXture_COOrdinate
+
+    #define  macro_rts( s ) #s
+    #define  MACRO_RTS( s ) macro_rts( s )
+             
+    #define  TD(return_type) typedef return_type
+    #define  RT(return_type)         return_type
+    
+    //:=========:REDEFINE_REDUNDANCY_TO_ASSERT_CORRECT_VALUES://
+    //:UNDEFINE_AFTER_HACKISH_REDEFINE_CHECK:================://
+
+    #undef   MACRO_LALODEX_verpos  
+    #undef   MACRO_LALODEX_texcoo  
+
+    #undef   macro_rts 
+    #undef   MACRO_RTS 
+  
+    #undef   TD 
+    #undef   RT 
+
+    //:================:UNDEFINE_AFTER_HACKISH_REDEFINE_CHECK://
+   
+
+//:===============================:GRAQUAD_LIBRARY_MACROS:BOT://

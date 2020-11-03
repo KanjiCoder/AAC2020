@@ -1,0 +1,77 @@
+//:----------------------------------------------------------://
+//:  GRAQUAD.C._:                                            ://
+//:                                                          ://
+//:  Public library struct. Put in ".C._" file because       ://
+//:  it is a mixture of DATA & FUNCTIONS, therefor we        ://
+//:  should classify it as a CLASS in our data oriented      ://
+//:  project design.                                         ://
+//:----------------------------------------------------------://
+
+//:CLASS_MACROS:TOP:=========================================://
+
+    //:PFN:Pointerto_FuNction
+    #define                MACRO_GXY(x, y) x##y 
+    #define RL_FuNaM(x, y) MACRO_GXY(x, y)
+    #define LIB_PFN  TESAWIND_PFN_  
+    #define POM( n )   RL_FuNaM( LIB_PFN, n    )
+
+//:=========================================:CLASS_MACROS:TOP://
+
+//|XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX|//
+//|____________________________________________|//
+//|                                            |//
+//| Funcs are PUBLIC:                          |//
+//| Functions are to be used by code OUTSIDE   |//
+//| of TESAWIND.H. Inside TESAWIND.H we use    |//
+//| the hard-coded functions.                  |//
+//|                                            |//
+//|  Public library pattern:                   |//
+//! TESAWIND.FUNC.BLA.BLA.BLA.TerminalFunc();  !//
+struct     TESAWIND_LIB_PUBLIC{ int com_hak;
+
+    struct TESAWIND_LIB_FUNC{   int com_hak;
+
+        POM( Ping   ) Ping  ;
+        POM( Test   ) Test  ;
+
+    //-   POM( Demo   ) Demo  ;   -//
+    //-   POM( Ignite ) Ignite;   -//
+ 
+
+    }FUNC;
+}TESAWIND={.com_hak=0 //://:#AVOID_PLURALITY#://
+   ,.FUNC={.com_hak=0
+       ,.Ping   = &( TESAWIND_Ping   )
+       ,.Test   = &( TESAWIND_Test   )
+
+    //-   ,.Demo   = &( TESAWIND_Demo   )  -//
+    //-   ,.Ignite = &( TESAWIND_Ignite )  -//
+
+    }
+
+};
+//|____________________________________________|//
+//|                                            |//
+//|XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX|//
+
+//:CLASS_MACROS:BOT:=========================================://
+
+    //:REDEFINE_AS_REDUNDANCY_ERROR_CHECK:===================://
+
+    #define                MACRO_GXY(x, y) x##y 
+    #define RL_FuNaM(x, y) MACRO_GXY(x, y)
+    #define LIB_PFN  TESAWIND_PFN_  
+    #define POM( n )   RL_FuNaM( LIB_PFN, n    )
+
+    //:===================:REDEFINE_AS_REDUNDANCY_ERROR_CHECK://
+    //:UNDEFINE_MACROS:======================================://
+
+    //:PFN:Pointerto_FuNction
+    #undef  MACRO_GXY 
+    #undef  RL_FuNaM 
+    #undef  LIB_PFN  
+    #undef  POM 
+    
+    //:======================================:UNDEFINE_MACROS://
+
+//:=========================================:CLASS_MACROS:BOT://

@@ -1,24 +1,1596 @@
+//:----------------------------------------------------------://
+//:    GRAQUAD.F: GRAphics_QUAD.FUNCTIONS                    ://
+//:    (Refactored from V:/TESAWIND/TESAWIND.H)              ://
+//:                                                          ://
+//:    Yes_The_Librarys_Job:                                 ://
+//:                                                          ://
+//:         #1: Setup QUAD and simple gradient shader.       ://
+//:         #2: #1 was it!                                   ://
+//:                                                          ://
+//:    NOT_THE_LIBRARYS_JOB: #1: Advanced Shaders.           ://
+//:    NOT_THE_LIBRARYS_JOB: #2: Atomic_Alice_2_Data_Structs ://
+//:----------------------------------------------------------://
+//:REFACTOR_NOTES:===========================================://
+/** ******************************************************** ***
 
-    //: GRAQUAD.F._: GRAphics_QUAD.Functions
+    GLEB_SWIN --> GINAWIN (Graphics_Init_And_WINdow)
+    GLEB -------> GLEBIND (open_GL_Easy_BINDings   )
+
+*** ******************************************************** **/
+//:LIBRARY_CHAIN_INTEGRITY_CHECK:============================://
+
+    //:GINAWIN: AAC2020_GINAWIN_*
+    //:GLEBIND: AAC2020_GLEBIND_*
+
+    #if( AAC2020_INCLUDE_GINAWIN <= 0 )
+        #error "REQUIRE[GINAWIN--->GRAQUAD]"
+    #endif
+    #if( AAC2020_INCLUDE_GLEBIND <= 0 )
+        #error "REQUIRE[GLEBEND--->GRAQUAD]"
+    #endif
+
+    #ifndef AAC2020_INCLUDE_GINAWIN 
+        #error "GRAQUAD.SAYS[NOT_DEFINED_AND_REQUIRED:GINAWIN]"
+    #endif
+    #ifndef AAC2020_INCLUDE_GLEBIND 
+        #error "GRAQUAD.SAYS[NOT_DEFINED_AND_REQUIRED:GLEBEND]"
+    #endif
+
+//:============================:LIBRARY_CHAIN_INTEGRITY_CHECK://
+//:GRAQUAD_LIBRARY_MACROS:TOP:===============================://
+
+    //:LALODEX:LAyout_LOcation_inDEX
+
+    #define  MACRO_LALODEX_verpos ((0)) //:VERtex____POSition
+    #define  MACRO_LALODEX_texcoo ((1)) //:TEXture_COOrdinate
+
+    //: RTS: Resolve_Then_Stringify.
+    //: Injects macro values into hardcoded source strings.
+
+    #define macro_rts( s ) #s
+    #define MACRO_RTS( s ) macro_rts( s )
+
+    //:TD: TypeDef: For creating PFN types.
+    //:RT: FuncTyp: For creating FUN types.
+
+    #define TD(return_type) typedef return_type
+    #define RT(return_type)         return_type
+
+//:===============================:GRAQUAD_LIBRARY_MACROS:TOP://
+//:MACROS:ROOT_LEVEL_OOP.TOP:================================://
+
+    //:INCLUDE AFTER ANY CLASSES (If any)
+    //: #include "00/OOP/ROOT_LEVEL_OOP.TOP._"
+    
+    #define                MACRO_GXY(x, y) x##y 
+    #define RL_FuNaM(x, y) MACRO_GXY(x, y)
+    #define      LIB_PFN  TESAWIND_PFN_ //:  PFN
+    #define      LIB_VIS  TESAWIND_ //:PUBLIC/VISIBLE
+    #define      lib_hid  tesawind_ //:PRIVATE/HIDDEN
+    #define POM( n )   RL_FuNaM( LIB_PFN, n    )
+    #define  PO( n ) (*RL_FuNaM( LIB_PFN, n    ) )
+    #define  FN( n )   RL_FuNaM( LIB_VIS, n    )   
+    #define  fn( n )   RL_FuNaM( lib_hid, n    )
+    #define   H(msg)   fn(   Halt   )(   msg   )  
+    #define  PRIVATE_FUNCTION( stuff ) stuff
+
+//:================================:MACROS:ROOT_LEVEL_OOP.TOP://
+
+
+
+
+
+void tesawind_Halt( const char* err_msg ){
+
+    printf(
+    /**/"[tesawind_Halt]%s\n"
+    ,   err_msg
+    );;fflush(stdout);exit(666);
+
+}
+        
+
+
+
+PRIVATE_FUNCTION( static void )
+fn( Init_Data )( void ){
+
+    #define T_1        const float /** GLfloat **/   
+    #define T_2        const     int  ////////////
+
+    T_1* ARR = tesawind_vertex_buffer_data     ; 
+    T_2  NUM = tesawind_vertex_buffer_data_num ; 
+
+    //: 12345678      TRI
+        tesawind.data.tri.ce.ARR = ARR;
+        tesawind.data.tri.ce.NUM = NUM;
+    //: 12345678      TRI
+
+    #undef T_1  //////////////////////////////////
+    #undef T_2  //////////////////////////////////
+
+    tesawind.data.
+    we_have_4_corner_verts_making_quad=(
+    tesawind_we_have_4_corner_verts_making_quad
+    );;
+
+    tesawind.data.FAG_SAD_SRC =(
+         tesawind_fag_sad_src   );;
+
+    tesawind.data.VET_SAD_SRC =(
+         tesawind_vet_sad_src   );;
+    
+
+}
+
+
+//! Did openGL emit any errors? -------------- !//
+PRIVATE_FUNCTION( static void )
+fn( ErrChk /**ga_ErrChk**/ )( 
+    const char* onn_err_msg /** on_fail_msg **/
+){
+int num_errors_found = 0;
+
+    //:######################################################://
+    #define GLE unsigned int /** GLenum **/ //:##############://
+
+            GLE err;
+
+            //: fem: First_Error_Message
+            GLE fem  = AAC2020_GLEBIND.ERR.gl_no_error; 
+
+    #undef  GLE //:##########################################://
+    //:######################################################://
+
+    err = AAC2020_GLEBIND.glGetError();
+    if( err != AAC2020_GLEBIND.ERR.gl_no_error ){
+        fem = err;
+        num_errors_found++;
+    };; 
+
+    //# MUST BE CALLED IN A LOOP!              #//
+    //# SEE[ youtu.be/FBbPWSOQ0-w?t=6m30s ]    #//
+    const int loop_till_i_say_break = 1;
+    while( loop_till_i_say_break ){
+        err = AAC2020_GLEBIND.glGetError();
+        if( err != AAC2020_GLEBIND.ERR.gl_no_error ){
+            num_errors_found++;
+        }else{
+            break; //:Ext loop, no error.
+        };;
+    };;
+
+    
+    //| If errors are found to be stacked,     |//
+    //| Give abnoxious warning message but     |//
+    //| do not halt program yet.               |//
+    if( 1 == num_errors_found ){
+        printf("[Found_One_Error]\n");
+    }else
+    if( 1  < num_errors_found ){
+        printf(
+            "[BEG:FIX_THIS_FIRST_________]   \n"
+            "[ERRORS_HAVE_BEEN_STACKED!!!]   \n"
+            "[ERRORS_HACK_BEEN_STACKED!!!]   \n"
+            "[- - - - - - - - - - - - - -]   \n"
+            "[num_errors_found___________]:%d\n"
+            "[- - - - - - - - - - - - - -]   \n"
+            "[ERRORS_HAVE_BEEN_STACKED!!!]   \n"
+            "[ERRORS_HAVE_BEEN_STACKED!!!]   \n"
+            "[END:FIX_THIS_FIRST_________]   \n"
+            , num_errors_found
+        );;
+    }else
+    if( 0  > num_errors_found ){
+        fn(Halt)("[NegativeErrorsHow?]\n");
+    };;
+
+    //| Make sure your flags agree             |//
+    //| with each other.                       |//
+    //| You'd think something like this is     |//
+    //| overly cautious. But it found bug      |//
+    //| in my code when I wrote it.            |//
+    //| And I did not write it to find a bug.  |//
+    //| I wrote it this way because I have     |//
+    //| a paranoid style.                      |//
+    //////////////////////////////////////////////
+    if( num_errors_found     >=1    && 
+        AAC2020_GLEBIND.ERR.gl_no_error != fem &&
+    1){
+        //:Do nothing. (Not YET, we have error)
+    }else
+    if( 0 == num_errors_found       &&
+        AAC2020_GLEBIND.ERR.gl_no_error == fem &&
+    1){
+        //:Do nothing. (Never. No Error)
+    }else{
+        printf("[JM:num_errors_found]:%d\n" 
+               "[JM:value_of_fem____]:%d\n" 
+               ,    num_errors_found
+               ,    fem
+        );;
+
+        fn(Halt)("[JohnMarksFault:FMM]");
+    };;
+    //////////////////////////////////////////////
+        
+
+    //:Finally, throw error if occured:
+    if( fem != AAC2020_GLEBIND.ERR.gl_no_error ){
+        printf("[ga_ErrChk:About_To_Halt]\n");
+        printf("[ERR_NO:fem]:%d\n", fem );
+        fn(Halt)( onn_err_msg );
+    };;
+} //[ErrChk]//
+
+PRIVATE_FUNCTION( static void )
+fn( CompileShader )(
+    #define AT_1  unsigned int /** GLuint **/ ////
+    #define AT_2  const char*  ///////////////////
+    #define AT_3  const char*  ///////////////////
+
+    AT_1  wev_sad_iid //:[fag_sad_iid|vet_sad_iid]
+,   AT_2  wev_sad_src //:[fag_sad_src|vet_sad_src]
+,   AT_3  onn_err_msg //:[fag_sad_err|vet_sad_err]
+
+    #undef AT_1  /////////////////////////////////
+    #undef AT_2  /////////////////////////////////
+    #undef AT_3  /////////////////////////////////
+){
+
+    //:######################################################://
+    #define GLI int /** GLint **/ //:########################://
+
+            int ino_log_num = ( 0-666 ); //:InfoLogLength 
+            GLI     cmd_ret = ( AAC2020_GLEBIND.BOL.gl_false );
+            int         num = ( 0-555 ); //:num_chars
+            int         siz = ( 0-444 ); //:num_bytes
+            char*       ems = ( NULL  ); //:err_msg
+    
+    #undef  GLI  //:#########################################://
+    //:######################################################://
+
+    //|wev_sad_src===ga_fragment_shader_source |//
+    //|wev_sad_src===ga_vertex_shader_source   |//
+
+    //|CS|CS|CS|CS|CS|CS|----|CS|CS|CS|CS|CS|CS|//
+    AAC2020_GLEBIND.glShaderSource(                  //|CS|//
+    /**/wev_sad_iid                       //|CS|//
+    ,   1 //+AlistOfOneMonoLithicString+////|CS|//
+    ,   &(wev_sad_src)                    //|CS|//
+    ,   NULL //|array_of_string_lengths|////|CS|//
+    );;                                   //|CS|//
+    AAC2020_GLEBIND.glCompileShader(                 //|CS|//
+        wev_sad_iid                       //|CS|//
+    );;                                   //|CS|//
+                                          //|CS|//
+    AAC2020_GLEBIND.glGetShaderiv(                   //|CS|//
+    /**/wev_sad_iid                       //|CS|//
+    ,   AAC2020_GLEBIND.SPN.gl_compile_status        //|CS|//
+    ,   &( cmd_ret )                      //|CS|//
+    );;                                   //|CS|//
+                                          //|CS|//
+    if( cmd_ret != AAC2020_GLEBIND.BOL.gl_true){     //|CS|//
+        AAC2020_GLEBIND.glGetShaderiv(               //|CS|//
+        /**/wev_sad_iid                   //|CS|//
+        ,   AAC2020_GLEBIND.SPN.gl_info_log_length   //|CS|//
+        ,   &(ino_log_num)                //|CS|//
+        );;                               //|CS|//
+                                          //|CS|//
+        if(ino_log_num>0){                //|CS|//
+            printf("[WEV:ino_log_num>0]");//|CS|//
+                                          //|CS|//
+            //|+1 because null terminator.  |CS|//
+            num =(ino_log_num+1   );      //|CS|//
+            siz = sizeof(  char   );      //|CS|//
+            ems = malloc( siz*num );      //|CS|//
+                                          //|CS|//
+            AAC2020_GLEBIND.glGetShaderInfoLog(      //|CS|//
+            /**/wev_sad_iid               //|CS|//
+            ,   ino_log_num               //|CS|//
+            ,   NULL                      //|CS|//
+            ,   ems                       //|CS|//
+            );;                           //|CS|//
+                                          //|CS|//
+            printf(                       //|CS|//
+                "[WEV:2019_08_02:MSG]:%s" //|CS|//
+            ,   ems                       //|CS|//
+            );;fflush(stdout);            //|CS|//
+                                          //|CS|//
+            free(             ems );      //|CS|// 
+            fn(Halt)( onn_err_msg );      //|CS|//            
+        }else{                            //|CS|//
+            printf(                       //|CS|//
+                "[WEV:COMPILE_STATUS]\n"  //|CS|//
+                "[WEV:NO_LOG_HELP@_@]\n"  //|CS|//
+            );;                           //|CS|//
+            fn(Halt)( onn_err_msg );      //|CS|//
+        };;                               //|CS|//
+    };;                                   //|CS|//
+    //|CS|CS|CS|CS|CS|CS|----|CS|CS|CS|CS|CS|CS|//
+}
+
+PRIVATE_FUNCTION( static void )
+fn( CheckTheProgram )( void ){
+
+    //:######################################################://
+    #define GLE  int /** GLint **/ //:#######################://
+
+            //! Command_Result:______________________________!//
+            GLE     cmd_res = (0-54); 
+
+            //! Number_Of_Characters:________________________!//
+            int         num = 0;
+            
+            //! Size_In_Bytes_Of_String:_____________________!//
+            int         siz = 0;
+
+            //! ems:err_msg/error_message:___________________!//
+            char*       ems = NULL;
+
+            //! info_log_length (num/number==length):________!//
+            int ino_log_num = (0-3472);
+
+    #undef  GLE //:##########################################://
+    //:######################################################://
+
+    //|P|P|P|P|P|P|P|P|P|----|P|P|P|P|P|P|P|P|P|//
+    /////////////////////////////////////////|P|//
+    #define POG_IID (tesawind.data.POG_IID)//|P|//
+    /////////////////////////////////////////|P|//
+    PFN_glGetProgramiv                     //|P|//
+    GPIV=AAC2020_GLEBIND.glGetProgramiv;              //|P|//
+                                           //|P|//
+    GPIV(                                  //|P|//
+    /**/POG_IID                            //|P|//
+    ,   AAC2020_GLEBIND.PPN.gl_link_status            //|P|//
+    ,   &cmd_res                           //|P|//
+    );                                     //|P|//
+                                           //|P|//
+    if(cmd_res != AAC2020_GLEBIND.BOL.gl_true){       //|P|//
+        AAC2020_GLEBIND.glGetProgramiv(               //|P|//
+        /**/POG_IID                        //|P|//
+        ,   AAC2020_GLEBIND.PPN.gl_info_log_length    //|P|//
+        ,   &(ino_log_num)                 //|P|//
+        );;                                //|P|//
+                                           //|P|//
+        if(ino_log_num>0){                 //|P|//
+            printf("[FS:ino_log_num>0]");  //|P|//
+                                           //|P|//
+            //|+1 because null terminator.   |P|//
+            num = (ino_log_num+1);         //|P|//
+            siz = sizeof( char  );         //|P|//
+            ems = malloc(siz*num);         //|P|//
+                                           //|P|//
+            AAC2020_GLEBIND.glGetProgramInfoLog(      //|P|//
+            /**/POG_IID                    //|P|//
+            ,   ino_log_num                //|P|//
+            ,   NULL                       //|P|//
+            ,   ems                        //|P|//
+            );;                            //|P|//
+                                           //|P|//
+            printf(                        //|P|//
+                "[PO:2019_08_03:MSG]:%s"   //|P|//
+            ,   ems                        //|P|//
+            );;fflush(stdout);             //|P|//
+                                           //|P|//
+            free( ems );                   //|P|//
+                                           //|P|//
+            fn(Halt)(                      //|P|//
+                "[PO:2019_08_03:SEE_ABOVE]"//|P|//
+            );;                            //|P|//
+        }else{                             //|P|//
+            fn(Halt)(                      //|P|//
+                "[X_X:PO:COMPILE_STATUS]\n"//|P|//
+                "[X_X:PO:NO_LOG_HELP@_@]\n"//|P|//
+            );;                            //|P|//
+        };;                                //|P|//
+    };;                                    //|P|//
+    /////////////////////////////////////////|P|//
+    #undef POG_IID //////////////////////////|P|//
+    /////////////////////////////////////////|P|//
+    //|P|P|P|P|P|P|P|P|P|----|P|P|P|P|P|P|P|P|P|//
+
+}
+
+PRIVATE_FUNCTION( static void )
+fn( ReclaimMemory_OpenGL_ShaderStuff )( void ){
+
+    //|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//
+    //|RM|RM|RM|RM|RM|RM|----|RM|RM|RM|RM|RM|RM|//
+    //|                                        |//
+    //|why detach?                             |//
+    //|This doesn't do what I think it does.   |//
+    //|It deletes the objects used to create   |//
+    //|the program, but the program itself     |//
+    //|still has compiled shader code in it    |//
+    //|even after the glDetachShader and       |//
+    //|glDeleteShader                          |//
+    //|                                        |//
+    //|[BEG:QUOTE]:                            |//
+    //|Shader objects take up a lot of memory  |//
+    //|compared to each program. It's better to|//
+    //|delete them after you're done compiling |//
+    //|your programs and have more memory      |//
+    //|available for more important things     |//
+    //|[END:QUOTE]:                            |//
+    //|SRC: gamedev.stackexchange.com          |//
+    //|              /questions/47910          |//
+    //|RM|RM|RM|RM|RM|RM|----|RM|RM|RM|RM|RM|RM|//
+                                     //| -- |RM|//
+    ///////////////////////////////////| -- |RM|//
+    #define D_D     (tesawind.data)  //| -- |RM|//
+    #define POG_IID ( D_D.POG_IID )  //| -- |RM|//
+    ///////////////////////////////////| -- |RM|//
+                                     //| -- |RM|//
+    //: GLU:GLuint           //:##:////| -- |RM|//
+    #define GLU unsigned int //:##:////| -- |RM|//
+                                     //| -- |RM|//
+            GLU vet_sad_iid =(       //| -- |RM|//
+            D_D.VET_SAD_IID   );;    //| -- |RM|//
+                                     //| -- |RM|//
+            GLU fag_sad_iid =(       //| -- |RM|//
+            D_D.FAG_SAD_IID   );;    //| -- |RM|//
+                                     //| -- |RM|//
+    #undef  GLU //:###############:////| -- |RM|//
+                                     //| -- |RM|//
+             PFN_glDetachShader      //| -- |RM|//
+    DetSad=(AAC2020_GLEBIND.glDetachShader);    //| -- |RM|//
+                                     //| -- |RM|//
+             PFN_glDeleteShader      //| -- |RM|//
+    KilSad=(AAC2020_GLEBIND.glDeleteShader);    //| -- |RM|//
+                                     //| -- |RM|//
+    DetSad(POG_IID, vet_sad_iid);    //| -- |RM|//
+	DetSad(POG_IID, fag_sad_iid);    //| -- |RM|//
+	                                 //| -- |RM|//
+	KilSad(vet_sad_iid);             //| -- |RM|//
+	KilSad(fag_sad_iid);             //| -- |RM|//
+                                     //| -- |RM|//
+    ///////////////////////////////////| -- |RM|//
+    #undef  POG_IID ///////////////////| -- |RM|//
+    #undef  D_D     ///////////////////| -- |RM|//
+    ///////////////////////////////////| -- |RM|//
+                                     //| -- |RM|//
+    //|RM|RM|RM|RM|RM|RM|----|RM|RM|RM|RM|RM|RM|//
+    //|________________________________________|//
+
+}
+
+PRIVATE_FUNCTION( static void )
+fn( CreateTheShaders )( void ){
+
+    #define GLU unsigned int /** GLuint **/ //:##############://
+
+        GLU fag_sad_iid = 27772;
+        GLU vet_sad_iid = 16661;
+
+    #undef  GLU //:##########################################://
+    
+
+    //|C|C|C|C|C|C|C|C|C|----|C|C|C|C|C|C|C|C|C|//
+    vet_sad_iid   =(                       //|C|//
+        AAC2020_GLEBIND.glCreateShader(               //|C|//
+            AAC2020_GLEBIND.ST.gl_vertex_shader       //|C|//
+        )                                  //|C|//
+    );;fn(ErrChk)("[tesawind:CREATE_VS]"); //|C|//
+                                           //|C|//
+    //|-  --  --  --  ---  --  --  --  -|////|C|//
+                                           //|C|//
+    fag_sad_iid =(                         //|C|//
+        AAC2020_GLEBIND.glCreateShader(               //|C|//
+            AAC2020_GLEBIND.ST.gl_fragment_shader     //|C|//
+        )                                  //|C|//
+    );;fn(ErrChk)("[tesawind:CREATE_FS]"); //|C|//
+                                           //|C|//
+    //|-  --  --  --  ---  --  --  --  -|////|C|//
+                                           //|C|//
+    if(           0  >= vet_sad_iid    ){  //|C|//
+        fn(Halt)("[0 >= vet_sad_iid]"  );  //|C|//
+    };;                                    //|C|//
+    if(           0  >= fag_sad_iid  ){    //|C|//
+        fn(Halt)("[0 >= fag_sad_iid]");    //|C|//
+    };;                                    //|C|//
+                                           //|C|//
+    //|C|C|C|C|C|C|C|C|C|----|C|C|C|C|C|C|C|C|C|//
+
+    //! Store_The_Result:______________________!//
+    tesawind.data.VET_SAD_IID=(
+                  vet_sad_iid  );;
+
+    tesawind.data.FAG_SAD_IID=(
+                  fag_sad_iid  );
+
+}
+
+PRIVATE_FUNCTION( static void )
+fn( CreateShaderCode )( void ){
 
     
 
-//:PUBLIC:===================================================://
+    const char*       vet_sad_src=(
+        tesawind.data.VET_SAD_SRC
+    );;
 
-    int AAC2020_GRA_Init(){
+    const char*       fag_sad_src=(
+        tesawind.data.FAG_SAD_SRC
+    );;
 
-        aac2020_gra_dll_openGL=(
-            PEB2020_LoadLibraryA("opengl32.dll") );;
+    const char* vet_sad_msg ="[VET_SAD_MSG]";
+    const char* fag_sad_msg ="[FAG_SAD_MSG]";
+
+    //! Create_The_Shaders:____________________!//
+    fn( CreateTheShaders )( );
+
+
+    //! Retrieve_Shader_IDs_Generated:_________!//
+    //|RI|RI|RI|RI|RI|RI|----|RI|RI|RI|RI|RI|RI|//
+    #define T1 unsigned int /** GLuint **///|RI|//
+        /** T1 **/                        //|RI|//
+            T1        vet_sad_iid =(0-83);//|RI|//
+            T1        fag_sad_iid =(0-84);//|RI|//
+        /** T1 **/                        //|RI|//
+        /** T1 **/    vet_sad_iid =(      //|RI|//
+        tesawind.data.VET_SAD_IID   );;   //|RI|//
+        /** T1 **/                        //|RI|//
+        /** T1 **/    fag_sad_iid =(      //|RI|//
+        tesawind.data.FAG_SAD_IID   );;   //|RI|//
+        /** T1 **/                        //|RI|//
+    #undef  T1 /////////////////////////////|RI|//
+    //|RI|RI|RI|RI|RI|RI|----|RI|RI|RI|RI|RI|RI|//
+
+
+    //! Compile_Vertex_Shader:_________________!//
+    //|VS|VS|VS|VS|VS|VS||||||VS|VS|VS|VS|VS|VS|//
+    fn( CompileShader )(                  //|VS|//
+        vet_sad_iid //| vet sad iid - - - //|VS|//
+    ,   vet_sad_src //| vet sad src - - - //|VS|//
+    ,   vet_sad_msg //| vet sad msg - - - //|VS|//
+    );;                                   //|VS|//
+    //|VS|VS|VS|VS|VS|VS||||||VS|VS|VS|VS|VS|VS|//
+
+    //! Compile_FRAGMENT_Shader:_______________!//
+    //|FS|FS|FS|FS|FS|FS||||||FS|FS|FS|FS|FS|FS|//
+    fn( CompileShader )(                  //|FS|//
+        fag_sad_iid //| fag sad iid - - - //|FS|//
+    ,   fag_sad_src //| fag sad src - - - //|FS|//
+    ,   fag_sad_msg //| fag sad msg - - - //|FS|//
+    );;                                   //|FS|//
+    //|FS|FS|FS|FS|FS|FS||||||FS|FS|FS|FS|FS|FS|//
+
+    //! Link_The_Program:______________________!//
+    //|LP|LP|LP|LP|LP|LP||||||LP|LP|LP|LP|LP|LP|//
+                                          //|LP|//
+    #define D_D (tesawind.data)       //////|LP|//
+    #define C_P (AAC2020_GLEBIND.glCreateProgram)//////|LP|//
+                                          //|LP|//
+            D_D.POG_IID = C_P();          //|LP|//
+    if(     D_D.POG_IID <= 0 ){           //|LP|//
+        fn(Halt)(                         //|LP|//
+          "[D_D.POG_IID <= 0]"            //|LP|//
+        );;                               //|LP|//
+    };;                                   //|LP|//
+        PFN_glAttachShader                //|LP|//
+        AS=(AAC2020_GLEBIND.glAttachShader);         //|LP|//
+                                          //|LP|//
+        AS( D_D.POG_IID, vet_sad_iid  );  //|LP|//
+        AS( D_D.POG_IID, fag_sad_iid  );  //|LP|//
+                                          //|LP|//
+        PFN_glLinkProgram                 //|LP|//
+        LP=(AAC2020_GLEBIND.glLinkProgram);          //|LP|//
+                                          //|LP|//
+        LP( D_D.POG_IID );                //|LP|//
+                                          //|LP|//
+    #undef  D_D  ///////////////////////////|LP|//
+    #undef  C_P  ///////////////////////////|LP|//
+    //|LP|LP|LP|LP|LP|LP||||||LP|LP|LP|LP|LP|LP|//
+
+    //! Check_The_Program:_____________________!//
+    //|========================================|//
+    fn(CheckTheProgram)(  ); //|===============|//
+    //|========================================|//
+
+    fn(ReclaimMemory_OpenGL_ShaderStuff)( );
+
+    AAC2020_GLEBIND.glUseProgram( tesawind.data.POG_IID ); 
+    fn( ErrChk )( 
+        "[2019_08_03:glUseProgram]"
+    );;
+
+}
+
+PRIVATE_FUNCTION( static void )
+fn( JunkCode_ErrorCheckOtherLibData )(void){
+
+    //:this code is kind of junk.
+    //:It breaks the chaining rule.
+    //:#THE_CHAINING_RULE#
+
+    if(NULL==AAC2020_GLEBIND.glGetUniformLocation){
+        fn(Halt)(
+            "[tesawind:NIL_2019_08_03_0351AM:01]"
+        );;
+    };;
+    if(NULL==pfn_glGetUniformLocation){
+        fn(Halt)(
+            "[tesawind:NIL_2019_08_03_0351AM:02]"
+        );;
+    };;
+
+}
+
+PRIVATE_FUNCTION( static void )
+fn( UseThatProgram )( void ){
+
+    AAC2020_GLEBIND.glUseProgram( tesawind.data.POG_IID );
+    
+    fn(JunkCode_ErrorCheckOtherLibData)( );
+
+}
+
+//////////////////////////////////////////////////
+
+PRIVATE_FUNCTION( static void )
+fn(       glGenBuffers )( ){ 
+//: ga_qs_glGenBuffers
+
+    //:glGenBuffers — generate buffer object names
+    AAC2020_GLEBIND  .glGenBuffers(
+        ( 1 )//:JustMakeOne
+    ,   &(tesawind.data.tri.ga.VBO) 
+    );;fn(ErrChk)("[glGenBuffers]");
+
+}
+PRIVATE_FUNCTION( static void )
+fn(       glBindBuffer )( ){ 
+//: ga_qs_glBindBuffer
+
+    //:BBT:BUFFER_BINDING_TARGET
+
+    AAC2020_GLEBIND  .glBindBuffer(
+        AAC2020_GLEBIND.BBT.gl_array_buffer
+    ,   tesawind.data.tri.ga.VBO
+    );;fn(ErrChk)("[glBindBuffer]");
+
+}
+PRIVATE_FUNCTION( static void )
+fn(       glBufferData )( ){ 
+//: ga_qs_glBufferData
+
+    //[ Give our vertices to OpenGL.     ]//
+    //||||||||||||||||||||||||||||||||||||//
+    #define d_d (tesawind.data) /////|   |//
+    AAC2020_GLEBIND  .glBufferData(           //|   |//
+        AAC2020_GLEBIND.BBT                   //|TAR|//
+        .gl_array_buffer           //|   |//
+    ,                              //|   |//
+        sizeof(d_d.tri.ce.ARR[0])  //|SIZ|//
+             *(d_d.tri.ce.NUM)     //| ++|//
+    ,          d_d.tri.ce.ARR      //|DAT|//
+    ,                              //|   |//
+        AAC2020_GLEBIND.BUFFER_DATA           //|USE|//
+        -> gl_static_draw          //|   |//
+    );;                            //|   |//
+    fn(ErrChk)("[glBufferData]");  //|   |//
+    #undef  d_d  ////////////////////|   |//
+    //||||||||||||||||||||||||||||||||||||//
+
+}
+
+PRIVATE_FUNCTION( static void )
+fn(       glGenVertexArrays )( ){ 
+//: ga_qs_glGenVertexArrays
+
+    AAC2020_GLEBIND  .glGenVertexArrays(
+        ( 1 )//:JustMakeMeOne
+    ,   &(tesawind.data.tri.ga.VAO)
+    );;fn(ErrChk)("[glGenVertexArrays]");
+
+}
+PRIVATE_FUNCTION( static void )
+fn(       glBindVertexArray )( ){ 
+//: ga_qs_glBindVertexArray
+
+    AAC2020_GLEBIND.  glBindVertexArray(
+        tesawind.data.tri.ga.VAO
+    );;fn(ErrChk)("[glBindVertexArray]");
+
+}
+PRIVATE_FUNCTION( static void )
+fn(       glVertexAttribPointer )( 
+//: ga_qs_glVertexAttribPointer
+
+    /**/unsigned int /** GLuint **/  
+        layout_index
+    ,   
+        int /** GLsizei **/ 
+        attrib_size_in_elements
+){ 
+
+    //|////////////////////////////////////////|//
+    //| glVertexAttribPointer :                |//
+    //| define an array of generic vertex      |//
+    //| attribute data                         |//
+    //|////////////////////////////////////////|//
+
+    //:#FEEBUS# #FEBUS# But not spelled that way.
+    //:febis:first_element_buffer_inset_seek
+    //:midep:measured_in_data_element_points
+    #define G_L_U_E(x,y) x##_##y /////////////////
+    size_t  G_L_U_E(febis,midep)=0;//:febis_midep
+    size_t  G_L_U_E(febis,bytes)=0;//:febis_bytes
+    #undef  G_L_U_E //////////////////////////////
+    
+    //:#LAYOUT_INDEX_SHOULD_BE_PRE_APPROVED#://          
+    if(MACRO_LALODEX_verpos //:Vertex_Position
+        ==layout_index
+    ){
+        size_t      seek_to_vertex_position=0;
+        febis_midep=seek_to_vertex_position;
+    }else
+    if(MACRO_LALODEX_texcoo //:Texture_Coordinate
+        ==layout_index
+    ){
+        size_t      seek_to_first_texcoord=3;
+        febis_midep=seek_to_first_texcoord;
+    }else{
+        fn(Halt)("[UnknownLayoutIndex]");
+    };;
+    
+    //:febis:first_element_buffer_inset_seek
+    //:midep:measured_in_data_element_points
+    //:bytes:bytes (measured_in_bytes/febis_bytes)
+    int siz = sizeof(float)  ;
+    int num = febis_midep    ;
+    febis_bytes=( siz * num );
+
+    //:#GET_THAT_FUCKING_STRIDE#:#############################//
+    #define GLS  int /** GLsizei **/ //:#####################://
+
+            GLS sin_elm =( //:stride_in_elements
+                tesawind_total_data_points_per_vertex
+                    //:ga_total_data_points_per_vertex
+            );;
+            GLS sin_byt =( //:stride_in_bytes
+                sin_elm * siz 
+            );;
+
+    #undef  GLS //:##########################################://
+    //:############################:#GET_THAT_FUCKING_STRIDE#://
+    
+    AAC2020_GLEBIND.glVertexAttribPointer(
+    //+   +-----------------------------+      +//
+    //+   | attribute 0.                |      +//
+    //+   | No particular reason for 0, |      +//
+    //+   | but must match the          |      +//
+    //+   | layout in the shader.       |      +//
+    //+   |                             |      +//
+    //+   +---+-------------------------+      +//
+    //+       |                                +//
+    /**/layout_index                      //[01]//
+    ,   attrib_size_in_elements           //[02]//
+    //                    //+                  +//
+    ,   AAC2020_GLEBIND.TYP.gl_float //| _ : type       03|//
+    ,   AAC2020_GLEBIND.BOL.gl_false //| _ : normalized?04|//
+    //                    //+                  +//
+    //| GLsizei   : stride                     |//
+    ,   sin_byt //:stride_in_bytes
+    //                            
+    //| array buffer offset                    |//
+    ,   (void*)febis_bytes  
+    );;
+    fn(ErrChk)("[X_X:glVertexAttribPointer]");
+
+    AAC2020_GLEBIND.glEnableVertexAttribArray(layout_index);
+    fn(ErrChk)("[X_X:glEnableVertexAttribArray]");
+
+}
+PRIVATE_FUNCTION( static void )
+fn(       glBindBuffer_GL_ARRAY_BUFFER_0_ZERO)(){
+//: ga_qs_glBindBuffer_GL_ARRAY_BUFFER_0_ZERO
+
+    //:#ITS_A_GOOD_HABIT_LIKE_NULLING_POINTERS#://
+    AAC2020_GLEBIND.glBindBuffer(
+    /**/AAC2020_GLEBIND.BBT.gl_array_buffer
+    ,   0 //:<<<<<<<<<<<<<<<<<<<<<<<<<ZERO!
+    );;fn(ErrChk)("[tesawind2019_08_04_0226AM]");
+
+}
+PRIVATE_FUNCTION( static void )
+fn(       glBindVertexArray_0_ZERO )(){
+//: ga_qs_glBindVertexArray_0_ZERO
+
+    //:#UNBIND_VERTEX_ARRAY_WHEN_DONE_HABIT#://
+    AAC2020_GLEBIND.glBindVertexArray(0); 
+    fn(ErrChk)("[YouMightAsWellErrorCheck]");
+
+}
+
+
+
+
+
+
+//////////////////////////////////////////////////
+
+
+//! Setup the single polygon used to render    !//
+//! pixels to the viewport. ------------------ !//
+PRIVATE_FUNCTION( static void )
+fn( QuadSetup )( void ){
+
+    fn( ErrChk )(
+        "[tesawin:FailedBeforeYouStarted]"
+    );;
+
+    fn( UseThatProgram )();
+
+
+    //:Create the raw vertex data (VAO):
+    //////////////////////////////////////////////
+    fn( glGenBuffers )();      //: GEN BUF
+    fn( glBindBuffer )();      //: BND BUF
+    fn( glBufferData )();      //: BUF DAT
+    //////////////////////////////////////////////
+    
+    //:Create VIEWS of that VAO known as VBO(s).
+    //////////////////////////////////////////////
+    
+    //:Create the vertex arrays:
+    fn( glGenVertexArrays )(); //: GEN VRT ARR
+    fn( glBindVertexArray )(); //: BND VRT ARR
+    
+    //:View (VBO) of POSITION info in VAO.
+    fn( glVertexAttribPointer )(
+    //-GA_MACRO_VERPOS_LAYOUT_LOCDEX-//
+          MACRO_LALODEX_verpos
+    ,3 //:Size_In_Elements
+    );;
+    
+    //:View (VBO) of TEXCOORDS info in VAO.
+    //:( vs_texcoord )
+    fn( glVertexAttribPointer )(
+    //-GA_MACRO_VERPOS_LAYOUT_LOCDEX-//
+        MACRO_LALODEX_verpos
+    ,2 //:Size_In_Elements
+    );;
+    
+    //////////////////////////////////////////////
+    
+    //| Unbind(de-select) the data you were    |//
+    //| working on so other state-full commands|//
+    //| do not accidentially modify your data. |//
+    fn( glBindBuffer_GL_ARRAY_BUFFER_0_ZERO )( );
+    fn( glBindVertexArray_0_ZERO            )( );
+    
+    
+//   //:#FUNCTION_EXECUTION_ORDER_MATTERS#://
+//   ga_MakeViewportTextureAndActivate( 1 );  <<<<<<<<<<<< BOARDWIN's job
+//   ga_ConfigureTextureSampling_PORPIX( 1 ); <<<<<<<<<<<< BOARDWIN's job
+//   ga_UploadTexturePixels_PORPIX( 1 );      <<<<<<<<<<<< BOARDWIN's job
+//
+
+    printf("[endofquadsetup]\n");
+}
+
+#define V void ///////////////////////////////////
+PRIVATE_FUNCTION( static void )
+fn(    MakeContextCurrentAndSetWindowSize )( V ){
+//: ga_MakeContextCurrentAndSetWindowSize
+#undef  V ////////////////////////////////////////
+
+
+    //:Make context current:
+    int /** BOOL **/ make_current_worked = (0-777);
+    make_current_worked=(
+    AAC2020_GLEBIND_wglMakeCurrent(
+    /**/AAC2020_GINAWIN_GetWinDC_ExistsNoWait()
+    ,   AAC2020_GLEBIND.handle_to_gl_rendering_context
+    ));;
+
+    //:#CONVOLUTED_BUT_I_WILL_ALLOW_IT#://    
+    if(1 == make_current_worked ){
+        //:DO_NOTHING://
+    }else
+    if(1 != make_current_worked ){
+        int is_window_still_open=(
+            AAC2020_GINAWIN_IsWindowStillOpen()
+        );;
+        if(is_window_still_open > 0){
+            printf(
+            /**/"[GA:is_window_still_open]:%d\n"
+            ,        is_window_still_open
+            );;    
+
+            #define D   (tesawind.data)    ///////
+            #define MCF  make_current_fail ///////
+            #define NUM  D.MCF.NUM         ///////
+            #define MAX  D.MCF.MAX         ///////
+
+            if( ++(NUM) > MAX ){
+
+                aac2020_glebind_Alert(
+                    "[MCF:FAIL:2019_08_04]\n"
+                );;
+
+            }else{
+                printf(
+                    "[MCF:OK:AllowThisTime]\n"
+                );;
+
+                /** Sleep(2); **/
+                //: return; #NAFOMEP#
+            };;
+
+            #undef  D    /////////////////////////
+            #undef  MCF  /////////////////////////
+            #undef  NUM  /////////////////////////
+            #undef  MAX  /////////////////////////
+        }else{
+            printf(
+                "[MCF:OK:CaughtWhileClosing]\n"
+            );;
+            //: return; #NAFOMEP#
+        };;
+    }else{
+        H("[2019_08_04:EDCL]");
+    };;
+
+  //: //:Set size of viewport:
+  //: int X   = AAC2020_GINAWIN_GetClient_X  ();
+  //: int Y   = AAC2020_GINAWIN_GetClient_Y  ();
+  //: int WID = AAC2020_GINAWIN_GetClient_WID();
+  //: int HIG = AAC2020_GINAWIN_GetClient_HIG();
+  //: AAC2020_GLEBIND.glViewport(
+  //: /**/(GLint) X
+  //: ,   (GLint) Y
+  //: ,   (GLint) WID
+  //: ,   (GLint) HIG
+  //: );;
+
+}
+
+//| Not sure if this function correctly        |//
+//| categorizes the code it invokes, hence the |//
+//| weird name.                                |//
+PRIVATE_FUNCTION( static void )
+fn( Init_NotSureWhatToCallThis_GLSetup )( void ){
+
+    int /** BOOL **/ make_current_worked=(
+    AAC2020_GLEBIND_wglMakeCurrent(
+    /**/AAC2020_GINAWIN_GetWinDC_ExistsNoWait()
+    ,   AAC2020_GLEBIND.handle_to_gl_rendering_context
+    ));;if(!make_current_worked){
+        tesawind_Halt(
+            //:MCFILT:MakeCurrentFailInLoopTick
+            "[tesawind:MCFILT]"
+        );;
+    };;
+
+    //:Do not create any textures! When texture
+    //:sampler switchboard's uniform is zero
+    //:it uses a default fragshader that
+    //:does not sample from texture.
+    fn(CreateShaderCode)();
+    fn(QuadSetup)();
+    fn(MakeContextCurrentAndSetWindowSize)();
+
+}
+
+PRIVATE_FUNCTION( static void )
+fn(Init_HaltIfChecksumsFail)(){
+//:ga_HaltIfChecksumsFail
+//:Init_HaltIfChecksumsFail
+//:HaltIfChecksumsFail
+
+    if(tesawind_vertex_buffer_data_num !=
+       tesawind_vertex_buffer_data_num_actual
+    ){  
+        //:VETCESFAL:VertexChecksumFail
+        fn(Halt)("[VETCESFAL:2019_08_04]");
+    };;
+} //[ga_HaltIfChecksumsFail]//
+
+//:Not certain if this
+PRIVATE_FUNCTION( static void )
+fn( Init )( void ){
+
+    //+ Commented out. + + + + + + + + + + + + + + + + + + + +//
+    //- COG_Init();    - - - - - - - - - - - - - - - - - - - -//
+    /**   Initialize after other dependencies. But don't     **/
+    /**   Initialize dependencies inside here. That works,   **/
+    /**   but makes the logic a lot harder to follow.        **/
+    /**   It also could create a very large init chain       **/
+    /**   that unecessarily creates a very deeply            **/
+    /**   nested stack.                                      **/
+    //- - - - - - - - - - - - - ---- - - - - - - - - - - - - -//
+    //+ - - - - - - - - - - - - ---- - - - - - - - - - - - - +//
+
+
+    fn( Init_HaltIfChecksumsFail )( );
+    fn( Init_Data )( );
+    fn( Init_NotSureWhatToCallThis_GLSetup )( );
+
+}
+void FN(Init)( void ){
+     fn(Init)(      );
+}
+
+//:DONT_DO_THIS:=============================================://
+/** ******************************************************** ***
+
+    PRIVATE_FUNCTION( static void )
+    fn( OnWindowResize )( void ){
+
+        //[   OnWindowResize is leftover from TESAWIND.H     ]//
+        //[   AAC2020 should have less convoluted logic      ]//
+        //[   by centralizing all of the resize logic for    ]//
+        //[   different libraries in our library chain.      ]//
+        //[   LIBCHAN==Library_Chain                         ]//
+
+//:     //:A "BEFORE" COG window resize function pointer?
+//:     if( tesawind.data.onn_win_riz.top.HAS_FUN ){
+//:         tesawind.data.onn_win_riz.top.FUN_ADD( );
+//:     };;
 
         
-        return( 0 );
+            //:Any resize code for 
+            //:THIS_LIBRARY/SELF/TESAWIND.H
+            //:goes here.
+
+            //+ The previous library in our library chain    +//
+            //+ From when we had a library chain of discrete +//
+            //+ projects that could be isolated and compiled +//
+            //+ on their own if need be.                     +//
+            //- COG_FitViewportToWindow(); -//
+
+
+//:     //:A "BEFORE" COG window resize function pointer?
+//:     if( tesawind.data.onn_win_riz.bot.HAS_FUN ){
+//:         tesawind.data.onn_win_riz.bot.FUN_ADD( );
+//:     };;
+
     }
 
-//:===================================================:PUBLIC://
-//:PRIVATE:==================================================://
+*** ******************************************************** **/
+//:=============================================:DONT_DO_THIS://
+//:DONT_DO_THIS:=============================================://
+
+    PRIVATE_FUNCTION( static void )
+    fn( CheckForWindowResizeFlagAndAct )( void ){
+    //:ga_CheckForWindowResizeFlagAndAct
+
+        /** This old code used threading to do it's work.    **/
+        /** We want to avoid this if we can, as threading    **/
+        /** our code makes it really easy to get weird       **/
+        /** running code due to the lack of....              **/
+        /** memory consistency...                            **/
+        /** AND... coherency.                                **/
+        /**                                                  **/
+        /** CONSISTENCY: Ordering of processor operations.   **/
+        /**   COHERENCY: Memory caches storing same values.  **/
+    
+        //: LONG64 val=(
+        //:     ENGETHER.THREADING.
+        //:     InterlockedExchangeAcquire64(
+        //:     &(GINAWIN.THREAD_SAFE_FLAGS.
+        //:         resize_message_count), 0
+        //:     )
+        //: );;
+        //: 
+        //: //:ga_completed_loop_ticks
+        //: int completed_loop_ticks =(
+        //:     tesawind.data.COM_LOP_TIK
+        //: );;
+        //: 
+        //: //:#AVOID_DOUBLE_REDRAW_ON_STARTUP#://
+        //: if( val > 0                     ){
+        //: if( completed_loop_ticks > 0    ){
+        //: 
+        //:     int v = (int)val;
+        //:     printf("[ga_~resizeCheck~:v]:%d\n", v );
+        //:     fflush(stdout);
+        //: 
+        //:     fn( OnWindowResize )( );
+        //: 
+        //: }};;
+    
+    }
+//:=============================================:DONT_DO_THIS://
+//:DONT_DO_THIS:=============================================://
+/** ******************************************************** ***
+    //:tesawind_DestructiveRead_IsRedrawFlagSet
+    //:#NOT_THE_REDRAW_YOU_THINK#://
+    PRIVATE_FUNCTION( static int )
+    fn(DestructiveRead_IsRedrawFlagSet)( void ){
+
+        //[ ************************************************ ]//
+        //[ If it uses "ENGETHER" remove it!                 ]//
+        //[ Engether is for multi-threading. And             ]//
+        //[ my experience is that it is way too easy         ]//
+        //[ to make hard to find mistakes.                   ]//
+        //[                                                  ]//
+        //[ Even worse is incorrect threading code will      ]//
+        //[ behave inconsistently. Which means it can        ]//
+        //[ fail at seemingly random spots.                  ]//
+        //[                                                  ]//
+        //[ Similiar to a "memory stomp"'s bad               ]//
+        //[ behavior.                                        ]//
+        //[                                                  ]//
+        //[ -John Mark Issac Madison DATE[2020_11_03]        ]//
+        //[ ************************************************ ]//
+
+        //- //#UNCERTAIN_ABOUT_INTERLOCKED_EX#//   -//
+        //- LONG64 val=(                           -//
+        //-     ENGETHER.THREADING.                -//
+        //-     InterlockedExchangeAcquire64(      -//
+        //-        &(GINAWIN.THREAD_SAFE_FLAGS.    -//
+        //-          redraw_message_count), 0      -//
+        //-     )                                  -//
+        //- );;                                    -//
+        //-                                        -//
+        //- if( val>0 ){ return 1; }               -//
+        //- return( 0 );                           -//
+
+        return( 0 );
+    } 
+*** ******************************************************** **/
+//:=============================================:DONT_DO_THIS://
+//:DONT_DO_THIS:=============================================://
+
+    PRIVATE_FUNCTION( void )
+    fn( HandleWindowLoopMessage_WM_PAINT )(void){
+
+        /** This is too complex. Just have window code       **/
+        /** call a function pointer that calls's this        **/
+        /** librarie's "loopTick" function to update the     **/
+        /** graphics. No mutex/semaphore bullshit.           **/
+
+        //- //:#NOT_THE_REDRAW_YOU_THINK#://                 -//
+        //- int should_redraw=(                              -//
+        //-                                                  -//
+        //-     //#UNCERTAIN_ABOUT_INTERLOCKED_EX#//         -//
+        //-     fn(DestructiveRead_IsRedrawFlagSet)()        -//
+        //-                                                  -//
+        //- );;                                              -//
+        //- if( should_redraw > 0 ){                         -//
+        //-     //[[TODO]: Figure out how to trigger   ]//   -//
+        //-     //[redraw flag at proper screen refersh]//   -//
+        //-     //[rate.                               ]//   -//
+        //-     printf("[tesawind:should_redraw]\n");        -//
+        //- };;                                              -//
+                                                        
+    }
+
+//:==============================================:DONT_DO_THIS://
+
+PRIVATE_FUNCTION( static void )
+fn( LoopTick )( void ){
+    //:GA_LoopTick  //:#ORIGINALLY_GA_LOOPTICK#
+
+    //[ GUTTED_THIS_FUNCTION. Does_Nothing. ]//
+    fn( HandleWindowLoopMessage_WM_PAINT )( );
+
+    int /** BOOL **/ make_current_worked=(
+    AAC2020_GLEBIND_wglMakeCurrent(
+    /**/AAC2020_GINAWIN_GetWinDC_ExistsNoWait()
+    ,   AAC2020_GLEBIND.handle_to_gl_rendering_context
+    ));;if(!make_current_worked){
+        //:MCF_ILT:MakeCurrentFailInLoopTick
+        fn(Halt)("[MCF_ILT]"); 
+    };;
+
+    //[ GUTTED_THIS_FUNCTION. Does_Nothing. ]//
+    fn( CheckForWindowResizeFlagAndAct )( ); 
+   
+
+    AAC2020_GLEBIND.glClearColor(0.0f,0.1f,0.5f, 1.0f);
+
+    #if(MACRO_TESAWIND_DEBUG_MODE>=1) ////////////
+    fn(ErrChk)("[glClearColor]"); //#<<<<<<<<<<<<<<<PerformanceHit/[MAN_HIT]? #//
+    #endif ///////////////////////////////////////
+
+    AAC2020_GLEBIND.glClear( 
+        AAC2020_GLEBIND.MAS.gl_color_buffer_bit
+    );;
+
+    #if(MACRO_TESAWIND_DEBUG_MODE>=1) ////////////
+    fn(ErrChk)("[glClear]"); //#<<<<<<<<<<<<<<<<<<<<<PerformanceHit/[MAN_HIT]? #//
+    #endif ///////////////////////////////////////
+
+    //:######################################################://
+    #define GLE unsigned int /** GLenum **/ //:##############://
+
+        GLE err; /** GLenum:err **/
+
+    #undef  GLE //:##########################################://
+    //:######################################################://
+
+    glBindVertexArray(
+        tesawind.data.tri.ga.VAO
+    );;fn(ErrChk)("[2019_08_04_0518PM]");
+    //:     LoopTick:glBindVertexArray
+
+    int four_4_quad=(
+        tesawind.data
+       .we_have_4_corner_verts_making_quad
+    );;
+    
+    //: Draw the triangle !
+    AAC2020_GLEBIND.glDrawArrays(
+    /**/AAC2020_GLEBIND.MOD.gl_triangle_strip
+    ,   0  //: Starting from vertex 0;
+    ,   four_4_quad
+    );;
+    err = AAC2020_GLEBIND.glGetError();
+    if( err != AAC2020_GLEBIND.ERR.gl_no_error ){
+        fn(Halt)("[FAIL:glDrawArrays]");
+    };; 
+
+    AAC2020_GINAWIN_SwapBuffers();
+    
+    //[ DON'T DO THIS.                         ]//
+    //[ Your triangle will vanish!             ]//
+    //- AAC2020_GLEBIND.glDisableVertexAttribArray(0);    -//
+    //- fn(ErrChk)("[DisVerAttArr]");          -//
+
+    //: ga_completed_loop_ticks++;
+    tesawind.data.COM_LOP_TIK++;
+
+}
 
 
-    //:No private functions yet.
 
 
-//:==================================================:PRIVATE://
+
+
+
+
+
+
+//:tesawind_Loop( )
+PRIVATE_FUNCTION( void )
+fn( Loop )( void ){
+
+    while( AAC2020_GINAWIN_IsWindowStillOpen() > 0 ){
+    
+        tesawind_LoopTick();
+        
+    };;
+
+}
+
+//:DONT_DO_THIS:=============================================://
+
+    /**  We wrapped these functions because this code came   **/
+    /**  from a previous project where we chained together   **/
+    /**  discrete compilable projects into larger projects.  **/
+    /**                                                      **/
+    /**  The library chain of AAC2020 is not composed to     **/
+    /**  discrete projects, only discrete sub libraries      **/
+    /**  that are chained together.                          **/
+    /**                                                      **/
+    /**  Wrapping function calls of previous library like    **/
+    /**  this does not make sense in AAC2020 and only serves **/
+    /**  to:                                                 **/
+    /**       1. Increase code surface area "BAD"            **/
+    /**       2. Make more than one way to do the            **/
+    /**          same thing. Also "BAD".                     **/
+
+    //- PRIVATE_FUNCTION( static void )                      -//
+    //- fn( Wait )( void ){                                  -//
+    //-                                                      -//
+    //-     COG_Wait(); //:#ABOUT_TESAWIND_Wait#://          -//
+    //-                                                      -//
+    //- }                                                    -//
+    //- void FN( Wait )( void ){                             -//
+    //-      fn( Wait )(      );                             -//
+    //- }                                                    -//
+
+//:=============================================:DONT_DO_THIS://
+
+
+TD(void) (*TESAWIND_PFN_Test)( void );
+RT(void)   TESAWIND_Test(        void ){
+
+    printf("[TODO:TESAWIND_Test()...]\n");
+}
+
+TD(void) (*TESAWIND_PFN_Ping)( void );
+RT(void)   TESAWIND_Ping(      void ){
+    
+    printf("[HelloFrclearom:TESAWIND]\n");
+
+}
+
+
+//:REMOVED_BECAUSE_NO_LONGER_A_PROJECT_IN_ITSELF:============://
+
+    /** The library chain of AAC2020 is discrete             **/
+    /** SUB-libraries that can be chained together.          **/
+    /** Previously this code was part of discrete            **/
+    /** PROJECTS that could be chained together.             **/
+    /**                                                      **/
+    /** Call them:                                           **/
+    /**     DIPCHAN : DIscrete Project Chain                 **/
+    /**     LIBCHAN : LIbrary  Chain (using sub libraries)   **/
+
+    //- //|IQ:[IGNITE|QUENCH]__________________________|//   -//
+    //- //|                                            |//   -//
+    //- //|IQ|IQ|IQ|IQ|IQ|IQ|IQ|IQ|IQ|IQ|IQ|IQ|IQ|IQ|IQ|//   -//
+    //- TD(void) PO( Ignite )( void );                       -//
+    //- RT(void) FN( Ignite )( void ){                       -//
+    //-                                                      -//
+    //-     tesawind_Init( );                                -//
+    //-     tesawind_Loop( );                                -//
+    //-     tesawind_Wait( );                                -//
+    //-                                                      -//
+    //- }                                                    -//
+    //- //|-  --  --  --  --  --  --  --  --  --  --  -|//   -//
+    //- TD(void) PO( Quench )( void );                       -//
+    //- RT(void) FN( Quench )( void ){                       -//
+    //-                                                      -//
+    //-     printf("[TODO:Quench:TESAWIND]\n");              -//
+    //-                                                      -//
+    //- }                                                    -//
+    //- //|IQ|IQ|IQ|IQ|IQ|IQ|IQ|IQ|IQ|IQ|IQ|IQ|IQ|IQ|IQ|//   -//
+    //- //|____________________________________________|//   -//
+    //-                                                      -//
+    //-                                                      -//
+    //-                                                      -//
+    //- //|DM:[DEMO]___________________________________|//   -//
+    //- //|                                            |//   -//
+    //- //|DM|DM|DM|DM|DM|DM|DM|DM|DM|DM|DM|DM|DM|DM|DM|//   -//
+    //- TD(void) (*TESAWIND_PFN_Demo)( void );               -//
+    //- RT(void)   TESAWIND_Demo(      void ){               -//
+    //-                                                      -//
+    //-     TESAWIND_Ping(   );                              -//
+    //-     TESAWIND_Ignite( );                              -//
+    //-                                                      -//
+    //- }                                                    -//
+    //- //|DM|DM|DM|DM|DM|DM|DM|DM|DM|DM|DM|DM|DM|DM|DM|//   -//
+
+//:============:REMOVED_BECAUSE_NO_LONGER_A_PROJECT_IN_ITSELF://
+
+
+
+
+#undef  MACRO_TESAWIND_DEBUG_MODE ////////////////
+
+//|////////////////////////////////////////////|//
+//|     -///-                        -///-     |//
+//|....(( 0 ))|| ||_ _--  --_ _|| ||(( 0 ))....|//
+//|_  __      __  __  __  __  __  __      __  _|//
+//| \/  \    /  \/  \/  \/  \/  \/  \    /  \/ |//
+//|      \  /                        \  /      |//
+//|       \/                          \/       |//
+//+ BEG: #BOTTOM_OF_FILE_COMMENTS_SECTION#     +//
+//|           /\                  /\           |//
+//|          /  \                /  \          |//
+//|_--__--__/    \__/\__/\__/\__/    \__--__--_|//
+//|                                            |//
+//|       ______________________________       |//
+//|______/                              \______|//
+#if(BOTTOM_OF_FILE_COMMENTS_SECTION) /////////////
+/** ****************************************** |||
+                                                   
+#AVOID_PLURALITY#
+    Do NOT use plural forms of words.   
+    1. Increases mental search space.
+    2. Plurality is NOT consistent in english.
+       EX: Deer, Sheep, Octopi, Octopuses
+
+#ABOUT_TESAWIND_Wait#
+    Just a wrapper for COG_Wait, the idea is
+    to try to de-couple the libraries I am 
+    chaining together.
+
+    Think of each library as a coarse grain
+    module. No library should be so big that
+    it is unaffordable to scrap it and 
+    re-write it.
+
+    I am treating code more like building houses.
+    Need a new garage? Tear down the old one
+    with a bulldozer, and build a new garage.
+    
+    Need a new bathroom?
+    Tear apart the whole thing and re-model.
+
+    Need a new sink? No you don't.
+
+    Need a new sink, toilet, and shower.
+    Okay, let's tear down the bathroom.
+
+    The sink is really broken? Are you sure?
+    The only thing wrong with the bathroom is
+    the sink?
+    
+    Okay... Tear down the entire bathroom then
+    and make a new bathroom.
+
+    Yes, a bit crazy. But the idea is course
+    grain modularity and course grain refactoring.
+
+#AAC2020_GLEBIND(LIBRARY)ERROR#
+#CheckFileNameSpelling#
+    Fix: You probably need:
+    OPEN_GL_SEARCH_PATHS.TXT
+    OPEN_CL_SEARCH_PATHS.TXT
+    In the same folder as wherever the
+    executable will be generated.
+
+#UNCERTAIN_ABOUT_INTERLOCKED_EX#
+    (I am uncertain about interlocking exchange)
+    Looking over the code. I think it actually
+    might be correct. However this was written
+    before I knew anything about how to properly
+    use atomic objects. Hence the worry.
+
+    ----------------------------------------------
+
+    I did not know what I was doing   
+    and pretty sure this uses         
+    "InterlockingExchange" commands   
+    in the WRONG way.                 
+                                      
+    [TODO] : Potential_Code_Killer    
+    [WARN] : Potential_Code_Killer  
+
+    ----------------------------------------------
+
+#LAYOUT_INDEX_SHOULD_BE_PRE_APPROVED#
+    layout_index should be one   
+    of the expected values.      
+
+
+#ITS_A_GOOD_HABIT_LIKE_NULLING_POINTERS#
+
+    #GOOD_PRACTICE_LIKE_NULLING_POINTERS#
+    #A_GOOD_PRACTICE_LIKE_NULLING_POINTERS#
+    #YOU_CAN_UNBIND_WHEN_YOU_ARE_FINISHED# 
+    #GOOD_PRACTICE_LIKE_NULLING_POINTERS#  
+
+    note that this is allowed, 
+    the call to glVertexAttribPointer 
+    registered VBO as the vertex attribute's 
+    bound vertex buffer object so afterwards 
+    we can safely unbind
+
+#UNBIND_VERTEX_ARRAY_WHEN_DONE_HABIT#
+    You can unbind the VAO afterwards so    
+    other VAO calls won't accidentally      
+    modify this VAO,but this rarely         
+    happens. Modifying other                
+                                            
+    VAOs requires a call to                 
+    glBindVertexArray anyways so we         
+    generally don't unbind VAOs (nor VBOs)  
+    when it's not directly necessary.       
+    SOURCE[SC[ logl-hellotri-scr-url ]]     
+
+#GET_THAT_FUCKING_STRIDE#
+    The offset in datum (bytes or elements)
+    to the next element of the same type.
+    SEE[ SC[ AHK_STRIDE_IMAGE ] ]
+
+#CONVOLUTED_BUT_I_WILL_ALLOW_IT#
+    If failed, it coulde be because
+    the window was closed while the loop
+    was running. The window loop being on
+    a different thread could make this
+    possible.
+    NOTE: is_window_still_open really
+        should be a proper mutex.
+    UPDATE:2019_08_04:
+        This code looks kinda hackish
+        to me, but doesn't look like it
+        is breaking anything, so allow
+        it to be convoluted.
+    
+#NAFOMEP#
+    Not a fan of multiple exit points
+
+#ORIGINALLY_GA_LOOPTICK#
+    Function is a refactor of GA_LoopTick
+    in GAKU.H (NOT GAKU02.H)
+
+#AVOID_DOUBLE_REDRAW_ON_STARTUP#
+    I've observed the first time (val>0),
+    the window hasn't been resized by user
+    but rather just adjusted for init.
+    Avoid double re-draw at startup by
+    gaurding with (ga_completed_loop_ticks>0)
+                                                   
+||| ****************************************** **/ 
+#endif ///////////////////////////////////////////
+//|______                                ______|//
+//|||||||\______________________________/|||||||//
+//|                                            |//
+//|....(( 0 ))|| ||_ _--  --_ _|| ||(( 0 ))....|//
+//|_  __      __  __  __  __  __  __      __  _|//
+//| \/  \    /  \/  \/  \/  \/  \/  \    /  \/ |//
+//|      \  /                        \  /      |//
+//|       \/                          \/       |//
+//+ END: #BOTTOM_OF_FILE_COMMENTS_SECTION#     +//
+//|           /\                  /\           |//
+//|          /  \                /  \          |//
+//|_--__--__/    \__/\__/\__/\__/    \__--__--_|//
+//|                                            |//
+//|____________________________________________|//
+
+
+
+
+//:tessawin.data WRONG
+//:tesawin.data  WRONG
+//:tesawind.data YEAH!
+//:12345678
+
+//:MACROS:ROOT_LEVEL_OOP.TOP:================================://
+
+    //:REDEFINE_REDUNDANCY_TO_ASSERT_CORRECT_VALUES:=========://
+
+    //:INCLUDE AFTER ANY CLASSES (If any)
+    //: #include "00/OOP/ROOT_LEVEL_OOP.TOP._"
+    
+    #define                MACRO_GXY(x, y) x##y 
+    #define RL_FuNaM(x, y) MACRO_GXY(x, y)
+    #define      LIB_PFN  TESAWIND_PFN_ //:  PFN
+    #define      LIB_VIS  TESAWIND_ //:PUBLIC/VISIBLE
+    #define      lib_hid  tesawind_ //:PRIVATE/HIDDEN
+    #define POM( n )   RL_FuNaM( LIB_PFN, n    )
+    #define  PO( n ) (*RL_FuNaM( LIB_PFN, n    ) )
+    #define  FN( n )   RL_FuNaM( LIB_VIS, n    )   
+    #define  fn( n )   RL_FuNaM( lib_hid, n    )
+    #define   H(msg)   fn(   Halt   )(   msg   )  
+    #define  PRIVATE_FUNCTION( stuff ) stuff
+
+    //:=========:REDEFINE_REDUNDANCY_TO_ASSERT_CORRECT_VALUES://
+    //:UNDEFINE_AFTER_HACKISH_REDEFINE_CHECK:================://
+
+    #undef  MACRO_GXY 
+    #undef  RL_FuNaM 
+
+    #undef  LIB_PFN  
+    #undef  LIB_VIS  
+    #undef  lib_hid  
+
+    #undef  POM 
+    #undef   PO 
+    #undef   FN 
+    #undef   fn 
+    #undef    H 
+    #undef   PRIVATE_FUNCTION 
+
+    //:================:UNDEFINE_AFTER_HACKISH_REDEFINE_CHECK://
+
+//:================================:MACROS:ROOT_LEVEL_OOP.TOP://
+//:GRAQUAD_LIBRARY_MACROS:BOT:===============================://
+
+    //:REDEFINE_REDUNDANCY_TO_ASSERT_CORRECT_VALUES:=========://
+
+    #define  MACRO_LALODEX_verpos ((0)) //:VERtex____POSition
+    #define  MACRO_LALODEX_texcoo ((1)) //:TEXture_COOrdinate
+
+    #define  macro_rts( s ) #s
+    #define  MACRO_RTS( s ) macro_rts( s )
+             
+    #define  TD(return_type) typedef return_type
+    #define  RT(return_type)         return_type
+    
+    //:=========:REDEFINE_REDUNDANCY_TO_ASSERT_CORRECT_VALUES://
+    //:UNDEFINE_AFTER_HACKISH_REDEFINE_CHECK:================://
+
+    #undef   MACRO_LALODEX_verpos 
+    #undef   MACRO_LALODEX_texcoo 
+
+    #undef   macro_rts 
+    #undef   MACRO_RTS 
+  
+    #undef   TD 
+    #undef   RT 
+
+    //:================:UNDEFINE_AFTER_HACKISH_REDEFINE_CHECK://
+   
+
+//:===============================:GRAQUAD_LIBRARY_MACROS:BOT://
