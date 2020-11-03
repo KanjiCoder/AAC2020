@@ -64,9 +64,9 @@
     
     #define                MACRO_GXY(x, y) x##y 
     #define RL_FuNaM(x, y) MACRO_GXY(x, y)
-    #define      LIB_PFN  TESAWIND_PFN_ //:  PFN
-    #define      LIB_VIS  TESAWIND_ //:PUBLIC/VISIBLE
-    #define      lib_hid  tesawind_ //:PRIVATE/HIDDEN
+    #define      LIB_PFN  AAC2020_GRAQUAD_PFN_ //:  PFN
+    #define      LIB_VIS  AAC2020_GRAQUAD_ //:PUBLIC/VISIBLE
+    #define      lib_hid  aac2020_graquad_ //:PRIVATE/HIDDEN
     #define POM( n )   RL_FuNaM( LIB_PFN, n    )
     #define  PO( n ) (*RL_FuNaM( LIB_PFN, n    ) )
     #define  FN( n )   RL_FuNaM( LIB_VIS, n    )   
@@ -80,10 +80,10 @@
 
 
 
-void tesawind_Halt( const char* err_msg ){
+void aac2020_graquad_Halt( const char* err_msg ){
 
     printf(
-    /**/"[tesawind_Halt]%s\n"
+    /**/"[aac2020_graquad_Halt]%s\n"
     ,   err_msg
     );;fflush(stdout);exit(666);
 
@@ -98,27 +98,27 @@ fn( Init_Data )( void ){
     #define T_1        const float /** GLfloat **/   
     #define T_2        const     int  ////////////
 
-    T_1* ARR = tesawind_vertex_buffer_data     ; 
-    T_2  NUM = tesawind_vertex_buffer_data_num ; 
+    T_1* ARR = aac2020_graquad_vertex_buffer_data     ; 
+    T_2  NUM = aac2020_graquad_vertex_buffer_data_num ; 
 
     //: 12345678      TRI
-        tesawind.data.tri.ce.ARR = ARR;
-        tesawind.data.tri.ce.NUM = NUM;
+        aac2020_graquad.data.tri.ce.ARR = ARR;
+        aac2020_graquad.data.tri.ce.NUM = NUM;
     //: 12345678      TRI
 
     #undef T_1  //////////////////////////////////
     #undef T_2  //////////////////////////////////
 
-    tesawind.data.
+    aac2020_graquad.data.
     we_have_4_corner_verts_making_quad=(
-    tesawind_we_have_4_corner_verts_making_quad
+    aac2020_graquad_we_have_4_corner_verts_making_quad
     );;
 
-    tesawind.data.FAG_SAD_SRC =(
-         tesawind_fag_sad_src   );;
+    aac2020_graquad.data.FAG_SAD_SRC =(
+         aac2020_graquad_fag_sad_src   );;
 
-    tesawind.data.VET_SAD_SRC =(
-         tesawind_vet_sad_src   );;
+    aac2020_graquad.data.VET_SAD_SRC =(
+         aac2020_graquad_vet_sad_src   );;
     
 
 }
@@ -336,7 +336,7 @@ fn( CheckTheProgram )( void ){
 
     //|P|P|P|P|P|P|P|P|P|----|P|P|P|P|P|P|P|P|P|//
     /////////////////////////////////////////|P|//
-    #define POG_IID (tesawind.data.POG_IID)//|P|//
+    #define POG_IID (aac2020_graquad.data.POG_IID)//|P|//
     /////////////////////////////////////////|P|//
     PFN_glGetProgramiv                     //|P|//
     GPIV=AAC2020_GLEBIND.glGetProgramiv;              //|P|//
@@ -419,7 +419,7 @@ fn( ReclaimMemory_OpenGL_ShaderStuff )( void ){
     //|RM|RM|RM|RM|RM|RM|----|RM|RM|RM|RM|RM|RM|//
                                      //| -- |RM|//
     ///////////////////////////////////| -- |RM|//
-    #define D_D     (tesawind.data)  //| -- |RM|//
+    #define D_D     (aac2020_graquad.data)  //| -- |RM|//
     #define POG_IID ( D_D.POG_IID )  //| -- |RM|//
     ///////////////////////////////////| -- |RM|//
                                      //| -- |RM|//
@@ -472,7 +472,7 @@ fn( CreateTheShaders )( void ){
         AAC2020_GLEBIND.glCreateShader(               //|C|//
             AAC2020_GLEBIND.ST.gl_vertex_shader       //|C|//
         )                                  //|C|//
-    );;fn(ErrChk)("[tesawind:CREATE_VS]"); //|C|//
+    );;fn(ErrChk)("[aac2020_graquad:CREATE_VS]"); //|C|//
                                            //|C|//
     //|-  --  --  --  ---  --  --  --  -|////|C|//
                                            //|C|//
@@ -480,7 +480,7 @@ fn( CreateTheShaders )( void ){
         AAC2020_GLEBIND.glCreateShader(               //|C|//
             AAC2020_GLEBIND.ST.gl_fragment_shader     //|C|//
         )                                  //|C|//
-    );;fn(ErrChk)("[tesawind:CREATE_FS]"); //|C|//
+    );;fn(ErrChk)("[aac2020_graquad:CREATE_FS]"); //|C|//
                                            //|C|//
     //|-  --  --  --  ---  --  --  --  -|////|C|//
                                            //|C|//
@@ -494,10 +494,10 @@ fn( CreateTheShaders )( void ){
     //|C|C|C|C|C|C|C|C|C|----|C|C|C|C|C|C|C|C|C|//
 
     //! Store_The_Result:______________________!//
-    tesawind.data.VET_SAD_IID=(
+    aac2020_graquad.data.VET_SAD_IID=(
                   vet_sad_iid  );;
 
-    tesawind.data.FAG_SAD_IID=(
+    aac2020_graquad.data.FAG_SAD_IID=(
                   fag_sad_iid  );
 
 }
@@ -508,11 +508,11 @@ fn( CreateShaderCode )( void ){
     
 
     const char*       vet_sad_src=(
-        tesawind.data.VET_SAD_SRC
+        aac2020_graquad.data.VET_SAD_SRC
     );;
 
     const char*       fag_sad_src=(
-        tesawind.data.FAG_SAD_SRC
+        aac2020_graquad.data.FAG_SAD_SRC
     );;
 
     const char* vet_sad_msg ="[VET_SAD_MSG]";
@@ -530,10 +530,10 @@ fn( CreateShaderCode )( void ){
             T1        fag_sad_iid =(0-84);//|RI|//
         /** T1 **/                        //|RI|//
         /** T1 **/    vet_sad_iid =(      //|RI|//
-        tesawind.data.VET_SAD_IID   );;   //|RI|//
+        aac2020_graquad.data.VET_SAD_IID   );;   //|RI|//
         /** T1 **/                        //|RI|//
         /** T1 **/    fag_sad_iid =(      //|RI|//
-        tesawind.data.FAG_SAD_IID   );;   //|RI|//
+        aac2020_graquad.data.FAG_SAD_IID   );;   //|RI|//
         /** T1 **/                        //|RI|//
     #undef  T1 /////////////////////////////|RI|//
     //|RI|RI|RI|RI|RI|RI|----|RI|RI|RI|RI|RI|RI|//
@@ -560,7 +560,7 @@ fn( CreateShaderCode )( void ){
     //! Link_The_Program:______________________!//
     //|LP|LP|LP|LP|LP|LP||||||LP|LP|LP|LP|LP|LP|//
                                           //|LP|//
-    #define D_D (tesawind.data)       //////|LP|//
+    #define D_D (aac2020_graquad.data)       //////|LP|//
     #define C_P (AAC2020_GLEBIND.glCreateProgram)//////|LP|//
                                           //|LP|//
             D_D.POG_IID = C_P();          //|LP|//
@@ -591,7 +591,7 @@ fn( CreateShaderCode )( void ){
 
     fn(ReclaimMemory_OpenGL_ShaderStuff)( );
 
-    AAC2020_GLEBIND.glUseProgram( tesawind.data.POG_IID ); 
+    AAC2020_GLEBIND.glUseProgram( aac2020_graquad.data.POG_IID ); 
     fn( ErrChk )( 
         "[2019_08_03:glUseProgram]"
     );;
@@ -607,12 +607,12 @@ fn( JunkCode_ErrorCheckOtherLibData )(void){
 
     if(NULL==AAC2020_GLEBIND.glGetUniformLocation){
         fn(Halt)(
-            "[tesawind:NIL_2019_08_03_0351AM:01]"
+            "[aac2020_graquad:NIL_2019_08_03_0351AM:01]"
         );;
     };;
     if(NULL==pfn_glGetUniformLocation){
         fn(Halt)(
-            "[tesawind:NIL_2019_08_03_0351AM:02]"
+            "[aac2020_graquad:NIL_2019_08_03_0351AM:02]"
         );;
     };;
 
@@ -621,7 +621,7 @@ fn( JunkCode_ErrorCheckOtherLibData )(void){
 PRIVATE_FUNCTION( static void )
 fn( UseThatProgram )( void ){
 
-    AAC2020_GLEBIND.glUseProgram( tesawind.data.POG_IID );
+    AAC2020_GLEBIND.glUseProgram( aac2020_graquad.data.POG_IID );
     
     fn(JunkCode_ErrorCheckOtherLibData)( );
 
@@ -636,7 +636,7 @@ fn(       glGenBuffers )( ){
     //:glGenBuffers — generate buffer object names
     AAC2020_GLEBIND  .glGenBuffers(
         ( 1 )//:JustMakeOne
-    ,   &(tesawind.data.tri.ga.VBO) 
+    ,   &(aac2020_graquad.data.tri.ga.VBO) 
     );;fn(ErrChk)("[glGenBuffers]");
 
 }
@@ -648,7 +648,7 @@ fn(       glBindBuffer )( ){
 
     AAC2020_GLEBIND  .glBindBuffer(
         AAC2020_GLEBIND.BBT.gl_array_buffer
-    ,   tesawind.data.tri.ga.VBO
+    ,   aac2020_graquad.data.tri.ga.VBO
     );;fn(ErrChk)("[glBindBuffer]");
 
 }
@@ -658,7 +658,7 @@ fn(       glBufferData )( ){
 
     //[ Give our vertices to OpenGL.     ]//
     //||||||||||||||||||||||||||||||||||||//
-    #define d_d (tesawind.data) /////|   |//
+    #define d_d (aac2020_graquad.data) /////|   |//
     AAC2020_GLEBIND  .glBufferData(           //|   |//
         AAC2020_GLEBIND.BBT                   //|TAR|//
         .gl_array_buffer           //|   |//
@@ -682,7 +682,7 @@ fn(       glGenVertexArrays )( ){
 
     AAC2020_GLEBIND  .glGenVertexArrays(
         ( 1 )//:JustMakeMeOne
-    ,   &(tesawind.data.tri.ga.VAO)
+    ,   &(aac2020_graquad.data.tri.ga.VAO)
     );;fn(ErrChk)("[glGenVertexArrays]");
 
 }
@@ -691,7 +691,7 @@ fn(       glBindVertexArray )( ){
 //: ga_qs_glBindVertexArray
 
     AAC2020_GLEBIND.  glBindVertexArray(
-        tesawind.data.tri.ga.VAO
+        aac2020_graquad.data.tri.ga.VAO
     );;fn(ErrChk)("[glBindVertexArray]");
 
 }
@@ -747,7 +747,7 @@ fn(       glVertexAttribPointer )(
     #define GLS  int /** GLsizei **/ //:#####################://
 
             GLS sin_elm =( //:stride_in_elements
-                tesawind_total_data_points_per_vertex
+                aac2020_graquad_total_data_points_per_vertex
                     //:ga_total_data_points_per_vertex
             );;
             GLS sin_byt =( //:stride_in_bytes
@@ -792,7 +792,7 @@ fn(       glBindBuffer_GL_ARRAY_BUFFER_0_ZERO)(){
     AAC2020_GLEBIND.glBindBuffer(
     /**/AAC2020_GLEBIND.BBT.gl_array_buffer
     ,   0 //:<<<<<<<<<<<<<<<<<<<<<<<<<ZERO!
-    );;fn(ErrChk)("[tesawind2019_08_04_0226AM]");
+    );;fn(ErrChk)("[aac2020_graquad2019_08_04_0226AM]");
 
 }
 PRIVATE_FUNCTION( static void )
@@ -901,7 +901,7 @@ fn(    MakeContextCurrentAndSetWindowSize )( V ){
             ,        is_window_still_open
             );;    
 
-            #define D   (tesawind.data)    ///////
+            #define D   (aac2020_graquad.data)    ///////
             #define MCF  make_current_fail ///////
             #define NUM  D.MCF.NUM         ///////
             #define MAX  D.MCF.MAX         ///////
@@ -960,9 +960,9 @@ fn( Init_NotSureWhatToCallThis_GLSetup )( void ){
     /**/AAC2020_GINAWIN_GetWinDC_ExistsNoWait()
     ,   AAC2020_GLEBIND.handle_to_gl_rendering_context
     ));;if(!make_current_worked){
-        tesawind_Halt(
+        aac2020_graquad_Halt(
             //:MCFILT:MakeCurrentFailInLoopTick
-            "[tesawind:MCFILT]"
+            "[aac2020_graquad:MCFILT]"
         );;
     };;
 
@@ -982,8 +982,8 @@ fn(Init_HaltIfChecksumsFail)(){
 //:Init_HaltIfChecksumsFail
 //:HaltIfChecksumsFail
 
-    if(tesawind_vertex_buffer_data_num !=
-       tesawind_vertex_buffer_data_num_actual
+    if(aac2020_graquad_vertex_buffer_data_num !=
+       aac2020_graquad_vertex_buffer_data_num_actual
     ){  
         //:VETCESFAL:VertexChecksumFail
         fn(Halt)("[VETCESFAL:2019_08_04]");
@@ -1185,7 +1185,7 @@ fn( LoopTick )( void ){
 
     AAC2020_GLEBIND.glClearColor(0.0f,0.1f,0.5f, 1.0f);
 
-    #if(MACRO_TESAWIND_DEBUG_MODE>=1) ////////////
+    #if(MACRO_AAC2020_GRAQUAD_DEBUG_MODE>=1) ////////////
     fn(ErrChk)("[glClearColor]"); //#<<<<<<<<<<<<<<<PerformanceHit/[MAN_HIT]? #//
     #endif ///////////////////////////////////////
 
@@ -1193,7 +1193,7 @@ fn( LoopTick )( void ){
         AAC2020_GLEBIND.MAS.gl_color_buffer_bit
     );;
 
-    #if(MACRO_TESAWIND_DEBUG_MODE>=1) ////////////
+    #if(MACRO_AAC2020_GRAQUAD_DEBUG_MODE>=1) ////////////
     fn(ErrChk)("[glClear]"); //#<<<<<<<<<<<<<<<<<<<<<PerformanceHit/[MAN_HIT]? #//
     #endif ///////////////////////////////////////
 
@@ -1206,12 +1206,12 @@ fn( LoopTick )( void ){
     //:######################################################://
 
     glBindVertexArray(
-        tesawind.data.tri.ga.VAO
+        aac2020_graquad.data.tri.ga.VAO
     );;fn(ErrChk)("[2019_08_04_0518PM]");
     //:     LoopTick:glBindVertexArray
 
     int four_4_quad=(
-        tesawind.data
+        aac2020_graquad.data
        .we_have_4_corner_verts_making_quad
     );;
     
@@ -1234,18 +1234,22 @@ fn( LoopTick )( void ){
     //- fn(ErrChk)("[DisVerAttArr]");          -//
 
     //: ga_completed_loop_ticks++;
-    tesawind.data.COM_LOP_TIK++;
+    aac2020_graquad.data.COM_LOP_TIK++;
 
 }
 
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
 
+void AAC2020_GRAQUAD_LoopTick()
+{
+    /** Public version of LoopTick. **/
+    /** ADDED[DATE[2020_11_03]]     **/
+    /** To use with AAC2020.C11     **/
 
+    aac2020_graquad_LoopTick();
+}
 
-
-
-
-
-
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
 
 //:tesawind_Loop( )
 PRIVATE_FUNCTION( void )
@@ -1253,7 +1257,7 @@ fn( Loop )( void ){
 
     while( AAC2020_GINAWIN_IsWindowStillOpen() > 0 ){
     
-        tesawind_LoopTick();
+        aac2020_graquad_LoopTick();
         
     };;
 
@@ -1289,16 +1293,16 @@ fn( Loop )( void ){
 //:=============================================:DONT_DO_THIS://
 
 
-TD(void) (*TESAWIND_PFN_Test)( void );
-RT(void)   TESAWIND_Test(        void ){
+TD(void) (*AAC2020_GRAQUAD_PFN_Test)( void );
+RT(void)   AAC2020_GRAQUAD_Test(        void ){
 
-    printf("[TODO:TESAWIND_Test()...]\n");
+    printf("[TODO:AAC2020_GRAQUAD_Test()...]\n");
 }
 
-TD(void) (*TESAWIND_PFN_Ping)( void );
-RT(void)   TESAWIND_Ping(      void ){
+TD(void) (*AAC2020_GRAQUAD_PFN_Ping)( void );
+RT(void)   AAC2020_GRAQUAD_Ping(      void ){
     
-    printf("[HelloFrclearom:TESAWIND]\n");
+    printf("[HelloFrclearom:AAC2020_GRAQUAD]\n");
 
 }
 
@@ -1329,7 +1333,7 @@ RT(void)   TESAWIND_Ping(      void ){
     //- TD(void) PO( Quench )( void );                       -//
     //- RT(void) FN( Quench )( void ){                       -//
     //-                                                      -//
-    //-     printf("[TODO:Quench:TESAWIND]\n");              -//
+    //-     printf("[TODO:Quench:AAC2020_GRAQUAD]\n");              -//
     //-                                                      -//
     //- }                                                    -//
     //- //|IQ|IQ|IQ|IQ|IQ|IQ|IQ|IQ|IQ|IQ|IQ|IQ|IQ|IQ|IQ|//   -//
@@ -1340,11 +1344,11 @@ RT(void)   TESAWIND_Ping(      void ){
     //- //|DM:[DEMO]___________________________________|//   -//
     //- //|                                            |//   -//
     //- //|DM|DM|DM|DM|DM|DM|DM|DM|DM|DM|DM|DM|DM|DM|DM|//   -//
-    //- TD(void) (*TESAWIND_PFN_Demo)( void );               -//
-    //- RT(void)   TESAWIND_Demo(      void ){               -//
+    //- TD(void) (*AAC2020_GRAQUAD_PFN_Demo)( void );               -//
+    //- RT(void)   AAC2020_GRAQUAD_Demo(      void ){               -//
     //-                                                      -//
-    //-     TESAWIND_Ping(   );                              -//
-    //-     TESAWIND_Ignite( );                              -//
+    //-     AAC2020_GRAQUAD_Ping(   );                              -//
+    //-     AAC2020_GRAQUAD_Ignite( );                              -//
     //-                                                      -//
     //- }                                                    -//
     //- //|DM|DM|DM|DM|DM|DM|DM|DM|DM|DM|DM|DM|DM|DM|DM|//   -//
@@ -1354,7 +1358,7 @@ RT(void)   TESAWIND_Ping(      void ){
 
 
 
-#undef  MACRO_TESAWIND_DEBUG_MODE ////////////////
+#undef  MACRO_AAC2020_GRAQUAD_DEBUG_MODE ////////////////
 
 //|////////////////////////////////////////////|//
 //|     -///-                        -///-     |//
@@ -1379,7 +1383,7 @@ RT(void)   TESAWIND_Ping(      void ){
     2. Plurality is NOT consistent in english.
        EX: Deer, Sheep, Octopi, Octopuses
 
-#ABOUT_TESAWIND_Wait#
+#ABOUT_AAC2020_GRAQUAD_Wait#
     Just a wrapper for COG_Wait, the idea is
     to try to de-couple the libraries I am 
     chaining together.
@@ -1535,9 +1539,9 @@ RT(void)   TESAWIND_Ping(      void ){
     
     #define                MACRO_GXY(x, y) x##y 
     #define RL_FuNaM(x, y) MACRO_GXY(x, y)
-    #define      LIB_PFN  TESAWIND_PFN_ //:  PFN
-    #define      LIB_VIS  TESAWIND_ //:PUBLIC/VISIBLE
-    #define      lib_hid  tesawind_ //:PRIVATE/HIDDEN
+    #define      LIB_PFN  AAC2020_GRAQUAD_PFN_ //:  PFN
+    #define      LIB_VIS  AAC2020_GRAQUAD_ //:PUBLIC/VISIBLE
+    #define      lib_hid  aac2020_graquad_ //:PRIVATE/HIDDEN
     #define POM( n )   RL_FuNaM( LIB_PFN, n    )
     #define  PO( n ) (*RL_FuNaM( LIB_PFN, n    ) )
     #define  FN( n )   RL_FuNaM( LIB_VIS, n    )   

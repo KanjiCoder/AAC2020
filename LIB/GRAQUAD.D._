@@ -14,7 +14,7 @@
 
 
 
-    #define MACRO_TESAWIND_DEBUG_MODE 1
+    #define MACRO_AAC2020_GRAQUAD_DEBUG_MODE 1
 
 
 
@@ -106,13 +106,13 @@
                                                       //[LSFD]//
     //:ga_vertex_buffer_data_num_actual               //[LSFD]//
     static const int                                  //[LSFD]//
-    tesawind_vertex_buffer_data_num_actual=(          //[LSFD]//
+    aac2020_graquad_vertex_buffer_data_num_actual=(          //[LSFD]//
             MACRO_NUMELM                              //[LSFD]//
     );                                                //[LSFD]//
                                                       //[LSFD]//
     //: ga_vertex_buffer_data                         //[LSFD]//
     static const float /** GLfloat **/                //[LSFD]//
-    tesawind_vertex_buffer_data[                      //[LSFD]//
+    aac2020_graquad_vertex_buffer_data[                      //[LSFD]//
         MACRO_NUMELM                                  //[LSFD]//
     ]={ //| TEXCOORDS_INVERTED_Y_TO_DISPLAY_PIXELS |////[LSFD]//             
         ///////////////////////////( X ) , ( Y )//||////[LSFD]//
@@ -130,7 +130,7 @@
                                                       //[LSFD]//
                                                       //[LSFD]//
     static const int                                  //[LSFD]//
-    tesawind_we_have_4_corner_verts_making_quad=(     //[LSFD]//
+    aac2020_graquad_we_have_4_corner_verts_making_quad=(     //[LSFD]//
     //:   ga_we_have_4_corner_verts_making_quad       //[LSFD]//
         4                                             //[LSFD]//
     );                                                //[LSFD]//
@@ -141,10 +141,10 @@
     //- ga_data_points_per_vertex_texcoord  ------ -////[LSFD]//
     //- ga_total_data_points_per_vertex     ------ -////[LSFD]//
     #define C_I const int                             //[LSFD]//
-    C_I tesawind_num_corner_verts_in_screen_quad=4;   //[LSFD]//
-    C_I tesawind_data_points_per_vertex_location=3;   //[LSFD]//
-    C_I tesawind_data_points_per_vertex_texcoord=2;   //[LSFD]//
-    C_I tesawind_total_data_points_per_vertex   =(    //[LSFD]//
+    C_I aac2020_graquad_num_corner_verts_in_screen_quad=4;   //[LSFD]//
+    C_I aac2020_graquad_data_points_per_vertex_location=3;   //[LSFD]//
+    C_I aac2020_graquad_data_points_per_vertex_texcoord=2;   //[LSFD]//
+    C_I aac2020_graquad_total_data_points_per_vertex   =(    //[LSFD]//
         3 //:ga_data_points_per_vertex_location       //[LSFD]//
         +                                             //[LSFD]//
         2 //:ga_data_points_per_vertex_texcoord       //[LSFD]//
@@ -153,7 +153,7 @@
                                                       //[LSFD]//
     //- ga_vertex_buffer_data_num -//                 //[LSFD]//
     static const int                                  //[LSFD]//
-    tesawind_vertex_buffer_data_num =(                //[LSFD]//                          
+    aac2020_graquad_vertex_buffer_data_num =(                //[LSFD]//                          
         4 //:ga_num_corner_verts_in_screen_quad       //[LSFD]//
             *   //|__TOTAL_ELEMENTS_PER_VERTEX_|//    //[LSFD]//
             (   //////////////////////////////////    //[LSFD]//
@@ -176,10 +176,10 @@
     //+  #TheShaderCode# #theshadercode#           +////[LSFD]//
     //+                                            +////[LSFD]//
     //+  ga_vertex_shader_source                   +////[LSFD]//
-    //+  ===tesawind_vet_sad_src                   +////[LSFD]//
+    //+  ===aac2020_graquad_vet_sad_src                   +////[LSFD]//
     //+                                            +////[LSFD]//
     //+  ga_fragment_shader_source                 +////[LSFD]//
-    //+  ===tesawind_fag_sad_src                   +////[LSFD]//
+    //+  ===aac2020_graquad_fag_sad_src                   +////[LSFD]//
                                                       //[LSFD]//
     #define macro_rts( s ) #s                         //[LSFD]//
     #define MACRO_RTS( s ) macro_rts( s )             //[LSFD]//
@@ -191,7 +191,7 @@
     //:          vertex_shader_texture_coordinate     //[LSFD]//
                                                       //[LSFD]//
     ////////////////////////////////////////////////////[LSFD]//
-    const char* tesawind_vet_sad_src =(    /////////////[LSFD]//
+    const char* aac2020_graquad_vet_sad_src =(    /////////////[LSFD]//
                                                       //[LSFD]//
         //|(( VER ))_______________________________|////[LSFD]//
         "#version 330 core  \n /////////////////// \n"//[LSFD]//
@@ -227,7 +227,7 @@
     #undef MACRO_RTS  //////////////////////////////////[LSFD]//
                                                       //[LSFD]//
     ////////////////////////////////////////////////////[LSFD]//
-    const char* tesawind_fag_sad_src =(      ///////////[LSFD]//
+    const char* aac2020_graquad_fag_sad_src =(      ///////////[LSFD]//
         ////////////////////////////////////////////////[LSFD]//
         ////////////////////////////////////////////////[LSFD]//
                                                       //[LSFD]//
@@ -360,7 +360,7 @@
     //|XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX|////[LSFD]//
                                                       //[LSFD]//
     //#IF_YOU_ARE_HERE_YOU_ARE_SPELLING_IT_WRONG#//   //[LSFD]//
-    //+ tesawind   <--YES +//                         //[LSFD]//
+    //+ aac2020_graquad   <--YES +//                         //[LSFD]//
     //- tessawind  <--BAD -//                         //[LSFD]//
     //- tessawind_vertex_buffer_data               -////[LSFD]//
     //- tessawind_vertex_buffer_data_num           -////[LSFD]//
@@ -380,9 +380,9 @@
     
     #define                MACRO_GXY(x, y) x##y 
     #define RL_FuNaM(x, y) MACRO_GXY(x, y)
-    #define      LIB_PFN  TESAWIND_PFN_ //:  PFN
-    #define      LIB_VIS  TESAWIND_ //:PUBLIC/VISIBLE
-    #define      lib_hid  tesawind_ //:PRIVATE/HIDDEN
+    #define      LIB_PFN  AAC2020_GRAQUAD_PFN_ //:  PFN
+    #define      LIB_VIS  AAC2020_GRAQUAD_ //:PUBLIC/VISIBLE
+    #define      lib_hid  aac2020_graquad_ //:PRIVATE/HIDDEN
     #define POM( n )   RL_FuNaM( LIB_PFN, n    )
     #define  PO( n ) (*RL_FuNaM( LIB_PFN, n    ) )
     #define  FN( n )   RL_FuNaM( LIB_VIS, n    )   
@@ -397,17 +397,17 @@
     //|____________________________________________|////[PLIB]//
     //|                                            |////[PLIB]//
     //! Private library pattern:                   !////[PLIB]//
-    //! tesawind.data.bla.bla.bla.TERMINAL_DATA;   !////[PLIB]//
-    struct     tesawind_lib_private{ int com_hak;     //[PLIB]//
+    //! aac2020_graquad.data.bla.bla.bla.TERMINAL_DATA;   !////[PLIB]//
+    struct     aac2020_graquad_lib_private{ int com_hak;     //[PLIB]//
         //:Data is private: ://                       //[PLIB]//
-        struct tesawind_lib_data{    int com_hak;     //[PLIB]//
+        struct aac2020_graquad_lib_data{    int com_hak;     //[PLIB]//
                                                       //[PLIB]//
             /** completed_loop_ticks **/              //[PLIB]//
             int COM_LOP_TIK;                          //[PLIB]//
                                                       //[PLIB]//
             struct                                    //[PLIB]//
-            tesawind_triangle_data_for_screen_quad{   //[PLIB]//
-                struct tesawind_tri_CE{               //[PLIB]//
+            aac2020_graquad_triangle_data_for_screen_quad{   //[PLIB]//
+                struct aac2020_graquad_tri_CE{               //[PLIB]//
                     #define GLF float /** GLfloat **/ //[PLIB]//
                                                       //[PLIB]//
                     const   GLF* ARR; //:arr://       //[PLIB]//
@@ -415,7 +415,7 @@
                                                       //[PLIB]//
                     #undef  GLF       /** GLfloat **/ //[PLIB]//
                 }ce; //:CE means: C11/C99 ://         //[PLIB]//
-                struct tesawind_tri_GA{               //[PLIB]//
+                struct aac2020_graquad_tri_GA{               //[PLIB]//
                     #define GLU unsigned int          //[PLIB]//
                     /**     GLU: GLuint **/           //[PLIB]//
                             GLU VBO; //:VBO(Buffer):////[PLIB]//
@@ -445,7 +445,7 @@
             //:  Avoid alert when closing window.  :////[PLIB]//
             struct                                    //[PLIB]//
             //:ga_make_current_fail ://               //[PLIB]//
-            tesawind_make_current_fail{               //[PLIB]//
+            aac2020_graquad_make_current_fail{               //[PLIB]//
                 //: int com_hak ://                   //[PLIB]//
                                                       //[PLIB]//
                 int     NUM; //:NumberOfFailures   :////[PLIB]//
@@ -453,19 +453,19 @@
             }        make_current_fail;               //[PLIB]//
                                                       //[PLIB]//
     //-    struct                                  -////[PLIB]//
-    //-    tesawind_onn_window_resize_functions{   -////[PLIB]//
+    //-    aac2020_graquad_onn_window_resize_functions{   -////[PLIB]//
     //-    //:      onn win    r  iz               -////[PLIB]//
     //-                                            -////[PLIB]//
-    //-        //:TOP: As in before tesawind's     -////[PLIB]//
+    //-        //:TOP: As in before aac2020_graquad's     -////[PLIB]//
     //-        //:resize logic.                    -////[PLIB]//
-    //-        struct tesawind_riz_fun_top{        -////[PLIB]//
+    //-        struct aac2020_graquad_riz_fun_top{        -////[PLIB]//
     //-            int   HAS_FUN;                  -////[PLIB]//
     //-            void(*FUN_ADD)( void );         -////[PLIB]//
     //-        }top;                               -////[PLIB]//
     //-                                            -////[PLIB]//
-    //-        //:BOT: As in after tesawind's      -////[PLIB]//
+    //-        //:BOT: As in after aac2020_graquad's      -////[PLIB]//
     //-        //:resize logic.                    -////[PLIB]//
-    //-        struct tesawind_riz_fun_bot{        -////[PLIB]//
+    //-        struct aac2020_graquad_riz_fun_bot{        -////[PLIB]//
     //-            int   HAS_FUN;                  -////[PLIB]//
     //-            void(*FUN_ADD)( void );         -////[PLIB]//
     //-        }bot;                               -////[PLIB]//
@@ -475,7 +475,7 @@
             int we_have_4_corner_verts_making_quad;   //[PLIB]//
                                                       //[PLIB]//
         }data;                                        //[PLIB]//
-    }tesawind={.com_hak=0                             //[PLIB]//
+    }aac2020_graquad={.com_hak=0                             //[PLIB]//
        ,.data={.com_hak=0                             //[PLIB]//
                                                       //[PLIB]//
                 //:NS:NOT_SET://                      //[PLIB]//
@@ -525,9 +525,9 @@
     
     #define                MACRO_GXY(x, y) x##y 
     #define RL_FuNaM(x, y) MACRO_GXY(x, y)
-    #define      LIB_PFN  TESAWIND_PFN_ //:  PFN
-    #define      LIB_VIS  TESAWIND_ //:PUBLIC/VISIBLE
-    #define      lib_hid  tesawind_ //:PRIVATE/HIDDEN
+    #define      LIB_PFN  AAC2020_GRAQUAD_PFN_ //:  PFN
+    #define      LIB_VIS  AAC2020_GRAQUAD_ //:PUBLIC/VISIBLE
+    #define      lib_hid  aac2020_graquad_ //:PRIVATE/HIDDEN
     #define POM( n )   RL_FuNaM( LIB_PFN, n    )
     #define  PO( n ) (*RL_FuNaM( LIB_PFN, n    ) )
     #define  FN( n )   RL_FuNaM( LIB_VIS, n    )   
