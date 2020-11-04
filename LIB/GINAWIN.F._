@@ -442,7 +442,7 @@ aac2020_ginawin_WIN_MSG_HAN_WND_POC(
 
         printf("[AAC2020_GINAWIN:WM_SIZE]\n");
         fflush(stdout);
-    
+
         if( AAC2020_GINAWIN_OnWindowResize_HAS ){
 
             AAC2020_GINAWIN_OnWindowResize_PFN( 0x00 );
@@ -835,17 +835,23 @@ aac2020_ginawin_WindowTick_private(
         //:                window. SetFocus probably should
         //:                NOT be used in our 
         //:               [ window_loop / window_tick ]
+
+        //:NOTE: SetFocus: Is NOT responsible for window
+        //:                always being on top. That is
+        //:                0x00000008L /** WS_EX_TOPMOST **/ 
+        //:                Used during window creation.
         
         int sw_show = U32DATA -> sw_show;
         int   SW = U32F ->  ShowWindow(  Hw,sw_show); 
         int   UW = U32F ->  UpdateWindow(Hw        ); 
-    //  void* SF = U32F ->  SetFocus(    Hw        ); //:<<<<<<<<<<<<<<<<<<<<<<<<<< TODO:IS_THIS_WHY_WINDOW_IS_ALWAYS_ON_TOP?
+        void* SF = U32F ->  SetFocus(    Hw        );  
 
         if(         0  == SW ){ /** NOT AN ERROR **/ };
         if(         0  != SW ){ /** NOT AN ERROR **/ };
 
         if(         0  == UW ){ FUK("[UpdateWindow:FAIL]"); };
     //  if( ((void*)0) == SF ){ FUK("[SetFocus:::::FAIL]"); };
+        if(               SF ){ /** NOOP **/ };
 
         #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 ) //:##########://
 
@@ -1107,7 +1113,8 @@ aac2020_ginawin_OPEN_WINDOW(
 
         Hw=FP->USER32.CreateWindowExW(
             //: dwExStyle   (EXT-窓style)
-        /**/U32DATA -> ws_ex_topmost 
+        /**/ /** U32DATA -> ws_ex_topmost **/
+            0x00000000L /** Window always on top is annoying **/
 
             //: lpClassName (窓class    )
         ,   unique_window_name    

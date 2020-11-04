@@ -1,0 +1,94 @@
+
+
+//:AAC2020_FRAGBED_DEFAULT_005:==============================://
+    const char* AAC2020_FRAGBED_DEFAULT_005=(
+                    //|(( VER ))_____________________________|//
+                    "#version 330 core  \n ///////////////// \n"
+                                                                  
+                    //|(( UNI ))_____________________________|//
+                    "uniform vec3 iResolution;               \n"
+                                        
+                    //|(( INN ))_____________________________|//
+                    //:      fag_tec:FrAG_shader_TExture_Coord
+                    "in vec2 fag_tec;                        \n"    
+                                                              
+                    //|(( OUT ))_____________________________|//
+                    "out vec4 FragColor;                     \n"
+                                                                  
+                    //|(( FUN ))_____________________________|//
+                    "void main()                             \n"
+                    "{                                       \n"
+                                                                                                    
+                    " //:tic:texture_integer_color           \n"
+                    "uvec4 tic;                              \n"
+
+        //|ARRAY_SPELLING_OUT_TEXT:__________________________|//
+    "   #define U08 unsigned char                            \n"
+    "   #define _ 0                                          \n"
+    "   #define X 1                                          \n"
+    "   U08 msg_arr[ 25 * 7 ]=U08[ 25 * 7 ](                 \n"
+    //:                  10                  20        25    ://
+    //: 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5    ://
+    "   _,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,   \n"
+    "   _,X,X,_,_,X,X,X,_,X,X,X,_,X,X,X,_,X,X,X,_,X,X,X,_,   \n"
+    "   _,X,_,X,_,X,_,_,_,X,_,_,_,_,_,_,_,_,_,_,_,X,_,_,_,   \n"
+    "   _,X,_,X,_,X,X,_,_,X,X,X,_,X,X,X,_,X,X,X,_,X,X,_,_,   \n"
+    "   _,X,_,X,_,X,_,_,_,X,_,_,_,X,_,X,_,X,_,X,_,_,_,X,_,   \n"
+    "   _,X,X,_,_,X,X,X,_,X,_,_,_,X,X,X,_,X,X,X,_,X,X,_,_,   \n"
+    "   _,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_    \n"
+    //: DEF005:Default_005                                   ://
+    "  );;                                                   \n"
+    "  #undef  _                                             \n"
+    "  #undef  X                                             \n"
+    "  #undef  U08                                           \n"
+
+//: #error "[TODO:UseTileMapMathToDraw:SYNERR:Message]"
+
+    //| gfc: gl_FragCoord , but top-left origin is [0,0] ___ |//
+    "   vec2 gfc = vec2(                                     \n"
+    "       0             + gl_FragCoord.x                   \n"
+    "   ,   iResolution.y - gl_FragCoord.y                   \n"
+    "   );;                                                  \n"
+
+    //| Normalized_UV_Screen_Coord:__________________________|//
+    "   vec2 u_v = gfc.xy / iResolution.xy;                  \n"
+                
+    //| Calculate_Tile_Coordinate:___________________________|//
+    "   //: tpW : tile_wid_in_pixels                         \n"
+    "   //: tpH : tile_hig_in_pixels                         \n"
+    "   int ntX    = 25; //:Number_Of_Tiles:X-axis           \n"
+    "   int ntY    =  7; //:Number_Of_tiles:Y-axis           \n"
+    "   int tpW    = int( iResolution.x / ntX    );          \n"
+    "   int tpH    = int( iResolution.y / ntY    );          \n"
+    "   int tile_x = int( gfc.x / float( tpW )  );           \n"
+    "   int tile_y = int( gfc.y / float( tpH )  );           \n"
+
+    //| Get 1D index of tile:(dex_til):______________________|//
+    "   int dex_til = tile_x + ( ntX * tile_y);              \n"
+
+    //| Get tile Value:______________________________________|//
+    "   uint tile_value = msg_arr[ dex_til ];                \n"
+
+    //| Draw_Tile_Or_Background_Gradient:____________________|//
+    "   if( tile_value > uint(0) ){                          \n"
+                        //|Set output pixel color:___________|//
+    "                   FragColor = vec4(                    \n"
+    "                      /**/1.0 - u_v.x                   \n"
+    "                      ,   0.0                           \n"
+    "                      ,   0.0                           \n"
+    "                      ,   1.0f                          \n"
+    "                   );;                                  \n"
+    "                                                        \n"
+    "   }else{                                               \n"
+    "                                                        \n"
+                        //|Set output pixel color:___________|//
+    "                   FragColor = vec4(                    \n"
+    "                      /**/u_v.x                         \n"
+    "                      ,  (u_v.x/2.0)                    \n"
+    "                      ,   0.0                           \n"
+    "                      ,   1.0f                          \n"
+    "                   );;                                  \n"  
+    "   };;                                                  \n"
+    "} //:main://                                          \n\0"
+    ); /////////////////////////////////////////////////////////
+//:==============================:AAC2020_FRAGBED_DEFAULT_005://

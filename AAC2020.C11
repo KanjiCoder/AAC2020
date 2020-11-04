@@ -2,6 +2,15 @@
 //:TODO:
     //: 2: GRABIND //:Graphics Calls Bindings
 
+//:LIBRARY_CHAIN_ORDER:SUMMARY:==============================://
+
+#define macro_libchan_order_GINAWIN ( 1 ) //:Graphics & Window
+#define macro_libchan_order_DUI     ( 2 ) //:Dialog_UI(s)
+#define macro_libchan_order_GLEBIND ( 3 ) //:OpenGL Bindings
+#define macro_libchan_order_GRAQUAD ( 4 ) //:Graphics QUAD
+#define macro_libchan_order_FRAGBED ( 5 ) //:FRAGMENT_st_BED
+
+//:==============================:LIBRARY_CHAIN_ORDER:SUMMARY://
 //:ABOUT_THIS_PROJECT:=======================================://
 
     //: PREVIOUS_LIBRARY: A2_JC.JS ------------------------- ://
@@ -52,8 +61,21 @@
     |      |                                    |
     |      V                                    |
     |   GRAQUAD       GRAQUAD: GRAphics_QUAD    |
-    |                 GLEBIND: GL_Easy_BINDings |
-    |                                           |
+    |      |          GLEBIND: GL_Easy_BINDings |
+    |      |                                    |
+    +------V------------------------------------+
+    |      |                                    |
+    |      |    Intermediary Graphics:          |
+    |      V                                    |
+    |   FRAGBED : 1. Creates shadertoy like     |
+    |                program we could sell.     |
+                                                |
+    |             2. Shaders 1-9 activated      |
+    |                when pressing keyboard.    |
+                                                |
+    |             3. Can override shader code   |
+    |                by editing serialized      |
+    |                FRAGBED_###.frag files.    |
     +-------------------------------------------+
         
     *** **************************************************** **/
@@ -103,14 +125,15 @@
     /**                                                      **/
     /** John Mark Isaac Madison DATE[2020_11_01]             **/
 
-    #define AAC2020_MAC_LIBCHAN_CUR ( 4 )
+    #define AAC2020_MAC_LIBCHAN_CUR ( 5 ) //:<-- Compile_To_Here
 
     #define AAC2020_MAC_LIBCHAN_001 ( 1 )
     #define AAC2020_MAC_LIBCHAN_002 ( 2 )
     #define AAC2020_MAC_LIBCHAN_003 ( 3 )
     #define AAC2020_MAC_LIBCHAN_004 ( 4 )
+    #define AAC2020_MAC_LIBCHAN_005 ( 5 )
 
-    #define AAC2020_MAC_LIBCHAN_MAX ( 4 )
+    #define AAC2020_MAC_LIBCHAN_MAX ( 5 ) //:<-- Complile_Limit
 
 //:============================================:LIBRARY_CHAIN://
 //:DATA:DATA_BEFORE_FUNCTIONS:===============================://
@@ -121,7 +144,7 @@
         #define AAC2020_INCLUDE_GINAWIN ( 1 )
         #else   //:     INCLUDE_GINAWIN ( - )
         #define AAC2020_INCLUDE_GINAWIN ( 0 )
-        #endif
+        #endif 
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_002 )
     
@@ -144,10 +167,31 @@
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_004 )
 
         //:GRAQUAD:GRAPHICS_QUAD
-        #include "LIB/GRAQUAD.D._"   
+        #include "LIB/GRAQUAD.D._"       //:STANDARD_DATA
+        #include "LIB/GRAQUAD.D.FRAG._"  //:FRAGMENT_SHADERS
         #define AAC2020_INCLUDE_GRAQUAD ( 4 )
         #else   //:     INCLUDE_GRAQUAD ( - )
         #define AAC2020_INCLUDE_GRAQUAD ( 0 )
+        #endif
+
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_005 )
+
+        //:FRAGBED:FRAGMENT_shader_test_BED
+        #include "LIB/FRAGBED.D._"    
+   
+        #include "LIB/FRAGBED_DEFAULT_SHADERS\FDS_001._"
+        #include "LIB/FRAGBED_DEFAULT_SHADERS\FDS_002._"
+        #include "LIB/FRAGBED_DEFAULT_SHADERS\FDS_003._"
+        #include "LIB/FRAGBED_DEFAULT_SHADERS\FDS_004._"
+        #include "LIB/FRAGBED_DEFAULT_SHADERS\FDS_005._"
+        #include "LIB/FRAGBED_DEFAULT_SHADERS\FDS_006._"
+        #include "LIB/FRAGBED_DEFAULT_SHADERS\FDS_007._"
+        #include "LIB/FRAGBED_DEFAULT_SHADERS\FDS_008._"
+        #include "LIB/FRAGBED_DEFAULT_SHADERS\FDS_009._"
+
+        #define AAC2020_INCLUDE_FRAGBED ( 5 )
+        #else   //:     INCLUDE_FRAGBED ( - )
+        #define AAC2020_INCLUDE_FRAGBED ( 0 )
         #endif
 
 #if( AAC2020_MAC_LIBCHAN_CUR > AAC2020_MAC_LIBCHAN_MAX  )
@@ -194,6 +238,16 @@
         #else   //:     INCLUDE_GRAQUAD ( - )
         #define AAC2020_INCLUDE_GRAQUAD ( 0 )
         #endif
+
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_005 )
+
+        //:FRAGBED:FRAGMENT_shader_test_BED
+        #include "LIB/FRAGBED.F._"    
+        #define AAC2020_INCLUDE_FRAGBED ( 5 )
+        #else   //:     INCLUDE_FRAGBED ( - )
+        #define AAC2020_INCLUDE_FRAGBED ( 0 )
+        #endif
+
 
 #if( AAC2020_MAC_LIBCHAN_CUR > AAC2020_MAC_LIBCHAN_MAX  )
 
@@ -523,9 +577,17 @@
             #define call( f ) AAC2020_GRAQUAD_##f
             #define CALL( f ) call( f )
                  
-                CALL( Init                               )();
-                CALL( ReLoadFragShader_HACKTEST          )();
-                CALL( ReLoadFragShader_StatusSyntaxError )();
+            //# DONT DO THIS SHIT TO SAVE COLUMN SPACE.      #//
+            //# It just makes the code harder to follow.     #//
+            //:    CALL( Init                               )();
+            //:    CALL( ReLoadFragShader_HACKTEST          )();
+            //:    CALL( ReLoadFragShader_StatusSyntaxError )();
+
+                //:RFS: ReloadFragShader
+                AAC2020_GRAQUAD_Init();     
+            //: AAC2020_GRAQUAD_RFS_HACKTEST();     
+            //: AAC2020_GRAQUAD_RFS_StatusSyntaxError();     
+                AAC2020_GRAQUAD_RFS_StatusReady();
 
             #undef  call
             #undef  CALL
@@ -589,3 +651,42 @@
     }
 
 //:====================================:MAIN_ENTRY_POINT.FUNC://
+//:LIBRARY_CHAIN_ORDER:CHECK:================================://
+
+#if( 0                           != AAC2020_INCLUDE_GINAWIN )
+#if( macro_libchan_order_GINAWIN != AAC2020_INCLUDE_GINAWIN )
+              #error "[OUT_OF_ORDER:AAC2020_INCLUDE_GINAWIN]"
+#endif
+#endif
+#if( 0                           != AAC2020_INCLUDE_DUI )
+#if( macro_libchan_order_DUI != AAC2020_INCLUDE_DUI )
+              #error "[OUT_OF_ORDER:AAC2020_INCLUDE_DUI]"
+#endif
+#endif
+#if( 0                           != AAC2020_INCLUDE_GLEBIND )
+#if( macro_libchan_order_GLEBIND != AAC2020_INCLUDE_GLEBIND )
+              #error "[OUT_OF_ORDER:AAC2020_INCLUDE_GLEBIND]"
+#endif
+#endif
+#if( 0                           != AAC2020_INCLUDE_GRAQUAD )
+#if( macro_libchan_order_GRAQUAD != AAC2020_INCLUDE_GRAQUAD )
+              #error "[OUT_OF_ORDER:AAC2020_INCLUDE_GRAQUAD]"
+#endif
+#endif
+#if( 0                           != AAC2020_INCLUDE_FRAGBED )
+#if( macro_libchan_order_FRAGBED != AAC2020_INCLUDE_FRAGBED )
+              #error "[OUT_OF_ORDER:AAC2020_INCLUDE_FRAGBED]"
+#endif
+#endif
+
+    //:DONT_POLLUTE_OTHER_PEOPLES_CODE_WITH_MACROS:==========://
+
+    #undef  macro_libchan_order_GINAWIN 
+    #undef  macro_libchan_order_DUI     
+    #undef  macro_libchan_order_GLEBIND 
+    #undef  macro_libchan_order_GRAQUAD 
+    #undef  macro_libchan_order_FRAGBED 
+
+    //:==========:DONT_POLLUTE_OTHER_PEOPLES_CODE_WITH_MACROS://
+
+//:================================:LIBRARY_CHAIN_ORDER:CHECK://
