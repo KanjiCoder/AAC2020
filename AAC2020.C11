@@ -137,6 +137,9 @@
 
 //:============================================:LIBRARY_CHAIN://
 //:DATA:DATA_BEFORE_FUNCTIONS:===============================://
+
+    #include "LIB/NATIKEY.D._"
+
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_001 )
 
         //:GINAWIN:GRAPHICS_INIT_AND_WINDOW:
@@ -202,6 +205,8 @@
 
 //:===============================:DATA:DATA_BEFORE_FUNCTIONS://
 //:FUNC:FUNCTIONS_AFTER_DATA:================================://
+
+    #include "LIB/NATIKEY.F._"
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_001 )
 
@@ -355,6 +360,30 @@
         return( result );
     }
 //:======================:MAIN_ENTRY_POINT.TEST_SAVE_PNG_FILE://
+//:MAIN_ENTRY_POINT.KEYBOARD_HANDLERS:=======================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+
+    U32
+    AAC2020_WIRE_UP_KEYBOARD( U32 u32 )
+    {
+        /** Only ONE keyboard handler should be registered   **/
+        /** at a time. More recent handlers in library chain **/
+        /** should override older handlers in library chain. **/
+
+        if( u32 ){ /** NOOP: Reserved Future Use **/ };
+
+        #if( AAC2020_INCLUDE_FRAGBED >= 1 )
+
+            AAC2020_GINAWIN_SimpleKeyHandler_SetCallback(  
+                    &( AAC2020_FRAGBED_SimpleKeyHandler ) );;
+
+        #endif
+
+        return( 0x00 );
+    }
+
+#undef  U32
+//:=======================:MAIN_ENTRY_POINT.KEYBOARD_HANDLERS://
 //:MAIN_ENTRY_POINT.ON_WINDOW_RESIZE:========================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
 
@@ -462,8 +491,16 @@
     int
     AAC2020_AFTER__WINDOW_OPENS_TASKS()
     {
-
+        /** Make application respond to window resize **/
         AAC2020_OnWindowResize_RegisterAfterAllInitIsDone();
+
+        /** Make application respond to keyboard input    **/
+        /** Decided to use inconsistent verbage with this **/ 
+        /** function because.                             **/
+        /** "AAC2020_KeyHandler_SetCallback( 0x00 )"      **/
+        /** Sounded kind of misleading. Since function    **/
+        /** CHOOSES which callback to wire up.            **/
+        AAC2020_WIRE_UP_KEYBOARD( 0x00 );
 
         return( 0 );
     }
@@ -592,6 +629,11 @@
             #undef  call
             #undef  CALL
             #endif //:#######################################://
+            #if( AAC2020_INCLUDE_FRAGBED >= 1 ) //:##########://
+
+                AAC2020_FRAGBED_Init( );
+
+            #endif
 
         #endif //:- - - - - - - - - - - - - - - - - - - - - -://
         #if( AAC2020_INCLUDE_GINAWIN >= 1 )  //:- - - - - - -://

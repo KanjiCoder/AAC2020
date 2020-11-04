@@ -36,19 +36,56 @@
 
 //:============================================:CONFIGURATION://
 //:CONCEPTUAL_LIBRARY_MEMBER_VARIABLES:======================://
-
-    #define  U32 uint32_t /** GCC: <stdint.h> **/
-    typedef  U32 (*AAC2020_GINAWIN_PFN_2020_11_03)( U32 );
-    #define  PFN   AAC2020_GINAWIN_PFN_2020_11_03
-    #define  HAS   int
-
-        HAS  AAC2020_GINAWIN_OnWindowResize_HAS = 0;
-        PFN  AAC2020_GINAWIN_OnWindowResize_PFN =((void*)0);
-
-    #undef   HAS
-    #undef   PFN
-    #undef   U32
     
+    //: AAC2020_GINAWIN_OnWindowResize_HAS
+    //: AAC2020_GINAWIN_OnWindowResize_PFN
+
+    //: AAC2020_GINAWIN_SimpleKeyHandler_HAS
+    //: AAC2020_GINAWIN_SimpleKeyHandler_PFN
+
+    //: AAC2020_GINAWIN_ComplexKeyHandler_HAS
+    //: AAC2020_GINAWIN_ComplexKeyHandler_PFN
+
+    #define U32 uint32_t /** GCC: <stdint.h> **/
+    #define U64 uint64_t /** GCC: <stdint.h> **/
+    #define HAS   int  
+    #define VOD  ((void*)0)
+
+        typedef  
+            U32 
+            (*AAC2020_GINAWIN_PFN_2020_11_03)
+            ( U32 );
+        typedef  
+            U32
+            (*AAC2020_GINAWIN_PFN_2020_11_04_SIMPLEKEY)
+            ( signed char );
+        typedef  
+            U32
+            (*AAC2020_GINAWIN_PFN_2020_11_04_COMPLEXKEY)
+            ( U64 );
+
+    #define P_1   AAC2020_GINAWIN_PFN_2020_11_03
+    #define P_2   AAC2020_GINAWIN_PFN_2020_11_04_SIMPLEKEY
+    #define P_3   AAC2020_GINAWIN_PFN_2020_11_04_COMPLEXKEY
+
+            HAS  AAC2020_GINAWIN_OnWindowResize_HAS    = 0;
+            P_1  AAC2020_GINAWIN_OnWindowResize_PFN    =VOD;
+            
+            HAS  AAC2020_GINAWIN_SimpleKeyHandler_HAS  = 0;
+            P_2  AAC2020_GINAWIN_SimpleKeyHandler_PFN  =VOD;
+            
+            HAS  AAC2020_GINAWIN_ComplexKeyHandler_HAS = 0;
+            P_3  AAC2020_GINAWIN_ComplexKeyHandler_PFN =VOD;
+
+    #undef  P_1
+    #undef  P_2
+    #undef  P_3
+            
+    #undef  U32
+    #undef  U64
+    #undef  HAS
+    #undef  VOD
+             
 //:======================:CONCEPTUAL_LIBRARY_MEMBER_VARIABLES://
 //:CONSTANTS:================================================://
 

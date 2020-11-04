@@ -75,28 +75,11 @@
     #define  PRIVATE_FUNCTION( stuff ) stuff
 
 //:================================:MACROS:ROOT_LEVEL_OOP.TOP://
-
-
-//:WINDOW_RESIZE_CALLBACK_FUNCTION:==========================://
-//:CALLED_BY:AAC2020_OnWindowResize:=========================://
+//:RE_LOAD_SHADER_UNIFORMS:==================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
 
-    U32  AAC2020_GRAQUAD_OnWindowResize( U32 u32 )
+    U32  AAC2020_GRAQUAD_ReLoadShaderUniforms()
     {
-        printf("[AAC2020_GRAQUAD_OnWindowResize]\n");
-
-        if( u32 ){ /** reserved for future use **/ };
-
-        //:Resize_OpenGL_Viewport_To_New_Screen_Size:--------://
-
-            AAC2020_GLEBIND.glViewport(
-                0 , 0 //: x,y
-            ,   AAC2020_GINAWIN_GetClient_WID()
-            ,   AAC2020_GINAWIN_GetClient_HIG()
-            );;
-
-        //:--------:Resize_OpenGL_Viewport_To_New_Screen_Size://
-
         #define POG_IID  (aac2020_graquad.data.POG_IID)
         int /** GLint **/ f32_loc =(
             AAC2020_GLEBIND.glGetUniformLocation(
@@ -118,6 +101,37 @@
                       /** vec3, so use 1 to leave value    **/
                       /** unchanged when multiplying with  **/
                       /** something else.                  **/
+    
+        return( 0x00 );
+    }
+
+#undef U32
+//:==================================:RE_LOAD_SHADER_UNIFORMS://
+//:WINDOW_RESIZE_CALLBACK_FUNCTION:==========================://
+//:CALLED_BY:AAC2020_OnWindowResize:=========================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+
+    U32  AAC2020_GRAQUAD_OnWindowResize( U32 u32 )
+    {
+        printf("[AAC2020_GRAQUAD_OnWindowResize]\n");
+
+        if( u32 ){ /** reserved for future use **/ };
+
+        //:Resize_OpenGL_Viewport_To_New_Screen_Size:--------://
+
+            AAC2020_GLEBIND.glViewport(
+                0 , 0 //: x,y
+            ,   AAC2020_GINAWIN_GetClient_WID()
+            ,   AAC2020_GINAWIN_GetClient_HIG()
+            );;
+
+        //:--------:Resize_OpenGL_Viewport_To_New_Screen_Size://
+        //:Re_Load_Shader_Uniforms:--------------------------://
+
+            AAC2020_GRAQUAD_ReLoadShaderUniforms();
+
+        //:--------------------------:Re_Load_Shader_Uniforms://
+
 
         return( 0x00 );
     }
@@ -1431,6 +1445,11 @@ RT(void)   AAC2020_GRAQUAD_Ping(      void ){
 
         //:Re-build your entire shader pipeline:
         fn( Init_NotSureWhatToCallThis_GLSetup )( );
+
+        //:After re-building shader pipeline, re-load
+        //:your "built-in" / "standard" uniforms.
+        //:(The ones YOU (JMIM) say are standard)
+        AAC2020_GRAQUAD_ReLoadShaderUniforms();
 
         return( 0 );
     }

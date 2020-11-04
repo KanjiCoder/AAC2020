@@ -25,14 +25,178 @@
 //:      All EXE loaded files are serialized to disk.        ://
 //:----------------------------------------------------------://
 
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    #define U32 uint32_t /** GCC: <stdint.h> **/
+    U32 AAC2020_FRAGBED_SimpleKeyHandler( 
+        signed char chr_key 
+    )
+    {
+        //:AKA[ AAC2020_ReadKeySimple ]
+        /** ************************************************ ***
+        Default ( ONLY ) keyboard callback for FRAGBED    
+        USEAGE:                                           
+            AAC2020_GINAWIN_SimpleKeyHandler_SetCallback(  
+            &( AAC2020_FRAGBED_SimpleKeyHandler ) );;   
+        *** ************************************************ **/
+
+        //:FTI:Forgot_To_Init:
+        if( AAC2020_FRAGBED_inited <= 0 ){
+            printf("[FATAL_ERROR:AAC2020_FRAGBED:FTI]\n");
+            fflush(stdout); exit(666);
+        };;
+
+        //:TODO: Swap loaded shaders here.
+        if( chr_key >= 1 ){
+
+            printf("[AAC2020_FRAGBED_SimpleKeyHandler]...\n");
+            printf("[FRAGBED:KEY]:%c\n" , chr_key );
+            fflush(stdout);
+
+            #define P_1 AAC2020_FRAGBED_loaded_001_ptr //:###://
+            #define P_2 AAC2020_FRAGBED_loaded_002_ptr //:###://
+            #define P_3 AAC2020_FRAGBED_loaded_003_ptr //:###://
+            #define P_4 AAC2020_FRAGBED_loaded_004_ptr //:###://
+            #define P_5 AAC2020_FRAGBED_loaded_005_ptr //:###://
+            #define P_6 AAC2020_FRAGBED_loaded_006_ptr //:###://
+            #define P_7 AAC2020_FRAGBED_loaded_007_ptr //:###://
+            #define P_8 AAC2020_FRAGBED_loaded_008_ptr //:###://
+            #define P_9 AAC2020_FRAGBED_loaded_009_ptr //:###://
+
+            int   shader_found =(   0    );
+            const char*    str =((void*)0); //:frag_shader_str
+
+            switch( chr_key ){
+            case '1' :{ str = P_1; shader_found = 1; };break;
+            case '2' :{ str = P_2; shader_found = 2; };break;
+            case '3' :{ str = P_3; shader_found = 3; };break;
+            case '4' :{ str = P_4; shader_found = 4; };break;
+            case '5' :{ str = P_5; shader_found = 5; };break;
+            case '6' :{ str = P_6; shader_found = 6; };break;
+            case '7' :{ str = P_7; shader_found = 7; };break;
+            case '8' :{ str = P_8; shader_found = 8; };break;
+            case '9' :{ str = P_9; shader_found = 9; };break;
+            default:{ 
+                printf("[PICK_SHADER_USING_NUMBER_KEY]\n");
+                fflush(stdout);
+            };};;
+
+            #undef  P_1  //:#################################://
+            #undef  P_2  //:#################################://
+            #undef  P_3  //:#################################://
+            #undef  P_4  //:#################################://
+            #undef  P_5  //:#################################://
+            #undef  P_6  //:#################################://
+            #undef  P_7  //:#################################://
+            #undef  P_8  //:#################################://
+            #undef  P_9  //:#################################://
+
+
+            if( shader_found > 0 ){
+
+                AAC2020_GRAQUAD_ReLoadFragShader(
+                    str           //: frag_shader_str
+                ,   strlen( str ) //: frag_shader_len
+                );;
+
+            }else
+            if( shader_found <= 0 ){
+
+                if( '0' == chr_key ){
+
+                    AAC2020_GRAQUAD_RFS_StatusReady();
+                
+                };;
+
+            };;
+
+        }else
+        if( chr_key <= 1 ){
+
+            printf("[AAC2020_FRAGBED:IGNORED_KEY]\n");
+            fflush(stdout);
+
+        };;
+
+        return( 0x00 );
+    }
+    #undef U32
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
     int AAC2020_FRAGBED_Init()
     {
+        //:LOAD_DEFAULT_SHADER_REFERENCES:-------------------://
 
         AAC2020_FRAGBED_loaded_001_has=( 1 );
         AAC2020_FRAGBED_loaded_001_ptr=( 
         AAC2020_FRAGBED_DEFAULT_001 );;
 
+        AAC2020_FRAGBED_loaded_002_has=( 2 );
+        AAC2020_FRAGBED_loaded_002_ptr=( 
+        AAC2020_FRAGBED_DEFAULT_002 );;
+
+        AAC2020_FRAGBED_loaded_003_has=( 3 );
+        AAC2020_FRAGBED_loaded_003_ptr=( 
+        AAC2020_FRAGBED_DEFAULT_003 );;
+
+        AAC2020_FRAGBED_loaded_004_has=( 4 );
+        AAC2020_FRAGBED_loaded_004_ptr=( 
+        AAC2020_FRAGBED_DEFAULT_004 );;
+
+        AAC2020_FRAGBED_loaded_005_has=( 5 );
+        AAC2020_FRAGBED_loaded_005_ptr=( 
+        AAC2020_FRAGBED_DEFAULT_005 );;
+
+        AAC2020_FRAGBED_loaded_006_has=( 6 );
+        AAC2020_FRAGBED_loaded_006_ptr=( 
+        AAC2020_FRAGBED_DEFAULT_006 );;
+
+        AAC2020_FRAGBED_loaded_007_has=( 7 );
+        AAC2020_FRAGBED_loaded_007_ptr=( 
+        AAC2020_FRAGBED_DEFAULT_007 );;
+
+        AAC2020_FRAGBED_loaded_008_has=( 8 );
+        AAC2020_FRAGBED_loaded_008_ptr=( 
+        AAC2020_FRAGBED_DEFAULT_008 );;
+
+        AAC2020_FRAGBED_loaded_009_has=( 9 );
+        AAC2020_FRAGBED_loaded_009_ptr=( 
+        AAC2020_FRAGBED_DEFAULT_009 );;
+
+        AAC2020_FRAGBED_inited =( 1 );
+
+        //:-------------------:LOAD_DEFAULT_SHADER_REFERENCES://
+        //:LOAD_OVERRIDES_THEN_SAVE_ALL_TO_DISK:-------------://
+        /** This is not the most efficient way to do it,     **/
+        /** as it will often read a file from disk and then  **/
+        /** immediately write that same file back to disk.   **/
+        /** However, it is dead simple. And simple wins over **/
+        /** efficiency. Computers will get faster over time. **/
+        /** The code however, will stay just as confusing    **/
+        /** over time. (Or get more confusing as you forget) **/
+
+            //:HARD_DISK:LOAD_SHADER_OVERRIDES:--------------://
+
+                /** Any FRAGBED_###.frag file on disk        **/
+                /** will be de-serialized into RAM-memory.   **/
+
+
+
+
+            //:--------------:HARD_DISK:LOAD_SHADER_OVERRIDES://
+            //:HARD_DISK:SAVE_ALL_SHADERS_IN_MEMORY:---------://
+
+                /** ALL AAC2020_FRAGBED_loaded_### shaders   **/
+                /** will be re-serialized to hard disk memory**/
+
+
+
+            //:---------:HARD_DISK:SAVE_ALL_SHADERS_IN_MEMORY://
+
+        //:-------------:LOAD_OVERRIDES_THEN_SAVE_ALL_TO_DISK://
 
         return( 0 );
     }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
