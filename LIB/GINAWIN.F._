@@ -95,6 +95,12 @@
     AAC2020_GINAWIN_OnWindowResize_SetCallback(
         PFN pfn
     ){
+        if( ((void*)0) == pfn ){
+            printf("[FATAL_ERROR:Void_ResizeCallback]");
+            fflush(stdout);
+            exit(666);
+        };;
+
         AAC2020_GINAWIN_OnWindowResize_HAS=( 1 );
         AAC2020_GINAWIN_OnWindowResize_PFN=( pfn );
 
@@ -438,7 +444,20 @@ aac2020_ginawin_WIN_MSG_HAN_WND_POC(
         fflush(stdout);
     
         if( AAC2020_GINAWIN_OnWindowResize_HAS ){
+
             AAC2020_GINAWIN_OnWindowResize_PFN( 0x00 );
+
+        }else{
+        #define P printf
+
+            P("[WARNING:GINAWIN_HAS_NO_RESIZE_CALLBACK::::]\n");
+            P("[TO_FIX:USE_THE_BELOW_FUNCTION:::::::::::::]\n");
+            P("[******************************************]\n");
+            P("[AAC2020_GINAWIN_OnWindowResize_SetCallback]\n");
+            P("[******************************************]\n");
+            fflush( stdout );
+
+        #undef  P
         };;
 
         //: ENGETHER.THREADING.InterlockedIncrement64(

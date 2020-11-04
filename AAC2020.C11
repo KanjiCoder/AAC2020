@@ -307,6 +307,9 @@
     U32
     AAC2020_OnWindowResize( U32 u32 )
     {
+        printf("[AAC2020_OnWindowResize]\n");
+        fflush(stdout);
+
         /** Centralize all sub-library window resize code **/
         /** here in one place. **/
 
@@ -314,6 +317,19 @@
             /** u32: Reserved for future use. **/
         };;
 
+        //:ALL_SUB_LIBRARY_RESIZE_CALLBACKS_HERE:------------://
+
+
+
+            #if( AAC2020_INCLUDE_GRAQUAD >= 1 )
+
+                AAC2020_GRAQUAD_OnWindowResize( 0x00 );
+
+            #endif
+
+
+
+        //:------------:ALL_SUB_LIBRARY_RESIZE_CALLBACKS_HERE://
 
         return( 0x00 /** Reserved for future use. **/ );
     }
@@ -324,8 +340,11 @@
         /** This is the only place where we should be **/
         /** Registering a window resize callback.     **/
 
+        printf("[AAC2020.C11:REGISTERING:OnWindowResize]\n");
+        fflush(stdout);
+
         AAC2020_GINAWIN_OnWindowResize_SetCallback(
-                AAC2020_OnWindowResize
+                &(AAC2020_OnWindowResize)
         );;
 
         return( 0x00 );
@@ -389,6 +408,8 @@
     int
     AAC2020_AFTER__WINDOW_OPENS_TASKS()
     {
+
+        AAC2020_OnWindowResize_RegisterAfterAllInitIsDone();
 
         return( 0 );
     }
@@ -554,7 +575,15 @@
         #endif //:###########################################://
         //:#################:( AAC2020_INCLUDE_GINAWIN >= 1 )://
         //:=================================:MAIN_SECTION:002://
+        //:MAIN_SECTION:003:AFTER_INIT_CALLBACKS:============://
 
+            
+        //# YOU CANT PUT CODE DOWN HERE. SINGLE THREADED     #//
+        //# WINDOW WILL PREVENT EXECUTION FROM EVER REACHING #//
+        //# HERE UNTIL PROGRAM IS READY TO CLOSE.            #//
+
+
+        //:============:MAIN_SECTION:003:AFTER_INIT_CALLBACKS://
 
         printf("[LAST_LINE_OF_MAIN_FUNCTION]\n");
     }

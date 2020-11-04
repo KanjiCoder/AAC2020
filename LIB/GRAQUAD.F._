@@ -83,6 +83,8 @@
 
     U32  AAC2020_GRAQUAD_OnWindowResize( U32 u32 )
     {
+        printf("[AAC2020_GRAQUAD_OnWindowResize]\n");
+
         if( u32 ){ /** reserved for future use **/ };
 
         #define POG_IID  (aac2020_graquad.data.POG_IID)
@@ -99,10 +101,13 @@
         //: to load a uniform variable array of type vec3    ://
         AAC2020_GLEBIND.glUniform3f(
             f32_loc
-        ,   (float) 1
-        ,   (float) 2
-        ,   (float) 3
-        );;
+        ,   (float) AAC2020_GINAWIN_GetClient_WID()
+        ,   (float) AAC2020_GINAWIN_GetClient_HIG()
+        ,   (float) 1 /** No 3rd dimension on 2D window    **/
+        );;           /** But shadertoy "iResolution" is a **/
+                      /** vec3, so use 1 to leave value    **/
+                      /** unchanged when multiplying with  **/
+                      /** something else.                  **/
 
         return( 0x00 );
     }
