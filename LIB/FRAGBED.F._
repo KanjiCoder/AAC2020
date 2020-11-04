@@ -25,6 +25,46 @@
 //:      All EXE loaded files are serialized to disk.        ://
 //:----------------------------------------------------------://
 
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    //:LOAD_FILE_AND_SAVE_FILE:==============================://
+
+    #define U32 uint32_t /** GCC: <stdint.h> **/
+    U32 AAC2020_FRAGBED_LoadFileIfExists(
+        const char*  frag_shader_nam //:EX:FRAGBED_001.frag
+    ,   const char*  frag_shader_str //:DESTINATION
+    )
+    {
+        #define F_OK 0 /** unistd.h **/
+        #define FNAM frag_shader_nam
+        if( access( FNAM , 0x00 /** F_OK **/ ) != -1 ) {
+        //:File Exists, load it.
+
+
+        }else{
+            //:Do nothing. File does NOT exist.
+        };;
+        #undef  F_OK
+
+        return( 0x00 );
+    }
+    #undef U32
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    #define U32 uint32_t /** GCC: <stdint.h> **/
+    U32 AAC2020_FRAGBED_SaveTextFileToDisk(
+        const char* frag_shader_nam //:Name_Of_File
+    ,   const char* frag_shader_str //:Contents_Of_File
+    )
+    {
+
+
+        return( 0x00 );
+    }
+    #undef U32
+
+    //:==============================:LOAD_FILE_AND_SAVE_FILE://
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
     #define U32 uint32_t /** GCC: <stdint.h> **/
@@ -181,8 +221,36 @@
                 /** Any FRAGBED_###.frag file on disk        **/
                 /** will be de-serialized into RAM-memory.   **/
 
+                #define LOD  AAC2020_FRAGBED_LoadFileIfExists
+    
+                        LOD(          "FRAGBED_001.FRAG" 
+                        AAC2020_FRAGBED_loaded_001_ptr );
 
+                        LOD(          "FRAGBED_002.FRAG" 
+                        AAC2020_FRAGBED_loaded_002_ptr );
 
+                        LOD(          "FRAGBED_003.FRAG" 
+                        AAC2020_FRAGBED_loaded_003_ptr );
+
+                        LOD(          "FRAGBED_004.FRAG" 
+                        AAC2020_FRAGBED_loaded_004_ptr );
+
+                        LOD(          "FRAGBED_005.FRAG" 
+                        AAC2020_FRAGBED_loaded_005_ptr );
+
+                        LOD(          "FRAGBED_006.FRAG" 
+                        AAC2020_FRAGBED_loaded_006_ptr );
+
+                        LOD(          "FRAGBED_007.FRAG" 
+                        AAC2020_FRAGBED_loaded_007_ptr );
+
+                        LOD(          "FRAGBED_008.FRAG" 
+                        AAC2020_FRAGBED_loaded_008_ptr );
+
+                        LOD(          "FRAGBED_009.FRAG" 
+                        AAC2020_FRAGBED_loaded_009_ptr );
+
+                #undef  LOD
 
             //:--------------:HARD_DISK:LOAD_SHADER_OVERRIDES://
             //:HARD_DISK:SAVE_ALL_SHADERS_IN_MEMORY:---------://
@@ -190,6 +258,36 @@
                 /** ALL AAC2020_FRAGBED_loaded_### shaders   **/
                 /** will be re-serialized to hard disk memory**/
 
+                #define SAV  AAC2020_FRAGBED_SaveTextFileToDisk
+    
+                        SAV(          "FRAGBED_001.FRAG" 
+                        AAC2020_FRAGBED_loaded_001_ptr );
+
+                        SAV(          "FRAGBED_002.FRAG" 
+                        AAC2020_FRAGBED_loaded_002_ptr );
+
+                        SAV(          "FRAGBED_003.FRAG" 
+                        AAC2020_FRAGBED_loaded_003_ptr );
+
+                        SAV(          "FRAGBED_004.FRAG" 
+                        AAC2020_FRAGBED_loaded_004_ptr );
+
+                        SAV(          "FRAGBED_005.FRAG" 
+                        AAC2020_FRAGBED_loaded_005_ptr );
+
+                        SAV(          "FRAGBED_006.FRAG" 
+                        AAC2020_FRAGBED_loaded_006_ptr );
+
+                        SAV(          "FRAGBED_007.FRAG" 
+                        AAC2020_FRAGBED_loaded_007_ptr );
+
+                        SAV(          "FRAGBED_008.FRAG" 
+                        AAC2020_FRAGBED_loaded_008_ptr );
+
+                        SAV(          "FRAGBED_009.FRAG" 
+                        AAC2020_FRAGBED_loaded_009_ptr );
+
+                #undef  SAV
 
 
             //:---------:HARD_DISK:SAVE_ALL_SHADERS_IN_MEMORY://
