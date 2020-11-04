@@ -86,6 +86,26 @@
 //:     a million dollars off of something.
 //:     Otherwise, not worth the hassel.
 
+//:SET_RESIZE_CALLBACK:======================================://
+//:ADDED_DATE[2020_11_03]:===================================://
+#define PFN AAC2020_GINAWIN_PFN_2020_11_03
+#define U32 uint32_t /** GCC: <stdint.h> **/
+    
+    U32
+    AAC2020_GINAWIN_OnWindowResize_SetCallback(
+        PFN pfn
+    ){
+        AAC2020_GINAWIN_OnWindowResize_HAS=( 1 );
+        AAC2020_GINAWIN_OnWindowResize_PFN=( pfn );
+
+        return( 0x00 );
+    }
+        
+#undef U32
+#undef PFN
+//:===================================:ADDED_DATE[2020_11_03]://
+//:======================================:SET_RESIZE_CALLBACK://
+
 void
 aac2020_ginawin_OK( const char* ok_message ){
 
@@ -416,6 +436,10 @@ aac2020_ginawin_WIN_MSG_HAN_WND_POC(
 
         printf("[AAC2020_GINAWIN:WM_SIZE]\n");
         fflush(stdout);
+    
+        if( AAC2020_GINAWIN_OnWindowResize_HAS ){
+            AAC2020_GINAWIN_OnWindowResize_PFN( 0x00 );
+        };;
 
         //: ENGETHER.THREADING.InterlockedIncrement64(
         //:     &( AAC2020_GINAWIN.THREAD_SAFE_FLAGS.

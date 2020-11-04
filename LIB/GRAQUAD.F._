@@ -77,7 +77,39 @@
 //:================================:MACROS:ROOT_LEVEL_OOP.TOP://
 
 
+//:WINDOW_RESIZE_CALLBACK_FUNCTION:==========================://
+//:CALLED_BY:AAC2020_OnWindowResize:=========================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
 
+    U32  AAC2020_GRAQUAD_OnWindowResize( U32 u32 )
+    {
+        if( u32 ){ /** reserved for future use **/ };
+
+        #define POG_IID  (aac2020_graquad.data.POG_IID)
+        int /** GLint **/ f32_loc =(
+            AAC2020_GLEBIND.glGetUniformLocation(
+                POG_IID      //:Program:Program_Integer_ID
+            ,  "iResolution" //:Shader[uniform/var]in:GLSL
+            )
+        );;
+        #undef  POG_IID
+
+        //: khronos.org/.../gl4/html/glUniform.xhtml         ://
+        //: e.g.,glUniform3f or glUniform3fv can be used     ://
+        //: to load a uniform variable array of type vec3    ://
+        AAC2020_GLEBIND.glUniform3f(
+            f32_loc
+        ,   (float) 1
+        ,   (float) 2
+        ,   (float) 3
+        );;
+
+        return( 0x00 );
+    }
+
+#undef  U32
+//:==========================:WINDOW_RESIZE_CALLBACK_FUNCTION://
+//:=========================:CALLED_BY:AAC2020_OnWindowResize://
 
 
 void aac2020_graquad_Halt( const char* err_msg ){
@@ -1424,7 +1456,7 @@ RT(void)   AAC2020_GRAQUAD_Ping(      void ){
                     "#version 330 core  \n ///////////////// \n"
                                                                   
                     //|(( UNI ))_____________________________|//
-                    "uniform int unused_test_uniform;  \n"
+                    "uniform vec3 iResolution;               \n"
                                         
                     //|(( INN ))_____________________________|//
                     //:      fag_tec:FrAG_shader_TExture_Coord
@@ -1458,7 +1490,7 @@ RT(void)   AAC2020_GRAQUAD_Ping(      void ){
     "  #undef  X                                             \n"
     "  #undef  U08                                           \n"
 
-    #error "[TODO:UseTileMapMathToDraw:SYNERR:Message]"
+//: #error "[TODO:UseTileMapMathToDraw:SYNERR:Message]"
                                                                                            
                     //| Error_Pattern:_______________________|//
                     "   int fc_x = int(gl_FragCoord.x);      \n"
@@ -1507,20 +1539,20 @@ RT(void)   AAC2020_GRAQUAD_Ping(      void ){
 
 #undef  MACRO_AAC2020_GRAQUAD_DEBUG_MODE ///////////////////////
 
-//|////////////////////////////////////////////|//
-//|     -///-                        -///-     |//
-//|....(( 0 ))|| ||_ _--  --_ _|| ||(( 0 ))....|//
-//|_  __      __  __  __  __  __  __      __  _|//
-//| \/  \    /  \/  \/  \/  \/  \/  \    /  \/ |//
-//|      \  /                        \  /      |//
-//|       \/                          \/       |//
-//+ BEG: #BOTTOM_OF_FILE_COMMENTS_SECTION#     +//
-//|           /\                  /\           |//
-//|          /  \                /  \          |//
-//|_--__--__/    \__/\__/\__/\__/    \__--__--_|//
-//|                                            |//
-//|       ______________________________       |//
-//|______/                              \______|//
+//|//////////////////////////////////////////////////////////|//
+//|     -///-                                      -\\\-     |//
+//|....(( 0 ))|| ||_ _--                --_ _|| ||(( 0 ))....|//
+//|_  __      __  __  __   ||      ||   __  __  __      __  _|//
+//| \/  \    /  \/  \/  \______________/  \/  \/  \    /  \/ |//
+//|      \  /                                      \  /      |//
+//|       \/                                        \/       |//
+//+ BEG:       ##BOTTOMOF_FILE_COMMENTS_SECTION##            +//
+//|           /\                                /\           |//
+//|          /  \        ______________        /  \          |//
+//|_--__--__/    \__/\__/              \__/\__/    \__--__--_|//
+//|                                                          |//
+//|       ____________________________________________       |//
+//|______/                                            \______|//
 #if(BOTTOM_OF_FILE_COMMENTS_SECTION) /////////////
 /** ****************************************** |||
                                                    
@@ -1651,23 +1683,30 @@ RT(void)   AAC2020_GRAQUAD_Ping(      void ){
     but rather just adjusted for init.
     Avoid double re-draw at startup by
     gaurding with (ga_completed_loop_ticks>0)
+
+iResolution:
+    Using the same variable name as that used in SHADERTOY.
+    Being able to cut+paste [to|from] shadertoy should be
+    advantageous.
                                                    
 ||| ****************************************** **/ 
 #endif ///////////////////////////////////////////
-//|______                                ______|//
-//|||||||\______________________________/|||||||//
-//|                                            |//
-//|....(( 0 ))|| ||_ _--  --_ _|| ||(( 0 ))....|//
-//|_  __      __  __  __  __  __  __      __  _|//
-//| \/  \    /  \/  \/  \/  \/  \/  \    /  \/ |//
-//|      \  /                        \  /      |//
-//|       \/                          \/       |//
-//+ END: #BOTTOM_OF_FILE_COMMENTS_SECTION#     +//
-//|           /\                  /\           |//
-//|          /  \                /  \          |//
-//|_--__--__/    \__/\__/\__/\__/    \__--__--_|//
-//|                                            |//
-//|____________________________________________|//
+//|¯¯¯¯¯¯\                                            /¯¯¯¯¯¯|//
+//|       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       |//
+//|                                                          |//
+//|¯--¯¯--¯¯\    /¯¯\/¯¯\              /¯¯\/¯¯\    /¯¯--¯¯--¯|//
+//|          \  /        ¯¯¯¯¯¯¯¯¯¯¯¯¯¯        \  /          |//
+//|           \/                                \/           |//
+//+ BEG:       ##BOTTOMOF_FILE_COMMENTS_SECTION##            +//
+//|       /\                                        /\       |//
+//|      /  \                                      /  \      |//
+//|_/\__/    \__/\__/\__/¯¯¯¯¯¯¯¯¯¯¯¯¯¯\__/\__/\__/    \__/\_|//
+//|....                    ||      ||                    ....|//
+//|    (( 0 ))|| ||¯ ¯--                --¯ ¯|| ||(( 0 ))    |//
+//|     -###-                                      -###-     |//
+//|\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\|//
+
+
 
 
 

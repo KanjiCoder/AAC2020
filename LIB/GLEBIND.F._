@@ -1556,6 +1556,52 @@ AAC2020_GLEBIND_GetAnyGLFuncAddress(
 
 //[][][][][][][][][][][][][][][][][][][][][][][]//
 
+
+//:glUniform3f:==============================================://
+typedef  
+    void                                      
+    (*AAC2020_GLEBIND_PFN_glUniform3f)                        
+    (                                         
+    /**/    int   /** GLint   **/ location//[01]////[ARG_LIST]//
+    ,       float /** GLfloat **/       v0//[02]////[ARG_LIST]//
+    ,       float /** GLfloat **/       v1//[03]////[ARG_LIST]//
+    ,       float /** GLfloat **/       v2//[04]////[ARG_LIST]//
+    );  
+                     
+    //:Declare_Function_Pointer_To_Be_Loaded_From_OPENGL:
+    AAC2020_GLEBIND_PFN_glUniform3f  //: TYPE                      
+    aac2020_glebind_pfn_glUniform3f; //: INST                  
+             
+    //:Wrapper_Function_That_Invokes_Function_Pointer:
+    void                                      
+    AAC2020_GLEBIND_glUniform3f                               
+    (                                         
+    /**/    int   /** GLint   **/ location//[01]////[ARG_LIST]//
+    ,       float /** GLfloat **/       v0//[02]////[ARG_LIST]//
+    ,       float /** GLfloat **/       v1//[03]////[ARG_LIST]//
+    ,       float /** GLfloat **/       v2//[04]////[ARG_LIST]//
+    ){                                        
+            //:IS_FUNCTION_POINTER_LOADED:-------------------://
+
+            #define PFN AAC2020_GLEBIND_FUNC
+            AAC2020_GLEBIND_FuncPointerSated(
+                  "[aac2020_glebind_pfn_glUniform3f]"
+            , (PFN) aac2020_glebind_pfn_glUniform3f );;
+            #undef  PFN
+
+            //:-------------------:IS_FUNCTION_POINTER_LOADED://
+            //:CALL_WRAPPED_FUNCTION_POINTER:----------------://
+
+            aac2020_glebind_pfn_glUniform3f(              
+    /**/ /**int       GLint   **/ location//[01]////[ARG_LIST]//
+    ,    /**float     GLfloat **/       v0//[02]////[ARG_LIST]//
+    ,    /**float     GLfloat **/       v1//[03]////[ARG_LIST]//
+    ,    /**float     GLfloat **/       v2//[04]////[ARG_LIST]//
+            );;                                  
+
+            //:----------------:CALL_WRAPPED_FUNCTION_POINTER://                                                                              
+    }  
+//:==============================================:glUniform3f://
 //:--------------------------------------------://
 typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
 void                                            //[  ]//
@@ -3155,7 +3201,13 @@ aac2020_glebind_library_container{
 
     }CAPABILITY; //:<--SINGULAR plurality!
 
+        //:NEW_MEMBER_FUNC_PTRS:2020_11_04:==================://
 
+            //: AAC2020_GLEBIND.glUniform3f
+            AAC2020_GLEBIND_PFN_glUniform3f                           
+                                glUniform3f;  
+
+        //:==================:NEW_MEMBER_FUNC_PTRS:2020_11_04://
 
         PFN_glGenBuffers 
             glGenBuffers;
@@ -3345,6 +3397,12 @@ aac2020_glebind_library_container{
 
    ,.TEXTURE.QUERY.gl_texture_binding_2d=0x8069
    ,.TEXTURE.QUERY.gl_active_texture    =0x84E0
+
+    //:NEW_LOADED_FUNCTION_POINTERS:2020_11_04:==============://
+
+    ,.  glUniform3f=&( AAC2020_GLEBIND_glUniform3f )
+
+    //:==============:NEW_LOADED_FUNCTION_POINTERS:2020_11_04://
 
     ,//[comma]//
 
@@ -3692,6 +3750,21 @@ void AAC2020_GLEBIND_GetFuncsFromDLL(){
          handle_to_gl_rendering_context
     );;
     
+    //:NEW_FUNCTION_POINTER_LOADING:2020_11_04:==============://
+
+    /** Lets be more condensed about it.        **/
+    /** As well as use more verbose namespaces. **/
+
+        //:glUniform3f:--------------------------------------://
+        #define TYPE AAC2020_GLEBIND_PFN_glUniform3f
+        #define INST aac2020_glebind_pfn_glUniform3f
+        INST=(  TYPE )g(                "glUniform3f" );
+        #undef  TYPE
+        #undef  INST
+        //:--------------------------------------:glUniform3f://
+
+
+    //:==============:NEW_FUNCTION_POINTER_LOADING:2020_11_04://
 
     //|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//
     pfn_glGenBuffers               =(       //||//

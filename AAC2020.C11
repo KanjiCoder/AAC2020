@@ -300,6 +300,39 @@
 
         return( result );
     }
+//:======================:MAIN_ENTRY_POINT.TEST_SAVE_PNG_FILE://
+//:MAIN_ENTRY_POINT.ON_WINDOW_RESIZE:========================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+
+    U32
+    AAC2020_OnWindowResize( U32 u32 )
+    {
+        /** Centralize all sub-library window resize code **/
+        /** here in one place. **/
+
+        if( u32 ){ 
+            /** u32: Reserved for future use. **/
+        };;
+
+
+        return( 0x00 /** Reserved for future use. **/ );
+    }
+
+    U32
+    AAC2020_OnWindowResize_RegisterAfterAllInitIsDone()
+    {
+        /** This is the only place where we should be **/
+        /** Registering a window resize callback.     **/
+
+        AAC2020_GINAWIN_OnWindowResize_SetCallback(
+                AAC2020_OnWindowResize
+        );;
+
+        return( 0x00 );
+    }
+
+#undef U32
+//:========================:MAIN_ENTRY_POINT.ON_WINDOW_RESIZE://
 //:MAIN_ENTRY_POINT.LAUNCH_COLOR_PICKER:=====================://
 #define PICKCOLOR_BWO  AAC2020_DUI_AskUserToPickColor_BWO
     int
