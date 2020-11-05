@@ -24,27 +24,189 @@
 //:      Files missing from disk are loaded from .EXE        ://
 //:      All EXE loaded files are serialized to disk.        ://
 //:----------------------------------------------------------://
+//:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=====================://
+    void 
+    aac2020_fragbed_Halt( const char* msg_err )
+    {
+        printf("[FATAL_ERROR:AAC2020_FRAGBED]:%s\n", msg_err );
+        fflush(stdout);
+        exit(666);
+    }
+//:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
 
+    const char*
+    AAC2020_FRAGBED_CopyHardCodedShaderStrings(
+        
+        /** One of our FILE_SCOPE hardcoded strings in **/
+        /** our source code.                           **/
+        const char* AAC2020_FRAGBED_DEFAULT 
+    )
+    {
+        /** FUNCTION_SUMMARY: Copys hard coded FILE_SCOPE    **/
+        /** shader strings to dynamic memory so that all     **/
+        /** pointers are always freeable regardless of if    **/
+        /** we are pointing to HARDCODED shader source or    **/
+        /** shader source loaded from disk.                  **/
 
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-    //:LOAD_FILE_AND_SAVE_FILE:==============================://
+        //:##################################################://
+        #define H aac2020_fragbed_Halt //:###################://
+        if( ((void*)0) == AAC2020_FRAGBED_DEFAULT ){
+            H( "[NULL_FRAGBED_DEFAULT]" );
+        };;
+        if( strlen( AAC2020_FRAGBED_DEFAULT ) <= 0 ){
+            H("[ZERO_LEN_HARD_CODED_STR]");
+        };;
+        #undef  H //:########################################://
+        //:##################################################://
+
+        //: noc: number_of_characters
+        //: nob: number_of_bytes
+        int noc = strlen( AAC2020_FRAGBED_DEFAULT );
+        int nob = (noc + 1); //:Add null terminator.
+
+        //:Allocate dynamic memory:
+        char* aac2020_fragbed_default=calloc(1,nob);
+
+        //:Copy all characters:
+        for( int dex = 0 ; dex < noc ; dex ++ ){
+            aac2020_fragbed_default[ dex ]=(
+            AAC2020_FRAGBED_DEFAULT[ dex ]  );;
+        };;
+
+        //:Make absolutely god damned sure that we have a 
+        //:null terminator at the end of our string.
+        aac2020_fragbed_default[ nob + 0 ] ='\0';
+        aac2020_fragbed_default[ noc + 1 ] ='\0';
+        assert( nob + 0 == noc + 1 );
+
+        //:Make sure copy didn't fail.
+        if( strlen( aac2020_fragbed_default ) <= 0 ){
+            aac2020_fragbed_Halt("[WELL_FUCK_ME_I_GUESS]");
+        };;
+
+        return( aac2020_fragbed_default );
+    }
 
     #define U32 uint32_t /** GCC: <stdint.h> **/
     U32 AAC2020_FRAGBED_LoadFileIfExists(
-        const char*  frag_shader_nam //:EX:FRAGBED_001.frag
-    ,   const char*  frag_shader_str //:DESTINATION
+        #define ARG const char
+        ARG*         frag_shader_nam //:EX:FRAGBED_001.frag
+    ,   ARG*  *BYREF_frag_shader_str //:DESTINATION
+        #undef  ARG
     )
     {
+        const char* frag_shader_str =((void*)0);
+
+        //:DOES_THE_FILE_EXIST_ON_DISK:?:--------------------://
         #define F_OK 0 /** unistd.h **/
         #define FNAM frag_shader_nam
+
         if( access( FNAM , 0x00 /** F_OK **/ ) != -1 ) {
-        //:File Exists, load it.
 
+        //:DOES_THE_FILE_EXIST_ON_DISK:YES:
+ 
+            //:FREE_PREVIOUS_MEMORY:-------------------------://
 
+                if( AAC2020_all_default_shaders_malloc_copied ){
+
+                    //:Be paranoid, check your pointers.
+                    //:######################################://
+                    #define H aac2020_fragbed_Halt //:#######://
+                    if( ((void*)0) == BYREF_frag_shader_str ){
+                        H("[NULL:BYREF]");
+                    };;
+                    if( ((void*)0) ==*BYREF_frag_shader_str ){
+                        H("[NULL:DEREF]");
+                    };;
+                    #undef  H //:############################://
+                    //:######################################://
+
+                    //:De-reference char** to char* :
+                    frag_shader_str=( *BYREF_frag_shader_str );
+                    
+                    //:Discard const qualifier and free.
+                    free( (char*)frag_shader_str );
+
+                }else{
+                    //: Fail because we want normalized data.://
+                    //: Mixing "freeable" and "non-freeable" ://
+                    //: pointers is a HORRIBLE idea.         ://
+                    aac2020_fragbed_Halt(
+                        "[NULL_OR_NON_DYNAMIC_POINTERS]"
+                    );;
+                };;
+
+            //:-------------------------:FREE_PREVIOUS_MEMORY://
+            //:READ_ALLOCATE_AND_COPY:-----------------------://
+            /** SEEK_SET : GCC: unistd.h && mmsystem.h **/
+            /** SEEK_END : GCC: unistd.h && mmsystem.h **/
+            #define MACRO_SEEK_SET 0  
+            #define MACRO_SEEK_END 2  
+
+                //:file_nob:GET_FILE_NUMBER_OF_BYTES:--------://
+
+                    //:Open file for "read as binary" ("rb")
+                    int   file_nob =( 0 - 404 );
+                    FILE* file_han = fopen( 
+                        frag_shader_nam , "rb" );;
+                    
+                    //:Seek to end and get number of bytes.
+                    //:Then reset file handle to start of file.
+                    fseek( file_han , 0 , MACRO_SEEK_END );
+                    file_nob = ftell( file_han );
+                    fseek( file_han , 0 , MACRO_SEEK_SET );
+
+                //:file_nob:GET_FILE_NUMBER_OF_BYTES:--------://
+                //:ALLOCATE_MEMORY:--------------------------://
+
+                    //:1. Allocate_Memory: (plus extra byte)
+                    //:2. Be safe. Add extra null byte to end.
+                    frag_shader_str = calloc( 1 , file_nob+1 );
+            ((char*)frag_shader_str)[ file_nob ]='\0';
+
+                    //:Set output parameter:
+                    (*BYREF_frag_shader_str)=frag_shader_str;
+
+                //:--------------------------:ALLOCATE_MEMORY://
+                //:READ_FILE_INTO_ALLOCATED_MEMORY:----------://
+
+                    fread( 
+                        (char*)         //:<-- MAKE_WRITABLE
+                        frag_shader_str //:<-- DESTINTION(WRITE)
+
+                    ,   file_nob        //:Number_Of_Bytes
+                    ,   1               //:Read 1 byte at a time
+                    ,   file_han        //:SOURCE(READ)
+                    );;
+
+                //:----------:READ_FILE_INTO_ALLOCATED_MEMORY://
+                //:DONT_FORGET_TO_CLOSE_FILE:----------------://
+
+                    fclose( file_han );
+
+                //:----------------:DONT_FORGET_TO_CLOSE_FILE://
+            #undef MACRO_SEEK_SET
+            #undef MACRO_SEEK_END
+            //:-----------------------:READ_ALLOCATE_AND_COPY://
+           
+            //:does_the_file_exist_on_disk:NO!:--------------://
+            #if( AAC2020_FRAGBED_BUGHUNT_FileOnDiskNotify >= 1 )
+            printf("[file_YES_on_disk]:%s\n",frag_shader_nam);
+            fflush(stdout);
+            #endif 
+            //:--------------:does_the_file_exist_on_disk:NO!://
         }else{
-            //:Do nothing. File does NOT exist.
+            //:does_the_file_exist_on_disk:YES:--------------://
+            #if( AAC2020_FRAGBED_BUGHUNT_FileOnDiskNotify >= 1 )
+            printf("[file_NOT_on_disk]:%s\n",frag_shader_nam);
+            fflush(stdout); 
+            #endif
+            //:--------------:does_the_file_exist_on_disk:YES://
+
         };;
         #undef  F_OK
+        #undef  FNAM
+        //:--------------------:DOES_THE_FILE_EXIST_ON_DISK:?://
 
         return( 0x00 );
     }
@@ -58,8 +220,48 @@
     ,   const char* frag_shader_str //:Contents_Of_File
     )
     {
+        #define H aac2020_fragbed_Halt
+        if( ((void*)0) == frag_shader_nam ){ H("[NULLNAME]");};;
+        if( ((void*)0) == frag_shader_str ){ H("[NULL_STR]");};;
+        #undef  H 
 
+        //:##################################################://
+        #if( AAC2020_FRAGBED_BUGHUNT_SaveTextFileToDisk >= 1 )
+        #define P printf
+        
+            int frag_shader_len = strlen( frag_shader_str );
+            P("[DEBUG:AAC2020_FRAGBED_SaveTextFileToDisk]\n");
+            P("[frag_shader_nam]:%s\n"    , frag_shader_nam );
+            P("[frag_shader_str]:%s\n"    , frag_shader_str );
+            P("[frag_shader_len]:%d\n"    , frag_shader_len );
+            fflush( stdout );
 
+        #undef  P
+        #endif //:###########################################://
+        //:##################################################://
+
+        //: noc:Number_Of_Characters:
+        //: nob:Number_Of_Bytes     : (Ascii My Boy!)
+        int noc = strlen( frag_shader_str );
+        int nob = ( noc + 1 ); 
+        assert( '\0' == frag_shader_str[ nob ] ); //:NullTerm
+
+        //:Open file for write. This will erase any
+        //:previous file contents.
+        FILE*  file_han = fopen( frag_shader_nam , "wb" );
+        fseek( file_han , 0 /**orgin**/ , 0 /**SEEK_SET**/ );
+        fwrite( 
+            frag_shader_str
+        ,   1   //:Size_In_Bytes_Of_Each_Element_To_Be_Written
+
+        //:Number_of_Elements_To_Write
+        ,   noc //:number_of_characters( noc )
+                //:NOT[ nob ]because strings are not
+                //:null terminated inside text files.
+
+        ,   file_han //:File We are writing into.
+        );;
+        fclose( file_han );
         return( 0x00 );
     }
     #undef U32
@@ -167,45 +369,78 @@
     int AAC2020_FRAGBED_Init()
     {
         //:LOAD_DEFAULT_SHADER_REFERENCES:-------------------://
+        #define COPY AAC2020_FRAGBED_CopyHardCodedShaderStrings
 
-        AAC2020_FRAGBED_loaded_001_has=( 1 );
-        AAC2020_FRAGBED_loaded_001_ptr=( 
-        AAC2020_FRAGBED_DEFAULT_001 );;
+            //:Mini_Unit_Test:COPY:--------------------------://
+            //:------------------"1234567"-------------------://
+            const char* test_me=("TEST_ME");
+            const char* TEST_ME=COPY( test_me );
+            int i=( 7 ); //:Inited To Length Of String.
+            while(i--){ assert(test_me[i] == TEST_ME[i]); };
+            free( (char*)TEST_ME );
+            //:------------------"1234567"-------------------://
+            //:--------------------------:Mini_Unit_Test:COPY://
 
-        AAC2020_FRAGBED_loaded_002_has=( 2 );
-        AAC2020_FRAGBED_loaded_002_ptr=( 
-        AAC2020_FRAGBED_DEFAULT_002 );;
+            AAC2020_FRAGBED_loaded_001_has=( 1 );
+            AAC2020_FRAGBED_loaded_001_ptr=COPY( 
+            AAC2020_FRAGBED_DEFAULT_001 );;
 
-        AAC2020_FRAGBED_loaded_003_has=( 3 );
-        AAC2020_FRAGBED_loaded_003_ptr=( 
-        AAC2020_FRAGBED_DEFAULT_003 );;
+            AAC2020_FRAGBED_loaded_002_has=( 2 );
+            AAC2020_FRAGBED_loaded_002_ptr=COPY( 
+            AAC2020_FRAGBED_DEFAULT_002 );;
 
-        AAC2020_FRAGBED_loaded_004_has=( 4 );
-        AAC2020_FRAGBED_loaded_004_ptr=( 
-        AAC2020_FRAGBED_DEFAULT_004 );;
+            AAC2020_FRAGBED_loaded_003_has=( 3 );
+            AAC2020_FRAGBED_loaded_003_ptr=COPY( 
+            AAC2020_FRAGBED_DEFAULT_003 );;
 
-        AAC2020_FRAGBED_loaded_005_has=( 5 );
-        AAC2020_FRAGBED_loaded_005_ptr=( 
-        AAC2020_FRAGBED_DEFAULT_005 );;
+            AAC2020_FRAGBED_loaded_004_has=( 4 );
+            AAC2020_FRAGBED_loaded_004_ptr=COPY( 
+            AAC2020_FRAGBED_DEFAULT_004 );;
 
-        AAC2020_FRAGBED_loaded_006_has=( 6 );
-        AAC2020_FRAGBED_loaded_006_ptr=( 
-        AAC2020_FRAGBED_DEFAULT_006 );;
+            AAC2020_FRAGBED_loaded_005_has=( 5 );
+            AAC2020_FRAGBED_loaded_005_ptr=COPY( 
+            AAC2020_FRAGBED_DEFAULT_005 );;
 
-        AAC2020_FRAGBED_loaded_007_has=( 7 );
-        AAC2020_FRAGBED_loaded_007_ptr=( 
-        AAC2020_FRAGBED_DEFAULT_007 );;
+            AAC2020_FRAGBED_loaded_006_has=( 6 );
+            AAC2020_FRAGBED_loaded_006_ptr=COPY( 
+            AAC2020_FRAGBED_DEFAULT_006 );;
 
-        AAC2020_FRAGBED_loaded_008_has=( 8 );
-        AAC2020_FRAGBED_loaded_008_ptr=( 
-        AAC2020_FRAGBED_DEFAULT_008 );;
+            AAC2020_FRAGBED_loaded_007_has=( 7 );
+            AAC2020_FRAGBED_loaded_007_ptr=COPY( 
+            AAC2020_FRAGBED_DEFAULT_007 );;
 
-        AAC2020_FRAGBED_loaded_009_has=( 9 );
-        AAC2020_FRAGBED_loaded_009_ptr=( 
-        AAC2020_FRAGBED_DEFAULT_009 );;
+            AAC2020_FRAGBED_loaded_008_has=( 8 );
+            AAC2020_FRAGBED_loaded_008_ptr=COPY( 
+            AAC2020_FRAGBED_DEFAULT_008 );;
 
-        AAC2020_FRAGBED_inited =( 1 );
+            AAC2020_FRAGBED_loaded_009_has=( 9 );
+            AAC2020_FRAGBED_loaded_009_ptr=COPY( 
+            AAC2020_FRAGBED_DEFAULT_009 );;
 
+                //:DEBUG:ASSERT_NON_ZERO_DEFAULTS:-----------://
+                #define LEN strlen
+                #define  A  assert
+
+                A( LEN( AAC2020_FRAGBED_loaded_001_ptr ) > 0 );
+                A( LEN( AAC2020_FRAGBED_loaded_002_ptr ) > 0 );
+                A( LEN( AAC2020_FRAGBED_loaded_003_ptr ) > 0 );
+                A( LEN( AAC2020_FRAGBED_loaded_004_ptr ) > 0 );
+                A( LEN( AAC2020_FRAGBED_loaded_005_ptr ) > 0 );
+                A( LEN( AAC2020_FRAGBED_loaded_006_ptr ) > 0 );
+                A( LEN( AAC2020_FRAGBED_loaded_007_ptr ) > 0 );
+                A( LEN( AAC2020_FRAGBED_loaded_008_ptr ) > 0 );
+                A( LEN( AAC2020_FRAGBED_loaded_009_ptr ) > 0 );
+
+                #undef  LEN
+                #undef   A
+                //:-----------:DEBUG:ASSERT_NON_ZERO_DEFAULTS://
+
+            //: Missing sub namespace, but let's allow it    ://
+            //: since the variable name is already a bit     ://
+            //: too long for my tastes.                      ://
+            AAC2020_all_default_shaders_malloc_copied=( 9 );
+
+        #undef COPY
         //:-------------------:LOAD_DEFAULT_SHADER_REFERENCES://
         //:LOAD_OVERRIDES_THEN_SAVE_ALL_TO_DISK:-------------://
         /** This is not the most efficient way to do it,     **/
@@ -222,33 +457,35 @@
                 /** will be de-serialized into RAM-memory.   **/
 
                 #define LOD  AAC2020_FRAGBED_LoadFileIfExists
+
+                    /** YES, 2nd param is DOUBLE_POINTER(**) **/
     
-                        LOD(          "FRAGBED_001.FRAG" 
-                        AAC2020_FRAGBED_loaded_001_ptr );
+                        LOD(          "FRAGBED_001.FRAG"  ,
+                      &(AAC2020_FRAGBED_loaded_001_ptr ));;
 
-                        LOD(          "FRAGBED_002.FRAG" 
-                        AAC2020_FRAGBED_loaded_002_ptr );
+                        LOD(          "FRAGBED_002.FRAG"  ,
+                      &(AAC2020_FRAGBED_loaded_002_ptr ));;
 
-                        LOD(          "FRAGBED_003.FRAG" 
-                        AAC2020_FRAGBED_loaded_003_ptr );
+                        LOD(          "FRAGBED_003.FRAG"  ,
+                      &(AAC2020_FRAGBED_loaded_003_ptr ));;
 
-                        LOD(          "FRAGBED_004.FRAG" 
-                        AAC2020_FRAGBED_loaded_004_ptr );
+                        LOD(          "FRAGBED_004.FRAG"  ,
+                      &(AAC2020_FRAGBED_loaded_004_ptr ));;
 
-                        LOD(          "FRAGBED_005.FRAG" 
-                        AAC2020_FRAGBED_loaded_005_ptr );
+                        LOD(          "FRAGBED_005.FRAG"  ,
+                      &(AAC2020_FRAGBED_loaded_005_ptr ));;
 
-                        LOD(          "FRAGBED_006.FRAG" 
-                        AAC2020_FRAGBED_loaded_006_ptr );
+                        LOD(          "FRAGBED_006.FRAG"  ,
+                      &(AAC2020_FRAGBED_loaded_006_ptr ));;
 
-                        LOD(          "FRAGBED_007.FRAG" 
-                        AAC2020_FRAGBED_loaded_007_ptr );
+                        LOD(          "FRAGBED_007.FRAG"  ,
+                      &(AAC2020_FRAGBED_loaded_007_ptr ));;
 
-                        LOD(          "FRAGBED_008.FRAG" 
-                        AAC2020_FRAGBED_loaded_008_ptr );
+                        LOD(          "FRAGBED_008.FRAG"  ,
+                      &(AAC2020_FRAGBED_loaded_008_ptr ));;
 
-                        LOD(          "FRAGBED_009.FRAG" 
-                        AAC2020_FRAGBED_loaded_009_ptr );
+                        LOD(          "FRAGBED_009.FRAG"  ,
+                      &(AAC2020_FRAGBED_loaded_009_ptr ));;
 
                 #undef  LOD
 
@@ -260,32 +497,32 @@
 
                 #define SAV  AAC2020_FRAGBED_SaveTextFileToDisk
     
-                        SAV(          "FRAGBED_001.FRAG" 
-                        AAC2020_FRAGBED_loaded_001_ptr );
+                        SAV(          "FRAGBED_001.FRAG"  ,
+                        AAC2020_FRAGBED_loaded_001_ptr  );;
 
-                        SAV(          "FRAGBED_002.FRAG" 
-                        AAC2020_FRAGBED_loaded_002_ptr );
+                        SAV(          "FRAGBED_002.FRAG"  ,
+                        AAC2020_FRAGBED_loaded_002_ptr  );;
 
-                        SAV(          "FRAGBED_003.FRAG" 
-                        AAC2020_FRAGBED_loaded_003_ptr );
+                        SAV(          "FRAGBED_003.FRAG"  ,
+                        AAC2020_FRAGBED_loaded_003_ptr  );;
 
-                        SAV(          "FRAGBED_004.FRAG" 
-                        AAC2020_FRAGBED_loaded_004_ptr );
+                        SAV(          "FRAGBED_004.FRAG"  ,
+                        AAC2020_FRAGBED_loaded_004_ptr  );;
 
-                        SAV(          "FRAGBED_005.FRAG" 
-                        AAC2020_FRAGBED_loaded_005_ptr );
+                        SAV(          "FRAGBED_005.FRAG"  ,
+                        AAC2020_FRAGBED_loaded_005_ptr  );;
 
-                        SAV(          "FRAGBED_006.FRAG" 
-                        AAC2020_FRAGBED_loaded_006_ptr );
+                        SAV(          "FRAGBED_006.FRAG"  ,
+                        AAC2020_FRAGBED_loaded_006_ptr  );;
 
-                        SAV(          "FRAGBED_007.FRAG" 
-                        AAC2020_FRAGBED_loaded_007_ptr );
+                        SAV(          "FRAGBED_007.FRAG"  ,
+                        AAC2020_FRAGBED_loaded_007_ptr  );;
 
-                        SAV(          "FRAGBED_008.FRAG" 
-                        AAC2020_FRAGBED_loaded_008_ptr );
+                        SAV(          "FRAGBED_008.FRAG"  ,
+                        AAC2020_FRAGBED_loaded_008_ptr  );;
 
-                        SAV(          "FRAGBED_009.FRAG" 
-                        AAC2020_FRAGBED_loaded_009_ptr );
+                        SAV(          "FRAGBED_009.FRAG"  ,
+                        AAC2020_FRAGBED_loaded_009_ptr  );;
 
                 #undef  SAV
 
@@ -294,6 +531,7 @@
 
         //:-------------:LOAD_OVERRIDES_THEN_SAVE_ALL_TO_DISK://
 
+        AAC2020_FRAGBED_inited =( 1 );
         return( 0 );
     }
 

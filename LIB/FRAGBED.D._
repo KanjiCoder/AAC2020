@@ -1,5 +1,32 @@
 
     //:FRAGBED.D._ : FRAGmentshadertestBED.DATA
+
+/** DESIGN NOTES: ****************************************** ***
+
+    I originally thought "AAC2020_FRAGBED_loaded_##_ptr"(s)
+    could point to either the default shaders
+    ( "AAC2020_FRAGBED_DEFAULT_###" ) or to shader code
+    on the hard disk.
+    
+    Problem:
+
+    This would mean sometimes the pointer is FREEABLE
+    (when it points to disk) and UN-FREEABLE when it points
+    to a hard coded (in source code) FILE_SCOPE char array.
+
+    Solution:
+
+    FILE_SCOPE char arrays must be copied over to malloced 
+    memory for consistency.
+
+*** ******************************************************** **/
+//:CONFIGURATION:============================================://
+
+    #define AAC2020_FRAGBED_BUGHUNT_SaveTextFileToDisk ( 0 )
+    #define AAC2020_FRAGBED_BUGHUNT_FileOnDiskNotify   ( 1 )
+
+//:============================================:CONFIGURATION://
+
     #define U08 unsigned char
 
     U08 AAC2020_FRAGBED_inited = ( 0 ); //:Initialized?
@@ -17,6 +44,8 @@
     extern const char* AAC2020_FRAGBED_DEFAULT_008; //:FDS_008._
     extern const char* AAC2020_FRAGBED_DEFAULT_009; //:FDS_009._
 
+    //:Shaders_Loaded_Into_Ram:------------------------------://
+
     const char* AAC2020_FRAGBED_loaded_001_ptr = ((void*)0);
     const char* AAC2020_FRAGBED_loaded_002_ptr = ((void*)0);
     const char* AAC2020_FRAGBED_loaded_003_ptr = ((void*)0);
@@ -26,6 +55,15 @@
     const char* AAC2020_FRAGBED_loaded_007_ptr = ((void*)0);
     const char* AAC2020_FRAGBED_loaded_008_ptr = ((void*)0);
     const char* AAC2020_FRAGBED_loaded_009_ptr = ((void*)0);
+
+    //:------------------------------:Shaders_Loaded_Into_Ram://
+    //:SHADE_LOAD_FLAGS:Probably_Only_Need_This:-------------://
+
+    //: AAC2020_FRAGBED_all_default_shaders_malloc_copied    ://
+    int         AAC2020_all_default_shaders_malloc_copied=( 0 );
+
+    //:-------------:SHADE_LOAD_FLAGS:Probably_Only_Need_This://
+    //:SHADE_LOAD_FLAGS:Probably_A_Bit_Excessive:------------://
 
     int         AAC2020_FRAGBED_loaded_001_has = (   0    );
     int         AAC2020_FRAGBED_loaded_002_has = (   0    );
@@ -37,11 +75,31 @@
     int         AAC2020_FRAGBED_loaded_008_has = (   0    );
     int         AAC2020_FRAGBED_loaded_009_has = (   0    );
 
-    /** imm: Is_Malloced_Memory ?                            **/
-    /** If we are loading from files, but also sometimes     **/
-    /** reference hard coded strings, we are going to need   **/
-    /** to know what kind of memory is in the pointer to     **/
-    /** avoid problems.                                      **/
+    //:------------:SHADE_LOAD_FLAGS:Probably_A_Bit_Excessive://
+
+/** ******************************************************** ***
+
+    We are going to NOT do the below. This makes things a
+    lot harder on us because we have to check if the pointer
+    is a pointer to FILESCOPE memory (.text) section or if
+    the memory has been dynamically allocated.
+
+    To fix this, ALL_POINTERS to DEFAULT_SHADERS
+    will malloc-copy the memory, rather than just point to it.
+
+    //:DEFAULT_SHADERS:
+    (AAC2020_FRAGBED_DEFAULT_001 
+                        -to- AAC2020_FRAGBED_DEFAULT_009    )
+
+    //:ALL_POINTERS:
+    (AAC2020_FRAGBED_loaded_001_ptr   
+                        -to- AAC2020_FRAGBED_loaded_009_ptr )
+
+    //: imm: Is_Malloced_Memory ?                            ://
+    //: If we are loading from files, but also sometimes     ://
+    //: reference hard coded strings, we are going to need   ://
+    //: to know what kind of memory is in the pointer to     ://
+    //: avoid problems.                                      ://
     int         AAC2020_FRAGBED_loaded_001_imm = (   0    );
     int         AAC2020_FRAGBED_loaded_002_imm = (   0    );
     int         AAC2020_FRAGBED_loaded_003_imm = (   0    );
@@ -52,6 +110,7 @@
     int         AAC2020_FRAGBED_loaded_008_imm = (   0    );
     int         AAC2020_FRAGBED_loaded_009_imm = (   0    );
                                           
+** ********************************************************* **/
 
 
     
