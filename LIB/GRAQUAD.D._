@@ -70,6 +70,21 @@
         
 
 //:============================:FRAG_SHADER_LOAD_STATUS_FLAGS://
+//:SHADER_UNIFORMS:==========================================://
+
+    /** **************************************************** ***
+        aac2020_graquad_iResolution:
+        iResolution is not used because it exists as
+        the client width and height in GINAWIN.
+        We don't want to fractionate our variable stores.
+        That will lead to memory coherency issues.
+    *** **************************************************** **/
+    
+    float   aac2020_graquad_iTime =( 0 );
+    #define aac2020_graquad_iResolution ( "DO_NOT_USE" )
+
+
+//:==========================================:SHADER_UNIFORMS://
  
 //| 12345678 TESA:TextureSampler WIND:Window:  |//
 //| TESAWIND:                                  |//

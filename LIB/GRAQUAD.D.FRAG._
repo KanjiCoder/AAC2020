@@ -112,7 +112,8 @@
                     "#version 330 core  \n ///////////////// \n"
                                                                   
                     //|(( UNI ))_____________________________|//
-                    "uniform vec3 iResolution;               \n"
+                    "uniform vec3  iResolution;              \n"
+                    "uniform float iTime      ;              \n"
                                         
                     //|(( INN ))_____________________________|//
                     //:      fag_tec:FrAG_shader_TExture_Coord
@@ -180,8 +181,8 @@
                         //|Set output pixel color:___________|//
     "                   FragColor = vec4(                    \n"
     "                      /**/0.0                           \n"
-    "                      ,   0.0                           \n"
-    "                      ,   0.0                           \n"
+    "                      ,   u_v.x * sin((iTime/(255*1)))  \n"
+    "                      ,   0.1                           \n"
     "                      ,   1.0f                          \n"
     "                   );;                                  \n"
     "                                                        \n"

@@ -1557,6 +1557,46 @@ AAC2020_GLEBIND_GetAnyGLFuncAddress(
 //[][][][][][][][][][][][][][][][][][][][][][][]//
 
 
+
+//:glUniform1f:==============================================://
+typedef  
+    void                                      
+    (*AAC2020_GLEBIND_PFN_glUniform1f)                        
+    (                                         
+    /**/    int   /** GLint   **/ location//[01]////[ARG_LIST]//
+    ,       float /** GLfloat **/       v0//[02]////[ARG_LIST]//
+    );  
+                     
+    //:Declare_Function_Pointer_To_Be_Loaded_From_OPENGL:
+    AAC2020_GLEBIND_PFN_glUniform1f  //: TYPE                      
+    aac2020_glebind_pfn_glUniform1f; //: INST                  
+             
+    //:Wrapper_Function_That_Invokes_Function_Pointer:
+    void                                      
+    AAC2020_GLEBIND_glUniform1f                               
+    (                                         
+    /**/    int   /** GLint   **/ location//[01]////[ARG_LIST]//
+    ,       float /** GLfloat **/       v0//[02]////[ARG_LIST]//
+    ){                                        
+            //:IS_FUNCTION_POINTER_LOADED:-------------------://
+
+            #define PFN AAC2020_GLEBIND_FUNC
+            AAC2020_GLEBIND_FuncPointerSated(
+                  "[aac2020_glebind_pfn_glUniform1f]"
+            , (PFN) aac2020_glebind_pfn_glUniform1f );;
+            #undef  PFN
+
+            //:-------------------:IS_FUNCTION_POINTER_LOADED://
+            //:CALL_WRAPPED_FUNCTION_POINTER:----------------://
+
+            aac2020_glebind_pfn_glUniform1f(              
+    /**/ /**int       GLint   **/ location//[01]////[ARG_LIST]//
+    ,    /**float     GLfloat **/       v0//[02]////[ARG_LIST]//
+            );;                                  
+
+            //:----------------:CALL_WRAPPED_FUNCTION_POINTER://                                                                              
+    }  
+//:==============================================:glUniform1f://
 //:glUniform3f:==============================================://
 typedef  
     void                                      
@@ -3201,6 +3241,13 @@ aac2020_glebind_library_container{
 
     }CAPABILITY; //:<--SINGULAR plurality!
 
+        //:NEW_MEMBER_FUNC_PTRS:2020_11_06:==================://
+
+            //: AAC2020_GLEBIND.glUniform1f
+            AAC2020_GLEBIND_PFN_glUniform1f                           
+                                glUniform1f;  
+
+        //:==================:NEW_MEMBER_FUNC_PTRS:2020_11_06://
         //:NEW_MEMBER_FUNC_PTRS:2020_11_04:==================://
 
             //: AAC2020_GLEBIND.glUniform3f
@@ -3398,6 +3445,11 @@ aac2020_glebind_library_container{
    ,.TEXTURE.QUERY.gl_texture_binding_2d=0x8069
    ,.TEXTURE.QUERY.gl_active_texture    =0x84E0
 
+    //:NEW_LOADED_FUNCTION_POINTERS:2020_11_06:==============://
+
+    ,.  glUniform1f=&( AAC2020_GLEBIND_glUniform1f )
+
+    //:==============:NEW_LOADED_FUNCTION_POINTERS:2020_11_06://
     //:NEW_LOADED_FUNCTION_POINTERS:2020_11_04:==============://
 
     ,.  glUniform3f=&( AAC2020_GLEBIND_glUniform3f )
@@ -3750,6 +3802,22 @@ void AAC2020_GLEBIND_GetFuncsFromDLL(){
          handle_to_gl_rendering_context
     );;
     
+
+
+    //:NEW_FUNCTION_POINTER_LOADING:2020_11_06:==============://
+
+    /** Lets be more condensed about it.        **/
+    /** As well as use more verbose namespaces. **/
+
+        //:glUniform1f:--------------------------------------://
+        #define TYPE AAC2020_GLEBIND_PFN_glUniform1f
+        #define INST aac2020_glebind_pfn_glUniform1f
+        INST=(  TYPE )g(                "glUniform1f" );
+        #undef  TYPE
+        #undef  INST
+        //:--------------------------------------:glUniform1f://
+
+    //:==============:NEW_FUNCTION_POINTER_LOADING:2020_11_06://
     //:NEW_FUNCTION_POINTER_LOADING:2020_11_04:==============://
 
     /** Lets be more condensed about it.        **/
@@ -3762,7 +3830,6 @@ void AAC2020_GLEBIND_GetFuncsFromDLL(){
         #undef  TYPE
         #undef  INST
         //:--------------------------------------:glUniform3f://
-
 
     //:==============:NEW_FUNCTION_POINTER_LOADING:2020_11_04://
 

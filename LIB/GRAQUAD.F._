@@ -174,32 +174,66 @@
 //:RE_LOAD_SHADER_UNIFORMS:==================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
 
-    U32  AAC2020_GRAQUAD_ReLoadShaderUniforms()
-    {
-        #define POG_IID  (aac2020_graquad.data.POG_IID)
-        int /** GLint **/ f32_loc =(
-            AAC2020_GLEBIND.glGetUniformLocation(
-                POG_IID      //:Program:Program_Integer_ID
-            ,  "iResolution" //:Shader[uniform/var]in:GLSL
-            )
-        );;
-        #undef  POG_IID
+    //:RE_LOAD_SHADER_UNIFORMS:iTime:========================://
 
-        //: khronos.org/.../gl4/html/glUniform.xhtml         ://
-        //: e.g.,glUniform3f or glUniform3fv can be used     ://
-        //: to load a uniform variable array of type vec3    ://
-        AAC2020_GLEBIND.glUniform3f(
-            f32_loc
-        ,   (float) AAC2020_GINAWIN_GetClient_WID()
-        ,   (float) AAC2020_GINAWIN_GetClient_HIG()
-        ,   (float) 1 /** No 3rd dimension on 2D window    **/
-        );;           /** But shadertoy "iResolution" is a **/
-                      /** vec3, so use 1 to leave value    **/
-                      /** unchanged when multiplying with  **/
-                      /** something else.                  **/
-    
-        return( 0x00 );
-    }
+        /** This also increments iTime **/
+        U32  aac2020_graquad_ReLoadShaderUniforms_iTime()
+        {
+            #define POG_IID  (aac2020_graquad.data.POG_IID)
+            int /** GLint **/ f32_loc =(
+                AAC2020_GLEBIND.glGetUniformLocation(
+                    POG_IID      //:Program:Program_Integer_ID
+                ,  "iTime"       //:Shader[uniform/var]in:GLSL
+                )
+            );;
+            #undef  POG_IID
+
+            aac2020_graquad_iTime++;
+
+            #define F float //:##############################://
+            AAC2020_GLEBIND.glUniform1f(
+                f32_loc
+            ,   ( F ) aac2020_graquad_iTime
+            );;      
+
+            #undef  F //:####################################://
+        
+            return( 0x00 );
+        }
+
+    //:=======================:RE_LOAD_SHADER_UNIFORMS:iTime://
+    //:RE_LOAD_SHADER_UNIFORMS:iResolution:==================://
+
+        U32  AAC2020_GRAQUAD_ReLoadShaderUniforms_iResolution()
+        {
+            #define POG_IID  (aac2020_graquad.data.POG_IID)
+            int /** GLint **/ f32_loc =(
+                AAC2020_GLEBIND.glGetUniformLocation(
+                    POG_IID      //:Program:Program_Integer_ID
+                ,  "iResolution" //:Shader[uniform/var]in:GLSL
+                )
+            );;
+            #undef  POG_IID
+
+            #define F float //:##############################://
+            //: khronos.org/.../gl4/html/glUniform.xhtml     ://
+            //: e.g.,glUniform3f or glUniform3fv can be used ://
+            //: to load a uniform variable array of type vec3://
+            AAC2020_GLEBIND.glUniform3f(
+                f32_loc
+            ,   ( F ) AAC2020_GINAWIN_GetClient_WID()
+            ,   ( F ) AAC2020_GINAWIN_GetClient_HIG()
+            ,   ( F ) 1 /** No 3rd dimension on 2D window    **/
+            );;         /** But shadertoy "iResolution" is a **/
+                        /** vec3, so use 1 to leave value    **/
+                        /** unchanged when multiplying with  **/
+                        /** something else.                  **/
+            #undef  F //:####################################://
+        
+            return( 0x00 );
+        }
+
+    //:==================:RE_LOAD_SHADER_UNIFORMS:iResolution://
 
 #undef U32
 //:==================================:RE_LOAD_SHADER_UNIFORMS://
@@ -224,7 +258,7 @@
         //:--------:Resize_OpenGL_Viewport_To_New_Screen_Size://
         //:Re_Load_Shader_Uniforms:--------------------------://
 
-            AAC2020_GRAQUAD_ReLoadShaderUniforms();
+            AAC2020_GRAQUAD_ReLoadShaderUniforms_iResolution();
 
         //:--------------------------:Re_Load_Shader_Uniforms://
 
@@ -1576,7 +1610,10 @@ void FN(Init)( void ){
 
 PRIVATE_FUNCTION( static void )
 fn( LoopTick )( void ){
+    /** AKA: aac2020_graquad_LoopTick **/
     //:GA_LoopTick  //:#ORIGINALLY_GA_LOOPTICK#
+
+    aac2020_graquad_ReLoadShaderUniforms_iTime();
 
     //[ GUTTED_THIS_FUNCTION. Does_Nothing. ]//
     fn( HandleWindowLoopMessage_WM_PAINT )( );
@@ -1814,7 +1851,7 @@ RT(void)   AAC2020_GRAQUAD_Ping(      void ){
             //:After re-building shader pipeline, re-load
             //:your "built-in" / "standard" uniforms.
             //:(The ones YOU (JMIM) say are standard)
-            AAC2020_GRAQUAD_ReLoadShaderUniforms();
+            AAC2020_GRAQUAD_ReLoadShaderUniforms_iResolution();
 
         //[------------------:DO_NOT_EXTRACT_CODE_TO_FUNCTION]//
         //:---------------------------:RELOAD_FRAGMENT_SHADER://
@@ -1924,7 +1961,7 @@ RT(void)   AAC2020_GRAQUAD_Ping(      void ){
             //:After re-building shader pipeline, re-load
             //:your "built-in" / "standard" uniforms.
             //:(The ones YOU (JMIM) say are standard)
-            AAC2020_GRAQUAD_ReLoadShaderUniforms();
+            AAC2020_GRAQUAD_ReLoadShaderUniforms_iResolution();
 
         //[------------------:DO_NOT_EXTRACT_CODE_TO_FUNCTION]//
         //:---------------------------:RELOAD_FRAGMENT_SHADER://
