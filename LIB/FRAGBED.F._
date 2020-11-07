@@ -67,17 +67,70 @@
         //:Allocate dynamic memory:
         char* aac2020_fragbed_default=calloc(1,nob);
 
-        //:Copy all characters:
-        for( int dex = 0 ; dex < noc ; dex ++ ){
-            aac2020_fragbed_default[ dex ]=(
-            AAC2020_FRAGBED_DEFAULT[ dex ]  );;
-        };;
+        //:COPY_ALL_CHARACTERS:------------------------------://
 
-        //:Make absolutely god damned sure that we have a 
-        //:null terminator at the end of our string.
-        aac2020_fragbed_default[ nob + 0 ] ='\0';
-        aac2020_fragbed_default[ noc + 1 ] ='\0';
-        assert( nob + 0 == noc + 1 );
+            #if( AAC2020_GRAQUAD_BUGHUNT_001 >= 1 )
+                /** GRADQUAD BUGHUNT_001 led us into the     **/
+                /** NEXT file within our library chain.      **/
+                printf("[ABOUT_TO_COPY:noc]:%d\n", noc );
+                fflush(stdout); 
+            #endif
+
+            //:copy_all_characters::- - - - - - - - - - - - -://
+            for( int dex = 0 ; dex < noc ; dex ++ ){
+                aac2020_fragbed_default[ dex ]=(
+                AAC2020_FRAGBED_DEFAULT[ dex ]  );;
+            };;//:- - - - - - - - - - - -:copy_all_characters://
+
+            #if( AAC2020_GRAQUAD_BUGHUNT_001 >= 1 )
+                /** GRADQUAD BUGHUNT_001 led us into the     **/
+                /** NEXT file within our library chain.      **/
+                printf("[DONE_COPYING:noc]:%d\n", noc );
+                fflush(stdout); 
+            #endif
+
+        //:------------------------------:COPY_ALL_CHARACTERS://
+        //:ADD_NULL_TERM:MEMORY_STOMP_RISK:------------------://
+
+            #if( AAC2020_GRAQUAD_BUGHUNT_001 >= 1 )
+                /** YES: AAC2020_GRAQUAD_BUGHUNT_001  **/
+                /** NOT: AAC2020_FRAGBED_BUGHUNT_001  **/
+                //:MSR:MEMORY_STOMP_RISK
+                printf("[BEFORE:ADD_NUL_TERM:MSR]");
+                fflush(stdout); 
+            #endif
+
+            //:add_null_term:MSR!:- - - - - - - - - - - - - -://
+
+                //[AAC2020_GRAQUAD_BUGHUNT_001:FOUND]////[!!!]//
+                /** You were off by 1 here and memory        **/
+                /** stomping other memory. The reason it     **/
+                /** worked originally probably was because   **/
+                /** malloc allocates in powers of 2 chunks.  **/
+                /** So sometimes going 1 out of bounds       **/
+                /** does NOT stomp memory if extra was       **/
+                /** allocated. DATE[ 2020_11_06 ]            **/
+
+                int max_dex = (    nob - 1 );
+                assert( max_dex == nob - 1 );
+                assert( max_dex == noc + 0 );
+                assert( nob - 1 == noc + 0 );
+
+                //:Make absolutely god damned sure that we have  
+                //:a null terminator at the end of our string.
+                aac2020_fragbed_default[ max_dex ] ='\0';
+
+            //:- - - - - - - - - - - - - -:add_null_term:MSR!://
+
+            #if( AAC2020_GRAQUAD_BUGHUNT_001 >= 1 )
+                /** YES: AAC2020_GRAQUAD_BUGHUNT_001  **/
+                /** NOT: AAC2020_FRAGBED_BUGHUNT_001  **/
+                //:MSR:MEMORY_STOMP_RISK
+                printf("[AFTER::ADD_NUL_TERM:MSR]");
+                fflush(stdout); 
+            #endif
+
+        //:------------------:ADD_NULL_TERM:MEMORY_STOMP_RISK://
 
         //:Make sure copy didn't fail.
         if( strlen( aac2020_fragbed_default ) <= 0 ){
@@ -336,7 +389,12 @@
 
             if( shader_found > 0 ){
 
-                AAC2020_GRAQUAD_ReLoadFragShader(
+                //: These shaders can be user edited and     ://
+                //: loaded from disk. So use the more fault  ://
+                //: tolerant loading function. If fails,     ://
+                //: the screen will display the              ://
+                //: letters: "synerr" for "syntax_error"     ://
+                AAC2020_GRAQUAD_ReLoadFragShader_SyntaxErrorsOk(
                     str           //: frag_shader_str
                 ,   strlen( str ) //: frag_shader_len
                 );;
@@ -381,6 +439,11 @@
             //:------------------"1234567"-------------------://
             //:--------------------------:Mini_Unit_Test:COPY://
 
+            #if( AAC2020_GRAQUAD_BUGHUNT_001 >= 1 )
+                printf("[BEG:MALCOPY:DEFAULT_SHADERS]\n");
+                fflush(stdout);
+            #endif
+
             AAC2020_FRAGBED_loaded_001_has=( 1 );
             AAC2020_FRAGBED_loaded_001_ptr=COPY( 
             AAC2020_FRAGBED_DEFAULT_001 );;
@@ -417,6 +480,11 @@
             AAC2020_FRAGBED_loaded_009_ptr=COPY( 
             AAC2020_FRAGBED_DEFAULT_009 );;
 
+            #if( AAC2020_GRAQUAD_BUGHUNT_001 >= 1 )
+                printf("[MID:MALCOPY:DEFAULT_SHADERS]\n");
+                fflush(stdout);
+            #endif
+
                 //:DEBUG:ASSERT_NON_ZERO_DEFAULTS:-----------://
                 #define LEN strlen
                 #define  A  assert
@@ -439,6 +507,11 @@
             //: since the variable name is already a bit     ://
             //: too long for my tastes.                      ://
             AAC2020_all_default_shaders_malloc_copied=( 9 );
+
+            #if( AAC2020_GRAQUAD_BUGHUNT_001 >= 1 )
+                printf("[END:MALCOPY:DEFAULT_SHADERS]\n");
+                fflush(stdout);
+            #endif
 
         #undef COPY
         //:-------------------:LOAD_DEFAULT_SHADER_REFERENCES://
