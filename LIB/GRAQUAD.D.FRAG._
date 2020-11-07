@@ -114,6 +114,7 @@
                     //|(( UNI ))_____________________________|//
                     "uniform vec3  iResolution;              \n"
                     "uniform float iTime      ;              \n"
+                    "uniform vec4  iMouse     ;              \n"
                                         
                     //|(( INN ))_____________________________|//
                     //:      fag_tec:FrAG_shader_TExture_Coord
@@ -195,6 +196,21 @@
     "                      ,   u_v.x                         \n"
     "                      ,   1.0f                          \n"
     "                   );;                                  \n"  
+    "   };;                                                  \n"
+
+    //| Draw_CrossHairs_Using_iMouse:________________________|//
+    "   vec4  n_m  = iMouse / iResolution.xyxy;              \n"
+    "   if( distance(n_m.x , u_v.x ) < (7.0/iResolution.x)   \n"
+    "   ||  distance(n_m.y , u_v.y ) < (7.0/iResolution.y)   \n"
+    "   ){                                                   \n"
+                        //|Set output pixel color:___________|//
+    "                   FragColor = vec4(                    \n"
+    "                      /**/1.0                           \n"
+    "                      ,   1.0                           \n"
+    "                      ,   1.0                           \n"
+    "                      ,   1.0f                          \n"
+    "                   );;                                  \n"
+    "                                                        \n"
     "   };;                                                  \n"
     "} //:main://                                          \n\0"
     ); /////////////////////////////////////////////////////////

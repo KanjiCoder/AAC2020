@@ -86,6 +86,33 @@
 //:     a million dollars off of something.
 //:     Otherwise, not worth the hassel.
 
+//:SET_MOUSEMOVE_HANDLER:====================================://
+//:ADDED_DATE[2020_11_06]:===================================://
+#define PFN AAC2020_GINAWIN_PFN_2020_11_06_ONMOUSEMOVE
+#define U32 uint32_t /** GCC: <stdint.h> **/
+    
+    U32
+    AAC2020_GINAWIN_OnMouseMove_SetCallback(
+        PFN pfn
+    ){
+        if( ((void*)0) == pfn ){
+            printf("[FATAL_ERROR:Void_MouseMoveCallback]");
+            fflush(stdout);
+            exit(666);
+        };;
+
+        AAC2020_GINAWIN_OnMouseMove_HAS=( 1 );
+        AAC2020_GINAWIN_OnMouseMove_PFN=( pfn );
+
+        return( 0x00 );
+    }
+        
+#undef U32
+#undef PFN
+//:=========
+
+//:===================================:ADDED_DATE[2020_11_06]://
+//:===================================:SET_MOUSE_MOVE_HANDLER://
 //:SET_RESIZE_CALLBACK:======================================://
 //:ADDED_DATE[2020_11_03]:===================================://
 #define PFN AAC2020_GINAWIN_PFN_2020_11_03
@@ -504,6 +531,74 @@ aac2020_ginawin_WIN_MSG_HAN_WND_POC(
     //:-----------------------:ASSERT_SATED_FUNCTION_POINTERS://
 
     switch(Msg){ //:- - - - - - - - - - - - - -://
+
+    case 0x0200 /** WM_MOUSEMOVE **/:
+    {
+
+        //:STORE_MOUSE_COORDINATES:--------------------------://
+        if( AAC2020_GINAWIN_OnMouseMove_HAS ){
+        #define U32 uint32_t /** GCC: <stdint.h> **/
+
+            //:LOW_AND_HIGH_WORDS:---------------------------://
+
+                U32 low_word_is_x_axis=( 0 );
+                U32 hig_word_is_y_axis=( 0 );
+
+                /** Get X and Y Coordinates in **/
+                /** WM_MOUSEMOVE case          **/
+
+                low_word_is_x_axis=
+                ((unsigned short)(((unsigned __int64)(
+
+                    lParam /** INPUT_VALUE **/
+
+                )) & 0xffff));;
+
+                hig_word_is_y_axis=
+                ((unsigned short)((((unsigned __int64)( 
+
+                    lParam /** INPUT_VALUE **/
+
+                )) >> 16) & 0xffff));;
+
+            //:---------------------------:LOW_AND_HIGH_WORDS://
+            //:TODO:IMPLEMENT_DRAG_COORDS:-------------------://
+
+                U32 low_word_is_x_axis_drag_start=(
+                    low_word_is_x_axis );;
+
+                U32 hig_word_is_y_axis_drag_end=(
+                    hig_word_is_y_axis );;
+
+            //:-------------------:TODO:IMPLEMENT_DRAG_COORDS://
+            //:CALL_CALLBACK:--------------------------------://
+
+                AAC2020_GINAWIN_OnMouseMove_PFN(
+                    low_word_is_x_axis //:...........:X:.....:// 
+                ,   hig_word_is_y_axis //:...........:Y:.....://  
+
+                //:TODO: Implement dragging.
+                ,   low_word_is_x_axis_drag_start //:.Z:.....://  
+                ,   hig_word_is_y_axis_drag_end   //:.W:.....://  
+                );;
+            //:--------------------------------:CALL_CALLBACK://
+
+        #undef U32
+        };; //:----------------------:STORE_MOUSE_COORDINATES://
+
+        /** ************************************************* **
+        // Check to see if the left button is held down:
+        int leftButtonDown =wParam & 0x0001 ; //: MK_LBUTTON ://
+
+        // Check if right button down:
+        int rightButtonDown=wParam & 0x0002 ; //: MK_RBUTTON ://
+        *** ************************************************ **/
+
+
+
+    }break;
+
+
     case 0x0005 /** WM_SIZE **/:{ 
 
         printf("[AAC2020_GINAWIN:WM_SIZE]\n");

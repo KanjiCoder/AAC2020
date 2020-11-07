@@ -174,7 +174,71 @@
 //:RE_LOAD_SHADER_UNIFORMS:==================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
 
+    //:RE_LOAD_SHADER_UNIFORMS:iMouse:=======================://
+    #define U32 uint32_t /** GCC: <stdint.h> **/
+
+        U32 aac2020_graquad_ReLoadShaderUniforms_iMouse(
+            U32 low_word_is_x_axis
+        ,   U32 hig_word_is_y_axis
+
+        ,   U32 low_word_is_x_axis_drag_start
+        ,   U32 hig_word_is_y_axis_drag_end
+        )
+        {
+            //[ Wired up using:                              ]//
+            //[ AAC2020_GINAWIN_OnMouseMove_SetCallback(     ]//
+            //[ aac2020_graquad_ReLoadShaderUniforms_iMouse);]//
+
+            #define POG_IID  (aac2020_graquad.data.POG_IID)
+            int /** GLint **/ f32_loc =(
+                AAC2020_GLEBIND.glGetUniformLocation(
+                    POG_IID      //:Program:Program_Integer_ID
+                ,  "iMouse"      //:Shader[uniform/var]in:GLSL
+                )
+            );;
+            #undef  POG_IID
+
+            //:TODO:STORE_COPIES_IN:BASUNIF.D._:-------------://
+            #define F32 float /** 32 bits even on X64 **/
+               
+                /** Mouse is not normalized. Need to divide **/
+                /** it by "iResolution" in your shader code  **/
+                /** depending on what you are doing.         **/
+                printf("[iMouse.x:SETTING_TO]:%f\n]"
+                , ( F32 )low_word_is_x_axis );;
+                
+                printf("[iMouse.y:SETTING_TO]:%f\n]"
+                , ( F32 )hig_word_is_y_axis );;
+
+                fflush(stdout);
+
+                //:SET__UNIFORM:- - - - - - - - - - - - - - -://
+                AAC2020_GLEBIND.glUniform4f(
+                    f32_loc
+                ,   ( F32 ) low_word_is_x_axis
+                ,   ( F32 ) hig_word_is_y_axis
+
+                //: Keep identical to XY to mean             ://
+                //: "Not dragging". ">0" as in documentation ://
+                //: on wordpress makes no sense. What if you ://
+                //: wanted to drag to [0,0] ?                ://
+                ,   ( F32 ) low_word_is_x_axis_drag_start
+                ,   ( F32 ) hig_word_is_y_axis_drag_end
+                );;      
+                //:- - - - - - - - - - - - - - -:SET__UNIFORM://
+
+            #undef  F32
+            //:-------------:TODO:STORE_COPIES_IN:BASUNIF.D._://
+        
+            return( 0x00 );
+
+
+        }
+
+    #undef  U32
+    //:=======================:RE_LOAD_SHADER_UNIFORMS:iMouse://
     //:RE_LOAD_SHADER_UNIFORMS:iTime:========================://
+    #define U32 uint32_t /** GCC: <stdint.h> **/
 
         /** This also increments iTime **/
         U32  aac2020_graquad_ReLoadShaderUniforms_iTime()
@@ -188,7 +252,7 @@
             );;
             #undef  POG_IID
 
-            aac2020_graquad_iTime++;
+            aac2020_graquad_iTime += ( 1.0 / 256.0 );
 
             #define F float //:##############################://
             AAC2020_GLEBIND.glUniform1f(
@@ -201,8 +265,10 @@
             return( 0x00 );
         }
 
+    #undef  U32
     //:=======================:RE_LOAD_SHADER_UNIFORMS:iTime://
     //:RE_LOAD_SHADER_UNIFORMS:iResolution:==================://
+    #define U32 uint32_t /** GCC: <stdint.h> **/
 
         U32  AAC2020_GRAQUAD_ReLoadShaderUniforms_iResolution()
         {
@@ -233,8 +299,9 @@
             return( 0x00 );
         }
 
+    #undef  U32
     //:==================:RE_LOAD_SHADER_UNIFORMS:iResolution://
-
+    
 #undef U32
 //:==================================:RE_LOAD_SHADER_UNIFORMS://
 //:WINDOW_RESIZE_CALLBACK_FUNCTION:==========================://
@@ -1429,6 +1496,10 @@ fn(Init_HaltIfChecksumsFail)(){
 PRIVATE_FUNCTION( static void )
 fn( Init )( void ){
 
+    if( 0 != aac2020_graquad_inited ){
+        aac2020_graquad_Halt("[NOT_IDEMPOTENT_INIT]");
+    };;
+
     //+ Commented out. + + + + + + + + + + + + + + + + + + + +//
     //- COG_Init();    - - - - - - - - - - - - - - - - - - - -//
     /**   Initialize after other dependencies. But don't     **/
@@ -1455,6 +1526,15 @@ fn( Init )( void ){
         fflush(stdout);
     #endif
 
+    //: This part specifically could lead to trouble if you  ://
+    //: try to let initializer be idempotent. Because we use ://
+    //: a LIBCHAN, we need to make sure library initializers ://
+    //: only execute once. -John Mark DATE[11_06_2020]       ://
+    /** Enabled "iMouse" uniform. **/
+    AAC2020_GINAWIN_OnMouseMove_SetCallback(
+    aac2020_graquad_ReLoadShaderUniforms_iMouse );
+
+    aac2020_graquad_inited=( 777 );return;
 }
 void FN(Init)( void ){
      fn(Init)(      );

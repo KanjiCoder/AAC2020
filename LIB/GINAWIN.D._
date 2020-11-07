@@ -35,6 +35,11 @@
     //:-----------------------:DEBUGGING_VERY_SPECIFIC_THINGS://
 
 //:============================================:CONFIGURATION://
+//:FLAGS:====================================================://
+
+    int aac2020_graquad_inited =( 0 );
+
+//:====================================================:FLAGS://
 //:CONCEPTUAL_LIBRARY_MEMBER_VARIABLES:======================://
     
     //: AAC2020_GINAWIN_OnWindowResize_HAS
@@ -45,6 +50,9 @@
 
     //: AAC2020_GINAWIN_ComplexKeyHandler_HAS
     //: AAC2020_GINAWIN_ComplexKeyHandler_PFN
+
+    //: AAC2020_GINAWIN_OnMouseMove_HAS
+    //: AAC2020_GINAWIN_OnMouseMove_PFN
 
     #define U32 uint32_t /** GCC: <stdint.h> **/
     #define U64 uint64_t /** GCC: <stdint.h> **/
@@ -63,10 +71,21 @@
             U32
             (*AAC2020_GINAWIN_PFN_2020_11_04_COMPLEXKEY)
             ( U64 );
+        typedef
+            U32
+            (*AAC2020_GINAWIN_PFN_2020_11_06_ONMOUSEMOVE)
+            ( 
+            /**/    U32 low_word_is_x_axis  
+            ,       U32 hig_word_is_y_axis  
+            ,       U32 low_word_is_x_axis_drag_start  
+            ,       U32 hig_word_is_y_axis_drag_end
+
+            );
 
     #define P_1   AAC2020_GINAWIN_PFN_2020_11_03
     #define P_2   AAC2020_GINAWIN_PFN_2020_11_04_SIMPLEKEY
     #define P_3   AAC2020_GINAWIN_PFN_2020_11_04_COMPLEXKEY
+    #define P_4   AAC2020_GINAWIN_PFN_2020_11_06_ONMOUSEMOVE
 
             HAS  AAC2020_GINAWIN_OnWindowResize_HAS    = 0;
             P_1  AAC2020_GINAWIN_OnWindowResize_PFN    =VOD;
@@ -77,9 +96,13 @@
             HAS  AAC2020_GINAWIN_ComplexKeyHandler_HAS = 0;
             P_3  AAC2020_GINAWIN_ComplexKeyHandler_PFN =VOD;
 
+            HAS  AAC2020_GINAWIN_OnMouseMove_HAS       = 0;
+            P_4  AAC2020_GINAWIN_OnMouseMove_PFN       =VOD;
+
     #undef  P_1
     #undef  P_2
     #undef  P_3
+    #undef  P_4
             
     #undef  U32
     #undef  U64

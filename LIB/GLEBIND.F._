@@ -1642,6 +1642,54 @@ typedef
             //:----------------:CALL_WRAPPED_FUNCTION_POINTER://                                                                              
     }  
 //:==============================================:glUniform3f://
+//:glUniform4f:==============================================://
+typedef  
+    void                                      
+    (*AAC2020_GLEBIND_PFN_glUniform4f)                        
+    (                                         
+    /**/    int   /** GLint   **/ location//[01]////[ARG_LIST]//
+    ,       float /** GLfloat **/       v0//[02]////[ARG_LIST]//
+    ,       float /** GLfloat **/       v1//[03]////[ARG_LIST]//
+    ,       float /** GLfloat **/       v2//[04]////[ARG_LIST]//
+    ,       float /** GLfloat **/       v3//[05]////[ARG_LIST]//
+    );  
+                     
+    //:Declare_Function_Pointer_To_Be_Loaded_From_OPENGL:
+    AAC2020_GLEBIND_PFN_glUniform4f  //: TYPE                      
+    aac2020_glebind_pfn_glUniform4f; //: INST                  
+             
+    //:Wrapper_Function_That_Invokes_Function_Pointer:
+    void                                      
+    AAC2020_GLEBIND_glUniform4f                               
+    (                                         
+    /**/    int   /** GLint   **/ location//[01]////[ARG_LIST]//
+    ,       float /** GLfloat **/       v0//[02]////[ARG_LIST]//
+    ,       float /** GLfloat **/       v1//[03]////[ARG_LIST]//
+    ,       float /** GLfloat **/       v2//[04]////[ARG_LIST]//
+    ,       float /** GLfloat **/       v3//[05]////[ARG_LIST]//
+    ){                                        
+            //:IS_FUNCTION_POINTER_LOADED:-------------------://
+
+            #define PFN AAC2020_GLEBIND_FUNC
+            AAC2020_GLEBIND_FuncPointerSated(
+                  "[aac2020_glebind_pfn_glUniform4f]"
+            , (PFN) aac2020_glebind_pfn_glUniform4f );;
+            #undef  PFN
+
+            //:-------------------:IS_FUNCTION_POINTER_LOADED://
+            //:CALL_WRAPPED_FUNCTION_POINTER:----------------://
+
+            aac2020_glebind_pfn_glUniform4f(              
+    /**/ /**int       GLint   **/ location//[01]////[ARG_LIST]//
+    ,    /**float     GLfloat **/       v0//[02]////[ARG_LIST]//
+    ,    /**float     GLfloat **/       v1//[03]////[ARG_LIST]//
+    ,    /**float     GLfloat **/       v2//[04]////[ARG_LIST]//
+    ,    /**float     GLfloat **/       v3//[05]////[ARG_LIST]//
+            );;                                  
+
+            //:----------------:CALL_WRAPPED_FUNCTION_POINTER://                                                                              
+    }  
+//:==============================================:glUniform4f://
 //:--------------------------------------------://
 typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
 void                                            //[  ]//
@@ -3255,6 +3303,13 @@ aac2020_glebind_library_container{
                                 glUniform3f;  
 
         //:==================:NEW_MEMBER_FUNC_PTRS:2020_11_04://
+        //:NEW_MEMBER_FUNC_PTRS:2020_11_06:==================://
+
+            //: AAC2020_GLEBIND.glUniform4f
+            AAC2020_GLEBIND_PFN_glUniform4f                           
+                                glUniform4f;  
+
+        //:==================:NEW_MEMBER_FUNC_PTRS:2020_11_06://
 
         PFN_glGenBuffers 
             glGenBuffers;
@@ -3455,6 +3510,11 @@ aac2020_glebind_library_container{
     ,.  glUniform3f=&( AAC2020_GLEBIND_glUniform3f )
 
     //:==============:NEW_LOADED_FUNCTION_POINTERS:2020_11_04://
+    //:NEW_LOADED_FUNCTION_POINTERS:2020_11_06:==============://
+
+    ,.  glUniform4f=&( AAC2020_GLEBIND_glUniform4f )
+
+    //:==============:NEW_LOADED_FUNCTION_POINTERS:2020_11_06://
 
     ,//[comma]//
 
@@ -3832,6 +3892,20 @@ void AAC2020_GLEBIND_GetFuncsFromDLL(){
         //:--------------------------------------:glUniform3f://
 
     //:==============:NEW_FUNCTION_POINTER_LOADING:2020_11_04://
+    //:NEW_FUNCTION_POINTER_LOADING:2020_11_06:==============://
+
+    /** Lets be more condensed about it.        **/
+    /** As well as use more verbose namespaces. **/
+
+        //:glUniform4f:--------------------------------------://
+        #define TYPE AAC2020_GLEBIND_PFN_glUniform4f
+        #define INST aac2020_glebind_pfn_glUniform4f
+        INST=(  TYPE )g(                "glUniform4f" );
+        #undef  TYPE
+        #undef  INST
+        //:--------------------------------------:glUniform4f://
+
+    //:==============:NEW_FUNCTION_POINTER_LOADING:2020_11_06://
 
     //|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//
     pfn_glGenBuffers               =(       //||//
