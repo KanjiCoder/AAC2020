@@ -16,9 +16,60 @@
 
     #define MACRO_AAC2020_GRAQUAD_DEBUG_MODE 1
 
+    /** AAC2020_GRAQUAD_BUGHUNT_001 : BUGHUNT_001            **/
+    /** Looking for reason I am NOT getting an error message **/
+    /** When there is a syntax error in default shaders.     **/
+    /** Instead I seem to be getting a segfault.             **/
 
+    #define AAC2020_GRAQUAD_BUGHUNT_001 ( 1 )
 
 //:============================================:CONFIGURATION://
+//:FAIL_FAST_OR_RETURN_ERROR_CODE:===========================://
+
+    //: ADDFOR[ #FEATURE:FAULT_TOLERANT_USER_FRAG_SHADERS# ] ://
+    //: If function fails, what should it do?                ://
+    #define AAC2020_GRAQUAD_FAIL_CODE         ( 9001 )  
+    #define AAC2020_GRAQUAD_FAIL_FAST         ( 9002 )                           
+                
+//:===========================:FAIL_FAST_OR_RETURN_ERROR_CODE://
+//:HOS:STATUS_CODES:FAILURE_STATUS:==========================://
+
+    /** Likely reason for shader failure is usually a   **/
+    /** bad user inputted fragment shader. Espcially if **/
+    /** Error did not immediately occur on startup.     **/
+
+    #define AAC2020_GRAQUAD_SHADER_FAIL   ( 0x123 ) //:291
+    #define AAC2020_GRAQUAD_CURCON_FAIL   ( 0x2D4 ) //:724
+
+//:==========================:HOS:STATUS_CODES:FAILURE_STATUS://
+//:GENERIC:FAILURE_CODE:AKA:STATUS_CODE:=====================://
+
+    #define AAC2020_GRAQUAD_HAS_FAILED_FAST   ( 9999 )
+
+//:=====================:GENERIC:FAILURE_CODE:AKA:STATUS_CODE://
+//:BUILD_GRAPHICS_PIPELINE_STATUS:===========================://
+
+    /** Use as generic printf for debug. Return a numeric    **/
+    /** code specific to actual site of failure when         **/
+    /** this problem occurs.                                **/
+
+    #define AAC2020_GRAQUAD_BGP_STATUS_WGL_FAIL "[WGL_FAIL]"
+
+
+//:===========================:BUILD_GRAPHICS_PIPELINE_STATUS://
+//:FRAG_SHADER_LOAD_STATUS_FLAGS:============================://
+
+    //:AKA: AAC2020_GRAQUAD_LOAD_STATUS_SUCCESS
+    #define AAC2020_GRAQUAD_LOAD_STATUS_OK       ( 0 )
+
+    //:AKA: AAC2020_GRAQUAD_LOAD_STATUS_SYNTAX_ERROR
+    #define AAC2020_GRAQUAD_LOAD_STATUS_SYNERR   (606)
+
+    //:AKA: AAC2020_GRAQUAD_LOAD_STATUS_NOT_SET
+    #define AAC2020_GRAQUAD_LOAD_STATUS_NOT_SET  (404)
+        
+
+//:============================:FRAG_SHADER_LOAD_STATUS_FLAGS://
  
 //| 12345678 TESA:TextureSampler WIND:Window:  |//
 //| TESAWIND:                                  |//

@@ -75,6 +75,102 @@
     #define  PRIVATE_FUNCTION( stuff ) stuff
 
 //:================================:MACROS:ROOT_LEVEL_OOP.TOP://
+
+//:HALTING_FUNCTIONS:========================================://
+#define U32 uint32_t /** stdint.h **/
+
+    //:FUNCTION:HALT(ALWAYS):================================://
+
+    void aac2020_graquad_Halt( const char* err_msg ){
+
+        printf(
+        /**/"[aac2020_graquad_Halt]%s\n"
+        ,   err_msg
+        );;fflush(stdout);exit(666);
+
+    }
+
+    //:================================:FUNCTION:HALT(ALWAYS)://
+    //:FUNCTION:HALT_OR_STATUS(HOS):=========================://
+    #define HAS_FAILED_FAST  AAC2020_GRAQUAD_HAS_FAILED_FAST
+    
+        U32
+        aac2020_graquad_HOS( 
+
+            int         HOS     //:Halt_Or_Status 
+                                //:(failure_method)
+            //: 1: HOS == AAC2020_GRAQUAD_FAIL_FAST
+            //: 2: HOS == AAC2020_GRAQUAD_FAIL_CODE
+     
+        ,   const char* err_msg //:Error Message 
+        ,   U32         err_hex //:Error_Code_In:HEX
+        ,   U32         err_dec //:Error_Code_In:DEC
+
+        )
+        {
+            /** This function either fails fast or returns   **/
+            /** an error status code. This function was made **/
+            /** to allow for feature:                        **/
+            /** #FEATURE:FAULT_TOLERANT_USER_FRAG_SHADERS#   **/
+            /** FUNCTION_ADDED_DATE[ 2020_11_06 ]            **/
+
+            U32 status_code=( 0x00 /** No Trouble **/ );
+
+            //:ERROR_CODE_REDUNDANCY:========================://
+            if( err_hex != err_dec ){ //:--------------------://
+            #define P printf
+
+                P("[#define:A2G:aac2020_graquad)]\n"         );
+                P("[A2G_HOS:ERROR_CODE_ERROR]:...\n"         );
+                P("[A2G_HOS:err_msg]:%s          \n" ,err_msg);
+                P("[A2G_HOS:err_hex]:%0x         \n" ,err_hex);
+                P("[A2G_HOS:err_dec]:%d          \n" ,err_dec);
+                
+                fflush(stdout);
+                exit( 666 );
+
+            #undef P
+            };; //:-------------------:( err_hex != err_dec )://
+            //:========================:ERROR_CODE_REDUNDANCY://
+            //:HALT_OR_STATUS:===============================://
+
+            switch( HOS /** failure_method **/ ){
+            
+            case    AAC2020_GRAQUAD_FAIL_FAST:
+            
+                    aac2020_graquad_Halt( "[BGP_OGL:001]" );
+                    status_code = HAS_FAILED_FAST ;
+                    break;
+            
+            case    AAC2020_GRAQUAD_FAIL_CODE:
+            
+                    assert(       err_hex == err_dec );
+                    status_code = err_hex ;
+                    break;
+            
+                
+            default: 
+                    /** BFM: Bad_Failure_Method/HOS_Value **/
+                    aac2020_graquad_Halt("[#BFM/HOS#]");
+            };;
+            //:===============================:HALT_OR_STATUS://
+            //:RETURN_STATUS_CODE:===========================://
+
+            /** Fail fast status code should never be        **/
+            /** returned because failing fast means failing  **/
+            /** immediately and NOT returning a status code. **/
+
+            assert( status_code != HAS_FAILED_FAST );
+            return( status_code );
+
+            //:===========================:RETURN_STATUS_CODE://
+        }
+
+    #undef  HAS_FAILED_FAST
+    //:=========================:FUNCTION:HALT_OR_STATUS(HOS)://
+
+#undef  U32
+//:========================================:HALTING_FUNCTIONS://
 //:RE_LOAD_SHADER_UNIFORMS:==================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
 
@@ -141,15 +237,7 @@
 //:=========================:CALLED_BY:AAC2020_OnWindowResize://
 
 
-void aac2020_graquad_Halt( const char* err_msg ){
 
-    printf(
-    /**/"[aac2020_graquad_Halt]%s\n"
-    ,   err_msg
-    );;fflush(stdout);exit(666);
-
-}
-        
 
 
 
@@ -284,92 +372,170 @@ int num_errors_found = 0;
     };;
 } //[ErrChk]//
 
-PRIVATE_FUNCTION( static void )
-fn( CompileShader )(
-    #define AT_1  unsigned int /** GLuint **/ ////
-    #define AT_2  const char*  ///////////////////
-    #define AT_3  const char*  ///////////////////
 
-    AT_1  wev_sad_iid //:[fag_sad_iid|vet_sad_iid]
-,   AT_2  wev_sad_src //:[fag_sad_src|vet_sad_src]
-,   AT_3  onn_err_msg //:[fag_sad_err|vet_sad_err]
+//:COMPILE_SHADER_PRIVATE:===================================://
+#define U32 uint32_t /** GCC: <stdint.h>  **/
+#define  OK ( 0 )    /** Okay Status Code **/
 
-    #undef AT_1  /////////////////////////////////
-    #undef AT_2  /////////////////////////////////
-    #undef AT_3  /////////////////////////////////
-){
+    U32
+    aac2020_graquad_CompileShader(
+        
+        //:     AT: Argument_Type  ::::::::::::::::::::::::::://
+        #define AT_1  int          /////////////////////////////
+        #define AT_2  unsigned int /** GLuint **/ //////////////
+        #define AT_3  const char*  /////////////////////////////
+        #define AT_4  const char*  /////////////////////////////
+        //:     AT: Argument_Type  ::::::::::::::::::::::::::://
+        
+        AT_1  HOS /** halt_or_status (failure_method) **/
+    ,   AT_2  wev_sad_iid //:[fag_sad_iid|vet_sad_iid]
+    ,   AT_3  wev_sad_src //:[fag_sad_src|vet_sad_src]
+    ,   AT_4  onn_err_msg //:[fag_sad_err|vet_sad_err]
 
-    //:######################################################://
-    #define GLI int /** GLint **/ //:########################://
+        //:     AT: Argument_Type  ::::::::::::::::::::::::::://
+        #undef  AT_1  //////////////////////////////////////////
+        #undef  AT_2  //////////////////////////////////////////
+        #undef  AT_3  //////////////////////////////////////////
+        #undef  AT_4  //////////////////////////////////////////
+        //:     AT: Argument_Type  ::::::::::::::::::::::::::://
+    ){
 
-            int ino_log_num = ( 0-666 ); //:InfoLogLength 
-            GLI     cmd_ret = ( AAC2020_GLEBIND.BOL.gl_false );
-            int         num = ( 0-555 ); //:num_chars
-            int         siz = ( 0-444 ); //:num_bytes
-            char*       ems = ( NULL  ); //:err_msg
+        /** Function name previously written as:  * **/
+        /** fn( CompileShader ) * * * * * * * * * * **/
+
+        //:DECLARE_VARIABLES:--------------------------------://
+
+        //:##################################################://
+        #define GLI int /** GLint **/ //:####################://
+
+                int HOS_status_code = ( 0 /** OKAY **/ );
+
+                int ino_log_num = ( 0-666 ); //:InfoLogLength 
+                int         num = ( 0-555 ); //:num_chars
+                int         siz = ( 0-444 ); //:num_bytes
+                char*       ems = ( NULL  ); //:err_msg
+                GLI     cmd_ret = ( 
+                            AAC2020_GLEBIND.BOL.gl_false );;
+
+        #undef  GLI  //:#####################################://
+        //:##################################################://
+
+        //:--------------------------------:DECLARE_VARIABLES://
+        //:RUN_OPEN_GL_COMMANDS:-----------------------------://
+        if( OK == HOS_status_code ){
+
+            /** WEV: WHATEVER (FragmentShader|VertexShader)  **/
+            /** WEV == "ver(vert)" or "fag(frag)"            **/
+            /** wev_sad_src===ga_fragment_shader_source      **/
+            /** wev_sad_src===ga_vertex_shader_source        **/
+ 
+            AAC2020_GLEBIND.glShaderSource(           
+            /**/wev_sad_iid                           
+            ,   1 //+AlistOfOneMonoLithicString+//    
+            ,   &(wev_sad_src)  //:WEV:Whatever                      
+            ,   NULL //|array_of_string_lengths|//    
+            );;       
+                                
+            AAC2020_GLEBIND.glCompileShader(          
+                wev_sad_iid                           
+            );;                                       
+                                                      
+            AAC2020_GLEBIND.glGetShaderiv(            
+            /**/wev_sad_iid                           
+            ,   AAC2020_GLEBIND.SPN.gl_compile_status         
+            ,   &( cmd_ret )                                  
+            );;   
+
+        };; //:-------------------------:RUN_OPEN_GL_COMMANDS://
+        //:CHECK_COMPILE_STATUS:-----------------------------://
+        if( OK == HOS_status_code ){
     
-    #undef  GLI  //:#########################################://
-    //:######################################################://
+            //:CHECK_COMPILE_STATUS:OK:----------------------://
+            if( cmd_ret == AAC2020_GLEBIND.BOL.gl_true){
 
-    //|wev_sad_src===ga_fragment_shader_source |//
-    //|wev_sad_src===ga_vertex_shader_source   |//
+                //:Do nothing. All is okay.
 
-    //|CS|CS|CS|CS|CS|CS|----|CS|CS|CS|CS|CS|CS|//
-    AAC2020_GLEBIND.glShaderSource(                  //|CS|//
-    /**/wev_sad_iid                       //|CS|//
-    ,   1 //+AlistOfOneMonoLithicString+////|CS|//
-    ,   &(wev_sad_src)                    //|CS|//
-    ,   NULL //|array_of_string_lengths|////|CS|//
-    );;                                   //|CS|//
-    AAC2020_GLEBIND.glCompileShader(                 //|CS|//
-        wev_sad_iid                       //|CS|//
-    );;                                   //|CS|//
-                                          //|CS|//
-    AAC2020_GLEBIND.glGetShaderiv(                   //|CS|//
-    /**/wev_sad_iid                       //|CS|//
-    ,   AAC2020_GLEBIND.SPN.gl_compile_status        //|CS|//
-    ,   &( cmd_ret )                      //|CS|//
-    );;                                   //|CS|//
-                                          //|CS|//
-    if( cmd_ret != AAC2020_GLEBIND.BOL.gl_true){     //|CS|//
-        AAC2020_GLEBIND.glGetShaderiv(               //|CS|//
-        /**/wev_sad_iid                   //|CS|//
-        ,   AAC2020_GLEBIND.SPN.gl_info_log_length   //|CS|//
-        ,   &(ino_log_num)                //|CS|//
-        );;                               //|CS|//
-                                          //|CS|//
-        if(ino_log_num>0){                //|CS|//
-            printf("[WEV:ino_log_num>0]");//|CS|//
-                                          //|CS|//
-            //|+1 because null terminator.  |CS|//
-            num =(ino_log_num+1   );      //|CS|//
-            siz = sizeof(  char   );      //|CS|//
-            ems = malloc( siz*num );      //|CS|//
-                                          //|CS|//
-            AAC2020_GLEBIND.glGetShaderInfoLog(      //|CS|//
-            /**/wev_sad_iid               //|CS|//
-            ,   ino_log_num               //|CS|//
-            ,   NULL                      //|CS|//
-            ,   ems                       //|CS|//
-            );;                           //|CS|//
-                                          //|CS|//
-            printf(                       //|CS|//
-                "[WEV:2019_08_02:MSG]:%s" //|CS|//
-            ,   ems                       //|CS|//
-            );;fflush(stdout);            //|CS|//
-                                          //|CS|//
-            free(             ems );      //|CS|// 
-            fn(Halt)( onn_err_msg );      //|CS|//            
-        }else{                            //|CS|//
-            printf(                       //|CS|//
-                "[WEV:COMPILE_STATUS]\n"  //|CS|//
-                "[WEV:NO_LOG_HELP@_@]\n"  //|CS|//
-            );;                           //|CS|//
-            fn(Halt)( onn_err_msg );      //|CS|//
-        };;                               //|CS|//
-    };;                                   //|CS|//
-    //|CS|CS|CS|CS|CS|CS|----|CS|CS|CS|CS|CS|CS|//
-}
+            };; //:------------------:CHECK_COMPILE_STATUS:OK://
+            //:CHECK_COMPILE_STATUS:HAS_ERROR:---------------://
+            if( cmd_ret != AAC2020_GLEBIND.BOL.gl_true){ 
+     
+                //:ERROR_LOGS:GET_SIZE:----------------------://
+
+                    AAC2020_GLEBIND.glGetShaderiv(                
+                    /**/wev_sad_iid                      
+                    ,   AAC2020_GLEBIND.SPN.gl_info_log_length    
+                    ,   &(ino_log_num)                  
+                    );;   
+
+                //:----------------------:ERROR_LOGS:GET_SIZE://
+                //:ERROR_LOGS:ALLOCATE_AND_PRINT:------------://
+                //:##########################################://
+                #define P printf //:#########################://
+                if(ino_log_num>0){ 
+                
+                    P("[AAC2020_GRAQUAD:WEV:ino_log_num>0]\n"); 
+                                                   
+                    /** +1 because null terminator. **/ 
+                    num =(ino_log_num+1   );       
+                    siz = sizeof(  char   );       
+                    ems = malloc( siz*num );       
+                                                   
+                    AAC2020_GLEBIND.glGetShaderInfoLog(       
+                    /**/wev_sad_iid                
+                    ,   ino_log_num                
+                    ,   NULL                       
+                    ,   ems                        
+                    );;                            
+                                                   
+                    P( "[WEV:2019_08_02:MSG]:%s\n" , ems );
+                    fflush(stdout);             
+                                                   
+                    free(             ems );       
+                    
+                    //:Clue as too root error:
+                    P("[RE_CLUE001:]:%s\n",onn_err_msg);;
+
+                    #define CODE AAC2020_GRAQUAD_SHADER_FAIL
+                    assert( CODE == 0x123 );
+                    HOS_status_code = aac2020_graquad_HOS( 
+                    HOS , "[HALT:0x123(291)]" , CODE , 291 );;
+                    #undef  CODE
+                }else{                             
+                    P("[NO_GOD_DAMN_INFO_LOGS]\n");                        
+                    P("[RE_CLUE:002:]:%s\n",onn_err_msg);;    
+                    
+                    HOS_status_code = aac2020_graquad_HOS( 
+                    HOS , "[HALT:0x1B1(433)]" , 0x1B1 , 433 );;
+                };; 
+                #undef  P //:################################://
+                //:##########################################://
+                //:------------:ERROR_LOGS:ALLOCATE_AND_PRINT://
+
+            };; //:-----------:CHECK_COMPILE_STATUS:HAS_ERROR://                             
+        };; //:-------------------------:CHECK_COMPILE_STATUS://
+        //:RETURN_STATUS_CODE:-------------------------------://
+        #define STOP_MOTHER_FUCKER  aac2020_graquad_Halt
+
+            /** STOP MOTHERFUCKER * * * * * * * * * **/
+            /** www.youtube.com/watch?v=3kcH23tyzsI **/
+
+            //:Status code used when not in fail fast mode.
+            if(     HOS == AAC2020_GRAQUAD_FAIL_FAST ){ 
+                if( 0 != HOS_status_code ){
+                    //:SHBCE:SHOULD_HAVE_BEEN_CAUGHT_EARLIER
+                    STOP_MOTHER_FUCKER("[SHBCE]");
+                };;
+            };;
+
+            return( HOS_status_code );
+
+        #undef  STOP_MOTHER_FUCKER
+        //:-------------------------------:RETURN_STATUS_CODE://
+    }
+
+#undef   OK
+#undef  U32
+//:===================================:COMPILE_SHADER_PRIVATE://
 
 PRIVATE_FUNCTION( static void )
 fn( CheckTheProgram )( void ){
@@ -563,101 +729,192 @@ fn( CreateTheShaders )( void ){
 
 }
 
-PRIVATE_FUNCTION( static void )
-fn( CreateShaderCode )( void ){
+//:CREATESHADERCODE:=========================================://
+#define U32        uint32_t 
+#define HALT_BITCH aac2020_graquad_Halt
+#define  OK        ( 0x00 )
 
-    
+    U32
+    aac2020_graquad_CreateShaderCode(
 
-    const char*       vet_sad_src=(
-        aac2020_graquad.data.VET_SAD_SRC
-    );;
+        int    HOS /** failure_method       **/
+        //: 1: HOS == AAC2020_GRAQUAD_FAIL_FAST
+        //: 2: HOS == AAC2020_GRAQUAD_FAIL_CODE
 
-    const char*       fag_sad_src=(
-        aac2020_graquad.data.FAG_SAD_SRC
-    );;
+    )
+    {
+        /** AKA: fn( CreateShaderCode ) **/
+        
+        int HOS_status_code =( 0 /** Success / OK **/ );
 
-    const char* vet_sad_msg ="[VET_SAD_MSG]";
-    const char* fag_sad_msg ="[FAG_SAD_MSG]";
+        //:VARS:- - - - - - - - - - - - - - - - - - - - - - -://
+            //:LOAD__DATA:- - - - - - - - - - - - - - - - - -://
+            const char*              vet_sad_src=(
+                aac2020_graquad.data.VET_SAD_SRC
+            );;
+            
+            const char*              fag_sad_src=(
+                aac2020_graquad.data.FAG_SAD_SRC
+            );;
+            
+            /**  These messages are used to let us know      **/
+            /**  if "CompileShader(...)" failed because      **/
+            /**  of a bad vertex shader (vet_sad_msg)        **/
+            /**  or a fragment shader.  (fag_sad_msg)        **/
+            
+            const char* vet_sad_msg ="[VET_SAD_MSG]";
+            const char* fag_sad_msg ="[FAG_SAD_MSG]";
+            //:- - - - - - - - - - - - - - - - - -:LOAD__DATA://
+            //:OTHER_TOP_SCOPE_VARS:- - - - - - - - - - - - -://
 
-    //! Create_The_Shaders:____________________!//
-    fn( CreateTheShaders )( );
+                /** FOR:Retrieve_Shader_IDs_Generated **/
+      
+                #define T1 unsigned int /** GLuint **/ 
+                    /** T1 **/                         
+                        T1    vet_sad_iid =(0-83); 
+                        T1    fag_sad_iid =(0-84);                       
+                #undef  T1  
 
+            //:- - - - - - - - - - - - -:OTHER_TOP_SCOPE_VARS://
+        //:- - - - - - - - - - - - - - - - - - - - - - -:VARS://
+        //:ALLOCATE_SHADER_MEMORY:---------------------------://
+        if( OK == HOS_status_code ){
 
-    //! Retrieve_Shader_IDs_Generated:_________!//
-    //|RI|RI|RI|RI|RI|RI|----|RI|RI|RI|RI|RI|RI|//
-    #define T1 unsigned int /** GLuint **///|RI|//
-        /** T1 **/                        //|RI|//
-            T1        vet_sad_iid =(0-83);//|RI|//
-            T1        fag_sad_iid =(0-84);//|RI|//
-        /** T1 **/                        //|RI|//
-        /** T1 **/    vet_sad_iid =(      //|RI|//
-        aac2020_graquad.data.VET_SAD_IID   );;   //|RI|//
-        /** T1 **/                        //|RI|//
-        /** T1 **/    fag_sad_iid =(      //|RI|//
-        aac2020_graquad.data.FAG_SAD_IID   );;   //|RI|//
-        /** T1 **/                        //|RI|//
-    #undef  T1 /////////////////////////////|RI|//
-    //|RI|RI|RI|RI|RI|RI|----|RI|RI|RI|RI|RI|RI|//
+            //:ALLOCATE:-------------------------------------://
 
+                /** Creates allocations for our vertex and   **/
+                /** fragment shaders. Does not look at       **/
+                /** any shader source code.                  **/
+                
 
-    //! Compile_Vertex_Shader:_________________!//
-    //|VS|VS|VS|VS|VS|VS||||||VS|VS|VS|VS|VS|VS|//
-    fn( CompileShader )(                  //|VS|//
-        vet_sad_iid //| vet sad iid - - - //|VS|//
-    ,   vet_sad_src //| vet sad src - - - //|VS|//
-    ,   vet_sad_msg //| vet sad msg - - - //|VS|//
-    );;                                   //|VS|//
-    //|VS|VS|VS|VS|VS|VS||||||VS|VS|VS|VS|VS|VS|//
+                fn( CreateTheShaders )( );
 
-    //! Compile_FRAGMENT_Shader:_______________!//
-    //|FS|FS|FS|FS|FS|FS||||||FS|FS|FS|FS|FS|FS|//
-    fn( CompileShader )(                  //|FS|//
-        fag_sad_iid //| fag sad iid - - - //|FS|//
-    ,   fag_sad_src //| fag sad src - - - //|FS|//
-    ,   fag_sad_msg //| fag sad msg - - - //|FS|//
-    );;                                   //|FS|//
-    //|FS|FS|FS|FS|FS|FS||||||FS|FS|FS|FS|FS|FS|//
+            //:-------------------------------------:ALLOCATE://
+            //:RETRIEVE:Set_Via_Side_Effect:-----------------://
 
-    //! Link_The_Program:______________________!//
-    //|LP|LP|LP|LP|LP|LP||||||LP|LP|LP|LP|LP|LP|//
-                                          //|LP|//
-    #define D_D (aac2020_graquad.data)       //////|LP|//
-    #define C_P (AAC2020_GLEBIND.glCreateProgram)//////|LP|//
-                                          //|LP|//
-            D_D.POG_IID = C_P();          //|LP|//
-    if(     D_D.POG_IID <= 0 ){           //|LP|//
-        fn(Halt)(                         //|LP|//
-          "[D_D.POG_IID <= 0]"            //|LP|//
-        );;                               //|LP|//
-    };;                                   //|LP|//
-        PFN_glAttachShader                //|LP|//
-        AS=(AAC2020_GLEBIND.glAttachShader);         //|LP|//
-                                          //|LP|//
-        AS( D_D.POG_IID, vet_sad_iid  );  //|LP|//
-        AS( D_D.POG_IID, fag_sad_iid  );  //|LP|//
-                                          //|LP|//
-        PFN_glLinkProgram                 //|LP|//
-        LP=(AAC2020_GLEBIND.glLinkProgram);          //|LP|//
-                                          //|LP|//
-        LP( D_D.POG_IID );                //|LP|//
-                                          //|LP|//
-    #undef  D_D  ///////////////////////////|LP|//
-    #undef  C_P  ///////////////////////////|LP|//
-    //|LP|LP|LP|LP|LP|LP||||||LP|LP|LP|LP|LP|LP|//
+                /** DO::Retrieve_Shader_IDs_Generated **/
+      
+                #define T1 unsigned int /** GLuint **/                                      
+                                         vet_sad_iid =(       
+                    aac2020_graquad.data.VET_SAD_IID   );;    
+                    /** T1 **/                        
+                    /** T1 **/           fag_sad_iid =(       
+                    aac2020_graquad.data.FAG_SAD_IID   );;   
+                    /** T1 **/                         
+                #undef  T1  
+                 
+            //:-----------------:RETRIEVE:Set_Via_Side_Effect://
 
-    //! Check_The_Program:_____________________!//
-    //|========================================|//
-    fn(CheckTheProgram)(  ); //|===============|//
-    //|========================================|//
+        };; //:-----------------------:ALLOCATE_SHADER_MEMORY://
+        //:COMPILE_SHADER:ALL:-------------------------------://
+        if( OK == HOS_status_code ){
 
-    fn(ReclaimMemory_OpenGL_ShaderStuff)( );
+            //:COMPILE_SHADER:VERTEX:------------------------://
+            if( OK == HOS_status_code ){
 
-    AAC2020_GLEBIND.glUseProgram( aac2020_graquad.data.POG_IID ); 
-    fn( ErrChk )( 
-        "[2019_08_03:glUseProgram]"
-    );;
+                /** Because the USER never inputs VERTEX     **/
+                /** shader code. This will always fail fast. **/
+                HOS_status_code =(
+                fn( CompileShader )(      
 
-}
+                /**/AAC2020_GRAQUAD_FAIL_FAST /** HOS **/
+
+                ,   vet_sad_iid   //:Vertex_Shader_Integer_ID
+                ,   vet_sad_src   //:Vertex_Shader_Source
+                ,   vet_sad_msg   //:Vertex_Shader_Message
+                ));;    
+
+                if( HOS_status_code != 0 ){ 
+                    HALT_BITCH("[EXPECTED_FAIL_FAST_001]"); 
+                };;
+         
+            };; //:--------------------:COMPILE_SHADER:VERTEX://
+            //:COMPILE_SHADER:FRAGMENT:----------------------://
+            if( OK == HOS_status_code ){
+
+                /** HOS == AAC2020_GRAQUAD_FAIL_CODE         **/
+                /**         *** WHEN ***                     **/
+                /** the pipeline's fragment shader           **/
+                /** input is user defined source code.       **/
+
+                HOS_status_code =(
+                fn( CompileShader )(    
+  
+                /**/HOS
+                        //: 1. HOS == AAC2020_GRAQUAD_FAIL_CODE
+                        //: 2. HOS == AAC2020_GRAQUAD_FAIL_FAST
+
+                ,   fag_sad_iid  //:Fragment_Shader_Integer_ID                    
+                ,   fag_sad_src  //:Fragment_Shader_Source                    
+                ,   fag_sad_msg  //:Fragment_Shader_Message                    
+                ));;                                  
+            
+            };; //:------------------:COMPILE_SHADER:FRAGMENT://
+
+        };; //:---------------------------:COMPILE_SHADER:ALL://
+        //:LINK_THE_PROGRAM:---------------------------------://
+        if( OK == HOS_status_code ){ //:---------------------://
+
+            /** If everything was successful so far then:    **/
+            /** 1: create program (Allocate)                 **/
+            /** 2: attach shaders                            **/
+            /** 3: link   program (Compile I Think)          **/
+                                
+            #define D_D (aac2020_graquad.data)        
+            #define C_P (AAC2020_GLEBIND.glCreateProgram) 
+                                                   
+                    D_D.POG_IID = C_P();           
+            if(     D_D.POG_IID <= 0 ){            
+                fn(Halt)(                          
+                  "[D_D.POG_IID <= 0]"             
+                );;                                
+            };;                                    
+                PFN_glAttachShader                 
+                AS=(AAC2020_GLEBIND.glAttachShader);          
+                                                   
+                AS( D_D.POG_IID, vet_sad_iid  );   
+                AS( D_D.POG_IID, fag_sad_iid  );   
+                                                   
+                PFN_glLinkProgram                  
+                LP=(AAC2020_GLEBIND.glLinkProgram);           
+                                                   
+                LP( D_D.POG_IID );                 
+                                                   
+            #undef  D_D   
+            #undef  C_P   
+ 
+        };; //:-----------------------------:LINK_THE_PROGRAM://
+        //:MISC_STUFF_AT_THE_END:----------------------------://
+        if( OK == HOS_status_code ){
+
+            /** MISC_STUFF_AT_END: ************************* **/
+            /** Miscellanious stuff at the end that I'am not **/
+            /** going to comment because I don't remember    **/
+            /** what is does and as long as it isn't broken, **/
+            /** that is good enough for me.                  **/
+            /** ******************************************** **/
+
+            fn(CheckTheProgram)(  );  
+       
+            fn(ReclaimMemory_OpenGL_ShaderStuff)( );
+
+            AAC2020_GLEBIND.glUseProgram( 
+                aac2020_graquad.data.POG_IID 
+            );;
+
+            fn( ErrChk )( 
+                "[2019_08_03:glUseProgram]"
+            );;
+
+        };; //:------------------------:MISC_STUFF_AT_THE_END://
+
+        return( HOS_status_code );
+    }
+
+#undef OK
+#undef HALT_BITCH
+#undef U32
+//:=========================================:CREATESHADERCODE://
 
 PRIVATE_FUNCTION( static void )
 fn( JunkCode_ErrorCheckOtherLibData )(void){
@@ -1010,32 +1267,115 @@ fn(    MakeContextCurrentAndSetWindowSize )( V ){
 
 }
 
-//| Not sure if this function correctly        |//
-//| categorizes the code it invokes, hence the |//
-//| weird name.                                |//
-PRIVATE_FUNCTION( static void )
-fn( Init_NotSureWhatToCallThis_GLSetup )( void ){
+ 
+//:BUILD_GRAPHICS_PIPELINE:OPENGL:===========================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
 
-    int /** BOOL **/ make_current_worked=(
-    AAC2020_GLEBIND_wglMakeCurrent(
-    /**/AAC2020_GINAWIN_GetWinDC_ExistsNoWait()
-    ,   AAC2020_GLEBIND.handle_to_gl_rendering_context
-    ));;if(!make_current_worked){
-        aac2020_graquad_Halt(
-            //:MCFILT:MakeCurrentFailInLoopTick
-            "[aac2020_graquad:MCFILT]"
-        );;
-    };;
+    U32
+    fn( BGP_OpenGL  )( 
 
-    //:Do not create any textures! When texture
-    //:sampler switchboard's uniform is zero
-    //:it uses a default fragshader that
-    //:does not sample from texture.
-    fn(CreateShaderCode)();
-    fn(QuadSetup)();
-    fn(MakeContextCurrentAndSetWindowSize)();
+        //: A4[ #FEATURE:FAULT_TOLERANT_USER_FRAG_SHADERS# ] ://
+        //: If function fails, what should it do?            ://
+        //: AAC2020_GRAQUAD_FAIL_FAST                        ://
+        //: AAC2020_GRAQUAD_FAIL_CODE                        ://
+        int HOS /** Halt Or StatusCode (failure_method) **/
 
-}
+    ){
+    #define OK ( 0 )
+
+        #if( AAC2020_GRAQUAD_BUGHUNT_001 >= 1 ) //:##########://
+
+            printf("[BEG:BUILD_GRAPHICS_PIPELINE:OPENGL]\n");
+            printf("[HOS(failure_method)]:%d\n", HOS );
+            printf("[CODE==9001 , FAST==9002]\n");
+            fflush(stdout);
+        
+        #endif //:###########################################://
+
+        int status_code =( 0  /** success / OK **/ );
+        
+        /** BGP_OpenGL: Build Graphics Pipeline. OpenGL.  **/
+        /** Prev_Name: Init_NotSureWhatToCallThis_GLSetup **/
+
+        if( OK == status_code ){ //:-------------------------://
+
+            /** Make Open GL Context Current **/
+
+            int /** BOOL **/ make_current_worked=(
+            AAC2020_GLEBIND_wglMakeCurrent(
+            /**/AAC2020_GINAWIN_GetWinDC_ExistsNoWait()
+            ,   AAC2020_GLEBIND.handle_to_gl_rendering_context
+            ));;if(!make_current_worked){
+
+                /** Failure To Set Current Context **/
+
+                //:#HFC_ASO_BREAKAGE#::::::::::::::::::::::::://
+                assert( AAC2020_GRAQUAD_CURCON_FAIL == 0x2D4 );
+                status_code = aac2020_graquad_HOS( 
+                HOS , "[HALT:0x2D4(724)]" , 0x2D4 , 724  );;
+
+                //:#WHY_WGL_FAIL_PRINTF_HERE#::::::::::::::::://
+                #define P printf //:#########################://
+                P("[Specific_Failure_Code_Above_This_Line]\n");
+                P("[Generic_Failure_Code_Below]:%s\n",
+                AAC2020_GRAQUAD_BGP_STATUS_WGL_FAIL );
+                fflush(stdout);
+                #undef  P //:################################://
+
+            };;
+
+        };; //:----------------------------------------------://
+        if( OK == status_code ){ //:-------------------------://
+
+            /** CreateShaderCode:                            **/
+            /** Creates Vertex And Fragment Shader Code      **/
+            /** for the current pipeline setup.              **/
+            /** At the moment, pipeline is re-built when     **/
+            /** we change editors becuase different editors  **/
+            /** use different fragment shaders.              **/
+            /** DATE_WRITTEN[  2020_11_06 ]                  **/
+            /** LAST_VERIFIED[ 2020_11_06 ]                  **/
+
+            //: Do not create any textures! When texture  - -://
+            //: sampler switchboard's uniform is zero     - -://
+            //: it uses a default fragshader that         - -://
+            //: does not sample from texture.             - -://
+            status_code =(
+                //:aac2020_graquad_CreateShaderCode
+                fn(CreateShaderCode)( 
+                    HOS /** failure_method **/
+                )
+            );;
+
+        };; //:----------------------------------------------://
+        if( OK == status_code ){ //:-------------------------://
+            
+            //[ EVERYTHING_ELSE_FAILS_FAST ----------------- ]//
+            
+            //:#WHY_EVERYTHING_FAILS_FAST_HERE_IN_BGP#://
+
+            fn(QuadSetup)();
+            fn(MakeContextCurrentAndSetWindowSize)();
+
+            //[ ----------------- EVERYTHING_ELSE_FAILS_FAST ]//
+
+        };; //:----------------------------------------------://
+
+
+        #if( AAC2020_GRAQUAD_BUGHUNT_001 >= 1 ) //:##########://
+
+            printf("[END:BUILD_GRAPHICS_PIPELINE:OPENGL]\n");
+            fflush(stdout);
+        
+        #endif //:###########################################://
+
+        return( status_code );
+
+    #undef OK
+    }
+
+#undef U32
+//:===========================:BUILD_GRAPHICS_PIPELINE:OPENGL://
 
 PRIVATE_FUNCTION( static void )
 fn(Init_HaltIfChecksumsFail)(){
@@ -1069,7 +1409,17 @@ fn( Init )( void ){
 
     fn( Init_HaltIfChecksumsFail )( );
     fn( Init_Data )( );
-    fn( Init_NotSureWhatToCallThis_GLSetup )( );
+
+    //: If this fails, crash immediately. :::::::::::::::::::://
+    fn( BGP_OpenGL )( AAC2020_GRAQUAD_FAIL_FAST );
+
+
+    #if( AAC2020_GRAQUAD_BUGHUNT_001 >= 1 )
+        printf("\n");
+        printf("[EXITING:GRAQUAD.Init()]\n");
+        printf("\n");
+        fflush(stdout);
+    #endif
 
 }
 void FN(Init)( void ){
@@ -1417,8 +1767,9 @@ RT(void)   AAC2020_GRAQUAD_Ping(      void ){
 //:============:REMOVED_BECAUSE_NO_LONGER_A_PROJECT_IN_ITSELF://
 //:ALLOW_FOR_RE_LOADING_DIFFERENT_FRAGMENT_SHADERS:==========://
 
+
     int
-    AAC2020_GRAQUAD_ReLoadFragShader(
+    AAC2020_GRAQUAD_ReLoadFragShader_ErrorsNotAllowed(
         const char* const frag_shader_str
     ,   const  int        frag_shader_len
     )
@@ -1431,32 +1782,49 @@ RT(void)   AAC2020_GRAQUAD_Ping(      void ){
         /**     Re-use library initialization code to        **/
         /**     load arbitrary fragment shader source.       **/
 
-        //:Make sure reported length of shader matches
-        //:the length we find when using strlen(...).
-        int len_chk=( strlen( frag_shader_str ));
-        if( len_chk        != frag_shader_len ){
-            aac2020_graquad_Halt("[SHADER_LEN_CHK_FAIL]");
-        };;
+        //:RELOAD_FRAGMENT_SHADER:---------------------------://
+        //[DO_NOT_EXTRACT_CODE_TO_FUNCTION:------------------]//
 
-        //: Alter shader reference set in: fn( Init_Data )( );
-        aac2020_graquad.data.FAG_SAD_SRC=(
-            frag_shader_str
-        );;
+            /** * * #DO_NOT_EXTRACT:COPY_PASTE_PAIR:001# * * **/
+ 
 
-        //:Re-build your entire shader pipeline:
-        fn( Init_NotSureWhatToCallThis_GLSetup )( );
+            //:Make sure reported length of shader matches
+            //:the length we find when using strlen(...).
+            int len_chk=( strlen( frag_shader_str ));
+            if( len_chk        != frag_shader_len ){
+                aac2020_graquad_Halt("[SHADER_LEN_CHK_FAIL]");
+            };;
 
-        //:After re-building shader pipeline, re-load
-        //:your "built-in" / "standard" uniforms.
-        //:(The ones YOU (JMIM) say are standard)
-        AAC2020_GRAQUAD_ReLoadShaderUniforms();
+            //: Alter shader reference set in: fn( Init_Data )( );
+            aac2020_graquad.data.FAG_SAD_SRC=(
+                frag_shader_str
+            );;
+
+            //:BGP_OpenGL:-----------------------------------://
+            //:Re-build your entire shader pipeline:
+            //:fn( Init_NotSureWhatToCallThis_GLSetup )( );
+            aac2020_graquad_BGP_OpenGL( 
+
+                /** If fail, crash immediately, because  * * **/
+                /** errors in "frag_shader_str" are not  * * **/
+                /** allowed.                             * * **/
+                AAC2020_GRAQUAD_FAIL_FAST 
+            );; //:-------------------------------:BGP_OpenGL://
+
+            //:After re-building shader pipeline, re-load
+            //:your "built-in" / "standard" uniforms.
+            //:(The ones YOU (JMIM) say are standard)
+            AAC2020_GRAQUAD_ReLoadShaderUniforms();
+
+        //[------------------:DO_NOT_EXTRACT_CODE_TO_FUNCTION]//
+        //:---------------------------:RELOAD_FRAGMENT_SHADER://
 
         return( 0 );
     }
 
     int
     AAC2020_GRAQUAD_RFS_HACKTEST(void)
-    {
+    {            //:RFS:ReLoadFragShader
         /** AKA: ReLoadFragShader_HACKTEST                   **/
         /**                                                  **/
         /** A hackish test of "ReLoadFragShader".            **/
@@ -1465,7 +1833,7 @@ RT(void)   AAC2020_GRAQUAD_Ping(      void ){
         /** it was successful.                               **/
 
         //:AKA[ AAC2020_GRAQUAD_RFS ]
-        AAC2020_GRAQUAD_ReLoadFragShader(
+        AAC2020_GRAQUAD_ReLoadFragShader_ErrorsNotAllowed(
                     aac2020_graquad_fag_sad_src
         ,   strlen( aac2020_graquad_fag_sad_src )
         );;
@@ -1475,7 +1843,7 @@ RT(void)   AAC2020_GRAQUAD_Ping(      void ){
 
     int
     AAC2020_GRAQUAD_RFS_StatusReady(void)
-    {
+    {            //:RFS:ReloadFragShader
         /** AKA: ReLoadFragShader_StatusReady                **/
         /**                                                  **/
         /**  Call ReLoadFragShader(...) with shader code     **/
@@ -1487,7 +1855,7 @@ RT(void)   AAC2020_GRAQUAD_Ping(      void ){
         int frag_shader_len=( strlen( frag_shader_str ) );
 
         //:AKA[ AAC2020_GRAQUAD_RFS ]
-        AAC2020_GRAQUAD_ReLoadFragShader(
+        AAC2020_GRAQUAD_ReLoadFragShader_ErrorsNotAllowed(
             frag_shader_str
         ,   frag_shader_len
         );;
@@ -1509,13 +1877,113 @@ RT(void)   AAC2020_GRAQUAD_Ping(      void ){
         int frag_shader_len=( strlen( frag_shader_str ) );
     
         //:AKA[ AAC2020_GRAQUAD_RFS ]
-        AAC2020_GRAQUAD_ReLoadFragShader(
+        AAC2020_GRAQUAD_ReLoadFragShader_ErrorsNotAllowed(
             frag_shader_str
         ,   frag_shader_len
         );;
     
         return( 0 );
     }
+
+    #define U32 uint32_t /** GCC: <stdint.h> **/
+    U32
+    AAC2020_GRAQUAD_ReLoadFragShader_SyntaxErrorsOk(
+        const char* const frag_shader_str
+    ,   const  int        frag_shader_len
+    ){
+
+        assert( 0   == AAC2020_GRAQUAD_LOAD_STATUS_OK     );
+        assert( 606 == AAC2020_GRAQUAD_LOAD_STATUS_SYNERR );
+        assert( 404 == AAC2020_GRAQUAD_LOAD_STATUS_NOT_SET);
+
+        U32 load_status=(AAC2020_GRAQUAD_LOAD_STATUS_NOT_SET);
+
+
+        //:RELOAD_FRAGMENT_SHADER:---------------------------://
+        //[DO_NOT_EXTRACT_CODE_TO_FUNCTION:------------------]//
+
+            /** * * #DO_NOT_EXTRACT:COPY_PASTE_PAIR:001# * * **/
+
+            //:Make sure reported length of shader matches
+            //:the length we find when using strlen(...).
+            int len_chk=( strlen( frag_shader_str ));
+            if( len_chk        != frag_shader_len ){
+                aac2020_graquad_Halt("[SHADER_LEN_CHK_FAIL]");
+            };;
+
+            //: Alter shader reference set in: fn( Init_Data )( );
+            aac2020_graquad.data.FAG_SAD_SRC=(
+                frag_shader_str
+            );;
+
+            //:Re-build your entire shader pipeline:
+            load_status =(
+                fn( BGP_OpenGL )( AAC2020_GRAQUAD_FAIL_CODE )
+            );;
+
+            //:After re-building shader pipeline, re-load
+            //:your "built-in" / "standard" uniforms.
+            //:(The ones YOU (JMIM) say are standard)
+            AAC2020_GRAQUAD_ReLoadShaderUniforms();
+
+        //[------------------:DO_NOT_EXTRACT_CODE_TO_FUNCTION]//
+        //:---------------------------:RELOAD_FRAGMENT_SHADER://
+        //:LOAD_STATUS:VALID_SHADER_CODE_LOADED?:------------://
+    
+        if( //: AKA:AAC2020_GRAQUAD_LOAD_STATUS_SUCCESS
+                    AAC2020_GRAQUAD_LOAD_STATUS_OK
+        == load_status
+        ){
+
+            //+ OK: Do nothing. ++++++++++++++++++++++++++++ +//
+
+        }else
+        if( //:AKA: AAC2020_GRAQUAD_LOAD_STATUS_SYNTAX_ERROR
+                    AAC2020_GRAQUAD_LOAD_STATUS_SYNERR
+        == load_status
+        ){
+            //-BAD: Notify user with error message shader. - -//
+
+            //:Indirectly_Call:                              ://
+            //:AAC2020_GRAQUAD_ReLoadFragShader_ErrorsNotAllowed
+            //:                                              ://
+            //:By calling: Reload_Fragment_Shader(RFS)       ://
+            //:With out shader that displays "synerr"        ://
+            //:to notify user of a syntax error.             ://
+            AAC2020_GRAQUAD_RFS_StatusSyntaxError();
+   
+        }else
+        if( AAC2020_GRAQUAD_SHADER_FAIL
+        ==      load_status
+        ){
+
+            /** Probably a syntax error in user supplied     **/
+            /** Fragment shader. So that is what we will     **/
+            /** show to user.                                **/
+            AAC2020_GRAQUAD_RFS_StatusSyntaxError();
+
+        }else
+        if( AAC2020_GRAQUAD_CURCON_FAIL
+        ==  load_status
+        ){
+                 
+            /** If reason for failure was a failure to set   **/
+            /** current opengl context... I have no way to   **/
+            /** recover gracefully. So always fail fast.     **/
+            aac2020_graquad_Halt("[No_Way_To_Fail_Gracefully]");
+
+        }else{
+
+            printf("[load_status]:(((%d)))\n", load_status );
+            aac2020_graquad_Halt("[Bad_Load_Status]"); 
+
+        };;
+        //:------------:LOAD_STATUS:VALID_SHADER_CODE_LOADED?://
+
+        
+        return( load_status );
+    }
+    #define U32 uint32_t /** GCC: <stdint.h> **/
 
 
 //:
@@ -1541,6 +2009,20 @@ RT(void)   AAC2020_GRAQUAD_Ping(      void ){
 //|______/                                            \______|//
 #if(BOTTOM_OF_FILE_COMMENTS_SECTION) /////////////
 /** ****************************************** |||
+
+#DO_NOT_EXTRACT:COPY_PASTE_PAIR:001#
+
+    Two of these tags are in two different code blocks.
+    You might notice the code blocks are the SAME or slightly
+    different. Do NOT try to make a common 3rd utility
+    function.
+
+    We need to reserve the right for the functions
+    below to DIVERGE in the future in terms of how
+    they perform their fragment shader loading logic.
+
+    AAC2020_GRAQUAD_ReLoadFragShader_ErrorsNotAllowed
+    AAC2020_GRAQUAD_ReLoadFragShader_SyntaxErrorsOk
                                                    
 #AVOID_PLURALITY#
     Do NOT use plural forms of words.   
@@ -1674,6 +2156,60 @@ iResolution:
     Using the same variable name as that used in SHADERTOY.
     Being able to cut+paste [to|from] shadertoy should be
     advantageous.
+
+#FEATURE:FAULT_TOLERANT_USER_FRAG_SHADERS#
+
+    Some refactoring to prevent program from executing
+    "fail fast" code when problem of re-making the
+    open-gl pipeline is because of end-user loaded
+    fragment shader code. DATE[ 2002_11_06 ]
+
+ADDFOR : 
+    Means "Added For"
+    Specifically, what feature was this added for?
+
+aac2020_graquad_BGP_OpenGL:
+
+    BGP_OpenGL: BuildGraphicsPipeline - OpenGL
+    Originally Called: Init_NotSureWhatToCallThis_GLSetup
+    But that function name is:
+    
+    1: Gives less information.
+    2: Is way too many columns long in characters.
+
+#WHY_EVERYTHING_FAILS_FAST_HERE_IN_BGP#
+
+    /:: Everything else. Right now, all of this will     ::/
+    /:: FAIL_FAST ( AAC2020_GRAQUAD_FAIL_FAST )          ::/
+    /:: Because  FAIL_CODE ( AAC2020_GRAQUAD_FAIL_CODE ) ::/
+    /:: was implemented to make feature:                 ::/
+    /::                                                  ::/
+    /:: #FEATURE:FAULT_TOLERANT_USER_FRAG_SHADERS#       ::/
+    /::                                                  ::/
+    /:: Possible.                                        ::/
+
+#WHY_WGL_PRINTF_HERE#
+#WHY_WGL_FAIL_PRINTF_HERE#
+
+    //: So I can find:                             ::://
+    //: AAC2020_GRAQUAD_BGP_STATUS_WGL_FAIL, while ::://
+    //: still using unique hard coded error codes  ::://
+    //: for aac2020_graquad_HOS(...)               ::://
+
+#HCF_ASO_BREAKAGE#:
+#HFC_ASO_BREAKAGE#:
+
+    HFC_ASO_BREAKAGE: 
+        HFC:::::: Hardcode_Failure_Code
+        ASO:::::: At_Site_Of
+        BREAKAGE: BREAKAGE
+
+    //:AAC2020_GRAQUAD_BGP_STATUS_WGL_FAIL://
+    //:Hardcode failure status at site of breakage:::://
+
+A4:
+    Added_For:
+    What feature was some code added for?
                                                    
 ||| ****************************************** **/ 
 #endif ///////////////////////////////////////////
