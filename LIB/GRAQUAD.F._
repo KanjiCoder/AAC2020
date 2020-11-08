@@ -171,139 +171,7 @@
 
 #undef  U32
 //:========================================:HALTING_FUNCTIONS://
-//:RE_LOAD_SHADER_UNIFORMS:==================================://
-#define U32 uint32_t /** GCC: <stdint.h> **/
 
-    //:RE_LOAD_SHADER_UNIFORMS:iMouse:=======================://
-    #define U32 uint32_t /** GCC: <stdint.h> **/
-
-        U32 aac2020_graquad_ReLoadShaderUniforms_iMouse(
-            U32 low_word_is_x_axis
-        ,   U32 hig_word_is_y_axis
-
-        ,   U32 low_word_is_x_axis_drag_start
-        ,   U32 hig_word_is_y_axis_drag_end
-        )
-        {
-            //[ Wired up using:                              ]//
-            //[ AAC2020_GINAWIN_OnMouseMove_SetCallback(     ]//
-            //[ aac2020_graquad_ReLoadShaderUniforms_iMouse);]//
-
-            #define POG_IID  (aac2020_graquad.data.POG_IID)
-            int /** GLint **/ f32_loc =(
-                AAC2020_GLEBIND.glGetUniformLocation(
-                    POG_IID      //:Program:Program_Integer_ID
-                ,  "iMouse"      //:Shader[uniform/var]in:GLSL
-                )
-            );;
-            #undef  POG_IID
-
-            //:TODO:STORE_COPIES_IN:BASUNIF.D._:-------------://
-            #define F32 float /** 32 bits even on X64 **/
-               
-                /** Mouse is not normalized. Need to divide **/
-                /** it by "iResolution" in your shader code  **/
-                /** depending on what you are doing.         **/
-                printf("[iMouse.x:SETTING_TO]:%f\n]"
-                , ( F32 )low_word_is_x_axis );;
-                
-                printf("[iMouse.y:SETTING_TO]:%f\n]"
-                , ( F32 )hig_word_is_y_axis );;
-
-                fflush(stdout);
-
-                //:SET__UNIFORM:- - - - - - - - - - - - - - -://
-                AAC2020_GLEBIND.glUniform4f(
-                    f32_loc
-                ,   ( F32 ) low_word_is_x_axis
-                ,   ( F32 ) hig_word_is_y_axis
-
-                //: Keep identical to XY to mean             ://
-                //: "Not dragging". ">0" as in documentation ://
-                //: on wordpress makes no sense. What if you ://
-                //: wanted to drag to [0,0] ?                ://
-                ,   ( F32 ) low_word_is_x_axis_drag_start
-                ,   ( F32 ) hig_word_is_y_axis_drag_end
-                );;      
-                //:- - - - - - - - - - - - - - -:SET__UNIFORM://
-
-            #undef  F32
-            //:-------------:TODO:STORE_COPIES_IN:BASUNIF.D._://
-        
-            return( 0x00 );
-
-
-        }
-
-    #undef  U32
-    //:=======================:RE_LOAD_SHADER_UNIFORMS:iMouse://
-    //:RE_LOAD_SHADER_UNIFORMS:iTime:========================://
-    #define U32 uint32_t /** GCC: <stdint.h> **/
-
-        /** This also increments iTime **/
-        U32  aac2020_graquad_ReLoadShaderUniforms_iTime()
-        {
-            #define POG_IID  (aac2020_graquad.data.POG_IID)
-            int /** GLint **/ f32_loc =(
-                AAC2020_GLEBIND.glGetUniformLocation(
-                    POG_IID      //:Program:Program_Integer_ID
-                ,  "iTime"       //:Shader[uniform/var]in:GLSL
-                )
-            );;
-            #undef  POG_IID
-
-            aac2020_graquad_iTime += ( 1.0 / 256.0 );
-
-            #define F float //:##############################://
-            AAC2020_GLEBIND.glUniform1f(
-                f32_loc
-            ,   ( F ) aac2020_graquad_iTime
-            );;      
-
-            #undef  F //:####################################://
-        
-            return( 0x00 );
-        }
-
-    #undef  U32
-    //:=======================:RE_LOAD_SHADER_UNIFORMS:iTime://
-    //:RE_LOAD_SHADER_UNIFORMS:iResolution:==================://
-    #define U32 uint32_t /** GCC: <stdint.h> **/
-
-        U32  AAC2020_GRAQUAD_ReLoadShaderUniforms_iResolution()
-        {
-            #define POG_IID  (aac2020_graquad.data.POG_IID)
-            int /** GLint **/ f32_loc =(
-                AAC2020_GLEBIND.glGetUniformLocation(
-                    POG_IID      //:Program:Program_Integer_ID
-                ,  "iResolution" //:Shader[uniform/var]in:GLSL
-                )
-            );;
-            #undef  POG_IID
-
-            #define F float //:##############################://
-            //: khronos.org/.../gl4/html/glUniform.xhtml     ://
-            //: e.g.,glUniform3f or glUniform3fv can be used ://
-            //: to load a uniform variable array of type vec3://
-            AAC2020_GLEBIND.glUniform3f(
-                f32_loc
-            ,   ( F ) AAC2020_GINAWIN_GetClient_WID()
-            ,   ( F ) AAC2020_GINAWIN_GetClient_HIG()
-            ,   ( F ) 1 /** No 3rd dimension on 2D window    **/
-            );;         /** But shadertoy "iResolution" is a **/
-                        /** vec3, so use 1 to leave value    **/
-                        /** unchanged when multiplying with  **/
-                        /** something else.                  **/
-            #undef  F //:####################################://
-        
-            return( 0x00 );
-        }
-
-    #undef  U32
-    //:==================:RE_LOAD_SHADER_UNIFORMS:iResolution://
-    
-#undef U32
-//:==================================:RE_LOAD_SHADER_UNIFORMS://
 //:WINDOW_RESIZE_CALLBACK_FUNCTION:==========================://
 //:CALLED_BY:AAC2020_OnWindowResize:=========================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
@@ -325,7 +193,8 @@
         //:--------:Resize_OpenGL_Viewport_To_New_Screen_Size://
         //:Re_Load_Shader_Uniforms:--------------------------://
 
-            AAC2020_GRAQUAD_ReLoadShaderUniforms_iResolution();
+        /** Done By:                                         **/
+        /** AAC2020_BASUNIF_ReLoadShaderUniforms_iResolution **/
 
         //:--------------------------:Re_Load_Shader_Uniforms://
 
@@ -1526,13 +1395,12 @@ fn( Init )( void ){
         fflush(stdout);
     #endif
 
-    //: This part specifically could lead to trouble if you  ://
-    //: try to let initializer be idempotent. Because we use ://
-    //: a LIBCHAN, we need to make sure library initializers ://
-    //: only execute once. -John Mark DATE[11_06_2020]       ://
-    /** Enabled "iMouse" uniform. **/
-    AAC2020_GINAWIN_OnMouseMove_SetCallback(
-    aac2020_graquad_ReLoadShaderUniforms_iMouse );
+    /** **************************************************** ***
+        iMouse listener callback moved to: BASUNIF.F._   
+
+        AAC2020_GINAWIN_OnMouseMove_SetCallback(
+        AAC2020_*******_ReLoadShaderUniforms_iMouse );;
+    *** **************************************************** **/
 
     aac2020_graquad_inited=( 777 );return;
 }
@@ -1693,7 +1561,22 @@ fn( LoopTick )( void ){
     /** AKA: aac2020_graquad_LoopTick **/
     //:GA_LoopTick  //:#ORIGINALLY_GA_LOOPTICK#
 
-    aac2020_graquad_ReLoadShaderUniforms_iTime();
+    
+    /** **************************************************** **/
+    /** Originally called:                                   **/
+    /** aac2020_graquad_ReLoadShaderUniforms_iTime();        **/
+    /** But refactored all uniforms into "BASUNIF.F._"       **/
+    /**                                                      **/
+    /** This is a bit convoluted, so let's do our best       **/
+    /** to keep notes so people in the future can find       **/
+    /** where this is happening.                             **/
+    /**                         FFU:From_Future_Update       **/
+            if( aac2020_graquad_FFU_iTime_HAS ){             ///
+                aac2020_graquad_FFU_iTime_PFN( 0x00 );       ///
+            };;            /**  FFU:From_Future_Update **/   ///
+    /**                                                      **/
+    /**                                                      **/
+    /** **************************************************** **/
 
     //[ GUTTED_THIS_FUNCTION. Does_Nothing. ]//
     fn( HandleWindowLoopMessage_WM_PAINT )( );
@@ -1931,7 +1814,7 @@ RT(void)   AAC2020_GRAQUAD_Ping(      void ){
             //:After re-building shader pipeline, re-load
             //:your "built-in" / "standard" uniforms.
             //:(The ones YOU (JMIM) say are standard)
-            AAC2020_GRAQUAD_ReLoadShaderUniforms_iResolution();
+            //: AAC2020_GRAQUAD_ReLoadShaderUniforms_iResolution();
 
         //[------------------:DO_NOT_EXTRACT_CODE_TO_FUNCTION]//
         //:---------------------------:RELOAD_FRAGMENT_SHADER://
@@ -2041,7 +1924,8 @@ RT(void)   AAC2020_GRAQUAD_Ping(      void ){
             //:After re-building shader pipeline, re-load
             //:your "built-in" / "standard" uniforms.
             //:(The ones YOU (JMIM) say are standard)
-            AAC2020_GRAQUAD_ReLoadShaderUniforms_iResolution();
+            //: AAC2020_GRAQUAD_ReLoadShaderUniforms_iResolution();
+        
 
         //[------------------:DO_NOT_EXTRACT_CODE_TO_FUNCTION]//
         //:---------------------------:RELOAD_FRAGMENT_SHADER://

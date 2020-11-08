@@ -1,0 +1,341 @@
+//: 123_123 ------------------------------------------------ ://
+//: BASUNIF: BASic_UNIForms (.F._ : FUNC )                   ://
+//: 1234567                                                  ://
+//: Dependency Chain (LIBCHAN) snapshot from here:           ://
+//:  <1st> --> GRAQUAD --> BASUNIF --> FRAGBED --> <last>    ://
+//: -------------------------------------------------------- ://
+//:I_LL_TAKE_RIGIDNESS_OVER_FLEXIBLE_CODE:===================://
+
+    #if( AAC2020_INCLUDE_GRAQUAD <= 0 )
+    #error "[BASUNIF.F._:LIBCHAN(LibraryChain)ERROR:001]"
+    #endif
+
+//:===================:I_LL_TAKE_RIGIDNESS_OVER_FLEXIBLE_CODE://
+//:HALT_IS_OFTEN_THE_FIRST_FUNCTION:=========================://
+
+    void
+    aac2020_basunif_Halt( const char* msg )
+    {
+        printf( "[AAC2020_basunif_Halt]:%s\n" , msg );
+        fflush( stdout );
+        exit( 666 );
+    }
+
+//:=========================:HALT_IS_OFTEN_THE_FIRST_FUNCTION://
+//:RE_LOAD_SHADER_UNIFORMS:==================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+
+    //:RE_LOAD_SHADER_UNIFORMS:iMouse:=======================://
+    #define U32 uint32_t /** GCC: <stdint.h> **/
+
+        U32 aac2020_basunif_ReLoadShaderUniforms_iMouse(
+            U32 low_word_is_x_axis
+        ,   U32 hig_word_is_y_axis
+
+        ,   U32 low_word_is_x_axis_drag_start
+        ,   U32 hig_word_is_y_axis_drag_end
+        )
+        {
+            //[ Wired up using:                              ]//
+            //[ AAC2020_GINAWIN_OnMouseMove_SetCallback(     ]//
+            //[ aac2020_basunif_ReLoadShaderUniforms_iMouse);]//
+
+            #define POG_IID  (aac2020_graquad.data.POG_IID)
+            int /** GLint **/ f32_loc =(
+                AAC2020_GLEBIND.glGetUniformLocation(
+                    POG_IID      //:Program:Program_Integer_ID
+                ,  "iMouse"      //:Shader[uniform/var]in:GLSL
+                )
+            );;
+            #undef  POG_IID
+
+            //:TODO:STORE_COPIES_IN:BASUNIF.D._:-------------://
+            #define F32 float /** 32 bits even on X64 **/
+               
+
+                #if( AAC2020_BASUNIF_ECHO_IMOUSE_POS >= 1 ) ////
+                /** Mouse is not normalized. Need to divide **/
+                /** it by "iResolution" in your shader code  **/
+                /** depending on what you are doing.         **/
+                printf("[iMouse.x:SETTING_TO]:%f\n]"
+                , ( F32 )low_word_is_x_axis );;
+                
+                printf("[iMouse.y:SETTING_TO]:%f\n]"
+                , ( F32 )hig_word_is_y_axis );;
+                #endif //:###################################://
+
+                fflush(stdout);
+
+                //:SET__UNIFORM:- - - - - - - - - - - - - - -://
+                AAC2020_GLEBIND.glUniform4f(
+                    f32_loc
+                ,   ( F32 ) low_word_is_x_axis
+                ,   ( F32 ) hig_word_is_y_axis
+
+                //: Keep identical to XY to mean             ://
+                //: "Not dragging". ">0" as in documentation ://
+                //: on wordpress makes no sense. What if you ://
+                //: wanted to drag to [0,0] ?                ://
+                ,   ( F32 ) low_word_is_x_axis_drag_start
+                ,   ( F32 ) hig_word_is_y_axis_drag_end
+                );;      
+                //:- - - - - - - - - - - - - - -:SET__UNIFORM://
+
+            #undef  F32
+            //:-------------:TODO:STORE_COPIES_IN:BASUNIF.D._://
+        
+            return( 0x00 );
+
+
+        }
+
+    #undef  U32
+    //:=======================:RE_LOAD_SHADER_UNIFORMS:iMouse://
+    //:RE_LOAD_SHADER_UNIFORMS:iTime:========================://
+    #define U32 uint32_t /** GCC: <stdint.h> **/
+
+        /** This also increments iTime **/
+        U32  aac2020_basunif_ReLoadShaderUniforms_iTime()
+        {
+            #define POG_IID  (aac2020_graquad.data.POG_IID)
+            int /** GLint **/ f32_loc =(
+                AAC2020_GLEBIND.glGetUniformLocation(
+                    POG_IID      //:Program:Program_Integer_ID
+                ,  "iTime"       //:Shader[uniform/var]in:GLSL
+                )
+            );;
+            #undef  POG_IID
+
+            aac2020_basunif_iTime += ( 1.0 / 256.0 );
+
+            #define F float //:##############################://
+            AAC2020_GLEBIND.glUniform1f(
+                f32_loc
+            ,   ( F ) aac2020_basunif_iTime
+            );;      
+
+            #undef  F //:####################################://
+        
+            return( 0x00 );
+        }
+
+    #undef  U32
+    //:=======================:RE_LOAD_SHADER_UNIFORMS:iTime://
+    //:RE_LOAD_SHADER_UNIFORMS:iResolution:==================://
+    #define U32 uint32_t /** GCC: <stdint.h> **/
+
+        U32  AAC2020_BASUNIF_ReLoadShaderUniforms_iResolution(
+            U32 u32
+        )
+        {
+            if( u32 ){ /** Reserved For Furture Use **/ };
+
+            #define POG_IID  (aac2020_graquad.data.POG_IID)
+            int /** GLint **/ f32_loc =(
+                AAC2020_GLEBIND.glGetUniformLocation(
+                    POG_IID      //:Program:Program_Integer_ID
+                ,  "iResolution" //:Shader[uniform/var]in:GLSL
+                )
+            );;
+            #undef  POG_IID
+
+            #define F float //:##############################://
+            //: khronos.org/.../gl4/html/glUniform.xhtml     ://
+            //: e.g.,glUniform3f or glUniform3fv can be used ://
+            //: to load a uniform variable array of type vec3://
+            AAC2020_GLEBIND.glUniform3f(
+                f32_loc
+            ,   ( F ) AAC2020_GINAWIN_GetClient_WID()
+            ,   ( F ) AAC2020_GINAWIN_GetClient_HIG()
+            ,   ( F ) 1 /** No 3rd dimension on 2D window    **/
+            );;         /** But shadertoy "iResolution" is a **/
+                        /** vec3, so use 1 to leave value    **/
+                        /** unchanged when multiplying with  **/
+                        /** something else.                  **/
+            #undef  F //:####################################://
+        
+            return( 0x00 );
+        }
+
+    #undef  U32
+    //:==================:RE_LOAD_SHADER_UNIFORMS:iResolution://
+    //:RE_LOAD_SHADER_UNIFORMS:RFS:==========================://
+    #define U32 uint32_t /** GCC: <stdint.h> **/
+
+        U32
+        AAC2020_BASUNIF_RFS_ReLoadShaderUniforms( U32 u32 )
+        {
+        /** ************************************************ ***
+            This function updates any uniforms that  
+            need to be re-enstated after a shader    
+            re-load using:
+
+            1: AAC2020_GRAQUAD_RFS_StatusReady()
+            2: AAC2020_GRAQUAD_RFS_StatusSyntaxError()
+            3: AAC2020_GRAQUAD_HACKTEST()
+            4: AAC2020_GRAQUAD_ReLoadFragShader_ErrorsNotAllowed
+            5: AAC2020_GRAQUAD_ReLoadFragShader_SyntaxErrorsOk
+        *** ************************************************ **/
+
+            if( u32 ){ /** Reserved for future use **/ };
+
+            
+            AAC2020_BASUNIF_ReLoadShaderUniforms_iResolution(
+                0x00
+            );;
+
+
+            return( 0x00 );
+        }
+
+
+    #undef  U32
+    //:==========================:RE_LOAD_SHADER_UNIFORMS:RFS://
+    
+#undef U32
+//:==================================:RE_LOAD_SHADER_UNIFORMS://
+//:PUBLIC_INITIALIZATION_FUNCTION:===========================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+
+    U32
+    AAC2020_BASUNIF_Init( U32 u32 )
+    {
+        if( u32 ){ /** Reserved For Future Use **/ };
+
+        if( 0 != aac2020_basunif_inited ){
+            aac2020_basunif_Halt("[NOT_IDEMPOTENT_INIT]");
+        };;
+
+        //: This part specifically could lead to trouble     ://
+        //: if you try to let initializer be idempotent.     ://
+        //: Because we use a LIBCHAN,we need to make sure    ://
+        //: library initializers only execute once.          ://
+        //: -John  Mark DATE[11_06_2020]                     ://
+        /** Enabled "iMouse" uniform. **/
+        //: AAC2020_GINAWIN_OnMouseMove_SetCallback(
+        //: aac2020_basunif_ReLoadShaderUniforms_iMouse );
+
+        //:WIRE_UP:iMouse:===================================://
+        #define HAS AAC2020_GINAWIN_OnMouseMove_HAS
+        #define PFN AAC2020_GINAWIN_OnMouseMove_PFN
+
+            if( ((void*)0) != PFN || 0 != HAS ){
+                aac2020_basunif_Halt("[iMouse:AlreadyWired]");
+            };;
+                                                               
+            HAS=( 1 );             
+            PFN=( aac2020_basunif_ReLoadShaderUniforms_iMouse );           
+    
+        #undef  HAS
+        #undef  PFN
+        //:===================================:WIRE_UP:iMouse://
+        //:WIRE_UP:iTime:====================================://
+        #define HAS aac2020_graquad_FFU_iTime_HAS
+        #define PFN aac2020_graquad_FFU_iTime_PFN
+
+            /** This looks a bit ugly. But in retrospect.    **/
+            /** 1. Less code than creating a "SetCallback"   **/
+            /**    function.                                 **/
+            /** 2. Easier to figure out where is happening.  **/
+            /**    Since 1 less level of indirection by      **/
+            /**    removing a "SetCallback" function.        **/
+
+            if( HAS != 0 || PFN!=((void*)0)){
+                aac2020_basunif_Halt("[iTime:AlreadyWired]");
+            };;
+
+            HAS=(1);
+            PFN=( aac2020_basunif_ReLoadShaderUniforms_iTime );;
+        
+        #undef  HAS
+        #undef  PNF
+        //:====================================:WIRE_UP:iTime://
+
+        return( 0x00 );
+    }
+
+
+#undef  U32
+//:===========================:PUBLIC_INITIALIZATION_FUNCTION://
+//:LOOP_TICK:================================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+
+    U32
+    AAC2020_BASUNIF_LoopTick( U32 u32 ) 
+    {
+        if( u32 ){ /** Reserved For Future Use **/ };
+    
+        //:This is an empty stub. But from a linear perspective
+        //:It is kind of where you might expect all updates
+        //:of uniforms to happen. So let's go over where that
+        //:is happening here in the comments.
+
+        /** iMouse **/
+            
+            //: CALLED_BY:                                   ://
+            //:                                              ://
+            //: AAC2020_GINAWIN_OnMouseMove_SetCallback(     ://
+            //: aac2020_basunif_ReLoadShaderUniforms_iMouse);://
+            //: STORED IN:                                   ://
+            //: AAC2020_GINAWIN_OnMouseMove_PFN              ://
+
+        /** iTime **/
+
+            //: CALLED_BY: --------------------------------- ://
+            //: aac2020_graquad_LoopTick()'s                 ://
+            //: Via:aac2020_graquad_FFU_iTime_PFN()          ://
+            //:                                              ://
+            //: Wired Up In BASUNIF_Init().                  ://
+            //: aac2020_graquad_FFU_iTime_PFN=(              ://
+            //: aac2020_basunif_ReLoadShaderUniforms_iTime );://
+            //:                                              ://
+            //: FFU:From_Future_Update                       ://
+            //:                                              ://
+            //: REASON_FOR_CONVOLUTION: -------------------- ://
+            //: Need to update uniforms before re-draw.      ://
+            //: -------------------------------------------- ://
+
+
+        return( 0x00 );
+    }
+
+#undef  U32
+//:LOOP_TICK:================================================://
+//:WINDOW_RESIZE_CALLBACK_FUNCTION:==========================://
+//:CALLED_BY:AAC2020_OnWindowResize:=========================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+
+    U32  AAC2020_BASUNIF_OnWindowResize( U32 u32 )
+    {
+        printf("[AAC2020_BASUNIF_OnWindowResize]\n");
+
+        if( u32 ){ /** reserved for future use **/ };
+
+        //:Resize_OpenGL_Viewport_To_New_Screen_Size:--------://
+
+            //[ Done by: AAC2020_GRAQUAD_OnWindowResize(...) ]//
+    
+            /** We are going with philosophy of :            **/
+            /** "Flat is better then nested."                **/
+            /** So using "LIBCHAN" concept instead of        **/
+            /** "DIPCHAN" concept.                           **/
+            /**                                              **/
+            /** DIPCHAN : DIscrete Project Chain             **/
+            /** LIBCHAN : LIbrary Chain (using sub libraries)**/
+
+        //:--------:Resize_OpenGL_Viewport_To_New_Screen_Size://
+        //:Re_Load_Shader_Uniforms:--------------------------://
+
+            AAC2020_BASUNIF_ReLoadShaderUniforms_iResolution(
+                0x00
+            );;
+
+        //:--------------------------:Re_Load_Shader_Uniforms://
+
+
+        return( 0x00 );
+    }
+
+#undef  U32
+//:==========================:WINDOW_RESIZE_CALLBACK_FUNCTION://
+//:=========================:CALLED_BY:AAC2020_OnWindowResize://

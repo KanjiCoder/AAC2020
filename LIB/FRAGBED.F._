@@ -398,13 +398,39 @@
                     str           //: frag_shader_str
                 ,   strlen( str ) //: frag_shader_len
                 );;
+                AAC2020_BASUNIF_RFS_ReLoadShaderUniforms(
+                    0x00
+                );;
 
             }else
             if( shader_found <= 0 ){
 
                 if( '0' == chr_key ){
 
+                    /** Any time you call a shader reload    **/
+                    /** function, ( AAC2020_GRAQUAD_RFS_*** )**/
+                    /** you need to call a                   **/
+                    /** uniform reload                       **/
+                    /** ( AAC2020_BASUNIF_RFS_*** )          **/
+                    /** directly after.                      **/
+                    /**                                      **/
+                    /** The reason they are two calls that   **/
+                    /** always need to be paired is.         **/
+                    /**                                      **/
+                    /** 1: Flat is better than nested.       **/
+                    /** 2: GRAQUAD cannot call BASUNIF       **/
+                    /**    functions. But the BASUNIF        **/
+                    /**    function needs to be called       **/
+                    /**    after the GRAQUAD function.       **/
+                    /**                                      **/
+                    /**    This is because of our            **/
+                    /**    LIBCHAN(s) library ordering.      **/
+                    /**                                      **/
+                    /** -John Mark DATE[2020_11_08]          **/
                     AAC2020_GRAQUAD_RFS_StatusReady();
+                    AAC2020_BASUNIF_RFS_ReLoadShaderUniforms(
+                        0x00
+                    );;
                 
                 };;
 

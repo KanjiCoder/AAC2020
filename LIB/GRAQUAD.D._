@@ -10,9 +10,22 @@
 //:    NOT_THE_LIBRARYS_JOB: #1: Advanced Shaders.           ://
 //:    NOT_THE_LIBRARYS_JOB: #2: Atomic_Alice_2_Data_Structs ://
 //:----------------------------------------------------------://
+//:A_BIT_CONVOLUTED_SO_PUT_FIRST_SO_YOU_NOTICE_IT:===========://
+
+    #define U32 uint32_t /** GCC: <stdint.h> **/
+    typedef U32 (*AAC2020_GRAQUAD_UPDATE_iTime_SIG)(U32);
+    #define PFN   AAC2020_GRAQUAD_UPDATE_iTime_SIG
+    #define HAS   int
+                        //: FFU:From_Future_Update ::::::::::://
+    HAS     aac2020_graquad_FFU_iTime_HAS =( 0 );
+    PFN     aac2020_graquad_FFU_iTime_PFN =( 0 );
+                        //: FFU:From_Future_Update ::::::::::://
+    #undef U32
+    #undef PFN
+    #undef HAS
+
+//:===========:A_BIT_CONVOLUTED_SO_PUT_FIRST_SO_YOU_NOTICE_IT://
 //:CONFIGURATION:============================================://
-
-
 
     #define MACRO_AAC2020_GRAQUAD_DEBUG_MODE 1
 
@@ -70,21 +83,7 @@
         
 
 //:============================:FRAG_SHADER_LOAD_STATUS_FLAGS://
-//:SHADER_UNIFORMS:==========================================://
 
-    /** **************************************************** ***
-        aac2020_graquad_iResolution:
-        iResolution is not used because it exists as
-        the client width and height in GINAWIN.
-        We don't want to fractionate our variable stores.
-        That will lead to memory coherency issues.
-    *** **************************************************** **/
-    
-    float   aac2020_graquad_iTime =( 0 );
-    #define aac2020_graquad_iResolution ( "DO_NOT_USE" )
-
-
-//:==========================================:SHADER_UNIFORMS://
  
 //| 12345678 TESA:TextureSampler WIND:Window:  |//
 //| TESAWIND:                                  |//

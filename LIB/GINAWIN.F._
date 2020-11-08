@@ -90,27 +90,29 @@
 //:ADDED_DATE[2020_11_06]:===================================://
 #define PFN AAC2020_GINAWIN_PFN_2020_11_06_ONMOUSEMOVE
 #define U32 uint32_t /** GCC: <stdint.h> **/
+
+    /** Removed. I think "SetCallback" functions just        **/
+    /** add an extra level of indirection that makes the     **/ 
+    /** code harded to follow. DATE[ 2020_11_08 ]            **/
     
-    U32
-    AAC2020_GINAWIN_OnMouseMove_SetCallback(
-        PFN pfn
-    ){
-        if( ((void*)0) == pfn ){
-            printf("[FATAL_ERROR:Void_MouseMoveCallback]");
-            fflush(stdout);
-            exit(666);
-        };;
-
-        AAC2020_GINAWIN_OnMouseMove_HAS=( 1 );
-        AAC2020_GINAWIN_OnMouseMove_PFN=( pfn );
-
-        return( 0x00 );
-    }
+//-  U32                                                     -//
+//-  AAC2020_GINAWIN_OnMouseMove_SetCallback(                -//
+//-      PFN pfn                                             -//
+//-  ){                                                      -//
+//-      if( ((void*)0) == pfn ){                            -//
+//-          printf("[FATAL_ERROR:Void_MouseMoveCallback]"); -//
+//-          fflush(stdout);                                 -//
+//-          exit(666);                                      -//
+//-      };;                                                 -//
+//-                                                          -//
+//-      AAC2020_GINAWIN_OnMouseMove_HAS=( 1 );              -//
+//-      AAC2020_GINAWIN_OnMouseMove_PFN=( pfn );            -//
+//-                                                          -//
+//-      return( 0x00 );                                     -//
+//-  }                                                       -//
         
 #undef U32
 #undef PFN
-//:=========
-
 //:===================================:ADDED_DATE[2020_11_06]://
 //:===================================:SET_MOUSE_MOVE_HANDLER://
 //:SET_RESIZE_CALLBACK:======================================://

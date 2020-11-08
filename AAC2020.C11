@@ -5,10 +5,11 @@
 //:LIBRARY_CHAIN_ORDER:SUMMARY:==============================://
 
 #define macro_libchan_order_GINAWIN ( 1 ) //:Graphics & Window
-#define macro_libchan_order_DUI     ( 2 ) //:Dialog_UI(s)
-#define macro_libchan_order_GLEBIND ( 3 ) //:OpenGL Bindings
-#define macro_libchan_order_GRAQUAD ( 4 ) //:Graphics QUAD
-#define macro_libchan_order_FRAGBED ( 5 ) //:FRAGMENT_st_BED
+#define macro_libchan_order_DUI     ( 2 ) //:Dialog________UI(s)
+#define macro_libchan_order_GLEBIND ( 3 ) //:OpenGL_EasyBINDings
+#define macro_libchan_order_GRAQUAD ( 4 ) //:Graphics_____QUAD
+#define macro_libchan_order_BASUNIF ( 5 ) //:BASic____UNIForms
+#define macro_libchan_order_FRAGBED ( 6 ) //:FRAGMENT_test_BED
 
 //:==============================:LIBRARY_CHAIN_ORDER:SUMMARY://
 //:ABOUT_THIS_PROJECT:=======================================://
@@ -43,7 +44,7 @@
     |      |                                    |
     +------V------------------------------------+
     |                                           |
-    |   Basic Grapics. (Just a colored Quad)    |
+    |   Basic_Grapics. (Just a colored Quad)    |
     |   Advanced shaders & data come later.     |
     |                                           |
     |  (OpenGL)     (OpenCL)     (Vulkan)       |
@@ -64,15 +65,20 @@
     |      |          GLEBIND: GL_Easy_BINDings |
     |      |                                    |
     +------V------------------------------------+
+    |      |              Intermediary_Graphics |
+    |      |              ( Informal Category ) |
+    |      |              ( Informal Category ) |
+    |      V                                    |
+    |   BASUNIF : BASicUNIForms                 |
     |      |                                    |
-    |      |    Intermediary Graphics:          |
+    |      |                                    |
     |      V                                    |
     |   FRAGBED : 1. Creates shadertoy like     |
     |                program we could sell.     |
-                                                |
+    |                                           |
     |             2. Shaders 1-9 activated      |
     |                when pressing keyboard.    |
-                                                |
+    |                                           |
     |             3. Can override shader code   |
     |                by editing serialized      |
     |                FRAGBED_###.frag files.    |
@@ -125,15 +131,16 @@
     /**                                                      **/
     /** John Mark Isaac Madison DATE[2020_11_01]             **/
 
-    #define AAC2020_MAC_LIBCHAN_CUR ( 5 ) //:<-- Compile_To_Here
+    #define AAC2020_MAC_LIBCHAN_CUR ( 6 ) //:<-- Compile_To_Here
 
     #define AAC2020_MAC_LIBCHAN_001 ( 1 )
     #define AAC2020_MAC_LIBCHAN_002 ( 2 )
     #define AAC2020_MAC_LIBCHAN_003 ( 3 )
     #define AAC2020_MAC_LIBCHAN_004 ( 4 )
     #define AAC2020_MAC_LIBCHAN_005 ( 5 )
+    #define AAC2020_MAC_LIBCHAN_006 ( 6 )
 
-    #define AAC2020_MAC_LIBCHAN_MAX ( 5 ) //:<-- Complile_Limit
+    #define AAC2020_MAC_LIBCHAN_MAX ( 6 ) //:<-- Complile_Limit
 
 //:============================================:LIBRARY_CHAIN://
 //:DATA:DATA_BEFORE_FUNCTIONS:===============================://
@@ -179,6 +186,15 @@
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_005 )
 
+        //:BASUNIF:BASic_UNIForms
+        #include "LIB/BASUNIF.D._"        
+        #define AAC2020_INCLUDE_BASUNIF ( 5 )
+        #else   //:     INCLUDE_BASUNIF ( - )
+        #define AAC2020_INCLUDE_BASUNIF ( 0 )
+        #endif
+
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_006 )
+
         //:FRAGBED:FRAGMENT_shader_test_BED
         #include "LIB/FRAGBED.D._"    
    
@@ -192,7 +208,7 @@
         #include "LIB/FRAGBED_DEFAULT_SHADERS\FDS_008._"
         #include "LIB/FRAGBED_DEFAULT_SHADERS\FDS_009._"
 
-        #define AAC2020_INCLUDE_FRAGBED ( 5 )
+        #define AAC2020_INCLUDE_FRAGBED ( 6 )
         #else   //:     INCLUDE_FRAGBED ( - )
         #define AAC2020_INCLUDE_FRAGBED ( 0 )
         #endif
@@ -246,9 +262,18 @@
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_005 )
 
+        //:BASUNIF:BASic_UNIForms
+        #include "LIB/BASUNIF.F._"    
+        #define AAC2020_INCLUDE_BASUNIF ( 5 )
+        #else   //:     INCLUDE_BASUNIF ( - )
+        #define AAC2020_INCLUDE_BASUNIF ( 0 )
+        #endif
+
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_006 )
+
         //:FRAGBED:FRAGMENT_shader_test_BED
         #include "LIB/FRAGBED.F._"    
-        #define AAC2020_INCLUDE_FRAGBED ( 5 )
+        #define AAC2020_INCLUDE_FRAGBED ( 6 )
         #else   //:     INCLUDE_FRAGBED ( - )
         #define AAC2020_INCLUDE_FRAGBED ( 0 )
         #endif
@@ -528,8 +553,15 @@
     AAC2020_GraphicsUpdateTick()
     { //:FUNCTION_BODY
 
+        #if( AAC2020_INCLUDE_GRAQUAD >= 1 ) //:##############://
         AAC2020_GRAQUAD_LoopTick(); //:Update Painted Quad.
-
+        #endif
+        
+        #if( AAC2020_INCLUDE_BASUNIF >= 1 ) //:##############://
+        //: Notes at to where different uniforms are updated
+        //: can be found in AAC2020_BASUNIF_LoopTick comments.
+        AAC2020_BASUNIF_LoopTick( 0x00 );  
+        #endif
 
         return( 0 );
 
@@ -629,6 +661,15 @@
             #undef  call
             #undef  CALL
             #endif //:#######################################://
+            #if( AAC2020_INCLUDE_BASUNIF >= 1 ) //:##########://
+
+                /** Sets up callback to update:              **/
+                /** iMouse uniform.                          **/
+                AAC2020_BASUNIF_Init( 0x00 );
+                AAC2020_BASUNIF_RFS_ReLoadShaderUniforms(0x00);
+                //:------------:RFS:Reload_Fragment_Shader
+
+            #endif //:#######################################://
             #if( AAC2020_INCLUDE_FRAGBED >= 1 ) //:##########://
 
                 AAC2020_FRAGBED_Init( );
@@ -715,18 +756,50 @@
               #error "[OUT_OF_ORDER:AAC2020_INCLUDE_GRAQUAD]"
 #endif
 #endif
+#if( 0                           != AAC2020_INCLUDE_BASUNIF )
+#if( macro_libchan_order_BASUNIF != AAC2020_INCLUDE_BASUNIF )
+              #error "[OUT_OF_ORDER:AAC2020_INCLUDE_BASUNIF]"
+#endif
+#endif
 #if( 0                           != AAC2020_INCLUDE_FRAGBED )
 #if( macro_libchan_order_FRAGBED != AAC2020_INCLUDE_FRAGBED )
               #error "[OUT_OF_ORDER:AAC2020_INCLUDE_FRAGBED]"
 #endif
 #endif
 
+    //:ONE_MORE_REDUNDANT_CHECK_BEFORE_WE_UNDEFINE:==========://
+
+    #if( macro_libchan_order_GINAWIN != 1 )
+    #error "[TAIL_ORDER_FAIL:GINAWIN]"
+    #endif
+    #if( macro_libchan_order_DUI     != 2 )
+    #error "[TAIL_ORDER_FAIL:DUI]"
+    #endif
+    #if( macro_libchan_order_GLEBIND != 3 )
+    #error "[TAIL_ORDER_FAIL:GLEBIND]"
+    #endif
+    #if( macro_libchan_order_GRAQUAD != 4 )
+    #error "[TAIL_ORDER_FAIL:GRAQUAD]"
+    #endif
+    #if( macro_libchan_order_BASUNIF != 5 )
+    #error "[TAIL_ORDER_FAIL:BASUNIF]"
+    #endif
+    #if( macro_libchan_order_FRAGBED != 6 )
+    #error "[TAIL_ORDER_FAIL:FRAGBED]"
+    #endif
+
+    //:==========:ONE_MORE_REDUNDANT_CHECK_BEFORE_WE_UNDEFINE://
     //:DONT_POLLUTE_OTHER_PEOPLES_CODE_WITH_MACROS:==========://
+
+    /** I could see how these might be useful to other       **/
+    /** people using the library.... But lets stick with a   **/
+    /** YAGNI (You_Arent_Going_To_Need_It) philosophy.       **/
 
     #undef  macro_libchan_order_GINAWIN 
     #undef  macro_libchan_order_DUI     
     #undef  macro_libchan_order_GLEBIND 
     #undef  macro_libchan_order_GRAQUAD 
+    #undef  macro_libchan_order_BASUNIF
     #undef  macro_libchan_order_FRAGBED 
 
     //:==========:DONT_POLLUTE_OTHER_PEOPLES_CODE_WITH_MACROS://

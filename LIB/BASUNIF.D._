@@ -1,0 +1,42 @@
+//: 123_123 ------------------------------------------------ ://
+//: BASUNIF: BASic_UNIForms (.D._ : DATA )                   ://
+//: 1234567                                                  ://
+//: Dependency Chain (LIBCHAN) snapshot from here:           ://
+//:  <1st> --> GRAQUAD --> BASUNIF --> FRAGBED --> <last>    ://
+//: -------------------------------------------------------- ://
+//:I_LL_TAKE_RIGIDNESS_OVER_FLEXIBLE_CODE:===================://
+
+    #if( AAC2020_INCLUDE_GRAQUAD <= 0 )
+    #error "[BASUNIF.D._:LIBCHAN(LibraryChain)ERROR:001]"
+    #endif
+
+//:===================:I_LL_TAKE_RIGIDNESS_OVER_FLEXIBLE_CODE://
+//:MISC_STATE:===============================================://
+
+    int aac2020_basunif_inited = ( 0 );
+
+    #define AAC2020_BASUNIF_ECHO_IMOUSE_POS ( 0 )
+
+//:===============================================:MISC_STATE://
+//:SHADER_UNIFORMS:==========================================://
+
+    /** **************************************************** ***
+        aac2020_basunif_iResolution:
+        iResolution is not used because it exists as
+        the client width and height in GINAWIN.
+        We don't want to fractionate our variable stores.
+        That will lead to memory coherency issues.
+    *** **************************************************** **/
+    
+    float   aac2020_basunif_iTime =( 0 );
+    #define aac2020_basunif_iResolution ( "DO_NOT_USE" )
+    #define aac2020_basunif_iMouse ( "DECLARE_HERE_IF_NEED" )
+
+
+//:==========================================:SHADER_UNIFORMS://
+
+
+
+#ifdef AAC2020_GRAQUAD_ECHO_IMOUSE_POS
+    #error "[RENAMED_TO:AAC2020_BASUNIF_ECHO_IMOUSE_POS]"
+#endif
