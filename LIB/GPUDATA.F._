@@ -1,0 +1,784 @@
+
+//[ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ]//
+//#######: INSTANCES OF AAC2020_GPUDATA DO NOT BELONG :#######//
+//#######: IN [ GPUDATA.D._ ]OR[ GPUDATA.H._ ]        :#######//
+//#######: SEE[ DOC/WHY_NO_INSTANCES_IN_GPUDATA.TXT ] :#######//
+//[ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ]//
+//:----------------------------------------------------------://
+//: GPUDATA.F._ (FUNC) : Managing Functions For GPUDATA.D._  ://
+//:                                                          ://
+//: NOTE: GPUDATA is NOT JUST "Graphics data"                ://
+//:       SEE_MORE[ DOC/WHY_GPUDATA.TXT ]                    ://
+//:----------------------------------------------------------://
+
+//: DOTADIW: Functions that manage syncrhonization of    ::::://
+//:          512-x-512 RGBA textures between GPU & CPU.  ::::://
+//:         ( Operates on: AAC2020_GPUDATA instances )   ::::://
+
+    #define AAC2020_GPUDATA_DEBUG_MODE ( 1 )
+
+    #if( AAC2020_GPUDATA_DEBUG_MODE >= 1 ) //:###############://
+
+        #define PIX_R_G_B_A   AAC2020_GPUDATA_Check_PIX_R_G_B_A
+        #define PIX_P_X_P_Y   AAC2020_GPUDATA_Check_PIX_P_X_P_Y
+
+    #else
+        //: if no debug mode, remove call sites.
+
+        #define PIX_R_G_B_A(PIX,R,G,B,A,TRACEBACK_MESSAGE)
+        #define PIX_P_X_P_Y(PIX,P_X,P_Y,TRACEBACK_MESSAGE)
+
+    #endif //:###############################################://
+
+
+//:HALTING_FUNCTIONS_AND_MESSAGES:===========================://
+
+    //:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=================://
+        void 
+        aac2020_gpudata_Halt( const char* msg_err )
+        {
+            #define P printf
+            P("[FATAL_ERROR:AAC2020_GPUDATA]:%s\n", msg_err );
+            #undef  P
+
+            fflush(stdout);
+            exit(666);
+        }
+    //:=================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+    //:HALT_WITH_TRACEBACK_MESSAGE:==========================://
+
+        void 
+        aac2020_gpudata_HaltWithTrace( 
+            const char* msg_err /** what went wrong **/
+        ,   const char* msg_t_b /** Trace Back To Call Site **/
+                                /** #TRACEBACK_MESSAGE# **/
+        )
+        {
+            #define P printf
+            #define E msg_err
+            #define T msg_t_b
+
+            P("[FATAL_ERROR::::AAC2020_GPUDATA]:%s\n", E );
+            P("[FATAL_ERROR:TRACE_BACK_MESSAGE]:%s\n", T );
+
+            #undef  P
+            #undef  E
+            #undef  T
+
+            fflush(stdout);
+            exit( 13 /**DoesntReallyMatter**/ );
+        }
+
+    //:==========================:HALT_WITH_TRACEBACK_MESSAGE://
+//:===========================:HALTING_FUNCTIONS_AND_MESSAGES://
+//:FAIL_FAST_INPUT_CHECKS:===================================://
+#define HWT aac2020_gpudata_HaltWithTrace
+#define PIX struct AAC2020_GPUDATA
+#define U32 uint32_t /** GCC: <stdint.h> **/
+#define U08 uint8_t  /** GCC: <stdint.h> **/
+#define STR const char*
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    void
+    AAC2020_GPUDATA_Check_PIX_P_X_P_Y(
+        PIX* pix
+    ,   U32  p_x
+    ,   U32  p_y
+    ,   STR  t_b /** #TRACEBACK_MESSAGE# / msg_t_b **/
+    )
+    {
+        if( ((void*)0) == pix   ){  HWT("[N_PTR:PIX]", t_b); };
+
+        if( (int)p_x < 0        ){  HWT("[N.OOB:P_X]", t_b); };
+        if(      p_x > (512 - 1)){  HWT("[P.OOB:P_X]", t_b); };
+                                  
+        if( (int)p_y < 0        ){  HWT("[N.OOB:P_Y]", t_b); };
+        if(      p_y > (512 - 1)){  HWT("[P.OOB:P_Y]", t_b); };
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    void
+    AAC2020_GPUDATA_Check_PIX_R_G_B_A(
+        PIX*  pix       /** AAC2020_GPUDATA   **/
+    ,   U08*  r         /** OUTPUT_PARAM      **/
+    ,   U08*  g         /** OUTPUT_PARAM      **/
+    ,   U08*  b         /** OUTPUT_PARAM      **/
+    ,   U08*  a         /** OUTPUT_PARAM      **/
+    ,   const char* t_b /** TRACEBACK_MESSAGE **/
+    )
+    {
+        //:MAKE_SURE_ALL_POINTERS_NON_NULL:------------------://
+
+            if( ((void*)0) == r ){ HWT("[RGBAP:R!!]" , t_b); };
+            if( ((void*)0) == g ){ HWT("[RGBAP:G!!]" , t_b); };
+            if( ((void*)0) == b ){ HWT("[RGBAP:B!!]" , t_b); };
+            if( ((void*)0) == a ){ HWT("[RGBAP:A!!]" , t_b); };
+            if( ((void*)0) ==pix){ HWT("[RGBAP:P!!]" , t_b); };
+
+        //:------------------:MAKE_SURE_ALL_POINTERS_NON_NULL://
+        //:MAKE_SURE_RESTRICT_KEYWORD_NOT_VIOLATED:----------://
+
+            if( 0 == r          ){ HWT("[RGBAP:001]" , t_b); };
+            if( g == r          ){ HWT("[RGBAP:002]" , t_b); };
+            if( b == r          ){ HWT("[RGBAP:003]" , t_b); };
+            if( a == r          ){ HWT("[RGBAP:004]" , t_b); };
+                                
+            if( r == g          ){ HWT("[RGBAP:005]" , t_b); };
+            if( 0 == g          ){ HWT("[RGBAP:006]" , t_b); };
+            if( b == g          ){ HWT("[RGBAP:007]" , t_b); };
+            if( a == g          ){ HWT("[RGBAP:008]" , t_b); };
+                                            
+            if( r == b          ){ HWT("[RGBAP:009]" , t_b); };
+            if( g == b          ){ HWT("[RGBAP:010]" , t_b); };
+            if( 0 == b          ){ HWT("[RGBAP:011]" , t_b); };
+            if( a == b          ){ HWT("[RGBAP:012]" , t_b); };
+                                            
+            if( r == a          ){ HWT("[RGBAP:013]" , t_b); };
+            if( g == a          ){ HWT("[RGBAP:014]" , t_b); };
+            if( b == a          ){ HWT("[RGBAP:015]" , t_b); };
+            if( 0 == a          ){ HWT("[RGBAP:016]" , t_b); };
+
+        //:----------:MAKE_SURE_RESTRICT_KEYWORD_NOT_VIOLATED://
+
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+#undef  HWT
+#undef  PIX
+#undef  U32
+#undef  U08
+#undef  STR
+//:===================================:FAIL_FAST_INPUT_CHECKS://
+//:MATH_FUNCTIONS:===========================================://
+#define WID 512
+#define HIG 512
+#define M_P ( (512 * 512 * 1) - 1 ) /** MAX:Pixel_____Index **/
+#define M_C ( (512 * 512 * 4) - 1 ) /** MAX:Component_Index **/
+#define M_X ( 512 - 1 )             /** MAX:X **/
+#define M_Y ( 512 - 1 )             /** MAX:Y **/
+#define ERR aac2020_gpudata_Halt
+#define U32 uint32_t /** GCC: <stdint.h> **/
+    
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    /** Centralizing these functions will help me avoid      **/
+    /** making mistakes. They could be inlined. But lets     **/
+    /** not do that right now, as it makes the code more     **/
+    /** likely to break during compilation.                  **/
+    /** https://www.geeksforgeeks.org/inline-function-in-c/  **/
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    U32
+    AAC2020_GPUDATA_p_x_p_y_CTO_com_dex( 
+        U32 p_x
+    ,   U32 p_y
+    )
+    {
+        if( (int)p_x <  0  ){ ERR("[WTF:2020_11_14:A]"); };
+        if( (int)p_y <  0  ){ ERR("[WTF:2020_11_14:B]"); };
+        if(      p_x > M_X ){ ERR("[WTF:2020_11_14:C]"); };
+        if(      p_y > M_Y ){ ERR("[WTF:2020_11_14:D]"); };
+
+        U32 pix_dex = p_x + ( WID * p_y);
+        U32 com_dex =( 4 * pix_dex ); /** 4 == RGBA **/
+        return( com_dex );
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    void
+    AAC2020_GPUDATA_com_dex_CTO_p_x_p_y(
+        U32       com_dex
+    ,   U32* restrict p_x
+    ,   U32* restrict p_y
+    )
+    {
+        //:WTFHM:WHAT_THE_FUCKING_HELL_MAN:------------------://
+        if( (int)com_dex < 0       ){ ERR("[WTFHM:001]"); };
+        if(      com_dex > M_C     ){ ERR("[WTFHM:002]"); };
+        if(      ((void*)0) == p_x ){ ERR("[WTFHM:003]"); };
+        if(      ((void*)0) == p_y ){ ERR("[WTFHM:004]"); };
+        if(      p_x == p_y        ){ ERR("[WTFHM:005]"); };
+        if(      com_dex % 4 != 0  ){ 
+
+                printf("[NOT_DIVISIBLE_BY_4:com_dex]:%d\n"
+                                           ,com_dex   );;
+                fflush(stdout);
+
+                //:SIDE_TRACKED_BUT_FUCKYOU_ITS_MY_CODE:-----://
+
+                //:How much is six figures? If you have 100% ://
+                //:markup on your product. And after 10%     ://
+                //:sales tax.                                ://
+               
+                /** G_Y: Gross profit per year. **/
+                /** G_D: Gross profit per day . **/
+                float K = ( 1000 );
+                float G_Y = ( 100 * K );
+                float G_D  = ( G_Y / 365 );
+
+                /** B_T: Before 10% tax                      **/
+                /** **************************************** **/
+                /** 0.9 is your percent KEEP *************** **/
+                /** G_D = B_T * 0.9;         *************** **/
+                float B_T = ( G_D / 0.9 );
+                /** **************************************** **/
+
+                /** B_M: Before Markup of 200%               **/
+                /** **************************************** **/
+                float M_U = 2.0; //:markup percentage.
+                float M_T = 1.0 / M_U; //:Markup tax.
+                /** EXAMPLE: If you sell for 800% markup, **/
+                /** That means 1/8th is expenses. So you  **/
+                /** can think of that as a 1/8th tax.     **/
+                float P_K = ( 1.0 - M_T );
+                if( P_K <= 0 ){ ERR("[BadPercentKeep]"); };
+                float B_M = ( B_T / P_K );
+                /** **************************************** **/
+                
+                /** At given tax rate and markup rate. **/
+
+                //: 608 / 2 * 0.9 * 365 == Close To 100K
+                printf("[SIX_FIGURES_IS:B_M]%f\n",B_M);
+                fflush(stdout);
+
+                //:-----:SIDE_TRACKED_BUT_FUCKYOU_ITS_MY_CODE://
+                 
+                ERR("[ERROR:SIX_FIGURES_IS_ONLY]"); 
+
+        };;
+        //:------------------:WTFHM:WHAT_THE_FUCKING_HELL_MAN://
+
+        U32 pix_dex = ( com_dex / 4 )           ;
+                                                ;
+        U32 val_p_x =  pix_dex            % WID ;
+        U32 val_p_y = (pix_dex - val_p_x )/ WID ;
+                                                ;
+        /** Load Output Parameters **/          ;
+        (*p_x) = val_p_x                        ;
+        (*p_y) = val_p_y                        ;
+    
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+#undef  WID
+#undef  HIG
+#undef  M_P 
+#undef  M_C 
+#undef  M_X 
+#undef  M_Y
+#undef  ERR
+#undef  U32
+//:===========================================:MATH_FUNCTIONS://
+//:APPLY_CHANGES_TO_GPU(DEVICE):=============================://
+#define U08 uint8_t  /** GCC: <stdint.h> **/
+#define PIX struct AAC2020_GPUDATA
+#define WID 512
+#define HIG 512
+
+    U08
+    AAC2020_GPUDATA_ApplyChangesToGPU(
+        PIX* pix /** AAC2020_GPUDATA **/
+    )
+    {
+        if( ((void*)0) == pix ){
+            aac2020_gpudata_Halt("[NULL:GPUDATA:001]");
+        }else{
+            aac2020_gpudata_Halt("[TODO:GPUDATA:001]");
+        };;
+            
+        
+        return( 0x00 );
+    }
+
+#undef  WID
+#undef  HIG
+#undef  PIX
+#undef  U08
+//:=============================:APPLY_CHANGES_TO_GPU(DEVICE)://
+//:PUT_PIXEL_ON_CPU(HOST):===================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+#define U08 uint8_t  /** GCC: <stdint.h> **/
+#define PIX struct AAC2020_GPUDATA
+#define WID 512
+#define HIG 512
+
+    U08
+    AAC2020_GPUDATA_PutPixelOnCPU_RGBA( 
+
+        PIX* pix /** AAC2020_GPUDATA **/
+
+    ,   U32  p_x
+    ,   U32  p_y
+
+    ,   U08    r
+    ,   U08    g
+    ,   U08    b
+    ,   U08    a
+    )
+    {
+        //:RGBA will always be in range. No Debug For Them.
+        PIX_P_X_P_Y( pix,p_x,p_y, "[DEBUG_INPUTS:001]");  
+ 
+        U32 com_dex =( 0 ); //:COMponent_inDEX
+
+        com_dex = AAC2020_GPUDATA_p_x_p_y_CTO_com_dex( 
+                                  p_x,p_y             );;
+
+        pix -> cpu_pix[ com_dex + 0 ] = r;
+        pix -> cpu_pix[ com_dex + 1 ] = g;
+        pix -> cpu_pix[ com_dex + 2 ] = b;
+        pix -> cpu_pix[ com_dex + 3 ] = a;
+
+        return( 0x00 );
+    }
+
+    
+    U08
+    AAC2020_GPUDATA_PutPixelOnCPU_U32( 
+        PIX* pix /** AAC2020_GPUDATA **/
+
+    ,   U32  p_x
+    ,   U32  p_y
+
+    ,   U32  RGBA
+    )
+    {
+        //:RGBA will always be in range. No Debug For Them.
+        PIX_P_X_P_Y( pix,p_x,p_y , "[DEBUG_INPUTS:005]");
+           
+        U32 r = ( RGBA >>24 ) & 0xFF;
+        U32 g = ( RGBA >>16 ) & 0xFF;
+        U32 b = ( RGBA >> 8 ) & 0xFF;
+        U32 a = ( RGBA >> 0 ) & 0xFF;
+
+        AAC2020_GPUDATA_PutPixelOnCPU_RGBA(
+        pix , p_x , p_y , r , g , b , a    );;
+
+        return( 0x00 );
+    }
+
+#undef  WID
+#undef  HIG
+#undef  PIX
+#undef  U08
+#undef  U32
+//:===================================:PUT_PIXEL_ON_CPU(HOST)://
+//:GET_PIXEL_ON_CPU(HOST):===================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+#define U08 uint8_t  /** GCC: <stdint.h> **/
+#define PIX struct AAC2020_GPUDATA
+#define WID 512
+#define HIG 512
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    void /** KEEP_VOID_TO_AVOID_CONFUSION **/
+
+    AAC2020_GPUDATA_GetPixelOnCPU_RGBA( 
+        PIX*   restrict pix  /** AAC2020_GPUDATA **/
+
+    ,   U32             p_x
+    ,   U32             p_y
+
+    ,   U08*   restrict r    /** OUTPUT_PARAM **/
+    ,   U08*   restrict g    /** OUTPUT_PARAM **/
+    ,   U08*   restrict b    /** OUTPUT_PARAM **/
+    ,   U08*   restrict a    /** OUTPUT_PARAM **/
+    )
+    {
+        //: Debug RGBA because they could be null.
+        PIX_R_G_B_A( pix,r,g,b,a , "[DEBUG_INPUTS:002]");  
+        PIX_P_X_P_Y( pix,p_x,p_y , "[DEBUG_INPUTS:004]");
+
+        if( ((void*)0) == pix ){
+            aac2020_gpudata_Halt("[NULL:GPUDATA:004]");
+        }else{
+
+            U32 pix_dex = p_x + ( WID * p_y);
+            U32 com_dex = pix_dex * 4; /** RGBA == 4 **/
+
+            (*r )= pix -> cpu_pix[ com_dex + 0 ];
+            (*g )= pix -> cpu_pix[ com_dex + 1 ];
+            (*b )= pix -> cpu_pix[ com_dex + 2 ];
+            (*a )= pix -> cpu_pix[ com_dex + 3 ];
+
+        };;
+
+        return; /** KEEP_VOID_TO_AVOID_CONFUSION **/
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    
+    U32
+    AAC2020_GPUDATA_GetPixelOnCPU_U32( 
+        PIX* pix /** AAC2020_GPUDATA **/
+
+    ,   U32  p_x
+    ,   U32  p_y
+    )
+    {
+
+        PIX_P_X_P_Y( pix,p_x,p_y , "[DEBUG_INPUTS:003]");
+
+        if( ((void*)0) == pix ){
+            aac2020_gpudata_Halt("[NULL:GPUDATA:005]");
+        }else{
+            aac2020_gpudata_Halt("[TODO:GPUDATA:005]");
+
+
+        };;
+
+        return( 0x00 );
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+#undef  WID
+#undef  HIG
+#undef  PIX
+#undef  U08
+#undef  U32
+//:===================================:GET_PIXEL_ON_CPU(HOST)://
+//:INSTANCE_INITIALIZER:=====================================://
+#define GPUDATA struct AAC2020_GPUDATA
+#define U32 uint32_t /** GCC: <stdint.h> **/
+
+    U32
+    AAC2020_GPUDATA_InitInstance( GPUDATA* gpudata )
+    {
+        /** Named "InitInstance" and NOT "InstanceInit"  * * **/
+        /** So what if you CTRL+F for "GPUDATA_Init"     * * **/
+        /** You will find "GPUDATA_InitInstance"         * * **/
+
+        if( ((void*)0) == gpudata ){
+            aac2020_gpudata_Halt("[NULL_GPUDATA_INSTANCE]");
+        };;
+
+        AAC2020_VITAL_TODO( "[AAC2020_GPUDATA_InitInstance]" );
+
+        return( 0x00 );
+    }
+
+#undef  U32
+#undef  GPUDATA
+//:=====================================:INSTANCE_INITIALIZER://
+//:TEST_CODE:================================================://
+#define U08 uint8_t  /** GCC: <stdint.h> **/
+#define U32 uint32_t /** GCC: <stdint.h> **/
+#define PIX struct AAC2020_GPUDATA
+
+    //:TEST_CODE:COORDINATE_CONVERSION:======================://
+    #define MAX ((512*512*4)-1) /** MAX COMPONENT INDEX **/
+    #define M_X ((     512 )-1) /** MAX PIXEL     INDEX **/
+    #define M_Y ((     512 )-1) /** MAX PIXEL     INDEX **/
+
+        U32
+        AAC2020_GPUDATA_Test_Coordinate_Conversion( void )
+        {
+            /**  Test component indexes. These are NOT the   **/
+            /**  same thing as pixel indexes. The index      **/
+            /**  represents the red component of whatever    **/
+            /**  pixel you are trying to grab.               **/
+
+            U32 d_1; //:Component Index #1
+            U32 d_2; //:Component Index #2
+
+            U32 p1x;
+            U32 p1y;
+
+            U32 p2x;
+            U32 p2y;
+
+            /** Increments by 4 because each component index **/
+            /** Should be the first element of our RGBA      **/
+            /** chunk of bytes.                              **/
+            for( d_1 = 0; d_1 <= MAX;  (((d_1 += 4)))  ){
+
+                if( d_1 % 4 != 0 ){
+                    printf("[d_1]:%d\n", d_1 );
+                    fflush(stdout);
+                    aac2020_gpudata_Halt("[ALREADY_FUCKED]");
+                };;
+
+                AAC2020_GPUDATA_com_dex_CTO_p_x_p_y(
+                    d_1, &p1x , &p1y
+                );;
+      
+                d_2 = AAC2020_GPUDATA_p_x_p_y_CTO_com_dex(
+                          p1x , p1y
+                );;
+
+                if( d_2 != d_1 ){
+
+                    printf("[d_1<>d_2]...\n");
+
+                    printf("\n");
+
+                    printf("[d_1]:%d\n", d_1 );
+                    printf("[d_2]:%d\n", d_2 );
+
+                    printf("\n");
+
+                    printf("[p1x]:%d\n", p1x );
+                    printf("[p1y]:%d\n", p1y );
+
+                    printf("\n");
+
+                    fflush(stdout);
+
+                    aac2020_gpudata_Halt("[D1D2:FAIL]");
+                };;
+            };;
+
+            for( p1x = 0; p1x <= M_X; p1x++ ){
+            for( p1y = 0; p1y <= M_Y; p1y++ ){
+
+                d_1 = AAC2020_GPUDATA_p_x_p_y_CTO_com_dex(
+                                      p1x,p1y             );;
+
+                
+                if( d_1 % 4 != 0 ){
+                    printf("[d_1]:%d\n" , d_1 );
+                    fflush(stdout);
+                    aac2020_gpudata_Halt("[ALREADY_WRONG]");
+                };;
+
+                AAC2020_GPUDATA_com_dex_CTO_p_x_p_y(
+                                    d_1  , &p2x,&p2y
+                );;
+      
+                if( p1x != p2x ){
+                    aac2020_gpudata_Halt("[PT_X:FAIL]");
+                };;
+                if( p1y != p2y ){
+                    aac2020_gpudata_Halt("[PT_Y:FAIL]");
+                };;
+            };;};;
+           
+            return( 0x00 );
+        }
+
+    #undef  M_X
+    #undef  M_Y
+    #undef  MAX
+    //:======================:TEST_CODE:COORDINATE_CONVERSION://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    U32
+    AAC2020_GPUDATA_Test_CPU_Only( PIX* pix )
+    {
+
+        U32 com    = 0;
+        U32 com_max=( ( 512 * 512 * 4 ) - 1 );
+
+        U32 p_x;
+        U32 p_y;
+
+        U08 r_1;
+        U08 g_1;
+        U08 b_1;
+        U08 a_1;
+
+        U08 r_2;
+        U08 g_2;
+        U08 b_2;
+        U08 a_2;
+
+        //:ALMOST_IDENTICAL_LOOPS:===========================://
+
+            /** The difference in these two loops is in  * * **/
+            /** how "p_x" and "p_y" are derived.         * * **/
+            /** Everything else should be the same.      * * **/
+
+            //:HELP_ASSURE_LOOPS_ARE_SAME:===================://
+            U32 loop_times_loop_0001 =( 0 );
+            U32 loop_times_loop_0002 =( 0 );
+            U32 loop_check_sums_0001 =( 0 );
+            U32 loop_check_sums_0002 =( 0 );
+            //:===================:HELP_ASSURE_LOOPS_ARE_SAME://
+            //:LOOP_0001:====================================://
+            for( p_x = 0; p_x <= (512 - 1); p_x ++ ){
+            for( p_y = 0; p_y <= (512 - 1); p_y ++ ){
+
+                r_1 =   p_x         % 255;
+                g_1 =   p_y         % 255;
+                b_1 = ( p_x + p_y ) % 255;
+                a_1 = ( p_x * p_y ) % 255;
+
+                AAC2020_GPUDATA_PutPixelOnCPU_RGBA(
+                    pix, p_x, p_y,  r_1 ,  g_1 ,  b_1 ,  a_1
+                );;
+
+                AAC2020_GPUDATA_GetPixelOnCPU_RGBA(
+                    pix, p_x, p_y, &r_2 , &g_2 , &b_2 , &a_2
+                );;
+
+                #define H aac2020_gpudata_Halt
+                if( r_1 != r_2 ){ H("[AYE:R_1!=R_2]"); };
+                if( g_1 != g_2 ){ H("[AYE:G_1!=G_2]"); };
+                if( b_1 != b_2 ){ H("[AYE:B_1!=B_2]"); };
+                if( a_1 != a_2 ){ H("[AYE:A_1!=A_2]"); };
+                #undef  H
+
+                loop_times_loop_0001++;
+                loop_check_sums_0001=( r_1+g_1+b_1+a_1 );
+
+            };;};; //:=============================:LOOP_0001://
+            //:LOOP_0002:====================================://
+            for( com = 0; com <= com_max; ((( com += 4 ))) ){
+
+                if( com % 4 != 0 ){
+                    printf("[com]:%d\n" , com );
+                    fflush(stdout);
+                    aac2020_gpudata_Halt("[YOUVE_BEEN_HAD]");
+                };;
+                    
+                AAC2020_GPUDATA_com_dex_CTO_p_x_p_y(
+                    com, &p_x, &p_y 
+                );;
+
+                r_1 =   p_x         % 255;
+                g_1 =   p_y         % 255;
+                b_1 = ( p_x + p_y ) % 255;
+                a_1 = ( p_x * p_y ) % 255;
+
+                AAC2020_GPUDATA_PutPixelOnCPU_RGBA(
+                    pix, p_x, p_y,  r_1 ,  g_1 ,  b_1 ,  a_1
+                );;
+
+                AAC2020_GPUDATA_GetPixelOnCPU_RGBA(
+                    pix, p_x, p_y, &r_2 , &g_2 , &b_2 , &a_2
+                );;
+
+                #define H aac2020_gpudata_Halt
+                if( r_1 != r_2 ){ H("[BEE:R_1!=R_2]"); };
+                if( g_1 != g_2 ){ H("[BEE:G_1!=G_2]"); };
+                if( b_1 != b_2 ){ H("[BEE:B_1!=B_2]"); };
+                if( a_1 != a_2 ){ H("[BEE:A_1!=A_2]"); };
+                #undef  H
+
+                loop_times_loop_0002++;
+                loop_check_sums_0002=( r_1+g_1+b_1+a_1 );
+
+            };; //:================================:LOOP_0002://
+            //:HELP_ASSURE_LOOPS_ARE_SAME:===================://
+            if( loop_times_loop_0001 != loop_times_loop_0002 ){
+                aac2020_gpudata_Halt("[LOOP_TIMES_FAIL]");
+            };;
+            if( loop_check_sums_0001 != loop_check_sums_0002 ){
+                aac2020_gpudata_Halt("[CHECK_SUMS_FAIL]");
+            };;
+            //:===================:HELP_ASSURE_LOOPS_ARE_SAME://
+
+        //:===========================:ALMOST_IDENTICAL_LOOPS://
+
+        return( 0x00 );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    U32
+    AAC2020_GPUDATA_Test_CPU_AND_GPU()
+    {
+        //:This would require setting up an openGL
+        //:texture using struct AAC2020_GPUDATA
+        //:
+        //:We would need a routine to wire up to GPU.
+        //:Does such routine belong in "GPUDATA"....
+        //:
+        //:Yes, I think so.
+
+        //:TODO
+
+        //: Calling: "AAC2020_GPUDATA_ApplyChangesToGPU()"
+        //: After setting pixels is a necessity to properly
+        //: test this.
+
+        AAC2020_VITAL_TODO( "[VITAL_TODO_2020_11_14]" );
+
+        return( 0x00 );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    U32
+    AAC2020_GPUDATA_TestAll()
+    {
+
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+
+        /** For lifetime of function only. For testing. **/
+        PIX pix = {0};
+
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+
+        AAC2020_GPUDATA_Test_Coordinate_Conversion();
+
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+
+        /** TEST CPU(Host) Before GPU(Device)  * * * * * * * **/
+
+        AAC2020_GPUDATA_Test_CPU_Only( &pix );
+
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+
+        /** Testing of GPU will require using texture    * * **/
+        /** querying functions on CPU side that we would * * **/
+        /** normally NOT use because they violate        * * **/
+        /** the entire purpose of keeping a seperate     * * **/
+        /** copy on CPU and GPU.                         * * **/
+
+        AAC2020_GPUDATA_Test_CPU_AND_GPU( &pix );
+
+        return( 0x00 );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+#undef U08
+#undef U32
+#undef PIX
+//:================================================:TEST_CODE://
+//:LIBRARY_INIT_FUNCTION:====================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+
+    U32
+    AAC2020_GPUDATA_Init( U32 u32 )
+    {
+        if( u32 ){ /** Reserved For Future Use **/ };
+
+        /** ************************************************ **/
+        /** Unit Test should be called in the init function  **/
+        /** So that testing code is force on startup.        **/
+        /** Removing test code (if ever) should be saved     **/
+        /** for long down the road when we have a final      **/
+        /** product.                                         **/
+        /**                                                  **/
+        /** In the mean time, make it a PAIN IN THE ASS      **/
+        /** to avoid running tests. Because everything in    **/
+        /** this world takes the path of least resistance.   **/
+        /**                                                  **/
+        /** As above, so below. As below, so above.          **/
+        /**                                                  **/
+        /**     ABOVE: Laws Of Physics                       **/
+        /**     BELOW: Laws Of Mental Effort                 **/
+        /**                                                  **/    
+        /** ************************************************ **/
+        AAC2020_GPUDATA_TestAll();
+
+        return( 0x00 );
+    }
+
+#undef  U32
+//:==========================================================://
+//:CLEANUP_YOUR_MACRO_MESS:==================================://
+
+
+    #undef  PIX_R_G_B_A
+    #undef  PIX_P_X_P_Y
+
+
+//:==================================:CLEANUP_YOUR_MACRO_MESS://
+//[ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ]//
+//#######: INSTANCES OF AAC2020_GPUDATA DO NOT BELONG :#######//
+//#######: IN [ GPUDATA.D._ ]OR[ GPUDATA.H._ ]        :#######//
+//#######: SEE[ DOC/WHY_NO_INSTANCES_IN_GPUDATA.TXT ] :#######//
+//[ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ]//

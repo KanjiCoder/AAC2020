@@ -1,0 +1,92 @@
+
+//: GPUDATA_PAINT5D: ( .F._ : FuncFile )
+
+//[ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ]//
+//[  #PATTERN_BREAKER#:                                      ]//                 
+//[  Full Namespace Is:  AAC2020_GPUDATA_PAINT5D             ]//
+//[  You may have been expecting AAC2020_PAINT5D   #TAG_P5D# ]//
+//[                                                          ]//
+//[  Leave comment here so that people can easily find what  ]//
+//[  they are looking for when searching for AAC2020_PAINT5D ]//
+//[ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ]//
+//:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=====================://
+#define P printf
+
+    void 
+    aac2020_gpudata_paint5d_Halt( const char* msg_err )
+    {
+        P("[FATAL:aac2020_gpudata_paint5d_Halt]:%s\n"
+        , msg_err );;
+        
+        fflush(stdout);
+        exit(  11 /** 4*20-69 **/ );
+    }
+
+#undef  P
+//:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+//:INITIALIZE_PAINT5D:=======================================://
+#define U32     uint32_t /** GCC: <stdint.h> **/
+#define paint5d ACC2020_GPUDATA_PAINT5D_dat  
+#define ERR     aac2020_gpudata_paint5d_Halt
+
+    U32
+    AAC2020_GPUDATA_PAINT5D_Init( U32 u32 )
+    {
+        if( u32 ){ /** Reserved for future use **/ };
+
+        //:ALL_MEMBERS_OF_PAINT5D:---------------------------://
+
+            /** SBE: [Set/Put]Before_Init **/
+
+            paint5d.g_pixel.tex_lot   = 0         ; /** SBE **/
+         //:paint5d.g_pixel.pix_nam   = "paint5d" ; /** SBE **/
+            paint5d.pix_nam[ 0 ] = 'p' ;          ;
+            paint5d.pix_nam[ 1 ] = 'a' ;          ;
+            paint5d.pix_nam[ 2 ] = 'i' ;          ;
+            paint5d.pix_nam[ 3 ] = 'n' ;          ;
+            paint5d.pix_nam[ 4 ] = 't' ;          ;
+            paint5d.pix_nam[ 5 ] = '5' ;          ;
+            paint5d.pix_nam[ 6 ] = 'd' ;          ;
+            paint5d.pix_nam[ 7 ] = '\0';          ;
+                           
+            /** These errors could happen if                 **/
+            /** 1: You failed to zero initialize struct      **/
+            /** 2: You called initializer TWICE or MORE.     **/
+            if( paint5d.cpu_pix[0]      != 0 ){ ERR("[E_1]");};                   
+            if( paint5d.g_pixel.tex_han != 0 ){ ERR("[E_2]");};
+            if( paint5d.g_pixel.sam_loc != 0 ){ ERR("[E_3]");};
+            if( paint5d.g_pixel.sam_val != 0 ){ ERR("[E_4]");};
+
+        //:---------------------------:ALL_MEMBERS_OF_PAINT5D://
+        //:ALLOCATES_OPEN_GL_TEXTURE:------------------------://
+
+            AAC2020_GPUDATA_InitInstance(
+                &( paint5d /** ACC2020_GPUDATA_PAINT5D_dat **/ )
+            );;
+
+        //:------------------------:ALLOCATES_OPEN_GL_TEXTURE://
+        //:ERROR_CHECK:--------------------------------------://
+
+            if( strcmp( 
+                &(                 paint5d.pix_nam[ 0 ]  )
+            ,   &( AAC2020_PIXNAME_paint5d[ 0 ]          )
+            ) != 0 ){
+                ERR("[paint5d:INIT_FAIL:ON:pix_nam]");
+            };;
+    
+            if( AAC2020_PIXNAME_paint5d_tex_lot
+                   !=   paint5d.g_pixel.tex_lot
+            ){
+                ERR("[paint5d:INIT_FAIL:ON:tex_lot]");
+            };;
+
+        //:--------------------------------------:ERROR_CHECK://
+
+        return( 0x00 );
+
+    }
+
+#undef  U32    
+#undef  paint5d
+#undef  ERR
+//:=======================================:INITIALIZE_PAINT5D://

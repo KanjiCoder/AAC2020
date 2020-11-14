@@ -1,0 +1,116 @@
+
+//[ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ]//
+//#######: INSTANCES OF AAC2020_GPUDATA DO NOT BELONG :#######//
+//#######: IN [ GPUDATA.D._ ]OR[ GPUDATA.H._ ]        :#######//
+//#######: SEE[ DOC/WHY_NO_INSTANCES_IN_GPUDATA.TXT ] :#######//
+//[ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ]//
+//:----------------------------------------------------------://
+//: GPUDATA.D._ (DATA)                                   ::::://
+//:          Data on GPU for GRAPHICS and NON-GRAPHICS.  ::::://
+//:          Non Graphical Example: Enemy Positions      ::::://
+//:          SEE_MORE[ DOC/WHY_GPUDATA.TXT ]             ::::://
+//:----------------------------------------------------------://
+
+    //: ---------------------------------------------------- ://
+    //: CTRL+F HELP:                                         ://
+    //: 123_123                                              ://
+    //:                                                      ://
+    //: #define paint5d ACC2020_GPUDATA_PAINT5D_dat          ://
+    //: paint5d.cpu_pix                                      ://
+    //: paint5d.pix_nam = "paint5d"                          ://
+    //: paint5d.g_pixel.tex_lot                              ://
+    //: paint5d.g_pixel.tex_han                              ://
+    //: paint5d.g_pixel.sam_loc                              ://
+    //: paint5d.g_pixel.sam_val                              ://
+    //: ---------------------------------------------------- ://
+
+//:GPU_DATA_STRUCT:==========================================://
+#define U08 uint8_t /** GCC: <stdint.h> **/
+                                       
+    /** DESIGN NOTE:                                         **/
+    /**         1:1 mapping between everything.              **/
+    /**                                                      **/
+    /**         1: Array Of Pixels (cpu_pix)                 **/
+    /**         1: Name to identify everything (pix_nam)     **/
+    /**         1: Actual Texture (tex_han)                  **/
+    /**         1: Put in ONE spot only (tex_lot)            **/
+    /**         1: Texture Sampler (sam_loc )                **/
+    /**         1: Sample ONE texture (sam_val == tex_lot )  **/
+    struct AAC2020_GPUDATA{
+
+        //:NOTE: assert( sam_val == tex_lot )
+        //:      I think that is how we connect the
+        //:      texture to the sampler.
+        //:      USE[ edit_a2jc ]ForSomeReference
+
+        /** ************************************************ **/
+        /** All data will be represented by 512 x 512  ***** **/
+        /** pixel bitmaps. Each pixel being stored as  ***** **/
+        /** a series of 4 bytes. 4 bytes being RGBA    ***** **/
+        /** respectively.                              ***** **/
+        /** ************************************************ **/
+
+        /**[ cpu_pix ]===[ pix_arr ] (PreviousProjectsNote)  **/
+        U08  cpu_pix[ 512 * 512 * 4 ];//: CPU Side 512-x-512 ://
+                                      //: RGBA Bitmap        ://
+
+
+        
+        //: This name identifies BOTH:
+        //:     1: The texture sampler name in GPU's GLSL code.
+        //:     2: The array of pixels on the CPU.
+        //:
+        //: 7 letters: String name of these pixels. :::::::::://
+        //: 1 char:::: Null Terminator.             :::::::::://
+        char pix_nam[8] ;//: USE_WITH[ getUniformLocation ]
+
+        //:Handle to GPU texture representing cpu_pix :::::::://
+        struct AAC2020_GPUDATA_G_PIXEL{
+
+            //: -------------------------------------------- ://
+            //: activeTexture( tex_lot )                     ://
+            //: bindTexture(   tex_han );                    ://
+            //: Means:                                       ://
+            //:     OPEN_GL_TEXTURES[ tex_lot ]=( tex_han ); ://
+            //: -------------------------------------------- ://
+            int
+            tex_lot ;//:USE_WITH[ activeTexture ]   
+            int
+            tex_han ;//:USE_WITH[ bindTexture   ]   
+            
+            //: -------------------------------------------- ://
+            //: Texture SAMPLER_UNIFORM Value ************** ://
+            //: sam_loc: Memory ADDRESS of SAMPLER_UNIFORM   ://
+            //: sam_val: ValueOf[ tex_lot ]stored at ADDRESS ://
+            //: -------------------------------------------- ://
+            int
+            sam_loc ;//:USE_WITH[ uniform1i( sam_loc, sam_val )]
+            int
+            sam_val ;//:USE_WITH[ uniform1i( sam_loc, sam_val )]
+
+        }g_pixel; /** AKA: gpu_pix / gpu_han **/
+      
+
+    }; //:struct://
+
+#undef  U08
+//:==========================================:GPU_DATA_STRUCT://
+
+/** ******************************************************** ***
+
+    FUTURE_INSTANCE : 001 : AAC2020_GPUDATA_PAINT5D_dat
+    FUTURE_____DATA : 001 :         GPUDATA_PAINT5D.D._
+    FUTURE_____FUNC : 001 :         GPUDATA_PAINT5D.F._
+    FUTURE_DOCUMENT : 001 : DOC/WHY_GPUDATA_PAINT5D.TXT
+
+*** ******************************************************** **/
+//[ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ]//
+//#######: INSTANCES OF AAC2020_GPUDATA DO NOT BELONG :#######//
+//#######: IN [ GPUDATA.D._ ]OR[ GPUDATA.H._ ]        :#######//
+//#######: SEE[ DOC/WHY_NO_INSTANCES_IN_GPUDATA.TXT ] :#######//
+//[ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ]//
+
+                
+
+
+    

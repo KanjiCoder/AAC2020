@@ -1,0 +1,15 @@
+//:This was NOT named GRADATA (graphics data)
+//:          because from past experience I know that 
+//:          some of the data on the GPU will be used for
+//:          rendering while other data on the GPU may be
+//:          used for things like storing the current 
+//:          position of enemies.
+//:
+//:          GPUDATA will keep a local CPU cache of the
+//:          arrays of data it pushes to the GPU. Being
+//:          careful to always keep both sets of data
+//:          in sync (the same).
+//:
+//:          The reason for this is that querying GPU values
+//:          for CPU tasks will use up on bandwidth AND be
+//:          relatively slow.

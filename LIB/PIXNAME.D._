@@ -1,0 +1,86 @@
+//: -------------------------------------------------------- ://
+//: DOTADIW: A centralized place to know the names that      ://
+//:          identify different 512-x-512 pixel chunks       ://
+//:          of memory that exist both on the GPU and CPU.   ://
+//:                                                          ://
+//:                                                          ://
+//: #PATTERN_BREAKER#                                        ://
+//:                                                          ://
+//: This somewhat breaks the spirit of our LIBCHAN           ://
+//: (library chain) pattern of adding things on as you       ://
+//: build up.                                                ://
+//:                                                          ://
+//: The variables here will only be used for:                ://
+//:     1. Human Reference                                   ://
+//:     2. Asserts                                           ://
+//:                                                          ://
+//: It will never be used as an assingnment like:            ://
+//:                                                          ://
+//:     ACC2020_GPUDATA_PAINT5D_dat.pix_nam=(                ://
+//:     AAC2020_PIXNAME_paint5d ); <<<<<<< NO! NEVER!        ://
+//:                                                          ://
+//: But will rather be used like so:                         ://
+//:                                                          ://
+//:     ACC2020_GPUDATA_PAINT5D_dat.pix_nam = "paint5d";     ://
+//:     assert( AAC2020_PIXNAME_paint5d    == "paint5d" );   ://
+//:                                                          ://
+//: Reason:                                                  ://
+//:                                                          ://
+//:     Make the code easy to follow with minimal            ://
+//:     indirection, while still having the benifit of       ://
+//:     a centralized area where all of the different        ://
+//:     512 -x- 512 chunks of memory are defined.            ://
+//: -------------------------------------------------------- ://
+
+    //:ACC2020_GPUDATA_PAINT5D_dat.pix_nam == "paint5d"
+
+    /** A bit weird, but let's keep the texture slot values  **/
+    /** centralized here as well so that we can easily       **/
+    /** verify that all texture slots are UNIQUE .           **/
+
+    int AAC2020_PIXNAME_paint5d_tex_lot =( 0 );
+    int AAC2020_PIXNAME_todo_01_tex_lot =( 1 );
+    int AAC2020_PIXNAME_todo_02_tex_lot =( 2 );
+
+                    //:paint5d
+    const char      //:1234567
+    AAC2020_PIXNAME_paint5d[8] ={
+        'p'    //: 1 ://
+    ,   'a'    //: 2 ://
+    ,   'i'    //: 3 ://
+    ,   'n'    //: 4 ://
+    ,   't'    //: 5 ://
+    ,   '5'    //: 6 ://
+    ,   'd'    //: 7 ://
+    ,   '\0'   //: 8 ://
+    };
+
+    //:CHANGE LATER WHEN YOU ARE READY TO USE:
+                    //:todo_01
+    const char   //:1234567
+    AAC2020_PIXNAME_todo_01[8] ={
+        't'    //: 1 ://
+    ,   'o'    //: 2 ://
+    ,   'd'    //: 3 ://
+    ,   'o'    //: 4 ://
+    ,   '_'    //: 5 ://
+    ,   '0'    //: 6 ://
+    ,   '1'    //: 7 ://
+    ,   '\0'   //: 8 ://
+    };
+
+    //:CHANGE LATER WHEN YOU ARE READY TO USE:
+                    //:todo_02
+    const char   //:1234567
+    AAC2020_PIXNAME_todo_02[8] ={
+        't'    //: 1 ://
+    ,   'o'    //: 2 ://
+    ,   'd'    //: 3 ://
+    ,   'o'    //: 4 ://
+    ,   '_'    //: 5 ://
+    ,   '0'    //: 6 ://
+    ,   '2'    //: 7 ://
+    ,   '\0'   //: 8 ://
+    };
+
+    

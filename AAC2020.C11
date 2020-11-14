@@ -1,92 +1,48 @@
+//:DEBUG_CONFIGURATION:======================================://
 
-//:SAFTEY_SAVE: THIS CODE WORKS AS OF: 2020_11_13:0440PM
-//:But we are about to try and refactor NATIKEY into
-//:the library chain.
+    #define   AAC2020_CRASH_ON_VITAL_TODO (  0  )
 
+    #include <stdio.h> //:printf(...)
+    void AAC2020_VITAL_TODO( const char* todo_message ){
+
+        printf( "[AAC2020_VITAL_TODO]:%s\n", todo_message );
+        fflush( stdout );
+
+        #if( AAC2020_CRASH_ON_VITAL_TODO >= 1 )
+            exit( 222 );
+        #endif
+    }
+
+//:======================================:DEBUG_CONFIGURATION://
+//:EXPECTATION_BREAKERS:=====================================://
+//:                                                          ://
+//: 1. Uses a LIBCHAN ( SEE:   DOC/LIBRARY_CHAIN.TXT )       ://
+//: 2. Procedural OOP ( SEE: DATA_THEN_FUNCTIONS.TXT )       ://
+//:    NO : ".H"   : Header         --- NEVER                ://
+//:    NO : ".C"   : Implementation --- NEVER                ://
+//:                  (One Exception: AAC2020.C11)            ://
+//:                                                          ://
+//:    YES: ".D._" : DATA ------------- ALWAYS (can be empty)://
+//:    YES: ".F._" : FUNCTIONS -------- ALWAYS (can be empty)://
+//:    YES: ".P._" : Public Interface - SOMETIMES            ://
+//:                                                          ://
+//:=====================================:EXPECTATION_BREAKERS://
 //:LIBRARY_CHAIN_ORDER:SUMMARY:==============================://
 
-#define macro_libchan_order_GINAWIN ( 1 ) //:Graphics & Window
-#define macro_libchan_order_DUI     ( 2 ) //:Dialog________UI(s)
-#define macro_libchan_order_GLEBIND ( 3 ) //:OpenGL_EasyBINDings
-#define macro_libchan_order_GRAQUAD ( 4 ) //:Graphics_____QUAD
-#define macro_libchan_order_BASUNIF ( 5 ) //:BASic____UNIForms
-#define macro_libchan_order_FRAGBED ( 6 ) //:FRAGMENT_test_BED
+#define     AAC2020_MAC_LIBCHAN_CUR (10 ) //:<--Compile_To_Here
+
+#define macro_libchan_order_NATIKEY ( 1 ) //:NATIve_KEYboard
+#define macro_libchan_order_GINAWIN ( 2 ) //:Graphics & Window
+#define macro_libchan_order_DUI     ( 3 ) //:Dialog________UI(s)
+#define macro_libchan_order_GLEBIND ( 4 ) //:OpenGL_EasyBINDings
+#define macro_libchan_order_GRAQUAD ( 5 ) //:Graphics_____QUAD
+#define macro_libchan_order_BASUNIF ( 6 ) //:BASic____UNIForms
+#define macro_libchan_order_FRAGBED ( 7 ) //:FRAGMENT_test_BED
+#define macro_libchan_order_GPUDATA ( 8 ) //:GPU_DATA
+#define macro_libchan_order_PIXNAME ( 9 ) //:PIXEL_DATA_NAMES
+#define macro_libchan_order_PAINT5D (10 ) //:GPUDATA_PAINT5D
 
 //:==============================:LIBRARY_CHAIN_ORDER:SUMMARY://
-//:ABOUT_THIS_PROJECT:=======================================://
-
-    //: PREVIOUS_LIBRARY: A2_JC.JS ------------------------- ://
-    //: CURRENT__LIBRARY: AAC2020                            ://
-    //:                                                      ://
-    //: Re-write of A2JC ( R:\G\A2_JC ) into C only code.    ://
-    //: A2_JC:DEMO[ file:///R:/G/A2_JC/AA2.HTM         ]     ://
-    //: A2_JC:ANIM[ https://imgur.com/XiNdLvT          ]     ://
-    //: A2_JC:GITH[ github.com/HeavyMetalCookies/A2_JC ]     ://
-    //: ---------------------------------------------------- ://
-    /** **************************************************** ***   
-                                      
-    +-------------------------------------------+
-    |                                           |
-    |   Bare Basics                             |
-    |                                           |
-    |   lodepng                                 |
-    |   PEB2020 (PEB2002_LoadLibraryA)          |
-    |           (PEB2020_GetProcAddress)        |
-    |            PEB:PEB(file)Walker            |
-    |                                           |
-    +-------------------------------------------+
-    |                                           |
-    |   Windows & Dialogs Section               |
-    |                                           |
-    |   GINAWIN   : Graphics_INit_And_WINdow    |
-    |      |  |                                 |
-    |      |  V                                 |
-    |      |  DUI : Dialog_User_Interfaces      |
-    |      |                                    |
-    +------V------------------------------------+
-    |                                           |
-    |   Basic_Grapics. (Just a colored Quad)    |
-    |   Advanced shaders & data come later.     |
-    |                                           |
-    |  (OpenGL)     (OpenCL)     (Vulkan)       |
-    |                MAYBEDO:    MAYBEDO:       |
-    |   GLEBIND      CLEBIND     VUEBIND        |
-    |      |            |        |              |
-    |      |            |        |              |
-    |      |            |        |              |
-    |      V            V        V              |
-    |      COG_THAT_DOES_NOT_EXIST(COG.H)       |
-    |      .            |                       |
-    |      .            |                       |
-    |      .            |                       |
-    |      .____________|                       |          
-    |      |                                    |
-    |      V                                    |
-    |   GRAQUAD       GRAQUAD: GRAphics_QUAD    |
-    |      |          GLEBIND: GL_Easy_BINDings |
-    |      |                                    |
-    +------V------------------------------------+
-    |      |              Intermediary_Graphics |
-    |      |              ( Informal Category ) |
-    |      |              ( Informal Category ) |
-    |      V                                    |
-    |   BASUNIF : BASicUNIForms                 |
-    |      |                                    |
-    |      |                                    |
-    |      V                                    |
-    |   FRAGBED : 1. Creates shadertoy like     |
-    |                program we could sell.     |
-    |                                           |
-    |             2. Shaders 1-9 activated      |
-    |                when pressing keyboard.    |
-    |                                           |
-    |             3. Can override shader code   |
-    |                by editing serialized      |
-    |                FRAGBED_###.frag files.    |
-    +-------------------------------------------+
-        
-    *** **************************************************** **/
-//:=======================================:ABOUT_THIS_PROJECT://
 //:NON_DEBUG_CONFIGURATION:==================================://
 
     #define AAC2020_IS_MULTI_THREADED ( 0 )
@@ -94,6 +50,81 @@
     #define AAC2020_LAUNCH_COLOR_PICKER_ON_STARTUP ( 1 )
 
 //:==================================:NON_DEBUG_CONFIGURATION://
+//:ABOUT_THIS_PROJECT:=======================================://
+    /** EXTRACTED_BLOCK_COMMENT: DOC/PREVIOUS_PROJECT.TXT ** **/
+    /** **************************************************** ***   
+                      
+    TREE Conceptualization of [1D/Linear] LIBCHAN:
+    +------------------------------------------+
+    |                                          |
+    |   Bare Basics:                           |
+    |   +-------------------------------------+|  
+    |   |                                     ||
+    |   |  In this order, but order should    ||
+    |   |  NOT matter.                        ||
+    |   |                                     ||
+    |   |  +  lodepng                         ||
+    |   |                                     ||
+    |   |  +  PEB2020 (PEB2002_LoadLibraryA)  ||
+    |   |             (PEB2020_GetProcAddress)||
+    |   |              PEB:PEB(file)Walker    ||
+    |   +--+----------------------------------+|
+    |      |                                   |
+    |      V                                   |
+    +------------------------------------------+
+    |                                          |
+    |   Windows & Dialogs Section              |
+    |                                          |
+    |   GINAWIN   : Graphics_INit_And_WINdow   |
+    |      |  |                                |
+    |      |  V                                |
+    |      |  DUI : Dialog_User_Interfaces     |
+    |      |                                   |
+    +------V-----------------------------------+
+    |                                          |
+    |   Basic_Grapics. (Just a colored Quad)   |
+    |   Advanced shaders & data come later.    |
+    |                                          |
+    |  (OpenGL)     (OpenCL)     (Vulkan)      |
+    |                MAYBEDO:    MAYBEDO:      |
+    |   GLEBIND      CLEBIND     VUEBIND       |
+    |      |            |        |             |
+    |      |            |        |             |
+    |      |            |        |             |
+    |      V            V        V             |
+    |      COG_THAT_DOES_NOT_EXIST(COG.H)      |
+    |      (SEE: DOC/WHY_COG_IN_DIAGRAM.TXT)   |
+    |      .            |                      |
+    |      .            |                      |
+    |      .            |                      |
+    |      .____________|                      |          
+    |      |                                   |
+    |      V                                   |
+    |   GRAQUAD       GRAQUAD: GRAphics_QUAD   |
+    |      |          GLEBIND: GL_Easy_BINDings|
+    |      |                                   |
+    +------V-----------------------------------+
+    |      |              Intermediary_Graphics|
+    |      |              ( Informal Category )|
+    |      |              ( Informal Category )|
+    |      V                                   |
+    |   BASUNIF : BASicUNIForms                |
+    |      |                                   |
+    |      |                                   |
+    |      V                                   |
+    |   FRAGBED : 1. Creates shadertoy like    |
+    |                program we could sell.    |
+    |                                          |
+    |             2. Shaders 1-9 activated     |
+    |                when pressing keyboard.   |
+    |                                          |
+    |             3. Can override shader code  |
+    |                by editing serialized     |
+    |                FRAGBED_###.frag files.   |
+    +------------------------------------------+
+        
+    *** **************************************************** **/
+//:=======================================:ABOUT_THIS_PROJECT://
 //:INCLUDE_DIRECTIVES:=======================================://
 
     #include "DEP/lodepng.h"  /** https://lodev.org/lodepng/ **/
@@ -132,7 +163,7 @@
     /**                                                      **/
     /** John Mark Isaac Madison DATE[2020_11_01]             **/
 
-    #define AAC2020_MAC_LIBCHAN_CUR ( 6 ) //:<-- Compile_To_Here
+    /////// AAC2020_MAC_LIBCHAN_CUR ( ? ) //:<-- Compile_To_Here
 
     #define AAC2020_MAC_LIBCHAN_001 ( 1 )
     #define AAC2020_MAC_LIBCHAN_002 ( 2 )
@@ -140,61 +171,72 @@
     #define AAC2020_MAC_LIBCHAN_004 ( 4 )
     #define AAC2020_MAC_LIBCHAN_005 ( 5 )
     #define AAC2020_MAC_LIBCHAN_006 ( 6 )
+    #define AAC2020_MAC_LIBCHAN_007 ( 7 )
+    #define AAC2020_MAC_LIBCHAN_008 ( 8 )
+    #define AAC2020_MAC_LIBCHAN_009 ( 9 )
+    #define AAC2020_MAC_LIBCHAN_010 (10 )
 
-    #define AAC2020_MAC_LIBCHAN_MAX ( 6 ) //:<-- Complile_Limit
+    #define AAC2020_MAC_LIBCHAN_MAX (10 ) //:<-- Complile_Limit
 
 //:============================================:LIBRARY_CHAIN://
 //:DATA:DATA_BEFORE_FUNCTIONS:===============================://
 
-    #include "LIB/NATIKEY.D._"
-
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_001 )
+
+        //:NATIWIN:NATIve_WINdow:(PlatformSpecific)
+        #include           "LIB/NATIKEY.D._"  
+        #define AAC2020_INCLUDE_NATIKEY ( 1 )
+        #else   //:     INCLUDE_NATIKEY ( - )
+        #define AAC2020_INCLUDE_NATIKEY ( 0 )
+        #endif 
+
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_002 )
 
         //:GINAWIN:GRAPHICS_INIT_AND_WINDOW:
         #include           "LIB/GINAWIN.D._"  
-        #define AAC2020_INCLUDE_GINAWIN ( 1 )
+        #define AAC2020_INCLUDE_GINAWIN ( 2 )
         #else   //:     INCLUDE_GINAWIN ( - )
         #define AAC2020_INCLUDE_GINAWIN ( 0 )
         #endif 
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_002 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_003 )
     
         //:DUI:DIALOG_USER_INTERFACES:
         #include           "LIB/DUI.D._"     
-        #define AAC2020_INCLUDE_DUI ( 2 )
+        #define AAC2020_INCLUDE_DUI ( 3 )
         #else   //:     INCLUDE_DUI ( - ) 
         #define AAC2020_INCLUDE_DUI ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_003 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_004 )
 
         //:GLEBIND:GL_EASY_BINDINGS:
         #include           "LIB/GLEBIND.D._"   
-        #define AAC2020_INCLUDE_GLEBIND ( 3 )
+        #define AAC2020_INCLUDE_GLEBIND ( 4 )
         #else   //:     INCLUDE_GLEBIND ( - )
         #define AAC2020_INCLUDE_GLEBIND ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_004 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_005 )
 
         //:GRAQUAD:GRAPHICS_QUAD
         #include "LIB/GRAQUAD.D._"       //:STANDARD_DATA
         #include "LIB/GRAQUAD.D.FRAG._"  //:FRAGMENT_SHADERS
-        #define AAC2020_INCLUDE_GRAQUAD ( 4 )
+        #define AAC2020_INCLUDE_GRAQUAD ( 5 )
         #else   //:     INCLUDE_GRAQUAD ( - )
         #define AAC2020_INCLUDE_GRAQUAD ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_005 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_006 )
 
         //:BASUNIF:BASic_UNIForms
         #include "LIB/BASUNIF.D._"        
-        #define AAC2020_INCLUDE_BASUNIF ( 5 )
+        #define AAC2020_INCLUDE_BASUNIF ( 6 )
         #else   //:     INCLUDE_BASUNIF ( - )
         #define AAC2020_INCLUDE_BASUNIF ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_006 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_007 )
 
         //:FRAGBED:FRAGMENT_shader_test_BED
         #include "LIB/FRAGBED.D._"    
@@ -209,9 +251,76 @@
         #include "LIB/FRAGBED_DEFAULT_SHADERS\FDS_008._"
         #include "LIB/FRAGBED_DEFAULT_SHADERS\FDS_009._"
 
-        #define AAC2020_INCLUDE_FRAGBED ( 6 )
+        #define AAC2020_INCLUDE_FRAGBED ( 7 )
         #else   //:     INCLUDE_FRAGBED ( - )
         #define AAC2020_INCLUDE_FRAGBED ( 0 )
+        #endif
+
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_008 )
+
+        //:GPUDATA: GraphicsProcessingUnit_DATA
+        //:        (NOT NECCESSARILY GRAPHICAL DATA)
+        //:        (NOT NECCESSARILY GRAPHICAL INFORMATION)
+        //:        GPUDATA tells me where the data is stored,
+        //:        but not what the data represents.
+        #include           "LIB/GPUDATA.D._"        
+        #define AAC2020_INCLUDE_GPUDATA ( 8 )
+        #else   //:     INCLUDE_GPUDATA ( - )
+        #define AAC2020_INCLUDE_GPUDATA ( 0 )
+        #endif
+
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_009 )
+
+        //:--------------------------------------------------://
+        //:#PATTERN_BREAKER# (slightly)                      ://
+        //:                                                  ://
+        //: A list of names of all of the gpu textures       ://
+        //: defined by different GPUDATA instances.          ://
+        //:                                                  ://
+        //: We don't know what those names will be yet.      ://
+        //: That is why this breaks project structure.       ://
+        //:                                                  ://
+        //: To mitigate the problem, these values will only  ://
+        //: be used to ASSERT the correct values in future   ://
+        //: libraries.                                       ://
+        //:                                                  ://
+        //:Q: Why are we breaking the LIBCHAN pattern here?  ://
+        //:A: A consolidated list of all GPU textures        ://
+        //:   is useful.                                     ://
+        //:--------------------------------------------------://
+        #include           "LIB/PIXNAME.D._"        
+        #define AAC2020_INCLUDE_PIXNAME ( 9 )
+        #else   //:     INCLUDE_PIXNAME ( - )
+        #define AAC2020_INCLUDE_PIXNAME ( 0 )
+        #endif
+
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_010 )
+
+        //: #PATTERN_BREAKER# ------------------------------ ://
+        //: You might be expecting:                          ://
+        //: 1: AAC2020_INCLUDE_GPUDATA_PAINT5D               ://
+        //: 2: INCLUDE_GPUDATA_PAINT5D                       ://
+        //: But using shorter namespacing for our            ://
+        //: includes to avoid running over column limit.     ://
+        //: ------------------------------------------------ ://
+        #define AAC2020_INCLUDE_GPUDATA_PAINT5D "DO_NOT_USE"
+        #define INCLUDE_GPUDATA_PAINT5D         "DO_NOT_USE"
+
+        //:GPUDATA_PAINT5D: -------------------------------- ://
+        //:        Graphical Data For a 5-Dimensional        ://
+        //:        MS-PAINT 95 like program.                 ://
+        //:                                                  ://
+        //:        Dimensions:                               ://
+        //:        1. Tile X                                 ://
+        //:        2. Tile Y                                 ://
+        //:        3. Tile Size                              ://
+        //:        4. Tile Layer                             ://
+        //:        5. Tile Color                             ://
+        //:   NOT: "LIB/PAINT5D.D._" << #PATTERN_BREAKER     ://
+        #include           "LIB/GPUDATA_PAINT5D.D._"        
+        #define AAC2020_INCLUDE_PAINT5D (10 )
+        #else   //:     INCLUDE_PAINT5D ( - )
+        #define AAC2020_INCLUDE_PAINT5D ( 0 )
         #endif
 
 #if( AAC2020_MAC_LIBCHAN_CUR > AAC2020_MAC_LIBCHAN_MAX  )
@@ -223,62 +332,136 @@
 //:===============================:DATA:DATA_BEFORE_FUNCTIONS://
 //:FUNC:FUNCTIONS_AFTER_DATA:================================://
 
-    #include "LIB/NATIKEY.F._"
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_001 )
 
+        //:NATIKEY:NATIve_KEYboard:(PlatformSpecific)
+        #include "LIB/NATIKEY.F._" 
+        #define AAC2020_INCLUDE_NATIKEY ( 1 )
+        #else   //:     INCLUDE_NATIKEY ( - )
+        #define AAC2020_INCLUDE_NATIKEY ( 0 )
+        #endif
+
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_002 )
+
         //:GINAWIN:GRAPHICS_INIT_AND_WINDOW:
         #include "LIB/GINAWIN.F._" 
-        #define AAC2020_INCLUDE_GINAWIN ( 1 )
+        #define AAC2020_INCLUDE_GINAWIN ( 2 )
         #else   //:     INCLUDE_GINAWIN ( - )
         #define AAC2020_INCLUDE_GINAWIN ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_002 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_003 )
      
         //:DUI:DIALOG_USER_INTERFACES:
         #include "LIB/DUI.F._"   
-        #define AAC2020_INCLUDE_DUI ( 2 )
+        #define AAC2020_INCLUDE_DUI ( 3 )
         #else   //:     INCLUDE_DUI ( - )
         #define AAC2020_INCLUDE_DUI ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_003 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_004 )
 
         //:GLEBIND:GL_EASY_BINDINGS:
         #include "LIB/GLEBIND.F._"  
-        #define AAC2020_INCLUDE_GLEBIND ( 3 )
+        #define AAC2020_INCLUDE_GLEBIND ( 4 )
         #else   //:     INCLUDE_GLEBIND ( - )
         #define AAC2020_INCLUDE_GLEBIND ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_004 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_005 )
 
         //:GRAQUAD:GRAPHICS_QUAD
         #include "LIB/GRAQUAD.F._"    
-        #define AAC2020_INCLUDE_GRAQUAD ( 4 )
+        #define AAC2020_INCLUDE_GRAQUAD ( 5 )
         #else   //:     INCLUDE_GRAQUAD ( - )
         #define AAC2020_INCLUDE_GRAQUAD ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_005 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_006 )
 
         //:BASUNIF:BASic_UNIForms
         #include "LIB/BASUNIF.F._"    
-        #define AAC2020_INCLUDE_BASUNIF ( 5 )
+        #define AAC2020_INCLUDE_BASUNIF ( 6 )
         #else   //:     INCLUDE_BASUNIF ( - )
         #define AAC2020_INCLUDE_BASUNIF ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_006 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_007 )
 
         //:FRAGBED:FRAGMENT_shader_test_BED
         #include "LIB/FRAGBED.F._"    
-        #define AAC2020_INCLUDE_FRAGBED ( 6 )
+        #define AAC2020_INCLUDE_FRAGBED ( 7 )
         #else   //:     INCLUDE_FRAGBED ( - )
         #define AAC2020_INCLUDE_FRAGBED ( 0 )
         #endif
 
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_008 )
+
+        //:GPUDATA: GraphicsProcessingUnit_DATA
+        //:        (NOT NECCESSARILY GRAPHICAL DATA)
+        //:        (NOT NECCESSARILY GRAPHICAL INFORMATION)
+        //:        GPUDATA tells me where the data is stored,
+        //:        but not what the data represents.
+        #include           "LIB/GPUDATA.F._"        
+        #define AAC2020_INCLUDE_GPUDATA ( 8 )
+        #else   //:     INCLUDE_GPUDATA ( - )
+        #define AAC2020_INCLUDE_GPUDATA ( 0 )
+        #endif
+
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_009 )
+
+        //:--------------------------------------------------://
+        //:#PATTERN_BREAKER# (slightly)                      ://
+        //:                                                  ://
+        //: A list of names of all of the gpu textures       ://
+        //: defined by different GPUDATA instances.          ://
+        //:                                                  ://
+        //: We don't know what those names will be yet.      ://
+        //: That is why this breaks project structure.       ://
+        //:                                                  ://
+        //: To mitigate the problem, these values will only  ://
+        //: be used to ASSERT the correct values in future   ://
+        //: libraries.                                       ://
+        //:                                                  ://
+        //:Q: Why are we breaking the LIBCHAN pattern here?  ://
+        //:A: A consolidated list of all GPU textures        ://
+        //:   is useful.                                     ://
+        //:--------------------------------------------------://
+        #include           "LIB/PIXNAME.F._"        
+        #define AAC2020_INCLUDE_PIXNAME ( 9 )
+        #else   //:     INCLUDE_PIXNAME ( - )
+        #define AAC2020_INCLUDE_PIXNAME ( 0 )
+        #endif
+
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_010 )
+
+        //: #PATTERN_BREAKER# ------------------------------ ://
+        //: You might be expecting:                          ://
+        //: 1: AAC2020_INCLUDE_GPUDATA_PAINT5D               ://
+        //: 2: INCLUDE_GPUDATA_PAINT5D                       ://
+        //: But using shorter namespacing for our            ://
+        //: includes to avoid running over column limit.     ://
+        //: ------------------------------------------------ ://
+        #define AAC2020_INCLUDE_GPUDATA_PAINT5D "DO_NOT_USE"
+        #define INCLUDE_GPUDATA_PAINT5D         "DO_NOT_USE"
+
+        //:GPUDATA_PAINT5D: -------------------------------- ://
+        //:        Graphical Data For a 5-Dimensional        ://
+        //:        MS-PAINT 95 like program.                 ://
+        //:                                                  ://
+        //:        Dimensions:                               ://
+        //:        1. Tile X                                 ://
+        //:        2. Tile Y                                 ://
+        //:        3. Tile Size                              ://
+        //:        4. Tile Layer                             ://
+        //:        5. Tile Color                             ://
+        //:   NOT: "LIB/PAINT5D.F._" << #PATTERN_BREAKER     ://
+        #include   "LIB/GPUDATA_PAINT5D.F._"        
+        #define AAC2020_INCLUDE_PAINT5D (10 )
+        #else   //:     INCLUDE_PAINT5D ( - )
+        #define AAC2020_INCLUDE_PAINT5D ( 0 )
+        #endif
 
 #if( AAC2020_MAC_LIBCHAN_CUR > AAC2020_MAC_LIBCHAN_MAX  )
 
@@ -675,7 +858,23 @@
 
                 AAC2020_FRAGBED_Init( );
 
-            #endif
+            #endif //:#######################################://
+            #if( AAC2020_INCLUDE_GPUDATA >= 1 ) //:##########://
+
+                AAC2020_GPUDATA_Init( 0x00 );
+
+            #endif //:#######################################://
+            #if( AAC2020_INCLUDE_PIXNAME >= 1 ) //:##########://
+
+                AAC2020_PIXNAME_Init( );
+
+            #endif //:#######################################://
+            #if( AAC2020_INCLUDE_PAINT5D >= 1 ) //:##########://
+
+                /** AKA: AAC2020_PAINT5D_Init( 0x00 ) **/
+                AAC2020_GPUDATA_PAINT5D_Init( 0x00 );
+
+            #endif //:#######################################://
 
         #endif //:- - - - - - - - - - - - - - - - - - - - - -://
         #if( AAC2020_INCLUDE_GINAWIN >= 1 )  //:- - - - - - -://
@@ -737,13 +936,18 @@
 //:====================================:MAIN_ENTRY_POINT.FUNC://
 //:LIBRARY_CHAIN_ORDER:CHECK:================================://
 
+#if( 0                           != AAC2020_INCLUDE_NATIKEY )
+#if( macro_libchan_order_NATIKEY != AAC2020_INCLUDE_NATIKEY )
+              #error "[OUT_OF_ORDER:AAC2020_INCLUDE_NATIKEY]"
+#endif
+#endif
 #if( 0                           != AAC2020_INCLUDE_GINAWIN )
 #if( macro_libchan_order_GINAWIN != AAC2020_INCLUDE_GINAWIN )
               #error "[OUT_OF_ORDER:AAC2020_INCLUDE_GINAWIN]"
 #endif
 #endif
-#if( 0                           != AAC2020_INCLUDE_DUI )
-#if( macro_libchan_order_DUI != AAC2020_INCLUDE_DUI )
+#if( 0                           != AAC2020_INCLUDE_DUI     )
+#if( macro_libchan_order_DUI     != AAC2020_INCLUDE_DUI     )
               #error "[OUT_OF_ORDER:AAC2020_INCLUDE_DUI]"
 #endif
 #endif
@@ -767,26 +971,53 @@
               #error "[OUT_OF_ORDER:AAC2020_INCLUDE_FRAGBED]"
 #endif
 #endif
+#if( 0                           != AAC2020_INCLUDE_GPUDATA )
+#if( macro_libchan_order_GPUDATA != AAC2020_INCLUDE_GPUDATA )
+              #error "[OUT_OF_ORDER:AAC2020_INCLUDE_GPUDATA]"
+#endif
+#endif
+#if( 0                           != AAC2020_INCLUDE_PIXNAME )
+#if( macro_libchan_order_PIXNAME != AAC2020_INCLUDE_PIXNAME )
+              #error "[OUT_OF_ORDER:AAC2020_INCLUDE_PIXNAME]"
+#endif
+#endif
+#if( 0                           != AAC2020_INCLUDE_PAINT5D )
+#if( macro_libchan_order_PAINT5D != AAC2020_INCLUDE_PAINT5D )
+              #error "[OUT_OF_ORDER:AAC2020_INCLUDE_PAINT5D]"
+#endif
+#endif
 
     //:ONE_MORE_REDUNDANT_CHECK_BEFORE_WE_UNDEFINE:==========://
 
-    #if( macro_libchan_order_GINAWIN != 1 )
-    #error "[TAIL_ORDER_FAIL:GINAWIN]"
-    #endif
-    #if( macro_libchan_order_DUI     != 2 )
-    #error "[TAIL_ORDER_FAIL:DUI]"
-    #endif
-    #if( macro_libchan_order_GLEBIND != 3 )
-    #error "[TAIL_ORDER_FAIL:GLEBIND]"
-    #endif
-    #if( macro_libchan_order_GRAQUAD != 4 )
-    #error "[TAIL_ORDER_FAIL:GRAQUAD]"
-    #endif
-    #if( macro_libchan_order_BASUNIF != 5 )
-    #error "[TAIL_ORDER_FAIL:BASUNIF]"
-    #endif
-    #if( macro_libchan_order_FRAGBED != 6 )
-    #error "[TAIL_ORDER_FAIL:FRAGBED]"
+    #if( macro_libchan_order_NATIKEY !=  1 )
+    #error "[TAIL_ORDER_FAIL:NATIKEY]"  
+    #endif                              
+    #if( macro_libchan_order_GINAWIN !=  2 )
+    #error "[TAIL_ORDER_FAIL:GINAWIN]"  
+    #endif                              
+    #if( macro_libchan_order_DUI     !=  3 )
+    #error "[TAIL_ORDER_FAIL:DUI]"      
+    #endif                              
+    #if( macro_libchan_order_GLEBIND !=  4 )
+    #error "[TAIL_ORDER_FAIL:GLEBIND]"  
+    #endif                              
+    #if( macro_libchan_order_GRAQUAD !=  5 )
+    #error "[TAIL_ORDER_FAIL:GRAQUAD]"  
+    #endif                              
+    #if( macro_libchan_order_BASUNIF !=  6 )
+    #error "[TAIL_ORDER_FAIL:BASUNIF]"  
+    #endif                              
+    #if( macro_libchan_order_FRAGBED !=  7 )
+    #error "[TAIL_ORDER_FAIL:FRAGBED]"  
+    #endif                              
+    #if( macro_libchan_order_GPUDATA !=  8 )
+    #error "[TAIL_ORDER_FAIL:GPUDATA]"  
+    #endif                              
+    #if( macro_libchan_order_PIXNAME !=  9 )
+    #error "[TAIL_ORDER_FAIL:PIXNAME]"  
+    #endif                              
+    #if( macro_libchan_order_PAINT5D != 10 )
+    #error "[TAIL_ORDER_FAIL:PAINT5D]"
     #endif
 
     //:==========:ONE_MORE_REDUNDANT_CHECK_BEFORE_WE_UNDEFINE://
@@ -796,12 +1027,16 @@
     /** people using the library.... But lets stick with a   **/
     /** YAGNI (You_Arent_Going_To_Need_It) philosophy.       **/
 
-    #undef  macro_libchan_order_GINAWIN 
-    #undef  macro_libchan_order_DUI     
-    #undef  macro_libchan_order_GLEBIND 
-    #undef  macro_libchan_order_GRAQUAD 
-    #undef  macro_libchan_order_BASUNIF
-    #undef  macro_libchan_order_FRAGBED 
+    #undef  macro_libchan_order_NATIKEY   //:----## 01 ##----://
+    #undef  macro_libchan_order_GINAWIN   //:----## 02 ##----://
+    #undef  macro_libchan_order_DUI       //:----## 03 ##----://
+    #undef  macro_libchan_order_GLEBIND   //:----## 04 ##----://
+    #undef  macro_libchan_order_GRAQUAD   //:----## 05 ##----://
+    #undef  macro_libchan_order_BASUNIF   //:----## 06 ##----://
+    #undef  macro_libchan_order_FRAGBED   //:----## 07 ##----://
+    #undef  macro_libchan_order_GPUDATA   //:----## 08 ##----://
+    #undef  macro_libchan_order_PIXNAME   //:----## 08 ##----://
+    #undef  macro_libchan_order_PAINT5D   //:----## 10 ##----://
 
     //:==========:DONT_POLLUTE_OTHER_PEOPLES_CODE_WITH_MACROS://
 
