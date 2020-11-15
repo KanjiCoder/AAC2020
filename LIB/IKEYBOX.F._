@@ -1,0 +1,27 @@
+//:IKEYBOX: InputKEYBOX: ------------------------------------://
+//:                                                          ://
+//:     WHAT:                                                ://
+//:         1. A "P.O. Box For Keys that were pressed.       ://
+//:                                                          ://
+//:      WHY:                                                ://
+//:         1. Mitigate MultiThreading Problems.             ://
+//:                                                          ://
+//:         2. Allow for a design that does not require      ://
+//:            callbacks for future code to have a way       ://
+//:            to know what keys were pressed.               ://
+//:                                                          ://
+//:----------------------------------------------------------://
+//:INIT_NONE:================================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+
+    U32
+    AAC2020_IKEYBOX_InitNone( U32 u32 ){
+
+        //:InitNone: Explicitly No Init
+
+        if( u32 ){ /** Reserved For Future Use **/ };
+        return( 0x00 );
+    };;
+
+#undef  U32
+//:================================================:INIT_NONE://

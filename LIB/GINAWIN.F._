@@ -691,7 +691,10 @@ aac2020_ginawin_WIN_MSG_HAN_WND_POC(
     }break;
 
     //:WM_CLOSE: The "[X]" button was clicked.
-    case 0x0010 /** WM_CLOSE **/:
+    case 0x0010 /** WM_CLOSE **/:{
+
+        //:Question: Should "WM_CLOSE" fallthrough
+        //:              to "WM_DESTROY"?
 
         /** SC[ WM_DESTROY_VS_WM_CLOSE ] ******************* **/
         /** WM_DESTROY: CANNOT BE STOPPED, must cleanup.     **/
@@ -709,9 +712,9 @@ aac2020_ginawin_WIN_MSG_HAN_WND_POC(
         if(0==ok){aac2020_ginawin_Halt("[0OK_2]");}
 
         
-
+    }break;
     //:WM_DESTROY: ( DESTROYED|DESTROYING )
-    case 0x0002 /** WM_DESTROY **/:  
+    case 0x0002 /** WM_DESTROY **/:{
 
         /** SC[ WM_DESTROY_VS_WM_CLOSE ] ******************* **/
         /** WM_DESTROY: CANNOT BE STOPPED, must cleanup.     **/
@@ -728,7 +731,8 @@ aac2020_ginawin_WIN_MSG_HAN_WND_POC(
         //: Send "WM_QUIT" to exit msg loop.
         FP->USER32.PostQuitMessage(0);
 
-    case 0x000F /** WM_PAINT **/:
+    }break;
+    case 0x000F /** WM_PAINT **/:{
         //:[TODO]:Something to pace the updating
         //:of graphics.
 
@@ -762,15 +766,33 @@ aac2020_ginawin_WIN_MSG_HAN_WND_POC(
 
 
 
-
+    }break;
     //:Keep window responsive:
-    default: 
-        return_this_result=(
-            FP->USER32.DefWindowProcW(
-                Hw,Msg,wParam,lParam
-            )
-        );;
+    default: if( return_this_result ){ /** NOOP **/ };
+    //:   return_this_result=(
+    //:       FP->USER32.DefWindowProcW(
+    //:           Hw,Msg,wParam,lParam
+    //:       )
+    //:   );;
     };;//:- - - - - - - - - - - - - - - - - - -://
+    
+    //:------------------------------------------------------://
+    //:[GUESS]I THINK we must ALWAYS call the default window ://
+    //:       procedure in order to fulfill some type of     ://
+    //:       contract with the operating system. Much like  ://
+    //:       how your parents would report you MISSING if   ://
+    //:       you didn't come home for 5 days, WINDOWS       ://
+    //:       will report your application as unresponsive   ://
+    //:       if your application does not report back       ://
+    //:       frequently enough.                             ://
+    return_this_result=(                                 //: ://
+        FP->USER32.DefWindowProcW(                       //: ://
+            Hw,Msg,wParam,lParam                         //: ://
+        )                                                //: ://
+    );;                                                  //: ://
+    //:------------------------------------------------------://
+                                                                                                                       
+
 
     return( return_this_result );
 } //[aac2020_ginawin_WIN_MSG_HAN_WND_POC]//
