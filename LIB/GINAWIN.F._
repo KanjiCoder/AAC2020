@@ -142,67 +142,68 @@
 //:======================================:SET_RESIZE_CALLBACK://
 //:SET_SIMPLE_AND_COMPLEX_KEYBOARD_CALLBACKS:================://
 //:ADDED_DATE[2020_11_04]:===================================://
-
-    #define U32 uint32_t /** GCC: <stdint.h> **/
-    U32
-    AAC2020_GINAWIN_RemoveAllKeyboardHandlers()
-    {
-        AAC2020_GINAWIN_SimpleKeyHandler_HAS =( 0 );
-        AAC2020_GINAWIN_SimpleKeyHandler_PFN =((void*)0);
-
-        AAC2020_GINAWIN_ComplexKeyHandler_HAS =( 0 );
-        AAC2020_GINAWIN_ComplexKeyHandler_PFN =((void*)0);
-
-        return( 0x00 );
-    }
-    #undef  U32
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-
-    #define PFN AAC2020_GINAWIN_PFN_2020_11_04_SIMPLEKEY
-    #define U32 uint32_t /** GCC: <stdint.h> **/
-        
-        U32
-        AAC2020_GINAWIN_SimpleKeyHandler_SetCallback(
-            PFN pfn
-        ){
-            if( ((void*)0) == pfn ){
-                printf("[FATAL_ERROR:VOID:SimpleKeyHandler]");
-                fflush(stdout);
-                exit(666);
-            };;
-
-            AAC2020_GINAWIN_SimpleKeyHandler_HAS=( 1 );
-            AAC2020_GINAWIN_SimpleKeyHandler_PFN=( pfn );
-
-            return( 0x00 );
-        }
-            
-    #undef U32
-    #undef PFN
-
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-
-    #define PFN AAC2020_GINAWIN_PFN_2020_11_04_COMPLEXKEY
-    #define U32 uint32_t /** GCC: <stdint.h> **/
-        
-        U32
-        AAC2020_GINAWIN_ComplexKeyHandler_SetCallback(
-            PFN pfn
-        ){
-            if( ((void*)0) == pfn ){
-                printf("[FATAL_ERROR:VOID:ComplexKeyHandler]");
-                fflush(stdout);
-                exit(666);
-            };;
-
-            AAC2020_GINAWIN_ComplexKeyHandler_HAS=( 1 );
-            AAC2020_GINAWIN_ComplexKeyHandler_PFN=( pfn );
-
-            return( 0x00 );
-        }
-            
-    #undef U32
-    #undef PFN
+//
+//  #define U32 uint32_t /** GCC: <stdint.h> **/
+//  U32
+//  AAC2020_GINAWIN_RemoveAllKeyboardHandlers()
+//  {
+//      AAC2020_GINAWIN_SimpleKeyHandler_HAS =( 0 );
+//      AAC2020_GINAWIN_SimpleKeyHandler_PFN =((void*)0);
+//
+//      AAC2020_GINAWIN_ComplexKeyHandler_HAS =( 0 );
+//      AAC2020_GINAWIN_ComplexKeyHandler_PFN =((void*)0);
+//
+//      return( 0x00 );
+//  }
+//  #undef  U32
+//  //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+//
+//  #define PFN AAC2020_GINAWIN_PFN_2020_11_04_SIMPLEKEY
+//  #define U32 uint32_t /** GCC: <stdint.h> **/
+//      
+//      U32
+//      AAC2020_GINAWIN_SimpleKeyHandler_SetCallback(
+//          PFN pfn
+//      ){
+//          if( ((void*)0) == pfn ){
+//              printf("[FATAL_ERROR:VOID:SimpleKeyHandler]");
+//              fflush(stdout);
+//              exit(666);
+//          };;
+//
+//          AAC2020_GINAWIN_SimpleKeyHandler_HAS=( 1 );
+//          AAC2020_GINAWIN_SimpleKeyHandler_PFN=( pfn );
+//
+//          return( 0x00 );
+//      }
+//          
+//  #undef U32
+//  #undef PFN
+//
+//  //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+//
+//: TODO: DELETE_THIS_CODE: TAGGED_ON[DATE[2020_11_15]]
+//  #define PFN AAC2020_GINAWIN_PFN_2020_11_04_COMPLEXKEY
+//  #define U32 uint32_t /** GCC: <stdint.h> **/
+//      
+//      U32
+//      AAC2020_GINAWIN_ComplexKeyHandler_SetCallback(
+//          PFN pfn
+//      ){
+//          if( ((void*)0) == pfn ){
+//              printf("[FATAL_ERROR:VOID:ComplexKeyHandler]");
+//              fflush(stdout);
+//              exit(666);
+//          };;
+//
+//          AAC2020_GINAWIN_ComplexKeyHandler_HAS=( 1 );
+//          AAC2020_GINAWIN_ComplexKeyHandler_PFN=( pfn );
+//
+//          return( 0x00 );
+//      }
+//          
+//  #undef U32
+//  #undef PFN
 
 //:================:SET_SIMPLE_AND_COMPLEX_KEYBOARD_CALLBACKS://
 //:===================================:ADDED_DATE[2020_11_04]://
@@ -566,6 +567,10 @@ aac2020_ginawin_WIN_MSG_HAN_WND_POC(
             //:---------------------------:LOW_AND_HIGH_WORDS://
             //:TODO:IMPLEMENT_DRAG_COORDS:-------------------://
 
+                /** Right now, just filled with dummy        **/
+                /** values. Maybe GINAWIN is not the right   **/
+                /** place to calculate drag start?           **/
+
                 U32 low_word_is_x_axis_drag_start=(
                     low_word_is_x_axis );;
 
@@ -644,42 +649,55 @@ aac2020_ginawin_WIN_MSG_HAN_WND_POC(
             if(0==ok){aac2020_ginawin_Halt("[0OK_1]");}
 
         }else{
-            
-            
-            if( AAC2020_GINAWIN_SimpleKeyHandler_HAS
-            &&  AAC2020_GINAWIN_ComplexKeyHandler_HAS
-            ){
-                aac2020_ginawin_Halt(
-                    "[CANT_HAVE_TWO_HANDLERS]");;
-            };;
 
-            if( AAC2020_GINAWIN_SimpleKeyHandler_HAS ){
 
-                /** Simple keyboard handler only understands **/
-                /** '0'-'9' and 'A'-'Z' (UppercaseOnly)      **/
+            //:PO_BOX_INSTEAD_OF_CALLBACKS:------------------://
+            char key =(
+                AAC2020_NATIKEY_wParam_CTO_AZ09( wParam ) );;
+                   
+            AAC2020_IKEYBOX_k_p   = key ;
+            AAC2020_IKEYBOX_dirty =( 0 );
+            //:------------------:PO_BOX_INSTEAD_OF_CALLBACKS://
 
-                AAC2020_GINAWIN_SimpleKeyHandler_PFN(
-                    AAC2020_NATIKEY_wParam_CTO_AZ09(
-                        wParam
-                    )
-                );;
-
-            }else
-            if( AAC2020_GINAWIN_ComplexKeyHandler_HAS ){
-                
-                aac2020_ginawin_Halt("[TODO:CKH]");
-
-            //:  glo_eve = SomeFunctionCall( wParam )
-            //:  Or something.
-            
-            //:  AAC2020_GINAWIN_ComplexKeyHandler_PFN(
-            //:      some_value_here_i_dont_know_what_yet
-            //:  )
-
-            };;
-
-            //: KEBO_DOWN_HandleVirtualKey( wParam );
-            printf("[WM_KEYDOWN]");
+        //  //:Use IKEYBOX instead.
+        //  AAC2020_VITAL_TODO("[REMOVE_KEYBOARD_CALLBACKS]");
+        //  
+        //    if( AAC2020_GINAWIN_SimpleKeyHandler_HAS
+        //    &&  AAC2020_GINAWIN_ComplexKeyHandler_HAS
+        //    ){
+        //        aac2020_ginawin_Halt(
+        //            "[CANT_HAVE_TWO_HANDLERS]");;
+        //    };;
+        //
+        //
+        //    if( AAC2020_GINAWIN_SimpleKeyHandler_HAS ){
+        //
+        //        /** Simple keyboard handler only understands **/
+        //        /** '0'-'9' and 'A'-'Z' (UppercaseOnly)      **/
+        //
+        //        
+        //        AAC2020_GINAWIN_SimpleKeyHandler_PFN(
+        //            AAC2020_NATIKEY_wParam_CTO_AZ09(
+        //                wParam
+        //            )
+        //        );;
+        //
+        //    }else
+        //    if( AAC2020_GINAWIN_ComplexKeyHandler_HAS ){
+        //        
+        //        aac2020_ginawin_Halt("[TODO:CKH]");
+        //
+        //    //:  glo_eve = SomeFunctionCall( wParam )
+        //    //:  Or something.
+        //    
+        //    //:  AAC2020_GINAWIN_ComplexKeyHandler_PFN(
+        //    //:      some_value_here_i_dont_know_what_yet
+        //    //:  )
+        //
+        //    };;
+        //
+        //    //: KEBO_DOWN_HandleVirtualKey( wParam );
+        //    printf("[WM_KEYDOWN]");
         };;
 
     }break;

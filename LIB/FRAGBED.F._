@@ -302,19 +302,34 @@
         //:Open file for write. This will erase any
         //:previous file contents.
         FILE*  file_han = fopen( frag_shader_nam , "wb" );
-        fseek( file_han , 0 /**orgin**/ , 0 /**SEEK_SET**/ );
-        fwrite( 
-            frag_shader_str
-        ,   1   //:Size_In_Bytes_Of_Each_Element_To_Be_Written
 
-        //:Number_of_Elements_To_Write
-        ,   noc //:number_of_characters( noc )
-                //:NOT[ nob ]because strings are not
-                //:null terminated inside text files.
+        if( ((void*)0) != file_han ){
 
-        ,   file_han //:File We are writing into.
-        );;
-        fclose( file_han );
+            fseek( file_han , 0 /**orgin**/ , 0 /**SEEK_SET**/);
+            fwrite( 
+                frag_shader_str
+            ,   1   //:SizeInBytesOfEachElementToBeWritten
+
+            //:Number_of_Elements_To_Write
+            ,   noc //:number_of_characters( noc )
+                    //:NOT[ nob ]because strings are not
+                    //:null terminated inside text files.
+
+            ,   file_han //:File We are writing into.
+            );;
+            fclose( file_han );
+
+        }else{
+            
+            //:TODO: Figure out how to create folders so that
+            //:      this file save will work.
+            printf("[FILE_SAVE_FAIL]:%s\n"
+                    ,frag_shader_nam    );;
+            fflush(stdout);
+
+            aac2020_fragbed_Halt("[FIX_THIS_YOU_FOOL]");
+        };;
+
         return( 0x00 );
     }
     #undef U32
@@ -559,31 +574,31 @@
 
                     /** YES, 2nd param is DOUBLE_POINTER(**) **/
     
-                        LOD(          "FRAGBED_001.FRAG"  ,
+                        LOD( "HACK_ME/FRAG/FRAGBED_001.FRAG"  ,
                       &(AAC2020_FRAGBED_loaded_001_ptr ));;
 
-                        LOD(          "FRAGBED_002.FRAG"  ,
+                        LOD( "HACK_ME/FRAG/FRAGBED_002.FRAG"  ,
                       &(AAC2020_FRAGBED_loaded_002_ptr ));;
 
-                        LOD(          "FRAGBED_003.FRAG"  ,
+                        LOD( "HACK_ME/FRAG/FRAGBED_003.FRAG"  ,
                       &(AAC2020_FRAGBED_loaded_003_ptr ));;
 
-                        LOD(          "FRAGBED_004.FRAG"  ,
+                        LOD( "HACK_ME/FRAG/FRAGBED_004.FRAG"  ,
                       &(AAC2020_FRAGBED_loaded_004_ptr ));;
 
-                        LOD(          "FRAGBED_005.FRAG"  ,
+                        LOD( "HACK_ME/FRAG/FRAGBED_005.FRAG"  ,
                       &(AAC2020_FRAGBED_loaded_005_ptr ));;
 
-                        LOD(          "FRAGBED_006.FRAG"  ,
+                        LOD( "HACK_ME/FRAG/FRAGBED_006.FRAG"  ,
                       &(AAC2020_FRAGBED_loaded_006_ptr ));;
 
-                        LOD(          "FRAGBED_007.FRAG"  ,
+                        LOD( "HACK_ME/FRAG/FRAGBED_007.FRAG"  ,
                       &(AAC2020_FRAGBED_loaded_007_ptr ));;
 
-                        LOD(          "FRAGBED_008.FRAG"  ,
+                        LOD( "HACK_ME/FRAG/FRAGBED_008.FRAG"  ,
                       &(AAC2020_FRAGBED_loaded_008_ptr ));;
 
-                        LOD(          "FRAGBED_009.FRAG"  ,
+                        LOD( "HACK_ME/FRAG/FRAGBED_009.FRAG"  ,
                       &(AAC2020_FRAGBED_loaded_009_ptr ));;
 
                 #undef  LOD
@@ -596,31 +611,31 @@
 
                 #define SAV  AAC2020_FRAGBED_SaveTextFileToDisk
     
-                        SAV(          "FRAGBED_001.FRAG"  ,
+                        SAV( "HACK_ME/FRAG/FRAGBED_001.FRAG"  ,
                         AAC2020_FRAGBED_loaded_001_ptr  );;
 
-                        SAV(          "FRAGBED_002.FRAG"  ,
+                        SAV( "HACK_ME/FRAG/FRAGBED_002.FRAG"  ,
                         AAC2020_FRAGBED_loaded_002_ptr  );;
 
-                        SAV(          "FRAGBED_003.FRAG"  ,
+                        SAV( "HACK_ME/FRAG/FRAGBED_003.FRAG"  ,
                         AAC2020_FRAGBED_loaded_003_ptr  );;
 
-                        SAV(          "FRAGBED_004.FRAG"  ,
+                        SAV( "HACK_ME/FRAG/FRAGBED_004.FRAG"  ,
                         AAC2020_FRAGBED_loaded_004_ptr  );;
 
-                        SAV(          "FRAGBED_005.FRAG"  ,
+                        SAV( "HACK_ME/FRAG/FRAGBED_005.FRAG"  ,
                         AAC2020_FRAGBED_loaded_005_ptr  );;
 
-                        SAV(          "FRAGBED_006.FRAG"  ,
+                        SAV( "HACK_ME/FRAG/FRAGBED_006.FRAG"  ,
                         AAC2020_FRAGBED_loaded_006_ptr  );;
 
-                        SAV(          "FRAGBED_007.FRAG"  ,
+                        SAV( "HACK_ME/FRAG/FRAGBED_007.FRAG"  ,
                         AAC2020_FRAGBED_loaded_007_ptr  );;
 
-                        SAV(          "FRAGBED_008.FRAG"  ,
+                        SAV( "HACK_ME/FRAG/FRAGBED_008.FRAG"  ,
                         AAC2020_FRAGBED_loaded_008_ptr  );;
 
-                        SAV(          "FRAGBED_009.FRAG"  ,
+                        SAV( "HACK_ME/FRAG/FRAGBED_009.FRAG"  ,
                         AAC2020_FRAGBED_loaded_009_ptr  );;
 
                 #undef  SAV

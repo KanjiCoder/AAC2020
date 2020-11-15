@@ -1,0 +1,465 @@
+//:MAIN_ENTRY_POINT.DATA:====================================://
+
+    //:This section also known as [global/filescope] variables:
+
+    /** Always store as RGBA. Do not store other formats     **/
+    /** in game code. Normalization of data keeps things     **/
+    /** simple.                                              **/
+    unsigned long AAC2020_last_picked_color_hex=( 0x808080FF );
+
+//:====================================:MAIN_ENTRY_POINT.DATA://
+//:MAIN_ENTRY_POINT.TEST_SAVE_PNG_FILE:======================://
+    int
+    AAC2020_TestSaveFile_PNG()
+    {
+
+        /**  Try saving a 512x512 png image using the        **/
+        /**  color picker value to set color of all pixels.  **/
+
+        unsigned char pix_arr[512*512*4]; //:AKA[ image ]
+        unsigned int  pix_wid=( 512 );
+        unsigned int  pix_hig=( 512 );
+
+        //:Extract RGBA:
+        #define U32 uint32_t /** unsigned long **/
+        #define HEX AAC2020_last_picked_color_hex
+
+            U32 R = (HEX >> 24) & 0xFF;
+            U32 G = (HEX >> 16) & 0xFF;
+            U32 B = (HEX >>  8) & 0xFF;
+            U32 A = (HEX >>  0) & 0xFF;
+     
+        #undef  HEX
+        #undef  U32
+
+        //:Make all alpha 100%:
+        for( int i = 0 ; i < (512*512) ; i++ ){
+            int pixel_base_address=( i * 4 );
+            int r = pixel_base_address + 0;
+            int g = pixel_base_address + 1;
+            int b = pixel_base_address + 2;
+            int a = pixel_base_address + 3;
+            pix_arr[ r ]=(    R  );
+            pix_arr[ g ]=(    G  );
+            pix_arr[ b ]=(    B  );
+            pix_arr[ a ]=(    A  );
+        };;
+
+        unsigned int result=( 
+            lodepng_encode32_file( 
+                "FILE.PNG" 
+            ,   pix_arr  //:AKA[ image ]
+            ,   pix_wid 
+            ,   pix_hig
+            )
+        );;
+
+        return( result );
+    } 
+//:======================:MAIN_ENTRY_POINT.TEST_SAVE_PNG_FILE://
+//:MAIN_ENTRY_POINT.KEYBOARD_HANDLERS:=======================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+
+    U32
+    AAC2020_WIRE_UP_KEYBOARD( U32 u32 )
+    {
+        AAC2020_VITAL_TODO("[REMOVE_THIS_FUNCTION:WUK]");
+
+
+        /** Only ONE keyboard handler should be registered   **/
+        /** at a time. More recent handlers in library chain **/
+        /** should override older handlers in library chain. **/
+
+        if( u32 ){ /** NOOP: Reserved Future Use **/ };
+
+    //  #if( AAC2020_INCLUDE_FRAGBED >= 1 )
+    //
+    //      AAC2020_GINAWIN_SimpleKeyHandler_SetCallback(  
+    //              &( AAC2020_FRAGBED_SimpleKeyHandler ) );;
+    //
+    //  #endif
+
+        return( 0x00 );
+    }
+
+#undef  U32
+//:=======================:MAIN_ENTRY_POINT.KEYBOARD_HANDLERS://
+//:MAIN_ENTRY_POINT.ON_WINDOW_RESIZE:========================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+
+    U32
+    AAC2020_OnWindowResize( U32 u32 )
+    {
+        printf("[AAC2020_OnWindowResize]\n");
+        fflush(stdout);
+
+        /** Centralize all sub-library window resize code **/
+        /** here in one place. **/
+
+        if( u32 ){ 
+            /** u32: Reserved for future use. **/
+        };;
+
+        //:ALL_SUB_LIBRARY_RESIZE_CALLBACKS_HERE:------------://
+
+
+
+            #if( AAC2020_INCLUDE_GRAQUAD >= 1 )
+
+                AAC2020_GRAQUAD_OnWindowResize( 0x00 );
+
+            #endif
+
+
+
+        //:------------:ALL_SUB_LIBRARY_RESIZE_CALLBACKS_HERE://
+
+        return( 0x00 /** Reserved for future use. **/ );
+    }
+
+    U32
+    AAC2020_OnWindowResize_RegisterAfterAllInitIsDone()
+    {
+        /** This is the only place where we should be **/
+        /** Registering a window resize callback.     **/
+
+        printf("[AAC2020.C11:REGISTERING:OnWindowResize]\n");
+        fflush(stdout);
+
+        AAC2020_GINAWIN_OnWindowResize_SetCallback(
+                &(AAC2020_OnWindowResize)
+        );;
+
+        return( 0x00 );
+    }
+
+#undef U32
+//:========================:MAIN_ENTRY_POINT.ON_WINDOW_RESIZE://
+//:MAIN_ENTRY_POINT.LAUNCH_COLOR_PICKER:=====================://
+#define PICKCOLOR_BWO  AAC2020_DUI_AskUserToPickColor_BWO
+    int
+    AAC2020_MAYBEE_LaunchColorPickerOnStartup(){
+
+        int return_status=( 0 - 666 );
+
+        #if( AAC2020_INCLUDE_DUI ) //:#######################://
+        //:##################################################://
+        #if( AAC2020_LAUNCH_COLOR_PICKER_ON_STARTUP >= 1 ) 
+        #define G(a,b,c) a##_##b##_##c
+            printf("[Ask_User_To_Pick_Color]");
+            
+            //:  //: Doing it this way will be impossible
+            //:  //: to easily GREP search for.
+            //:  unsigned long hex =(
+            //:      G(AAC2020_DUI
+            //:      , AskUserToPickColor
+            //:      , BEFORE_MAIN_WINDOW_OPENS
+            //:      )()
+            //:  );;
+
+            unsigned long hex=PICKCOLOR_BWO( );
+            return_status=( 0 /** No error **/ );
+
+            //:Window's color picker uses BGR (no alpha).
+            //:We need to get it into RGBA format.
+            AAC2020_last_picked_color_hex=(  0
+            |
+                ( ( hex >>  0  ) & 0xFF ) << 24 //:RED
+            |
+                ( ( hex >>  8  ) & 0xFF ) << 16 //:GREEN
+            |
+                ( ( hex >> 16  ) & 0xFF ) <<  8 //:BLUE
+            |
+                ( ( 0xFF /** ALPHA **/ )) <<  0 //:ALPHA
+            );;
+
+            AAC2020_DUI_MessageBoxForHexValue(
+                "[!YOU_ABSOLUTE_LEGEND!]" 
+            ,    AAC2020_last_picked_color_hex
+            );;
+        #undef G
+        #endif //:####:AAC2020_LAUNCH_COLOR_PICKER_ON_STARTUP://
+        #endif //:#######################:AAC2020_INCLUDE_DUI://
+
+        return( return_status );
+    }
+#undef PICKCOLOR_BWO
+//:=====================:MAIN_ENTRY_POINT.LAUNCH_COLOR_PICKER://
+//:MAIN_ENTRY_POINT.TASKS:===================================://
+
+
+    int
+    AAC2020_AFTER__WINDOW_OPENS_TASKS()
+    {
+
+        AAC2020_VITAL_TODO("[DontDoWindowResizeWitHCallback]");
+
+        /** Make application respond to window resize **/
+        AAC2020_OnWindowResize_RegisterAfterAllInitIsDone();
+
+
+        AAC2020_VITAL_TODO( "[REMOVE_THIS_CALLBACK:KHSC]" );
+        /** Make application respond to keyboard input    **/
+        /** Decided to use inconsistent verbage with this **/ 
+        /** function because.                             **/
+        /** "AAC2020_KeyHandler_SetCallback( 0x00 )"      **/
+        /** Sounded kind of misleading. Since function    **/
+        /** CHOOSES which callback to wire up.            **/
+        //: AAC2020_WIRE_UP_KEYBOARD( 0x00 );
+
+        return( 0 );
+    }
+
+    int
+    AAC2020_BEFORE_WINDOW_OPENS_TASKS()
+    {
+
+        #if( AAC2020_INCLUDE_DUI ) //:#######################://
+
+            AAC2020_DUI_ErrorCheckSizeOfTypes_WIN_10_64BIT();
+            AAC2020_MAYBEE_LaunchColorPickerOnStartup();
+
+        #endif //:###########################################://
+
+        AAC2020_TestSaveFile_PNG();
+        return( 0 );
+    }
+
+
+//:===================================:MAIN_ENTRY_POINT.TASKS://
+//:MAIN_ENTRY_POINT.FUNC.GRAPHICS_UPDATE_TICK:===============://
+
+    int
+    AAC2020_GraphicsUpdateTick()
+    { //:FUNCTION_BODY
+
+        #if( AAC2020_INCLUDE_GRAQUAD >= 1 ) //:##############://
+        AAC2020_GRAQUAD_LoopTick(); //:Update Painted Quad.
+        #endif
+        
+        #if( AAC2020_INCLUDE_BASUNIF >= 1 ) //:##############://
+        //: Notes at to where different uniforms are updated
+        //: can be found in AAC2020_BASUNIF_LoopTick comments.
+        AAC2020_BASUNIF_LoopTick( 0x00 );  
+        #endif
+
+        return( 0 );
+
+    } //:FUNCTION_BODY
+
+//:===============:MAIN_ENTRY_POINT.FUNC.GRAPHICS_UPDATE_TICK://
+//:MAIN_ENTRY_POINT.FUNC.GAME_LOOP:==========================://
+    int 
+    AAC2020_GameLoop()
+    { //:FUNCTION_BODY
+
+
+
+
+        //:TODO: Game update stuff.
+
+
+
+        return( 0 );
+    } //:FUNCTION_BODY
+//:==========================:MAIN_ENTRY_POINT.FUNC.GAME_LOOP://
+//:MAIN_ENTRY_POINT.INPUT_HANDLER:===========================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+
+    U32
+    AAC2020_HandleInput( U32 u32 ){
+        if( u32 ){ /** Reserved For Future Use **/ };
+
+        /** AKA: ReadFromKeyboardPostOfficeBox(...) **/
+
+        /** Keys 0-9 reserved for FRAGBED. FRAGBED should  * **/
+        /** be synced with the active editor               * **/
+        /** ( AAC2020_CEDITOR_dex_edit ).                  * **/
+
+        
+        if( AAC2020_IKEYBOX_dirty <= 0 ){
+
+            AAC2020_FRAGBED_SimpleKeyHandler(
+                AAC2020_IKEYBOX_k_p
+            );;
+
+        };;
+
+
+
+
+
+        AAC2020_IKEYBOX_dirty=( 1 );
+        return( 0x00 );
+    }
+
+#undef  U32
+//:===========================:MAIN_ENTRY_POINT.INPUT_HANDLER://
+//:MAIN_ENTRY_POINT.FUNC:====================================://
+
+    int 
+    main( void )
+    {
+        
+        //:MAIN_SECTION:001:=================================://
+        //:##################################################://
+        #if( AAC2020_INCLUDE_GINAWIN <= 0 ) //:##############://
+
+            AAC2020_BEFORE_WINDOW_OPENS_TASKS();
+            AAC2020_AFTER__WINDOW_OPENS_TASKS();
+
+        #endif //:###########################################://
+        #if( AAC2020_INCLUDE_GINAWIN >= 1 ) //:##############://
+
+            AAC2020_BEFORE_WINDOW_OPENS_TASKS();
+
+        #endif //:###########################################://
+        //:##################################################://
+        //:=================================:MAIN_SECTION:001://
+        //:MAIN_SECTION:002:=================================://
+        //:( AAC2020_INCLUDE_GINAWIN >= 1 ):#################://
+        #if( AAC2020_INCLUDE_GINAWIN >= 1 ) //:##############://
+        #if( AAC2020_INCLUDE_GINAWIN >= 1 ) //:##############://
+
+            AAC2020_GINAWIN.X   = 22  ;
+            AAC2020_GINAWIN.Y   = 22  ;
+            AAC2020_GINAWIN.WID = 1024;
+            AAC2020_GINAWIN.HIG = 512 ;
+
+            AAC2020_GINAWIN_Init( 
+                #if(       AAC2020_IS_MULTI_THREADED >= 1 )
+                     AAC2020_GINAWIN__MULTI_THREADED
+                #endif
+                #if(       AAC2020_IS_MULTI_THREADED <= 0 )
+                     AAC2020_GINAWIN_SINGLE_THREADED
+                #endif
+            );;
+
+            if( AAC2020_IS_MULTI_THREADED >= 1 ){
+
+                aac2020_ginawin_WaitHereUntilWindowExists();
+
+            };;
+
+            #if( AAC2020_INCLUDE_GLEBIND >= 1 ) //:##########://
+
+                if( AAC2020_GLEBIND_no_news_is_good_news >= 1 ){
+                    //:Say nothing. No news, good news.
+                }else{
+                    printf("[ABOUT_TO:AAC2020_GLEBIND_Init]\n");  
+                };;
+
+                //:Load OpenGL bindings and create
+                //:an OpenGL context.
+                AAC2020_GLEBIND_Init();
+
+            #endif //:#######################################://
+            #if( AAC2020_INCLUDE_GRAQUAD >= 1 ) //:##########://
+            #define call( f ) AAC2020_GRAQUAD_##f
+            #define CALL( f ) call( f )
+                 
+            //# DONT DO THIS SHIT TO SAVE COLUMN SPACE.      #//
+            //# It just makes the code harder to follow.     #//
+            //:    CALL( Init                               )();
+            //:    CALL( ReLoadFragShader_HACKTEST          )();
+            //:    CALL( ReLoadFragShader_StatusSyntaxError )();
+
+                //:RFS: ReloadFragShader
+                AAC2020_GRAQUAD_Init();     
+            //: AAC2020_GRAQUAD_RFS_HACKTEST();     
+            //: AAC2020_GRAQUAD_RFS_StatusSyntaxError();     
+                AAC2020_GRAQUAD_RFS_StatusReady();  
+
+            #undef  call
+            #undef  CALL
+            #endif //:#######################################://
+            #if( AAC2020_INCLUDE_BASUNIF >= 1 ) //:##########://
+
+                /** Sets up callback to update:              **/
+                /** iMouse uniform.                          **/
+                AAC2020_BASUNIF_Init( 0x00 );
+                AAC2020_BASUNIF_RFS_ReLoadShaderUniforms(0x00);
+                //:------------:RFS:Reload_Fragment_Shader
+
+            #endif //:#######################################://
+            #if( AAC2020_INCLUDE_FRAGBED >= 1 ) //:##########://
+
+                AAC2020_FRAGBED_Init( );
+
+            #endif //:#######################################://
+            #if( AAC2020_INCLUDE_GPUDATA >= 1 ) //:##########://
+
+                AAC2020_GPUDATA_Init( 0x00 );
+
+            #endif //:#######################################://
+            #if( AAC2020_INCLUDE_PIXNAME >= 1 ) //:##########://
+
+                AAC2020_PIXNAME_Init( );
+
+            #endif //:#######################################://
+            #if( AAC2020_INCLUDE_PAINT5D >= 1 ) //:##########://
+
+                /** AKA: AAC2020_PAINT5D_Init( 0x00 ) **/
+                AAC2020_GPUDATA_PAINT5D_Init( 0x00 );
+
+            #endif //:#######################################://
+
+        #endif //:- - - - - - - - - - - - - - - - - - - - - -://
+        #if( AAC2020_INCLUDE_GINAWIN >= 1 )  //:- - - - - - -://
+
+            
+            AAC2020_AFTER__WINDOW_OPENS_TASKS();
+           
+            if( AAC2020_GINAWIN.type_of_threading 
+            ==  AAC2020_GINAWIN__MULTI_THREADED
+            ){
+
+                
+
+                AAC2020_GINAWIN_Wait();
+
+            }else
+            if( AAC2020_GINAWIN.type_of_threading 
+            ==  AAC2020_GINAWIN_SINGLE_THREADED
+            ){
+
+                while( AAC2020_GINAWIN_IsWindowStillOpen() ){
+
+                    AAC2020_GraphicsUpdateTick();
+                    AAC2020_HandleInput( 0x00 );
+                    AAC2020_GameLoop();
+
+                    /** AAC2020_GINAWIN_LoopTick(); **/
+                        AAC2020_GINAWIN_WindowTick(
+                            AAC2020_GINAWIN_SINGLE_THREADED
+                        );;
+                
+                        #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 )
+                    
+                            static int counter=( 0 );
+                            counter++;
+                            if( counter % ( 512*512 ) == 0 ){
+                                printf("YOLO\n");
+                            };;
+                    
+                        #endif
+                };;
+            };;
+        #endif //:###########################################://
+        #endif //:###########################################://
+        //:#################:( AAC2020_INCLUDE_GINAWIN >= 1 )://
+        //:=================================:MAIN_SECTION:002://
+        //:MAIN_SECTION:003:AFTER_INIT_CALLBACKS:============://
+
+            
+        //# YOU CANT PUT CODE DOWN HERE. SINGLE THREADED     #//
+        //# WINDOW WILL PREVENT EXECUTION FROM EVER REACHING #//
+        //# HERE UNTIL PROGRAM IS READY TO CLOSE.            #//
+
+
+        //:============:MAIN_SECTION:003:AFTER_INIT_CALLBACKS://
+
+        printf("[LAST_LINE_OF_MAIN_FUNCTION]\n");
+    }
+
+//:====================================:MAIN_ENTRY_POINT.FUNC://
