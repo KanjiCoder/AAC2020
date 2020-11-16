@@ -148,13 +148,25 @@
         #undef  ARG
     )
     {
+        /** SSAE: Shader Should Always Exist * * * * * * * * **/
+        /**       A FILE on disk might not exists, but at  * **/
+        /**       this point we should have MALCOPY(ed)  the **/
+        /**       hardcoded .exe shader string to the        **/
+        /**       BYREF_frag_shader_str variable.            **/
+        if( ((void*)0) == (*BYREF_frag_shader_str) ){
+            aac2020_fragbed_Halt("[FATAL:SSAE]");
+        };;
+
         const char* frag_shader_str =((void*)0);
+        int file_nob    = (   0 - 808   ); //: Neg: TrapValue
+        int file_exists = (   0         ); //: 0 == undefined.
 
         //:DOES_THE_FILE_EXIST_ON_DISK:?:--------------------://
         #define F_OK 0 /** unistd.h **/
         #define FNAM frag_shader_nam
 
         if( access( FNAM , 0x00 /** F_OK **/ ) != -1 ) {
+        file_exists=( 1 );
 
         //:DOES_THE_FILE_EXIST_ON_DISK:YES:
  
@@ -199,7 +211,7 @@
                 //:file_nob:GET_FILE_NUMBER_OF_BYTES:--------://
 
                     //:Open file for "read as binary" ("rb")
-                    int   file_nob =( 0 - 404 );
+                          file_nob =( 0 - 404 );
                     FILE* file_han = fopen( 
                         frag_shader_nam , "rb" );;
                     
@@ -227,7 +239,18 @@
                         (char*)         //:<-- MAKE_WRITABLE
                         frag_shader_str //:<-- DESTINTION(WRITE)
 
-                    ,   file_nob        //:Number_Of_Bytes
+
+                    //[ ------------------------------------ ]//
+                    //[ Q: should this be: ( file_nob + 1 ) ?]//
+                    //[ A: No. The "file_nob+1" from earlier ]//
+                    //[    was a precaution in case string   ]//
+                    //[    read into memory here was NOT     ]//
+                    //[    null terminated. Text files are   ]//
+                    //[    NOT null terminated on disk.      ]//
+                    ,   file_nob  //+  file:Number_Of_Bytes  +//
+                    //[ ------------------------------------ ]//
+
+
                     ,   1               //:Read 1 byte at a time
                     ,   file_han        //:SOURCE(READ)
                     );;
@@ -242,24 +265,61 @@
             #undef MACRO_SEEK_END
             //:-----------------------:READ_ALLOCATE_AND_COPY://
            
-            //:does_the_file_exist_on_disk:NO!:--------------://
+            
             #if( AAC2020_FRAGBED_BUGHUNT_FileOnDiskNotify >= 1 )
             printf("[file_YES_on_disk]:%s\n",frag_shader_nam);
             fflush(stdout);
             #endif 
-            //:--------------:does_the_file_exist_on_disk:NO!://
-        }else{
-            //:does_the_file_exist_on_disk:YES:--------------://
+         
+            file_exists=( 0 + 4 );
+        }else{ 
+            file_exists=( 0 - 4 );
+   
             #if( AAC2020_FRAGBED_BUGHUNT_FileOnDiskNotify >= 1 )
             printf("[file_NOT_on_disk]:%s\n",frag_shader_nam);
             fflush(stdout); 
             #endif
-            //:--------------:does_the_file_exist_on_disk:YES://
+          
 
         };;
         #undef  F_OK
         #undef  FNAM
         //:--------------------:DOES_THE_FILE_EXIST_ON_DISK:?://
+        //:ASSERT_NULL_TERMINATOR:---------------------------://
+        #define FATAL_ERROR aac2020_fragbed_Halt
+        #define BYREF_BOI BYREF_frag_shader_str
+
+            /** ADDED[ DATE[ 2020_11_16 ] ] **************** **/
+
+            if( file_exists >= 1 ){
+
+                if( '\0' != frag_shader_str[ file_nob ] ){
+                    FATAL_ERROR("[DONE_FUCKED_UP:001]");
+                };;
+
+                if( '\0' != (*BYREF_BOI)[ file_nob ] ){
+                    FATAL_ERROR("[DONE_FUCKED_UP:002]");
+                };;
+
+            }else{
+                    
+                /** nod_noc: NotOnDisk:NumberOfCharacters **/
+                int nod_noc = strlen(*BYREF_BOI);
+
+                /** nod_nob: NotOnDisk:NumberOfBytes **/ 
+                int nod_nob = ( nod_noc + 1 );
+
+                if( '\0' != (    *BYREF_BOI)[ nod_nob - 1 ]){
+
+                    FATAL_ERROR("[DONE_FUCKED_UP:003]");
+
+                };;
+
+            };;
+
+        #undef BYREF_BOI
+        #undef FATAL_ERROR
+        //:---------------------------:ASSERT_NULL_TERMINATOR://
 
         return( 0x00 );
     }
@@ -297,7 +357,26 @@
         //: nob:Number_Of_Bytes     : (Ascii My Boy!)
         int noc = strlen( frag_shader_str );
         int nob = ( noc + 1 ); 
-        assert( '\0' == frag_shader_str[ nob ] ); //:NullTerm
+
+        /** BUGFIX:                                        * **/
+        /**     WRONG: '\0' == frag_shader_str[ nob     ]  * **/
+        /**       FIX: '\0' == frag_shader_str[ nob - 1 ]  * **/
+        if( '\0' != frag_shader_str[ nob - 1 ] ){
+
+            /** Print this before attempting to print        **/
+            /** the string variables in case the string      **/
+            /** vars cause a segfault or something.          **/
+            printf("[FATAL_ERROR:WE_HAVE_A_PROBLEM_CAPTAIN]\n");
+            fflush(stdout);
+
+            printf("[frag_shader_nam]%s\n",
+                     frag_shader_nam );;
+
+            printf("[frag_shader_str]%s\n",
+                     frag_shader_str );;
+
+            aac2020_fragbed_Halt("[ERR:NNT]");
+        };;
 
         //:CREATE_BLANK_IF_NOT_EXIST:------------------------://
 
@@ -509,6 +588,8 @@
                 printf("[BEG:MALCOPY:DEFAULT_SHADERS]\n");
                 fflush(stdout);
             #endif
+
+            /** SEE[ DOC/WHY_FRAGBED_DEFAULT_COPY.TXT ] **/
 
             AAC2020_FRAGBED_loaded_001_has=( 1 );
             AAC2020_FRAGBED_loaded_001_ptr=COPY( 
