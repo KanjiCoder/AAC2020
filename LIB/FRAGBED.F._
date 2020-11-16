@@ -299,36 +299,61 @@
         int nob = ( noc + 1 ); 
         assert( '\0' == frag_shader_str[ nob ] ); //:NullTerm
 
-        //:Open file for write. This will erase any
-        //:previous file contents.
-        FILE*  file_han = fopen( frag_shader_nam , "wb" );
+        //:CREATE_BLANK_IF_NOT_EXIST:------------------------://
 
-        if( ((void*)0) != file_han ){
+            //:----------------------------------------------://
+            //:DOES:                                     : : ://
+            //:     1: Creates Directories If Not Exist  : : ://
+            //:     2: Creates Empty File  If Not Exist  : : ://
+            //:----------------------------------------------://
 
-            fseek( file_han , 0 /**orgin**/ , 0 /**SEEK_SET**/);
-            fwrite( 
-                frag_shader_str
-            ,   1   //:SizeInBytesOfEachElementToBeWritten
+            /** Will create directory structure AND touch    **/
+            /** the file. Touch in the linux sense of        **/
+            /** create if not exists and upate access time.  **/
+            /** Though I don't care about access time, just  **/
+            /** creating if not exist.                       **/
+            AAC2020_FILEBOI_TouchFile( frag_shader_nam );
 
-            //:Number_of_Elements_To_Write
-            ,   noc //:number_of_characters( noc )
-                    //:NOT[ nob ]because strings are not
-                    //:null terminated inside text files.
+        //:------------------------:CREATE_BLANK_IF_NOT_EXIST://
+        //:CORE_ACTION:SaveTextFileToDisk:-------------------://
 
-            ,   file_han //:File We are writing into.
-            );;
-            fclose( file_han );
+            //[ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ]//
+            //[ AAC2020_FILEBOI_TouchFile( frag_shader_name )]//
+            //[ MUST BE CALLED PRIOR TO CORE_ACTION !!!!!!!! ]//
+            //[ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ]//
 
-        }else{
+            /** Open file for write.                         **/
+            /** This will erase any previous file contents.  **/
+            FILE*  file_han = fopen( frag_shader_nam , "wb" );
             
-            //:TODO: Figure out how to create folders so that
-            //:      this file save will work.
-            printf("[FILE_SAVE_FAIL]:%s\n"
-                    ,frag_shader_nam    );;
-            fflush(stdout);
-
-            aac2020_fragbed_Halt("[FIX_THIS_YOU_FOOL]");
-        };;
+            if( ((void*)0) != file_han ){
+            
+                fseek( file_han , 0 /**orgin**/ , 0 /**SEEK_SET**/);
+                fwrite( 
+                    frag_shader_str
+                ,   1   //:SizeInBytesOfEachElementToBeWritten
+            
+                //:Number_of_Elements_To_Write
+                ,   noc //:number_of_characters( noc )
+                        //:NOT[ nob ]because strings are not
+                        //:null terminated inside text files.
+            
+                ,   file_han //:File We are writing into.
+                );;
+                fclose( file_han );
+            
+            }else{
+                
+                //:TODO: Figure out how to create folders so that
+                //:      this file save will work.
+                printf("[FILE_SAVE_FAIL]:%s\n"
+                        ,frag_shader_nam    );;
+                fflush(stdout);
+            
+                aac2020_fragbed_Halt("[FIX_THIS_YOU_FOOL]");
+            };;
+        
+        //:-------------------:CORE_ACTION:SaveTextFileToDisk://
 
         return( 0x00 );
     }
@@ -574,31 +599,31 @@
 
                     /** YES, 2nd param is DOUBLE_POINTER(**) **/
     
-                        LOD( "HACK_ME/FRAG/FRAGBED_001.FRAG"  ,
+                        LOD( "MOD/SHADER_001_PAINT5D.FRAG"  ,
                       &(AAC2020_FRAGBED_loaded_001_ptr ));;
 
-                        LOD( "HACK_ME/FRAG/FRAGBED_002.FRAG"  ,
+                        LOD( "MOD/SHADER_002_KEYPAD2.FRAG"  ,
                       &(AAC2020_FRAGBED_loaded_002_ptr ));;
 
-                        LOD( "HACK_ME/FRAG/FRAGBED_003.FRAG"  ,
+                        LOD( "MOD/SHADER_003_KEYPAD3.FRAG"  ,
                       &(AAC2020_FRAGBED_loaded_003_ptr ));;
 
-                        LOD( "HACK_ME/FRAG/FRAGBED_004.FRAG"  ,
+                        LOD( "MOD/SHADER_004_KEYPAD4.FRAG"  ,
                       &(AAC2020_FRAGBED_loaded_004_ptr ));;
 
-                        LOD( "HACK_ME/FRAG/FRAGBED_005.FRAG"  ,
+                        LOD( "MOD/SHADER_005_KEYPAD5.FRAG"  ,
                       &(AAC2020_FRAGBED_loaded_005_ptr ));;
 
-                        LOD( "HACK_ME/FRAG/FRAGBED_006.FRAG"  ,
+                        LOD( "MOD/SHADER_006_KEYPAD6.FRAG"  ,
                       &(AAC2020_FRAGBED_loaded_006_ptr ));;
 
-                        LOD( "HACK_ME/FRAG/FRAGBED_007.FRAG"  ,
+                        LOD( "MOD/SHADER_007_KEYPAD7.FRAG"  ,
                       &(AAC2020_FRAGBED_loaded_007_ptr ));;
 
-                        LOD( "HACK_ME/FRAG/FRAGBED_008.FRAG"  ,
+                        LOD( "MOD/SHADER_008_KEYPAD8.FRAG"  ,
                       &(AAC2020_FRAGBED_loaded_008_ptr ));;
 
-                        LOD( "HACK_ME/FRAG/FRAGBED_009.FRAG"  ,
+                        LOD( "MOD/SHADER_009_KEYPAD9.FRAG"  ,
                       &(AAC2020_FRAGBED_loaded_009_ptr ));;
 
                 #undef  LOD
@@ -611,31 +636,31 @@
 
                 #define SAV  AAC2020_FRAGBED_SaveTextFileToDisk
     
-                        SAV( "HACK_ME/FRAG/FRAGBED_001.FRAG"  ,
+                        SAV( "MOD/SHADER_001_PAINT5D.FRAG"  ,
                         AAC2020_FRAGBED_loaded_001_ptr  );;
 
-                        SAV( "HACK_ME/FRAG/FRAGBED_002.FRAG"  ,
+                        SAV( "MOD/SHADER_002_KEYPAD2.FRAG"  ,
                         AAC2020_FRAGBED_loaded_002_ptr  );;
 
-                        SAV( "HACK_ME/FRAG/FRAGBED_003.FRAG"  ,
+                        SAV( "MOD/SHADER_003_KEYPAD3.FRAG"  ,
                         AAC2020_FRAGBED_loaded_003_ptr  );;
 
-                        SAV( "HACK_ME/FRAG/FRAGBED_004.FRAG"  ,
+                        SAV( "MOD/SHADER_004_KEYPAD4.FRAG"  ,
                         AAC2020_FRAGBED_loaded_004_ptr  );;
 
-                        SAV( "HACK_ME/FRAG/FRAGBED_005.FRAG"  ,
+                        SAV( "MOD/SHADER_005_KEYPAD5.FRAG"  ,
                         AAC2020_FRAGBED_loaded_005_ptr  );;
 
-                        SAV( "HACK_ME/FRAG/FRAGBED_006.FRAG"  ,
+                        SAV( "MOD/SHADER_006_KEYPAD6.FRAG"  ,
                         AAC2020_FRAGBED_loaded_006_ptr  );;
 
-                        SAV( "HACK_ME/FRAG/FRAGBED_007.FRAG"  ,
+                        SAV( "MOD/SHADER_007_KEYPAD7.FRAG"  ,
                         AAC2020_FRAGBED_loaded_007_ptr  );;
 
-                        SAV( "HACK_ME/FRAG/FRAGBED_008.FRAG"  ,
+                        SAV( "MOD/SHADER_008_KEYPAD8.FRAG"  ,
                         AAC2020_FRAGBED_loaded_008_ptr  );;
 
-                        SAV( "HACK_ME/FRAG/FRAGBED_009.FRAG"  ,
+                        SAV( "MOD/SHADER_009_KEYPAD9.FRAG"  ,
                         AAC2020_FRAGBED_loaded_009_ptr  );;
 
                 #undef  SAV

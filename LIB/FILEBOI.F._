@@ -1,0 +1,194 @@
+
+
+//:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=====================://
+    void 
+    aac2020_fileboi_Halt( const char* msg_err )
+    {
+        printf("[FATAL_ERROR:AAC2020_fileboi]:%s\n", msg_err );
+        fflush(stdout);
+        exit( 489 /** 69 + 420 == 489 , NICE! **/ );
+    }
+//:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+//:PRIVATE:RECURIVE_MAKE_DIRECTORY:==========================://
+
+
+    int
+    aac2020_fileboi_MakeOneDirectory(
+        const char* name
+    )
+    {
+        int mkdir_status_zero_is_success=( 23 );
+
+        #ifdef __linux__
+            mkdir_status_zero_is_success =  mkdir(name, 0777);  
+        #else
+            mkdir_status_zero_is_success =  mkdir(name);
+        #endif
+
+        return( mkdir_status_zero_is_success );
+    }
+
+    void aac2020_fileboi_mkdir(char* path) 
+    {
+        if( ((char*)0) != strrchr(path, '\\' ) ){
+            aac2020_fileboi_Halt("BACK_SLASHES_NOT_SUPPORTED]");
+        };;
+
+        char *sep = strrchr(path, '/');
+        if( ((char*)0) != sep ){
+
+            *sep = 0;
+            aac2020_fileboi_mkdir(path);
+            *sep = '/';
+        };;
+
+        if(
+            aac2020_fileboi_MakeOneDirectory(path) 
+        && 
+            errno != EEXIST
+        ){
+            printf("[FUCKING_FILES_MAN]:(((%s)))\n", path); 
+        };;
+    }
+
+//:==========================:PRIVATE:RECURIVE_MAKE_DIRECTORY://
+//:TOUCH_FILE:===============================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+#define SMF aac2020_fileboi_Halt /** SMF:SupriseMotherFucker **/
+#define MACRO_MAX_LEN ( 256 )
+
+    U32
+    AAC2020_FILEBOI_TouchFile(
+        const char* file_name /** EX:frag_shader_nam **/
+    )
+    {
+        printf("[FILEBOI_TouchFile]:%s\n"
+        , file_name );; fflush(stdout);;
+
+        //:GET_STR_LEN_AND_VALIDATE:-------------------------://
+        #define NILIDEX ( 1 ) /** 1 null terminator **/
+
+            int str_len = strlen( file_name );
+            if( str_len > ( MACRO_MAX_LEN - NILIDEX ) ){
+
+                /** Must be short enough to accomidate     **/
+                /** Length of string plus null terminator. **/
+                aac2020_fileboi_Halt("[TOO_LONG]");
+
+            };;
+        
+        #undef  NILIDEX  /** 1 null terminator **/
+        //:-------------------------:GET_STR_LEN_AND_VALIDATE://
+        //:EXPECT_EXACTLY_ONE_DOT:---------------------------://
+        //:DO_NOT_ALLOW_BACKSLASH:---------------------------://
+
+            /** These constraints will make it easier to     **/
+            /** implement your code. * * * * * * * * * * * * **/
+
+            int nos = ( 0 ); /** nos: Number_Of_back_Slashes **/
+            int nod = ( 0 ); /** nod: Number_Of_Dots **/
+            for( int i = 0; i < str_len; i++ ){
+
+                if( file_name[i] == '.'  ){ nod++; };
+                if( file_name[i] == '\\' ){ nos++; };
+
+            };;
+
+            if( nod >   1  ){ SMF("[TOO_MANY_DOTS]"); }else
+            if( nod <=  0  ){ SMF("[ZERO_____DOTS]"); }else
+            if(  1  == nod ){ /** OKAY. NOOP **/    }else
+            {
+                SMF("[WTF:EDCL]");//:ExpectedDeadCodeLine
+            };; 
+
+            if( nos != 0 ){ SMF("[UNDOCUMENTED_BACKSLASHES]");};
+
+        //:---------------------------:DO_NOT_ALLOW_BACKSLASH://
+        //:---------------------------:EXPECT_EXACTLY_ONE_DOT://
+        //:CREATE_DIRECTORY:---------------------------------://
+
+            //:PATH_ONLY_SUB_STRING:- - - - - - - - - - - - -://
+
+                //:FIND__LAST_SLASH:. . . . . . . . . . . . .://
+
+                    int dex_last_slash =( 0 - 1 );
+                    for( int i = 0; i < str_len; i++ ){
+                        if( '/' == file_name[ i ]  ){
+                            dex_last_slash =( i );
+                        };;
+                    };;
+
+                //:. . . . . . . . . . . . .:FIND__LAST_SLASH://
+                //:TAKE_TO_LAST_SLASH:. . . . . . . . . . . .://
+
+                    /** dir_sus : DIRectory_SUb_String **/
+                    char dir_sus[ MACRO_MAX_LEN ] = {0};
+                    for( int i = 0; i < dex_last_slash; i++ ){
+
+                        if( '.' != file_name[ i ]  ){
+
+                            dir_sus[ i ] = file_name[ i ];
+
+                        }else{
+                            //:DNE:Did_Not_Expect
+                            //:DBL:Dot_Before_Lastslash
+                            aac2020_fileboi_Halt("[DNE_DBL]");
+                        };;
+
+                    };;
+
+                //:. . . . . . . . . . . .:TAKE_TO_LAST_SLASH://
+
+            //:- - - - - - - - - - - - -:PATH_ONLY_SUB_STRING://
+            //:RECURSIVE_MAKE_DIR:- - - - - - - - - - - - - -://
+ 
+                if( dex_last_slash <= 0 ){
+                        
+                    /** Creation of directory requires at  * **/
+                    /** least ONE character BEFORE the     * **/
+                    /** last slash.                        * **/
+                    /** Example/Reason: f/t.x              * **/
+
+                }else
+                if( dex_last_slash  < 1 ){
+
+                    /** ECATOH: ExpectedCaseAboveTOHandle  * **/
+                    /** "<1" is the same as "<=0"          * **/
+                    aac2020_fileboi_Halt("[ECATOH]");
+
+                }else{
+
+                    //:RECURSIVE_MAKE_DIR:4REAL:. . . . . . .://
+
+                        printf("[MAKING_DIRECTORY:dir_sus]:%s\n"
+                                                 ,dir_sus);;
+                        fflush(stdout);
+
+                        /** dir_sus : DIRectory_SUb_String **/
+                        aac2020_fileboi_mkdir( dir_sus );
+
+                    //:. . . . . . .:RECURSIVE_MAKE_DIR:4REAL://
+
+                };;
+
+            //:- - - - - - - - - - - - - -:RECURSIVE_MAKE_DIR://
+
+        //:---------------------------------:CREATE_DIRECTORY://
+        //:CREATE_FILE_IF_NOT_EXIST:-------------------------://
+
+            /** Open For: APPEND/BINARY/UPDATE (a/b/+)   * * **/
+            /** Using wrong open can DELETE FILE CONTENTS  * **/
+            /** Which is not what we want. We want a touch.  **/
+            FILE*   file_han = fopen( file_name , "ab+" );
+            fclose( file_han );
+
+        //:-------------------------:CREATE_FILE_IF_NOT_EXIST://
+
+        return( 0x00 );
+    }
+
+#undef  MACRO_MAX_LEN
+#undef  SMF /** www.youtube.com/watch?v=_bSEfx6D8mA **/
+#undef  U32
+//:===============================================:TOUCH_FILE://
+
