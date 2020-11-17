@@ -1,3 +1,6 @@
+
+
+
 //:MAIN_ENTRY_POINT.DATA:====================================://
 
     //:This section also known as [global/filescope] variables:
@@ -233,15 +236,12 @@
     AAC2020_GraphicsUpdateTick()
     { //:FUNCTION_BODY
 
-        #if( AAC2020_INCLUDE_GRAQUAD >= 1 ) //:##############://
-        AAC2020_GRAQUAD_LoopTick(); //:Update Painted Quad.
-        #endif
-        
-        #if( AAC2020_INCLUDE_BASUNIF >= 1 ) //:##############://
-        //: Notes at to where different uniforms are updated
-        //: can be found in AAC2020_BASUNIF_LoopTick comments.
-        AAC2020_BASUNIF_LoopTick( 0x00 );  
-        #endif
+        //:Flat is better than nested. 
+        //:Let's pull this stuff out of here.
+
+        printf("[DONT_CALL_ME_I_WONT_ANSWER]\n");
+        fflush(stdout);
+        exit( 202 );
 
         return( 0 );
 
@@ -425,7 +425,12 @@
 
                 while( AAC2020_GINAWIN_IsWindowStillOpen() ){
 
-                    AAC2020_GraphicsUpdateTick();
+                    //:AAC2020_GraphicsUpdateTick:-----------://
+                    FMACROS_CPUNIFO_LoopTick( 0x00 );
+                    FMACROS_GRAQUAD_LoopTick( 0x00 );
+                    FMACROS_BASUNIF_LoopTick( 0x00 );
+                    //:-----------:AAC2020_GraphicsUpdateTick://
+
                     AAC2020_HandleInput( 0x00 );
                     AAC2020_GameLoop();
 
@@ -463,3 +468,4 @@
     }
 
 //:====================================:MAIN_ENTRY_POINT.FUNC://
+

@@ -1,0 +1,37 @@
+//:----------------------------------------------------------://
+//: FMACROS.TOP : Declare Function Macros                    ://
+//:                                                          ://
+//: REASON For This File:                                    ://
+//:     Remove Visual Clutter From AAC2020.C11 's logic .    ://
+//:                                                          ://
+//: More Info:                                               ://
+//:     The LIBCHAN (librarychain) allows us to compile      ://
+//:     the project up to different points, as we maintain   ://
+//:     a strict ordering of our libraries.                  ://
+//:                                                          ://
+//:----------------------------------------------------------://
+//:LOOPTICK:=================================================://
+
+    #if( AAC2020_INCLUDE_CPUNIFO >= 1 )
+    #define  FMACROS_CPUNIFO_LoopTick   AAC2020_CPUNIFO_LoopTick
+    #endif
+    #if( AAC2020_INCLUDE_CPUNIFO == 0 )
+    #define  FMACROS_CPUNIFO_LoopTick( )
+    #endif
+
+    #if( AAC2020_INCLUDE_GRAQUAD >= 1 )
+    #define  FMACROS_GRAQUAD_LoopTick   AAC2020_GRAQUAD_LoopTick
+    #endif
+    #if( AAC2020_INCLUDE_GRAQUAD == 0 )
+    #define  FMACROS_GRAQUAD_LoopTick( )
+    #endif
+
+    #if( AAC2020_INCLUDE_BASUNIF >= 1 )
+    #define  FMACROS_BASUNIF_LoopTick   AAC2020_BASUNIF_LoopTick
+    #endif
+    #if( AAC2020_INCLUDE_BASUNIF == 0 )
+    #define  FMACROS_BASUNIF_LoopTick( )
+    #endif
+
+//:=================================================:LOOPTICK://
+

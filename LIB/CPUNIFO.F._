@@ -1,0 +1,53 @@
+//:----------------------------------------------------------://
+//: SEE: CPUNIFO.D._ For Documentation.                      ://
+//:----------------------------------------------------------://
+//:LOOP_TICK:================================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/               //://
+                                                           //://
+#define POS_X           AAC2020_CPUNIFO_iMouse_mouse_pos_x //://
+#define POS_Y           AAC2020_CPUNIFO_iMouse_mouse_pos_y //://
+                                                           //://
+#define DRAGSTART_X     AAC2020_CPUNIFO_iMouse_dragstart_x //://
+#define DRAGSTART_Y     AAC2020_CPUNIFO_iMouse_dragstart_y //://
+                                                           //://
+#define IRESOLU_WID     AAC2020_CPUNIFO_iResolution_wid    //://
+#define IRESOLU_HIG     AAC2020_CPUNIFO_iResolution_hig    //://
+#define IRESOLU_PAR     AAC2020_CPUNIFO_iResolution_par    //://
+                                                           //://
+#define ITIME           AAC2020_CPUNIFO_iTime              //://
+  
+    U32
+    AAC2020_CPUNIFO_LoopTick( U32 u32 ){ /** Update Function **/
+
+        if( u32 ){ /** reserved for future use **/ };
+
+        POS_X = AAC2020_IMOUBOX_m_x ;
+        POS_Y = AAC2020_IMOUBOX_m_y ;
+
+        //:TODO: Implement dragstart:
+        DRAGSTART_X = AAC2020_IMOUBOX_m_x ;
+        DRAGSTART_Y = AAC2020_IMOUBOX_m_y ;
+
+        ITIME ++ ;
+
+        IRESOLU_WID = AAC2020_GINAWIN_GetClient_WID();
+        IRESOLU_HIG = AAC2020_GINAWIN_GetClient_HIG();
+        IRESOLU_PAR = ( 1 );
+
+        return( 0x00 );
+    } 
+
+#undef  U32             //: -------------------------------- ://
+                        //: -------------------------------- ://
+#undef  POS_X           //: -------------------------------- ://
+#undef  POS_Y           //: -------------------------------- ://
+                        //: -------------------------------- ://
+#undef  DRAGSTART_X     //: -------------------------------- ://
+#undef  DRAGSTART_Y     //: -------------------------------- ://
+                        //: -------------------------------- ://
+#undef  IRESOLUTION_WID //: -------------------------------- ://
+#undef  IRESOLUTION_HIG //: -------------------------------- ://
+#undef  IRESOLUTION_PAR //: -------------------------------- ://
+                        //: -------------------------------- ://
+#undef  ITIME           //: -------------------------------- ://
+//:================================================:LOOP_TICK://

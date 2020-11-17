@@ -1,0 +1,38 @@
+//:==========================================================://
+//: CPUNIFO : CPU_UNIFOrms: -------------------------------- ://
+//:                                                          ://
+//:     Created to replace BASUNIF.                          ://
+//:                                                          ://
+//:     Responsible for:                                     ://
+//:     1. Updating basic uniforms on the CPU side.          ://
+//:     2. Updating those uniforms WITHOUT using callbacks.  ://
+//:                                                          ://
+//:     NOT responsible for:                                 ://
+//:     1. Getting it's values onto the GPU.                 ://
+//:     2. Getting it's values int OpenGL                    ://
+//:                                                          ://
+//:     GRAQUAD will look at CPUINFO and update the          ://
+//:     uniforms on the GPU side.                            ://
+//:                                                          ://
+//: ------------------------------- : CPUNIFO : CPU_UNIFOrms ://
+//:==========================================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+#define F32 float
+
+        //: These will be backed into VEC4 when 
+        //: loaded into iMouse uniform.
+        U32   AAC2020_CPUNIFO_iMouse_mouse_pos_x =( 0 );
+        U32   AAC2020_CPUNIFO_iMouse_mouse_pos_y =( 0 );
+        U32   AAC2020_CPUNIFO_iMouse_dragstart_x =( 0 );
+        U32   AAC2020_CPUNIFO_iMouse_dragstart_y =( 0 );
+
+        F32   AAC2020_CPUNIFO_iTime =( 0.0 );
+
+        //:Width,Height,PixelAspectRatio:
+        F32   AAC2020_CPUNIFO_iResolution_wid =(  64 );  
+        F32   AAC2020_CPUNIFO_iResolution_hig =(  64 );  
+        F32   AAC2020_CPUNIFO_iResolution_par =(  1  );  
+                                                 
+#undef U32
+#undef F32
+//:==========================================================://

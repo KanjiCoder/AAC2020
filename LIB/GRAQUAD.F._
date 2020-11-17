@@ -1650,16 +1650,25 @@ fn( LoopTick )( void ){
 }
 
 //: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+//:PUBLIC_LOOP_TICK:=========================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
 
-void AAC2020_GRAQUAD_LoopTick()
-{
-    /** Public version of LoopTick. **/
-    /** ADDED[DATE[2020_11_03]]     **/
-    /** To use with AAC2020.C11     **/
+    U32
+    AAC2020_GRAQUAD_LoopTick( U32 u32 )
+    {
+        if( u32 ){ /** Reserved For Future Use **/ };
 
-    aac2020_graquad_LoopTick();
-}
+        /** Public version of LoopTick. **/
+        /** ADDED[DATE[2020_11_03]]     **/
+        /** To use with AAC2020.C11     **/
 
+        aac2020_graquad_LoopTick();
+
+        return( 0x00 );
+    }
+
+#undef U32
+//:=========================================:PUBLIC_LOOP_TICK://
 //: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
 
 //:tesawind_Loop( )
