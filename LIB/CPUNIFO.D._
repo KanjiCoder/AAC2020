@@ -19,12 +19,23 @@
 #define U32 uint32_t /** GCC: <stdint.h> **/
 #define F32 float
 
-        //: These will be backed into VEC4 when 
-        //: loaded into iMouse uniform.
-        U32   AAC2020_CPUNIFO_iMouse_mouse_pos_x =( 0 );
-        U32   AAC2020_CPUNIFO_iMouse_mouse_pos_y =( 0 );
-        U32   AAC2020_CPUNIFO_iMouse_dragstart_x =( 0 );
-        U32   AAC2020_CPUNIFO_iMouse_dragstart_y =( 0 );
+        //: ------------------------------------------------ ://
+        //: [x,y,z,w]                                        ://
+        //:                                                  ://
+        //: These will be backed into VEC4 when              ://
+        //: loaded into iMouse uniform.                      ://
+        //: Decided to label these as their actual values    ://
+        //: in the GLSL code rather than their usage.        ://
+        //:                                                  ://
+        //: Reason: I might not correctly understand what    ://
+        //:         these values SHOULD BE and I don't want  ://
+        //:         to have variable names that lie in my    ://
+        //:         code.                                    ://
+        //: ------------------------------------------------ ://
+        U32   AAC2020_CPUNIFO_iMouse_vec4_x =( 0 );
+        U32   AAC2020_CPUNIFO_iMouse_vec4_y =( 0 );
+        U32   AAC2020_CPUNIFO_iMouse_vec4_z =( 0 );
+        U32   AAC2020_CPUNIFO_iMouse_vec4_w =( 0 );
 
         F32   AAC2020_CPUNIFO_iTime =( 0.0 );
 

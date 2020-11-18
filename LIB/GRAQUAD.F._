@@ -1554,12 +1554,164 @@ void FN(Init)( void ){
                                                         
     }
 
-//:==============================================:DONT_DO_THIS://
+//:=============================================:DONT_DO_THIS://
+//:SHADER_UNIFORM_RE_LOADING:================================://
+
+
+    /** DATE[ 2020_11_17 ] ********************************* **/
+    /**                                                      **/
+    /** These functions were ripped out of BASUNIF           **/
+    /** And refactored from callback functions to            **/
+    /** Functions that update by using values                **/
+    /** Stored in CPUNIFO                                    **/
+    /**                                                      **/
+    /** ********************************* DATE[ 2020_11_17 ] **/
+
+    //:RE_LOAD_SHADER_UNIFORMS:iMouse:=======================://
+    #define U32 uint32_t /** GCC: <stdint.h> **/
+
+        U32 
+        aac2020_graquad_ReLoadShaderUniforms_iMouse(
+            U32 u32
+        )
+        {
+            if( u32 ){ /** Reserved For Future Use **/ };;
+
+            //:GET_HANDLE_TO_MEMORY_ADDRESS:-----------------://
+            #define POG_IID  (aac2020_graquad.data.POG_IID)
+            int /** GLint **/ f32_loc =(
+                AAC2020_GLEBIND.glGetUniformLocation(
+                    POG_IID      //:Program:Program_Integer_ID
+                ,  "iMouse"      //:Shader[uniform/var]in:GLSL
+                )
+            );;
+            #undef  POG_IID
+            //:-----------------:GET_HANDLE_TO_MEMORY_ADDRESS://
+            //:SET_VALUE_AT_MEMORY_ADDRESS:------------------://
+            #define F32 float /** 32 bits even on X64 **/
+               
+                //:Removed: Mouse XY printf debugging.
+
+                //:SET__UNIFORM:- - - - - - - - - - - - - - -://
+                AAC2020_GLEBIND.glUniform4f(
+                    f32_loc
+                ,   ( F32 ) AAC2020_CPUNIFO_iMouse_vec4_x
+                ,   ( F32 ) AAC2020_CPUNIFO_iMouse_vec4_y
+
+                    /** [ vec4_z , vec4_w ] **************** **/
+                    /** I don't fully understand these yet   **/
+                    /** But they communicate if you are      **/
+                    /** currently clicking or dragging.      **/
+                    /** And LOCATE where that is happening.  **/
+                    /** ************************************ **/
+
+                ,   ( F32 ) AAC2020_CPUNIFO_iMouse_vec4_z
+                ,   ( F32 ) AAC2020_CPUNIFO_iMouse_vec4_w
+                );;      
+                //:- - - - - - - - - - - - - - -:SET__UNIFORM://
+
+            #undef  F32
+            //:------------------:SET_VALUE_AT_MEMORY_ADDRESS://
+        
+            return( 0x00 );
+
+        }
+
+    #undef  U32
+    //:=======================:RE_LOAD_SHADER_UNIFORMS:iMouse://
+    //:RE_LOAD_SHADER_UNIFORMS:iTime:========================://
+    #define U32 uint32_t /** GCC: <stdint.h> **/
+
+        /** This also increments iTime **/
+        U32  
+        aac2020_graquad_ReLoadShaderUniforms_iTime()
+        {
+            #define POG_IID  (aac2020_graquad.data.POG_IID)
+            int /** GLint **/ f32_loc =(
+                AAC2020_GLEBIND.glGetUniformLocation(
+                    POG_IID      //:Program:Program_Integer_ID
+                ,  "iTime"       //:Shader[uniform/var]in:GLSL
+                )
+            );;
+            #undef  POG_IID
+
+            #define F float //:##############################://
+            AAC2020_GLEBIND.glUniform1f(
+                f32_loc
+            ,   ( F ) AAC2020_CPUNIFO_iTime
+            );;       
+
+            #undef  F //:####################################://
+        
+            return( 0x00 );
+        }
+
+    #undef  U32
+    //:=======================:RE_LOAD_SHADER_UNIFORMS:iTime://
+    //:RE_LOAD_SHADER_UNIFORMS:iResolution:==================://
+    #define U32 uint32_t /** GCC: <stdint.h> **/
+
+        U32  
+        aac2020_graquad_ReLoadShaderUniforms_iResolution(
+            U32 u32
+        )
+        {
+            if( u32 ){ /** Reserved For Furture Use **/ };
+
+            #define POG_IID  (aac2020_graquad.data.POG_IID)
+            int /** GLint **/ f32_loc =(
+                AAC2020_GLEBIND.glGetUniformLocation(
+                    POG_IID      //:Program:Program_Integer_ID
+                ,  "iResolution" //:Shader[uniform/var]in:GLSL
+                )
+            );;
+            #undef  POG_IID
+
+            #define F float //:##############################://
+            //: khronos.org/.../gl4/html/glUniform.xhtml     ://
+            //: e.g.,glUniform3f or glUniform3fv can be used ://
+            //: to load a uniform variable array of type vec3://
+            AAC2020_GLEBIND.glUniform3f(
+                f32_loc
+            ,   ( F ) AAC2020_CPUNIFO_iResolution_wid
+            ,   ( F ) AAC2020_CPUNIFO_iResolution_hig
+            ,   ( F ) AAC2020_CPUNIFO_iResolution_par
+            );;                    
+            #undef  F //:####################################://
+        
+            return( 0x00 );
+        }
+
+    #undef  U32
+    //:==================:RE_LOAD_SHADER_UNIFORMS:iResolution://
+
+//:================================:SHADER_UNIFORM_RE_LOADING://
 
 PRIVATE_FUNCTION( static void )
 fn( LoopTick )( void ){
     /** AKA: aac2020_graquad_LoopTick **/
     //:GA_LoopTick  //:#ORIGINALLY_GA_LOOPTICK#
+
+    //:UPDATE_BASIC_UNIFORMS:--------------------------------://
+    /** Originally this code called from the future using    **/
+    /** a callback. But decided.                             **/
+    /**                                                      **/
+    /** 1: Calling from future violates LIBCHAN design.      **/
+    /** 2: Callbacks made the code harder to follow.         **/
+    /**    Avoid them when possible.                         **/
+    /**                                                      **/
+    /**    (Still a fan of using callback to create   )      **/
+    /**    (abstract classes, like my tilemap entities)      **/
+    /**    (that exist by rendering themselves as     )      **/
+    /**    (tiles on a tilemap using function pointers)      **/
+    /**    (to GetTile and SetTile functions.         )      **/
+    /**  * * * * * * * * * * * * *** * * * * * * * * * * * * **/
+
+        aac2020_graquad_ReLoadShaderUniforms_iMouse      (0x00);
+        aac2020_graquad_ReLoadShaderUniforms_iTime       (0x00);
+        aac2020_graquad_ReLoadShaderUniforms_iResolution (0x00);
+
+    //:--------------------------------:UPDATE_BASIC_UNIFORMS://
 
     
     /** **************************************************** **/
@@ -1571,9 +1723,9 @@ fn( LoopTick )( void ){
     /** to keep notes so people in the future can find       **/
     /** where this is happening.                             **/
     /**                         FFU:From_Future_Update       **/
-            if( aac2020_graquad_FFU_iTime_HAS ){             ///
-                aac2020_graquad_FFU_iTime_PFN( 0x00 );       ///
-            };;            /**  FFU:From_Future_Update **/   ///
+ //        if( aac2020_graquad_FFU_iTime_HAS ){             ///
+ //            aac2020_graquad_FFU_iTime_PFN( 0x00 );       ///
+ //        };;            /**  FFU:From_Future_Update **/   ///
     /**                                                      **/
     /**                                                      **/
     /** **************************************************** **/

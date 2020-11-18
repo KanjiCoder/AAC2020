@@ -4,11 +4,11 @@
 //:LOOP_TICK:================================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/               //://
                                                            //://
-#define POS_X           AAC2020_CPUNIFO_iMouse_mouse_pos_x //://
-#define POS_Y           AAC2020_CPUNIFO_iMouse_mouse_pos_y //://
+#define POS_X           AAC2020_CPUNIFO_iMouse_vec4_x      //://
+#define POS_Y           AAC2020_CPUNIFO_iMouse_vec4_y      //://
                                                            //://
-#define DRAGSTART_X     AAC2020_CPUNIFO_iMouse_dragstart_x //://
-#define DRAGSTART_Y     AAC2020_CPUNIFO_iMouse_dragstart_y //://
+#define IMOUSE_Z        AAC2020_CPUNIFO_iMouse_vec4_z      //://
+#define IMOUSE_W        AAC2020_CPUNIFO_iMouse_vec4_w      //://
                                                            //://
 #define IRESOLU_WID     AAC2020_CPUNIFO_iResolution_wid    //://
 #define IRESOLU_HIG     AAC2020_CPUNIFO_iResolution_hig    //://
@@ -21,14 +21,17 @@
 
         if( u32 ){ /** reserved for future use **/ };
 
+        /** UPDATE BASIC UNIFORMS ON THE CPU SIDE ONLY HERE **/
+
         POS_X = AAC2020_IMOUBOX_m_x ;
         POS_Y = AAC2020_IMOUBOX_m_y ;
 
-        //:TODO: Implement dragstart:
-        DRAGSTART_X = AAC2020_IMOUBOX_m_x ;
-        DRAGSTART_Y = AAC2020_IMOUBOX_m_y ;
+        //:TODO: Figure out the correct value of
+        //:      "z" and "w" to be given to shader.
+        IMOUSE_Z = AAC2020_IMOUBOX_m_x ;
+        IMOUSE_W = AAC2020_IMOUBOX_m_y ;
 
-        ITIME ++ ;
+        ITIME += ( 1.0 / 256.0 );
 
         IRESOLU_WID = AAC2020_GINAWIN_GetClient_WID();
         IRESOLU_HIG = AAC2020_GINAWIN_GetClient_HIG();
@@ -42,8 +45,8 @@
 #undef  POS_X           //: -------------------------------- ://
 #undef  POS_Y           //: -------------------------------- ://
                         //: -------------------------------- ://
-#undef  DRAGSTART_X     //: -------------------------------- ://
-#undef  DRAGSTART_Y     //: -------------------------------- ://
+#undef  IMOUSE_Z        //: -------------------------------- ://
+#undef  IMOUSE_W        //: -------------------------------- ://
                         //: -------------------------------- ://
 #undef  IRESOLUTION_WID //: -------------------------------- ://
 #undef  IRESOLUTION_HIG //: -------------------------------- ://

@@ -441,7 +441,12 @@
     //:==============================:LOAD_FILE_AND_SAVE_FILE://
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
-    #define U32 uint32_t /** GCC: <stdint.h> **/
+//:SIMPLE_KEY_HANDLER:=======================================://
+#define U32   uint32_t /** GCC: <stdint.h> **/
+#define FN_01 aac2020_graquad_ReLoadShaderUniforms_iMouse
+#define FN_02 aac2020_graquad_ReLoadShaderUniforms_iTime
+#define FN_03 aac2020_graquad_ReLoadShaderUniforms_iResolution
+
     U32 AAC2020_FRAGBED_SimpleKeyHandler( 
         signed char chr_key 
     )
@@ -506,6 +511,8 @@
             #undef  P_9  //:#################################://
 
 
+            int should_re_load_the_shader_uniforms=( 0 );
+            
             if( shader_found > 0 ){
 
                 //: These shaders can be user edited and     ://
@@ -517,9 +524,8 @@
                     str           //: frag_shader_str
                 ,   strlen( str ) //: frag_shader_len
                 );;
-                AAC2020_BASUNIF_RFS_ReLoadShaderUniforms(
-                    0x00
-                );;
+
+                should_re_load_the_shader_uniforms = ( 1 );
 
             }else
             if( shader_found <= 0 ){
@@ -547,11 +553,22 @@
                     /**                                      **/
                     /** -John Mark DATE[2020_11_08]          **/
                     AAC2020_GRAQUAD_RFS_StatusReady();
-                    AAC2020_BASUNIF_RFS_ReLoadShaderUniforms(
-                        0x00
-                    );;
+
+
+                    should_re_load_the_shader_uniforms = ( 2 );
                 
                 };;
+
+            };;
+
+            if( should_re_load_the_shader_uniforms >= 1 ){
+
+                /** FLAT IS BETTER THAN NESTED **/
+
+                //:ReLoadShaderUniforms:
+                FN_01(0x00); /** Reload_Uniform: iMouse      **/
+                FN_02(0x00); /** Reload_Uniform: iTime       **/
+                FN_03(0x00); /** Reload_Uniform: iResolution **/
 
             };;
 
@@ -565,7 +582,12 @@
 
         return( 0x00 );
     }
-    #undef U32
+
+#undef  U32
+#undef  FN_01  
+#undef  FN_02  
+#undef  FN_03  
+//:=======================================:SIMPLE_KEY_HANDLER://
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
