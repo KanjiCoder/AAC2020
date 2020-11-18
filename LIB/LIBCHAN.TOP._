@@ -41,7 +41,7 @@
 #define macro_libchan_order_GLEBIND ( 8 ) //:OpenGL_EasyBINDings
 #define macro_libchan_order_CPUNIFO ( 9 ) //:CPU Side Uniforms
 #define macro_libchan_order_GRAQUAD (10 ) //:Graphics_____QUAD
-#define macro_libchan_order_BASUNIF (11 ) //:BASic____UNIForms
+#define macro_libchan_order_FREE_01 (11 ) //:FREE_SPOT_001
 #define macro_libchan_order_FRAGBED (12 ) //:FRAGMENT_test_BED
 #define macro_libchan_order_GPUDATA (13 ) //:GPU_DATA
 #define macro_libchan_order_PIXNAME (14 ) //:PIXEL_DATA_NAMES
@@ -283,20 +283,13 @@
         #endif
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_011 )
-
-        //[ ------------------------------------------------ ]//
-        //[   DEPRECATED IN FAVOR OF: CPUINFO:               ]//
-        //[   REASON: 1. Get rid of callbacks.               ]//
-        //[   REASON: 2. All OpenGL calls from SAME thread.  ]//
-        //[   (callbacks were calling from window thread)    ]//
-        //[   (which will cause memory coherence issues )    ]//
-        //[   (in your game state.                      )    ]//
-        //[ ------------------------------------------------ ]//
-
-       //: #include "BASUNIF.D._"        
-        #define AAC2020_INCLUDE_BASUNIF (11 )
-        #else   //:     INCLUDE_BASUNIF ( - )
-        #define AAC2020_INCLUDE_BASUNIF ( 0 )
+    
+        /** Free Spot, can put a library here if needed **/
+       
+        #include               "FREE_01.D._"     
+        #define AAC2020_INCLUDE_FREE_01 (11 )
+        #else   //:     INCLUDE_FREE_01 ( - ) 
+        #define AAC2020_INCLUDE_FREE_01 ( 0 )
         #endif
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_012 )
@@ -482,19 +475,12 @@
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_011 )
     
-        //[ ------------------------------------------------ ]//
-        //[   DEPRECATED IN FAVOR OF: CPUINFO:               ]//
-        //[   REASON: 1. Get rid of callbacks.               ]//
-        //[   REASON: 2. All OpenGL calls from SAME thread.  ]//
-        //[   (callbacks were calling from window thread)    ]//
-        //[   (which will cause memory coherence issues )    ]//
-        //[   (in your game state.                      )    ]//
-        //[ ------------------------------------------------ ]//
-
-       //: #include "BASUNIF.F._"    
-        #define AAC2020_INCLUDE_BASUNIF (11 )
-        #else   //:     INCLUDE_BASUNIF ( - )
-        #define AAC2020_INCLUDE_BASUNIF ( 0 )
+        /** Free Spot, can put a library here if needed **/
+       
+        #include               "FREE_01.F._"     
+        #define AAC2020_INCLUDE_FREE_01 (11 )
+        #else   //:     INCLUDE_FREE_01 ( - ) 
+        #define AAC2020_INCLUDE_FREE_01 ( 0 )
         #endif
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_012 )
