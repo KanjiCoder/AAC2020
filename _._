@@ -87,57 +87,6 @@
 
 #undef  U32
 //:=======================:MAIN_ENTRY_POINT.KEYBOARD_HANDLERS://
-//:MAIN_ENTRY_POINT.ON_WINDOW_RESIZE:========================://
-#define U32 uint32_t /** GCC: <stdint.h> **/
-
-    U32
-    AAC2020_OnWindowResize( U32 u32 )
-    {
-        printf("[AAC2020_OnWindowResize]\n");
-        fflush(stdout);
-
-        /** Centralize all sub-library window resize code **/
-        /** here in one place. **/
-
-        if( u32 ){ 
-            /** u32: Reserved for future use. **/
-        };;
-
-        //:ALL_SUB_LIBRARY_RESIZE_CALLBACKS_HERE:------------://
-
-
-
-            #if( AAC2020_INCLUDE_GRAQUAD >= 1 )
-
-                AAC2020_GRAQUAD_OnWindowResize( 0x00 );
-
-            #endif
-
-
-
-        //:------------:ALL_SUB_LIBRARY_RESIZE_CALLBACKS_HERE://
-
-        return( 0x00 /** Reserved for future use. **/ );
-    }
-
-    U32
-    AAC2020_OnWindowResize_RegisterAfterAllInitIsDone()
-    {
-        /** This is the only place where we should be **/
-        /** Registering a window resize callback.     **/
-
-        printf("[AAC2020.C11:REGISTERING:OnWindowResize]\n");
-        fflush(stdout);
-
-        AAC2020_GINAWIN_OnWindowResize_SetCallback(
-                &(AAC2020_OnWindowResize)
-        );;
-
-        return( 0x00 );
-    }
-
-#undef U32
-//:========================:MAIN_ENTRY_POINT.ON_WINDOW_RESIZE://
 //:MAIN_ENTRY_POINT.LAUNCH_COLOR_PICKER:=====================://
 #define PICKCOLOR_BWO  AAC2020_DUI_AskUserToPickColor_BWO
     int
@@ -189,31 +138,21 @@
 #undef PICKCOLOR_BWO
 //:=====================:MAIN_ENTRY_POINT.LAUNCH_COLOR_PICKER://
 //:MAIN_ENTRY_POINT.TASKS:===================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
 
-
-    int
+    U32
     AAC2020_AFTER__WINDOW_OPENS_TASKS()
     {
 
-        AAC2020_VITAL_TODO("[DontDoWindowResizeWitHCallback]");
+        /** Stuff used to be here. But refactored code to    **/
+        /** avoid using callbacks.                           **/
+        /** GONE: WIRE_UP_KEYBOARD                           **/
+        /** GONE: OnWindowResize_RegisterAfterAllInitIsDone  **/
 
-        /** Make application respond to window resize **/
-        AAC2020_OnWindowResize_RegisterAfterAllInitIsDone();
-
-
-        AAC2020_VITAL_TODO( "[REMOVE_THIS_CALLBACK:KHSC]" );
-        /** Make application respond to keyboard input    **/
-        /** Decided to use inconsistent verbage with this **/ 
-        /** function because.                             **/
-        /** "AAC2020_KeyHandler_SetCallback( 0x00 )"      **/
-        /** Sounded kind of misleading. Since function    **/
-        /** CHOOSES which callback to wire up.            **/
-        //: AAC2020_WIRE_UP_KEYBOARD( 0x00 );
-
-        return( 0 );
+        return( 0x00 );
     }
 
-    int
+    U32
     AAC2020_BEFORE_WINDOW_OPENS_TASKS()
     {
 
@@ -225,10 +164,10 @@
         #endif //:###########################################://
 
         AAC2020_TestSaveFile_PNG();
-        return( 0 );
+        return( 0x00 );
     }
 
-
+#undef  U32
 //:===================================:MAIN_ENTRY_POINT.TASKS://
 //:MAIN_ENTRY_POINT.FUNC.GRAPHICS_UPDATE_TICK:===============://
 

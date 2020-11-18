@@ -15,7 +15,22 @@
 //:     the BeginPaint call, so your painting will fail.  
 //:     https://stackoverflow.com/questions/30551850
 
+//:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=====================://
 
+    void
+    aac2020_ginawin_Halt( 
+        const char* error_message_string
+    ){
+        printf(
+            "[AAC2020_GINAWIN :Fatal_Error_Encountered]\n"
+        );;
+        printf( "[AAC2020_GINAWIN:error_message_string]:%s\n"
+                                , error_message_string );;
+        fflush(stdout);
+        exit( 666 );
+    } 
+
+//:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
 
 //:----------------------------------------------------------://
 //:     123_123                                              ://
@@ -124,6 +139,15 @@
     AAC2020_GINAWIN_OnWindowResize_SetCallback(
         PFN pfn
     ){
+
+        /** Use a check for a window resize flag instead     **/
+        /** of this. Because a resize callback will be       **/
+        /** called from WINDOW thread and we want openGL     **/
+        /** code to be called from the MAIN thread only.     **/
+        /** A callback will have more multi-threading        **/
+        /** issues due to cache incoherency.                 **/
+        aac2020_ginawin_Halt("[AVOID_RESIZE_CALLBACK_USE]");
+
         if( ((void*)0) == pfn ){
             printf("[FATAL_ERROR:Void_ResizeCallback]");
             fflush(stdout);
@@ -425,21 +449,6 @@ aac2020_ginawin_NULFUN(
         "[AAC2020_GINAWIN :Null_Func_Pointer_Found]\n"
     );;
     printf( "Null:%s\n", name_of_null_function );
-    fflush(stdout);
-    exit( 666 );
-} 
-
-//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
-
-void
-aac2020_ginawin_Halt( 
-    const char* error_message_string
-){
-    printf(
-        "[AAC2020_GINAWIN :Fatal_Error_Encountered]\n"
-    );;
-    printf( "[AAC2020_GINAWIN:error_message_string]:%s\n"
-                            , error_message_string );;
     fflush(stdout);
     exit( 666 );
 } 
