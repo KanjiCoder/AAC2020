@@ -1,0 +1,50 @@
+//:MAIN_ENTRY_POINT.LAUNCH_COLOR_PICKER:=====================://
+#define PICKCOLOR_BWO  AAC2020_DUI_AskUserToPickColor_BWO
+    int
+    AAC2020_MAYBEE_LaunchColorPickerOnStartup(){
+
+        int return_status=( 0 - 666 );
+
+        #if( AAC2020_INCLUDE_DUI ) //:#######################://
+        //:##################################################://
+        #if( AAC2020_LAUNCH_COLOR_PICKER_ON_STARTUP >= 1 ) 
+        #define G(a,b,c) a##_##b##_##c
+            printf("[Ask_User_To_Pick_Color]");
+            
+            //:  //: Doing it this way will be impossible
+            //:  //: to easily GREP search for.
+            //:  unsigned long hex =(
+            //:      G(AAC2020_DUI
+            //:      , AskUserToPickColor
+            //:      , BEFORE_MAIN_WINDOW_OPENS
+            //:      )()
+            //:  );;
+
+            unsigned long hex=PICKCOLOR_BWO( );
+            return_status=( 0 /** No error **/ );
+
+            //:Window's color picker uses BGR (no alpha).
+            //:We need to get it into RGBA format.
+            AAC2020_last_picked_color_hex=(  0
+            |
+                ( ( hex >>  0  ) & 0xFF ) << 24 //:RED
+            |
+                ( ( hex >>  8  ) & 0xFF ) << 16 //:GREEN
+            |
+                ( ( hex >> 16  ) & 0xFF ) <<  8 //:BLUE
+            |
+                ( ( 0xFF /** ALPHA **/ )) <<  0 //:ALPHA
+            );;
+
+            AAC2020_DUI_MessageBoxForHexValue(
+                "[!YOU_ABSOLUTE_LEGEND!]" 
+            ,    AAC2020_last_picked_color_hex
+            );;
+        #undef G
+        #endif //:####:AAC2020_LAUNCH_COLOR_PICKER_ON_STARTUP://
+        #endif //:#######################:AAC2020_INCLUDE_DUI://
+
+        return( return_status );
+    }
+#undef PICKCOLOR_BWO
+//:=====================:MAIN_ENTRY_POINT.LAUNCH_COLOR_PICKER://

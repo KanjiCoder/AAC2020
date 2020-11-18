@@ -1,35 +1,4 @@
-//:DEBUG_CONFIGURATION:======================================://
-
-    #define   AAC2020_CRASH_ON_VITAL_TODO (  0  )
-
-    #include <stdio.h> //:printf(...)
-    void AAC2020_VITAL_TODO( const char* todo_message ){
-
-        printf( "[AAC2020_VITAL_TODO]:%s\n", todo_message );
-        fflush( stdout );
-
-        #if( AAC2020_CRASH_ON_VITAL_TODO >= 1 )
-            exit( 222 );
-        #endif
-    }
-
-//:======================================:DEBUG_CONFIGURATION://
-//:EXPECTATION_BREAKERS:=====================================://
-//:                                                          ://
-//: 1. Uses a LIBCHAN ( SEE:   DOC/LIBRARY_CHAIN.TXT )       ://
-//: 2. Procedural OOP ( SEE: DATA_THEN_FUNCTIONS.TXT )       ://
-//:    NO : ".H"   : Header         --- NEVER                ://
-//:    NO : ".C"   : Implementation --- NEVER                ://
-//:                  (One Exception: AAC2020.C11)            ://
-//:                                                          ://
-//:    YES: ".D._" : DATA ------------- ALWAYS (can be empty)://
-//:    YES: ".F._" : FUNCTIONS -------- ALWAYS (can be empty)://
-//:    YES: ".P._" : Public Interface - SOMETIMES            ://
-//:                                                          ://
-//:=====================================:EXPECTATION_BREAKERS://
 //:LIBRARY_CHAIN_ORDER:SUMMARY:==============================://
-
-#define     AAC2020_MAC_LIBCHAN_CUR (14 ) //:<--Compile_To_Here
 
 #define macro_libchan_order_FILEBOI ( 1 ) //:FileSystemAccess
 #define macro_libchan_order_NATIKEY ( 2 ) //:NATIve___KEYboard
@@ -48,13 +17,6 @@
 #define macro_libchan_order_PAINT5D (15 ) //:GPUDATA_PAINT5D
 
 //:==============================:LIBRARY_CHAIN_ORDER:SUMMARY://
-//:NON_DEBUG_CONFIGURATION:==================================://
-
-    #define AAC2020_IS_MULTI_THREADED ( 0 )
-
-    #define AAC2020_LAUNCH_COLOR_PICKER_ON_STARTUP ( 1 )
-
-//:==================================:NON_DEBUG_CONFIGURATION://
 //:ABOUT_THIS_PROJECT:=======================================://
     /** EXTRACTED_BLOCK_COMMENT: DOC/PREVIOUS_PROJECT.TXT ** **/
     /** **************************************************** ***   
@@ -76,6 +38,20 @@
     |   +--+----------------------------------+|
     |      |                                   |
     |      V                                   |
+    +------------------------------------------+
+    |                                          |
+    |   Some basic data and measures to help   |
+    |   game design work without callbacks.    |
+    |   ( Conceptualy, in any order )          |
+    |                                          |
+    |   +   FILEBOI  : File Access Functions   |
+    |   +   NATIKEY  : Native Keyboard Funcs   |
+    |                                          |
+    |   +   IKEYBOX  : Input Keyboard Values   |
+    |   +   IMOUBOX  : Input Mouse    Values   |
+    |                                          |
+    |   +   CEDITOR  : Current Editor In Focus |
+    |                                          |
     +------------------------------------------+
     |                                          |
     |   Windows & Dialogs Section              |
@@ -105,6 +81,9 @@
     |      .____________|                      |          
     |      |                                   |
     |      V                                   |
+    |   CPUNIFO       CPUNIFO: CPU_UNIFORMS    |
+    |      |                                   |
+    |      V                                   |
     |   GRAQUAD       GRAQUAD: GRAphics_QUAD   |
     |      |          GLEBIND: GL_Easy_BINDings|
     |      |                                   |
@@ -114,7 +93,7 @@
     |      |              ( Informal Category )|
     |      V                                   |
     |   BASUNIF : BASicUNIForms                |
-    |      |                                   |
+    |      |      (REMOVED, SEE: CPUNIFO)      |
     |      |                                   |
     |      V                                   |
     |   FRAGBED : 1. Creates shadertoy like    |
@@ -127,16 +106,36 @@
     |                by editing serialized     |
     |                FRAGBED_###.frag files.   |
     +------------------------------------------+
-        
+    |                                          |
+    |   Minimum Viable Proof Of Concept Engine |
+    |   will be compiling up to "PAINT5D" to   |
+    |   create an executable like MS-PAINT 95  |
+    |   that allows 5 dimensions:              |
+    |   1. Color                               |
+    |   2. Tile X Location                     |
+    |   3. Tile Y Location                     |
+    |   4. Tile Size                           |
+    |   5. Tile Layer                          |
+    |                                          |
+    |   GPUDATA  <---- GPU_DATA(STRUCT)        |
+    |      |                                   |
+    |      V                                   |
+    |   PIXNAME  <---- PIXEL_DATA_NAMES        |
+    |      |                                   |
+    |      V                                   |
+    |   PAINT5D  <---- GPUDATA_PAINT5D         |
+    |                                          |
+    +------------------------------------------+
+    
     *** **************************************************** **/
 //:=======================================:ABOUT_THIS_PROJECT://
 //:INCLUDE_DIRECTIVES:=======================================://
 
-    #include "../DEP/lodepng.h"  /** https://lodev.org/lodepng/ **/
-    #include "../DEP/lodepng.c"  /** https://lodev.org/lodepng/ **/
+    #include "../DEP/lodepng.h"       /** lodev.org/lodepng/ **/
+    #include "../DEP/lodepng.c"       /** lodev.org/lodepng/ **/
 
-    #include "../DEP/PEB2020/PEB2020.H" /* PEB2020_LoadLibraryA  */
-    #include "../DEP/PEB2020/PEB2020.H" /* PEB2020_GetProcAddress*/
+    #include "../DEP/PEB2020/PEB2020.H" /** LoadLibraryA     **/
+    #include "../DEP/PEB2020/PEB2020.H" /** GetProcAddress   **/
 
     //:INCLUDE_DIRECTIVES:STANDARD_LIBRARIES:----------------://
 
@@ -153,8 +152,8 @@
         #include <sys/types.h>  /** Create_Directory **/
 
         /** https://stackoverflow.com/questions/5525668 **/
-        #include <unistd.h> /** Absolute Path Of Your Exe **/
-        #include <limits.h> /** Absolute Path Of Your Exe **/
+        #include <unistd.h> /** Absolute Path Of Your Exe    **/
+        #include <limits.h> /** Absolute Path Of Your Exe    **/
 
 
     //:----------------:INCLUDE_DIRECTIVES:STANDARD_LIBRARIES://

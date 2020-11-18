@@ -1,0 +1,192 @@
+//:REDUCE_CLUTTER_IN_MAIN_FILE:==============================://
+
+    #include "./LIB/MAIN/AAC2020_TestSaveFile_PNG._"
+    #include "LIB/MAIN/AAC2020_DUI_AskUserToPickColor_BWO._"
+
+    #include "LIB/MAIN/AAC2020_AFTER__WINDOW_OPENS_TASKS._" 
+    #include "LIB/MAIN/AAC2020_BEFORE_WINDOW_OPENS_TASKS._"
+
+//:==============================:REDUCE_CLUTTER_IN_MAIN_FILE://
+//:DONT_YOU_FUCKING_DARE_DO_THIS:============================://
+
+    /** DOCUMENTING WHAT ____NOT____ TO DO IS IMPORTANT !!!! **/
+
+    #include "./LIB/DONT/AAC2020_WIRE_UP_KEYBOARD._"
+
+//:============================:DONT_YOU_FUCKING_DARE_DO_THIS://
+//:MAIN_ENTRY_POINT.FUNC.GRAPHICS_UPDATE_TICK:===============://
+
+    int
+    AAC2020_GraphicsUpdateTick()
+    { //:FUNCTION_BODY
+
+        //:Flat is better than nested. 
+        //:Let's pull this stuff out of here.
+
+        printf("[DONT_CALL_ME_I_WONT_ANSWER]\n");
+        fflush(stdout);
+        exit( 202 );
+
+        return( 0 );
+
+    } //:FUNCTION_BODY
+
+//:===============:MAIN_ENTRY_POINT.FUNC.GRAPHICS_UPDATE_TICK://
+//:MAIN_ENTRY_POINT.FUNC.GAME_LOOP:==========================://
+    int 
+    AAC2020_GameLoop()
+    { //:FUNCTION_BODY
+
+
+
+
+        //:TODO: Game update stuff.
+
+
+
+        return( 0 );
+    } //:FUNCTION_BODY
+//:==========================:MAIN_ENTRY_POINT.FUNC.GAME_LOOP://
+//:MAIN_ENTRY_POINT.INPUT_HANDLER:===========================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+
+    U32
+    AAC2020_HandleInput( U32 u32 ){
+
+        if( u32 ){ /** Reserved For Future Use **/ };
+
+        /** AKA: ReadFromKeyboardPostOfficeBox(...) **/
+
+        /** Keys 0-9 reserved for FRAGBED. FRAGBED should  * **/
+        /** be synced with the active editor               * **/
+        /** ( AAC2020_CEDITOR_dex_edit ).                  * **/
+
+        
+        #if( AAC2020_INCLUDE_IKEYBOX >= 1 ) //:##############://
+        #if( AAC2020_INCLUDE_FRAGBED >= 1 ) //:##############://
+
+            if( AAC2020_IKEYBOX_dirty <= 0 /** Is Clean? **/ ){
+
+                AAC2020_FRAGBED_SimpleKeyHandler(
+                    AAC2020_IKEYBOX_k_p
+                );;
+
+            };;
+
+        #endif //:###########################################://
+        #endif //:###########################################://
+        #if( AAC2020_INCLUDE_IKEYBOX >= 1 ) //:##############://
+
+            AAC2020_IKEYBOX_dirty = 1 ;
+
+        #endif //:###########################################://
+
+        return( 0x00 );
+    }
+
+#undef  U32
+//:===========================:MAIN_ENTRY_POINT.INPUT_HANDLER://
+//:MAIN_ENTRY_POINT.FUNC:====================================://
+
+    int 
+    main( void )
+    {
+        
+        //:MAIN_SECTION:001:=================================://
+        //:##################################################://
+        #if( AAC2020_INCLUDE_GINAWIN <= 0 ) //:##############://
+
+            AAC2020_BEFORE_WINDOW_OPENS_TASKS();
+            AAC2020_AFTER__WINDOW_OPENS_TASKS();
+
+        #endif //:###########################################://
+        #if( AAC2020_INCLUDE_GINAWIN >= 1 ) //:##############://
+
+            AAC2020_BEFORE_WINDOW_OPENS_TASKS();
+
+        #endif //:###########################################://
+        //:##################################################://
+        //:=================================:MAIN_SECTION:001://
+        //:MAIN_SECTION:002:=================================://
+        //:( AAC2020_INCLUDE_GINAWIN >= 1 ):#################://
+        #if( AAC2020_INCLUDE_GINAWIN >= 1 ) //:##############://
+        #if( AAC2020_INCLUDE_GINAWIN >= 1 ) //:##############://
+
+            FMACROS_GINAWIN_Init( AAC2020_IS_MULTI_THREADED );
+            if( AAC2020_IS_MULTI_THREADED >= 1 ){
+
+                aac2020_ginawin_WaitHereUntilWindowExists();
+
+            };;
+            
+            FMACROS_GLEBIND_Init( 0x00 );
+            FMACROS_GRAQUAD_Init( 0x00 );
+            FMACROS_FRAGBED_Init( 0x00 );
+            FMACROS_GPUDATA_Init( 0x00 );
+            FMACROS_PIXNAME_Init( 0x00 );
+            FMACROS_PAINT5D_Init( 0x00 );
+
+
+        #endif //:- - - - - - - - - - - - - - - - - - - - - -://
+        #if( AAC2020_INCLUDE_GINAWIN >= 1 )  //:- - - - - - -://
+
+            
+            AAC2020_AFTER__WINDOW_OPENS_TASKS();
+           
+            if( AAC2020_GINAWIN.type_of_threading 
+            ==  AAC2020_GINAWIN__MULTI_THREADED
+            ){
+
+                AAC2020_GINAWIN_Wait();
+
+            }else
+            if( AAC2020_GINAWIN.type_of_threading 
+            ==  AAC2020_GINAWIN_SINGLE_THREADED
+            ){
+
+                while( AAC2020_GINAWIN_IsWindowStillOpen() ){
+
+                    //:AAC2020_GraphicsUpdateTick:-----------://
+                    FMACROS_CPUNIFO_LoopTick( 0x00 );
+                    FMACROS_GRAQUAD_LoopTick( 0x00 );
+               //:  FMACROS_BASUNIF_LoopTick( 0x00 );
+                    //:-----------:AAC2020_GraphicsUpdateTick://
+
+                    AAC2020_HandleInput( 0x00 );
+                    AAC2020_GameLoop();
+
+                    /** AAC2020_GINAWIN_LoopTick(); **/
+                        AAC2020_GINAWIN_WindowTick(
+                            AAC2020_GINAWIN_SINGLE_THREADED
+                        );;
+                
+                        #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 )
+                    
+                            static int counter=( 0 );
+                            counter++;
+                            if( counter % ( 512*512 ) == 0 ){
+                                printf("YOLO\n");
+                            };;
+                    
+                        #endif
+                };;
+            };;
+        #endif //:###########################################://
+        #endif //:###########################################://
+        //:#################:( AAC2020_INCLUDE_GINAWIN >= 1 )://
+        //:=================================:MAIN_SECTION:002://
+        //:MAIN_SECTION:003:AFTER_INIT_CALLBACKS:============://
+
+            
+        //# YOU CANT PUT CODE DOWN HERE. SINGLE THREADED     #//
+        //# WINDOW WILL PREVENT EXECUTION FROM EVER REACHING #//
+        //# HERE UNTIL PROGRAM IS READY TO CLOSE.            #//
+
+
+        //:============:MAIN_SECTION:003:AFTER_INIT_CALLBACKS://
+
+        printf("[LAST_LINE_OF_MAIN_FUNCTION]\n");
+    }
+
+//:====================================:MAIN_ENTRY_POINT.FUNC://
+

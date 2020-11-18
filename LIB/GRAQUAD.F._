@@ -1404,9 +1404,7 @@ fn( Init )( void ){
 
     aac2020_graquad_inited=( 777 );return;
 }
-void FN(Init)( void ){
-     fn(Init)(      );
-}
+
 
 //:DONT_DO_THIS:=============================================://
 /** ******************************************************** ***
@@ -1689,6 +1687,48 @@ void FN(Init)( void ){
 
 PRIVATE_FUNCTION( static void )
 fn( LoopTick )( void ){
+
+    if( aac2020_graquad_inited <= 0 ){  
+        //:FTI:Forgot_To_Init
+        aac2020_graquad_Halt("[FTI:2020_11_17]");
+    };;
+
+    //:WINDOW_RESIZE_HANDLING:===============================://
+    
+        /** Handling in tick function to:            * * * * **/
+        /** 1: Avoid using a callback.               * * * * **/
+        /** 2: Avoid calling OpenGL on window thread * * * * **/
+        if( AAC2020_CPUNIFO_iResolution_wid !=
+            AAC2020_GRAQUAD_last_resize_wid  
+            ||
+            AAC2020_CPUNIFO_iResolution_hig !=
+            AAC2020_GRAQUAD_last_resize_hig  
+        ){
+
+            //:Resize_OpenGL_Viewport_To_New_Screen_Size:----://
+
+                AAC2020_GLEBIND.glViewport(
+                    0 , 0 //: x,y
+                ,    
+                AAC2020_GRAQUAD_last_resize_wid=(
+                  AAC2020_GINAWIN_GetClient_WID())
+                ,
+                AAC2020_GRAQUAD_last_resize_hig=(
+                  AAC2020_GINAWIN_GetClient_HIG()) 
+                );;
+
+            //:----:Resize_OpenGL_Viewport_To_New_Screen_Size://
+
+            
+        };;
+
+ 
+
+        
+
+
+    //:===============================:WINDOW_RESIZE_HANDLING://
+
     /** AKA: aac2020_graquad_LoopTick **/
     //:GA_LoopTick  //:#ORIGINALLY_GA_LOOPTICK#
 
@@ -2131,6 +2171,24 @@ RT(void)   AAC2020_GRAQUAD_Ping(      void ){
     }
     #define U32 uint32_t /** GCC: <stdint.h> **/
 
+
+//:PUBLIC_INIT:==============================================://
+
+    U32
+    AAC2020_GRAQUAD_Init( U32 u32 ){
+
+        if( u32 ){ /** Reserved For Future Use **/ };
+
+        aac2020_graquad_Init( );
+
+        //[HACK]:Set the ready screen here to make our       ]//
+        //[      top-level managing code  streamlined.       ]//
+        AAC2020_GRAQUAD_RFS_StatusReady();
+
+        return( 0x00 );
+    }
+
+//:==============================================:PUBLIC_INIT://
 
 //:
 //:==========================================================://

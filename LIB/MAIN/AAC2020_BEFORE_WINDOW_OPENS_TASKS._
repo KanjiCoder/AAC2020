@@ -1,0 +1,34 @@
+//:MAIN_ENTRY_POINT.TASKS:===================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+
+    U32
+    AAC2020_BEFORE_WINDOW_OPENS_TASKS()
+    {
+
+        #if( AAC2020_INCLUDE_DUI ) //:#######################://
+
+            AAC2020_DUI_ErrorCheckSizeOfTypes_WIN_10_64BIT();
+            AAC2020_MAYBEE_LaunchColorPickerOnStartup();
+
+        #endif //:###########################################://
+
+        AAC2020_TestSaveFile_PNG();
+        return( 0x00 );
+    }
+
+    U32
+    AAC2020_AFTER__WINDOW_OPENS_TASKS()
+    {
+
+        /** Stuff used to be here. But refactored code to    **/
+        /** avoid using callbacks.                           **/
+        /** GONE: WIRE_UP_KEYBOARD                           **/
+        /** GONE: OnWindowResize_RegisterAfterAllInitIsDone  **/
+
+        return( 0x00 );
+    }
+
+
+
+#undef  U32
+//:===================================:MAIN_ENTRY_POINT.TASKS://

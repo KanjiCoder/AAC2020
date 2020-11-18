@@ -10,28 +10,206 @@
 //:     a strict ordering of our libraries.                  ://
 //:                                                          ://
 //:----------------------------------------------------------://
-//:LOOPTICK:=================================================://
 
-    #if( AAC2020_INCLUDE_CPUNIFO >= 1 )
+
+//:IKEYBOX:==================================================://
+#if(            AAC2020_INCLUDE_IKEYBOX >=  1 )
+_Static_assert( AAC2020_INCLUDE_IKEYBOX ==  3 ,        "3");
+
+    /** Only make macros out of functions that are        **/
+    /** common to multiple libraries and called together. **/
+
+#endif
+#if(     AAC2020_INCLUDE_IKEYBOX == 0 )
+
+    /** Only make macros out of functions that are        **/
+    /** common to multiple libraries and called together. **/
+
+#endif
+//:==================================================:IKEYBOX://
+
+//:CPUNIFO:==================================================://
+#if(            AAC2020_INCLUDE_CPUNIFO >=  1 )
+_Static_assert( AAC2020_INCLUDE_CPUNIFO ==  9 ,        "9");
+
     #define  FMACROS_CPUNIFO_LoopTick   AAC2020_CPUNIFO_LoopTick
-    #endif
-    #if( AAC2020_INCLUDE_CPUNIFO == 0 )
-    #define  FMACROS_CPUNIFO_LoopTick( )
-    #endif
 
-    #if( AAC2020_INCLUDE_GRAQUAD >= 1 )
+#endif
+#if(     AAC2020_INCLUDE_CPUNIFO == 0 )
+
+    #define  FMACROS_CPUNIFO_LoopTick( DISCARDED_ARGUMENT )
+
+#endif
+//:==================================================:CPUNIFO://
+//:GRAQUAD:==================================================://
+#if(            AAC2020_INCLUDE_GRAQUAD >=  1 )
+_Static_assert( AAC2020_INCLUDE_GRAQUAD == 10 ,       "10");
+
     #define  FMACROS_GRAQUAD_LoopTick   AAC2020_GRAQUAD_LoopTick
-    #endif
-    #if( AAC2020_INCLUDE_GRAQUAD == 0 )
-    #define  FMACROS_GRAQUAD_LoopTick( )
-    #endif
 
-    #if( AAC2020_INCLUDE_BASUNIF >= 1 )
-    #define  FMACROS_BASUNIF_LoopTick   AAC2020_BASUNIF_LoopTick
-    #endif
-    #if( AAC2020_INCLUDE_BASUNIF == 0 )
-    #define  FMACROS_BASUNIF_LoopTick( )
-    #endif
 
-//:=================================================:LOOPTICK://
+#endif
+#if(    AAC2020_INCLUDE_GRAQUAD == 0 )
 
+    #define  FMACROS_GRAQUAD_LoopTick( DISCARDED_ARGUMENT )    
+     
+
+#endif
+//:==================================================:GRAQUAD://
+
+
+ 
+
+
+
+//:AUTO_GENERATED_INIT_FUNCTIONS:============================://
+//:INITS: Auto Generated From Keyboard Shortcuts
+/** ******************************************************** ***
+[SOURCE]
+    //:INIT:1234567:=========================================://
+    #if(            AAC2020_INCLUDE_1234567 >=  1 )
+
+        #define  FMACROS_1234567_Init       AAC2020_1234567_Init
+
+    #endif
+    #if(    AAC2020_INCLUDE_1234567 == 0 )
+
+        #define  FMACROS_1234567_Init(  DISCARDED_ARGUMENT )       
+
+    #endif
+    //:=========================================:INIT:1234567://
+
+[FIND_KEY]
+    1234567
+
+[REPLACE_KEYS]
+    GINAWIN
+    GLEBIND
+    GRAQUAD
+    FRAGBED
+    GPUDATA
+    PIXNAME
+*** ******************************************************** **/
+
+    //:INIT:GINAWIN:=========================================://
+    #if(            AAC2020_INCLUDE_GINAWIN >=  1 )
+
+        #define  FMACROS_GINAWIN_Init       AAC2020_GINAWIN_Init
+
+    #endif
+    #if(    AAC2020_INCLUDE_GINAWIN == 0 )
+
+        #define  FMACROS_GINAWIN_Init(  DISCARDED_ARGUMENT )       
+
+    #endif
+    //:=========================================:INIT:GINAWIN://
+
+
+    //:INIT:GLEBIND:=========================================://
+    #if(            AAC2020_INCLUDE_GLEBIND >=  1 )
+
+        #define  FMACROS_GLEBIND_Init       AAC2020_GLEBIND_Init
+
+    #endif
+    #if(    AAC2020_INCLUDE_GLEBIND == 0 )
+
+        #define  FMACROS_GLEBIND_Init(  DISCARDED_ARGUMENT )       
+
+    #endif
+    //:=========================================:INIT:GLEBIND://
+
+
+    //:INIT:GRAQUAD:=========================================://
+    #if(            AAC2020_INCLUDE_GRAQUAD >=  1 )
+
+        #define  FMACROS_GRAQUAD_Init       AAC2020_GRAQUAD_Init
+
+    #endif
+    #if(    AAC2020_INCLUDE_GRAQUAD == 0 )
+
+        #define  FMACROS_GRAQUAD_Init(  DISCARDED_ARGUMENT )       
+
+    #endif
+    //:=========================================:INIT:GRAQUAD://
+
+
+    //:INIT:FRAGBED:=========================================://
+    #if(            AAC2020_INCLUDE_FRAGBED >=  1 )
+
+        #define  FMACROS_FRAGBED_Init       AAC2020_FRAGBED_Init
+
+    #endif
+    #if(    AAC2020_INCLUDE_FRAGBED == 0 )
+
+        #define  FMACROS_FRAGBED_Init(  DISCARDED_ARGUMENT )       
+
+    #endif
+    //:=========================================:INIT:FRAGBED://
+
+
+    //:INIT:GPUDATA:=========================================://
+    #if(            AAC2020_INCLUDE_GPUDATA >=  1 )
+
+        #define  FMACROS_GPUDATA_Init       AAC2020_GPUDATA_Init
+
+    #endif
+    #if(    AAC2020_INCLUDE_GPUDATA == 0 )
+
+        #define  FMACROS_GPUDATA_Init(  DISCARDED_ARGUMENT )       
+
+    #endif
+    //:=========================================:INIT:GPUDATA://
+
+
+    //:INIT:PIXNAME:=========================================://
+    #if(            AAC2020_INCLUDE_PIXNAME >=  1 )
+
+        #define  FMACROS_PIXNAME_Init       AAC2020_PIXNAME_Init
+
+    #endif
+    #if(    AAC2020_INCLUDE_PIXNAME == 0 )
+
+        #define  FMACROS_PIXNAME_Init(  DISCARDED_ARGUMENT )       
+
+    #endif
+    //:=========================================:INIT:PIXNAME://
+
+//:============================:AUTO_GENERATED_INIT_FUNCTIONS://
+
+
+
+//:GPUDATA_PAINT5D:IS_A_PATTERN_BREAKER:=====================://
+#if(            AAC2020_INCLUDE_PAINT5D >=  1 )
+
+    #define  FMACROS_PAINT5D_Init  AAC2020_GPUDATA_PAINT5D_Init
+
+#endif
+#if(    AAC2020_INCLUDE_PAINT5D == 0 )
+
+    #define  FMACROS_PAINT5D_Init(  DISCARDED_ARGUMENT )       
+
+#endif
+//:=====================:GPUDATA_PAINT5D:IS_A_PATTERN_BREAKER://
+ 
+
+/** REFERENCE ********************************************** ***
+
+    ( Not gauranteed to be up to date. SEE: LIBCHAN.TOP._ )
+
+    FILEBOI ( 1 )  
+    NATIKEY ( 2 )  
+    IKEYBOX ( 3 )  
+    IMOUBOX ( 4 )  
+    CEDITOR ( 5 )  
+    GINAWIN ( 6 )  
+    DUI     ( 7 )  
+    GLEBIND ( 8 )  
+    CPUNIFO ( 9 )  
+    GRAQUAD (10 )  
+    FREE_01 (11 )  
+    FRAGBED (12 )  
+    GPUDATA (13 )  
+    PIXNAME (14 )  
+    PAINT5D (15 )  ( GPUDATA_PAINT5D )
+
+*** ******************************************************** **/

@@ -270,19 +270,30 @@ AAC2020_GLEBIND_FuncPointerSated(                               //[ HFN ]//
     /**  Used to make sure function pointer is NOT null.     **///[ HFN ]//
     /**  Hopefully can swap out for macro in the future to   **///[ HFN ]//
     /**  remove this overhead when in a release mode.        **///[ HFN ]//
-                                                                //[ HFN ]//
-    if(NULL==function_pointer){                                 //[ HFN ]//
-        printf("[AAC2020_GLEBIND:ForgotToInitLibrary?]\n");     //[ HFN ]//
-        printf("[USE::AAC2020_GLEBIND_GetFuncsFromDLL]\n");     //[ HFN ]//
-        printf(                                                 //[ HFN ]//
-        /**/"[function_pointer_name]:%s\n"                      //[ HFN ]//
-        ,     function_pointer_name                             //[ HFN ]//
-        );;                                                     //[ HFN ]//
-        fflush(stdout);exit(666);                               //[ HFN ]//
-    };;                                                         //[ HFN ]//
-}                                                               //[ HFN ]//
-                                                                //[ HFN ]//
-//:=====================================:HFN:HELPER_FUNCTIONS:////[ HFN ]//
+                         
+    /** Forgetting to INIT is a root error, so crash **/
+    /** here first before checking function pointer. **/
+    if( aac2020_glebind_is_initing <= 0 ){
+    if( aac2020_glebind_inited     <= 0 ){
+
+        aac2020_glebind_Halt(
+            "[ROOT_ERROR:FTI:2020_11_17:1149PM]"
+        );;
+
+    };;};;
+
+    if(NULL==function_pointer){                                  
+        printf("[Library_Inited_Yet_Still_Problem...FUCK]\n");     
+        printf("[USE::AAC2020_GLEBIND_GetFuncsFromDLL]\n"   );      
+        printf(                                                  
+        /**/"[function_pointer_name]:%s\n"                       
+        ,     function_pointer_name                              
+        );;                                                      
+        fflush(stdout);exit(666);                                
+    };;                                                          
+}                                                                
+                                                                 
+//:=====================================:HFN:HELPER_FUNCTIONS:// 
 
 
 
@@ -1457,7 +1468,7 @@ int /** BOOL **/                    //[  ]   XX]//
 //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯]////[  ]   XX]//
                                     //[  ]   XX]//
 PFN_wglMakeCurrent                  //[  ]   XX]//
-pfn_wglMakeCurrent;                 //[  ]   XX]//
+pfn_wglMakeCurrent =((void*)0);
                                     //[  ]   XX]//
 //[_|_|_|_|_|_|_|_|____|_|_|_|_|_]////[  ]   XX]//
 int /** BOOL **/                    //[  ]   XX]//
@@ -4476,21 +4487,29 @@ void AAC2020_GLEBIND_Wait(){
 
 }
 
-void AAC2020_GLEBIND_Init(){ //:Initialize
+//:INIT:=====================================================://
 #define I_P AAC2020_GLEBIND_InfoPrint
 
-    I_P("[ABOUT_TO:TouchFile_OPEN_GL_SEARCH_PATHS]");
-    AAC2020_GLEBIND_TouchFile_OPEN_GL_SEARCH_PATHS(
-        1  /** if_not_exist_add_default_contents **/ );;
+    void AAC2020_GLEBIND_Init(){ //:Initialize
 
-    I_P("[ABOUT_TO:AAC2020_GLEBIND_GetFuncsFromDLL(...)]\n");
-    AAC2020_GLEBIND_GetFuncsFromDLL();
-
-    I_P("[ABOUT_TO:aac2020_glebind_LibraryAliasSmokeTest(...)]\n");
-    aac2020_glebind_LibraryAliasSmokeTest();
+        aac2020_glebind_is_initing = ( 1 );
     
+        I_P("[ABOUT_TO:TouchFile_OPEN_GL_SEARCH_PATHS]");
+        AAC2020_GLEBIND_TouchFile_OPEN_GL_SEARCH_PATHS(
+            1  /** if_not_exist_add_default_contents **/ );;
+
+        I_P("[ABOUT_TO:GLEBIND_GetFuncsFromDLL(...)]\n");
+        AAC2020_GLEBIND_GetFuncsFromDLL();
+
+        I_P("[ABOUT_TO:glebind_LibraryAliasSmokeTest(...)]\n");
+        aac2020_glebind_LibraryAliasSmokeTest();
+      
+        aac2020_glebind_inited     = ( 1 );
+        aac2020_glebind_is_initing = ( 0 );
+    }  
+
 #undef I_P
-} //[[AAC2020_GLEBIND_Init]]//
+//:=====================================================:INIT://
 
 void AAC2020_GLEBIND_Demo(){
 

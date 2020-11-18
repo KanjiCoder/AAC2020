@@ -1,0 +1,12 @@
+        
+    #include <stdlib.h> //: exit(.....)
+    #include <stdio.h>  //: printf(...)
+    void AAC2020_VITAL_TODO( const char* todo_message ){
+
+        printf( "[AAC2020_VITAL_TODO]:%s\n", todo_message );
+        fflush( stdout );
+
+        #if( AAC2020_CRASH_ON_VITAL_TODO >= 1 )
+            exit( 222 );
+        #endif
+    }

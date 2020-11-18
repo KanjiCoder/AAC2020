@@ -733,12 +733,25 @@ aac2020_ginawin_WIN_MSG_HAN_WND_POC(
         printf("[AAC2020_GINAWIN:WM_SIZE]\n");
         fflush(stdout);
 
+        //:DONT_USE_WINDOW_RESIZE_CALLBACKS:=================://
         if( AAC2020_GINAWIN_OnWindowResize_HAS ){
 
-            AAC2020_GINAWIN_OnWindowResize_PFN( 0x00 );
+            if( AAC2020_GINAWIN_AVOID_CALLBACKS >= 1 ){
+
+                aac2020_ginawin_Halt("[ButYouSaidYouWouldnt]");
+
+            }else{
+
+                AAC2020_GINAWIN_OnWindowResize_PFN( 0x00 );
+
+            };;
 
         }else{
         #define P printf
+
+            /** Dont give me warning if I am intentionally **/
+            /** Not using callbacks. **/
+            if( AAC2020_GINAWIN_AVOID_CALLBACKS <= 0 ){
 
             P("[WARNING:GINAWIN_HAS_NO_RESIZE_CALLBACK::::]\n");
             P("[TO_FIX:USE_THE_BELOW_FUNCTION:::::::::::::]\n");
@@ -747,9 +760,13 @@ aac2020_ginawin_WIN_MSG_HAN_WND_POC(
             P("[******************************************]\n");
             fflush( stdout );
 
+            };;
         #undef  P
         };;
+        //:=================:DONT_USE_WINDOW_RESIZE_CALLBACKS://
 
+        /** Removed, lets try to make an entire game without **/
+        /** having to use mutexes, semaphores, and fences.   **/
         //: ENGETHER.THREADING.InterlockedIncrement64(
         //:     &( AAC2020_GINAWIN.THREAD_SAFE_FLAGS.
         //:        resize_message_count )
@@ -2868,84 +2885,100 @@ aac2020_ginawin_InitGlobalStateContainer(       //|GS|//
                                           //|GS|//
 //[GSGSGSGSGSGSGSGSGSGSGSGSGSGSGSGSGSGSGSGSGSGS]//
 
-void AAC2020_GINAWIN_Init(
+//:GINAWIN_INIT:=============================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
 
-    //: A:  AAC2020_GINAWIN_SINGLE_THREADED
-    //: B:  AAC2020_GINAWIN__MULTI_THREADED
-    int SINGLE_THREADED__or__MULTI_THREADED
+    void AAC2020_GINAWIN_Init(
 
-){               
-     
-    //:DONE_IN_BOTH_THREADING_MODES:-------------------------://
+        //: A:  AAC2020_GINAWIN_SINGLE_THREADED
+        //: B:  AAC2020_GINAWIN__MULTI_THREADED
+        //: int SINGLE_THREADED__or__MULTI_THREADED
 
-        AAC2020_GINAWIN.init_called = 1;
+        U32 is_multi_threaded
+    ){   
 
-        aac2020_ginawin_InitGlobalStateContainer();  
+        /**  Original initialization design forced you to    **/
+        /**  set These values before calling the             **/
+        /**  initializer,but I think we should do            **/
+        /**  "convention over configuration"                 **/
+        AAC2020_GINAWIN.X   = 22  ;
+        AAC2020_GINAWIN.Y   = 22  ;
+        AAC2020_GINAWIN.WID = 1024;
+        AAC2020_GINAWIN.HIG = 512 ;
+                
+         
+        //:DONE_IN_BOTH_THREADING_MODES:---------------------://
+
+            AAC2020_GINAWIN.init_called = 1;
+
+            aac2020_ginawin_InitGlobalStateContainer();  
+                                                         
+            aac2020_ginawin_AssertCorrectSizesOfTypes(); 
+                                                         
+            aac2020_ginawin_FUNCTION_POINTERS_init();    
+                                                         
+            aac2020_ginawin_CorrectWindowIfNeeded();     
+
+        //:---------------------:DONE_IN_BOTH_THREADING_MODES://
+        //:PICK_INIT_LOGIC_FOR_THREADING_TYPE:---------------://
+
+            switch( is_multi_threaded ){
+            case 1:{
+
+                AAC2020_GINAWIN.type_of_threading=(
+                    AAC2020_GINAWIN__MULTI_THREADED
+                );;
+
+                aac2020_ginawin_CreateThread();              
+                aac2020_ginawin_AssertThreadCreated();      
+
+            };break;
+            case 0:{
+
+                AAC2020_GINAWIN.type_of_threading=(
+                    AAC2020_GINAWIN_SINGLE_THREADED
+                );;
+
+                /** Directly create window in this thread... **/
+                /** apposed to :                             **/
+                /** "aac2020_ginawin_CreateThread()"         **/
+                c_LPCWSTR_b16_2B 
+                unique_window_name=( 
+                    //: L"SINGLE_THREADED_WINDOW" 
+                        L"AAC2020_GINAWIN_UNIQUE_WINDOW_NAME"
+                );;
+
+                void* han_win=(
+                aac2020_ginawin_OPEN_WINDOW( 
+                    unique_window_name      ));;
+
+                if( ((void*)0) == han_win ){
+                    //:FTC_STW:
+                    //:         FTC:FAILED_TO_CREATE
+                    //:         STW:SINGLE_THREADED_WINDOW
+                    aac2020_ginawin_Halt("[FTC_STW]");
+                };;
+
+                aac2020_ginawin_WaitHereUntilWindowExists();
+
+            };break;
+            default:{
+
+                aac2020_ginawin_Halt("[BAD_THREADING_BOOL]");
+
+            };;};;
+
+        //:---------------:PICK_INIT_LOGIC_FOR_THREADING_TYPE://
+        //:COMMON_TAIL_LOGIC:--------------------------------://
+
+            AAC2020_GINAWIN.init_finished = 1;
+
+        //:--------------------------------:COMMON_TAIL_LOGIC://
                                                      
-        aac2020_ginawin_AssertCorrectSizesOfTypes(); 
-                                                     
-        aac2020_ginawin_FUNCTION_POINTERS_init();    
-                                                     
-        aac2020_ginawin_CorrectWindowIfNeeded();     
+    }   
 
-    //:-------------------------:DONE_IN_BOTH_THREADING_MODES://
-    //:PICK_INIT_LOGIC_FOR_THREADING_TYPE:-------------------://
-
-        switch( SINGLE_THREADED__or__MULTI_THREADED ){
-        case AAC2020_GINAWIN__MULTI_THREADED:{
-
-            AAC2020_GINAWIN.type_of_threading=(
-                AAC2020_GINAWIN__MULTI_THREADED
-            );;
-
-            aac2020_ginawin_CreateThread();              
-            aac2020_ginawin_AssertThreadCreated();      
-
-        };break;
-        case AAC2020_GINAWIN_SINGLE_THREADED:{
-
-            AAC2020_GINAWIN.type_of_threading=(
-                AAC2020_GINAWIN_SINGLE_THREADED
-            );;
-
-            /** Directly create window in this thread...     **/
-            /**,apposed to : "aac2020_ginawin_CreateThread()"**/
-            c_LPCWSTR_b16_2B 
-            unique_window_name=( 
-                //: L"SINGLE_THREADED_WINDOW" 
-                    L"AAC2020_GINAWIN_UNIQUE_WINDOW_NAME"
-            );;
-
-            void* han_win=(
-            aac2020_ginawin_OPEN_WINDOW( unique_window_name ));;
-
-            if( ((void*)0) == han_win ){
-                //:FTC_STW:
-                //:         FTC:FAILED_TO_CREATE
-                //:         STW:SINGLE_THREADED_WINDOW
-                aac2020_ginawin_Halt("[FTC_STW]");
-            };;
-
-
-            aac2020_ginawin_WaitHereUntilWindowExists();
-
-            //: aac2020_ginawin_Halt("[TODO:2394723473289]");
-
-        };break;
-        default:{
-
-            aac2020_ginawin_Halt("[BAD_THREADING_CODE]");
-
-        };;};;
-
-    //:-------------------:PICK_INIT_LOGIC_FOR_THREADING_TYPE://
-    //:COMMON_TAIL_LOGIC:------------------------------------://
-
-        AAC2020_GINAWIN.init_finished = 1;
-
-    //:------------------------------------:COMMON_TAIL_LOGIC://
-                                                 
-} //[AAC2020_GINAWIN_Init]//    
+#undef  U32
+//:=============================================:GINAWIN_INIT://
 
 //: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
 

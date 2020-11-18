@@ -1,11 +1,33 @@
+//:EXPECTATION_BREAKERS:=====================================://
+//:                                                          ://
+//: 1. Uses a LIBCHAN ( SEE:   DOC/LIBRARY_CHAIN.TXT )       ://
+//: 2. Procedural OOP ( SEE: DATA_THEN_FUNCTIONS.TXT )       ://
+//:    NO : ".H"   : Header         --- NEVER                ://
+//:    NO : ".C"   : Implementation --- NEVER                ://
+//:                  (One Exception: AAC2020.C11)            ://
+//:                                                          ://
+//:    YES: ".D._" : DATA ------------- ALWAYS (can be empty)://
+//:    YES: ".F._" : FUNCTIONS -------- ALWAYS (can be empty)://
+//:    YES: ".P._" : Public Interface - SOMETIMES            ://
+//:                                                          ://
+//:=====================================:EXPECTATION_BREAKERS://
+//:DEBUG_CONFIGURATION:======================================://
+
+    #define   AAC2020_MAC_LIBCHAN_CUR (15 )  
+
+    #define       AAC2020_CRASH_ON_VITAL_TODO (  0  )
+    #include "./LIB/STABLE/AAC2020_VITAL_TODO._"
+
+//:======================================:DEBUG_CONFIGURATION://
+//:TOP_LEVEL_CODE:===========================================://
 
     #include "LIB/LIBCHAN.TOP._"  //:BuildSystem
     #include "LIB/FMACROS.TOP._"  //:Declare Function Macros
 
-    #include "_._" //: <--- main() is in here
+    #include "D._" //: main()'s Data
+    #include "F._" //: main()'s Functions
 
     #include "LIB/FMACROS.BOT._"  //:[ Remove/Undefine] Macros
     #include "LIB/LIBCHAN.BOT._"  //:BuildSystem
 
-
-   
+//:===========================================:TOP_LEVEL_CODE://
