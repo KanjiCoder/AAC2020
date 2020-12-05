@@ -2,34 +2,17 @@
     int
     AAC2020_GLEBIND_TouchFile_OPEN_GL_SEARCH_PATHS(
 
-        /** If the file did not exist before we touched it,  **/
-        /** should we initialize it's contents with some     **/
-        /** default search paths for where we can expect     **/
-        /** OpenGL32.dll to be?                              **/
+        //:#if_not_exist_add_default_contents#://
+
         int if_not_exist_add_default_contents
     )
     {
-    //:======================================================://
-
-        /** TouchFile function did not exist in GLEB.H       **/
-        /** Added to GLEBIND.F (GLEBIND_DOT_F) to make       **/
-        /** program a bit more user friendly.                **/
-        /**                                                  **/
-        /** GOAL: Program is a single .EXE file, no          **/
-        /**      supplimentary files need to be copied to    **/
-        /**      maintain a working executable.              **/
-        /**                                                  **/
-        /** This function makes it so you don't have to      **/
-        /** copy around OPEN_GL_SEARCH_PATHS.TXT             **/
+        //:#_WHY_GLEBIND_TOUCHFILE_#://
 
         assert( 0x0100 == 00400 );
         assert( 0x0080 == 00200 );
     
-        //: If "OPEN_GL_SEARCH_PATHS.TXT" does not   ://
-        //: exist, create it now and populate it     ://
-        //: with some default values.                ://
-        /** #SEE_IF_FILE_EXISTS_THEN_USE# ** ******* **/
-        /** stackoverflow.com/questions/230062       **/
+        //:#_IF_NO_GL_LIST_CREATE_ONE_#://
         int fd = open(
             "OPEN_GL_SEARCH_PATHS.TXT"
         , 
@@ -1234,142 +1217,42 @@ AAC2020_GLEBIND_LoadFunc(
 //+ #gltypes# #gltype# #gltypedefs#            +//
 //|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx|//
 
+//:#GLEBIND_THIS_ONE_IS_SPECIAL#=============================://
+//:#DOES_NOT_REQUIRE_GL_CONTEXT_TO_CALL#=====================://
+#define CHK AAC2020_GLEBIND_FuncPointerSated
+#define TYP AAC2020_GLEBIND_FUNC
 
-//:OPEN_GL_TYPEDEFS:COMMENTED_OUT:===========================://
-//:    //:#AAC2020_GLEBIND_GLH_TYPES#://                         //: ://
-//:    #ifndef    GL_VERSION                                 ://
-//:                                                          ://
-//:        typedef int GLsizei;                              ://
-//:        typedef unsigned int GLuint;                      ://
-//:                                                          ://
-//:        //:glcoarearb.h:                                  ://
-//:        typedef unsigned int GLenum;                      ://
-//:                                                          ://
-//:        //: glcorearb.h:                                  ://
-//:        //: typedef khronos_ssize_t GLsizeiptr;           ://
-//:        //:                                               ://
-//:        //: khronos.org/opengl/wiki/OpenGL_Type:          ://
-//:        //: Non-negative binary integer size,             ://
-//:        //: for memory offsets and ranges	             ://
-//:        //:                                               ://
-//:        //:Assuming compilation in 64bit mode:            ://
-//:        typedef unsigned __int64 GLsizeiptr;              ://
-//:                                                          ://
-//:        typedef void GLvoid;                              ://
-//:                                                          ://
-//:        //:glcorearb.h:                                   ://
-//:        typedef int GLint;                                ://
-//:                                                          ://
-//:        //:glcorearb.h:                                   ://
-//:        typedef unsigned char GLboolean;                  ://
-//:                                                          ://
-//:        //:glcorearb.h                                    ://
-//:        typedef char GLchar;                              ://
-//:                                                          ://
-//:        //:glcorearb.h                                    ://
-//:        typedef unsigned int GLbitfield;                  ://
-//:                                                          ://
-//:        //|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//    ://
-//:        //| On a platfrom that supports IEEE-754   |//    ://
-//:        //| float it's going to be 32 bit. On      |//    ://
-//:        //| platforms that don't,different width   |//    ://
-//:        //| will probably be the least of your     |//    ://
-//:        //| problems. Bottom line - use float and  |//    ://
-//:        //| don't worry.                           |//    ://
-//:        //| stackoverflow.com/questions/18705192   |//    ://
-//:        //|                                        |//    ://
-//:        //|glcoarearb.h:                           |//    ://
-//:        //|     typedef khronos_float_t GLfloat;   |//    ://
-//:        //|khrplatform.h:                          |//    ://
-//:        //|     typedef float khronos_float_t;     |//    ://
-//:        typedef float GLfloat;                  //||//    ://
-//:        //|                                        |//    ://
-//:        //|________________________________________|//    ://
-//:                                                          ://
-//:                                                          ://
-//:        //////////////////////////////////////////////    ://
-//:        //| glcore.h:                              |//    ://
-//:        //| typedef khronos_uint8_t GLubyte;       |//    ://
-//:        //|                                        |//    ://
-//:        //| khrplatform.h                          |//    ://
-//:        //| khronos.org/registry/EGL/api/KHR       |//    ://
-//:        //| /khrplatform.h                         |//    ://
-//:        //| [BEG:QUOTE]                            |//    ://
-//:        //| "Types that are (so far) the same "    |//    ://
-//:        //| "on all platforms                 "    |//    ://
-//:        //| [END:QUOTE]                            |//    ://
-//:        //| typedef unsigned char khronos_uint8_t; |//    ://
-//:        typedef unsigned char GLubyte; //:         :////: ://
-//:        //////////////////////////////////////////////    ://
-//:                                                          ://
-//:    #endif /** GL_VERSION **/                             ://
-//:===========================:OPEN_GL_TYPEDEFS:COMMENTED_OUT://
+    typedef  
+        AAC2020_GLEBIND_WIN32_PROC                  //:<<RETURNS                
+        (*PFN_wglGetProcAddress)                    //:<<<<<NAME
+        (                                         
+        /**/    const char* /**LPCSTR**/    Arg1    //:<<<<<ARGS     
+        );  
 
-//[][][][][][][][][][][][][][][][][][][][][][][]//
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+                                                                  
+        PFN_wglGetProcAddress                
+        pfn_wglGetProcAddress;         
 
-/////////[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]/////////
-////////[]                              []////////
-///////[]                                []///////
-//////[]                                  []//////
-/////[]                                    []/////
-////[]                                      []////
-///[]                                        []///
-//[]                                          []//
-//[                                            ]//
-//[XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]//
-//[XX This one is special.                   XX]//
-//[XX The wrapper function is called         XX]//
-//[XX AAC2020_GLEBIND_wglGetProcAddress instead of      XX]//
-//[XX      wglGetProcAddress to avoid        XX]//
-//[XX      conflicts with Windows.h.         XX]//
-//[XX The "wglGetProcAddress" function       XX]//
-//[XX does NOT work "out of the box" like    XX]//
-//[XX "GetProcAddress".                      XX]//
-//[XX                                        XX]//
-//[XX I am sure if I knew more               XX]//
-//[XX about linkers I could fix this.        XX]//
-//[XX But messing with linkers would destroy XX]//
-//[XX the point of this library being an     XX]//
-//[XX                                        XX]//
-//[XX "easy bindings"                        XX]//
-//[XX                                        XX]//
-//[XX library. The whole point is to just    XX]//
-//[XX include this file and get access to    XX]//
-//[XX openGL functions.                      XX]//
-//[XX                                        XX]//
-//[XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]//
-typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]   XX]//
-AAC2020_GLEBIND_WIN32_PROC                               
-(*PFN_wglGetProcAddress)            //[  ]   XX]//
-(                                   //[  ]   XX]//
-/**/const char* /**LPCSTR**/    Arg1                  
-); //[- - - - - - - - - - - - - -]////[  ]   XX]//
-                                    //[  ]   XX]//
-//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯]////[  ]   XX]//
-                                    //[  ]   XX]//
-PFN_wglGetProcAddress               //[  ]   XX]//
-pfn_wglGetProcAddress;              //[  ]   XX]//
-                                    //[  ]   XX]//
-//[_|_|_|_|_|_|_|_|____|_|_|_|_|_]////[  ]   XX]//
-AAC2020_GLEBIND_WIN32_PROC                  //[  ]   XX]//
-AAC2020_GLEBIND_wglGetProcAddress              //[  ]   XX]//
-(                                   //[  ]   XX]//
-/**/const char*    Arg1                  //[01]   XX]//
-){                                  //[  ]   XX]//                 
-    AAC2020_GLEBIND_FuncPointerSated(          //[  ]   XX]//
-    /**/ "[pfn_wglGetProcAddress]", //[  ]   XX]//
-(AAC2020_GLEBIND_FUNC)pfn_wglGetProcAddress );;//[  ]   XX]//         
-    return(pfn_wglGetProcAddress(   //[  ]   XX]//
-    /**/      Arg1                  //[01]   XX]//
-    ));;                            //[  ]   XX]//           
-} //[[AAC2020_GLEBIND_wglGetProcAddress]____________]   XX]//
-//[XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]//
-//[XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]//
-//[XX                                        XX]//
-//[XX Also does NOT need an openGL context   XX]//
-//[XX in order to fetch it.                  XX]//
-//[XX                                        XX]//
-//[XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]//
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://                                     
+                                             
+        AAC2020_GLEBIND_WIN32_PROC          
+        AAC2020_GLEBIND_wglGetProcAddress   
+        (                                   
+        /**/    const char*                 Arg1             
+        )
+        {              
+             CHK( "[pfn_wglGetProcAddress]",  
+            (TYP)   pfn_wglGetProcAddress );;  
+            return( pfn_wglGetProcAddress(  Arg1  ));      
+        }  
+
+#undef  CHK  
+#undef  TYP 
+//:=============================#GLEBIND_THIS_ONE_IS_SPECIAL#://
+//:=====================#DOES_NOT_REQUIRE_GL_CONTEXT_TO_CALL#://
+
+
 typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]   XX]//
 void* /** HGLRC:Handle_GL_RenderingContext **/      
 (*PFN_wglGetCurrentContext)         //[  ]   XX]//

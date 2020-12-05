@@ -54,6 +54,103 @@ INDEX:
                 in a different file.                        
 
     //|SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS| GINAWIN |//
+    //| DUI |SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS|//
+
+        Dialog_User_Interfaces : Specifically Win32 specific
+                                 dialogs. Save us time by
+                                 using pre-made stuff.
+
+        Example: MSPaint-19 color picker dialog.
+                ( AAC2020_DUI_AskUserToPickColor_BWO )
+
+    //|SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS| DUI |//
+    //| GLEBIND |SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS|//
+
+        GLEBIND: open_GL_Easy_BINDings
+
+        REFACTOR_NOTE: GLEB_SWIN ===> AAC2020_GINAWIN
+        REFACTOR_NOTE:      GLEB ===> AAC2020_GLEBIND
+
+    //|SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS| GLEBIND |//
+    //| CPUNIFO |SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS|//
+
+        CPUNIFO: CPU_UNIFOrms ----------------------------------
+                                                
+            Created to replace BASUNIF.                          
+                                                                
+            Responsible for:                                     
+            1. Updating basic uniforms on the CPU side.          
+            2. Updating those uniforms WITHOUT using callbacks.  
+                                                                
+            NOT responsible for:                                 
+            1. Getting it's values onto the GPU.                 
+            2. Getting it's values int OpenGL                    
+                                                                
+            GRAQUAD will look at CPUINFO and update the          
+
+    //|SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS| CPUNIFO |//
+    //| GRAQUAD |SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS|//
+
+        GRAQUAD.D: GRAphics_QUAD.DATA                        
+        (Refactored from V:/TESAWIND/TESAWIND.H)             
+                                                             
+        Yes_The_Librarys_Job:                                
+                                                             
+            #1: Setup QUAD and simple gradient shader.       
+            #2: #1 was it!                                   
+                                                             
+        NOT_THE_LIBRARYS_JOB: #1: Advanced Shaders.            
+        NOT_THE_LIBRARYS_JOB: #2: Atomic_Alice_2_Data_Structs  
+
+    //|SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS| GRAQUAD |//
+    //| FRAGBED |SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS|//
+
+        FRAGBED : FRAG__mentshadertest__BED   
+
+        #_FRAGBED_UNIFORM_FREEABLE_POINTERS_#
+                                                                
+        Sets up 9 default shaders that serialize themselves     
+        to the hard disk. Shaders can be over-written by        
+        opening the [ serialized to disk shaders ] in   
+        text editor and editing them.                                       
+                                                                
+        On startup will check for existance of serialized files.                                       
+                                                                
+        If serialized files EXIST:                              
+                                                                
+            Contents of those files used as shader code.        
+                                                                
+        If serialized files DO NOT EXIST:                       
+                                                                
+            1. Loads shader code from .exe                      
+            2. Saves .exe shader code to .frag files on disk.   
+                                                                
+        If MIX OF BOTH (some serialized, some not)              
+                                                                
+            Files that are on disk are loaded from disk.        
+            Files missing from disk are loaded from .EXE        
+            All EXE loaded files are serialized to disk.        
+ 
+    //|SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS| FRAGBED |//
+    //| GPUDATA |SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS|//
+
+        NOTE: GPUDATA is NOT JUST "Graphics data"                 
+              SEE_MORE[ DOC/WHY_GPUDATA.TXT ]    
+  
+        GPUDATA.D._ (DATA)                                  
+                Data on GPU for GRAPHICS and NON-GRAPHICS.  
+                Non Graphical Example: Enemy Positions      
+                                                       
+        GPUDATA.F._ (FUNC) 
+                Managing Functions For GPUDATA.D._   
+                                                                  
+                DOTADIW: ( Do_One_Thing_And_Do_It_Well )
+
+                    Functions that manage syncrhonization of     
+                    512-x-512 RGBA textures between GPU & CPU.   
+                    ( Operates on: AAC2020_GPUDATA instances )   
+ 
+    //|SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS| GPUDATA |//
     //| PIXNAME |SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS|//
                                                                 
         DOTADIW: A centralized place to know the names that     
@@ -64,6 +161,8 @@ INDEX:
 
     //|SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS| PIXNAME |//
     //| GPUDATA_PAINT5D |SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS|//
+
+        PAINT5D (Previously Known As: GPUDATA_PAINT5D )
 
         ABOUT: User Canvas Data For "PAINT5D.EXE"         
             1. #OVERRIDE_DEFAULT_SHADER_001#              

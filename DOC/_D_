@@ -57,11 +57,160 @@
 
 
     //|DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD| GINAWIN |//
+    //|   DUI   |DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD|//
+
+        LPCCHOOKPROC 
+        COLORREF
+        CHOOSECOLORA
+
+    //|DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD|   DUI   |//
+    //| GLEBIND |DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD|//
+
+        PRIVATE:
+            inited
+            is_initing
+    
+        PUBLIC:
+            no_news_is_good_news
+            show_user_print_statements_DEBUG
+            show_user_print_statements_INFO
+            unit_test_verbose_echo
+            name_of_search_path_file
+            tell_me_about_empty_lines
+            next_search_path_index
+            num_search_paths
+            p_search_paths
+            BUGHUNT_WHITE_SPACE_PATH
+            PFN_line_processor
+            FUNC
+            WIN32_PROC
+            open_gl_handle
+
+        ALSO:
+            A "PFN" variable exists for every single binding
+            we exposed. But adding that here will just be noise.
+
+    //|DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD| GLEBIND |//
+    //| CPUNIFO |DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD|//
+
+        iMouse_vec4_x
+        iMouse_vec4_y
+        iMouse_vec4_z
+        iMouse_vec4_w
+        iTime
+        iResolution_wid
+        iResolution_hig
+        iResolution_par
+
+    //|DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD| CPUNIFO |//
+    //| GRAQUAD |DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD|//
+
+        GRAQUAD.D.FRAG:
+
+            synerr : Syntax Error Shader Code
+            iready : OpenGL Is Ready Shader Code
+
+        GRAQUAD.D:
+                MACROS:
+                    MACRO_LALODEX_verpos
+                    MACRO_LALODEX_texcoo
+                    macro_rts
+                    MACRO_RTS
+                    TD
+                    RT
+
+                PUBLIC VARS:
+                    last_resize_wid
+                    last_resize_hig
+                    inited
+                    BUGHUNT_001
+                    FAIL_CODE
+                    FAIL_FAST
+                    SHADER_FAIL
+                    CURCON_FAIL
+                    HAS_FAILED_FAST
+                    BGP_STATUS_WGL_FAIL
+                    LOAD_STATUS_OK
+                    LOAD_STATUS_SYNERR
+                    LOAD_STATUS_NOT_SET
+
+                PRIVATE VARS:
+                    vertex_buffer_data_num_actual
+                    vertex_buffer_data
+                    we_have_4_corner_verts_making_quad
+                    num_corner_verts_in_screen_quad
+                    data_points_per_vertex_location
+                    data_points_per_vertex_texcoord
+                    total_data_points_per_vertex
+                    vertex_buffer_data_num
+                    vet_sad_src
+                    fag_sad_src
+
+    //|DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD| GRAQUAD |//
+    //| FRAGBED |DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD|//
+
+                :AAC2020/LIB/FRAGBED_DEFAULT_SHADERS:----------:
+
+                    FDS_001._ --> AAC2020_FRAGBED_DEFAULT_001
+                    FDS_002._ --> AAC2020_FRAGBED_DEFAULT_001
+                    FDS_003._ --> AAC2020_FRAGBED_DEFAULT_001
+                    FDS_004._ --> AAC2020_FRAGBED_DEFAULT_001
+                    FDS_005._ --> AAC2020_FRAGBED_DEFAULT_001
+                    FDS_006._ --> AAC2020_FRAGBED_DEFAULT_001
+                    FDS_007._ --> AAC2020_FRAGBED_DEFAULT_001
+                    FDS_008._ --> AAC2020_FRAGBED_DEFAULT_001
+                    FDS_009._ --> AAC2020_FRAGBED_DEFAULT_001
+
+                :----------:AAC2020/LIB/FRAGBED_DEFAULT_SHADERS: 
+
+            BUGHUNT_SaveTextFileToDisk
+            BUGHUNT_FileOnDiskNotify
+            inited
+
+    extern  DEFAULT_001 +------+
+    extern  DEFAULT_002        |
+    extern  DEFAULT_003        |
+    extern  DEFAULT_004        +--+ .text section. 
+    extern  DEFAULT_005        +--+ Hard coded into .EXE file. 
+    extern  DEFAULT_006        |     
+    extern  DEFAULT_007        |     NOT: FREEABLE_POINTERS
+    extern  DEFAULT_008        |
+    extern  DEFAULT_009 +------+
+
+            loaded_001_ptr +---+
+            loaded_002_ptr     |
+            loaded_003_ptr     |
+            loaded_004_ptr     +--+ Copies from .text section
+            loaded_005_ptr     +--+ or copied from disk.
+            loaded_006_ptr     |   
+            loaded_007_ptr     |    ARE: FREEABLE_POINTERS
+            loaded_008_ptr     |
+            loaded_009_ptr +---+
+
+        AAC2020_all_default_shaders_malloc_copied
+
+            loaded_001_has +---+
+            loaded_002_has     |
+            loaded_003_has     |
+            loaded_004_has     +--+ Are pointers non-null?
+            loaded_005_has     +--+----------------------+
+            loaded_006_has     |
+            loaded_007_has     |
+            loaded_008_has     |
+            loaded_009_has +---+
+
+    //|DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD| FRAGBED |//
     //| GPUDATA |DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD|//
     
         cpu_pix 
         pix_nam 
-        
+
+        g_pixel.
+                tex_lot
+                tex_han
+                sam_loc
+                sam_val
+
         :cpu_pix:----------------------------------------------:
         
             [ cpu_pix ]===[ pix_arr ] (PreviousProjectsNote)  
@@ -84,6 +233,17 @@
         :----------------------------------------------:pix_nam:
     
     //|DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD| GPUDATA |//
+    //| PIXNAME |DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD|//
+
+        paint5d_tex_lot
+        todo_01_tex_lot
+        todo_02_tex_lot
+
+        paint5d
+        todo_01
+        todo_02
+
+    //|DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD| PIXNAME |//
     //| GPUDATA_PAINT5D |DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD|//
     
         ACC2020_GPUDATA_PAINT5D_dat :

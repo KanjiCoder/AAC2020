@@ -1,37 +1,11 @@
-//:==========================================================://
-//: CPUNIFO : CPU_UNIFOrms: -------------------------------- ://
-//:                                                          ://
-//:     Created to replace BASUNIF.                          ://
-//:                                                          ://
-//:     Responsible for:                                     ://
-//:     1. Updating basic uniforms on the CPU side.          ://
-//:     2. Updating those uniforms WITHOUT using callbacks.  ://
-//:                                                          ://
-//:     NOT responsible for:                                 ://
-//:     1. Getting it's values onto the GPU.                 ://
-//:     2. Getting it's values int OpenGL                    ://
-//:                                                          ://
-//:     GRAQUAD will look at CPUINFO and update the          ://
-//:     uniforms on the GPU side.                            ://
-//:                                                          ://
-//: ------------------------------- : CPUNIFO : CPU_UNIFOrms ://
-//:==========================================================://
+//:DOCUMENTATION[ DOC/[_S_,_D_,_F_] ]SEARCH[ CPUINFO ]
+
 #define U32 uint32_t /** GCC: <stdint.h> **/
 #define F32 float
 
-        //: ------------------------------------------------ ://
-        //: [x,y,z,w]                                        ://
-        //:                                                  ://
-        //: These will be backed into VEC4 when              ://
-        //: loaded into iMouse uniform.                      ://
-        //: Decided to label these as their actual values    ://
-        //: in the GLSL code rather than their usage.        ://
-        //:                                                  ://
-        //: Reason: I might not correctly understand what    ://
-        //:         these values SHOULD BE and I don't want  ://
-        //:         to have variable names that lie in my    ://
-        //:         code.                                    ://
-        //: ------------------------------------------------ ://
+        //:#_UNIFORM_NAMING_CONVENTION_#://
+
+        //:#_WHY_THESE_IMOUSE_NAMES_#://
         U32   AAC2020_CPUNIFO_iMouse_vec4_x =( 0 );
         U32   AAC2020_CPUNIFO_iMouse_vec4_y =( 0 );
         U32   AAC2020_CPUNIFO_iMouse_vec4_z =( 0 );

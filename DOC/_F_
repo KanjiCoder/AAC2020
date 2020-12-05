@@ -41,9 +41,195 @@
         be wasting time copying noise.
         ****************************************************
 
-
-
     //|FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF| GINAWIN |//
+    //|   DUI   |FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF|//
+
+        ErrorCheckSizeOfTypes_WIN_10_64BIT
+        MessageBoxForHexValue
+        AskUserToPickColor_BWO
+        AskUserToPickColor
+
+    //|FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF|   DUI   |//
+    //| GLEBIND |FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF|//
+
+        TouchFile_OPEN_GL_SEARCH_PATHS
+        MV_DEBUGPRINT_01
+        InfoPrint
+        InfoPrint_STR
+        InfoPrint_INT
+        Error
+        Halt
+        OK
+        FuncPointerSated
+        OpenFileAndProcessLines
+        TrimCopyToHeap
+        Wrapper_isspace
+        StringListMalloc
+        StringListPopulate
+        StringListPrint
+        StringListFree
+        StringListFree
+        next_search_path_index
+        num_search_paths
+        p_search_paths
+        IsLineFull
+        SearchPathInit
+        SearchPathCount
+        SearchPathStore
+        GetSearchPathsFromFile
+        TryOpenDLL
+        LoadFunc
+        wglGetProcAddress
+        wglGetCurrentContext
+        wglCreateContext
+        wglMakeCurrent
+        GetAnyGLFuncAddress
+        glUniform1f
+        PFN_glUniform3f
+        glUniform3f
+        PFN_glUniform4f
+        glUniform4f
+
+        glGenBuffers
+        glBindBuffer
+        glBufferData
+        glGetError
+        glEnableVertexAttribArray
+        glVertexAttribPointer
+        glDrawArrays
+        glDisableVertexAttribArray
+        glCreateShader
+        glShaderSource
+        glCompileShader
+        glGetShaderiv
+        glGetShaderInfoLog
+        glCreateProgram
+        glAttachShader
+        glLinkProgram
+        glGetProgramiv
+        glGetProgramInfoLog
+        glDetachShader
+        glDeleteShader
+        glClear
+        glUseProgram
+        glViewport
+        glClearColor
+        glGenVertexArrays
+        glBindVertexArray
+        glGenTextures
+        glBindTexture
+        glTexParameteri
+        glTexImage2D
+        glActiveTexture
+        glGetUniformLocation
+        glUniform1i
+        glPixelStorei
+        glEnable
+        glFinish
+        glGetIntegerv
+
+        aac2020_glebind_Alert
+        aac2020_glebind_library_container
+
+    //|FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF| GLEBIND |//
+    //| CPUNIFO |FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF|//
+
+        LoopTick : Updates all uniform values.
+
+    //|FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF| CPUNIFO |//
+    //| GRAQUAD |FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF|//
+
+        Seems kind of weird that high level functions are 
+        somehow at top without forward declarations. It is
+        because they just use GRAQUAD's data and previous
+        library ( GLEBIND ) functions.
+
+            Halt
+            HOS
+            OnWindowResize
+            Init_Data
+            ErrChk
+            CompileShader
+            CheckTheProgram
+            ReclaimMemory_OpenGL_ShaderStuff
+            CreateTheShaders
+            CreateShaderCode
+            JunkCode_ErrorCheckOtherLibData
+            UseThatProgram
+ 
+        Wrappers with side-effects that use the state
+        data of GLEBIND or GRAQUAD to execute.
+
+            glGenBuffers
+            glBindBuffer
+            glBufferData
+            glGenVertexArrays
+            glBindVertexArray
+            glVertexAttribPointer
+            glBindBuffer_GL_ARRAY_BUFFER_0_ZERO
+            glBindVertexArray_0_ZERO
+
+        High Level Setup:
+
+            QuadSetup
+            MakeContextCurrentAndSetWindowSize
+            BGP_OpenGL
+            Init_HaltIfChecksumsFail
+            Init
+
+        DO_NOT_USE_THESE_FUNCTIONS: DONT_DO_THIS
+
+            OnWindowResize
+            CheckForWindowResizeFlagAndAct
+            DestructiveRead_IsRedrawFlagSet
+            HandleWindowLoopMessage_WM_PAINT
+
+        Shader Uniforms:
+
+            ReLoadShaderUniforms_iMouse
+            ReLoadShaderUniforms_iTime
+            ReLoadShaderUniforms_iResolution
+            LoopTick
+
+    //|FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF| GRAQUAD |//
+    //| FRAGBED |FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF|//
+
+        Halt
+        CopyHardCodedShaderStrings
+        LoadFileIfExists
+        SaveTextFileToDisk
+        SimpleKeyHandler
+        Init
+ 
+    //|FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF| FRAGBED |//
+    //| GPUDATA |FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF|//
+
+        DEBUG_MODE
+        Halt
+        HaltWithTrace
+        Check_PIX_P_X_P_Y
+        Check_PIX_R_G_B_A
+        p_x_p_y_CTO_com_dex
+        com_dex_CTO_p_x_p_y
+        ApplyChangesToGPU
+        PutPixelOnCPU_RGBA
+        PutPixelOnCPU_U32
+        GetPixelOnCPU_RGBA
+        GetPixelOnCPU_U32
+        InitInstance
+        Test_Coordinate_Conversion
+        Test_CPU_Only
+        Test_CPU_AND_GPU
+        TestAll
+        Init
+
+    //|FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF| GPUDATA |//
+    //| PIXNAME |FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF|//
+
+        Halt
+        Init
+
+    //|FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF| PIXNAME |//
     //| GPUDATA_PAINT5D |FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF|//
     
         paint5d_Halt : Error Function

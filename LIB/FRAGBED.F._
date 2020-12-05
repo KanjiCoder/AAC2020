@@ -1,29 +1,7 @@
-//:----------------------------------------------------------://
-//: FRAGBED.F._ : FRAGmentshadertestBED.FUNCTIONS            ://
-//:                                                          ://
-//: Sets up 9 default shaders that serialize themselves      ://
-//: to the hard disk. Shaders can be over-written by         ://
-//: opening the serialized to disk shaders in text editor    ://
-//: and editing them.                                        ://
-//:                                                          ://
-//: On startup will check for existance of                   ://
-//: serialized files.                                        ://
-//:                                                          ://
-//:  If serialized files EXIST:                              ://
-//:                                                          ://
-//:      Contents of those files used as shader code.        ://
-//:                                                          ://
-//:  If serialized files DO NOT EXIST:                       ://
-//:                                                          ://
-//:      1. Loads shader code from .exe                      ://
-//:      2. Saves .exe shader code to .frag files on disk.   ://
-//:                                                          ://
-//:  If MIX OF BOTH (some serialized, some not)              ://
-//:                                                          ://
-//:      Files that are on disk are loaded from disk.        ://
-//:      Files missing from disk are loaded from .EXE        ://
-//:      All EXE loaded files are serialized to disk.        ://
-//:----------------------------------------------------------://
+//:FRAGBED.D._  
+
+//: #_FRAGBED_UNIFORM_FREEABLE_POINTERS_# ://
+
 //:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=====================://
     void 
     aac2020_fragbed_Halt( const char* msg_err )

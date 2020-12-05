@@ -1,25 +1,7 @@
+//:FRAGBED.D._  
 
-    //:FRAGBED.D._ : FRAGmentshadertestBED.DATA
+//: #_FRAGBED_UNIFORM_FREEABLE_POINTERS_# ://
 
-/** DESIGN NOTES: ****************************************** ***
-
-    I originally thought "AAC2020_FRAGBED_loaded_##_ptr"(s)
-    could point to either the default shaders
-    ( "AAC2020_FRAGBED_DEFAULT_###" ) or to shader code
-    on the hard disk.
-    
-    Problem:
-
-    This would mean sometimes the pointer is FREEABLE
-    (when it points to disk) and UN-FREEABLE when it points
-    to a hard coded (in source code) FILE_SCOPE char array.
-
-    Solution:
-
-    FILE_SCOPE char arrays must be copied over to malloced 
-    memory for consistency.
-
-*** ******************************************************** **/
 //:CONFIGURATION:============================================://
 
     #define AAC2020_FRAGBED_BUGHUNT_SaveTextFileToDisk ( 0 )

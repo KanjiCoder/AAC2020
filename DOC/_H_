@@ -6,6 +6,199 @@
     
 *** ******************************************************** ***
 
+#_FRAGBED_UNIFORM_FREEABLE_POINTERS_############################
+
+    EXTRACTED_FROM[ FRAGBED.D._ ]ON_DATE[ 2020_12_15 ]
+
+    DESIGN_NOTES:
+
+    I originally thought "AAC2020_FRAGBED_loaded_##_ptr"(s)
+    could point to either the default shaders
+    ( "AAC2020_FRAGBED_DEFAULT_###" ) or to shader code
+    on the hard disk.
+    
+    Problem:
+
+    This would mean sometimes the pointer is FREEABLE
+    (when it points to disk) and UN-FREEABLE when it points
+    to a hard coded (in source code) FILE_SCOPE char array.
+
+    Solution:
+
+    FILE_SCOPE char arrays must be copied over to malloced 
+    memory for consistency.
+
+
+############################_FRAGBED_UNIFORM_FREEABLE_POINTERS_#
+#_GRAQUAD_CAME_FROM_GLEB_SWIN_##################################
+
+    Extracted_From[ GRAQUAD.F._ ]ON_DATE[ 2020_12_05 ]
+
+    Refactor Note:
+    GLEB_SWIN --> GINAWIN (Graphics_Init_And_WINdow)
+    GLEB -------> GLEBIND (open_GL_Easy_BINDings   )
+
+##################################_GRAQUAD_CAME_FROM_GLEB_SWIN_#
+#_TWO_DEFAULT_SHADERS_ONLY_#####################################
+
+    EXTRACTED_FROM[ GRAQUAD.D.FRAG ]ON_DATE[ 2020_12_05 ]
+
+        GRAQUAD.D.FRAG._:                                        
+        GRAQUAD.DATA.FRAGMENT_SHADERS:                           
+                                                                 
+        These are just the shaders with different messages in    
+        them for the user. Do NOT put AAC2020_FRAGBED default    
+        shaders here. I get that you want to consolidate shader  
+        code, but those default shaders need to be placed        
+        where you would logically look for them in the future.   
+                                                                 
+        Which is with AAC2020_FRAGBED                            
+
+#####################################_TWO_DEFAULT_SHADERS_ONLY_#
+#_UNIFORM_NAMING_CONVENTION_####################################
+
+    Uniform names copies of SHADERTOY.COM uniform names. 
+
+    That way:
+
+        1. I don't have to think about what to call them.
+        2. I can easily [cut+paste] [ to | from ] Shadertoy.com
+
+####################################_UNIFORM_NAMING_CONVENTION_#
+#_WHY_THESE_IMOUSE_NAMES_#######################################
+
+        //: ------------------------------------------------ ://
+        //: [x,y,z,w]                                        ://
+        //:                                                  ://
+        //: These will be backed into VEC4 when              ://
+        //: loaded into iMouse uniform.                      ://
+        //: Decided to label these as their actual values    ://
+        //: in the GLSL code rather than their usage.        ://
+        //:                                                  ://
+        //: Reason: I might not correctly understand what    ://
+        //:         these values SHOULD BE and I don't want  ://
+        //:         to have variable names that lie in my    ://
+        //:         code.                                    ://
+        //: ------------------------------------------------ ://
+        U32   AAC2020_CPUNIFO_iMouse_vec4_x =( 0 );
+        U32   AAC2020_CPUNIFO_iMouse_vec4_y =( 0 );
+        U32   AAC2020_CPUNIFO_iMouse_vec4_z =( 0 );
+        U32   AAC2020_CPUNIFO_iMouse_vec4_w =( 0 );
+
+#######################################_WHY_THESE_IMOUSE_NAMES_#
+#_EXTRACTED_GLEBIND_CLUTTER_NOTES_##############################
+
+    //:NOTES:================================================://
+
+
+        PREDACESSOR: GLEB: openGL_Easy_Bindings
+        CURRENT_LIB: AAC2020_GLEBIND (GL_Easy_BINDings)
+        
+        Prefixes:
+        AAC2020_GLEBIND_   :Library namespace prefix.
+        MV_     :Macro Variable / Value
+        MM_     :Maybe A Macro (MV_ value will decide)
+        
+        Function Names:
+        DEBUGPRINT_01: Print ONE(01) string.
+
+    //:================================================:NOTES://
+    //:INCLUDES:=============================================://
+    //://////////////////////////////////////////////////////://   
+    //# Before you judge, include gaurds exist.              #//   
+    //://////////////////////////////////////////////////////://   
+                                                        //:  ://
+    //  #include <stdint.h> //:int32_t      ://         //:  ://
+    //                      //:             ://         //:  ://
+    //  #include <stdlib.h> //:malloc(....) ://         //:  ://
+    //  #include <stdlib.h> //:free(......) ://         //:  ://
+    //                      //:             ://         //:  ://
+    //  #include <string.h> //: strcmp      ://         //:  ://
+    //                      //:             ://         //:  ://
+    //  #include <stdio.h>  //:printf(....) ://         //:  ://
+    //  #include <stdio.h>  //:fprintf(...) ://         //:  ://
+    //  #include <stdio.h>  //:fflush(....) ://         //:  ://
+    //                      //:             ://         //:  ://
+    //  #include <ctype.h>  //:isspace(...) ://         //:  ://
+                                                        //:  ://
+        //[ Using: PEB20202_LoadLibrary    - - - - - ]////:  ://
+        //[ Using: PEB2020_GetProcAddress  - - - - - ]////:  ://
+        //-  Windows.h for:        - - - - - - - - - -////:  ://
+        //-  1. LoadLibrary        - - - - - - - - - -////:  ://
+        //-  2. GetProcAddress     - - - - - - - - - -////:  ://
+        //-  3. FreeLibrary        - - - - - - - - - -////:  ://
+        //-  #include <Windows.h>  - - - - - - - - - -////:  ://
+                                                        //:  ://
+    //://////////////////////////////////////////////////////://   
+    //# Before you judge, include gaurds exist.              #//   
+    //://////////////////////////////////////////////////////://   
+    //:=============================================:INCLUDES://
+ 
+##############################_EXTRACTED_GLEBIND_CLUTTER_NOTES_#
+#GLEBIND_THIS_ONE_IS_SPECIAL####################################
+
+    This one is special.                 
+    The wrapper function is called       
+                                         
+        AAC2020_GLEBIND_wglGetProcAddress    
+                                         
+    instead of                           
+                                         
+        wglGetProcAddress                
+                                         
+    to avoid conflicts with Windows.h. The
+    "wglGetProcAddress" function does NOT work "out of
+    the box" like "GetProcAddress".                    
+                                       
+    I am sure if I knew more about linkers I could fix
+    this. But messing with linkers would destroy the
+    point of this library being an
+                                         
+        "easy bindings"                      
+                                         
+    library. The whole point is to just include this
+    file and get access to openGL functions.
+
+#DOES_NOT_REQUIRE_GL_CONTEXT_TO_CALL############################
+
+    Also does NOT need an openGL context           
+    in order to fetch it.                                       
+                   
+############################DOES_NOT_REQUIRE_GL_CONTEXT_TO_CALL#                      
+####################################GLEBIND_THIS_ONE_IS_SPECIAL#
+#_IF_NO_GL_LIST_CREATE_ONE_#####################################
+
+    If "OPEN_GL_SEARCH_PATHS.TXT" does not    
+    exist, create it now and populate it      
+    with some default values.                 
+    #SEE_IF_FILE_EXISTS_THEN_USE#  
+    stackoverflow.com/questions/230062        
+
+#####################################_IF_NO_GL_LIST_CREATE_ONE_#
+#_WHY_GLEBIND_TOUCHFILE_########################################
+
+    TouchFile function did not exist in GLEB.H      
+    Added to GLEBIND.F (GLEBIND_DOT_F) to make      
+    program a bit more user friendly.               
+                                                    
+    GOAL: Program is a single .EXE file, no         
+        supplimentary files need to be copied to    
+        maintain a working executable.              
+                                                    
+    This function makes it so you don't have to     
+    copy around OPEN_GL_SEARCH_PATHS.TXT            
+
+########################################_WHY_GLEBIND_TOUCHFILE_#
+##############################if_not_exist_add_default_contents#
+
+    int if_not_exist_add_default_contents :
+
+        If the file did not exist before we touched it,   
+        should we initialize it's contents with some      
+        default search paths for where we can expect      
+        OpenGL32.dll to be?                               
+
+#if_not_exist_add_default_contents##############################
 #_WHY_CANT_I_SEE_MY_WINDOW_#####################################
 
     Trying to figure out why window does not show up:
