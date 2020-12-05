@@ -1,28 +1,12 @@
-
 //: GPUDATA_PAINT5D: ( .F._ : FuncFile )
+//: #NAMESPACE_PATTERN_BREAKER_PAINT5D#
 
-//[ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ]//
-//[  #PATTERN_BREAKER#:                                      ]//                 
-//[  Full Namespace Is:  AAC2020_GPUDATA_PAINT5D             ]//
-//[  You may have been expecting AAC2020_PAINT5D   #TAG_P5D# ]//
-//[                                                          ]//
-//[  Leave comment here so that people can easily find what  ]//
-//[  they are looking for when searching for AAC2020_PAINT5D ]//
-//[ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ]//
 //:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=====================://
-#define P printf
+    void
+    aac2020_gpudata_paint5d_Halt( const char* msg_err ){
+        printf("[FATAL_2020_12_04_076PM]:%s\n", msg_err );
+        fflush(stdout);exit(  11 /** 4*20-69 **/ );         }
 
-    void 
-    aac2020_gpudata_paint5d_Halt( const char* msg_err )
-    {
-        P("[FATAL:aac2020_gpudata_paint5d_Halt]:%s\n"
-        , msg_err );;
-        
-        fflush(stdout);
-        exit(  11 /** 4*20-69 **/ );
-    }
-
-#undef  P
 //:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
 //:INITIALIZE_PAINT5D:=======================================://
 #define U32     uint32_t /** GCC: <stdint.h> **/
@@ -38,7 +22,8 @@
 
             /** SBE: [Set/Put]Before_Init **/
 
-            paint5d.g_pixel.tex_lot   = 0         ; /** SBE **/
+            paint5d.g_pixel.tex_lot   = 1         ; /** SBE **/
+
          //:paint5d.g_pixel.pix_nam   = "paint5d" ; /** SBE **/
             paint5d.pix_nam[ 0 ] = 'p' ;          ;
             paint5d.pix_nam[ 1 ] = 'a' ;          ;
@@ -49,9 +34,7 @@
             paint5d.pix_nam[ 6 ] = 'd' ;          ;
             paint5d.pix_nam[ 7 ] = '\0';          ;
                            
-            /** These errors could happen if                 **/
-            /** 1: You failed to zero initialize struct      **/
-            /** 2: You called initializer TWICE or MORE.     **/
+            //:#WHY_PAINT5D_ERRORS_2020_12_04#
             if( paint5d.cpu_pix[0]      != 0 ){ ERR("[E_1]");};                   
             if( paint5d.g_pixel.tex_han != 0 ){ ERR("[E_2]");};
             if( paint5d.g_pixel.sam_loc != 0 ){ ERR("[E_3]");};

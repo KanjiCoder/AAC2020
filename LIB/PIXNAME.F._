@@ -1,21 +1,13 @@
-
-    //: PIXNAME.F._
-    
-    //: Functions do not belong here. Data-Only.
-    //: SEE[ PIXNAME.D._ ]
-
-
 //:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=====================://
     static void 
     aac2020_pixname_Halt( const char* msg_err )
     {
         printf("[FATAL_ERROR:AAC2020_PIXNAME]:%s\n", msg_err );
-        fflush(stdout);
-        exit(666);
+        fflush(stdout);exit(666);
     }
 //:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
 //:INIT_THIS_SUB_LIBRARY:====================================://
-#define H   aac2020_pixname_Halt
+#define ERR aac2020_pixname_Halt
 #define U32 uint32_t /** GCC: <stdint.h> **/
 
     U32
@@ -34,13 +26,13 @@
         r_2 = strcmp( AAC2020_PIXNAME_todo_01 , "todo_01" );
         r_3 = strcmp( AAC2020_PIXNAME_todo_02 , "todo_02" );
 
-        if( 0 != r_1 ){ H("[FATAL_ERROR:PIXNAME:001]"); };
-        if( 0 != r_2 ){ H("[FATAL_ERROR:PIXNAME:002]"); };
-        if( 0 != r_3 ){ H("[FATAL_ERROR:PIXNAME:003]"); };
+        if( 0 != r_1 ){ ERR("[FATAL_ERROR:PIXNAME:001]"); };
+        if( 0 != r_2 ){ ERR("[FATAL_ERROR:PIXNAME:002]"); };
+        if( 0 != r_3 ){ ERR("[FATAL_ERROR:PIXNAME:003]"); };
 
         return( 0x00 );
     }
 
-#undef  H
+#undef  ERR
 #undef  U32
 //:====================================:INIT_THIS_SUB_LIBRARY://

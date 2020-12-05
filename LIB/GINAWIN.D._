@@ -1,23 +1,5 @@
-
-//:----------------------------------------------------------://
-//:     123_123                                              ://
-//:     GINAWIN.F: GraphicsINit_And_WINdow.DATA              ://
-//:     1234567                                              ://
-//:                                                          ://
-//:             I don't want to re-write all code from       ://
-//:             scratch so we are taking "GLEB_SWIN" and     ://
-//:             editing it.                                  ://
-//:                                                          ://
-//:     GINAWIN only handles:                                ://
-//:                                                          ://
-//:             1. Creation of OpenGL Context                ://
-//:             2. Creation of a NATVIE Win32 Window         ://
-//:                                                          ://
-//:             Any other graphics operations belong         ://
-//:             in a different file.                         ://
-//:----------------------------------------------------------://
 //:CONFIGURATION:============================================://
-
+ 
     int AAC2020_GINAWIN_show_okay_message = 1;
 
     /** Quick hack to silence warnings about not having **/
@@ -39,6 +21,25 @@
 
 //:============================================:CONFIGURATION://
 //:CONCEPTUAL_LIBRARY_MEMBER_VARIABLES:======================://
+
+    #if( AAC2020_CRASH_ON_VITAL_TODO >= 1 ) //:##############://
+
+        #error GET_RID_OF_THESE_FUCKING_CALLBACKS
+
+        REASONS: 1: Reaching backwards like this from the 
+                    future violates the LIBCHAN structure.
+                    ( Linear layers that we add to and   )
+                    ( never look back                    )
+
+                 2: Callbacks make it harder to read and
+                    follow the code. (Extra indirection)
+
+                 3: Callbacks force code execution onto
+                    the window thread and will lead to 
+                    hard to debug memory concurrency 
+                    issues eventually.
+
+    #endif //:###############################################://
     
     //: AAC2020_GINAWIN_OnWindowResize_HAS
     //: AAC2020_GINAWIN_OnWindowResize_PFN

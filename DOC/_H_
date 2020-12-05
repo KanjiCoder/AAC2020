@@ -6,6 +6,275 @@
     
 *** ******************************************************** ***
 
+#_WHY_CANT_I_SEE_MY_WINDOW_#####################################
+
+    Trying to figure out why window does not show up:
+    
+    Possible fixes/problems:
+    
+    F01: You never initialise hdc with the result of 
+        the BeginPaint call, so your painting will fail.  
+        https://stackoverflow.com/questions/30551850
+
+#####################################_WHY_CANT_I_SEE_MY_WINDOW_#
+#_OLD_GINAWIN_DOCUMENTATION_####################################
+    
+    ********************************************************
+    Documentation for GINAWIN that I think was left over
+    from when I cut and pasted the code from previous 
+    project. Not sure how relevant these comments below are.
+    ********************************************************
+
+    KEY/PREFIXES:
+        aac2020_ginawin_:
+        The namespace prefix for all functions
+        that belong to this section of code.
+    
+        gleb: open_GL_Easy_Bindings
+        
+        swin:
+        SWIN=="SILKWIN"==="THREADED_WINDOW"
+        The idea is a "window made of silk" 
+        because threads can be made of silk.
+        I am thinking the window was woven
+        by a spider's threads.
+    
+        pfn: Pointer_to_FuNction
+             (Convention take from Vulkan)
+    
+    CONVENTIONS:
+    
+      1. Non-terminal objects of library
+         structs are ALL_CAPITAL.
+    
+      2. Terminal objects of library struct are:
+         A: CamelCaseIfFunction
+         B: snake_case_if_variable
+         C: OR: Written in convention of whatever
+            I am trying to wrap that exists from
+            some other library I don't own.
+    
+      3. Includes often are put near where
+         they are needed, rather than all at
+         the top of the file. Standard headers
+         have include gaurds, so this shouldn't
+         be a problem.
+    
+      4. Global Windows Functions Allowed:
+         1. LoadLibraryA
+         2. GetProcAddress
+         Anything else should be wrapped in
+         a library struct that tells us the
+         .dll file of origin.
+    
+         Convoluted and rigid and a pain to
+         port to another operating system?
+    
+         I'll worry about porting after I've made
+         a million dollars off of something.
+         Otherwise, not worth the hassel.
+
+####################################_OLD_GINAWIN_DOCUMENTATION_#
+#_CEDITOR_DESIGN_NOTES_2020_12_04_##############################
+
+    CEDITOR: Current_EDITOR
+
+    Currently the project is setup to use 9 different shaders.
+    That each activate when the corresponding number key is
+    pressed. For example, pressing "3" loads fragment shader
+    #3 into our pipeline.
+
+    Let's build upon this:
+
+    NUMKEY 1 ===>  Active:FragShader_1 , dex_edi == 1
+    NUMKEY 2 ===>  Active:FragShader_2 , dex_edi == 2
+    NUMKEY 3 ===>  Active:FragShader_3 , dex_edi == 3
+    NUMKEY 4 ===>  Active:FragShader_4 , dex_edi == 4
+    NUMKEY 5 ===>  Active:FragShader_5 , dex_edi == 5
+    NUMKEY 6 ===>  Active:FragShader_6 , dex_edi == 6
+    NUMKEY 7 ===>  Active:FragShader_7 , dex_edi == 7
+    NUMKEY 8 ===>  Active:FragShader_8 , dex_edi == 8
+    NUMKEY 9 ===>  Active:FragShader_9 , dex_edi == 9
+     
+    When zero is pressed, no conceptual "sub editor"      
+    is in focus. Maybe when that happens, the keyboard    
+    will only respond to keys "0" - "9" because there is  
+    no editor in focus to listen to what keys were
+    pressed. ?
+    NUMKEY 0 ===>  Active:FragShader_0 , dex_edi == 0
+
+##############################_CEDITOR_DESIGN_NOTES_2020_12_04_#
+#_LIKE_glo_eve_OBJECT_in_A2_JC_#################################
+
+    Like: glo_eve object in R:\G\A2_JC.js  
+
+          glo_eve == "global event"
+          A generic [system/platform] agnostic event object.
+
+          Thought "keyboard event" was too specific and
+          "input event" also too specific because controls
+          might be wired into an A.I.
+ 
+#################################_LIKE_glo_eve_OBJECT_in_A2_JC_#
+#_MARK_ALL_KEYS_AS_DIRTY_#######################################
+
+        After you've consumed the keyboard events  
+        mark all IKEYBOX data as dirty.  
+
+        U32  AAC2020_IKEYBOX_dirty = ( 1 );
+
+#######################################_MARK_ALL_KEYS_AS_DIRTY_#
+#_KEEP_KEY_PRESSED_DEAD_SIMPLE_FOR_NOW_#########################
+
+        Keep it dead simple for now. ***********************  
+        This is the most recent NON controll key pressed. **  
+        This should be suitable for basic editors. *********  
+        We can figure out something more complex ***********  
+        when we need responsive game controls. ************* 
+
+        char AAC2020_IKEYBOX_k_p = '_' ; //:k_p: Key_Pressed
+
+#########################_KEEP_KEY_PRESSED_DEAD_SIMPLE_FOR_NOW_#
+#_WHY_TEXTURE_SLOTS_IN_PIXNAME_#################################
+
+    A bit weird, but let's keep the texture slot values   
+    centralized here as well so that we can easily        
+    verify that all texture slots are UNIQUE .            
+
+#################################_WHY_TEXTURE_SLOTS_IN_PIXNAME_#
+#KEYPAD_HASHTAGS################################################
+
+    Keep those 1:1 relationships. 
+    SEE[ #EDITOR_ONE_TO_ONE_RELATIONSHIPS# ]
+
+    #KEYPAD_1# : Thing is associated with EDITOR#1, KEYPAD1
+    #KEYPAD_2# : Thing is associated with EDITOR#2, KEYPAD1
+    #KEYPAD_3# : Thing is associated with EDITOR#3, KEYPAD1
+    #KEYPAD_4# : Thing is associated with EDITOR#4, KEYPAD1
+    #KEYPAD_5# : Thing is associated with EDITOR#5, KEYPAD1
+    #KEYPAD_6# : Thing is associated with EDITOR#6, KEYPAD1
+    #KEYPAD_7# : Thing is associated with EDITOR#7, KEYPAD1
+    #KEYPAD_8# : Thing is associated with EDITOR#8, KEYPAD1
+    #KEYPAD_9# : Thing is associated with EDITOR#9, KEYPAD1
+
+################################################KEYPAD_HASHTAGS#
+#PATTERN_BREAKER_PIXNAME########################################
+
+    EXTRACTED_FROM[ PIXNAME.D._ ]ON_DATE[ 2020_12_04 : 0840PM ]
+                                           
+    #PATTERN_BREAKER#       
+                                                            
+    This somewhat breaks the spirit of our LIBCHAN          
+    (library chain) pattern of adding things on as you      
+    build up.                                               
+                                                            
+    The variables here will only be used for:               
+        1. Human Reference                                  
+        2. Asserts                                          
+                                                            
+    It will never be used as an assingnment like:           
+                                                            
+        ACC2020_GPUDATA_PAINT5D_dat.pix_nam=(               
+        AAC2020_PIXNAME_paint5d ); <<<<<<< NO! NEVER!       
+                                                            
+    But will rather be used like so:                        
+                                                            
+        ACC2020_GPUDATA_PAINT5D_dat.pix_nam = "paint5d";    
+        assert( AAC2020_PIXNAME_paint5d    == "paint5d" );  
+                                                            
+    Reason:                                                 
+                                                            
+        Make the code easy to follow with minimal           
+        indirection, while still having the benifit of      
+        a centralized area where all of the different       
+        512 -x- 512 chunks of memory are defined.           
+ 
+########################################PATTERN_BREAKER_PIXNAME#
+#WHY_PAINT5D_ERRORS_2020_12_04##################################
+
+    These errors could happen if                  
+    1: You failed to zero initialize struct       
+    2: You called initializer TWICE or MORE.     
+    
+    if( paint5d.cpu_pix[0]      != 0 ){ ERR("[E_1]");};                   
+    if( paint5d.g_pixel.tex_han != 0 ){ ERR("[E_2]");};
+    if( paint5d.g_pixel.sam_loc != 0 ){ ERR("[E_3]");};
+    if( paint5d.g_pixel.sam_val != 0 ){ ERR("[E_4]");}; 
+
+##################################WHY_PAINT5D_ERRORS_2020_12_04#
+#PROJECT_IS_EDITOR_CENTRIC######################################
+
+    As we build a game, we want the game play to just be
+    an editor view where the user's controls do not allow
+    for editing the level, but rather just moving and
+    controlling the player.
+
+    Level is still mutable by things like destructable
+    geometry, but not by editing tools.
+
+    Doing it this way means we only have ONE code base
+    to maintain. (An editor code base) rather than a
+    game engine and level editor code base.
+
+######################################PROJECT_IS_EDITOR_CENTRIC#
+#EDITOR_ONE_TO_ONE_RELATIONSHIPS################################
+
+    Even if there is shared state or components,
+    every editor should get unique copies of things
+    to keep the relationships simple 1:1 relationships.
+
+    If two editors need to share the same TILEBRUSH, we
+    just copy over E1_TILEBRUSH to E2_TILEBRUSH when
+    switch views from EDITOR #1 (E1) to EDITOR #2 (E2)
+
+    THIS_IS_GOOD::::::::::::::::::::::::::::::::::::::::::::::::
+
+    1 : 1 : 1 : 1 Relationship for each editor:
+
+    E1_DATA : E1_RENDERCODE : E1_USERINPUT : E1_TILEBRUSH
+    E2_DATA : E2_RENDERCODE : E2_USERINPUT : E2_TILEBRUSH
+    E3_DATA : E3_RENDERCODE : E3_USERINPUT : E3_TILEBRUSH
+    E4_DATA : E4_RENDERCODE : E4_USERINPUT : E4_TILEBRUSH
+
+    ::::::::::::::::::::::::::::::::::::::::::::::::THIS_IS_GOOD
+    THIS_IS_BAD!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    E1_DATA   E1_RENDERCODE   E1_USERINPUT   E1_TILEBRUSH
+     |                             |              |
+     |                             |              |
+    DATA                          UI           TILEBRUSH
+     |                             |              |
+     |                             |              |
+    E2_DATA   E2_RENDERCODE   E2_USERINPUT   E2_TILEBRUSH
+     |
+     |
+    DATA
+     |
+     |
+    E3_DATA   E3_RENDERCODE   E3_USERINPUT   E3_TILEBRUSH
+
+
+    E4_DATA   E4_RENDERCODE   E4_USERINPUT   E4_TILEBRUSH
+
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!THIS_IS_BAD
+
+################################EDITOR_ONE_TO_ONE_RELATIONSHIPS#
+#PATTERN_BREAKER################################################
+
+    #PATTERN_BREAKER# is a warning to reader of code that
+    something about this code breaks the [conventions/patterns]
+    typically used in the code base.
+
+################################################PATTERN_BREAKER#
+#NAMESPACE_PATTERN_BREAKER_PAINT5D##############################
+                                                    
+    Full Namespace Is:  AAC2020_GPUDATA_PAINT5D              
+    You may have been expecting AAC2020_PAINT5D   #TAG_P5D#  
+                                                            
+    Leave comment here so that people can easily find what   
+    they are looking for when searching for AAC2020_PAINT5D  
+
+##############################NAMESPACE_PATTERN_BREAKER_PAINT5D#
 #ALL_DATA_IS_512X512_RGBA_UNSIGNED##############################
 
     EXTRACTED_FROM[ GPUDATA.D._ ]ON[ 2020_12_04 : 0549PM ]

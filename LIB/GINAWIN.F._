@@ -1,20 +1,18 @@
+//:SEE: #_OLD_GINAWIN_DOCUMENTATION_#
+//:SEE: #_WHY_CANT_I_SEE_MY_WINDOW_#
+/** ******************************************************** ***
 
+    TODO: This needs to be re-written so the only difference
+          between the threaded an non-threaded version is
+          where our infinite loop function is called.
+          
+          The middle of the window loop will be done using
+          function pointers.
 
-//:TODO: This needs to be re-written so the only difference
-//:      between the threaded an non-threaded version is
-//:      where our infinite loop function is called.
-//:
-//:      The middle of the window loop will be done using
-//:      function pointers.
+          (This might already be done. Check and then remove)
+          (this comment. )
 
-//:Trying to figure out why window does not show up:
-//: 
-//:Possible fixes/problems:
-//:
-//:F01: You never initialise hdc with the result of 
-//:     the BeginPaint call, so your painting will fail.  
-//:     https://stackoverflow.com/questions/30551850
-
+*** ******************************************************** **/
 //:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=====================://
 
     void
@@ -31,76 +29,6 @@
     } 
 
 //:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
-
-//:----------------------------------------------------------://
-//:     123_123                                              ://
-//:     GINAWIN.F: GraphicsINit_And_WINdow.FUNCTIONS         ://
-//:     1234567                                              ://
-//:                                                          ://
-//:             I don't want to re-write all code from       ://
-//:             scratch so we are taking "GLEB_SWIN" and     ://
-//:             editing it.                                  ://
-//:                                                          ://
-//:     GINAWIN only handles:                                ://
-//:                                                          ://
-//:             1. Creation of OpenGL Context                ://
-//:             2. Creation of a NATVIE Win32 Window         ://
-//:                                                          ://
-//:             Any other graphics operations belong         ://
-//:             in a different file.                         ://
-//:----------------------------------------------------------://
-
-
-
-//:KEY/PREFIXES:
-//:    aac2020_ginawin_:
-//:    The namespace prefix for all functions
-//:    that belong to this section of code.
-//:
-//:    gleb: open_GL_Easy_Bindings
-//:    
-//:    swin:
-//:    SWIN=="SILKWIN"==="THREADED_WINDOW"
-//:    The idea is a "window made of silk" 
-//:    because threads can be made of silk.
-//:    I am thinking the window was woven
-//:    by a spider's threads.
-//:
-//:    pfn: Pointer_to_FuNction
-//:         (Convention take from Vulkan)
-//:
-//:CONVENTIONS:
-//:
-//:  1. Non-terminal objects of library
-//:     structs are ALL_CAPITAL.
-//:
-//:  2. Terminal objects of library struct are:
-//:     A: CamelCaseIfFunction
-//:     B: snake_case_if_variable
-//:     C: OR: Written in convention of whatever
-//:        I am trying to wrap that exists from
-//:        some other library I don't own.
-//:
-//:  3. Includes often are put near where
-//:     they are needed, rather than all at
-//:     the top of the file. Standard headers
-//:     have include gaurds, so this shouldn't
-//:     be a problem.
-//:
-//:  4. Global Windows Functions Allowed:
-//:     1. LoadLibraryA
-//:     2. GetProcAddress
-//:     Anything else should be wrapped in
-//:     a library struct that tells us the
-//:     .dll file of origin.
-//:
-//:     Convoluted and rigid and a pain to
-//:     port to another operating system?
-//:
-//:     I'll worry about porting after I've made
-//:     a million dollars off of something.
-//:     Otherwise, not worth the hassel.
-
 //:SET_MOUSEMOVE_HANDLER:====================================://
 //:ADDED_DATE[2020_11_06]:===================================://
 #define PFN AAC2020_GINAWIN_PFN_2020_11_06_ONMOUSEMOVE

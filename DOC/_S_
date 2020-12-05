@@ -7,22 +7,69 @@ INDEX:
 *** ******************************************************** ***
 *** ******************************************************** ***
 
-    //|GPUDATA_PAINT5D.[D+F]._|DFDFDFDFDFDFDFDFDFDFDFDFDFDFDF|//
-    
-        #PATTERN_BREAKER#:                                                    
-        Full Namespace Is:  AAC2020_GPUDATA_PAINT5D              
-        You may have been expecting AAC2020_PAINT5D   #TAG_P5D#  
+
+    //| IKEYBOX |SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS|//
+
+        IKEYBOX: InputKEYBOX
+                                                            
+        WHAT:                                               
+            1. A "P.O. Box For Keys that were pressed.      
+                                                            
+        WHY:                                                
+            1. Mitigate MultiThreading Problems.            
+                                                            
+            2. Allow for a design that does not require     
+            callbacks for future code to have a way        
+            to know what keys were pressed.                
+                                                            
+    //|SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS| IKEYBOX |//
+    //| IMOUBOX |SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS|//
+
+        Exact same "WHAT" and "WHY" as "IKEYBOX".
+        But for[  MOUSE  ]stuff instead of[  KEYBOARD  ].
+
+    //|SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS| IMOUBOX |//
+    //| CEDITOR |SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS|//
+
+        Keeps track of the [C]urrent [EDITOR] in control.
+        FOR_MORE_INFO_SEE[ #_CEDITOR_DESIGN_NOTES_2020_12_04_# ]
+
+    //|SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS| CEDITOR |//
+    //| GINAWIN |SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS|//
+
+        123_123                                             
+        GINAWIN.F: GraphicsINit_And_WINdow       
+        1234567                                             
+                                                            
+                I don't want to re-write all code from      
+                scratch so we are taking "GLEB_SWIN" and    
+                editing it.                                 
+                                                            
+        GINAWIN only handles:                               
+                                                            
+                1. Creation of OpenGL Context               
+                2. Creation of a NATVIE Win32 Window        
+                                                            
+                Any other graphics operations belong        
+                in a different file.                        
+
+    //|SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS| GINAWIN |//
+    //| PIXNAME |SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS|//
                                                                 
-        Leave comment here so that people can easily find what   
-        they are looking for when searching for AAC2020_PAINT5D  
-                                                                
-        //:--------------------------------------------------://
-        //:ABOUT: User Canvas Data For "PAINT5D.EXE"         ://
-        //:     1. #OVERRIDE_DEFAULT_SHADER_001#             ://
-        //:     2. #EVERY_EDITOR_GETS_512x512_GPUDATA_CHUNK# ://
-        //:--------------------------------------------------://
+        DOTADIW: A centralized place to know the names that     
+                 identify different 512-x-512 pixel chunks       
+                 of memory that exist both on the GPU and CPU.
+
+                ( EXAMPLE: ACC2020_GPUDATA_PAINT5D_dat.pix_nam )
+
+    //|SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS| PIXNAME |//
+    //| GPUDATA_PAINT5D |SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS|//
+
+        ABOUT: User Canvas Data For "PAINT5D.EXE"         
+            1. #OVERRIDE_DEFAULT_SHADER_001#              
+            2. #EVERY_EDITOR_GETS_512x512_GPUDATA_CHUNK#  
     
-    //|DFDFDFDFDFDFDFDFDFDFDFDFDFDFDF|GPUDATA_PAINT5D.[D+F]._|//
+    //|SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS| GPUDATA_PAINT5D |//
 
 *** ******************************************************** **/
 //[[_S_]: Summary Documentation For .[D+F]._ Files ========= ]//

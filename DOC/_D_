@@ -2,8 +2,62 @@
 /** ******************************************************** ***
 
 
+    //| FILEBOI |DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD|//
 
-    //|GPUDATA.D|DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD|//
+        NO_DATA
+
+    //|DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD| FILEBOI |//
+    //| NATIKEY |DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD|//
+
+        NO_DATA
+
+    //|DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD| NATIKEY |//
+    //| IKEYBOX |DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD|//
+
+        dirty : When >= 1 , means all information is dirty.
+          k_p : Current Key Pressed As Ascii Char
+
+    //|DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD| IKEYBOX |//
+    //| IMOUBOX |DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD|//
+
+        SUMMARY:
+
+            [ m_x , m_y ] : Mouse[x,y]
+            [ c_x , c_y ] : Click[x,y]
+            [ u_x , u_y ] :    UP[x,y] (Mouse Up  )
+            [ d_x , d_y ] :  DOWN[x,y] (Mouse Down)
+            
+            m_d  :.......: IS mouse DOWN ?
+            m_u  :.......: IS mouse   UP ?
+
+        EXPLAINED_IN_MORE_DETAIL:
+
+            [m_x,m_y] : Current mouse position.   
+            [c_x,c_y] : Position Where Mouse Was Clicked  
+            [u_x,u_y] : Position Where Mouse Was Released   
+            [d_x,d_y] : Position Where Mouse Was Pressed DOWN 
+
+            [ m_d | m_u ]: Mouse Down or Mouse Up ?      
+            If both are set or unset, that is an error:  
+
+    //|DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD| IMOUBOX |//
+    //| CEDITOR |DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD|//
+
+        dex_edi : Index of [active/in-control] editor.
+
+    //|DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD| CEDITOR |//
+    //| GINAWIN |DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD|//
+
+        ****************************************************
+        This sub-library is a mess. Put things here as you
+        need to reference them. Otherwise you might just
+        be wasting time copying noise.
+        ****************************************************
+
+
+
+    //|DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD| GINAWIN |//
+    //| GPUDATA |DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD|//
     
         cpu_pix 
         pix_nam 
@@ -29,8 +83,8 @@
         
         :----------------------------------------------:pix_nam:
     
-    //|DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD|GPUDATA.D|//
-    //|GPUDATA_PAINT5D.D|DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD|//
+    //|DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD| GPUDATA |//
+    //| GPUDATA_PAINT5D |DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD|//
     
         ACC2020_GPUDATA_PAINT5D_dat :
         
@@ -40,7 +94,7 @@
     
     
     
-    //|DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD|GPUDATA_PAINT5D.D|//
+    //|DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD| GPUDATA_PAINT5D |//
 
 
 

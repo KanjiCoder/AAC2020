@@ -1,47 +1,20 @@
-//:IMOUBOX: InputMouseBox: ----------------------------------://
-//:                                                          ://
-//:     WHAT:                                                ://
-//:         1. A "P.O. Box For Mouse Events                  ://
-//:                                                          ://
-//:      WHY:                                                ://
-//:         1. Mitigate MultiThreading Problems.             ://
-//:                                                          ://
-//:         2. Allow for a design that does not require      ://
-//:            callbacks for future code to have a way       ://
-//:            to know what is happening with the mouse.     ://
-//:                                                          ://
-//:----------------------------------------------------------://
 //:MOUSE_STATE:==============================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
 
-    /** **************************************************** **/
-    /** Like: glo_eve object in R:\G\A2_JC.js  * * * * * * * **/
-    /** **************************************************** **/
-
-    /** [m_x,m_y] : Current mouse position.  * * * * * * * * **/
+    //:#_LIKE_glo_eve_OBJECT_in_A2_JC_#://
 
     U32 AAC2020_IMOUBOX_m_x = 0 ; //:m_x: Mouse_X
     U32 AAC2020_IMOUBOX_m_y = 0 ; //:m_y: Mouse_Y
 
-    /** [c_x,c_y] : Position Where Mouse Was Clicked * * * * **/
-
     U32 AAC2020_IMOUBOX_c_x = 0 ; //:c_x: Click_X
     U32 AAC2020_IMOUBOX_c_y = 0 ; //:c_y: Click_Y
-            
-    /** [u_x,u_y] : Position Where Mouse Was Released  * * * **/
 
     U32 AAC2020_IMOUBOX_u_x = 0 ; //:u_x:Mouse_Up_X
     U32 AAC2020_IMOUBOX_u_y = 0 ; //:u_y:Mouse_Up_Y
-
-    /** [d_x,d_y] : Position Where Mouse Was Pressed DOWN  * **/
                             
     U32 AAC2020_IMOUBOX_d_x = 0 ; //:d_x:Mouse_Down_X
     U32 AAC2020_IMOUBOX_d_y = 0 ; //:d_y:Mouse_Down_Y
     
-
-    /** [ m_d | m_u ]: Mouse Down or Mouse Up ?      * * * * **/
-    /** If both are set or unset, that is an error:  * * * * **/
-
     U32 AAC2020_IMOUBOX_m_d = 0 ; //:m_d:MouseCurrentlyDown?
     U32 AAC2020_IMOUBOX_m_u = 0 ; //:m_u:MouseCurrentlyUp  ?
 
