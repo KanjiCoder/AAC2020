@@ -1,0 +1,55 @@
+//:Constants Used In OpenGL.
+//:Seperate for GLEBIND because GLEBIND is a clusterfuck
+//:and I already have them there, just in a horrible
+//:nested structure that there is no way in hell I am
+//:memorizing.
+
+//:1234567
+//:GLCONST
+//:123_123
+
+struct aac2020_glconst_library_container{
+
+    #define U32 uint32_t /** GCC: <stdint.h> **/
+
+            U32 unused_lax_leading_comma_formatting_hack;
+            
+            U32 TEXTURE0            ;  //: 01 ://
+            U32 TEXTURE_2D          ;  //: 02 ://
+            //:                     ;  //: -- ://
+            U32 NEAREST             ;  //: 03 ://
+            U32 CLAMP_TO_EDGE       ;  //: 04 ://
+            //:                     ;  //: -- ://
+            U32 TEXTURE_MIN_FILTER  ;  //: 05 ://
+            U32 TEXTURE_MAG_FILTER  ;  //: 06 ://
+            U32 TEXTURE_WRAP_S      ;  //: 07 ://
+            U32 TEXTURE_WRAP_T      ;  //: 08 ://
+            //:                     ;  //: -- ://
+            U32 UNPACK_ALIGNMENT    ;  //: 09 ://
+            //:                     ;  //: -- ://
+            U32 RGBA8UI             ;  //: 10 ://
+            U32 RGBA_INTEGER        ;  //: 11 ://
+            U32 UNSIGNED_BYTE       ;  //: 12 ://
+
+    #undef U32
+
+}AAC2020_GLCONST={
+
+    .unused_lax_leading_comma_formatting_hack = 0xBAD666
+
+    //:TAKEN FROM:
+    //:khronos.org/registry/OpenGL/api/GL/glcorearb.h
+
+    ,.  TEXTURE0           = 0x84C0    //: 01 ://
+    ,.  TEXTURE_2D         = 0x0DE1    //: 02 ://
+    ,.  NEAREST            = 0x2600    //: 03 ://
+    ,.  CLAMP_TO_EDGE      = 0x812F    //: 04 ://
+    ,.  TEXTURE_MIN_FILTER = 0x2801    //: 05 ://
+    ,.  TEXTURE_MAG_FILTER = 0x2800    //: 06 ://
+    ,.  TEXTURE_WRAP_S     = 0x2802    //: 07 ://
+    ,.  TEXTURE_WRAP_T     = 0x2803    //: 08 ://
+    ,.  UNPACK_ALIGNMENT   = 0x0CF5    //: 09 ://
+    ,.  RGBA8UI            = 0x8D7C    //: 10 ://
+    ,.  RGBA_INTEGER       = 0x8D99    //: 11 ://
+    ,.  UNSIGNED_BYTE      = 0x1401    //: 12 ://
+};

@@ -118,14 +118,21 @@
                 aac2020_ginawin_WaitHereUntilWindowExists();
 
             };;
-            
-            FMACROS_GLEBIND_Init( 0x00 );
-            FMACROS_GRAQUAD_Init( 0x00 );
-            FMACROS_FRAGBED_Init( 0x00 );
-            FMACROS_GPUDATA_Init( 0x00 );
-            FMACROS_PIXNAME_Init( 0x00 );
-            FMACROS_PAINT5D_Init( 0x00 );
 
+            /** Sub-libraries WITHOUT an init function should**/
+            /** call an "initNone" so we can see all         **/
+            /** sub libraries as accounted for in list below.**/
+            AAC2020_VITAL_TODO( "[Omitted_Use:InitNone]");
+            
+            #define X 0x00
+            FMACROS_GLEBIND_Init( X );//:AAC2020_GLEBIND_Init://
+            FMACROS_GRAQUAD_Init( X );//:AAC2020_GRAQUAD_Init://
+            FMACROS_FRAGBED_Init( X );//:AAC2020_FRAGBED_Init://
+            FMACROS_GPUDATA_Init( X );//:AAC2020_GPUDATA_Init://
+            FMACROS_PIXNAME_Init( X );//:AAC2020_PIXNAME_Init://
+            FMACROS_GLCONST_Init( X );//:AAC2020_GLCONST_Init://
+            FMACROS_PAINT5D_Init( X );//:AAC2020_PAINT5D_Init://
+            #undef  X
 
         #endif //:- - - - - - - - - - - - - - - - - - - - - -://
         #if( AAC2020_INCLUDE_GINAWIN >= 1 )  //:- - - - - - -://

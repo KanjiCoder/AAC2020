@@ -29,34 +29,19 @@
         //:#ASSERT_SAM_VAL_EQUALS_TEX_LOT#::::://
         //:#ALL_DATA_IS_512X512_RGBA_UNSIGNED#://
         
-        U08  cpu_pix[ 512 * 512 * 4 ];                  
-        char pix_nam[8] ; 
+        U08*  cpu_pix ; /** [ 512 * 512 * 4 ] **/               
+        char* pix_nam ; /** pix_nam[8]        **/
 
-        //:Handle to GPU texture representing cpu_pix :::::::://
-        struct AAC2020_GPUDATA_G_PIXEL{
+        int   pix_wid ; /** Used With: GLEBIND.glTexImage2D **/
+        int   pix_hig ; /** Used With: GLEBIND.glTexImage2D **/
 
-            //: -------------------------------------------- ://
-            //: activeTexture( tex_lot )                     ://
-            //: bindTexture(   tex_han );                    ://
-            //: Means:                                       ://
-            //:     OPEN_GL_TEXTURES[ tex_lot ]=( tex_han ); ://
-            //: -------------------------------------------- ://
-            int
-            tex_lot ;//:USE_WITH[ activeTexture ]   
-            int
-            tex_han ;//:USE_WITH[ bindTexture   ]   
-            
-            //: -------------------------------------------- ://
-            //: Texture SAMPLER_UNIFORM Value ************** ://
-            //: sam_loc: Memory ADDRESS of SAMPLER_UNIFORM   ://
-            //: sam_val: ValueOf[ tex_lot ]stored at ADDRESS ://
-            //: -------------------------------------------- ://
-            int
-            sam_loc ;//:USE_WITH[ uniform1i( sam_loc, sam_val )]
-            int
-            sam_val ;//:USE_WITH[ uniform1i( sam_loc, sam_val )]
+        int   tex_lot ; //:USE_WITH[ activeTexture ]
+        int   tex_han ; //:USE_WITH[ bindTexture   ]
 
-        }g_pixel; /** AKA: gpu_pix / gpu_han **/
+        int   sam_loc ; //:USE[ uniformli( sam_loc , val_val ) ]
+        int   sam_val ; //:USE[ uniformli( sam_loc , val_val ) ]
+
+        //:#_GPUDATA_FLAT_IS_BETTER_THAN_NESTED_#://
       
 
     }; //:struct://

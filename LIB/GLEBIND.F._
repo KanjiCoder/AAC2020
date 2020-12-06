@@ -1451,7 +1451,101 @@ AAC2020_GLEBIND_GetAnyGLFuncAddress(
 //[][][][][][][][][][][][][][][][][][][][][][][]//
 
 
+//:glGetUniformiv:===========================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+#define I32  int32_t /** GCC: <stdint.h> **/
 
+    typedef  
+        void                                      
+        (*AAC2020_GLEBIND_PFN_glGetUniformiv)                        
+        (                                         
+        /**/    U32  pog_iid //:program_integer_id
+        ,       I32  u32_loc //:uniform(u32-type)location
+        ,       I32* u32_val //:uniform(u32-type)value (RETURN)
+        );  
+                         
+        //:Declare_Function_Pointer_To_Be_Loaded_From_OPENGL:
+        AAC2020_GLEBIND_PFN_glGetUniformiv  //: TYPE                      
+        aac2020_glebind_pfn_glGetUniformiv; //: INST                  
+                 
+        //:Wrapper_Function_That_Invokes_Function_Pointer:
+        void                                      
+        AAC2020_GLEBIND_glGetUniformiv                               
+        (                                         
+        /**/    U32  pog_iid //:program_integer_id
+        ,       I32  u32_loc //:uniform(u32-type)location
+        ,       I32* u32_val //:uniform(u32-type)value (RETURN)
+        ){                                        
+                //:IS_FUNCTION_POINTER_LOADED:---------------://
+
+                #define PFN AAC2020_GLEBIND_FUNC
+                AAC2020_GLEBIND_FuncPointerSated(
+                      "[aac2020_glebind_pfn_glGetUniformiv]"
+                , (PFN) aac2020_glebind_pfn_glGetUniformiv );;
+                #undef  PFN
+
+                //:---------------:IS_FUNCTION_POINTER_LOADED://
+                //:CALL_WRAPPED_FUNCTION_POINTER:------------://
+
+                aac2020_glebind_pfn_glGetUniformiv(              
+                /**/ pog_iid //:program_integer_id
+                ,    u32_loc //:uniform(u32-type)location
+                ,    u32_val //:uniform(u32-type)value (RETURN)
+                );;                                  
+
+                //:------------:CALL_WRAPPED_FUNCTION_POINTER://                                                                              
+        }  
+
+#undef U32
+#undef I32
+//:===========================================:glGetUniformiv://
+//:glCreateTexture(WEBGL):===================================://
+//:glGenTextures(OPENGL):====================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+#define I32  int32_t /** GCC: <stdint.h> **/
+
+    typedef  
+        void                                      
+        (*AAC2020_GLEBIND_PFN_glGenTextures)                        
+        (                                         
+        /**/   I32      not //:GLsizei: Number_Of_Textures
+        ,      U32*     aot //:GLuint: Array_Of_Textures
+        );  
+                         
+        //:Declare_Function_Pointer_To_Be_Loaded_From_OPENGL:
+        AAC2020_GLEBIND_PFN_glGenTextures  //: TYPE                      
+        aac2020_glebind_pfn_glGenTextures; //: INST                  
+                 
+        //:Wrapper_Function_That_Invokes_Function_Pointer:
+        void                                      
+        AAC2020_GLEBIND_glGenTextures                               
+        (                                         
+        /**/   I32      not //:GLsizei: Number_Of_Textures
+        ,      U32*     aot //:GLuint: Array_Of_Textures
+        ){                                        
+                //:IS_FUNCTION_POINTER_LOADED:---------------://
+
+                #define PFN AAC2020_GLEBIND_FUNC
+                AAC2020_GLEBIND_FuncPointerSated(
+                      "[aac2020_glebind_pfn_glGenTextures]"
+                , (PFN) aac2020_glebind_pfn_glGenTextures );;
+                #undef  PFN
+
+                //:---------------:IS_FUNCTION_POINTER_LOADED://
+                //:CALL_WRAPPED_FUNCTION_POINTER:------------://
+
+                aac2020_glebind_pfn_glGenTextures(              
+                /**/    not //:Number_Of_Textures
+                ,       aot //:Array_Of_Textures
+                );;                                  
+
+                //:------------:CALL_WRAPPED_FUNCTION_POINTER://                                                                              
+        }  
+
+#undef U32
+#undef I32
+//:====================================:glGenTextures(OPENGL)://
+//:===================================:glCreateTexture(WEBGL)://
 //:glUniform1f:==============================================://
 typedef  
     void                                      
@@ -2395,41 +2489,41 @@ glBindVertexArray                         //[  ]//
     ));;                                  //[  ]//           
 } //[[glBindVertexArray]_______________]////[  ]//
 //:--------------------------------------------://
-//:--------------------------------------------://
-typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
-void                                      //[  ]//
-(*PFN_glGenTextures)                      //[  ]//
-(                                         //[  ]//
-/**/int /** GLsizei **/ n_number_of_textures_to_make  //[01]//
-,   unsigned int*  /** GLuint:PTR **/         texture_names_pointer  //[02]//
-); //[- - - - - - - - - - - - - - - - -]////[  ]//
-                                          //[  ]//
-//[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//
-                                          //[  ]//
-PFN_glGenTextures                         //[  ]//
-pfn_glGenTextures;                        //[  ]//
-                                          //[  ]//
-//[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//
-void                                      //[  ]//
-glGenTextures                             //[  ]//
-(                                         //[  ]//
-/**/
-    int /** GLsizei **/                   //[01]//
-    n_number_of_textures_to_make          //[01]//
-,              
-    unsigned int*  /** GLuint:PTR **/                                //[02]//
-    texture_names_pointer                 //[02]//
-
-){                                        //[  ]//                           
-    AAC2020_GLEBIND_FuncPointerSated(                //[  ]//
-    /**/   "[pfn_glGenTextures]",         //[  ]//
-  (AAC2020_GLEBIND_FUNC)pfn_glGenTextures );;        //[  ]//
-    /*NO*/(  pfn_glGenTextures(           //[  ]//
-    /**/    n_number_of_textures_to_make  //[01]//
-    ,              texture_names_pointer  //[02]//
-    ));;                                  //[  ]//           
-} //[[glGenTextures]___________________]////[  ]//
-//:--------------------------------------------://
+//-           //:--------------------------------------------://                                -//
+//-           typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//                                -//
+//-           void                                      //[  ]//                                -//
+//-           (*PFN_glGenTextures)                      //[  ]//                                -//
+//-           (                                         //[  ]//                                -//
+//-           /**/int /** GLsizei **/ n_number_of_textures_to_make  //[01]//                    -//
+//-           ,   unsigned int*  /** GLuint:PTR **/         texture_names_pointer  //[02]//     -//
+//-           ); //[- - - - - - - - - - - - - - - - -]////[  ]//                                -//
+//-                                                     //[  ]//                                -//
+//-           //[¯|¯|¯|¯|¯|¯|¯|¯|¯¯¯¯|¯|¯|¯|¯|¯|¯|¯|¯]////[  ]//                                -//
+//-                                                     //[  ]//                                -//
+//-           PFN_glGenTextures                         //[  ]//                                -//
+//-           pfn_glGenTextures;                        //[  ]//                                -//
+//-                                                     //[  ]//                                -//
+//-           //[_|_|_|_|_|_|_|_|____|_|_|_|_|_|_|_|_]////[  ]//                                -//
+//-           void                                      //[  ]//                                -//
+//-           glGenTextures                             //[  ]//                                -//
+//-           (                                         //[  ]//                                -//
+//-           /**/                                                                              -//
+//-               int /** GLsizei **/                   //[01]//                                -//
+//-               n_number_of_textures_to_make          //[01]//                                -//
+//-           ,                                                                                 -//
+//-               unsigned int*  /** GLuint:PTR **/                                //[02]//     -//
+//-               texture_names_pointer                 //[02]//                                -//
+//-                                                                                             -//
+//-           ){                                        //[  ]//                                -//
+//-               AAC2020_GLEBIND_FuncPointerSated(                //[  ]//                     -//
+//-               /**/   "[pfn_glGenTextures]",         //[  ]//                                -//
+//-             (AAC2020_GLEBIND_FUNC)pfn_glGenTextures );;        //[  ]//                     -//
+//-               /*NO*/(  pfn_glGenTextures(           //[  ]//                                -//
+//-               /**/    n_number_of_textures_to_make  //[01]//                                -//
+//-               ,              texture_names_pointer  //[02]//                                -//
+//-               ));;                                  //[  ]//                                -//
+//-           } //[[glGenTextures]___________________]////[  ]//                                -//
+//-           //:--------------------------------------------://                                -//
 //:--------------------------------------------://
 typedef //[¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯]//
 void                                      //[  ]//
@@ -3183,6 +3277,17 @@ aac2020_glebind_library_container{
 
     }CAPABILITY; //:<--SINGULAR plurality!
 
+        //:NEW_MEMBER_FUNC_PTRS:2020_12_06:==================://
+
+            //: AAC2020_GLEBIND.glGetUniformiv
+            AAC2020_GLEBIND_PFN_glGetUniformiv                           
+                                glGetUniformiv;  
+
+            //: AAC2020_GLEBIND.glGenTextures
+            AAC2020_GLEBIND_PFN_glGenTextures                           
+                                glGenTextures;  
+
+        //:==================:NEW_MEMBER_FUNC_PTRS:2020_12_06://
         //:NEW_MEMBER_FUNC_PTRS:2020_11_06:==================://
 
             //: AAC2020_GLEBIND.glUniform1f
@@ -3283,8 +3388,8 @@ aac2020_glebind_library_container{
         PFN_glBindVertexArray
             glBindVertexArray;
 
-        PFN_glGenTextures
-            glGenTextures;
+////    PFN_glGenTextures   //:OOPS. Already Had This.
+////        glGenTextures;  //:OOPS. Already Had This.
 
         PFN_glBindTexture
             glBindTexture;
@@ -3394,6 +3499,12 @@ aac2020_glebind_library_container{
    ,.TEXTURE.QUERY.gl_texture_binding_2d=0x8069
    ,.TEXTURE.QUERY.gl_active_texture    =0x84E0
 
+    //:NEW_LOADED_FUNCTION_POINTERS:2020_12_06:==============://
+
+    ,. glGetUniformiv=&( AAC2020_GLEBIND_glGetUniformiv )
+    ,. glGenTextures =&( AAC2020_GLEBIND_glGenTextures  )
+
+    //:==============:NEW_LOADED_FUNCTION_POINTERS:2020_12_06://
     //:NEW_LOADED_FUNCTION_POINTERS:2020_11_06:==============://
 
     ,.  glUniform1f=&( AAC2020_GLEBIND_glUniform1f )
@@ -3540,10 +3651,10 @@ aac2020_glebind_library_container{
     .glBindVertexArray         =&(  //|¯¯¯¯¯¯¯¯|//
      glBindVertexArray            ) //|________|//
 
-    ,//[comma]//
-
-    .glGenTextures             =&(  //|¯¯¯¯¯¯¯¯|//
-     glGenTextures                ) //|________|//
+//: ,//[comma]//                                     ::::::::://
+//:                                                  ::::::::://
+//: .glGenTextures             =&(  //|¯¯¯¯¯¯¯¯|//   ::::::::://
+//:  glGenTextures                ) //|________|//   ::::::::://
 
     ,//[comma]//
 
@@ -3758,6 +3869,27 @@ void AAC2020_GLEBIND_GetFuncsFromDLL(){
     
 
 
+    //:NEW_FUNCTION_POINTER_LOADING:2020_12_06:==============://
+
+    /** Lets be more condensed about it.        **/
+    /** As well as use more verbose namespaces. **/
+
+        //:glGetUniformiv:-----------------------------------://
+        #define TYPE AAC2020_GLEBIND_PFN_glGetUniformiv
+        #define INST aac2020_glebind_pfn_glGetUniformiv
+        INST=(  TYPE )g(                "glGetUniformiv" );
+        #undef  TYPE
+        #undef  INST
+        //:-----------------------------------:glGetUniformiv://
+        //:glGenTextures:------------------------------------://
+        #define TYPE AAC2020_GLEBIND_PFN_glGenTextures
+        #define INST aac2020_glebind_pfn_glGenTextures
+        INST=(  TYPE )g(                "glGenTextures" );
+        #undef  TYPE
+        #undef  INST
+        //:------------------------------------:glGenTextures://
+
+    //:==============:NEW_FUNCTION_POINTER_LOADING:2020_12_06://
     //:NEW_FUNCTION_POINTER_LOADING:2020_11_06:==============://
 
     /** Lets be more condensed about it.        **/
@@ -3906,9 +4038,9 @@ void AAC2020_GLEBIND_GetFuncsFromDLL(){
     PFN_glBindVertexArray            )g(    //||//
        "glBindVertexArray"              );; //||//
     //|-  --  --  --  --  --  --  --  --  --  -|//
-    pfn_glGenTextures              =(       //||//
-    PFN_glGenTextures                )g(    //||//
-       "glGenTextures"                  );; //||//
+//: pfn_glGenTextures              =(       //||//:::::::::::://
+//: PFN_glGenTextures                )g(    //||//:::::::::::://
+//:    "glGenTextures"                  );; //||//:::::::::::://
     //|-  --  --  --  --  --  --  --  --  --  -|//
     pfn_glBindTexture              =(       //||//
     PFN_glBindTexture                )g(    //||//

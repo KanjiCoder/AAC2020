@@ -433,6 +433,226 @@
 #undef  U08
 #undef  U32
 //:===================================:GET_PIXEL_ON_CPU(HOST)://
+//:INIT_ALL:=================================================://
+#define TEX_LOT_001  AAC2020_PIXNAME_paint5d_tex_lot
+#define TEX_LOT_002  AAC2020_PIXNAME_todo_02_tex_lot
+#define TEX_LOT_003  AAC2020_PIXNAME_todo_03_tex_lot
+
+#define TEX_HAN_001  AAC2020_PIXNAME_paint5d_tex_han
+#define TEX_HAN_002  AAC2020_PIXNAME_todo_02_tex_han
+#define TEX_HAN_003  AAC2020_PIXNAME_todo_03_tex_han
+
+#define SAM_LOC_001  AAC2020_PIXNAME_paint5d_tex_sam.sam_loc
+#define SAM_LOC_002  AAC2020_PIXNAME_todo_02_tex_sam.sam_loc
+#define SAM_LOC_003  AAC2020_PIXNAME_todo_03_tex_sam.sam_loc
+
+#define SAM_VAL_001  AAC2020_PIXNAME_paint5d_tex_sam.sam_val
+#define SAM_VAL_002  AAC2020_PIXNAME_todo_02_tex_sam.sam_val
+#define SAM_VAL_003  AAC2020_PIXNAME_todo_03_tex_sam.sam_val
+
+    #define PAINT5D &( AAC2020_PIXNAME_paint5d[ 0 ] )
+    #define TODO_01 &( AAC2020_PIXNAME_todo_02[ 0 ] )
+    #define TODO_02 &( AAC2020_PIXNAME_todo_03[ 0 ] )
+
+        //:WEBGL: glCreateTexture   OPENGL: glGenTextures
+
+        #define POG_IID (aac2020_graquad.data.POG_IID)            
+        #define GET_TEX AAC2020_GLEBIND.glGenTextures        
+        #define GET_LOC AAC2020_GLEBIND.glGetUniformLocation  
+        #define GET_VAL AAC2020_GLEBIND.glGetUniformiv        
+
+            #define G_G AAC2020_GLEBIND /** GL_Easy_Bindings **/
+            #define C_C AAC2020_GLCONST /** GL_Constants     **/
+            #define U08 uint8_t         /** GCC: <stdint.h>  **/
+            #define U32 uint32_t        /** GCC: <stdint.h>  **/
+
+//:INIT_ALL:-------------------------------------------------://
+//:InitAll:--------------------------------------------------://
+
+                         //: IIA ://
+        void aac2020_gpudata_IIA_UploadTexture( 
+                         //: IIA ://
+
+            struct AAC2020_GPUDATA gpudata 
+
+
+        ){
+            /** Refactor_Of[ aa2_GPUVCON_pix_Put_Tex_Pix ]   **/
+            /** IIA: InitInstanceAll                         **/
+            /** AAC2020_GPUDATA_InitInstanceAll_UploadTexture**/
+            
+            //: Extract_Variables_From_Container:
+            //:-   -   -   -   -   --==--   -   -   -   -   -://
+            int  tex_lot = gpudata.tex_lot;
+            int  tex_han = gpudata.tex_han;
+            int  pix_wid = gpudata.pix_wid;
+            int  pix_hig = gpudata.pix_hig;
+            U08* pix_arr = gpudata.cpu_pix;//:[cpu_pix==pix_arr]
+            //:-   -   -   -   -   --==--   -   -   -   -   -://
+            
+            //:TP:Texture_Push:------------------------------://
+            //:tp_tp_tp_tp_tp_tp_tp_tptp_tp_tp_tp_tp_tp_tp_tp://
+            
+            G_G.glActiveTexture( C_C.TEXTURE0   + tex_lot );
+            G_G.glBindTexture(   C_C.TEXTURE_2D , tex_han );
+            
+            //: NEAREST_MIPMAP_NEAREST:
+            //: gamedev.stackexchange.com/questions/158738
+            U32 T_2D = C_C.TEXTURE_2D   ;
+            U32 NEAR = C_C.NEAREST      ;
+            U32 EDGE = C_C.CLAMP_TO_EDGE;
+            
+            U32 MIN_FIL = C_C.TEXTURE_MIN_FILTER;
+            U32 MAG_FIL = C_C.TEXTURE_MAG_FILTER;
+            U32 TWRAP_S = C_C.TEXTURE_WRAP_S;
+            U32 TWRAP_T = C_C.TEXTURE_WRAP_T;
+            
+            G_G.glTexParameteri( T_2D, MIN_FIL , NEAR );
+            G_G.glTexParameteri( T_2D, MAG_FIL , NEAR );
+            G_G.glTexParameteri( T_2D, TWRAP_S , EDGE );
+            G_G.glTexParameteri( T_2D, TWRAP_T , EDGE );
+            
+            //:Before pushing, set alignment:
+            const int ALN = 4; //:ALN:"Alignment"
+            G_G.glPixelStorei(C_C.UNPACK_ALIGNMENT, ALN);   
+            
+            //:SEE[ DOC/TEX_IMAGE_2D_NOTES.TXT ]
+            G_G.glTexImage2D(  //:---------------------------://
+                C_C.TEXTURE_2D         //:TARGET
+            ,   0                      //:LEVEL
+            ,   C_C.RGBA8UI            //:INTERNAL_FORMAT   
+                //:------------------------------------------://
+            ,   pix_wid                //:WIDTH  / PIX_WID
+            ,   pix_hig                //:HEIGHT / PIX_HIG
+            ,   0                      //:BORDER
+                //:------------------------------------------://
+            ,   C_C.RGBA_INTEGER       //:SOURCE_FORMAT     
+            ,   C_C.UNSIGNED_BYTE      //:SOURCE_TYPE       
+            ,   pix_arr //:(cpu_pix)   //:ARRAY_BUFFER_VIEW
+            );//:--------------------------------------------://
+            
+            //:tp_tp_tp_tp_tp_tp_tp_tptp_tp_tp_tp_tp_tp_tp_tp://
+
+        }
+
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+
+    void
+    AAC2020_GPUDATA_InitInstanceAll( void ){
+
+        AAC2020_VITAL_TODO("[PROBLEM_FOUND:No_Uniform_Of_That_Name_In_Active_Shader]");
+
+        //:001:WIRE_IT_ALL_UP:- - - - - - - - - - - - - - - -://
+
+            //:synonymous_texture_slots:. . . . . . . . . . .://
+            assert( 1 == TEX_LOT_001 );  //: paint5d_tex_lot ://
+            assert( 2 == TEX_LOT_002 );  //: todo_02_tex_lot ://
+            assert( 3 == TEX_LOT_003 );  //: todo_03_tex_lot ://
+
+            assert( 1 ==     AAC2020_PIXNAME_paint5d_tex_lot );
+            assert( 2 ==     AAC2020_PIXNAME_todo_02_tex_lot );
+            assert( 3 ==     AAC2020_PIXNAME_todo_03_tex_lot );
+            //:. . . . . . . . . . .:synonymous_texture_slots://
+    
+        //: TextureHandle = glCreateTexture( void )
+            #define  MAKE_ONE ( 1 ) /* MAKE_JUST_ONE_TEXTURE  */
+    
+            GET_TEX( MAKE_ONE , &( TEX_HAN_001 ) );
+            GET_TEX( MAKE_ONE , &( TEX_HAN_002 ) );
+            GET_TEX( MAKE_ONE , &( TEX_HAN_003 ) );
+    
+            #undef   MAKE_ONE       /* MAKE_JUST_ONE_TEXTURE  */
+                        
+        //: glGetUniformLocation( PROGRAM, PIXNAM string )
+            SAM_LOC_001 = GET_LOC( POG_IID , PAINT5D );
+        /// SAM_LOC_002 = GET_LOC( POG_IID , TODO_01 );
+        /// SAM_LOC_003 = GET_LOC( POG_IID , TODO_02 );
+                          
+        //: glGetUniformiv( PROGRAM , PIXNAM's LOCATION )
+            GET_VAL( POG_IID , SAM_LOC_001 , &( SAM_VAL_001 ) );
+        /// GET_VAL( POG_IID , SAM_LOC_002 , &( SAM_VAL_002 ) );
+        /// GET_VAL( POG_IID , SAM_LOC_003 , &( SAM_VAL_003 ) );
+////
+////    //:- - - - - - - - - - - - - - - -:001:WIRE_IT_ALL_UP://
+////    //:002:LOAD_PIXEL_DATA:- - - - - - - - - - - - - - -:://
+////
+////        struct AAC2020_GPUDATA gpu_001; //:TEMP_HELPER
+////    //  struct AAC2020_GPUDATA gpu_002; //:TEMP_HELPER
+////    //  struct AAC2020_GPUDATA gpu_003; //:TEMP_HELPER
+////
+////        //: CTRL_F_HELP:---------------------------------://
+////        //: gupdata.tex_lot
+////        //: gupdata.tex_han
+////        //: gupdata.pix_wid
+////        //: gupdata.pix_hig
+////        //: gupdata.pix_arr
+////        //:----------------------------------:CTRL_F_HELP://
+////
+////        gpu_001.tex_lot = AAC2020_PIXNAME_paint5d_tex_lot ;
+////        gpu_001.tex_han = AAC2020_PIXNAME_paint5d_tex_han ;
+////        gpu_001.pix_wid = ( 512 );
+////        gpu_001.pix_hig = ( 512 );
+////        gpu_001.cpu_pix = &( AAC2020_PIXNAME_paint5d_cpu_pix[ 0 ] ); /////////////////////////////////////////
+////
+////    //  gpu_002.tex_lot = AAC2020_PIXNAME_todo_02_tex_lot ;
+////    //  gpu_002.tex_han = AAC2020_PIXNAME_todo_02_tex_han ;
+////    //  gpu_002.pix_wid = ( 512 );
+////    //  gpu_002.pix_hig = ( 512 );
+////    //  gpu_002.cpu_pix = AAC2020_PIXNAME_todo_02_cpu_pix ;
+////
+////    //  gpu_003.tex_lot = AAC2020_PIXNAME_todo_03_tex_lot ;
+////    //  gpu_003.tex_han = AAC2020_PIXNAME_todo_03_tex_han ;
+////    //  gpu_003.pix_wid = ( 512 );
+////    //  gpu_003.pix_hig = ( 512 );
+////    //  gpu_003.cpu_pix = AAC2020_PIXNAME_todo_03_cpu_pix ;
+////
+////    /** AAC2020_GPUDATA_InitInstanceAll_UploadTexture **/
+////    #define UPLOAD_TEXTURE aac2020_gpudata_IIA_UploadTexture
+////
+////            if( gpu_001.tex_lot ){ /** NOOP **/ };
+////
+////            UPLOAD_TEXTURE( gpu_001 );
+////    //      UPLOAD_TEXTURE( gpu_002 );
+////    //      UPLOAD_TEXTURE( gpu_003 );
+////
+////    #undef  UPLOAD_TEXTURE
+////
+////    //::- - - - - - - - - - - - - - -:002:LOAD_PIXEL_DATA://
+    
+    }
+
+//:-------------------------------------------------:INIT_ALL://
+            #undef  G_G  //:............................: 01 ://
+            #undef  C_C  //:............................: 02 ://
+            #undef  U08  //:............................: 03 ://
+            #undef  U32  //:............................: 04 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+        #undef  POG_IID  //:............................: 05 ://
+        #undef  GET_TEX  //:............................: 06 ://
+        #undef  GET_LOC  //:............................: 07 ://
+        #undef  GET_VAL  //:............................: 08 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+    #undef  PAINT5D      //:............................: 09 ://
+    #undef  TODO_01      //:............................: 10 ://
+    #undef  TODO_02      //:............................: 11 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://                        : -- ://
+#undef  TEX_LOT_001      //:                            : 12 ://
+#undef  TEX_LOT_002      //:                            : 13 ://
+#undef  TEX_LOT_003      //:                            : 14 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#undef  TEX_HAN_001      //:                            : 15 ://
+#undef  TEX_HAN_002      //:                            : 16 ://
+#undef  TEX_HAN_003      //:                            : 17 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#undef  SAM_LOC_001      //: PAINT5D.sam_loc ...........: 18 ://
+#undef  SAM_LOC_002      //: TODO_02.sam_Loc ...........: 19 ://
+#undef  SAM_LOC_003      //: TODO_03.sam_Loc ...........: 20 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#undef  SAM_VAL_001      //:                            : 21 ://
+#undef  SAM_VAL_002      //:                            : 22 ://
+#undef  SAM_VAL_003      //:                            : 23 ://
+//:--------------------------------------------------:InitAll://
+//:=================================================:INIT_ALL://
 //:INSTANCE_INITIALIZER:=====================================://
 #define GPUDATA struct AAC2020_GPUDATA
 #define U32 uint32_t /** GCC: <stdint.h> **/
@@ -443,12 +663,18 @@
         /** Named "InitInstance" and NOT "InstanceInit"  * * **/
         /** So what if you CTRL+F for "GPUDATA_Init"     * * **/
         /** You will find "GPUDATA_InitInstance"         * * **/
-
+        
         if( ((void*)0) == gpudata ){
-            aac2020_gpudata_Halt("[NULL_GPUDATA_INSTANCE]");
+            /***** Good. It's a temp object. ******/
+        }else
+        if( ((void*)0) != gpudata ){
+            aac2020_gpudata_Halt("[TEMP_OBJECTS_DONT_INIT]");
+        }else{
+            aac2020_gpudata_Halt("[EDCL_2020_12_05]");
         };;
-
-        AAC2020_VITAL_TODO( "[AAC2020_GPUDATA_InitInstance]" );
+        
+        /** The real work happens in: InitInstanceAll(...) **/
+        printf("[DECOY:SEE:AAC2020_GPUDATA_InitInstanceAll]");
 
         return( 0x00 );
     }
@@ -734,6 +960,17 @@
     {
         if( u32 ){ /** Reserved For Future Use **/ };
 
+        AAC2020_VITAL_TODO("[FIND_BUG_IN_InitInstanceAll]");
+
+        //: Initialize all data allocations defined          ://
+        //: in[ AAC2020_PIXNAME ]. This does mean that       ://
+        //: this( InitInstanceAll )code knows about the      ://
+        //: FUTURE, which is a violation of the LIBCHAN      ://
+        //: idea of layering on things over time. However,   ://
+        //: the benifit of having a centralized location of  ://
+        //: data allocations outweighs the rule breaking.    ://
+        AAC2020_GPUDATA_InitInstanceAll();
+
         /** ************************************************ **/
         /** Unit Test should be called in the init function  **/
         /** So that testing code is force on startup.        **/
@@ -751,7 +988,7 @@
         /**     BELOW: Laws Of Mental Effort                 **/
         /**                                                  **/    
         /** ************************************************ **/
-        AAC2020_GPUDATA_TestAll();
+////    AAC2020_GPUDATA_TestAll();
 
         return( 0x00 );
     }

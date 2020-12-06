@@ -1,0 +1,49 @@
+//:GLCONST.F._: No Associated Functions
+
+    //: EMPTY. And that's okay. Still include it
+    //:        in your LIBCHAN for consistency.
+
+
+//:DOUBLE_CHECK_THE_VALUES:==================================://
+#define GLEBIND AAC2020_GLEBIND
+#define GLCONST AAC2020_GLCONST
+#define U32     uint32_t /** GCC: <stdint.h> **/
+
+    U32
+    AAC2020_GLCONST_Init( U32 u32 ){
+
+        if( u32 ){ /** Reserved For Future Use **/ };
+
+        //: Check values, be paranoid.                       ://
+        //: Decided NOT to cross check values against        ://
+        //: GLEBIND because I would like to get rid of that  ://
+        //: mess, not further entrench myself in that        ://
+        //: nested distaster.                                ://
+
+        //:CHECK VALUES TAKEN FROM:
+        //: khronos.org/registry/OpenGL/api/GLES/1.0/gl.h
+        //:( NOTE: RGBA8UI does NOT exist in GLES/1.0 ) 
+        //:( NOTE: RGBA_INTEGER NOT exist in GLES/1.0 )
+
+        assert( GLCONST.TEXTURE0           == 0x84C0 ); //:01://
+        assert( GLCONST.TEXTURE_2D         == 0x0DE1 ); //:02://
+        assert( GLCONST.NEAREST            == 0x2600 ); //:03://
+        assert( GLCONST.CLAMP_TO_EDGE      == 0x812F ); //:04://
+        assert( GLCONST.TEXTURE_MIN_FILTER == 0x2801 ); //:05://
+        assert( GLCONST.TEXTURE_MAG_FILTER == 0x2800 ); //:06://
+        assert( GLCONST.TEXTURE_WRAP_S     == 0x2802 ); //:07://
+        assert( GLCONST.TEXTURE_WRAP_T     == 0x2803 ); //:08://
+        assert( GLCONST.UNPACK_ALIGNMENT   == 0x0CF5 ); //:09://
+        assert( GLCONST.RGBA8UI            == 0x8D7C ); //:10://
+        assert( GLCONST.RGBA_INTEGER       == 0x8D99 ); //:11://
+        assert( GLCONST.UNSIGNED_BYTE      == 0x1401 ); //:12://
+                                                          
+
+        return( 0x00 );
+    }
+
+
+#undef  GLEBIND  
+#undef  GLCONST  
+#undef  U32
+//:==================================:DOUBLE_CHECK_THE_VALUES://

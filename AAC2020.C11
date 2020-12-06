@@ -21,20 +21,22 @@
 #define macro_libchan_order_GINAWIN ( 6 ) //:Graphics & Window
 #define macro_libchan_order_DUI     ( 7 ) //:Dialog________UI(s)
 #define macro_libchan_order_GLEBIND ( 8 ) //:OpenGL_EasyBINDings
-#define macro_libchan_order_CPUNIFO ( 9 ) //:CPU Side Uniforms
-#define macro_libchan_order_GRAQUAD (10 ) //:Graphics_____QUAD
-#define macro_libchan_order_FREE_01 (11 ) //:FREE_SPOT_001
-#define macro_libchan_order_FRAGBED (12 ) //:FRAGMENT_test_BED
-#define macro_libchan_order_GPUDATA (13 ) //:GPU_DATA
-#define macro_libchan_order_PIXNAME (14 ) //:PIXEL_DATA_NAMES
-#define macro_libchan_order_PAINT5D (15 ) //:GPUDATA_PAINT5D
+#define macro_libchan_order_GLCONST ( 9 ) //:OpenGL:CONSTANTS
+#define macro_libchan_order_CPUNIFO (10 ) //:CPU Side Uniforms
+#define macro_libchan_order_GRAQUAD (11 ) //:Graphics_____QUAD
+#define macro_libchan_order_FREE_01 (12 ) //:FREE_SPOT_001
+#define macro_libchan_order_FRAGBED (13 ) //:FRAGMENT_test_BED       //: 13: OK
+#define macro_libchan_order_PIXNAME (14 ) //:PIXEL_DATA_NAMES        //: 14: OK
+#define macro_libchan_order_GPUDATA (15 ) //:GPU_DATA(#TEMPCON#)     //: 15: CRASHES
+#define macro_libchan_order_FREE_02 (16 ) //:FREE_SPOT_002
+#define macro_libchan_order_PAINT5D (17 ) //:GPUDATA_PAINT5D
 
 //:==============================:LIBRARY_CHAIN_ORDER:SUMMARY://
 //:DEBUG_CONFIGURATION:======================================://
 
-    #define   AAC2020_MAC_LIBCHAN_CUR (15 )  
+    #define   AAC2020_MAC_LIBCHAN_CUR ( 15 )  
 
-    #define       AAC2020_CRASH_ON_VITAL_TODO (  1  )
+    #define       AAC2020_CRASH_ON_VITAL_TODO (  0  )
     #define       AAC2020_CRASH_ON_MAYBE_TODO (  0  )
 
 //:======================================:DEBUG_CONFIGURATION://
@@ -149,12 +151,17 @@
     |   3. Tile Y Location                     |
     |   4. Tile Size                           |
     |   5. Tile Layer                          |
-    |                                          |
-    |   GPUDATA  <---- GPU_DATA(STRUCT)        |
-    |      |                                   |
-    |      V                                   |
+    |                                          +--------------+
+    |   GPUDATA  <---- GPU_DATA(STRUCT)                       |
+    |      |     ( Temporary Holder Of Loose PIXNAME values ) |
+    |      |                                                  |
+    |      V                                   +--------------+
     |   PIXNAME  <---- PIXEL_DATA_NAMES        |
     |      |                                   |
+    |      V                                   |
+    |   GLCONST  <---- OpenGl Constants        |
+    |      |           Because GLEBIND does    |
+    |      |           too much.               |
     |      V                                   |
     |   PAINT5D  <---- GPUDATA_PAINT5D         |
     |                                          |

@@ -26,6 +26,11 @@
               #error "[OUT_OF_ORDER:AAC2020_INCLUDE_GLEBIND]"
 #endif
 #endif
+#if( 0                           != AAC2020_INCLUDE_GLCONST )
+#if( macro_libchan_order_GLCONST != AAC2020_INCLUDE_GLCONST )
+              #error "[OUT_OF_ORDER:AAC2020_INCLUDE_GLCONST]"
+#endif
+#endif
 #if( 0                           != AAC2020_INCLUDE_CPUNIFO )
 #if( macro_libchan_order_CPUNIFO != AAC2020_INCLUDE_CPUNIFO )
               #error "[OUT_OF_ORDER:AAC2020_INCLUDE_CPUNIFO]"
@@ -46,14 +51,19 @@
               #error "[OUT_OF_ORDER:AAC2020_INCLUDE_FRAGBED]"
 #endif
 #endif
+#if( 0                           != AAC2020_INCLUDE_PIXNAME )
+#if( macro_libchan_order_PIXNAME != AAC2020_INCLUDE_PIXNAME )
+              #error "[OUT_OF_ORDER:AAC2020_INCLUDE_PIXNAME]"
+#endif
+#endif
 #if( 0                           != AAC2020_INCLUDE_GPUDATA )
 #if( macro_libchan_order_GPUDATA != AAC2020_INCLUDE_GPUDATA )
               #error "[OUT_OF_ORDER:AAC2020_INCLUDE_GPUDATA]"
 #endif
 #endif
-#if( 0                           != AAC2020_INCLUDE_PIXNAME )
-#if( macro_libchan_order_PIXNAME != AAC2020_INCLUDE_PIXNAME )
-              #error "[OUT_OF_ORDER:AAC2020_INCLUDE_PIXNAME]"
+#if( 0                           != AAC2020_INCLUDE_FREE_02 )
+#if( macro_libchan_order_FREE_02 != AAC2020_INCLUDE_FREE_02 )
+              #error "[OUT_OF_ORDER:AAC2020_INCLUDE_FREE_02]"
 #endif
 #endif
 #if( 0                           != AAC2020_INCLUDE_PAINT5D )
@@ -87,26 +97,32 @@
     #endif                              
     #if( macro_libchan_order_GLEBIND !=  8 )
     #error "[TAIL_ORDER_FAIL:GLEBIND]"  
-    #endif     
-    #if( macro_libchan_order_CPUNIFO !=  9 )
+    #endif 
+    #if( macro_libchan_order_GLCONST !=  9 )
+    #error "[TAIL_ORDER_FAIL:GLCONST]"
+    #endif    
+    #if( macro_libchan_order_CPUNIFO != 10 )
     #error "[TAIL_ORDER_FAIL:CPUNIFO]"  
     #endif                          
-    #if( macro_libchan_order_GRAQUAD != 10 )
+    #if( macro_libchan_order_GRAQUAD != 11 )
     #error "[TAIL_ORDER_FAIL:GRAQUAD]"  
     #endif                              
-    #if( macro_libchan_order_FREE_01 != 11 )
+    #if( macro_libchan_order_FREE_01 != 12 )
     #error "[TAIL_ORDER_FAIL:FREE_01]"  
     #endif                              
-    #if( macro_libchan_order_FRAGBED != 12 )
+    #if( macro_libchan_order_FRAGBED != 13 )
     #error "[TAIL_ORDER_FAIL:FRAGBED]"  
-    #endif                              
-    #if( macro_libchan_order_GPUDATA != 13 )
-    #error "[TAIL_ORDER_FAIL:GPUDATA]"  
-    #endif                              
+    #endif      
     #if( macro_libchan_order_PIXNAME != 14 )
     #error "[TAIL_ORDER_FAIL:PIXNAME]"  
-    #endif                              
-    #if( macro_libchan_order_PAINT5D != 15 )
+    #endif                            
+    #if( macro_libchan_order_GPUDATA != 15 )
+    #error "[TAIL_ORDER_FAIL:GPUDATA]"  
+    #endif                                                 
+    #if( macro_libchan_order_FREE_02 != 16 )
+    #error "[TAIL_ORDER_FAIL:FREE_02]"
+    #endif
+    #if( macro_libchan_order_PAINT5D != 17 )
     #error "[TAIL_ORDER_FAIL:PAINT5D]"
     #endif
 
@@ -125,13 +141,16 @@
     #undef  macro_libchan_order_GINAWIN   //:----## 06 ##----://
     #undef  macro_libchan_order_DUI       //:----## 07 ##----://
     #undef  macro_libchan_order_GLEBIND   //:----## 08 ##----://
-    #undef  macro_libchan_order_CPUNIFO   //:----## 09 ##----://
-    #undef  macro_libchan_order_GRAQUAD   //:----## 10 ##----://
-    #undef  macro_libchan_order_FREE_01   //:----## 11 ##----://
-    #undef  macro_libchan_order_FRAGBED   //:----## 12 ##----://
-    #undef  macro_libchan_order_GPUDATA   //:----## 13 ##----://
+    #undef  macro_libchan_order_GLCONST   //:----## 09 ##----://
+    #undef  macro_libchan_order_CPUNIFO   //:----## 10 ##----://
+    #undef  macro_libchan_order_GRAQUAD   //:----## 11 ##----://
+    #undef  macro_libchan_order_FREE_01   //:----## 12 ##----://
+    #undef  macro_libchan_order_FRAGBED   //:----## 13 ##----://
     #undef  macro_libchan_order_PIXNAME   //:----## 14 ##----://
-    #undef  macro_libchan_order_PAINT5D   //:----## 15 ##----://
+    #undef  macro_libchan_order_GPUDATA   //:----## 15 ##----://
+    #undef  macro_libchan_order_FREE_02   //:----## 16 ##----://
+    #undef  macro_libchan_order_PAINT5D   //:----## 17 ##----://
+ 
 
     //:==========:DONT_POLLUTE_OTHER_PEOPLES_CODE_WITH_MACROS://
 

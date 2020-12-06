@@ -30,7 +30,7 @@ _Static_assert( AAC2020_INCLUDE_IKEYBOX ==  3 ,        "3");
 
 //:CPUNIFO:==================================================://
 #if(            AAC2020_INCLUDE_CPUNIFO >=  1 )
-_Static_assert( AAC2020_INCLUDE_CPUNIFO ==  9 ,        "9");
+_Static_assert( AAC2020_INCLUDE_CPUNIFO == 10 ,        "10");
 
     #define  FMACROS_CPUNIFO_LoopTick   AAC2020_CPUNIFO_LoopTick
 
@@ -43,7 +43,7 @@ _Static_assert( AAC2020_INCLUDE_CPUNIFO ==  9 ,        "9");
 //:==================================================:CPUNIFO://
 //:GRAQUAD:==================================================://
 #if(            AAC2020_INCLUDE_GRAQUAD >=  1 )
-_Static_assert( AAC2020_INCLUDE_GRAQUAD == 10 ,       "10");
+_Static_assert( AAC2020_INCLUDE_GRAQUAD == 11 ,       "11");
 
     #define  FMACROS_GRAQUAD_LoopTick   AAC2020_GRAQUAD_LoopTick
 
@@ -85,10 +85,12 @@ _Static_assert( AAC2020_INCLUDE_GRAQUAD == 10 ,       "10");
 [REPLACE_KEYS]
     GINAWIN
     GLEBIND
+    GLCONST
     GRAQUAD
     FRAGBED
     GPUDATA
     PIXNAME
+    PAINT5D
 *** ******************************************************** **/
 
     //:INIT:GINAWIN:=========================================://
@@ -117,6 +119,20 @@ _Static_assert( AAC2020_INCLUDE_GRAQUAD == 10 ,       "10");
 
     #endif
     //:=========================================:INIT:GLEBIND://
+
+
+    //:INIT:GLCONST:=========================================://
+    #if(            AAC2020_INCLUDE_GLCONST >=  1 )
+
+        #define  FMACROS_GLCONST_Init       AAC2020_GLCONST_Init
+
+    #endif
+    #if(    AAC2020_INCLUDE_GLCONST == 0 )
+
+        #define  FMACROS_GLCONST_Init(  DISCARDED_ARGUMENT )       
+
+    #endif
+    //:=========================================:INIT:GLCONST://
 
 
     //:INIT:GRAQUAD:=========================================://
@@ -174,24 +190,21 @@ _Static_assert( AAC2020_INCLUDE_GRAQUAD == 10 ,       "10");
     #endif
     //:=========================================:INIT:PIXNAME://
 
+
+    //:INIT:PAINT5D:=========================================://
+    #if(            AAC2020_INCLUDE_PAINT5D >=  1 )
+
+        #define  FMACROS_PAINT5D_Init       AAC2020_PAINT5D_Init
+
+    #endif
+    #if(    AAC2020_INCLUDE_PAINT5D == 0 )
+
+        #define  FMACROS_PAINT5D_Init(  DISCARDED_ARGUMENT )       
+
+    #endif
+    //:=========================================:INIT:PAINT5D://
+
 //:============================:AUTO_GENERATED_INIT_FUNCTIONS://
-
-
-
-//:GPUDATA_PAINT5D:IS_A_PATTERN_BREAKER:=====================://
-#if(            AAC2020_INCLUDE_PAINT5D >=  1 )
-
-    #define  FMACROS_PAINT5D_Init  AAC2020_PAINT5D_Init
-
-#endif
-#if(    AAC2020_INCLUDE_PAINT5D == 0 )
-
-    #define  FMACROS_PAINT5D_Init(  DISCARDED_ARGUMENT )       
-
-#endif
-//:=====================:GPUDATA_PAINT5D:IS_A_PATTERN_BREAKER://
- 
-
 /** REFERENCE ********************************************** ***
 
     ( Not gauranteed to be up to date. SEE: LIBCHAN.TOP._ )
@@ -210,6 +223,7 @@ _Static_assert( AAC2020_INCLUDE_GRAQUAD == 10 ,       "10");
     FRAGBED (12 )  
     GPUDATA (13 )  
     PIXNAME (14 )  
-    PAINT5D (15 )  ( GPUDATA_PAINT5D )
+    GLCONST (15 )
+    PAINT5D (16 )  ( GPUDATA_PAINT5D )
 
 *** ******************************************************** **/

@@ -3,11 +3,55 @@
                 #PATTERN_BREAKER_PIXNAME#
 
 *** ******************************************************** **/
+//:STRUCTS:==================================================://
+#define I32 int32_t /** GCC: <stdint.h> **/
+
+    //:Texture_Sampler:STRUCT:-------------------------------://
+    //:(Samplers Are Just Glorified Signed Integer Uniforms )://
+
+        struct AAC2020_PIXNAME_tex_sam_HAS_sam_loc_sam_val{
+            I32 sam_loc ; //:tex_sam.sam_loc (uniform_location)
+            I32 sam_val ; //:tex_sam.sam_val (uniform_value   )
+        };                //:NOTE( pix_nam == sam_nam )
+
+    //:-------------------------------:Texture_Sampler:STRUCT://
+
+#undef  I32
+//:==================================================:STRUCTS://
+//:TEXTURE_FILESCOPE_VARS:===================================://
+#define T_S struct AAC2020_PIXNAME_tex_sam_HAS_sam_loc_sam_val
+#define U08 uint8_t /** GCC: <stdint.h> **/
+#define U32 uint32_t /** GCC: <stdint.h> **/
 
     //:#_WHY_TEXTURE_SLOTS_IN_PIXNAME_#://
-    int AAC2020_PIXNAME_paint5d_tex_lot =( 1 ); //:#KEYPAD_1#://
-    int AAC2020_PIXNAME_todo_01_tex_lot =( 2 ); //:#KEYPAD_2#://
-    int AAC2020_PIXNAME_todo_02_tex_lot =( 3 ); //:#KEYPAD_3#://
+
+    //:Texture_Slots(s):(       tex_lot ):
+    U32 AAC2020_PIXNAME_paint5d_tex_lot =( 1 ); //:#KEYPAD_1#://
+    U32 AAC2020_PIXNAME_todo_02_tex_lot =( 2 ); //:#KEYPAD_2#://
+    U32 AAC2020_PIXNAME_todo_03_tex_lot =( 3 ); //:#KEYPAD_3#://
+
+    //:Texture_Handle(s):(      tex_han ):
+    U32 AAC2020_PIXNAME_paint5d_tex_han ={ 0 }; //:#KEYPAD_1#://
+    U32 AAC2020_PIXNAME_todo_02_tex_han ={ 0 }; //:#KEYPAD_2#://
+    U32 AAC2020_PIXNAME_todo_03_tex_han ={ 0 }; //:#KEYPAD_3#://
+
+    //:Texture_Sampler(s):(     tex_sam ):
+    T_S AAC2020_PIXNAME_paint5d_tex_sam ={ 0 , 0 }; //: KP_1 ://
+    T_S AAC2020_PIXNAME_todo_02_tex_sam ={ 0 , 0 }; //: KP_2 ://
+    T_S AAC2020_PIXNAME_todo_03_tex_sam ={ 0 , 0 }; //: KP_3 ://
+
+    //:#_FOR_SIMPLICITY_ALL_MEMORY_IS_512x512_#
+    //:CPU_Side_Pixel_Arrays: ( cpu_pix === pix_arr ):
+    U08 AAC2020_PIXNAME_paint5d_cpu_pix[ 512 * 512 * 4 ]={0};
+    U08 AAC2020_PIXNAME_todo_02_cpu_pix[ 512 * 512 * 4 ]={0};
+    U08 AAC2020_PIXNAME_todo_03_cpu_pix[ 512 * 512 * 4 ]={0};
+
+#undef U32
+#undef U08  
+#undef T_S
+//:===================================:TEXTURE_FILESCOPE_VARS://
+
+    
 
 //: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
 
@@ -28,22 +72,6 @@
 //: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
 
     //:CHANGE_LATER_WHEN_YOU_ARE_READY_TO_USE:
-                 //:todo_01
-    const char   //:1234567
-    AAC2020_PIXNAME_todo_01[8] ={
-        't'    //: 1 ://
-    ,   'o'    //: 2 ://
-    ,   'd'    //: 3 ://
-    ,   'o'    //: 4 ://
-    ,   '_'    //: 5 ://
-    ,   '0'    //: 6 ://
-    ,   '1'    //: 7 ://
-    ,   '\0'   //: 8 ://
-    };
-
-//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
-
-    //:CHANGE_LATER_WHEN_YOU_ARE_READY_TO_USE:
                  //:todo_02
     const char   //:1234567
     AAC2020_PIXNAME_todo_02[8] ={
@@ -54,6 +82,22 @@
     ,   '_'    //: 5 ://
     ,   '0'    //: 6 ://
     ,   '2'    //: 7 ://
+    ,   '\0'   //: 8 ://
+    };
+
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+
+    //:CHANGE_LATER_WHEN_YOU_ARE_READY_TO_USE:
+                 //:todo_03
+    const char   //:1234567
+    AAC2020_PIXNAME_todo_03[8] ={
+        't'    //: 1 ://
+    ,   'o'    //: 2 ://
+    ,   'd'    //: 3 ://
+    ,   'o'    //: 4 ://
+    ,   '_'    //: 5 ://
+    ,   '0'    //: 6 ://
+    ,   '3'    //: 7 ://
     ,   '\0'   //: 8 ://
     };
 

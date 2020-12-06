@@ -6,6 +6,168 @@
     
 *** ******************************************************** ***
 
+#_PIXNAME_PATTERN_BREAKER_######################################
+
+    EXTRACTED_FROM[ LIBCHAN.TOP._ ]ON_DATE[ 2020_12_06 ]
+
+        //:--------------------------------------------------://
+        //:#PATTERN_BREAKER# (slightly)                      ://
+        //:                                                  ://
+        //: A list of names of all of the gpu textures       ://
+        //: defined by different GPUDATA instances.          ://
+        //:                                                  ://
+        //: We don't know what those names will be yet.      ://
+        //: That is why this breaks project structure.       ://
+        //:                                                  ://
+        //: To mitigate the problem, these values will only  ://
+        //: be used to ASSERT the correct values in future   ://
+        //: libraries.                                       ://
+        //:                                                  ://
+        //:Q: Why are we breaking the LIBCHAN pattern here?  ://
+        //:A: A consolidated list of all GPU textures        ://
+        //:   is useful.                                     ://
+        //:--------------------------------------------------://
+
+######################################_PIXNAME_PATTERN_BREAKER_#
+#_GPUDATA_IS_NOT_LIMITED_TO_GRAPHICS_###########################
+
+    EXTRACTED_FROM[ LIBCHAN.TOP._ ]ON_DATE[ 2020_12_06 ]
+
+        //:GPUDATA: GraphicsProcessingUnit_DATA
+        //:        (NOT NECCESSARILY GRAPHICAL DATA)
+        //:        (NOT NECCESSARILY GRAPHICAL INFORMATION)
+        //:        GPUDATA tells me where the data is stored,
+        //:        but not what the data represents.
+
+###########################_GPUDATA_IS_NOT_LIMITED_TO_GRAPHICS_#
+#TEMPCON########################################################
+
+    #TEMPCON#: Tagging some variable as a "temporary container"
+
+    For example: GPUDATA is a TEMPCON as of DATE[ 2020_12_06 ]
+
+#########################################################TEMPCON#
+#_FOR_SIMPLICITY_ALL_MEMORY_IS_512x512_#########################
+
+    All memory for all systems is a 512x512 RGBA 
+    UN-signed (NO NEGATIVES) integer texture.
+
+    Art is about working with contraints. A block of marble
+    with ZERO contraints is a block of marble. A statue is
+    a block of marble with constraints put on it.
+
+    Everything is nothing.
+
+    111111111111111111111111111111111111111 <<<< NOTHING
+    000000000000000000000000000000000000000 <<<< NOTHING
+    010100101010111111000001111000001010101 <<<< SOMETHING
+
+    This is why the void of nothingness is sometimes 
+    refered to a "chaos" because the void of nothingness
+    and complete chaos are the same exact thing.
+
+#########################_FOR_SIMPLICITY_ALL_MEMORY_IS_512x512_#
+#_PAINT5D_DATA_ERROR_CHECK_NOW_POINTLESS_#######################
+
+    REMOVED, because now pointless. 
+    REMOVED_DATE[ 2020_12_05 : 1134PM ]
+
+            if( strcmp( 
+                &(                 paint5d.pix_nam[ 0 ]  )
+            ,   &( AAC2020_PIXNAME_paint5d[ 0 ]          )
+            ) != 0 ){
+                ERR("[paint5d:INIT_FAIL:ON:pix_nam]");
+            };;
+    
+            if( AAC2020_PIXNAME_paint5d_tex_lot
+                   !=   paint5d.g_pixel.tex_lot
+            ){
+                ERR("[paint5d:INIT_FAIL:ON:tex_lot]");
+            };;
+
+#######################_PAINT5D_DATA_ERROR_CHECK_NOW_POINTLESS_#
+#_PAINT5D_DATA_IS_A_TEMPORARY_CONTAINER_NOW_####################
+    
+    ------------------------------------------------------------
+    For the sake of keeping things as SIMPLE & FLAT as possible,
+    "GPUDATA" is now a temporary container only. For when we
+    need to pass the data to a helper function. Actual data
+    for "GPUDATA" exists in "PIXNAME". 
+
+    REASON:
+        1. PIXNAME way is SIMPLE + FLAT
+        2. GPUDATA way is easy to pass around but harder to
+           follow and read the code.
+
+        We want to avoid fractionating our variable space,
+        so if we want the "best of both worlds" GPUDATA 
+        must be a TEMPORARY object only.
+
+    ------------------------------------------------------------
+
+        /// SBE: [Set/Put]Before_Init ///
+
+            paint5d.g_pixel.tex_lot   = 1         ; /// SBE ///
+
+         //:paint5d.g_pixel.pix_nam   = "paint5d" ; /// SBE ///
+            paint5d.pix_nam[ 0 ] = 'p' ;          ;
+            paint5d.pix_nam[ 1 ] = 'a' ;          ;
+            paint5d.pix_nam[ 2 ] = 'i' ;          ;
+            paint5d.pix_nam[ 3 ] = 'n' ;          ;
+            paint5d.pix_nam[ 4 ] = 't' ;          ;
+            paint5d.pix_nam[ 5 ] = '5' ;          ;
+            paint5d.pix_nam[ 6 ] = 'd' ;          ;
+            paint5d.pix_nam[ 7 ] = '\0';          ;
+                           
+            //:#WHY_PAINT5D_ERRORS_2020_12_04#
+            if( paint5d.cpu_pix[0]      != 0 ){ ERR("[E_1]");};                   
+            if( paint5d.g_pixel.tex_han != 0 ){ ERR("[E_2]");};
+            if( paint5d.g_pixel.sam_loc != 0 ){ ERR("[E_3]");};
+            if( paint5d.g_pixel.sam_val != 0 ){ ERR("[E_4]");};
+
+####################_PAINT5D_DATA_IS_A_TEMPORARY_CONTAINER_NOW_#
+#_GPUDATA_FLAT_IS_BETTER_THAN_NESTED_###########################
+
+    In retrospect, nesting things into a "g_pixel" member
+    was a bad idea. The intent was to communicate the
+    division between "data on the GPU" and "data on the CPU".
+
+    (CPU==HOST   Side)
+    (GPU==DEVICE Side)
+
+    But the only purpose GPUDATA struct should have is a
+    container to pass around a bundle of stuff.... Don't change
+    code structure for the sake of self-documenting code.
+
+        //:REMOVED_ON[ DATE[ 2020_12_05 ] ]
+
+        //:Handle to GPU texture representing cpu_pix :::::::://
+        struct AAC2020_GPUDATA_G_PIXEL{
+
+            //: -------------------------------------------- ://
+            //: activeTexture( tex_lot )                     ://
+            //: bindTexture(   tex_han );                    ://
+            //: Means:                                       ://
+            //:     OPEN_GL_TEXTURES[ tex_lot ]=( tex_han ); ://
+            //: -------------------------------------------- ://
+            int
+            tex_lot ;//:USE_WITH[ activeTexture ]   
+            int
+            tex_han ;//:USE_WITH[ bindTexture   ]   
+            
+            //: -------------------------------------------- ://
+            //: Texture SAMPLER_UNIFORM Value ************** ://
+            //: sam_loc: Memory ADDRESS of SAMPLER_UNIFORM   ://
+            //: sam_val: ValueOf[ tex_lot ]stored at ADDRESS ://
+            //: -------------------------------------------- ://
+            int
+            sam_loc ;//:USE_WITH[ uniform1i( sam_loc, sam_val )]
+            int
+            sam_val ;//:USE_WITH[ uniform1i( sam_loc, sam_val )]
+
+        }g_pixel; /// AKA: gpu_pix / gpu_han ///
+
+###########################_GPUDATA_FLAT_IS_BETTER_THAN_NESTED_#
 #_GAME_WITHOUT_MUTEXES_#########################################
 
         //: Removed, lets try to make an entire game without ://
@@ -229,11 +391,11 @@
 #####################################_WHY_CANT_I_SEE_MY_WINDOW_#
 #_OLD_GINAWIN_DOCUMENTATION_####################################
     
-    ********************************************************
+    --------------------------------------------------------
     Documentation for GINAWIN that I think was left over
     from when I cut and pasted the code from previous 
     project. Not sure how relevant these comments below are.
-    ********************************************************
+    --------------------------------------------------------
 
     KEY/PREFIXES:
         aac2020_ginawin_:
@@ -336,11 +498,11 @@
 #######################################_MARK_ALL_KEYS_AS_DIRTY_#
 #_KEEP_KEY_PRESSED_DEAD_SIMPLE_FOR_NOW_#########################
 
-        Keep it dead simple for now. ***********************  
-        This is the most recent NON controll key pressed. **  
-        This should be suitable for basic editors. *********  
-        We can figure out something more complex ***********  
-        when we need responsive game controls. ************* 
+        Keep it dead simple for now.  
+        This is the most recent NON controll key pressed.    
+        This should be suitable for basic editors.  
+        We can figure out something more complex    
+        when we need responsive game controls.   
 
         char AAC2020_IKEYBOX_k_p = '_' ; //:k_p: Key_Pressed
 
