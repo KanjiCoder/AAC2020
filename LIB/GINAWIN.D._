@@ -22,91 +22,91 @@
 //:============================================:CONFIGURATION://
 //:CONCEPTUAL_LIBRARY_MEMBER_VARIABLES:======================://
 
-    #if( AAC2020_CRASH_ON_VITAL_TODO >= 1 ) //:##############://
-
-        #error GET_RID_OF_THESE_FUCKING_CALLBACKS
-
-        REASONS: 1: Reaching backwards like this from the 
-                    future violates the LIBCHAN structure.
-                    ( Linear layers that we add to and   )
-                    ( never look back                    )
-
-                 2: Callbacks make it harder to read and
-                    follow the code. (Extra indirection)
-
-                 3: Callbacks force code execution onto
-                    the window thread and will lead to 
-                    hard to debug memory concurrency 
-                    issues eventually.
-
-    #endif //:###############################################://
+//  #if( AAC2020_CRASH_ON_VITAL_TODO >= 1 ) //:##############://
+//
+//      #error GET_RID_OF_THESE_FUCKING_CALLBACKS
+//
+//      REASONS: 1: Reaching backwards like this from the 
+//                  future violates the LIBCHAN structure.
+//                  ( Linear layers that we add to and   )
+//                  ( never look back                    )
+//
+//               2: Callbacks make it harder to read and
+//                  follow the code. (Extra indirection)
+//
+//               3: Callbacks force code execution onto
+//                  the window thread and will lead to 
+//                  hard to debug memory concurrency 
+//                  issues eventually.
+//
+//  #endif //:###############################################://
     
-    //: AAC2020_GINAWIN_OnWindowResize_HAS
-    //: AAC2020_GINAWIN_OnWindowResize_PFN
-
-    //: AAC2020_GINAWIN_SimpleKeyHandler_HAS
-    //: AAC2020_GINAWIN_SimpleKeyHandler_PFN
-
-    //: AAC2020_GINAWIN_ComplexKeyHandler_HAS
-    //: AAC2020_GINAWIN_ComplexKeyHandler_PFN
-
-    //: AAC2020_GINAWIN_OnMouseMove_HAS
-    //: AAC2020_GINAWIN_OnMouseMove_PFN
-
-    #define U32 uint32_t /** GCC: <stdint.h> **/
-    #define U64 uint64_t /** GCC: <stdint.h> **/
-    #define HAS   int  
-    #define VOD  ((void*)0)
-
-        typedef  
-            U32 
-            (*AAC2020_GINAWIN_PFN_2020_11_03)
-            ( U32 );
-        typedef  
-            U32
-            (*AAC2020_GINAWIN_PFN_2020_11_04_SIMPLEKEY)
-            ( signed char );
-        typedef  
-            U32
-            (*AAC2020_GINAWIN_PFN_2020_11_04_COMPLEXKEY)
-            ( U64 );
-        typedef
-            U32
-            (*AAC2020_GINAWIN_PFN_2020_11_06_ONMOUSEMOVE)
-            ( 
-            /**/    U32 low_word_is_x_axis  
-            ,       U32 hig_word_is_y_axis  
-            ,       U32 low_word_is_x_axis_drag_start  
-            ,       U32 hig_word_is_y_axis_drag_end
-
-            );
-
-    #define P_1   AAC2020_GINAWIN_PFN_2020_11_03
-    #define P_2   AAC2020_GINAWIN_PFN_2020_11_04_SIMPLEKEY
-    #define P_3   AAC2020_GINAWIN_PFN_2020_11_04_COMPLEXKEY
-    #define P_4   AAC2020_GINAWIN_PFN_2020_11_06_ONMOUSEMOVE
-
-            HAS  AAC2020_GINAWIN_OnWindowResize_HAS    = 0;
-            P_1  AAC2020_GINAWIN_OnWindowResize_PFN    =VOD;
-            
-            HAS  AAC2020_GINAWIN_SimpleKeyHandler_HAS  = 0;
-            P_2  AAC2020_GINAWIN_SimpleKeyHandler_PFN  =VOD;
-            
-            HAS  AAC2020_GINAWIN_ComplexKeyHandler_HAS = 0;
-            P_3  AAC2020_GINAWIN_ComplexKeyHandler_PFN =VOD;
-
-            HAS  AAC2020_GINAWIN_OnMouseMove_HAS       = 0;
-            P_4  AAC2020_GINAWIN_OnMouseMove_PFN       =VOD;
-
-    #undef  P_1
-    #undef  P_2
-    #undef  P_3
-    #undef  P_4
-            
-    #undef  U32
-    #undef  U64
-    #undef  HAS
-    #undef  VOD
+//  //: AAC2020_GINAWIN_OnWindowResize_HAS
+//  //: AAC2020_GINAWIN_OnWindowResize_PFN
+//
+//  //: AAC2020_GINAWIN_SimpleKeyHandler_HAS
+//  //: AAC2020_GINAWIN_SimpleKeyHandler_PFN
+//
+//  //: AAC2020_GINAWIN_ComplexKeyHandler_HAS
+//  //: AAC2020_GINAWIN_ComplexKeyHandler_PFN
+//
+//  //: AAC2020_GINAWIN_OnMouseMove_HAS
+//  //: AAC2020_GINAWIN_OnMouseMove_PFN
+//
+//  #define U32 uint32_t /** GCC: <stdint.h> **/
+//  #define U64 uint64_t /** GCC: <stdint.h> **/
+//  #define HAS   int  
+//  #define VOD  ((void*)0)
+//
+//      typedef  
+//          U32 
+//          (*AAC2020_GINAWIN_PFN_2020_11_03)
+//          ( U32 );
+//      typedef  
+//          U32
+//          (*AAC2020_GINAWIN_PFN_2020_11_04_SIMPLEKEY)
+//          ( signed char );
+//      typedef  
+//          U32
+//          (*AAC2020_GINAWIN_PFN_2020_11_04_COMPLEXKEY)
+//          ( U64 );
+//      typedef
+//          U32
+//          (*AAC2020_GINAWIN_PFN_2020_11_06_ONMOUSEMOVE)
+//          ( 
+//          /**/    U32 low_word_is_x_axis  
+//          ,       U32 hig_word_is_y_axis  
+//          ,       U32 low_word_is_x_axis_drag_start  
+//          ,       U32 hig_word_is_y_axis_drag_end
+//
+//          );
+//
+//  #define P_1   AAC2020_GINAWIN_PFN_2020_11_03
+//  #define P_2   AAC2020_GINAWIN_PFN_2020_11_04_SIMPLEKEY
+//  #define P_3   AAC2020_GINAWIN_PFN_2020_11_04_COMPLEXKEY
+//  #define P_4   AAC2020_GINAWIN_PFN_2020_11_06_ONMOUSEMOVE
+//
+//          HAS  AAC2020_GINAWIN_OnWindowResize_HAS    = 0;
+//          P_1  AAC2020_GINAWIN_OnWindowResize_PFN    =VOD;
+//          
+//          HAS  AAC2020_GINAWIN_SimpleKeyHandler_HAS  = 0;
+//          P_2  AAC2020_GINAWIN_SimpleKeyHandler_PFN  =VOD;
+//          
+//          HAS  AAC2020_GINAWIN_ComplexKeyHandler_HAS = 0;
+//          P_3  AAC2020_GINAWIN_ComplexKeyHandler_PFN =VOD;
+//
+//          HAS  AAC2020_GINAWIN_OnMouseMove_HAS       = 0;
+//          P_4  AAC2020_GINAWIN_OnMouseMove_PFN       =VOD;
+//
+//  #undef  P_1
+//  #undef  P_2
+//  #undef  P_3
+//  #undef  P_4
+//          
+//  #undef  U32
+//  #undef  U64
+//  #undef  HAS
+//  #undef  VOD
              
 //:======================:CONCEPTUAL_LIBRARY_MEMBER_VARIABLES://
 //:CONSTANTS:================================================://
