@@ -6,6 +6,247 @@
     
 *** ******************************************************** ***
 
+#_GPU_DATA_IS_A_TEMPORARY_HELPER_OBJECT_ONLY_###################
+
+    Flat is better than nested. But sometimes we need to
+    pass around a bundle of arguments to a helper function.
+
+    Don't make your data LIVE in a nested structure just
+    because sometimes it needs to be passed around in
+    a bundle.
+
+    REASONS:
+        1. Flat code easier to memorize.
+        2. Packing into nested structure at locations
+           where it is needed make the code readable 
+           WITHOUT intellisense because you can see
+           what members you are packing into the struct
+           at the fuction call site.
+
+###################_GPU_DATA_IS_A_TEMPORARY_HELPER_OBJECT_ONLY_#
+#_DO_NOT_EXTRACT_COMMENT_#######################################
+
+    #_DO_NOT_EXTRACT_COMMENT_#:
+
+        Means the comment itself serves some type of
+        [ mechanical / administrative ] purpose meerly
+        by existing where it does.
+
+        Most commonly this would be for:
+
+        1. WARNING COMMENTS 
+        2. CTRL_F_HELP Comments.
+        
+        The mechanics of both comments dictate that they
+        will fail to serve their purpose if they are
+        extraced into this (_H_) file.
+
+#######################################_DO_NOT_EXTRACT_COMMENT_#
+#_SIMPLE_CODE_TRUMPS_OPTIMIZED_CODE_############################
+
+    Prioritize SIMPLE over OPTIMIZED/PERFORMANT code.
+
+    Optimizing can happen. But only in 2 cases.
+
+    1. Performance loss makes project UN-Usable.
+    2. Game is 100% finished and we are in POLISH stage.
+
+############################_SIMPLE_CODE_TRUMPS_OPTIMIZED_CODE_#
+#_GPUDATA_NOT_USED_YET_BUT_STILL_ALLOCATE_######################
+
+    The names "todo_02" , "todo_03" etc are
+    name of reserved memory slots that have not
+    been assigned a purpose yet.
+
+    Though not assigned a purpose yet, we should still
+    allocate them.
+
+    (Yes wasteful I know)
+
+    Reason:
+        When ready to use memory for something, all we need
+        to do is a name refactor without changing any
+        functionality.
+
+        If there is a problem that can occure by reserving
+        more than ONE block of GPUDATA, we will know
+        RIGHT_FUCKING_NOW. Even though we only are going to
+        use one of those blocks RIGHT_FUCKING_NOW.
+
+        #_SIMPLE_CODE_TRUMPS_OPTIMIZED_CODE_#
+
+######################_GPUDATA_NOT_USED_YET_BUT_STILL_ALLOCATE_#
+#_BAD_IDEA_001_#################################################
+
+    ------------------------------------------------------------
+    Below was a bad idea. The correct way to handle this was
+    to create error friendly wrapper functions so that we 
+    can consolidate all the function calls needed to be
+    made on a ONE LINE PER CALL basis.
+    
+    Reducing the density like this I think is a BAD IDEA.
+    But originally did it because function calls were not
+    error friendly. So we fixed that up a bit and
+    make aac2020_gpudata wrapper functions for openGl
+    binding library functions in AAC2020_GLEBIND.
+
+        1:  aac2020_gpudata_glGetUniformLocation
+        2:  aac2020_gpudata_glGetUniformiv      
+    ------------------------------------------------------------
+
+        //:GET_TEXTURE_SAMPLER:ALL:--------------------------://
+        //:##################################################://
+        //: MACROS: Functions: UPPERCASE                     ://
+        //: MACROS: Constants: UPPERCASE                     ://
+        //: MACROS: Variables: lowercase                     ://
+        //:                                                  ://
+        //: Dont be afraid of long functions. This is kinda  ://
+        //: verbose and ugly and long... And very cut+paste. ://
+        //: But also pretty easy to follow with only         ://
+        //: 1 level of indirection.                          ://
+        //: (We will see how easy to follow when we )        ://
+        //: (come back to it in a month from now.   )        ://
+        //: (DATE_WRITTEN: 2020_12_07               )        ://
+        //:                                                  ://
+        //:##################################################://
+        #define N   ( 0 - 1 );                           //:1://
+        #define P   (aac2020_graquad.data.POG_IID)       //:1://
+        #define L   AAC2020_GLEBIND.glGetUniformLocation //:1://
+        #define V   AAC2020_GLEBIND.glGetUniformiv       //:1://
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+    
+            /** Sections by which texture sampler we are **/
+            /** getting.                                 **/
+
+            //:0101010101010101010101010101010101010101010101://
+            #define s &(AAC2020_PIXNAME_paint5d[ 0 ] ) 
+            #define h   AAC2020_PIXNAME_paint5d_tex_sam_HAS     
+            #define l   AAC2020_PIXNAME_paint5d_tex_sam.sam_loc                        
+            #define v   AAC2020_PIXNAME_paint5d_tex_sam.sam_val                        
+             
+                l = L( P , s );  
+                if(      l == N ){  /** DO_NOTHING **/   }
+                else if( l >= 0 ){  V(P, l ,  &( v )  ); }
+                else{ INI_ALL_ERR("[SAM_LOC_001:ERR]");  };;
+                
+                if( N == l ){ l = N ; v = N ; h =( 0 ); }
+                else{         l = l ; v = v ; h =( 1 ); }
+      
+            #undef  s  //:-----------------------------------://
+            #undef  h  //:-----------------------------------://
+            #undef  l  //:-----------------------------------://              
+            #undef  v  //:-----------------------------------://
+            //:0101010101010101010101010101010101010101010101://
+            //:0202020202020202020202020202020202020202020202://
+            #define s &(AAC2020_PIXNAME_todo_02[ 0 ] ) 
+            #define h   AAC2020_PIXNAME_todo_02_tex_sam_HAS     
+            #define l   AAC2020_PIXNAME_todo_02_tex_sam.sam_loc                        
+            #define v   AAC2020_PIXNAME_todo_02_tex_sam.sam_val                        
+             
+                l = L( P , s );  
+                if(      l == N ){  /** DO_NOTHING **/   }
+                else if( l >= 0 ){  V(P, l ,  &( v )  ); }
+                else{ INI_ALL_ERR("[SAM_LOC_002:ERR]");  };;
+                
+                if( N == l ){ l = N ; v = N ; h =( 0 ); }
+                else{         l = l ; v = v ; h =( 1 ); }
+      
+            #undef  s  //:-----------------------------------://
+            #undef  h  //:-----------------------------------://
+            #undef  l  //:-----------------------------------://              
+            #undef  v  //:-----------------------------------://
+            //:0202020202020202020202020202020202020202020202://
+            //:0303030303030303030303030303030303030303030303://
+            #define s &(AAC2020_PIXNAME_todo_03[ 0 ] ) 
+            #define h   AAC2020_PIXNAME_todo_03_tex_sam_HAS     
+            #define l   AAC2020_PIXNAME_todo_03_tex_sam.sam_loc                        
+            #define v   AAC2020_PIXNAME_todo_03_tex_sam.sam_val                        
+             
+                l = L( P , s );  
+                if(      l == N ){  /** DO_NOTHING **/   }
+                else if( l >= 0 ){  V(P, l ,  &( v )  ); }
+                else{ INI_ALL_ERR("[SAM_LOC_003:ERR]");  };;
+                
+                if( N == l ){ l = N ; v = N ; h =( 0 ); }
+                else{         l = l ; v = v ; h =( 1 ); }
+      
+            #undef  s  //:-----------------------------------://
+            #undef  h  //:-----------------------------------://
+            #undef  l  //:-----------------------------------://              
+            #undef  v  //:-----------------------------------://
+            //:0303030303030303030303030303030303030303030303://
+
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        #undef  N //:Not Exist is Negative One           //:1://
+        #undef  P //:Program Integer Id (POG_IID)        //:2://
+        #undef  L //:Program Integer Id (POG_IID)        //:3://
+        #undef  V //:Program Integer Id (POG_IID)        //:4://
+        //:##################################################://
+        //:--------------------------:GET_TEXTURE_SAMPLER:ALL://
+
+#################################################_BAD_IDEA_001_#
+#_ONE_EXIT_POINT_ALWAYS_########################################
+
+    Functions should always have exactly one EXIT point
+    as last line of function. A RETURN statement to be
+    precise.
+
+    Any function that does NOT obey this needs refactoring
+    eventually.
+
+    Multiple exit points are too error prone as I tend to
+    miss them when reading code.
+
+    The idea of "Get out of function as soon as possible"
+    "before you screw stuff up" is a good idea though.
+    To account for that philosophy, we should properly
+    gaurd code blocks with an [ ok / o_k ] variable if
+    their design typically WOULD best accomidate multiple
+    return statements.
+
+    WRITTEN_DATE[ 2020_12_07 ]
+
+########################################_ONE_EXIT_POINT_ALWAYS_#
+#_ALWAYS_WRAP_WITH_IDENTICAL_SIGNATURE_#########################
+
+    It is TEMPTING to change the siguatre of wrapped functions
+    to something NICER to use. However, doing that means
+    it will be harder to interchangibly swapp the
+
+        WRAPPED
+
+    version with the
+
+        UN-WRAPPED
+
+    version of the function. I can see some benifit to that.
+
+        BENIFITS:
+
+            1. More flexibility.
+            2. Dont have to THINK UP new signature format.
+
+    So... WRAPER FUNCTION SHOULD HAVE IDENTICAL SIGNATURE
+          TO THE FUNCTION IT IS WRAPPING.
+
+#########################_ALWAYS_WRAP_WITH_IDENTICAL_SIGNATURE_#
+#_ALWAYS_RELOAD_TEXSAM_AFTER_RELOADING_SHADER_##################
+
+    Just because GPUDATA is initialized does NOT mean the
+    texture sampler was successfully created. Texture sampler
+    will only successfully exist if the texture sampler
+    name is present in the currently loaded shader
+    source code.
+
+    Texture Sampler Names:
+        AAC2020_PIXNAME_paint5d
+        AAC2020_PIXNAME_todo_02  << Not_Yet_Assigned_As_Of_NOW
+        AAC2020_PIXNAME_todo_03  << Not_Yet_Assigned_As_Of_NOW
+        .... ETC
+
+    Not_Yet_Assigned_As_Of_NOW: 2020_12_07
+
+##################_ALWAYS_RELOAD_TEXSAM_AFTER_RELOADING_SHADER_#
 #_PIXNAME_PATTERN_BREAKER_######################################
 
     EXTRACTED_FROM[ LIBCHAN.TOP._ ]ON_DATE[ 2020_12_06 ]
