@@ -2,24 +2,74 @@
 //: #NAMESPACE_PATTERN_BREAKER_PAINT5D#
 
 //:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=====================://
+
     void
-    aac2020_paint5d_Halt( const char* msg_err ){
+    aac2020_paint5d_Halt( const char* msg_err )
+    {
+
         printf("[FATAL_2020_12_04_076PM]:%s\n", msg_err );
-        fflush(stdout);exit(  11 /** 4*20-69 **/ );         }
+        fflush(stdout);exit(  11 /** 4*20-69 **/ );         
+
+    }
 
 //:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+//:OKAY_STATUS_INFO_MESSAGE:=================================://
+
+    void
+    aac2020_paint5d_Okay( const char* msg_o_k )
+    {
+        printf("[aac2020_paint5d_Okay]:%s\n", msg_o_k );
+        fflush(stdout);    
+    }
+
+//:=================================:OKAY_STATUS_INFO_MESSAGE://
 //:INITIALIZE_PAINT5D:=======================================://
-#define U32     uint32_t /** GCC: <stdint.h> **/
-#define paint5d ACC2020_PAINT5D_dat  
-#define ERR     aac2020_paint5d_Halt
+#define U32  uint32_t /** GCC: <stdint.h> **/
+#define I32   int32_t /** GCC: <stdint.h> **/
+#define ERR   aac2020_paint5d_Halt
+#define O_K   aac2020_paint5d_Okay
 
     U32
     AAC2020_PAINT5D_Init( U32 u32 )
     {
         if( u32 ){ /** Reserved for future use **/ };
 
-        AAC2020_VITAL_TODO("[REMOVETHISRETURN_2020_12_06]");
-        return( 0x00 ); 
+        //:#_INI_SPAM_AND_RECURSION_GAURD_#:-----------------://
+
+        /** Hackishly debug what is going on. **/
+        AAC2020_PAINT5D_init_call_count++;
+        printf("[AAC2020_PAINT5D_init_call_count]:%d\n"
+                ,AAC2020_PAINT5D_init_call_count       );;
+                 fflush(stdout);
+
+        if( AAC2020_CEDITOR_dex_ing == 
+            AAC2020_CEDITOR_paint5d
+        ){  
+            /** If not recursion, it might be being called   **/
+            /** rapidly from another thread. Re-entering     **/
+            /** before it is exiting. But that seems         **/
+            /** unlikely. I think that would require         **/
+            /** more than one thread to call this function.  **/
+
+            ERR("[LIKELY_UNINTENTIONAL_RECURSION]"); 
+        };;
+
+        /** Editor Initialization Spam Gaurd **/
+        if( AAC2020_CEDITOR_dex_ini ==
+            AAC2020_CEDITOR_paint5d
+        ){
+            O_K("[Init_Already_Up_To_Date]");
+            return( 0x00 );
+        };;
+
+        /** We are now initilaizing paint5d **/
+        AAC2020_CEDITOR_dex_ing=( 
+        AAC2020_CEDITOR_paint5d  );;
+
+        //:-----------------:#_INI_SPAM_AND_RECURSION_GAURD_#://
+
+        /** Early Exit Will Trigger Recursion Guard Error **/
+        O_K( "[OH_FUCK...Code_Below_Was_Never_Ran_Before]" );;
 
         //:ALL_MEMBERS_OF_PAINT5D:---------------------------://
 
@@ -33,17 +83,101 @@
             );;
 
         //:------------------------:ALLOCATES_OPEN_GL_TEXTURE://
+        //:LOAD_INITIAL_TEXTURE_DATA:------------------------://
+        #define DAT gpudata_paint5d
+        #define F_S( name ) AAC2020_PIXNAME_##name
+
+            /** #_TODOS_CAN_BREAK_COLUMN_LIMIT_# **/
+            /** For now just load a test pattern to confirm we    * * * * * **/
+            /** have data. But once that is done, we will want to * * * * * **/
+            /** load from a save file on disk on startup.         * * * * * **/
+            AAC2020_VITAL_TODO("[Eventually_This_Should_Load_Save_File_Data]");
+
+
+
+            struct AAC2020_GPUDATA gpudata_paint5d ={ 0 };
+
+
+
+            if( strcmp( &(F_S( paint5d )[0]) ,"paint5d" )!= 0 ){
+                aac2020_paint5d_Halt("[BAD_NAME_2020]");
+            };;
+
+
+            
+            //: FILE_SCOPE(  F_S  ) --> TEMP_STRUCT(  DAT  );
+            DAT.tex_lot =    F_S( paint5d_tex_lot          );
+            DAT.tex_han =    F_S( paint5d_tex_han          ); 
+            DAT.sam_loc =    F_S( paint5d_tex_sam.sam_loc  );
+            DAT.sam_val =    F_S( paint5d_tex_sam.sam_val  );
+            DAT.sam_has =    F_S( paint5d_tex_sam_HAS      );
+            DAT.pix_wid =  ( 512                           );
+            DAT.pix_hig =  ( 512                           );
+            DAT.pix_nam = &( F_S( paint5d )[0]             );
+
+            DAT.cpu_pix =&( 
+                AAC2020_PIXNAME_paint5d_cpu_pix[0] 
+            );;
+
+
+
+            AAC2020_PIXLOAD_TestPattern( &(gpudata_paint5d) );
+            I32 has = AAC2020_PIXLOAD_HasSampler( "paint5d" );
+
+
+
+            if( has >= 1 ){
+
+                /** Update Texture Sampler Uniform On GPU **/
+
+                aac2020_pixload_PushSampler( 
+                    &(gpudata_paint5d) 
+                );;
+
+                /** Persist Changes: **/
+
+                //: TEMP_STRUCT(  DAT  ) --> FILE_SCOPE(  F_S  )
+                F_S( paint5d_tex_lot         ) = DAT.tex_lot ;
+                F_S( paint5d_tex_han         ) = DAT.tex_han ;
+                F_S( paint5d_tex_sam.sam_loc ) = DAT.sam_loc ;
+                F_S( paint5d_tex_sam.sam_val ) = DAT.sam_val ;
+                F_S( paint5d_tex_sam_HAS     ) = DAT.sam_has ;
+                //:                    ( 512 ) = DAT.pix_wid ://
+                //:                    ( 512 ) = DAT.pix_hig ://
+                //:                 "paint5d" ~=~DAT.pix_nam ://
+    
+            };;
+            
+
+        #undef DAT
+        #undef VAR
+        //:------------------------:LOAD_INITIAL_TEXTURE_DATA://
         //:ERROR_CHECK:--------------------------------------://
 
             //:#_PAINT5D_DATA_ERROR_CHECK_NOW_POINTLESS_#://
+            
 
         //:--------------------------------------:ERROR_CHECK://
+
+
+        //:#_INI_SPAM_AND_RECURSION_GAURD_#:-----------------://
+
+            /** DONE initializing. **/
+
+            AAC2020_CEDITOR_dex_ini=( 
+            AAC2020_CEDITOR_paint5d  );;
+
+            /** No editor initializ-ING now. **/
+            AAC2020_CEDITOR_dex_ing=( 0xFFFFFFFF );
+
+        //:-----------------:#_INI_SPAM_AND_RECURSION_GAURD_#://
 
         return( 0x00 );
 
     }
 
 #undef  U32    
-#undef  paint5d
+#undef  I32    
 #undef  ERR
+#undef  O_K
 //:=======================================:INITIALIZE_PAINT5D://

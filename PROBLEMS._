@@ -1,0 +1,22 @@
+
+    This file can be deleted once these problem are fixed.
+    DATE[ 2020_12_08 ]
+
+    //:PROBLEMS:
+
+    1. Changing shaders probably deletes my texture allocations.
+       (not sure about this)
+
+
+    2. Texture sampler uniforms must be re-queired when
+       doing a texture upload the uniforms may have been
+       setup when a fragement shader was loaded that did
+       NOT USE any texture sampler uniforms.
+
+    3. You need to read this:
+        https://www.khronos.org/opengl/wiki/Common_Mistakes#glGenTextures_in_render_function
+
+        You are definitely causing a memory leak
+        with your call to glGenTextures...
+
+        Possibly texture is not even correctly setup.

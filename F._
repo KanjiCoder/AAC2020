@@ -67,9 +67,10 @@
 
             if( AAC2020_IKEYBOX_dirty <= 0 /** Is Clean? **/ ){
 
+                AAC2020_CEDITOR_dex_edi=(
                 AAC2020_FRAGBED_SimpleKeyHandler(
                     AAC2020_IKEYBOX_k_p
-                );;
+                        ));;
 
             };;
 
@@ -80,6 +81,49 @@
             AAC2020_IKEYBOX_dirty = 1 ;
 
         #endif //:###########################################://
+
+        //::RE_INIT_EDITOR_IN_FOCUS::#######################:://
+        /** ################################################ **/
+        /** All sub editors should DEPEND_ON[ PIXNAME ]      **/
+        /** As PIXNAME is a profit from the future that      **/
+        /** knows about all future editor's data and allows  **/
+        /** us to centralize their GPUDATA FILESCOPE vars.   **/
+        #if( AAC2020_INCLUDE_PIXNAME >= 0 ) //::############:://
+
+            #if( AAC2020_INCLUDE_PAINT5D >  0 ) //::########:://
+             if( AAC2020_CEDITOR_dex_edi == 1 ){
+            
+                AAC2020_PAINT5D_Init( 0x00 ); /**@IDEMPOTENT@**/
+
+            };;
+            #endif //::#####################################:://
+            #if( AAC2020_INCLUDE_1234567 >  0 ) //::########:://
+             if( AAC2020_CEDITOR_dex_edi == 2 ){
+            
+                /** Future_Editor #002 Code Here **/
+                AAC2020_1234567_Init( 0x00 ); /**@IDEMPOTENT@**/
+
+            };;
+            #endif //::#####################################:://
+            #if( AAC2020_INCLUDE_1234567 >  0 ) //::########:://
+             if( AAC2020_CEDITOR_dex_edi == 3 ){
+            
+                /** Future_Editor #003 Code Here **/
+                AAC2020_1234567_Init( 0x00 ); /**@IDEMPOTENT@**/
+
+            };;
+            #endif //::#####################################:://
+            #if( AAC2020_INCLUDE_1234567 >  0 ) //::########:://
+             if( AAC2020_CEDITOR_dex_edi == 4 ){
+            
+                /** Future_Editor #004 Code Here **/
+                AAC2020_1234567_Init( 0x00 ); /**@IDEMPOTENT@**/
+
+            };;
+            #endif //::#####################################:://
+
+        #endif //::#########################################:://
+        //::#######################::RE_INIT_EDITOR_IN_FOCUS:://
 
         return( 0x00 );
     }
@@ -124,14 +168,25 @@
             /** sub libraries as accounted for in list below.**/
             AAC2020_VITAL_TODO( "[Omitted_Use:InitNone]");
             
+            /** ******************************************** ***
+                AAC2020_GLEBIND_Init  
+                AAC2020_GRAQUAD_Init    #_DO_NOT_EXTRACT_#
+                AAC2020_FRAGBED_Init
+                AAC2020_GPUDATA_Init       #_CTRL_F_HELP_#
+                AAC2020_PIXNAME_Init
+                AAC2020_GLCONST_Init    #_DO_NOT_EXTRACT_#
+                AAC2020_PAINT5D_Init
+                AAC2020_PIXLOAD_InitNone
+            *** ******************************************** **/
             #define X 0x00
-            FMACROS_GLEBIND_Init( X );//:AAC2020_GLEBIND_Init://
-            FMACROS_GRAQUAD_Init( X );//:AAC2020_GRAQUAD_Init://
-            FMACROS_FRAGBED_Init( X );//:AAC2020_FRAGBED_Init://
-            FMACROS_GPUDATA_Init( X );//:AAC2020_GPUDATA_Init://
-            FMACROS_PIXNAME_Init( X );//:AAC2020_PIXNAME_Init://
-            FMACROS_GLCONST_Init( X );//:AAC2020_GLCONST_Init://
-            FMACROS_PAINT5D_Init( X );//:AAC2020_PAINT5D_Init://
+            FMACROS_GLEBIND_Init(     X ); //: 01 ://
+            FMACROS_GRAQUAD_Init(     X ); //: 02 ://
+            FMACROS_FRAGBED_Init(     X ); //: 03 ://
+            FMACROS_GPUDATA_Init(     X ); //: 04 ://
+            FMACROS_PIXNAME_Init(     X ); //: 05 ://
+            FMACROS_GLCONST_Init(     X ); //: 06 ://
+            FMACROS_PAINT5D_Init(     X ); //: 07 ://
+            FMACROS_PIXLOAD_InitNone( 0 ); //: 08 ://
             #undef  X
 
         #endif //:- - - - - - - - - - - - - - - - - - - - - -://

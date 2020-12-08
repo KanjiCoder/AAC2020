@@ -16,6 +16,8 @@
             -fstrict-aliasing                                  \
             -Wstrict-aliasing                                  \
                                                                \
+            -Wno-overlength-strings                            \
+                                                               \
             -D MACRO_COMPILE_ONLY_THIS_FILE_AS_DEMO            \
                                                                \
             -std=c11                                           \
@@ -28,6 +30,14 @@
                                     ####                    ####
     read -p "[ENTER_TO_EXIT]:"      ####                    ####
     ############################################################
+
+    ##_BUILD_SCRIPT_NOTES:(DOCUMENTATION)_######################
+    ##
+    ##      Wno-overlength-strings : 
+    ##          Disable the 4095 iso-c99 embedded
+    ##          string literal limit.
+    ##
+    ######################_BUILD_SCRIPT_NOTES:(DOCUMENTATION)_##
 
     ############################################################
     ## GCC NOTES:                                             ##

@@ -421,11 +421,13 @@
 
 //:SIMPLE_KEY_HANDLER:=======================================://
 #define U32   uint32_t /** GCC: <stdint.h> **/
+#define I32    int32_t /** GCC: <stdint.h> **/
 #define FN_01 aac2020_graquad_ReLoadShaderUniforms_iMouse
 #define FN_02 aac2020_graquad_ReLoadShaderUniforms_iTime
 #define FN_03 aac2020_graquad_ReLoadShaderUniforms_iResolution
 
-    U32 AAC2020_FRAGBED_SimpleKeyHandler( 
+    I32 
+    AAC2020_FRAGBED_SimpleKeyHandler( 
         signed char chr_key 
     )
     {
@@ -436,6 +438,11 @@
             AAC2020_GINAWIN_SimpleKeyHandler_SetCallback(  
             &( AAC2020_FRAGBED_SimpleKeyHandler ) );;   
         *** ************************************************ **/
+
+        /** 404: Shader Not Found. Don't take seriously.     **/
+        /**      Any negative number will do.                **/
+
+        int   shader_index_loaded=( 0 - 404 ); 
 
         //:FTI:Forgot_To_Init:
         if( AAC2020_FRAGBED_inited <= 0 ){
@@ -461,6 +468,7 @@
             #define P_9 AAC2020_FRAGBED_loaded_009_ptr //:###://
 
             int   shader_found =(   0    );
+            if(   shader_index_loaded ){ /**@QUELCHNOTUSED@**/};
             const char*    str =((void*)0); //:frag_shader_str
 
             switch( chr_key ){
@@ -504,7 +512,7 @@
                 );;
 
                 should_re_load_the_shader_uniforms = ( 1 );
-
+                shader_index_loaded = ( shader_found );
             }else
             if( shader_found <= 0 ){
 
@@ -534,7 +542,7 @@
 
 
                     should_re_load_the_shader_uniforms = ( 2 );
-                
+                    shader_index_loaded=( 0 );
                 };;
 
             };;
@@ -548,6 +556,26 @@
                 FN_02(0x00); /** Reload_Uniform: iTime       **/
                 FN_03(0x00); /** Reload_Uniform: iResolution **/
 
+
+                //:Reload_Texture_Sampler_Uniform_For_The
+                //:Active_Editor_In_Focus:
+                #if( AAC2020_INCLUDE_PIXNAME >= 1 ) //:######://
+
+                    #define EDI AAC2020_CEDITOR_dex_edi
+
+                    if(EDI==AAC2020_PIXNAME_paint5d_tex_lot){
+                    /** ************************************ ***
+                        We can't do it this way. Would Involve
+                        calling functions from the future.
+                          
+                        Where is this_handler called from?  
+                        
+                    (((    this_handler==SimpleKeyHandler    )))
+                    *** ************************************ **/
+                    };;
+               
+                    #undef  EDI //:##########################://
+                #endif
             };;
 
         }else
@@ -558,10 +586,27 @@
 
         };;
 
-        return( 0x00 );
+        /**1:1 mapping between editor index and shader index**/
+        /** AAC2020_CEDITOR_dex_edi **/
+        I32 BEST_NOT_TO_DO_WITH_SIDE_EFFECTS_CEDITOR_dex_edi=(
+            shader_index_loaded );;
+
+        if( BEST_NOT_TO_DO_WITH_SIDE_EFFECTS_CEDITOR_dex_edi
+        != shader_index_loaded ){
+
+            /** Quelch : set but not used compiler error **/
+            aac2020_fragbed_Halt("[WTF_MY_MAN_2020]");
+
+        };;
+
+        /** Caller SHOULD use return value to set: **/
+        /** AAC2020_CEDITOR_dex_edi                **/
+        return( 
+            BEST_NOT_TO_DO_WITH_SIDE_EFFECTS_CEDITOR_dex_edi );;
     }
 
 #undef  U32
+#undef  I32
 #undef  FN_01  
 #undef  FN_02  
 #undef  FN_03  

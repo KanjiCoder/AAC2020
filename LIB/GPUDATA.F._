@@ -78,6 +78,15 @@
         }
 
     //:===============================:GOALS_ARE_NEVER_ERRORS://
+    //:NEITHER_ARE_OKAY_MESSAGES:============================://
+
+        void
+        aac2020_gpudata_Okay( const char* msg_gol ){
+            printf("[aac2020_gpudata_Okay]:%s\n", msg_gol );
+            fflush(stdout);
+        }
+
+    //:============================:NEITHER_ARE_OKAY_MESSAGES://
 //:===========================:HALTING_FUNCTIONS_AND_MESSAGES://
 //:FAIL_FAST_INPUT_CHECKS:===================================://
 #define HWT aac2020_gpudata_HaltWithTrace
@@ -586,7 +595,7 @@
         void aac2020_gpudata_IIA_UploadTexture( 
                          //: IIA ://
 
-            struct AAC2020_GPUDATA gpudata 
+            struct AAC2020_GPUDATA gpudata /** @INIT_ALL@ **/
 
 
         ){
@@ -646,12 +655,31 @@
             
             //:tp_tp_tp_tp_tp_tp_tp_tptp_tp_tp_tp_tp_tp_tp_tp://
 
+            U32 err_num = AAC2020_GLEBIND.glGetError( );
+            if( err_num != 0 ){
+                aac2020_gpudata_Halt("[OHFUCKNOITSALLOVERMAN]");
+            };;
+
         }
 
 //: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
 
     void
     AAC2020_GPUDATA_InitInstanceAll( void ){
+
+        /** #_NEW_PROGRAMS_DONT_REMOVE_OLD_TEXTURES_# **/
+
+        if( AAC2020_GPUDATA_init_instance_all_call_count++ >0){
+    
+            /** glGenTextures will cause memory leadk if     **/
+            /** called more than once I think... But do you  **/
+            /** need to regenerate textures when creating    **/
+            /** a new program ?                              **/
+            aac2020_gpudata_Halt(
+                "[ONLY_CALL_ONCE_OR_RISK_MEMORY_LEAK]"
+            );;
+        };;
+        
 
         AAC2020_VITAL_TODO("[PROBLEM_FOUND:No_Uniform_Of_That_Name_In_Active_Shader]");
 
@@ -777,6 +805,22 @@
             g3.pix_wid = ( 512 );
             g3.pix_hig = ( 512 );
             g3.cpu_pix =&( AAC2020_PIXNAME_todo_03_cpu_pix[0] );
+
+            #define O_K aac2020_gpudata_Okay
+            #define ERR aac2020_gpudata_Halt
+
+                /** Smoke Test: All texture handles  **/
+                /**             should be different. **/
+                if( g1.tex_han == g2.tex_han  
+                ||  g2.tex_han == g3.tex_han 
+                ||  g3.tex_han == g1.tex_han ){
+                    ERR("[SOME_TEXTURE_HANDLES_IDENTICAL]");
+                }else{
+                    O_K("[SmokeTest:Texture_Handles_Differ]");
+                };;
+
+            #undef O_K
+            #undef ERR
         
         /** AAC2020_GPUDATA_InitInstanceAll_UploadTexture **/
         #define UPLOAD_TEXTURE aac2020_gpudata_IIA_UploadTexture

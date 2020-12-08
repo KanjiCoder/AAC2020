@@ -5,9 +5,183 @@
     SO WE HAVE A RECORD OF WHAT WAS DONE IN WHAT ORDER.
     
 *** ******************************************************** ***
+#_NEW_PROGRAMS_DONT_REMOVE_OLD_TEXTURES_########################
 
+    https://www.khronos.org/opengl/wiki/Texture
 
+    Texture objects are not directly associated 
+    with or attached to program objects. Instead, 
+    program samplers reference texture image unit 
+    indices. Whatever textures are bound to those 
+    image units at the time of rendering are used 
+    by the program. So the first step is to set the 
+    uniform value for the program samplers.
 
+#########################_NEW_PROGRAMS_DONT_REMOVE_OLD_TEXTURES_
+#_INI_SPAM_AND_RECURSION_GAURD_#################################
+
+    Code that is [guarding/protecting] an initializer
+    function from.
+
+    1. being spammed (invoked rapidly in multiple succession)
+    2. recursively being called.
+
+    NOTE:
+        This is not intended as a hackish solution to 
+        make initializers idempotent by exiting early.
+
+        Not intended to prevent 2x in a row execution.
+        Just prevent QUICK successive calls.
+
+        Though the naive method for this will typically
+        prevent 2x in a row calls... DO NOT RELY ON THAT
+        TO MAKE FUNCTION IDEMPOTENT.
+
+#################################_INI_SPAM_AND_RECURSION_GAURD_#
+@QUELCHNOTUSED@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    
+    @QUELCHNOTUSED@ 
+    @QUELCH_NOT_USED@
+    @QUELCH_UNUSED@
+    @QUELCHUNUSED@
+
+        Denotes we are trying to quelch an un-used
+        variable compiler error.
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@QUELCHNOTUSED@
+@IDEMPOTENT@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @IDEMPOTENT@
+
+    Used to denote an function (typically initializer)
+    that can be called multiple times in a row without
+    breaking or causing unexpected behavior.
+
+    If you marked something as @IDEMPOTENT@ and it is not,
+    chances are the CODE IS WRONG not the COMMENT.
+
+    @IDEMPOTENT@ is conveying design intent. It would be
+    foolish to think that the comment is wrong and the
+    code correct in this case.
+        
+    Fuck You "cleanCode®™"
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@IDEMPOTENT@
+#_sam_val_ALWAYS_EQUALS_tex_lot_################################
+#_tex_lot_ALWAYS_EQUALS_sam_val_################################
+
+    For simplicity sam_val == tex_lot.
+    ( Specificially[ sam_val ]DEPENDS_ON[ tex_lot ] )
+
+    A 1:1 mapping between the texture slot.....
+
+    WAIT.... NOT FOR SIMPLICITY. For NECESSITY!!!!
+
+    tex_lot: Where the texture is loaded.
+
+    sam_val: Tell your sampler uniform to sample that texture
+             by setting: (sam_val)==(tex_lot)
+
+################################_sam_val_ALWAYS_EQUALS_tex_lot_#
+################################_tex_lot_ALWAYS_EQUALS_sam_val_#
+#_2ND_GUESSING_PIXLOAD_TEX_SAM_ERR_#############################
+                                         
+        Actually... This could happen because     
+        AAC2020_GPUDATA_InitInstanceAll may have  
+        been called when a shader that did NOT    
+        have a texture sampler uniform in it's    
+        source was [ in focus / loaded ]          
+                                                  
+        THIS CASE IS NOT AN ERROR **/             
+                                                  
+        Wait... it is an error but only if....    
+        Only if... "tex_sam_HAS" is true.         
+
+#############################_2ND_GUESSING_PIXLOAD_TEX_SAM_ERR_#
+#TEX_IMAGE_2D_CORRECTION########################################
+
+    SEARCHED_FOR[ texImage2D ]WHAT_YOU_WANT[ glTexImage2D ]
+
+########################################TEX_IMAGE_2D_CORRECTION#
+()calledby() :::::::::::::::::::::::::::::::::::::::::::::::::::
+
+    Comment used to help track what calls what.
+    Example:  bar()calleby()foo
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::()calledby()
+()calls() ::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+    Comment used to help track what calls what.
+    Example:  foo()calls()bar
+
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::()calls()
+#WHY_PIX_DEX_AND_COM_DEX########################################
+#DEX_PIX#DEX_COM################################################
+
+    #DEX_PIX# #dex_pix# -----------> pix_dex ( PIXel     inDEX )
+    #DEX_COM# #dex_com# -----------> com_dex ( COMponent inDEX )
+
+    Usually we go "general to specific"
+    and thus "pix_dex" and "com_dex" are the proper
+    variables. As "index (dex)" is a more general
+    variable specifier than "pixel(pix)" or "component(com)"
+
+    However: pix_dex is GRANDFATHERED in because it was first
+             used in the context of:
+
+             pix_wid
+             pix_hig
+             pix_arr
+             pix_dex
+                 |||
+             com_dex
+             
+             Where "pix" is the generic aspect and
+             "dex" is the more specific aspect.
+
+             To avoid fractionating our variable namespaces
+             (conceputal namespaces in our HEAD) we need to
+             pick one [ permutation / ordering ] and    
+             stick with it. To ease decision, it is whatever
+             we use FIRST. Hence "GRANDFATHERED IN"
+
+################################################DEX_PIX#DEX_COM#
+########################################WHY_PIX_DEX_AND_COM_DEX#
+@INIT_ALL@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @INIT_ALL@ : Added so when searching for AAC2020_GPUDATA
+                 with "find in files" I can find the
+                 instance of[ gpudata ]that I am looking for.
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@INIT_ALL@
+#_TODOS_CAN_BREAK_COLUMN_LIMIT_#################################
+
+    "TODO" notes are allowed to break the 64 character
+    source code column limit because.....
+        
+        1. It sticks out like a sore thumb (Its Noticable)
+        2. It annoys the hell out of me
+
+            Annoying things more likely to get my attention.
+            Annoying things more likely to be silenced
+            by getting them fixed.
+
+        SAYING: The sqeaky wheel gets the grease.
+
+#################################_TODOS_CAN_BREAK_COLUMN_LIMIT_#
+#_CTRL_F_HELP_##################################################
+
+    #_CTRL_F_HELP_#:
+    
+        A comment tag used to denote a comment that should
+        NOT be extracted into this (_H_) file because
+        it's mechanic is to help programmers find when
+        they are looking for when they
+
+        1. Find String In Files VIA editor
+        2. GREP via command line
+
+##################################################_CTRL_F_HELP_#
 #_SAM_PRECISION_BEFORE_SAM_VAR_#################################
 
     //: Must declare precision before            
@@ -73,8 +247,10 @@
 
 ###################_GPU_DATA_IS_A_TEMPORARY_HELPER_OBJECT_ONLY_#
 #_DO_NOT_EXTRACT_COMMENT_#######################################
+#_DO_NOT_EXTRACT_##############################################
 
-    #_DO_NOT_EXTRACT_COMMENT_#:
+    #_DO_NOT_EXTRACT_COMMENT_#:  ( Synonymous Hashtags )
+    #_DO_NOT_EXTRACT_#        :  ( Synonymous Hashtags )
 
         Means the comment itself serves some type of
         [ mechanical / administrative ] purpose meerly
@@ -89,6 +265,7 @@
         will fail to serve their purpose if they are
         extraced into this (_H_) file.
 
+###############################################_DO_NOT_EXTRACT_#
 #######################################_DO_NOT_EXTRACT_COMMENT_#
 #_SIMPLE_CODE_TRUMPS_OPTIMIZED_CODE_############################
 

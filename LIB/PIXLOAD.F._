@@ -1,1 +1,398 @@
 //:PIXLOAD.F._ (SEE: PIXLOAD.F._ for documentation)
+
+
+
+//:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=====================://
+    void 
+    aac2020_pixload_Halt( const char* msg_err )
+    {
+        printf("[FATAL_ERROR:AAC2020_pixload]:%s\n", msg_err );
+        fflush(stdout);
+        exit( 489 /** 69 + 420 == 489 , NICE! **/ );
+    }
+//:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+//:OKAY_MESSAGE_FOR_POOR_MANS_DEBUG:=========================://
+
+    void
+    aac2020_pixload_Okay( const char* msg_o_k )
+    {
+        printf("[AAC2020_pixload.Okay]:%s\n", msg_o_k );
+        fflush( stdout );
+    }
+
+//:=========================:OKAY_MESSAGE_FOR_POOR_MANS_DEBUG://
+//:INIT_NONE:================================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+
+    U32
+    AAC2020_PIXLOAD_InitNone( U32 u32)
+    {
+        if( u32 ){ /** Reserved For Future Use **/ };
+        printf("[OK:AAC2020_PIXLOAD_InitNone]");
+        fflush(stdout);
+        return( 0x00 );
+    }
+
+#undef  U32
+//:================================================:INIT_NONE://
+//:HAS_SAMPLER:==============================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+#define I32  int32_t /** GCC: <stdint.h> **/
+
+    I32
+    AAC2020_PIXLOAD_HasSampler( 
+        const char* pix_nam /** pix_nam == sam_nam **/
+    )
+    {
+        I32 u32_loc=(
+            AAC2020_GLEBIND.glGetUniformLocation(
+                ( aac2020_graquad.data.POG_IID )
+            ,   ( pix_nam )
+            ));;
+
+            if( AAC2020_GLEBIND.glGetError() != 0 ){
+                aac2020_pixload_Halt("[FUCKNOOOOOO!]");
+            };;
+
+        I32 sam_has =( 0 - 888000 /** TRAP_VALUE **/ );
+
+        if( u32_loc >= 0 ){ sam_has  = 1 ; };
+        if( u32_loc <  0 ){ sam_has  = 0 ; };
+        return(             sam_has        );
+    }
+
+#undef  U32
+#undef  I32
+//:==============================================:HAS_SAMPLER://
+//:PUSH_SAMPLER:=============================================://
+#define U32 uint32_t  /** GCC: <stdint.h> **/
+#define I32  int32_t  /** GCC: <stdint.h> **/
+#define ERR aac2020_pixload_Halt
+#define O_K aac2020_pixload_Okay
+
+    void
+    aac2020_pixload_PushSampler( 
+
+        /** Will FAIL if current shader in focus does **/
+        /** NOT contain the texture sampler uniform   **/
+        /** you are trying to wire up. Thus a PRIVATE **/
+        /** (all lowercase namespace) function.       **/
+        
+        /** Private is used loosely to mean:          **/
+        /** "Be careful when you call this."          **/
+
+        struct AAC2020_GPUDATA* gpudata
+
+    )
+    {
+        /** ************************************************ ***
+        [ AAC2020_PIXLOAD_PushSampler ]<--YOU_ARE_IN_HERE
+        AKA[ AAC2020_PIXLOAD_ReLoadTextureSamplerUniforms ]  
+        *** ************************************************ **/
+
+        U32 err_num = ( 0 - 87654321 /**TRAP**/ );
+
+        /** ------------------------------------------------ **/
+        /** AAC2020_GPUDATA_InitInstanceAll                  **/
+        /** ------------------------------------------------ **/
+        /** Should have set the correct value for sampler    **/
+        /** uniforms previously. Let's check to see          **/
+        /** that value is correct. If it is not...           **/
+        /** then crash the system.                           **/
+        /** ------------------------------------------------ **/
+
+        if( gpudata -> tex_lot <= 0 ){
+
+            /** Texture Slot If Configured On CPU Side **/
+            /** And then uploaded to GPU. This is how  **/
+            /** I know this value should never be <= 0 **/
+            /** Because.. I DONT USE ZERO FOR THIS.    **/
+
+            aac2020_pixload_Halt("[TEX_LOT_NEVER_ZERONEG]");
+        };;
+
+        if( gpudata -> sam_has >= 1 ){
+        #define OHH_NOO aac2020_pixload_Halt
+
+            /** gpudata -> tex_sam.sam_loc **/
+            if( gpudata ->         sam_loc <= 0 ){
+
+                /** NEVER USE LOCATION 0 **/
+                OHH_NOO("[IMPROPER_SETUP:sam_loc]");
+
+            }else
+            /** gpudata -> tex_sam.sam_val **/
+            if( gpudata ->         sam_val <= 0 ){
+                
+                /** #_2ND_GUESSING_PIXLOAD_TEX_SAM_ERR_# **/
+                OHH_NOO("[IMPROPER_SETUP:sam_val]");
+
+            };;
+ 
+                       /** tex_sam.sam_val **/
+            if( gpudata ->         sam_val !=
+                gpudata ->         tex_lot  
+            ){
+                OHH_NOO("[Expected:1:1:Mapping]");
+            };;
+
+
+            I32 tex_sam_sam_val =( 0 - 440044 /**TRAP**/ );
+            AAC2020_GLEBIND.glGetUniformiv( 
+                (aac2020_graquad.data.POG_IID) 
+            ,    gpudata ->          sam_loc
+            ,              &(tex_sam_sam_val )
+            );;
+            /** gpudata -> tex_sam.sam_val **/
+            if( gpudata ->         sam_val 
+                        != tex_sam_sam_val
+            ){
+                OHH_NOO("[OUT_OF_DATE_UNIFORM_VALUE]");
+            };;
+        #undef OHH_NOO
+        };;
+        if( gpudata -> sam_has <= 0 ){
+            
+            /** Do nothing. Just always re-fetch the       * **/
+            /** Uniform after uploading the texture data.  * **/
+            /** You just uploaded (512*512*4) bytes,       * **/
+            /** what is 4 more (uint32 sampler uniform) ?  * **/
+
+            /** DO_NOTHING_HERE **/
+
+        };;
+
+        /** For good measure before we make call. **/
+            err_num = AAC2020_GLEBIND.glGetError();
+        if( err_num != 0 ){ ERR("[NONE_OF_THE_ABOVE_2020]"); };
+
+
+        //:GET_SAMPLER_LOCATION:-----------------------------://
+
+            //:(sampler variable's memory address in shader)
+            if( strlen( gpudata -> pix_nam ) != ( 8 - 1 )){
+                aac2020_pixload_Halt("[BADPIXELARRAYNAME]");
+            };;
+            I32 tex_sam_sam_loc=(
+                AAC2020_GLEBIND.glGetUniformLocation(
+                    ( aac2020_graquad.data.POG_IID ) 
+                ,   ( gpudata -> pix_nam           )
+                ));;
+
+                err_num = AAC2020_GLEBIND.glGetError( );
+            if( err_num != 0 ){ ERR("[GET_SAMPLER_LOCATION]");};
+
+                       /** tex_sam.sam_loc **/
+            if( gpudata ->         sam_loc != tex_sam_sam_loc ){
+                gpudata ->         sam_loc  = tex_sam_sam_loc ;
+                       /** tex_sam.sam_loc **/
+
+                O_K( "[Local_Update_But_Not_Persisted]:sam_loc]" );
+
+            };;
+        
+        //:-----------------------------:GET_SAMPLER_LOCATION://
+        //:PUT_SAMPLER_VALUE:--------------------------------:// 
+
+            /** ******************************************** **/
+            /** LOCAL: gpudata object updated.               **/
+            /**   GPU: value updated on GPU.                 **/
+            /**  SYNC: value updated in PIXNAME.D._ ( CPU )  **/
+            /** ******************************************** **/
+
+            
+            /** #_tex_lot_ALWAYS_EQUALS_sam_val_# **/
+            gpudata ->                  sam_val =(
+                             gpudata -> tex_lot   );;
+            /** #_sam_val_ALWAYS_EQUALS_tex_lot_# **/
+
+            O_K( "[sam_val[YES:LOCAL::::NOT:GPU::::NOT:SYNC]" );
+            AAC2020_GLEBIND.glUniform1i(
+                        /** tex_sam.sam_loc **/
+                gpudata ->          sam_loc
+            ,   gpudata ->          sam_val
+                        /** tex_sam.sam_val **/
+            );;
+            err_num = AAC2020_GLEBIND.glGetError( );
+            if( err_num != 0 ){ ERR("[PUT_SAMPLER_VALUE]");};
+            O_K("[sam_val[YES:LOCAL::::YES:GPU::::NOT:SYNC]" );
+
+        //:--------------------------------:PUT_SAMPLER_VALUE://
+        //:GET_SAMPLER_VALUE:--------------------------------://
+
+            /** Verifying setting the uniform value was   **/
+            /** Successful by pulling value down from GPU **/
+
+            I32 tex_sam_sam_val=( 0 - 4242 /**TRAP_VALUE**/ );
+
+            AAC2020_GLEBIND.glGetUniformiv(
+                   (aac2020_graquad.data.POG_IID) 
+                ,    gpudata ->          sam_loc
+                ,  &(            tex_sam_sam_val )
+            );;
+            err_num = AAC2020_GLEBIND.glGetError( );
+            if( err_num != 0 ){ ERR("[GET_SAMPLER_VALUE]");};
+
+            if( gpudata ->         sam_val  //:What_You:PUT
+                        != tex_sam_sam_val  //:What_You:GOT
+            ){
+                ERR("[VALUE_PUT_ON_GPU_DID_NOT_STICK]");
+            };;
+
+                       /** tex_sam.sam_val **/
+            if( gpudata ->         sam_val <= 0 ){
+                ERR("[FETCHED:NEG_OR_ZERO_SAMPLER_VALUE]");
+            };;
+
+        //:--------------------------------:GET_SAMPLER_VALUE://
+
+        AAC2020_VITAL_TODO( "[Update_Caller_With_Revised:gpudata]" );
+
+    }
+
+#undef  U32
+#undef  I32
+#undef  ERR
+#undef  O_K
+//:UPLOAD_TEXTURE:===========================================://
+
+    void
+    AAC2020_PIXLOAD_UploadTexture( 
+        struct AAC2020_GPUDATA* gpudata
+    )
+    {
+
+        AAC2020_VITAL_TODO("[IIA_METHOD_SHOULD_TAKE_POINTER]");
+
+        aac2020_gpudata_IIA_UploadTexture( (*gpudata) );
+
+    }
+
+//:===========================================:UPLOAD_TEXTURE://
+//:TEST_PATTERN:=============================================://
+#define U08  uint8_t /** GCC: <stdint.h> **/
+#define U32 uint32_t /** GCC: <stdint.h> **/
+#define I32  int32_t /** GCC: <stdint.h> **/
+#define ERR aac2020_pixload_Halt
+#define O_K aac2020_pixload_Okay
+
+    void
+    AAC2020_PIXLOAD_TestPattern(struct AAC2020_GPUDATA* gpudata)
+    {
+        U32 err_num =( 407 /** TRAP **/ );
+            err_num = AAC2020_GLEBIND.glGetError();
+        if( err_num != 0 ){ ERR("[ERROR_ON_ENTRY:PLTP]"); };
+
+        /** PAINT5D_Init()calls()PIXLOAD_TestPattern    **/
+        /** PIXLOAD_TestPattern()calledby()PAINT5D_Init **/
+
+        /** ************************************************ ***
+        For list of gpudata you can use:
+        SEE:
+        1: AAC2020_PIXNAME for ACTUAL data.
+        2: AAC2020_GPUDATA for TEMPORARY PARAMTER struct
+        *** ************************************************ **/
+
+        /** Load A Test Pattern That Will Help Get **/
+        /** Visual Confirmation that GPUDATA was   **/
+        /** successfully sent to GPU TEXTURE.      **/
+
+        #define V ((void*)0)
+        #define H aac2020_pixload_Halt
+
+            /** P_L: PIXLOAD **/
+
+            if( V == gpudata            ){ H("[P_L:STRUCT_]");};
+            if( V == gpudata -> cpu_pix ){ H("[P_L:cpu_pix]");};
+
+            if( 512 != gpudata -> pix_wid
+            ||  512 != gpudata -> pix_hig
+            ){
+                H("[P_L:ALL_DATA_SHOULD_BE_512_x_512_PIXELS]");
+            };;
+
+        #undef  V
+        #undef  H
+
+        I32 num_pixels_put=( 0 ); //:For_Debugging.
+
+        /** #WHY_PIX_DEX_AND_COM_DEX# **/
+        I32 pix_dex; /** pixel     index #DEX_PIX# #dex_pix# **/ 
+        I32 com_dex; /** component index #DEX_COM# #dex_com# **/
+        I32 m_x =( gpudata -> pix_wid - 1 ); /** max:x **/
+        I32 m_y =( gpudata -> pix_hig - 1 ); /** max:y **/
+        for( I32 p_x = 0; p_x <= m_x ; p_x ++ ){
+        for( I32 p_y = 0; p_y <= m_y ; p_y ++ ){
+
+            pix_dex = p_x + ( gpudata -> pix_wid * p_y);
+            com_dex = ( pix_dex * 4 ); /** 4 == RGBA **/
+
+            I32 i_R = ( com_dex + 0 ); /** Index:rgba.RED   **/
+            I32 i_G = ( com_dex + 1 ); /** Index:rgba.GREEN **/
+            I32 i_B = ( com_dex + 2 ); /** Index:rgba.BLUE  **/
+            I32 i_A = ( com_dex + 3 ); /** Index:rgba.ALPHA **/
+
+            /** SOLID_RED_IS_GOOD_FOR_NOW_UNTIL_YOU_CAN **/
+            /** CONFIRM_SEEING_OF_SOLID_RED_IN_SHADER   **/
+
+            I32 v_R = 255; /** value: rgba.RED   **/
+            I32 v_G = 255; /** value: rgba.GREEN **/
+            I32 v_B = 255; /** value: rgba.BLUE  **/
+            I32 v_A = 255; /** value: rgba.ALPHA **/
+
+            I32 max_dex =(
+                gpudata -> pix_wid
+            *   gpudata -> pix_hig
+            *   4 /** 4 == RGBA **/
+            -   1
+            );;
+
+            if( i_R > max_dex  
+            ||  i_G > max_dex  
+            ||  i_B > max_dex  
+            ||  i_A > max_dex  
+            ){
+                aac2020_pixload_Halt("[OUT_OF_FUCKING_BOUNDS]");
+            };;
+
+            gpudata -> cpu_pix[ i_R ] = ( v_R );
+            gpudata -> cpu_pix[ i_G ] = ( v_G );
+            gpudata -> cpu_pix[ i_B ] = ( v_B );
+            gpudata -> cpu_pix[ i_A ] = ( v_A );
+            num_pixels_put++;
+
+        };;};;
+
+        /** Hardcode test value for now **/
+        if( num_pixels_put != (512 * 512) ){ 
+        
+            int got = num_pixels_put ; /** GOTTEN   **/
+            int exp = ( 512 * 512   ); /** EXPECTED **/
+
+            printf("[num_pixels_put:got]:%d\n",got);
+            printf("[num_pixels_put:exp]:%d\n",exp);
+
+            ERR("[MUCHCOMPUTERNOCOUNT_NUMPIXPUTFAIL]");
+
+        };;
+
+        /** Upload Texture ............ **/
+        /** AKA: Persist Changes To GPU **/
+        /** AKA: Sync With GPU          **/
+
+        AAC2020_PIXLOAD_UploadTexture( gpudata );
+
+        /** FLAT_IS_BETTER_THAN_NESTED: Expect Caller Of This**/
+        /** function to call:                                **/
+        /** AAC2020_PIXLOAD_ReLoadTextureSamplerUniforms()   **/
+
+        
+    }
+
+#undef  U08
+#undef  U32
+#undef  I32
+#undef  ERR
+#undef  O_K
+//:=============================================:TEST_PATTERN://
+

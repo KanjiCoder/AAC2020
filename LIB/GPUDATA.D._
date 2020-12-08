@@ -5,6 +5,8 @@
 //#######: SEE[ DOC/WHY_NO_INSTANCES_IN_GPUDATA.TXT ] :#######//
 //[ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ]//
 
+    int AAC2020_GPUDATA_init_instance_all_call_count=( 0 );
+
     //: ---------------------------------------------------- ://
     //: CTRL+F HELP:                                         ://
     //:                                                      ://
@@ -22,6 +24,7 @@
 
 //:GPU_DATA_STRUCT:==========================================://
 #define U08 uint8_t /** GCC: <stdint.h> **/
+#define COC const char
                                        
     //:#GPUDATA_ONE_TO_ONE_MAPPING_DESIGN_NOTE#://
     struct AAC2020_GPUDATA{
@@ -30,7 +33,7 @@
         //:#ALL_DATA_IS_512X512_RGBA_UNSIGNED#://
         
         U08*  cpu_pix ; /** [ 512 * 512 * 4 ] **/               
-        char* pix_nam ; /** pix_nam[8]        **/
+        COC*  pix_nam ; /** pix_nam[8]        **/
 
         int   pix_wid ; /** Used With: GLEBIND.glTexImage2D **/
         int   pix_hig ; /** Used With: GLEBIND.glTexImage2D **/
@@ -41,12 +44,15 @@
         int   sam_loc ; //:USE[ uniformli( sam_loc , val_val ) ]
         int   sam_val ; //:USE[ uniformli( sam_loc , val_val ) ]
 
+        int   sam_has ; //:flagged as texture sampler existing?
+
         //:#_GPUDATA_FLAT_IS_BETTER_THAN_NESTED_#://
       
 
     }; //:struct://
 
 #undef  U08
+#undef  COC
 //:==========================================:GPU_DATA_STRUCT://
 
 /** ******************************************************** ***
