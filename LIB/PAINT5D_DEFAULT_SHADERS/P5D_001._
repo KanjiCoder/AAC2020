@@ -9,12 +9,14 @@
 //:AAC2020_PAINT5D_DEFAULT_001:==============================://
     const char* AAC2020_PAINT5D_DEFAULT_001=(
                     //|(( VER ))_____________________________|//
-                    "#version 330 core  \n ///////////////// \n"
+                    "#version 330 core                       \n"
+                    "precision highp usampler2D;             \n"
 
                     //|(( UNI ))_____________________________|//
                         //[:::::SHADERTOY__COMPATIBILITY:::::]//
                         "#define fragCoord gl_FragCoord      \n"
                         "uniform vec3 iResolution;           \n"
+                        "uniform usampler2D paint5d;         \n"
                                         
                     //|(( INN ))_____________________________|//
                     //:      fag_tec:FrAG_shader_TExture_Coord
@@ -80,13 +82,24 @@
     //| Draw_Tile_Or_Background_Gradient:____________________|//
     "   if( tile_value > uint(0) ){                          \n"
                         //|Set output pixel color:___________|//
-    "                   FragColor = vec4(                    \n"
-    "                      /**/0.0                           \n"
-    "                      ,   1.0 - u_v.x                   \n"
-    "                      ,   0.0                           \n"
-    "                      ,   1.0f                          \n"
-    "                   );;                                  \n"
-    "                                                        \n"
+                        //[USING_A_TEXEL_FETCH_OF_PAINT5D:___]//
+
+                "       #define    ARG_001 ( paint5d )       \n" 
+                "       ivec2      arg_002 = ivec2(   //     \n"
+                "       /**/       int( gfc.x - 0.5 ) //     \n"
+                "       ,          int( gfc.y - 0.5 ) //     \n"
+                "       );;                          ;//     \n"
+                "       int        arg_003 = int( 0 );//     \n"
+                "                                            \n"
+                "       FragColor = vec4(                    \n"
+                "           texelFetch(                      \n"
+                "           /**/ARG_001 // Texture_To_Sample \n"
+                "           ,   arg_002 // Texel_Coordinates \n"
+                "           ,   arg_003 // Level_Of_Detail   \n"
+                "           )                                \n"
+                "       );;                                  \n"
+                "       #undef     ARG_001                   \n"
+
     "   }else{                                               \n"
     "                                                        \n"
                         //|Set output pixel color:___________|//
