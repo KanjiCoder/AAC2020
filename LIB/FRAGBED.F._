@@ -591,9 +591,24 @@
 
             /** SEE[ DOC/WHY_FRAGBED_DEFAULT_COPY.TXT ] **/
 
-            AAC2020_FRAGBED_loaded_001_has=( 1 );
-            AAC2020_FRAGBED_loaded_001_ptr=COPY( 
-            AAC2020_FRAGBED_DEFAULT_001 );;
+            #if( AAC2020_INCLUDE_PAINT5D <= 0 )
+
+                AAC2020_FRAGBED_loaded_001_has=( 1 );
+                AAC2020_FRAGBED_loaded_001_ptr=COPY( 
+                AAC2020_FRAGBED_DEFAULT_001 );;
+
+            #endif
+            #if( AAC2020_INCLUDE_PAINT5D >= 1 )
+
+                /** #_PULL_GLSL_SHADER_DATA_FROM_FUTURE_# **/
+            
+                /** #_WHY_CANT_I_SEE_PAINT5D_IN_MY_EXE_#  **/
+
+                AAC2020_FRAGBED_loaded_001_has=( 1 );
+                AAC2020_FRAGBED_loaded_001_ptr=COPY( 
+                AAC2020_PAINT5D_DEFAULT_001 );;
+
+            #endif
 
             AAC2020_FRAGBED_loaded_002_has=( 2 );
             AAC2020_FRAGBED_loaded_002_ptr=COPY( 

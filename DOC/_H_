@@ -6,6 +6,32 @@
     
 *** ******************************************************** ***
 
+#_WHY_CANT_I_SEE_PAINT5D_IN_MY_EXE_#############################
+
+    If you don't see your PAINT5D GLSL code, remember that the       
+    prescense (spelling?) of "SHADER_001_PAINT5D.FRAG" 
+    will override the hard-coded default shader code
+    embedded in the ".text" segment of your executable
+    source code.
+
+    Or more plainly:
+
+    Instead of loading AAC2020_PAINT5D_DEFAULT_001 from EXE,
+    we load "SHADER_001_PAINT5D.FRAG" from disk if it is
+    present.
+
+    This allows users of our game to make mods to game
+    if they are [informed/knowledgeable] of GLSL code.
+
+#############################_WHY_CANT_I_SEE_PAINT5D_IN_MY_EXE_#
+#_PULL_GLSL_SHADER_DATA_FROM_FUTURE_############################
+
+        Because ALL DATA is declared before      
+        ALL FUNCTIONS, we can get away with      
+        referencing a piece of data from the     
+        future like this.   
+                     
+############################_PULL_GLSL_SHADER_DATA_FROM_FUTURE_#
 #_GPU_DATA_IS_A_TEMPORARY_HELPER_OBJECT_ONLY_###################
 
     Flat is better than nested. But sometimes we need to
