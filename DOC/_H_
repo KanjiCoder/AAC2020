@@ -6,6 +6,28 @@
     
 *** ******************************************************** ***
 
+
+
+#_SAM_PRECISION_BEFORE_SAM_VAR_#################################
+
+    //: Must declare precision before            
+    //: declaring any uniforms                   
+
+    precision highp usampler2D; //:<<<<<<<<<< 1st
+
+    uniform usampler2D paint5d; //:<<<<<<<<<< 2nd
+
+#################################_SAM_PRECISION_BEFORE_SAM_VAR_#
+#_KEEP_USAMPLER_HIGH_###########################################
+
+
+    //: Pretty sure sampler precision must       :// 
+    //: always be high. Otherwise we will corrupt:// 
+    //: our bit-packing patterns that are stored :// 
+    //: in each pixel.                           :// 
+    ;//:- - - - - - - -:// 
+
+###########################################_KEEP_USAMPLER_HIGH_#
 #_WHY_CANT_I_SEE_PAINT5D_IN_MY_EXE_#############################
 
     If you don't see your PAINT5D GLSL code, remember that the       
