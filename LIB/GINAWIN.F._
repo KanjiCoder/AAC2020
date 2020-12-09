@@ -29,277 +29,369 @@
     } 
 
 //:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+//:ABOUT_TO_ERROR_MESSAGE:===================================://
 
-void
-aac2020_ginawin_OK( const char* ok_message ){
+    void
+    aac2020_ginawin_AboutToErrorMessage(
 
-    if( AAC2020_GINAWIN_show_okay_message ){
+        const char* atem /** about_to_error_message **/
 
-        printf(
-            "[AAC2020_GINAWIN:OK]:%s\n"
-        ,  ok_message 
-        );;
-
-    };;
-} //[aac2020_ginawin_OK]//
-
-void
-aac2020_ginawin_AssertCorrectSizesOfTypes(){
-
-    int size_errors=0;
-    int wrong_sign =0;
-
-    
-    if(sizeof(   BOOL_i32_4B) != 4 ){
-        printf("[BOOL_i32_4B]");
-        size_errors++;
-    };;
-    if(sizeof(  DWORD_u32_4B) != 4 ){
-        printf("[DWORD_u32_4B]");
-        size_errors++;
-    };;
-    if(sizeof(   UINT_u32_4B) != 4 ){
-        printf("[UINT_u32_4B]");
-        size_errors++;
-    };;
-    if(sizeof(   WORD_u16_2B) != 2 ){
-        printf("[WORD_u16_2B]");
-        size_errors++;
-    };;
-    //:I recall windows returning negative
-    //:characters to flag status codes or
-    //:something. So pretty sure CHAR
-    //:is a signed type.
-    if(sizeof(   CHAR_b08_1B) != 1 ){
-        printf("[CHAR_b08_1B]");
-        size_errors++;
-    };;
+    )
     {
-        //:assume if this works, c_LPCSTR_b08_1B
-        //:is correctly defined.
-        //:"i08_1B" refers to size of 
-        //:POINTED TO type, not the size of
-        //:the pointer.
-        const char pointed_to_value = 'e';
-        c_LPCSTR_b08_1B pointer = &(
-            pointed_to_value
-        );;
-        if( *pointer == 'e' ){
-            //:okay
-        }else{
-            printf("[WTF]");
-        };;
+        /** Do NOT make silencable. Since these messages **/
+        /** Are always shown before crashing system.     **/
+
+        printf("[AAC2020_GINAWIN:ATEM]:%s\n" , atem );;
+        fflush( stdout );
     }
 
-    //////////////////////////////////////////////
-    ;{
-         BOOL_i32_4B v =(
-        (BOOL_i32_4B)(-1) );;
-        if( v >= 0 ){ 
-            wrong_sign++;
-            printf("[WS:BOOL_i32_4B]");
-        }
-    }{
-         DWORD_u32_4B v =(
-        (DWORD_u32_4B)(-1) );;
-        if( v <= 0 ){ 
-            wrong_sign++; 
-            printf("[WS:DWORD_u32_4B]");
-        }
-    }{
-         UINT_u32_4B v =(
-        (UINT_u32_4B)(-1) );;
-        if( v <= 0 ){ 
-            wrong_sign++; 
-            printf("[WS:UINT_u32_4B]");
-        }
-    }{
-         WORD_u16_2B v =(
-        (WORD_u16_2B)(-1) );;
-        if( v <= 0 ){ 
-            wrong_sign++; 
-            printf("[WS:WORD_u16_2B]");
-        }
-    }{
-         CHAR_b08_1B v =(
-        (CHAR_b08_1B)(-1) );;
-        if( v > 0 ){ 
-            //:Turns out that character type
-            //:signedness is compiler dependent,
-            //:so... Dont test this.
-            wrong_sign++; 
-            printf("[WS:CHAR_b08_1B]");
-        }
-    };;
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
-    //////////////////////////////////////////////
+    void
+    aac2020_ginawin_AboutToErrorMessage_dec(
 
-    if(wrong_sign  > 0){
-        printf(
-            "[TypesOfWrongSign]:%d\n"
-        ,   wrong_sign
-        );;
-    };;
-    if(size_errors > 0){
-        printf("[AAC2020_GINAWIN:AssertFailed]\n");
-        printf(
-            "[TypesNotCorrectBitWidth]:%d\n"
-        ,   size_errors
-        );;
-    };;
-    if( size_errors > 0 || wrong_sign > 0 ){
-        printf("[AAC2020_GINAWIN:AssertFailed]\n");
+        const char* fmts /** format_string ........ **/
+    ,   int          dec /** decimal value to print **/
+
+    )
+    {
+        /** Do NOT make silencable. Since these messages **/
+        /** Are always shown before crashing system.     **/
+
+        printf("[AAC2020_GINAWIN:ATEM_DEC]:MESSAGE_BELOW]:\n");
+        printf( fmts , dec );
         fflush( stdout );
-        exit( 666 );
-    };;
+    }
 
-} //[aac2020_ginawin_AssertCorrectSizesOfTypes]//
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    void
+    aac2020_ginawin_AboutToErrorMessage_str(
+
+        const char* fmts /** format_string ........ **/
+    ,   const char*  str /** string value to print  **/
+
+    )
+    {
+        /** Do NOT make silencable. Since these messages **/
+        /** Are always shown before crashing system.     **/
+
+        printf("[AAC2020_GINAWIN:ATEM_STR]:MESSAGE_BELOW]:\n");
+        printf( fmts , str );
+        fflush( stdout );
+    }
+
+//:===================================:ABOUT_TO_ERROR_MESSAGE://
+//:ALERT_MESSAGE:============================================://
+#define ATEM_STR aac2020_ginawin_AboutToErrorMessage_str
+#define HALT     aac2020_ginawin_Halt
+
+    int 
+    aac2020_ginawin_Alert( 
+        const char* msg 
+    ){
+
+        ATEM_STR( "[WhatWentWrong]:%s\n", msg );
+
+        aac2020_ginawin_FUNCTION_POINTERS_struct*
+        FP=&(aac2020_ginawin_function_pointers);
+
+        if(NULL==FP->USER32.MessageBoxW){
+            const char* msg = "[ForgotToInitMsgBoxW]";
+            HALT( msg  );
+        };;
+
+        struct aac2020_ginawin_data_USER32*         
+        U32D = &(  FP->USER32.DATA );
+
+        int msgboxID =(
+        FP->USER32.MessageBoxW(
+            NULL
+        ,
+            L"You forgot to do something in code.\n"
+            L"strcat is a lot of work to make a  \n"
+            L"custom message. So check the       \n"
+            L"console for what went wrong.       \n"
+        ,
+            L"[!!CHECK_THE_CONSOLE!!]"
+        ,
+            (
+                U32D -> mb_iconexclamation | 
+                U32D -> mb_ok              |
+            0)
+        ));;
+
+        return msgboxID;    
+    } 
+
+#undef ATEM_STR
+#undef     HALT
+//:============================================:ALERT_MESSAGE://
+//:OKAY_MESSAGE:=============================================://
+
+    void
+    aac2020_ginawin_Okay( const char* ok_message ){
+
+        if( AAC2020_SILENCE.GINAWIN >= 1 ){
+
+            /** DO NOTHING. Non errors Silenced. **/
+
+        }else{
+
+            printf( "[AAC2020_GINAWIN:OK]:%s\n" ,  ok_message);
+            fflush(stdout);
+
+        };;
+    }  
+
+//:=============================================:OKAY_MESSAGE://
+//:ASSERT_CORRECT_SIZES_OF_TYPES:============================://
+#define ATEM     aac2020_ginawin_AboutToErrorMessage
+#define ATEM_DEC aac2020_ginawin_AboutToErrorMessage_dec
+#define HALT     aac2020_ginawin_Halt
+
+    void
+    aac2020_ginawin_AssertCorrectSizesOfTypes(){
+
+        int size_errors = 0; //:Number_Of_Size_Errors
+        int wrong_sign  = 0; //:Number_Of_Wrong_Sign_Errors
+
+        //:size_errors?:-------------------------------------://
+        
+            if(sizeof(   BOOL_i32_4B) != 4 ){
+                ATEM("[BOOL_i32_4B]");
+                size_errors++;
+            };;
+            if(sizeof(  DWORD_u32_4B) != 4 ){
+                ATEM("[DWORD_u32_4B]");
+                size_errors++;
+            };;
+            if(sizeof(   UINT_u32_4B) != 4 ){
+                ATEM("[UINT_u32_4B]");
+                size_errors++;
+            };;
+            if(sizeof(   WORD_u16_2B) != 2 ){
+                ATEM("[WORD_u16_2B]");
+                size_errors++;
+            };;
+            //:I recall windows returning negative
+            //:characters to flag status codes or
+            //:something. So pretty sure CHAR
+            //:is a signed type.
+            if(sizeof(   CHAR_b08_1B) != 1 ){
+                ATEM("[CHAR_b08_1B]");
+                size_errors++;
+            };;
+            {
+                //:assume if this works, c_LPCSTR_b08_1B
+                //:is correctly defined.
+                //:"i08_1B" refers to size of 
+                //:POINTED TO type, not the size of
+                //:the pointer.
+                const char pointed_to_value = 'e';
+                c_LPCSTR_b08_1B pointer = &(
+                    pointed_to_value
+                );;
+                if( *pointer == 'e' ){
+                    //:okay
+                }else{
+                    ATEM("[WTF:2020_12_09:0614PM]");
+                };;
+            }
+        
+        //:--------------------------------------:size_errors://
+        //:wrong_sign?:--------------------------------------://
+
+            ;{
+                 BOOL_i32_4B v =(
+                (BOOL_i32_4B)(-1) );;
+                if( v >= 0 ){ 
+                    wrong_sign++;
+                    ATEM("[WS:BOOL_i32_4B]");
+                }
+            }{
+                 DWORD_u32_4B v =(
+                (DWORD_u32_4B)(-1) );;
+                if( v <= 0 ){ 
+                    wrong_sign++; 
+                    ATEM("[WS:DWORD_u32_4B]");
+                }
+            }{
+                 UINT_u32_4B v =(
+                (UINT_u32_4B)(-1) );;
+                if( v <= 0 ){ 
+                    wrong_sign++; 
+                    ATEM("[WS:UINT_u32_4B]");
+                }
+            }{
+                 WORD_u16_2B v =(
+                (WORD_u16_2B)(-1) );;
+                if( v <= 0 ){ 
+                    wrong_sign++; 
+                    ATEM("[WS:WORD_u16_2B]");
+                }
+            }{
+                 CHAR_b08_1B v =(
+                (CHAR_b08_1B)(-1) );;
+                if( v > 0 ){ 
+                    //:Turns out that character type
+                    //:signedness is compiler dependent,
+                    //:so... Dont test this.
+                    wrong_sign++; 
+                    ATEM("[WS:CHAR_b08_1B]");
+                }
+            };;
+
+        //:--------------------------------------:wrong_sign?://
+        //:should_we_crash?:---------------------------------://
+
+            if(wrong_sign  > 0){
+                ATEM_DEC(
+                    "[TypesOfWrongSign]:%d\n"
+                ,   wrong_sign
+                );;
+            };;
+            if(size_errors > 0){
+                ATEM_DEC(
+                    "[TypesNotCorrectBitWidth]:%d\n"
+                ,   size_errors
+                );;
+            };;
+            if( size_errors > 0 || wrong_sign > 0 ){
+                HALT("[AAC2020_GINAWIN:AssertFailed]\n");
+            };;
+
+        //:---------------------------------:should_we_crash?://
+    }  
  
+#undef ATEM
+#undef ATEM_DEC
+#undef HALT
+//:============================:ASSERT_CORRECT_SIZES_OF_TYPES://
+//:ASSERT_RESTRICTED_NON_NULL:===============================://
+#define ATEM     aac2020_ginawin_AboutToErrorMessage
+#define HALT     aac2020_ginawin_Halt
 
-void
-aac2020_ginawin_AssertDifferentAndNonZero(
-/**/void* ptr_01
-,   void* ptr_02
-){
-    int has_error = 0;
+    void
+    aac2020_ginawin_AssertDifferentAndNonZero(
+    /**/void* ptr_01
+    ,   void* ptr_02
+    ){
+        int has_error = 0;
 
-    if(NULL==ptr_01){
-        has_error++;
-        printf("[ptr_01:NULL]");
-    };;
-    if(NULL==ptr_02){
-        has_error++;
-        printf("[ptr_02:NULL]");
-    };;
-    if( 0 != has_error ){
-        printf(
-            "[FAIL:AssertDifferentAndNonZero]\n"
+        //:collect_errors:-----------------------------------://
+
+            if(NULL==ptr_01){
+                has_error++;
+                ATEM("[ptr_01:NULL]");
+            };;
+            if(NULL==ptr_02){
+                has_error++;
+                ATEM("[ptr_02:NULL]");
+            };;
+            if( ptr_01 == ptr_02 ){
+                has_error++;
+                ATEM("[FAIL:ptr_01==ptr_02]");
+            };;
+        //:-----------------------------------:collect_errors://
+        //:THROW_ERROR:--------------------------------------://
+
+            if( 0 != has_error ){
+                HALT( "[FAIL:AssertDifferentAndNonZero]\n" );
+            };;
+
+        //:--------------------------------------:THROW_ERROR://
+
+    }  
+
+#undef ATEM
+#undef HALT
+//:===============================:ASSERT_RESTRICTED_NON_NULL://
+//:LOAD_LIBRARY:=============================================://
+#define ATEM      aac2020_ginawin_AboutToErrorMessage
+#define HALT      aac2020_ginawin_Halt
+#define ATEM_STR  aac2020_ginawin_AboutToErrorMessage_str
+
+    v_HINSTANCE
+    aac2020_ginawin_LoadLibrary( 
+        const char* dll_name //:Example: "user32.dll"
+    ){
+        v_HINSTANCE dll_handle =(
+            PEB2020_LoadLibraryA( dll_name )
         );;
-        fflush( stdout );
-        exit( 666 );
-    };;
+        if(NULL==dll_handle){
+            ATEM(    "[aac2020_ginawin:Failed_To_Load_DLL]");
+            ATEM_STR("[dll_name]:%s", dll_name );
+            HALT("[FUCK_IAM_OUT_OF_HERE:2020_12_09:0628PM]");
+        };;
+        
+        return( dll_handle );
+    } 
 
-    if( ptr_01 == ptr_02 ){
-        has_error++;
-        printf("[FAIL:ptr_01==ptr_02]");
-        fflush( stdout );
-        exit( 666 );
-    };;
+#undef  ATEM
+#undef  HALT
+#undef  ATEM_STR
+//:=============================================:LOAD_LIBRARY://
+//:GET_PROC_ADDRESS:=========================================://
+#define HALT aac2020_ginawin_Halt
 
-} //[aac2020_ginawin_AssertDifferentAndNonZero]//
+    //:GPA=="GetProcAddress"
+    AAC2020_GINAWIN_FUNC
+    aac2020_ginawin_GPA(
+    /**/c_LPCSTR_b08_1B                 function_name
+    ,   v_HMODULE   dll_containing_function
+    ){
+        if( ((void*)0) == dll_containing_function ){
+            HALT("[null:dll_containing_function]");
+        };;
 
-v_HINSTANCE
-aac2020_ginawin_LoadLibrary( 
-    const char* dll_name //:Example: "user32.dll"
-){
-    v_HINSTANCE dll_handle =(
-        PEB2020_LoadLibraryA( dll_name )
-    );;
-    if(NULL==dll_handle){
-        printf("[aac2020_ginawin:Failed_To_Load_DLL]");
-        printf("[dll_name]:%s", dll_name );
-        fflush(stdout);
-        exit(666);
-    };;
-    
-    return( dll_handle );
-} //[aac2020_ginawin_LoadLibrary]//
+        f_FARPROC function_pointer =(f_FARPROC)(
+            PEB2020_GetProcAddress(
+            /**/dll_containing_function
+            ,   function_name
+            )
+        );;
 
-//:GPA=="GetProcAddress"
-AAC2020_GINAWIN_FUNC
-aac2020_ginawin_GPA(
-/**/c_LPCSTR_b08_1B                 function_name
-,   v_HMODULE   dll_containing_function
-){
-    if(NULL==dll_containing_function){
-        printf("[null:dll_containing_function]");
-        fflush( stdout );
-        exit( 666 );
-    };;
+        if( ((void*)0) ==function_pointer){
+            HALT("[aac2020_ginawin:null:fn_ptr]");
+        };;
 
-    f_FARPROC function_pointer =(f_FARPROC)(
-        PEB2020_GetProcAddress(
-        /**/dll_containing_function
-        ,   function_name
-        )
-    );;
+        return( (AAC2020_GINAWIN_FUNC)function_pointer );
+    }  
 
-    if(NULL==function_pointer){
-        printf("[aac2020_ginawin:null:fn_ptr]");
-        fflush( stdout );
-        exit( 666 );
-    };;
+#undef  HALT
+//:=========================================:GET_PROC_ADDRESS://
+//:NULFUN:===================================================://
+#define ATEM      aac2020_ginawin_AboutToErrorMessage
+#define ATEM_STR  aac2020_ginawin_AboutToErrorMessage_str
+#define HALT      aac2020_ginawin_Halt
 
-    return( (AAC2020_GINAWIN_FUNC)function_pointer );
-} //[aac2020_ginawin_GPA]//
+    void
+    aac2020_ginawin_NULFUN( 
+        const char* name_of_null_function
+    ){
+        /** aac2020_ginawin_NULFUN MEANS:   **/
+        /** NULFUN:NullFunctionPointerError **/
 
+        ATEM    (  "[AAC2020_GINAWIN :Null_Func_Ptr_Found]\n" );
+        ATEM_STR( "Null:%s\n", name_of_null_function );
+        HALT    ( "[FUNCTION_POINTER_SEEMS_TO_BE_NULL]");
 
-//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+    } 
 
-void
-aac2020_ginawin_NULFUN( 
-    const char* name_of_null_function
-){
-    /** aac2020_ginawin_NULFUN MEANS:   **/
-    /** NULFUN:NullFunctionPointerError **/
-
-    printf(
-        "[AAC2020_GINAWIN :Null_Func_Pointer_Found]\n"
-    );;
-    printf( "Null:%s\n", name_of_null_function );
-    fflush(stdout);
-    exit( 666 );
-} 
-
-//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
-
-int 
-aac2020_ginawin_Alert( 
-    const char* msg 
-){
-
-    printf(
-        "[WhatWentWrong]:%s\n", msg
-    );;fflush(stdout);
-
-    aac2020_ginawin_FUNCTION_POINTERS_struct*
-    FP=&(aac2020_ginawin_function_pointers);
-
-    if(NULL==FP->USER32.MessageBoxW){
-        const char* msg = "[ForgotToInitMsgBoxW]";
-        aac2020_ginawin_Halt( msg  );
-    };;
-
-    struct aac2020_ginawin_data_USER32*         
-    U32D = &(                             
-        FP->USER32.DATA                   
-    );;
-
-    int msgboxID =(
-    FP->USER32.MessageBoxW(
-        NULL
-    ,
-        L"You forgot to do something in code.\n"
-        L"strcat is a lot of work to make a  \n"
-        L"custom message. So check the       \n"
-        L"console for what went wrong.       \n"
-    ,
-        L"[!!CHECK_THE_CONSOLE!!]"
-    ,
-        (
-            U32D -> mb_iconexclamation | 
-            U32D -> mb_ok              |
-        0)
-    ));;
-
-    return msgboxID;    
-} 
-
-//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#undef ATEM    
+#undef ATEM_STR
+#undef HALT    
+//:===================================================:NULFUN://
 
 
-//| Section:WINDOW_CODE:start -----------------|//
-//|WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW|//
+
+//:WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW://
+//:                                                          ://
+//:                  W:WINDOW_CODE:(BELOW)                   ://
+//:                                                          ://
+//:WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW://
+//:WINDOW_CODE:==============================================://
 
 //:WINDOW_MESSAGE_HANDLER_WNDPROC
 //:WIN:WINDOW
@@ -574,7 +666,7 @@ aac2020_ginawin_WIN_MSG_HAN_WND_POC(
         /** ************************************************ **/
 
         #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 ) //:##########://
-        #define OK aac2020_ginawin_OK
+        #define OK aac2020_ginawin_Okay
         OK("[OK:WM_CLOSE:About_To_DestroyWindow]");
         #undef  OK 
         #endif //:###########################################://
@@ -594,7 +686,7 @@ aac2020_ginawin_WIN_MSG_HAN_WND_POC(
         /** ************************************************ **/
 
         #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 ) //:##########://
-        #define OK aac2020_ginawin_OK
+        #define OK aac2020_ginawin_Okay
         OK("[OK:WM_DESTROY:Handling_Destroy_Window_Message]");
         #undef  OK 
         #endif //:###########################################://
@@ -1373,9 +1465,13 @@ aac2020_ginawin_ChangeWinDimsIfNotOkay(){
     return( window_size_changed );
 } //[aac2020_ginawin_ChangeWinDimsIfNotOkay]//
 
-//|WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW|//
-//| Section:WINDOW_CODE:end -------------------|//
-//- 〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓 -//
+//:==============================================:WINDOW_CODE://
+//:WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW://
+//:                                                          ://
+//:                  W:WINDOW_CODE:(ABOVE)                   ://
+//:                                                          ://
+//:WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW://
+
 
 void  aac2020_ginawin_FUNCTION_POINTERS_init( void ){
 
@@ -1974,7 +2070,7 @@ aac2020_ginawin_FreeCustomDataIfExists(){       //|MC|//
                                   //|  |////|MC|//
     //|________________________________|////|MC|//
                                           //|MC|//
-    aac2020_ginawin_OK("[CustomDataFreed]");    //|MC|//
+    aac2020_ginawin_Okay("[CustomDataFreed]");    //|MC|//
                                           //|MC|//
 } //[aac2020_ginawin_FreeCustomDataIfExists]//  //|MC|//
                                           //|MC|//
@@ -2065,7 +2161,7 @@ aac2020_ginawin_WaitUntilWindowClosed(){        //|MC|//
                                           //|MC|//
     }else{                                //|MC|//
                                           //|MC|//
-        aac2020_ginawin_OK(                     //|MC|//
+        aac2020_ginawin_Okay(                     //|MC|//
             "[ThreadedWindowClosed]"      //|MC|//
         );;                               //|MC|//
                                           //|MC|//
@@ -2098,7 +2194,7 @@ void AAC2020_GINAWIN_Wait(){
     if( AAC2020_GINAWIN.type_of_threading   
     == AAC2020_GINAWIN__MULTI_THREADED
     ){
-        aac2020_ginawin_OK(
+        aac2020_ginawin_Okay(
             "[OK:About_To_Wait_In_MultiThreaded_Mode]"
         );;
                                           
@@ -2127,7 +2223,7 @@ aac2020_ginawin_WaitHereUntilWindowExists(){
 
         hackish_timer++;
         if( hackish_timer > 1024*1024*32 ){
-            aac2020_ginawin_OK(
+            aac2020_ginawin_Okay(
                 "[Waiting_On_Window_Creation]"
             );;
             fflush( stdout );
@@ -2139,7 +2235,7 @@ aac2020_ginawin_WaitHereUntilWindowExists(){
         aac2020_ginawin_Halt("[YOUSAYYOUEXISTBUTYOUDONT]");
     };;
 
-    aac2020_ginawin_OK(
+    aac2020_ginawin_Okay(
         "[DONE_WAITING_ON_WINDOW_CREATION]"
     );;fflush(stdout);
 
