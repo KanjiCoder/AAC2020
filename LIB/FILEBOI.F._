@@ -1,6 +1,15 @@
 //:----------------------------------------------------------://
 //: FILEBOI: Manages File System Access                      ://
 //:----------------------------------------------------------://
+//:FILE_MACROS:TOP:##########################################://
+
+    /** Don't get carried Away Here.        **/
+    /** 3 uncommon macros max.              **/
+    /** 7   common macros max (U32,I32,ETC) **/
+
+    #define I_S aac2020_fileboi_Info_str
+
+//:##########################################:FILE_MACROS:TOP://
 //:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=====================://
     void 
     aac2020_fileboi_Halt( const char* msg_err )
@@ -10,6 +19,29 @@
         exit( 489 /** 69 + 420 == 489 , NICE! **/ );
     }
 //:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+//:INFO_PRINT_STRING:========================================://
+
+    void
+    aac2020_fileboi_Info_str( 
+        const char* msg_fmt /** Format String **/
+    ,   const char* msg_inf /** Information String **/
+    )
+    {
+        if( AAC2020_SILENCE.FILEBOI >= 1 ){
+
+            /** Do nothing. Silenced. **/
+
+        }else{
+
+            printf("[FILEBOI_INFO_STR_BELOW]:\n");
+            printf( msg_fmt , msg_inf );
+            fflush(stdout);
+
+        };;
+
+    }
+
+//:========================================:INFO_PRINT_STRING://
 //:PRIVATE:RECURIVE_MAKE_DIRECTORY:==========================://
 
     int
@@ -49,7 +81,16 @@
         && 
             errno != EEXIST
         ){
-            printf("[FUCKING_FILES_MAN]:(((%s)))\n", path); 
+            if( AAC2020_SILENCE.FILEBOI <= 0 ){
+
+                /** REVISIT[ DATE[ 2020_12_09 ] ] ********** **/
+                /** Is this an error? Why the fuck did I     **/
+                /** Write this? I have no clue what this     **/
+                /** should mean? Is it info or actually      **/
+                /** an error that should fail fast?          **/
+                I_S("[FUCKING_FILES_MAN]:(((%s)))\n", path); 
+
+            };;
         };;
     }
 
@@ -64,8 +105,7 @@
         const char* file_name /** EX:frag_shader_nam **/
     )
     {
-        printf("[FILEBOI_TouchFile]:%s\n"
-        , file_name );; fflush(stdout);;
+        I_S("[FILEBOI_TouchFile]:%s\n" , file_name );;  
 
         //:GET_STR_LEN_AND_VALIDATE:-------------------------://
         #define NILIDEX ( 1 ) /** 1 null terminator **/
@@ -162,9 +202,8 @@
 
                     //:RECURSIVE_MAKE_DIR:4REAL:. . . . . . .://
 
-                        printf("[MAKING_DIRECTORY:dir_sus]:%s\n"
-                                                 ,dir_sus);;
-                        fflush(stdout);
+                        I_S("[MAKING_DIRECTORY:dir_sus]:%s\n"
+                                              ,dir_sus);;
 
                         /** dir_sus : DIRectory_SUb_String **/
                         aac2020_fileboi_mkdir( dir_sus );
@@ -193,4 +232,10 @@
 #undef  SMF /** www.youtube.com/watch?v=_bSEfx6D8mA **/
 #undef  U32
 //:===============================================:TOUCH_FILE://
+//:FILE_MACROS:BOT:##########################################://
+ 
+    /** REDEFINE, THEN UNDEF. For Redundancy. **/
+    #define I_S aac2020_fileboi_Info_str
+    #undef  I_S 
 
+//:##########################################:FILE_MACROS:BOT://
