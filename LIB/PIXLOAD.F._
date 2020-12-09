@@ -44,7 +44,7 @@
         const char* pix_nam /** pix_nam == sam_nam **/
     )
     {
-        I32 u32_loc=(
+        I32 u32_loc=( /** #NEGONE_IF_NOT_IN_SHADER# **/
             AAC2020_GLEBIND.glGetUniformLocation(
                 ( aac2020_graquad.data.POG_IID )
             ,   ( pix_nam )
@@ -59,6 +59,19 @@
         if( u32_loc >= 0 ){ sam_has  = 1 ; };
         if( u32_loc <  0 ){ sam_has  = 0 ; };
         return(             sam_has        );
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    void
+    AAC2020_PIXLOAD_sam_has(
+        struct AAC2020_GPUDATA * gpudata
+    )
+    {
+        I32 sam_has = AAC2020_PIXLOAD_HasSampler(
+                             gpudata -> pix_nam   );;
+
+        gpudata -> sam_has = ( sam_has );
     }
 
 #undef  U32
@@ -85,6 +98,18 @@
 
     )
     {
+
+        /** Hackish hardcoded debug. Must have all     **/
+        /** GPUDATA.pix_nam values in project in order **/
+        /** to not report error when there is none.    **/
+        if( strcmp(gpudata->pix_nam , "paint5d") != 0   
+        &&  strcmp(gpudata->pix_nam , "todo_02") != 0 
+        &&  strcmp(gpudata->pix_nam , "todo_03") != 0 
+        ){
+            aac2020_pixload_Halt("[2020_12_09:WHATEVER]");
+        };;
+
+
         /** ************************************************ ***
         [ AAC2020_PIXLOAD_PushSampler ]<--YOU_ARE_IN_HERE
         AKA[ AAC2020_PIXLOAD_ReLoadTextureSamplerUniforms ]  
@@ -262,9 +287,7 @@
     )
     {
 
-        AAC2020_VITAL_TODO("[IIA_METHOD_SHOULD_TAKE_POINTER]");
-
-        aac2020_gpudata_IIA_UploadTexture( (*gpudata) );
+        aac2020_gpudata_IIA_UploadTexture( gpudata );
 
     }
 
@@ -316,6 +339,8 @@
 
         I32 num_pixels_put=( 0 ); //:For_Debugging.
 
+        AAC2020_VITAL_TODO("[FILL_WITH_CHECKERS_AND_USE_HEX_CODES_THAT_CAN_BE_FOUND_IN_SOURCE_CODE_WITH_CTRL_F]");
+
         /** #WHY_PIX_DEX_AND_COM_DEX# **/
         I32 pix_dex; /** pixel     index #DEX_PIX# #dex_pix# **/ 
         I32 com_dex; /** component index #DEX_COM# #dex_com# **/
@@ -333,12 +358,12 @@
             I32 i_A = ( com_dex + 3 ); /** Index:rgba.ALPHA **/
 
             /** SOLID_RED_IS_GOOD_FOR_NOW_UNTIL_YOU_CAN **/
-            /** CONFIRM_SEEING_OF_SOLID_RED_IN_SHADER   **/
+            /** CONFIRM_SEEING_OF_SOLID_RED_IN_SHADER   **/  
 
-            I32 v_R = 255; /** value: rgba.RED   **/
-            I32 v_G = 255; /** value: rgba.GREEN **/
-            I32 v_B = 255; /** value: rgba.BLUE  **/
-            I32 v_A = 255; /** value: rgba.ALPHA **/
+            U08 v_R = 255; /** value: rgba.RED   **/
+            U08 v_G = 255; /** value: rgba.GREEN **/
+            U08 v_B = 255; /** value: rgba.BLUE  **/
+            U08 v_A = 255; /** value: rgba.ALPHA **/
 
             I32 max_dex =(
                 gpudata -> pix_wid
@@ -380,12 +405,13 @@
         /** AKA: Persist Changes To GPU **/
         /** AKA: Sync With GPU          **/
 
-        AAC2020_PIXLOAD_UploadTexture( gpudata );
+        /** CALLER_OF_FUNCTION_SHOULD_CALL_THIS:      **/
+        /** AAC2020_PIXLOAD_UploadTexture( gpudata ); **/
 
         /** FLAT_IS_BETTER_THAN_NESTED: Expect Caller Of This**/
         /** function to call:                                **/
         /** AAC2020_PIXLOAD_ReLoadTextureSamplerUniforms()   **/
-
+        /** AKA: aac2020_pixload_PushSampler()               **/
         
     }
 

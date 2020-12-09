@@ -39,23 +39,8 @@
 //:=======================================:INCLUDE_DIRECTIVES://
 //:LIBRARY_CHAIN:============================================://
 
-    /** Library chain is used as a hackish way to debug      **/
-    /** code by divide and conquer. Any                      **/
-    /** AAC2020_MAC_LIBCHAN_CUR value between [ 0 -to- MAX ] **/
-    /** (inclusive range) should yeild a working             **/
-    /** executable.                                          **/
-    /**                                                      **/
-    /** This requires being a bit meticulous with your       **/
-    /** dependencies. But you should understand your         **/
-    /** dependencies well enough to pull this off anyhow.    **/
-    /**                                                      **/
-    /** Dependency injection or dependency resolvers are for **/
-    /** people who are writing clusterfucks. We want to      **/
-    /** actually have a clear idea of what our code is doing.**/
-    /**                                                      **/
-    /** John Mark Isaac Madison DATE[2020_11_01]             **/
-
-    /////// AAC2020_MAC_LIBCHAN_CUR ( ? ) //:<-- Compile_To_Here
+    //:#_WHAT_IS_THE_LIBRARY_CHAIN_#://
+    /** Search for hashtagged phrase above in[  DOC/_H_ ] **/
 
     #define AAC2020_MAC_LIBCHAN_001 ( 1 )
     #define AAC2020_MAC_LIBCHAN_002 ( 2 )
@@ -74,112 +59,121 @@
     #define AAC2020_MAC_LIBCHAN_015 (15 )
     #define AAC2020_MAC_LIBCHAN_016 (16 )
     #define AAC2020_MAC_LIBCHAN_017 (17 )
+    #define AAC2020_MAC_LIBCHAN_018 (18 )
 
-    #define AAC2020_MAC_LIBCHAN_MAX (17 ) //:<-- Complile_Limit
+    #define AAC2020_MAC_LIBCHAN_MAX (18 ) //:<-- Complile_Limit
 
 //:============================================:LIBRARY_CHAIN://
 //:DATA:DATA_BEFORE_FUNCTIONS:===============================://
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_001 )
 
-        #include               "FILEBOI.D._"  
-        #define AAC2020_INCLUDE_FILEBOI ( 1 )
-        #else   //:     INCLUDE_FILEBOI ( - )
-        #define AAC2020_INCLUDE_FILEBOI ( 0 )
+        #include               "SILENCE.D._"  
+        #define AAC2020_INCLUDE_SILENCE ( 1 )
+        #else   //:     INCLUDE_SILENCE ( - )
+        #define AAC2020_INCLUDE_SILENCE ( 0 )
         #endif 
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_002 )
 
-        #include               "NATIKEY.D._"  
-        #define AAC2020_INCLUDE_NATIKEY ( 2 )
-        #else   //:     INCLUDE_NATIKEY ( - )
-        #define AAC2020_INCLUDE_NATIKEY ( 0 )
+        #include               "FILEBOI.D._"  
+        #define AAC2020_INCLUDE_FILEBOI ( 2 )
+        #else   //:     INCLUDE_FILEBOI ( - )
+        #define AAC2020_INCLUDE_FILEBOI ( 0 )
         #endif 
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_003 )
 
-        #include               "IKEYBOX.D._"  
-        #define AAC2020_INCLUDE_IKEYBOX ( 3 )
-        #else   //:     INCLUDE_IKEYBOX ( - )
-        #define AAC2020_INCLUDE_IKEYBOX ( 0 )
+        #include               "NATIKEY.D._"  
+        #define AAC2020_INCLUDE_NATIKEY ( 3 )
+        #else   //:     INCLUDE_NATIKEY ( - )
+        #define AAC2020_INCLUDE_NATIKEY ( 0 )
         #endif 
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_004 )
 
-        #include               "IMOUBOX.D._"  
-        #define AAC2020_INCLUDE_IMOUBOX ( 4 )
-        #else   //:     INCLUDE_IMOUBOX ( - )
-        #define AAC2020_INCLUDE_IMOUBOX ( 0 )
+        #include               "IKEYBOX.D._"  
+        #define AAC2020_INCLUDE_IKEYBOX ( 4 )
+        #else   //:     INCLUDE_IKEYBOX ( - )
+        #define AAC2020_INCLUDE_IKEYBOX ( 0 )
         #endif 
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_005 )
 
-        #include               "CEDITOR.D._"  
-        #define AAC2020_INCLUDE_CEDITOR ( 5 )
-        #else   //:     INCLUDE_CEDITOR ( - )
-        #define AAC2020_INCLUDE_CEDITOR ( 0 )
+        #include               "IMOUBOX.D._"  
+        #define AAC2020_INCLUDE_IMOUBOX ( 5 )
+        #else   //:     INCLUDE_IMOUBOX ( - )
+        #define AAC2020_INCLUDE_IMOUBOX ( 0 )
         #endif 
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_006 )
 
+        #include               "CEDITOR.D._"  
+        #define AAC2020_INCLUDE_CEDITOR ( 6 )
+        #else   //:     INCLUDE_CEDITOR ( - )
+        #define AAC2020_INCLUDE_CEDITOR ( 0 )
+        #endif 
+
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_007 )
+
         #include               "GINAWIN.D._"  
-        #define AAC2020_INCLUDE_GINAWIN ( 6 )
+        #define AAC2020_INCLUDE_GINAWIN ( 7 )
         #else   //:     INCLUDE_GINAWIN ( - )
         #define AAC2020_INCLUDE_GINAWIN ( 0 )
         #endif 
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_007 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_008 )
     
         #include               "DUI.D._"     
-        #define AAC2020_INCLUDE_DUI ( 7 )
+        #define AAC2020_INCLUDE_DUI ( 8 )
         #else   //:     INCLUDE_DUI ( - ) 
         #define AAC2020_INCLUDE_DUI ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_008 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_009 )
 
         #include               "GLEBIND.D._"   
-        #define AAC2020_INCLUDE_GLEBIND ( 8 )
+        #define AAC2020_INCLUDE_GLEBIND ( 9 )
         #else   //:     INCLUDE_GLEBIND ( - )
         #define AAC2020_INCLUDE_GLEBIND ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_009 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_010 )
 
         #include               "GLCONST.D._"   
-        #define AAC2020_INCLUDE_GLCONST ( 9 )
+        #define AAC2020_INCLUDE_GLCONST (10 )
         #else   //:     INCLUDE_GLCONST ( - )
         #define AAC2020_INCLUDE_GLCONST ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_010 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_011 )
     
         #include           "CPUNIFO.D._"     
-        #define AAC2020_INCLUDE_CPUNIFO (10 )
+        #define AAC2020_INCLUDE_CPUNIFO (11 )
         #else   //:     INCLUDE_CPUNIFO ( - ) 
         #define AAC2020_INCLUDE_CPUNIFO ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_011 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_012 )
 
         #include "GRAQUAD.D._"       //:STANDARD_DATA
         #include "GRAQUAD.D.FRAG._"  //:FRAGMENT_SHADERS
-        #define AAC2020_INCLUDE_GRAQUAD (11 )
+        #define AAC2020_INCLUDE_GRAQUAD (12 )
         #else   //:     INCLUDE_GRAQUAD ( - )
         #define AAC2020_INCLUDE_GRAQUAD ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_012 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_013 )
     
         /** Free Spot, can put a library here if needed **/
        
         #include               "FREE_01.D._"     
-        #define AAC2020_INCLUDE_FREE_01 (12 )
+        #define AAC2020_INCLUDE_FREE_01 (13 )
         #else   //:     INCLUDE_FREE_01 ( - ) 
         #define AAC2020_INCLUDE_FREE_01 ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_013 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_014 )
 
         //:FRAGBED:FRAGMENT_shader_test_BED
         #include "FRAGBED.D._"    
@@ -194,38 +188,38 @@
         #include "FRAGBED_DEFAULT_SHADERS\FDS_008._"
         #include "FRAGBED_DEFAULT_SHADERS\FDS_009._"
 
-        #define AAC2020_INCLUDE_FRAGBED (13 )
+        #define AAC2020_INCLUDE_FRAGBED (14 )
         #else   //:     INCLUDE_FRAGBED ( - )
         #define AAC2020_INCLUDE_FRAGBED ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_014 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_015 )
 
         //:#_PIXNAME_PATTERN_BREAKER_#://
         #include           "PIXNAME.D._"        
-        #define AAC2020_INCLUDE_PIXNAME (14 )
+        #define AAC2020_INCLUDE_PIXNAME (15 )
         #else   //:     INCLUDE_PIXNAME ( - )
         #define AAC2020_INCLUDE_PIXNAME ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_015 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_016 )
 
         //:#_GPUDATA_IS_NOT_LIMITED_TO_GRAPHICS_#://
         #include           "GPUDATA.D._"        
-        #define AAC2020_INCLUDE_GPUDATA (15 )
+        #define AAC2020_INCLUDE_GPUDATA (16 )
         #else   //:     INCLUDE_GPUDATA ( - )
         #define AAC2020_INCLUDE_GPUDATA ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_016 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_017 )
 
         #include               "PIXLOAD.D._"        
-        #define AAC2020_INCLUDE_PIXLOAD (16 )
+        #define AAC2020_INCLUDE_PIXLOAD (17 )
         #else   //:     INCLUDE_PIXLOAD ( - )
         #define AAC2020_INCLUDE_PIXLOAD ( 0 )
         #endif              //: 123_123 ://
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_017 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_018 )
 
         //: #PATTERN_BREAKER# ------------------------------ ://
         //: You might be expecting:                          ://
@@ -252,7 +246,7 @@
 
         #include "PAINT5D_DEFAULT_SHADERS\P5D_001._"
 
-        #define AAC2020_INCLUDE_PAINT5D (17 )
+        #define AAC2020_INCLUDE_PAINT5D (18 )
         #else   //:     INCLUDE_PAINT5D ( - )
         #define AAC2020_INCLUDE_PAINT5D ( 0 )
         #endif
@@ -268,137 +262,145 @@
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_001 )
 
-        #include               "FILEBOI.F._" 
-        #define AAC2020_INCLUDE_FILEBOI ( 1 )
-        #else   //:     INCLUDE_FILEBOI ( - )
-        #define AAC2020_INCLUDE_FILEBOI ( 0 )
+        #include               "SILENCE.F._" 
+        #define AAC2020_INCLUDE_SILENCE ( 1 )
+        #else   //:     INCLUDE_SILENCE ( - )
+        #define AAC2020_INCLUDE_SILENCE ( 0 )
         #endif
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_002 )
 
-        #include               "NATIKEY.F._" 
-        #define AAC2020_INCLUDE_NATIKEY ( 2 )
-        #else   //:     INCLUDE_NATIKEY ( - )
-        #define AAC2020_INCLUDE_NATIKEY ( 0 )
+        #include               "FILEBOI.F._" 
+        #define AAC2020_INCLUDE_FILEBOI ( 2 )
+        #else   //:     INCLUDE_FILEBOI ( - )
+        #define AAC2020_INCLUDE_FILEBOI ( 0 )
         #endif
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_003 )
 
+        #include               "NATIKEY.F._" 
+        #define AAC2020_INCLUDE_NATIKEY ( 3 )
+        #else   //:     INCLUDE_NATIKEY ( - )
+        #define AAC2020_INCLUDE_NATIKEY ( 0 )
+        #endif
+
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_004 )
+
         #include               "IKEYBOX.F._"  
-        #define AAC2020_INCLUDE_IKEYBOX ( 3 )
+        #define AAC2020_INCLUDE_IKEYBOX ( 4 )
         #else   //:     INCLUDE_IKEYBOX ( - )
         #define AAC2020_INCLUDE_IKEYBOX ( 0 )
         #endif 
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_004 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_005 )
 
         #include               "IMOUBOX.F._"  
-        #define AAC2020_INCLUDE_IMOUBOX ( 4 )
+        #define AAC2020_INCLUDE_IMOUBOX ( 5 )
         #else   //:     INCLUDE_IMOUBOX ( - )
         #define AAC2020_INCLUDE_IMOUBOX ( 0 )
         #endif 
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_005 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_006 )
 
         #include               "CEDITOR.F._"  
-        #define AAC2020_INCLUDE_CEDITOR ( 5 )
+        #define AAC2020_INCLUDE_CEDITOR ( 6 )
         #else   //:     INCLUDE_CEDITOR ( - )
         #define AAC2020_INCLUDE_CEDITOR ( 0 )
         #endif 
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_006 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_007 )
 
         #include               "GINAWIN.F._" 
-        #define AAC2020_INCLUDE_GINAWIN ( 6 )
+        #define AAC2020_INCLUDE_GINAWIN ( 7 )
         #else   //:     INCLUDE_GINAWIN ( - )
         #define AAC2020_INCLUDE_GINAWIN ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_007 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_008 )
      
         #include               "DUI.F._"   
-        #define AAC2020_INCLUDE_DUI ( 7 )
+        #define AAC2020_INCLUDE_DUI ( 8 )
         #else   //:     INCLUDE_DUI ( - )
         #define AAC2020_INCLUDE_DUI ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_008 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_009 )
 
         #include               "GLEBIND.F._"  
-        #define AAC2020_INCLUDE_GLEBIND ( 8 )
+        #define AAC2020_INCLUDE_GLEBIND ( 9 )
         #else   //:     INCLUDE_GLEBIND ( - )
         #define AAC2020_INCLUDE_GLEBIND ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_009 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_010 )
 
         #include               "GLCONST.F._"  
-        #define AAC2020_INCLUDE_GLCONST ( 9 )
+        #define AAC2020_INCLUDE_GLCONST (10 )
         #else   //:     INCLUDE_GLCONST ( - )
         #define AAC2020_INCLUDE_GLCONST ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_010 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_011 )
      
         #include               "CPUNIFO.F._"   
-        #define AAC2020_INCLUDE_CPUNIFO (10 )
+        #define AAC2020_INCLUDE_CPUNIFO (11 )
         #else   //:     INCLUDE_CPUNIFO ( - )
         #define AAC2020_INCLUDE_CPUNIFO ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_011 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_012 )
 
         #include               "GRAQUAD.F._"    
-        #define AAC2020_INCLUDE_GRAQUAD (11 )
+        #define AAC2020_INCLUDE_GRAQUAD (12 )
         #else   //:     INCLUDE_GRAQUAD ( - )
         #define AAC2020_INCLUDE_GRAQUAD ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_012 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_013 )
     
         /** Free Spot, can put a library here if needed **/
        
         #include               "FREE_01.F._"     
-        #define AAC2020_INCLUDE_FREE_01 (12 )
+        #define AAC2020_INCLUDE_FREE_01 (13 )
         #else   //:     INCLUDE_FREE_01 ( - ) 
         #define AAC2020_INCLUDE_FREE_01 ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_013 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_014 )
 
         #include               "FRAGBED.F._"    
-        #define AAC2020_INCLUDE_FRAGBED (13 )
+        #define AAC2020_INCLUDE_FRAGBED (14 )
         #else   //:     INCLUDE_FRAGBED ( - )
         #define AAC2020_INCLUDE_FRAGBED ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_014 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_015 )
 
         //:#_PIXNAME_PATTERN_BREAKER_#://
         #include           "PIXNAME.F._"        
-        #define AAC2020_INCLUDE_PIXNAME (14 )
+        #define AAC2020_INCLUDE_PIXNAME (15 )
         #else   //:     INCLUDE_PIXNAME ( - )
         #define AAC2020_INCLUDE_PIXNAME ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_015 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_016 )
 
         //:#_GPUDATA_IS_NOT_LIMITED_TO_GRAPHICS_#://
         #include               "GPUDATA.F._"        
-        #define AAC2020_INCLUDE_GPUDATA (15 )
+        #define AAC2020_INCLUDE_GPUDATA (16 )
         #else   //:     INCLUDE_GPUDATA ( - )
         #define AAC2020_INCLUDE_GPUDATA ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_016 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_017 )
 
         #include               "PIXLOAD.F._"        
-        #define AAC2020_INCLUDE_PIXLOAD (16 )
+        #define AAC2020_INCLUDE_PIXLOAD (17 )
         #else   //:     INCLUDE_PIXLOAD ( - )
         #define AAC2020_INCLUDE_PIXLOAD ( 0 )
         #endif              //: 123_123 ://
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_017 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_018 )
 
         //: #PATTERN_BREAKER# ------------------------------ ://
         //: You might be expecting:                          ://
@@ -422,7 +424,7 @@
         //:        5. Tile Color                             ://
         //:   NOT: "LIB/PAINT5D.F._" << #PATTERN_BREAKER     ://
         #include               "PAINT5D.F._"        
-        #define AAC2020_INCLUDE_PAINT5D (17 )
+        #define AAC2020_INCLUDE_PAINT5D (18 )
         #else   //:     INCLUDE_PAINT5D ( - )
         #define AAC2020_INCLUDE_PAINT5D ( 0 )
         #endif

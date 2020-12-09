@@ -23,6 +23,16 @@
     }
 
 //:=================================:OKAY_STATUS_INFO_MESSAGE://
+//:INFO_STATUS_INFO_MESSAGE:=================================://
+
+    void
+    aac2020_paint5d_Info( const char* msg_inf )
+    {
+        printf("[aac2020_paint5d_Info]:%s\n", msg_inf );
+        fflush(stdout);    
+    }
+
+//:=================================:INFO_STATUS_INFO_MESSAGE://
 //:INITIALIZE_PAINT5D:=======================================://
 #define U32  uint32_t /** GCC: <stdint.h> **/
 #define I32   int32_t /** GCC: <stdint.h> **/
@@ -77,10 +87,10 @@
 
         //:---------------------------:ALL_MEMBERS_OF_PAINT5D://
         //:ALLOCATES_OPEN_GL_TEXTURE:------------------------://
-
-            AAC2020_GPUDATA_InitInstance(
-                ((void*)0) /** ACC2020_PAINT5D_dat **/  
-            );;
+    
+            //+ #GPUDATA_IS_NOW_A_TEMPORARY_CONTAINER# + + + +//
+            //- AAC2020_GPUDATA_InitInstance(  - - - - - - - -//
+            //-     ACC2020_PAINT5D_dat      );; - - - - - - -//
 
         //:------------------------:ALLOCATES_OPEN_GL_TEXTURE://
         //:LOAD_INITIAL_TEXTURE_DATA:------------------------://
@@ -121,18 +131,26 @@
 
 
 
-            AAC2020_PIXLOAD_TestPattern( &(gpudata_paint5d) );
+            AAC2020_PIXLOAD_TestPattern(   &( DAT ) );
+            AAC2020_PIXLOAD_UploadTexture( &( DAT ) );
+            
+
+            /** Set .sam_has to true if has the sampler **/
+            /** Identified by .pix_nam                  **/
+            AAC2020_PIXLOAD_sam_has( &( DAT ) );
+
+            /** Keep the error prone way of doing this  **/
+            /** As a redundancy to check for agreement. **/
             I32 has = AAC2020_PIXLOAD_HasSampler( "paint5d" );
-
-
+            if( DAT.sam_has != has ){
+                aac2020_paint5d_Halt("[WTF_MY_FRIEND]");
+            };;
 
             if( has >= 1 ){
 
                 /** Update Texture Sampler Uniform On GPU **/
 
-                aac2020_pixload_PushSampler( 
-                    &(gpudata_paint5d) 
-                );;
+                aac2020_pixload_PushSampler(  &( DAT ) );
 
                 /** Persist Changes: **/
 
@@ -146,8 +164,18 @@
                 //:                    ( 512 ) = DAT.pix_hig ://
                 //:                 "paint5d" ~=~DAT.pix_nam ://
     
+                aac2020_paint5d_Okay("[HAS_TEXTURE_SAMPLER]");
+            }else{
+
+                /** Whether this is a good or bad message **/
+                /** depends on you looking at code and    **/
+                /** deciding.                             **/
+                aac2020_paint5d_Info("[NO_TEXTURE_SAMPLER]");
+    
             };;
             
+            AAC2020_VITAL_TODO("[Add centralized switchboard to silence non-error messages from different sub-libraries]");
+
 
         #undef DAT
         #undef VAR

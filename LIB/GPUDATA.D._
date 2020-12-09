@@ -41,14 +41,13 @@
         int   tex_lot ; //:USE_WITH[ activeTexture ]
         int   tex_han ; //:USE_WITH[ bindTexture   ]
 
-        int   sam_loc ; //:USE[ uniformli( sam_loc , val_val ) ]
-        int   sam_val ; //:USE[ uniformli( sam_loc , val_val ) ]
+        int   sam_loc ; //:USE[ uniformli( sam_loc , sam_val ) ]
+        int   sam_val ; //:USE[ uniformli( sam_loc , sam_val ) ]
 
         int   sam_has ; //:flagged as texture sampler existing?
 
         //:#_GPUDATA_FLAT_IS_BETTER_THAN_NESTED_#://
       
-
     }; //:struct://
 
 #undef  U08
@@ -57,10 +56,18 @@
 
 /** ******************************************************** ***
 
-    FUTURE_INSTANCE : 001 : AAC2020_PAINT5D_dat
+    /// NOTE: GPUDATA is a temporary transport of data       ///
+    ///       struct only. Actual data lives in PIXNAME now. ///
+
     FUTURE_____DATA : 001 :         PAINT5D.D._
     FUTURE_____FUNC : 001 :         PAINT5D.F._
     FUTURE_DOCUMENT : 001 : DOC/WHY_GPUDATA_PAINT5D.TXT
+
+    FUTURE_____DATA : 002 :         TODO_02.D._
+    FUTURE_____FUNC : 002 :         TODO_02.F._
+
+    FUTURE_____DATA : 003 :         TODO_03.D._
+    FUTURE_____FUNC : 003 :         TODO_03.F._
 
 *** ******************************************************** **/
 //[ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ]//

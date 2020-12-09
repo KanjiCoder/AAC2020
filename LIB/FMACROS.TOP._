@@ -1,20 +1,9 @@
-//:----------------------------------------------------------://
-//: FMACROS.TOP : Declare Function Macros                    ://
-//:                                                          ://
-//: REASON For This File:                                    ://
-//:     Remove Visual Clutter From AAC2020.C11 's logic .    ://
-//:                                                          ://
-//: More Info:                                               ://
-//:     The LIBCHAN (librarychain) allows us to compile      ://
-//:     the project up to different points, as we maintain   ://
-//:     a strict ordering of our libraries.                  ://
-//:                                                          ://
-//:----------------------------------------------------------://
 
+//[ ABOUT_SEE[ DOC/_H_ ]SEARCH[ #_ABOUT_F_MACROS_TOP_# ]     ]//
 
 //:IKEYBOX:==================================================://
 #if(            AAC2020_INCLUDE_IKEYBOX >=  1 )
-_Static_assert( AAC2020_INCLUDE_IKEYBOX ==  3 ,        "3");
+_Static_assert( AAC2020_INCLUDE_IKEYBOX ==  4 ,        "4");
 
     /** Only make macros out of functions that are        **/
     /** common to multiple libraries and called together. **/
@@ -30,7 +19,7 @@ _Static_assert( AAC2020_INCLUDE_IKEYBOX ==  3 ,        "3");
 
 //:CPUNIFO:==================================================://
 #if(            AAC2020_INCLUDE_CPUNIFO >=  1 )
-_Static_assert( AAC2020_INCLUDE_CPUNIFO == 10 ,        "10");
+_Static_assert( AAC2020_INCLUDE_CPUNIFO == 11 ,        "11");
 
     #define  FMACROS_CPUNIFO_LoopTick   AAC2020_CPUNIFO_LoopTick
 
@@ -43,7 +32,7 @@ _Static_assert( AAC2020_INCLUDE_CPUNIFO == 10 ,        "10");
 //:==================================================:CPUNIFO://
 //:GRAQUAD:==================================================://
 #if(            AAC2020_INCLUDE_GRAQUAD >=  1 )
-_Static_assert( AAC2020_INCLUDE_GRAQUAD == 11 ,       "11");
+_Static_assert( AAC2020_INCLUDE_GRAQUAD == 12 ,       "12");
 
     #define  FMACROS_GRAQUAD_LoopTick   AAC2020_GRAQUAD_LoopTick
 
@@ -234,23 +223,27 @@ _Static_assert( AAC2020_INCLUDE_GRAQUAD == 11 ,       "11");
 //:============================:AUTO_GENERATED_INIT_FUNCTIONS://
 /** REFERENCE ********************************************** ***
 
-    ( Not gauranteed to be up to date. SEE: LIBCHAN.TOP._ )
+    ( Not gauranteed to be up to date. 
+    ( SEE: AAC2020.C11   )  <--[ Likely Locations For ]
+    ( SEE: LIBCHAN.TOP._ )  <--[ Official List        ]
 
-    FILEBOI ( 1 )  
-    NATIKEY ( 2 )  
-    IKEYBOX ( 3 )  
-    IMOUBOX ( 4 )  
-    CEDITOR ( 5 )  
-    GINAWIN ( 6 )  
-    DUI     ( 7 )  
-    GLEBIND ( 8 )  
-    CPUNIFO ( 9 )  
-    GRAQUAD (10 )  
-    FREE_01 (11 )  
-    FRAGBED (12 )  
-    GPUDATA (13 )  
-    PIXNAME (14 )  
-    GLCONST (15 )
-    PAINT5D (16 )  ( GPUDATA_PAINT5D )
+    SILENCE ( 1 ) Controls Silencing of non-debug messages.
+    FILEBOI ( 2 ) File System Access Calls.
+    NATIKEY ( 3 ) Native Keyboard To Library Cross Platform Keys
+    IKEYBOX ( 4 ) Collection Of Keys Pressed To Avoid Callbacks
+    IMOUBOX ( 5 ) Collection Of Mouse Data   To Avoid Callbacks
+    CEDITOR ( 6 ) Current Editor In Focus. (#_EDITOR_CENTRIC_#)
+    GINAWIN ( 7 ) Graphics_Init_And_WINDOW (Native Window Code)
+    DUI     ( 8 ) Dialog_UI(s) (NATIVE,WIN32)EXAMPLE:ColorPicker
+    GLEBIND ( 9 ) open GL Easy BINDings (FUNCTIONS)
+    GLCONST (10 ) open GL CONSTants     (DATA     )
+    CPUNIFO (11 ) CPU UNIFOrms (Uniforms Synced To CPU side)
+    GRAQUAD (12 ) GRAdient QUAD (Fragment Shader Surface)
+    FREE_01 (13 ) Free Spot, no code here.
+    FRAGBED (14 ) Fragment Shader Test Bed (Usable Program)
+    PIXNAME (15 ) PIXelNAME: Names+Data for every subsystem.
+    GPUDATA (16 ) Temp Container For Passing Around PIXNAME data
+    PIXLOAD (17 ) Used to load [PIXNAME/GPUDATA] onto GPU.
+    PAINT5D (18 ) Initialize and control PIXNAME_paint5d data
 
 *** ******************************************************** **/

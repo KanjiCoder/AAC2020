@@ -5,6 +5,260 @@
     SO WE HAVE A RECORD OF WHAT WAS DONE IN WHAT ORDER.
     
 *** ******************************************************** ***
+
+#_ABOUT_F_MACROS_###############################################
+
+    SEE[ #_ABOUT_F_MACROS_TOP_# ]
+
+###############################################_ABOUT_F_MACROS_#
+#_ABOUT_F_MACROS_BOT_###########################################
+
+    SEE[ #_ABOUT_F_MACROS_TOP_# ]
+
+###########################################_ABOUT_F_MACROS_BOT_#
+#_ABOUT_F_MACROS_TOP_###########################################
+
+    EXTRACTED_ON_DATE[ 2020_12_09 ]
+
+    FMACROS.TOP : Declare Function Macros                    
+                                                             
+    REASON For This File:                                    
+        Remove Visual Clutter From AAC2020.C11 's logic .    
+                                                             
+    More Info:                                               
+        The LIBCHAN (librarychain) allows us to compile      
+        the project up to different points, as we maintain   
+        a strict ordering of our libraries.                  
+                                                             
+###########################################_ABOUT_F_MACROS_TOP_#
+#_EDITOR_CENTRIC_###############################################
+
+    This project is "EDITOR CENTRIC" meaning the game is
+    first and foremost an "EDITOR" and the game runs on
+    TOP of the editor.
+
+    This is because:
+
+    1. Having 1 [code/codes/sourcecode] for both EDITOR-&-GAME
+       means less code to maintain.
+
+    2. Having 1 [code/codes/sourcecode] for both EDITOR-&-GAME
+       means what you see in the editor is what you will end
+       up with in the game exactly.
+
+    3. EDITOR -WITHOUT- GAME  : Fun art program.
+       GAME   -WITHOUT- EDITOR: YOU HAVE NOTHING.
+
+       A GAME IS NOTHING IF YOU CANNOT GET [DATA/ASSETS]
+       INTO IT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+###############################################_EDITOR_CENTRIC_#
+#_YOU_SPELL_CPUNIFO_WRONG_A_LOT_################################
+
+    CPUINFO : WRONG!! You Mean: CPUNIFO
+
+################################_YOU_SPELL_CPUNIFO_WRONG_A_LOT_#
+#_BE_NICE_AVOID_MACRO_POLLUTION_OF_OTHERS_CODE_#################
+
+        DONT_POLLUTE_OTHER_PEOPLES_CODE_WITH_MACROS:
+
+        I could see how these might be useful to other       
+        people using the library.... But lets stick with a   
+        YAGNI (You_Arent_Going_To_Need_It) philosophy.       
+
+#################_BE_NICE_AVOID_MACRO_POLLUTION_OF_OTHERS_CODE_#
+#_WHAT_IS_THE_LIBRARY_CHAIN_####################################
+
+        Library chain is used as a hackish way to debug       
+        code by divide and conquer. Any                       
+        AAC2020_MAC_LIBCHAN_CUR value between [ 0 -to- MAX ]  
+        (inclusive range) should yeild a working              
+        executable.                                           
+                                                             
+        This requires being a bit meticulous with your        
+        dependencies. But you should understand your          
+        dependencies well enough to pull this off anyhow.     
+                                                             
+        Dependency injection or dependency resolvers are for  
+        people who are writing clusterfucks. We want to       
+        actually have a clear idea of what our code is doing. 
+                                                            
+        John Mark Isaac Madison DATE[2020_11_01]              
+
+    /////// AAC2020_MAC_LIBCHAN_CUR ( ? ) //:<-- Compile_To_Here
+
+####################################_WHAT_IS_THE_LIBRARY_CHAIN_#
+#NEGONE_IF_NOT_IN_SHADER########################################
+
+
+    glGetUniformLocation :
+
+    This function returns -1 if name does not
+    correspond to an active uniform variable in
+    program,if name starts with the reserved
+    prefix "gl_",or if name is associated with
+    an atomic counter or a named uniform block.
+
+    https://www.khronos.org/registry/OpenGL-Refpages/
+                        gl4/html/glGetUniformLocation.xhtml
+
+########################################NEGONE_IF_NOT_IN_SHADER#
+#GPUDATA_IS_NOW_A_TEMPORARY_CONTAINER###########################
+
+    Data that I thought I was going to store in "GPUDATA"
+    instances now lives in FILE_SCOPE variables in PIXNAME.
+
+    We only pack vars from PIXNAME into GPUDATA 
+    ________TEMPORARILY_______ when we need to use it
+    with a function call.
+
+###########################GPUDATA_IS_NOW_A_TEMPORARY_CONTAINER#
+#_GENTEX_ONCE_ON_EXE_STARTUP_###################################
+
+        QUESTION: ( 2020_12_08 or before)
+
+            Should we always re-generate textures  
+            When initializing? Is function         
+            idempotent if we do it this way?     
+
+        ANSWER: ( 2020_12_09 )
+
+            NO! Do this only once because when you switch
+            programs (1 shader program per editor ).
+            The texture memory allocated is ____NOT____ deleted.
+
+            AKA: All programs share same texture memory.
+
+###################################_GENTEX_ONCE_ON_EXE_STARTUP_#
+@SYN_VAR@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    SYN_VAR: Synonymous_Variables:
+
+        Used to mark two variables that mean the 
+        same exact thing in code. We try to avoid
+        having two variables that mean the exact 
+        same thing in our code because it disrupts
+        the VISUAL PATTERNS of the source code.
+        But sometimes it happens.
+
+        Example: (FROM: aac2020_gpudata_IIA_UploadTexture )
+
+        /**  #SYN_VAR[ cpu_pix ============ pix_arr ] **/
+        U08*           pix_arr = gpudata -> cpu_pix; 
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@SYN_VAR@
+#SYN_VAR########################################################
+
+    SEE[ @SYN_VAR@ ]
+
+########################################################SYN_VAR#
+#KEEP_VOID_TO_AVOID_CONFUSION###################################
+
+    DATE_WRITTEN[ 2020_12_09 ]
+
+    Sometimes I like functions to return an unsigned integer
+    that means NOTHING so I have the ability to give that
+    returned integer a meaning in the future. However in
+    some functions, returning a number can make things
+    confusing to follow. 
+
+    For example, AAC2020_GPUDATA_GetPixelOnCPU_RGBA
+                 returns it's [ r,g,b,a ] via 
+                 output parameter pointers to U08.
+
+                 Giving this function a return value
+                 can distract from that I believe.
+
+###################################KEEP_VOID_TO_AVOID_CONFUSION#
+#SIX_FIGURES_IS_ONLY############################################
+
+    I wrote this when I was a bit distracted and wondering
+    how much you would REALLY have to make in terms of
+    gross profits to get to six figures after tax.
+    These are the source code calculations removed from
+    [ GPUDATA.F ]ON_DATE[ 2020_12_09 ]To reduce some of
+    the clutter in there as we review the code.
+
+                //:SIDE_TRACKED_BUT_FUCKYOU_ITS_MY_CODE:-----://
+
+                //:How much is six figures? If you have 100% ://
+                //:markup on your product. And after 10%     ://
+                //:sales tax.                                ://
+               
+                /** G_Y: Gross profit per year. **/
+                /** G_D: Gross profit per day . **/
+                float K = ( 1000 );
+                float G_Y = ( 100 * K );
+                float G_D  = ( G_Y / 365 );
+
+                /** B_T: Before 10% tax                      **/
+                /** **************************************** **/
+                /** 0.9 is your percent KEEP *************** **/
+                /** G_D = B_T * 0.9;         *************** **/
+                float B_T = ( G_D / 0.9 );
+                /** **************************************** **/
+
+                /** B_M: Before Markup of 200%               **/
+                /** **************************************** **/
+                float M_U = 2.0; //:markup percentage.
+                float M_T = 1.0 / M_U; //:Markup tax.
+                /** EXAMPLE: If you sell for 800% markup, **/
+                /** That means 1/8th is expenses. So you  **/
+                /** can think of that as a 1/8th tax.     **/
+                float P_K = ( 1.0 - M_T );
+                if( P_K <= 0 ){ ERR("[BadPercentKeep]"); };
+                float B_M = ( B_T / P_K );
+                /** **************************************** **/
+                
+                /** At given tax rate and markup rate. **/
+
+                //: 608 / 2 * 0.9 * 365 == Close To 100K
+                printf("[SIX_FIGURES_IS:B_M]%f\n",B_M);
+                fflush(stdout);
+
+                //:-----:SIDE_TRACKED_BUT_FUCKYOU_ITS_MY_CODE://
+
+############################################SIX_FIGURES_IS_ONLY#
+#_GPUDATA_MATH_FUNCTIONS_ARE_BARE_BASIC_ABSTRACTIONS_###########
+#BASIC_2D_ARRAY_ABSTRACTIONS_ONLY###############################
+
+    YES:::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+        GPUDATA math functions should abstract the 512x512
+        section of memory as a 512x512 bitmap. It should only
+        handle basic abstractions like "index-to-xy" and
+        "xy-to-index".
+    :::::::::::::::::::::::::::::::::::::::::::::::::::::::::YES
+    NOT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+        Something like:
+        "xy+tilesize+tilelayer" --> to "PhysicalPixelLocation"
+        Does NOT belong in GPUDATA but rather in PAINT5D.
+       ( Or another sub editor with it's own abstraction of )
+       ( what the[ cpu_pix ]of[ PIXNAME -or- GPUDATA ]mean. )
+
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!NOT
+
+###############################BASIC_2D_ARRAY_ABSTRACTIONS_ONLY#
+###########_GPUDATA_MATH_FUNCTIONS_ARE_BARE_BASIC_ABSTRACTIONS_#
+#_GROUP_MATH_FUNCTIONS_WITH_THEIR_INVERSES_#####################
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    /** Centralizing these functions will help me avoid      **/
+    /** making mistakes. They could be inlined. But lets     **/
+    /** not do that right now, as it makes the code more     **/
+    /** likely to break during compilation.                  **/
+    /** https://www.geeksforgeeks.org/inline-function-in-c/  **/
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+#####################_GROUP_MATH_FUNCTIONS_WITH_THEIR_INVERSES_#
+#DO_NOT_EXTRACT#################################################
+
+    SEE[ #_DO_NOT_EXTRACT_# ]
+
+#################################################DO_NOT_EXTRACT#
 #_NEW_PROGRAMS_DONT_REMOVE_OLD_TEXTURES_########################
 
     https://www.khronos.org/opengl/wiki/Texture
@@ -247,7 +501,7 @@
 
 ###################_GPU_DATA_IS_A_TEMPORARY_HELPER_OBJECT_ONLY_#
 #_DO_NOT_EXTRACT_COMMENT_#######################################
-#_DO_NOT_EXTRACT_##############################################
+#_DO_NOT_EXTRACT_###############################################
 
     #_DO_NOT_EXTRACT_COMMENT_#:  ( Synonymous Hashtags )
     #_DO_NOT_EXTRACT_#        :  ( Synonymous Hashtags )
@@ -434,7 +688,7 @@
 ########################################_ONE_EXIT_POINT_ALWAYS_#
 #_ALWAYS_WRAP_WITH_IDENTICAL_SIGNATURE_#########################
 
-    It is TEMPTING to change the siguatre of wrapped functions
+    It is TEMPTING to change the signature of wrapped functions
     to something NICER to use. However, doing that means
     it will be harder to interchangibly swapp the
 
@@ -997,6 +1251,12 @@
 
 ################################################KEYPAD_HASHTAGS#
 #PATTERN_BREAKER_PIXNAME########################################
+
+    ************************************************************
+    REVISITED[ DATE[ 2020_12_09 ]:
+    No longer a problem. We refactored:
+    AAC2200_GPUDATA_PIXNAME ===> AAC2020_PIXNAME
+    ************************************************************
 
     EXTRACTED_FROM[ PIXNAME.D._ ]ON_DATE[ 2020_12_04 : 0840PM ]
                                            

@@ -170,6 +170,7 @@
 #undef  STR
 //:===================================:FAIL_FAST_INPUT_CHECKS://
 //:MATH_FUNCTIONS:===========================================://
+//:#BASIC_2D_ARRAY_ABSTRACTIONS_ONLY#========================://
 #define WID 512
 #define HIG 512
 #define M_P ( (512 * 512 * 1) - 1 ) /** MAX:Pixel_____Index **/
@@ -179,15 +180,9 @@
 #define ERR aac2020_gpudata_Halt
 #define U32 uint32_t /** GCC: <stdint.h> **/
     
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    //:#_GROUP_MATH_FUNCTIONS_WITH_THEIR_INVERSES_#://
 
-    /** Centralizing these functions will help me avoid      **/
-    /** making mistakes. They could be inlined. But lets     **/
-    /** not do that right now, as it makes the code more     **/
-    /** likely to break during compilation.                  **/
-    /** https://www.geeksforgeeks.org/inline-function-in-c/  **/
-
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    //:_#GPUDATA_MATH_FUNCTIONS_ARE_BARE_BASIC_ABSTRACTIONS_:#
 
     U32
     AAC2020_GPUDATA_p_x_p_y_CTO_com_dex( 
@@ -209,9 +204,11 @@
 
     void
     AAC2020_GPUDATA_com_dex_CTO_p_x_p_y(
-        U32       com_dex
-    ,   U32* restrict p_x
-    ,   U32* restrict p_y
+
+        U32       com_dex        /** Always A RED Component. **/
+    ,   U32* restrict p_x        /** Pixel_X ............... **/
+    ,   U32* restrict p_y        /** Pixel_Y ............... **/
+
     )
     {
         //:WTFHM:WHAT_THE_FUCKING_HELL_MAN:------------------://
@@ -222,51 +219,10 @@
         if(      p_x == p_y        ){ ERR("[WTFHM:005]"); };
         if(      com_dex % 4 != 0  ){ 
 
-                printf("[NOT_DIVISIBLE_BY_4:com_dex]:%d\n"
-                                           ,com_dex   );;
+                /** NDB4: NOT_DIVISIBLE_BY_4 **/
+                printf("[NDB4:com_dex]:%d\n" ,com_dex   );;
                 fflush(stdout);
-
-                //:SIDE_TRACKED_BUT_FUCKYOU_ITS_MY_CODE:-----://
-
-                //:How much is six figures? If you have 100% ://
-                //:markup on your product. And after 10%     ://
-                //:sales tax.                                ://
-               
-                /** G_Y: Gross profit per year. **/
-                /** G_D: Gross profit per day . **/
-                float K = ( 1000 );
-                float G_Y = ( 100 * K );
-                float G_D  = ( G_Y / 365 );
-
-                /** B_T: Before 10% tax                      **/
-                /** **************************************** **/
-                /** 0.9 is your percent KEEP *************** **/
-                /** G_D = B_T * 0.9;         *************** **/
-                float B_T = ( G_D / 0.9 );
-                /** **************************************** **/
-
-                /** B_M: Before Markup of 200%               **/
-                /** **************************************** **/
-                float M_U = 2.0; //:markup percentage.
-                float M_T = 1.0 / M_U; //:Markup tax.
-                /** EXAMPLE: If you sell for 800% markup, **/
-                /** That means 1/8th is expenses. So you  **/
-                /** can think of that as a 1/8th tax.     **/
-                float P_K = ( 1.0 - M_T );
-                if( P_K <= 0 ){ ERR("[BadPercentKeep]"); };
-                float B_M = ( B_T / P_K );
-                /** **************************************** **/
-                
-                /** At given tax rate and markup rate. **/
-
-                //: 608 / 2 * 0.9 * 365 == Close To 100K
-                printf("[SIX_FIGURES_IS:B_M]%f\n",B_M);
-                fflush(stdout);
-
-                //:-----:SIDE_TRACKED_BUT_FUCKYOU_ITS_MY_CODE://
-                 
-                ERR("[ERROR:SIX_FIGURES_IS_ONLY]"); 
-
+                ERR("[ERROR:NDB4#SIX_FIGURES_IS_ONLY#]"); 
         };;
         //:------------------:WTFHM:WHAT_THE_FUCKING_HELL_MAN://
 
@@ -290,6 +246,7 @@
 #undef  M_Y
 #undef  ERR
 #undef  U32
+//:=======================:#BASIC_2D_ARRAY_ABSTRACTIONS_ONLY#://
 //:===========================================:MATH_FUNCTIONS://
 //:APPLY_CHANGES_TO_GPU(DEVICE):=============================://
 #define U08 uint8_t  /** GCC: <stdint.h> **/
@@ -302,6 +259,8 @@
         PIX* pix /** AAC2020_GPUDATA **/
     )
     {
+        AAC2020_VITAL_TODO("[FINISH_ApplyChangesToGPU]");
+
         if( ((void*)0) == pix ){
             aac2020_gpudata_Halt("[NULL:GPUDATA:001]");
         }else{
@@ -323,6 +282,17 @@
 #define PIX struct AAC2020_GPUDATA
 #define WID 512
 #define HIG 512
+
+    #if( AAC2020_CRASH_ON_VITAL_TODO >= 1 ) //:##############://
+
+        #error: Does this belong in PIXLOAD ?
+
+        We could keep the pixel put here because they are
+        essentially abstractions of the basic math functions
+        in this file, but I think anything that pushes to
+        the GPU might belong in PIXLOAD? Not sure.....
+
+    #endif //:###############################################://
 
     U08
     AAC2020_GPUDATA_PutPixelOnCPU_RGBA( 
@@ -368,13 +338,18 @@
         //:RGBA will always be in range. No Debug For Them.
         PIX_P_X_P_Y( pix,p_x,p_y , "[DEBUG_INPUTS:005]");
            
-        U32 r = ( RGBA >>24 ) & 0xFF;
-        U32 g = ( RGBA >>16 ) & 0xFF;
-        U32 b = ( RGBA >> 8 ) & 0xFF;
-        U32 a = ( RGBA >> 0 ) & 0xFF;
+        U32 r = ( RGBA >>24 ) & 0xFF;        assert( r <= 255 );
+        U32 g = ( RGBA >>16 ) & 0xFF;        assert( g <= 255 );
+        U32 b = ( RGBA >> 8 ) & 0xFF;        assert( b <= 255 );
+        U32 a = ( RGBA >> 0 ) & 0xFF;        assert( a <= 255 );
 
         AAC2020_GPUDATA_PutPixelOnCPU_RGBA(
-        pix , p_x , p_y , r , g , b , a    );;
+        pix , p_x , p_y 
+        ,                (U08)r  
+        ,                (U08)g  
+        ,                (U08)b  
+        ,                (U08)a    
+        );;
 
         return( 0x00 );
     }
@@ -426,7 +401,7 @@
 
         };;
 
-        return; /** KEEP_VOID_TO_AVOID_CONFUSION **/
+        return; /** #KEEP_VOID_TO_AVOID_CONFUSION# **/
     }
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
@@ -439,18 +414,33 @@
     ,   U32  p_y
     )
     {
-
         PIX_P_X_P_Y( pix,p_x,p_y , "[DEBUG_INPUTS:003]");
 
         if( ((void*)0) == pix ){
             aac2020_gpudata_Halt("[NULL:GPUDATA:005]");
-        }else{
-            aac2020_gpudata_Halt("[TODO:GPUDATA:005]");
-
-
         };;
 
-        return( 0x00 );
+        U08 r =( 0x77 ); //:Inited_To_Noticable_Values
+        U08 g =( 0x77 ); //:That_Should_Be_OverWritten
+        U08 b =( 0x77 );
+        U08 a =( 0x77 );
+
+        AAC2020_GPUDATA_GetPixelOnCPU_RGBA(
+            pix, p_x, p_y, &(r),&(g),&(b),&(a) );;
+
+       
+        //:........0x12345678
+        U32 rgba=( 0x00000000 );
+        //:........0xRrGgBbAa
+        
+        #define              M (0xFF) 
+        rgba = rgba | ( (r & M) << 24 ) ;
+        rgba = rgba | ( (g & M) << 16 ) ;
+        rgba = rgba | ( (b & M) <<  8 ) ;
+        rgba = rgba | ( (a & M) <<  0 ) ;
+        #undef               M
+
+        return( rgba );
     }
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
@@ -595,7 +585,7 @@
         void aac2020_gpudata_IIA_UploadTexture( 
                          //: IIA ://
 
-            struct AAC2020_GPUDATA gpudata /** @INIT_ALL@ **/
+            struct AAC2020_GPUDATA* gpudata /** @INIT_ALL@ **/
 
 
         ){
@@ -605,13 +595,30 @@
             
             //: Extract_Variables_From_Container:
             //:-   -   -   -   -   --==--   -   -   -   -   -://
-            int  tex_lot = gpudata.tex_lot;
-            int  tex_han = gpudata.tex_han;
-            int  pix_wid = gpudata.pix_wid;
-            int  pix_hig = gpudata.pix_hig;
-            U08* pix_arr = gpudata.cpu_pix;//:[cpu_pix==pix_arr]
+            int  tex_lot = gpudata -> tex_lot;
+            int  tex_han = gpudata -> tex_han;
+            int  pix_wid = gpudata -> pix_wid;
+            int  pix_hig = gpudata -> pix_hig;
+
+            /** @SYN_VAR@[ cpu_pix ============ pix_arr ] **/
+            U08*           pix_arr = gpudata -> cpu_pix; 
             //:-   -   -   -   -   --==--   -   -   -   -   -://
-            
+            //:SANITY_CHECK_CONSTANT_VALUES:-----------------://
+
+                assert( 0x84C0 == C_C.TEXTURE0           );
+                assert( 0x0DE1 == C_C.TEXTURE_2D         );
+                assert( 0x2600 == C_C.NEAREST            );
+                assert( 0x812F == C_C.CLAMP_TO_EDGE      );
+                assert( 0x2801 == C_C.TEXTURE_MIN_FILTER );
+                assert( 0x2800 == C_C.TEXTURE_MAG_FILTER );
+                assert( 0x2802 == C_C.TEXTURE_WRAP_S     );
+                assert( 0x2803 == C_C.TEXTURE_WRAP_T     );
+                assert( 0x0CF5 == C_C.UNPACK_ALIGNMENT   );
+                assert( 0x8D7C == C_C.RGBA8UI            );
+                assert( 0x8D99 == C_C.RGBA_INTEGER       );
+                assert( 0x1401 == C_C.UNSIGNED_BYTE      );
+
+            //:-----------------:SANITY_CHECK_CONSTANT_VALUES://
             //:TP:Texture_Push:------------------------------://
             //:tp_tp_tp_tp_tp_tp_tp_tptp_tp_tp_tp_tp_tp_tp_tp://
             
@@ -671,17 +678,15 @@
 
         if( AAC2020_GPUDATA_init_instance_all_call_count++ >0){
     
-            /** glGenTextures will cause memory leadk if     **/
+            /** glGenTextures will cause memory leak if      **/
             /** called more than once I think... But do you  **/
             /** need to regenerate textures when creating    **/
-            /** a new program ?                              **/
+            /** a new program ?  : ANSWER: (Seems to be NO)  **/
+            /**                    Programs SHARE textures.  **/
             aac2020_gpudata_Halt(
                 "[ONLY_CALL_ONCE_OR_RISK_MEMORY_LEAK]"
             );;
         };;
-        
-
-        AAC2020_VITAL_TODO("[PROBLEM_FOUND:No_Uniform_Of_That_Name_In_Active_Shader]");
 
         //:001:WIRE_IT_ALL_UP:- - - - - - - - - - - - - - - -://
 
@@ -698,20 +703,22 @@
             //:. . . . . . . . . . .:synonymous_texture_slots://
             //:generate_all_textures:. . . . . .... . . . . .://
 
-                /** Should we always re-generate textures    **/
-                /** When initializing? Is function           **/
-                /** idempotent if we do it this way?         **/
-                AAC2020_VITAL_TODO("[ALWAYS_REMAKE_TEXTURES?]");
-
+                //:#_GENTEX_ONCE_ON_EXE_STARTUP_#://
+                 
                 #define ASS assert
                 #define MAK_ONE ( 1 ) /* MAKE_JUST_ONE_TEXTURE*/
                 #define GEN_TEX  AAC2020_GLEBIND.glGenTextures 
+     
+                    GEN_TEX( MAK_ONE , &( TEX_HAN_001 ) );
+                    GEN_TEX( MAK_ONE , &( TEX_HAN_002 ) );
+                    GEN_TEX( MAK_ONE , &( TEX_HAN_003 ) );
 
                     ASS( GEN_TEX == GET_TEX );
-     
-                         GEN_TEX( MAK_ONE , &( TEX_HAN_001 ) );
-                         GEN_TEX( MAK_ONE , &( TEX_HAN_002 ) );
-                         GEN_TEX( MAK_ONE , &( TEX_HAN_003 ) );
+
+                    /** Check Generated Texture Handles */
+                    ASS( TEX_HAN_001 != TEX_HAN_002 );
+                    ASS( TEX_HAN_002 != TEX_HAN_003 );
+                    ASS( TEX_HAN_003 != TEX_HAN_001 );
         
                 #undef   ASS
                 #undef   MAK_ONE        
@@ -771,6 +778,10 @@
         
         //:- - - - - - - - - - - - - - - -:001:WIRE_IT_ALL_UP://
         //:002:LOAD_PIXEL_DATA:- - - - - - - - - - - - - - -:://
+
+            /** Uploading pixels here... They'll all be black... **/
+            AAC2020_VITAL_TODO( "[I_THINK_THIS_IS_A_POINTLESS_BLOCK_OF_CODE_2020_12_09]" );
+
         
             /**#_GPU_DATA_IS_A_TEMPORARY_HELPER_OBJECT_ONLY_#**/
 
@@ -830,9 +841,9 @@
                 if( g2.tex_lot != 2 ){ UPLOAD_TEX_ERR("[G2]");};
                 if( g3.tex_lot != 3 ){ UPLOAD_TEX_ERR("[G3]");};
         
-                UPLOAD_TEXTURE( g1 ); //: gpu_001 ://
-                UPLOAD_TEXTURE( g2 ); //: gpu_002 ://
-                UPLOAD_TEXTURE( g3 ); //: gpu_003 ://
+                UPLOAD_TEXTURE(  &(g1)  ); //: gpu_001 ://
+                UPLOAD_TEXTURE(  &(g2)  ); //: gpu_002 ://
+                UPLOAD_TEXTURE(  &(g3)  ); //: gpu_003 ://
         
         #undef  UPLOAD_TEXTURE
         #undef  UPLOAD_TEX_ERR
@@ -886,18 +897,15 @@
         /** Named "InitInstance" and NOT "InstanceInit"  * * **/
         /** So what if you CTRL+F for "GPUDATA_Init"     * * **/
         /** You will find "GPUDATA_InitInstance"         * * **/
-        
-        if( ((void*)0) == gpudata ){
-            /***** Good. It's a temp object. ******/
-        }else
-        if( ((void*)0) != gpudata ){
-            aac2020_gpudata_Halt("[TEMP_OBJECTS_DONT_INIT]");
-        }else{
-            aac2020_gpudata_Halt("[EDCL_2020_12_05]");
-        };;
-        
-        /** The real work happens in: InitInstanceAll(...) **/
-        printf("[DECOY:SEE:AAC2020_GPUDATA_InitInstanceAll]");
+        /** The real work happens in: InitInstanceAll(...)   **/
+
+        /** We should never init instances of GPUDATA        **/
+        /** Because they are just temporary vessels for      **/
+        /** file-scope variables in PIXNAME                  **/
+
+        if( gpudata ){ /** NOOP **/ };
+        aac2020_gpudata_Halt("[NEVER_CALL_ME_EVER_AGAIN:2020]");
+
 
         return( 0x00 );
     }
@@ -1118,8 +1126,14 @@
     }
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     U32
-    AAC2020_GPUDATA_Test_CPU_AND_GPU()
+    AAC2020_GPUDATA_Test_CPU_AND_GPU(
+
+        struct AAC2020_GPUDATA * pix
+
+    )
     {
+        if( pix ){ /** NOOP **/ };
+
         //:This would require setting up an openGL
         //:texture using struct AAC2020_GPUDATA
         //:
@@ -1147,6 +1161,8 @@
 
         /** For lifetime of function only. For testing. **/
         PIX pix = {0};
+        U08 cpu_pix[ 512 * 512 * 4 ]={ 0 };
+        pix.cpu_pix=&( cpu_pix[0] );
 
         //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
 
@@ -1211,7 +1227,8 @@
         /**     BELOW: Laws Of Mental Effort                 **/
         /**                                                  **/    
         /** ************************************************ **/
-////    AAC2020_GPUDATA_TestAll();
+        aac2020_gpudata_Okay("[ABOUT_TO_ENTER:TestAll]");
+        AAC2020_GPUDATA_TestAll();
 
         return( 0x00 );
     }

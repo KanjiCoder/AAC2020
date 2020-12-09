@@ -1,6 +1,11 @@
 //:##########################################################://
 //:LIBRARY_CHAIN_ORDER:CHECK:================================://
 
+#if( 0                           != AAC2020_INCLUDE_SILENCE )
+#if( macro_libchan_order_SILENCE != AAC2020_INCLUDE_SILENCE )
+              #error "[OUT_OF_ORDER:AAC2020_INCLUDE_SILENCE]"
+#endif
+#endif
 #if( 0                           != AAC2020_INCLUDE_FILEBOI )
 #if( macro_libchan_order_FILEBOI != AAC2020_INCLUDE_FILEBOI )
               #error "[OUT_OF_ORDER:AAC2020_INCLUDE_FILEBOI]"
@@ -74,88 +79,90 @@
 
     //:ONE_MORE_REDUNDANT_CHECK_BEFORE_WE_UNDEFINE:==========://
 
-    #if( macro_libchan_order_FILEBOI !=  1 )
-    #error "[TAIL_ORDER_FAIL:FILEBOI]"  
+    #if( macro_libchan_order_SILENCE !=  1 )
+    #error "[TAIL_ORDER_FAIL:SILENCE]"  
     #endif   
-    #if( macro_libchan_order_NATIKEY !=  2 )
+    #if( macro_libchan_order_FILEBOI !=  2 )
+    #error "[TAIL_ORDER_FAIL:FILEBOI]"  
+    #endif                              
+    #if( macro_libchan_order_NATIKEY !=  3 )
     #error "[TAIL_ORDER_FAIL:NATIKEY]"  
     #endif                              
-    #if( macro_libchan_order_IKEYBOX !=  3 )
+    #if( macro_libchan_order_IKEYBOX !=  4 )
     #error "[TAIL_ORDER_FAIL:IKEYBOX]"  
-    #endif    
-    #if( macro_libchan_order_IMOUBOX !=  4 )
+    #endif                              
+    #if( macro_libchan_order_IMOUBOX !=  5 )
     #error "[TAIL_ORDER_FAIL:IMOUBOX]"  
-    #endif    
-    #if( macro_libchan_order_CEDITOR !=  5 )
+    #endif                              
+    #if( macro_libchan_order_CEDITOR !=  6 )
     #error "[TAIL_ORDER_FAIL:CEDITOR]"  
-    #endif    
-    #if( macro_libchan_order_GINAWIN !=  6 )
+    #endif                              
+    #if( macro_libchan_order_GINAWIN !=  7 )
     #error "[TAIL_ORDER_FAIL:GINAWIN]"  
     #endif                              
-    #if( macro_libchan_order_DUI     !=  7 )
+    #if( macro_libchan_order_DUI     !=  8 )
     #error "[TAIL_ORDER_FAIL:DUI]"      
     #endif                              
-    #if( macro_libchan_order_GLEBIND !=  8 )
+    #if( macro_libchan_order_GLEBIND !=  9 )
     #error "[TAIL_ORDER_FAIL:GLEBIND]"  
-    #endif 
-    #if( macro_libchan_order_GLCONST !=  9 )
-    #error "[TAIL_ORDER_FAIL:GLCONST]"
-    #endif    
-    #if( macro_libchan_order_CPUNIFO != 10 )
+    #endif                              
+    #if( macro_libchan_order_GLCONST != 10 )
+    #error "[TAIL_ORDER_FAIL:GLCONST]"  
+    #endif                              
+    #if( macro_libchan_order_CPUNIFO != 11 )
     #error "[TAIL_ORDER_FAIL:CPUNIFO]"  
-    #endif                          
-    #if( macro_libchan_order_GRAQUAD != 11 )
+    #endif                              
+    #if( macro_libchan_order_GRAQUAD != 12 )
     #error "[TAIL_ORDER_FAIL:GRAQUAD]"  
     #endif                              
-    #if( macro_libchan_order_FREE_01 != 12 )
+    #if( macro_libchan_order_FREE_01 != 13 )
     #error "[TAIL_ORDER_FAIL:FREE_01]"  
     #endif                              
-    #if( macro_libchan_order_FRAGBED != 13 )
+    #if( macro_libchan_order_FRAGBED != 14 )
     #error "[TAIL_ORDER_FAIL:FRAGBED]"  
-    #endif      
-    #if( macro_libchan_order_PIXNAME != 14 )
+    #endif                              
+    #if( macro_libchan_order_PIXNAME != 15 )
     #error "[TAIL_ORDER_FAIL:PIXNAME]"  
-    #endif                            
-    #if( macro_libchan_order_GPUDATA != 15 )
+    #endif                                
+    #if( macro_libchan_order_GPUDATA != 16 )
     #error "[TAIL_ORDER_FAIL:GPUDATA]"  
-    #endif                                                 
-    #if( macro_libchan_order_PIXLOAD != 16 )
-    #error "[TAIL_ORDER_FAIL:PIXLOAD]"
-    #endif
-    #if( macro_libchan_order_PAINT5D != 17 )
+    #endif                                               
+    #if( macro_libchan_order_PIXLOAD != 17 )
+    #error "[TAIL_ORDER_FAIL:PIXLOAD]"  
+    #endif                              
+    #if( macro_libchan_order_PAINT5D != 18 )
     #error "[TAIL_ORDER_FAIL:PAINT5D]"
     #endif
 
     //:==========:ONE_MORE_REDUNDANT_CHECK_BEFORE_WE_UNDEFINE://
-    //:DONT_POLLUTE_OTHER_PEOPLES_CODE_WITH_MACROS:==========://
-
-    /** I could see how these might be useful to other       **/
-    /** people using the library.... But lets stick with a   **/
-    /** YAGNI (You_Arent_Going_To_Need_It) philosophy.       **/
-
-    #undef  macro_libchan_order_FILEBOI   //:----## 01 ##----://
-    #undef  macro_libchan_order_NATIKEY   //:----## 02 ##----://
-    #undef  macro_libchan_order_IKEYBOX   //:----## 03 ##----://
-    #undef  macro_libchan_order_IMOUBOX   //:----## 04 ##----://
-    #undef  macro_libchan_order_CEDITOR   //:----## 05 ##----://
-    #undef  macro_libchan_order_GINAWIN   //:----## 06 ##----://
-    #undef  macro_libchan_order_DUI       //:----## 07 ##----://
-    #undef  macro_libchan_order_GLEBIND   //:----## 08 ##----://
-    #undef  macro_libchan_order_GLCONST   //:----## 09 ##----://
-    #undef  macro_libchan_order_CPUNIFO   //:----## 10 ##----://
-    #undef  macro_libchan_order_GRAQUAD   //:----## 11 ##----://
-    #undef  macro_libchan_order_FREE_01   //:----## 12 ##----://
-    #undef  macro_libchan_order_FRAGBED   //:----## 13 ##----://
-    #undef  macro_libchan_order_PIXNAME   //:----## 14 ##----://
-    #undef  macro_libchan_order_GPUDATA   //:----## 15 ##----://
-    #undef  macro_libchan_order_PIXLOAD   //:----## 16 ##----://
-    #undef  macro_libchan_order_PAINT5D   //:----## 17 ##----://
- 
-
-    //:==========:DONT_POLLUTE_OTHER_PEOPLES_CODE_WITH_MACROS://
 
 //:================================:LIBRARY_CHAIN_ORDER:CHECK://
+//:CLEANUP:==================================================://
 
+    //:DONT_POLLUTE_OTHER_PEOPLES_CODE_WITH_MACROS:==========://
 
+    //:#_BE_NICE_AVOID_MACRO_POLLUTION_OF_OTHERS_CODE_#://
 
-//: CPUINFO : WRONG!! You Mean: CPUNIFO
+    #undef  macro_libchan_order_SILENCE   //:----## 01 ##----://
+    #undef  macro_libchan_order_FILEBOI   //:----## 02 ##----://
+    #undef  macro_libchan_order_NATIKEY   //:----## 03 ##----://
+    #undef  macro_libchan_order_IKEYBOX   //:----## 04 ##----://
+    #undef  macro_libchan_order_IMOUBOX   //:----## 05 ##----://
+    #undef  macro_libchan_order_CEDITOR   //:----## 06 ##----://
+    #undef  macro_libchan_order_GINAWIN   //:----## 07 ##----://
+    #undef  macro_libchan_order_DUI       //:----## 08 ##----://
+    #undef  macro_libchan_order_GLEBIND   //:----## 09 ##----://
+    #undef  macro_libchan_order_GLCONST   //:----## 10 ##----://
+    #undef  macro_libchan_order_CPUNIFO   //:----## 11 ##----://
+    #undef  macro_libchan_order_GRAQUAD   //:----## 12 ##----://
+    #undef  macro_libchan_order_FREE_01   //:----## 13 ##----://
+    #undef  macro_libchan_order_FRAGBED   //:----## 14 ##----://
+    #undef  macro_libchan_order_PIXNAME   //:----## 15 ##----://
+    #undef  macro_libchan_order_GPUDATA   //:----## 16 ##----://
+    #undef  macro_libchan_order_PIXLOAD   //:----## 17 ##----://
+    #undef  macro_libchan_order_PAINT5D   //:----## 18 ##----://
+ 
+    //:==========:DONT_POLLUTE_OTHER_PEOPLES_CODE_WITH_MACROS://
+
+//:==================================================:CLEANUP://
+//:##########################################################://
