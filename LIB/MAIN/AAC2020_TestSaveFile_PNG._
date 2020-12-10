@@ -35,14 +35,26 @@
             pix_arr[ a ]=(    A  );
         };;
 
-        unsigned int result=( 
-            lodepng_encode32_file( 
-                "MYFOLDER/FILE.PNG" 
-            ,   pix_arr  //:AKA[ image ]
-            ,   pix_wid 
-            ,   pix_hig
-            )
-        );;
+        //:SAVE_FILE_PNG:------------------------------------://
+        #define FILE_PNG ( "MOD/FILE.PNG" )
+
+            //: We don't have a touchFolder, only TouchFile.
+            //: AAC2020_FILEBOI_TouchFolder("./MOD");
+            AAC2020_FILEBOI_TouchFile( FILE_PNG );
+
+            unsigned int result=( 
+                lodepng_encode32_file( 
+
+                    FILE_PNG
+
+                ,   pix_arr  //:AKA[ image ]
+                ,   pix_wid 
+                ,   pix_hig
+                )
+            );;
+
+        #undef  FILE_PNG
+        //:------------------------------------:SAVE_FILE_PNG://
 
         return( result );
     } 

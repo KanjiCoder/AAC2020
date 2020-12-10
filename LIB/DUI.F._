@@ -1,263 +1,323 @@
 //:DUI.F._
 
-int
-AAC2020_DUI_ErrorCheckSizeOfTypes_WIN_10_64BIT()
-{
+//:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=====================://
+    void 
+    aac2020_dui_Halt( const char* msg_err )
+    {
+        printf("[FATAL_ERROR:aac2020_dui]:%s\n", msg_err );
+        fflush(stdout);
+        exit( 10  /** 420 / 42 **/  );
+    }
+//:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+//:OKAY_NEAR_TOP_BUT_BELOW_HALT:=============================://
 
-    /** This function is platform specific. **/
-    /** For Platform: Windows 10, 64 bit    **/
+    void
+    aac2020_dui_Okay( const char* msg_o_k ){
 
-    if( 71 != sizeof( struct AAC2020_DUI_CHOOSECOLORA ) ){
-        assert("[FAIL:SIZEOF]");
-    };;
+        if( AAC2020_SILENCE.DUI >= 1 ){
 
-    return( 0 );
-}
+            /** DO NOTHING. Non errors Silenced. **/
 
-int
-AAC2020_DUI_MessageBoxForHexValue(
-    const char*   msg
-,   unsigned long hex
-){
-
-    PEB2020_DLIB  hUser32    ; /** DLL Library  Reference **/
-    PEB2020_FUNC  pMessageBox; /** GPA Function Pointer   **/
-
-    hUser32 = PEB2020_LoadLibraryA("user32.dll");
-
-    pMessageBox=(
-    PEB2020_GetProcAddress( hUser32, "MessageBoxA")
-    );;
-
-    char buf[40]={0};
-    //:                     10        20          32      40
-    //:-------------1234567890123456789012345678901234567890
-    //:------------"[Your_Color_Is]:((( 0xRRGGBBAA )))" 
-    sprintf( buf , "[Your_Color_Is]:((( %0x )))" 
-    , (unsigned int)hex );
-
-    pMessageBox(
-    /**/NULL
-    ,   buf /** BODY : Your_Color_Is...        **/
-    ,   msg /** TITLE: Caller Supplied Message **/
-    
-    ,   MACRO_WINDOWS_xxx_MB_OK
-    );;
-
-    return( 0 );
-}
-
-//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
-
-unsigned long
-AAC2020_DUI_AskUserToPickColor_BWO()
-{
-
-    /** BWO: BEFORE_main_WINDOW_OPENS ...................... **/
-    /** This function is NOT aware of GINAWIN library.       **/
-
-    //:LOAD_DLL_FILES:---------------------------------------://
-
-        PEB2020_DLIB 
-        dll_User32=(PEB2020_LoadLibraryA("User32.dll"));
-
-        PEB2020_DLIB
-        dll_Comdlg32=( PEB2020_LoadLibraryA("Comdlg32.dll") );
-
-        PEB2020_DLIB
-        dll_Gdi32=( PEB2020_LoadLibraryA("Gdi32.dll"));
-
-    //:---------------------------------------:LOAD_DLL_FILES://
-    //:LOAD_FUNCTIONS:---------------------------------------://
-
-        PEB2020_FUNC
-        fun_GetDesktopWindow=( PEB2020_GetProcAddress(
-            dll_User32 , "GetDesktopWindow"
-        ));;
-
-        PEB2020_FUNC
-        fun_ChooseColorA=( PEB2020_GetProcAddress(
-            dll_Comdlg32 , "ChooseColorA" ));;
-
-        if( (void*)0 == fun_ChooseColorA ){
-            assert("[FAIL:ChooseColor:PTR]");
-        };;
-
-        PEB2020_FUNC
-        fun_CreateSolidBrush=(PEB2020_GetProcAddress(
-            dll_Gdi32 , "CreateSolidBrush" ));;
-
-        if( (void*)0 == fun_CreateSolidBrush ){
-            assert("[FAIL:CreateSolidBrush:PTR]");
-        };;
-
-    //:---------------------------------------:LOAD_FUNCTIONS://
-    //:GET_PARENT_WINDOW:####################################://
-    //:######################################################://
-
-        //: Parent window always desktop window because      ://
-        //: we are in the version of function to be called   ://
-        //: before main window opens.                        ://
-
-        void*  hwnd  =(void*)fun_GetDesktopWindow(); 
-
-    //:######################################################://
-    //:####################################:GET_PARENT_WINDOW://
-    //:STUFF_I_DONT_FEEL_LIKE_ORGANIZING:--------------------://
-
-        /** Common dialog box structure **/
-        struct AAC2020_DUI_CHOOSECOLORA cc ={0}; 
-        
-        /** array of custom colors **/
-        static AAC2020_DUI_COLORREF acrCustClr[16]; 
-        
-        void*  hbrush; // brush handle
-        
-        static unsigned long 
-            rgbCurrent = 0x808080;   // initial color selection
-                                            
-        // Initialize AAC2020_DUI_CHOOSECOLORA 
-        cc.lStructSize  = sizeof(cc);
-        cc.hwndOwner    = hwnd;
-        cc.lpCustColors = ( unsigned long *) acrCustClr;
-        cc.rgbResult    = rgbCurrent;
-        cc.Flags        = ( 0 | 0x00002 /** CC_FULLOPEN **/ 
-                              | 0x00001 /** CC_RGBINIT  **/ );
-        
-        /** #COLOR_PICKER# **/
-        if (fun_ChooseColorA(&cc)== 1 /** TRUE **/ ) 
-        {
-            hbrush = (void*)fun_CreateSolidBrush(cc.rgbResult);
-            rgbCurrent = cc.rgbResult; 
-
-            if( hbrush ){ /** NOOP **/ };
-
-            printf("[OKAY!:fun_ChooseColorA:RETURNED_TRUTH]");
         }else{
-            printf("[ERROR:fun_ChooseColorA:RETURNED_FALSE]");
+
+            printf( "[aac2020_dui:Okay]:%s\n" ,  msg_o_k);
+            fflush(stdout);
+
+        };;
+    }  
+
+//:=============================:OKAY_NEAR_TOP_BUT_BELOW_HALT://
+//:INFO_NEAR_TOP_BUT_BELOW_HALT:=============================://
+
+    void
+    aac2020_dui_Info( const char* msg_o_k ){
+
+        if( AAC2020_SILENCE.DUI >= 1 ){
+
+            /** DO NOTHING. Non errors Silenced. **/
+
+        }else{
+
+            printf( "[aac2020_dui:Info]:%s\n" ,  msg_o_k);
+            fflush(stdout);
+
+        };;
+    }  
+
+//:=============================:INFO_NEAR_TOP_BUT_BELOW_HALT://
+//:ERROR_CHECK_SIZE_OF_TYPES:================================://
+
+    int
+    AAC2020_DUI_ErrorCheckSizeOfTypes_WIN_10_64BIT()
+    {
+
+        /** This function is platform specific. **/
+        /** For Platform: Windows 10, 64 bit    **/
+
+        if( 71 != sizeof( struct AAC2020_DUI_CHOOSECOLORA ) ){
+            assert("[FAIL:SIZEOF]");
         };;
 
-        if( 0 == rgbCurrent ){
-            printf("[ARE_WE_SURE_BLACK_WAS_SELECTED?]");
-        };;
+        return( 0 );
+    }
 
-    //:--------------------:STUFF_I_DONT_FEEL_LIKE_ORGANIZING://
+//:================================:ERROR_CHECK_SIZE_OF_TYPES://
+//:MESSAGE_BOX_FOR_HEX_VALUE:================================://
+#define DLL PEB2020_DLIB           //:------------------: 01 ://
+#define FUN PEB2020_FUNC           //:------------------: 02 ://
+#define LLA PEB2020_LoadLibraryA   //:------------------: 03 ://
+#define GPA PEB2020_GetProcAddress //:------------------: 04 ://
 
-    return( rgbCurrent );
+    int
+    AAC2020_DUI_MessageBoxForHexValue(
+        const char*   msg
+    ,   unsigned long hex
+    ){
 
-}
+        DLL  hUser32    ; /** DLL Library  Reference **/
+        FUN  pMessageBox; /** GPA Function Pointer   **/
 
-//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+                           hUser32 = LLA("user32.dll");
+        pMessageBox=( GPA( hUser32, "MessageBoxA") );;
 
-unsigned long
-AAC2020_DUI_AskUserToPickColor()
-{
-    /** This version of function adapts to if GINAWIN        **/
-    /** Library exists or not. Think I will NOT use this     **/
-    /** function but instead use                             **/
-    /** AAC2020_DUI_AskUserToPickColor_BWO , but will keep   **/
-    /** this code for reference.                             **/
+        char buf[40]={0};
+        //:                     10        20          32      40
+        //:-------------1234567890123456789012345678901234567890
+        //:------------"[Your_Color_Is]:((( 0xRRGGBBAA )))" 
+        sprintf( buf , "[Your_Color_Is]:((( %0x )))" 
+        , (unsigned int)hex );
 
-    //:LOAD_DLL_FILES:---------------------------------------://
+        pMessageBox(
+        /**/NULL
+        ,   buf /** BODY : Your_Color_Is...        **/
+        ,   msg /** TITLE: Caller Supplied Message **/
+        
+        ,   MACRO_WINDOWS_xxx_MB_OK
+        );;
 
-    #if( AAC2020_INCLUDE_GINAWIN <= 0 )
+        return( 0 );
+    }
 
-        PEB2020_DLIB 
-        dll_User32=(PEB2020_LoadLibraryA("User32.dll"));
+#undef  DLL //: 01 :-----------------------------------------://
+#undef  FUN //: 02 :-----------------------------------------://
+#undef  LLA //: 03 :-----------------------------------------://
+#undef  GPA //: 04 :-----------------------------------------://
+//:================================:MESSAGE_BOX_FOR_HEX_VALUE://
+//:ASK_USER_TO_PICK_COLOR:BWO:===============================://
+#define OKAY aac2020_dui_Okay
+#define INFO aac2020_dui_Info
 
-    #endif
+    unsigned long
+    AAC2020_DUI_AskUserToPickColor_BWO()
+    {
 
-        PEB2020_DLIB
-        dll_Comdlg32=( PEB2020_LoadLibraryA("Comdlg32.dll") );
+        /** BWO: BEFORE_main_WINDOW_OPENS .................. **/
+        /** This function is NOT aware of GINAWIN library.   **/
 
-        PEB2020_DLIB
-        dll_Gdi32=( PEB2020_LoadLibraryA("Gdi32.dll"));
+        //:LOAD_DLL_FILES:-----------------------------------://
+        #define LOAD  PEB2020_LoadLibraryA /** Load DLL Func **/
+        #define ADDR  PEB2020_DLIB         /** DLL Address   **/
 
-    //:---------------------------------------:LOAD_DLL_FILES://
-    //:LOAD_FUNCTIONS:---------------------------------------://
+            ADDR dll_User32   =( LOAD("User32.dll")   );
+            ADDR dll_Comdlg32 =( LOAD("Comdlg32.dll") );
+            ADDR dll_Gdi32    =( LOAD("Gdi32.dll")    );
 
-    #if( AAC2020_INCLUDE_GINAWIN <= 0 )
+        #undef  ADDR 
+        #undef  LOAD 
+        //:-----------------------------------:LOAD_DLL_FILES://
+        //:LOAD_FUNCTIONS:-----------------------------------://
+        #define FUN PEB2020_FUNC
+        #define GPA PEB2020_GetProcAddress
 
-        PEB2020_FUNC
-        fun_GetDesktopWindow=( PEB2020_GetProcAddress(
-            dll_User32 , "GetDesktopWindow"
-        ));;
+                FUN           fun_GetDesktopWindow=( GPA(
+                    dll_User32 , "GetDesktopWindow"
+                ));;
+                
+                FUN             fun_ChooseColorA=( GPA(
+                    dll_Comdlg32 , "ChooseColorA" ));;
+                
+                if( (void*)0 == fun_ChooseColorA ){
+                    assert("[FAIL:ChooseColor:PTR]");
+                };;
+                
+                FUN fun_CreateSolidBrush=(GPA(
+                    dll_Gdi32 , "CreateSolidBrush" ));;
+                
+                if( (void*)0 == fun_CreateSolidBrush ){
+                    assert("[FAIL:CreateSolidBrush:PTR]");
+                };;
+                
+        #undef  FUN
+        #undef  GPA
+        //:-----------------------------------:LOAD_FUNCTIONS://
+        //:GET_PARENT_WINDOW:################################://
+        //:##################################################://
 
-    #endif
+            /** #_PARENT_ALWAYS_DESKTOP_HERE_DUI_# **/
 
-        PEB2020_FUNC
-        fun_ChooseColorA=( PEB2020_GetProcAddress(
-            dll_Comdlg32 , "ChooseColorA" ));;
+            void*  hwnd  =(void*)fun_GetDesktopWindow(); 
 
-        if( (void*)0 == fun_ChooseColorA ){
-            assert("[FAIL:ChooseColor:PTR]");
-        };;
+        //:##################################################://
+        //:################################:GET_PARENT_WINDOW://
+        //:STUFF_I_DONT_FEEL_LIKE_ORGANIZING:----------------://
 
-        PEB2020_FUNC
-        fun_CreateSolidBrush=(PEB2020_GetProcAddress(
-            dll_Gdi32 , "CreateSolidBrush" ));;
+            /** Common dialog box structure **/
+            struct AAC2020_DUI_CHOOSECOLORA cc ={0}; 
+            
+            /** array of custom colors **/
+            static AAC2020_DUI_COLORREF acrCustClr[16]; 
+            
+            void*  hbrush; // brush handle
+            
+            // initial color selection
+            static unsigned long  rgbCurrent = 0x808080;   
+                                                
+            // Initialize AAC2020_DUI_CHOOSECOLORA 
+            cc.lStructSize  = sizeof(cc);
+            cc.hwndOwner    = hwnd;
+            cc.lpCustColors = ( unsigned long *) acrCustClr;
+            cc.rgbResult    = rgbCurrent;
+            cc.Flags        = ( 0 | 0x00002 /** CC_FULLOPEN **/ 
+                                  | 0x00001 /** CC_RGBINIT  **/ 
+                                );;
+            
+            /** #COLOR_PICKER# **/
+            if (fun_ChooseColorA(&cc)== 1 /** TRUE **/ ) 
+            {
+                hbrush = (void*)fun_CreateSolidBrush(
+                                                cc.rgbResult);;
+                rgbCurrent = cc.rgbResult; 
 
-        if( (void*)0 == fun_CreateSolidBrush ){
-            assert("[FAIL:CreateSolidBrush:PTR]");
-        };;
+                if( hbrush ){ /** NOOP **/ };
 
-    //:---------------------------------------:LOAD_FUNCTIONS://
-    //:GET_PARENT_WINDOW:####################################://
-    //:######################################################://
-    #if( AAC2020_INCLUDE_GINAWIN <= 0 )
+                OKAY("[OKAY!:fun_ChooseColorA:RETURNED_TRUTH]");
+            }else{
+                INFO("[ERROR:fun_ChooseColorA:RETURNED_FALSE]");
+            };;
 
-        void*  hwnd  =(void*)fun_GetDesktopWindow(); 
+            if( 0 == rgbCurrent ){
+                INFO("[ARE_WE_SURE_BLACK_WAS_SELECTED?]");
+            };;
 
-    #endif
-    #if( AAC2020_INCLUDE_GINAWIN >= 1 )
+        //:----------------:STUFF_I_DONT_FEEL_LIKE_ORGANIZING://
+
+        return( rgbCurrent );
+    }
+
+#undef  OKAY
+#undef  INFO
+//:===============================:ASK_USER_TO_PICK_COLOR:BWO://
+//:ASK_USER_TO_PICK_COLOR:___:===============================://
+#define INFO aac2020_dui_Info
+
+    unsigned long
+    AAC2020_DUI_AskUserToPickColor()
+    {
+        //:#_DUI_PICKCOLOR_KEPT_FOR_REFERENCE_#://
+
+        //:LOAD_DLL_FILES:-----------------------------------://
+        #define DLL PEB2020_DLIB
+        #define LLA PEB2020_LoadLibraryA
+        
+            #if( AAC2020_INCLUDE_GINAWIN <= 0 )
+
+                DLL dll_User32  =( LLA("User32.dll")    );
+            #endif
+                DLL dll_Comdlg32=( LLA("Comdlg32.dll") );
+                DLL dll_Gdi32   =( LLA("Gdi32.dll")    );
+
+        #undef DLL
+        #undef LLA
+        //:-----------------------------------:LOAD_DLL_FILES://
+        //:LOAD_FUNCTIONS:-----------------------------------://
+
+        #if( AAC2020_INCLUDE_GINAWIN <= 0 )
+
+            PEB2020_FUNC
+            fun_GetDesktopWindow=( PEB2020_GetProcAddress(
+                dll_User32 , "GetDesktopWindow"
+            ));;
+
+        #endif
+
+            PEB2020_FUNC
+            fun_ChooseColorA=( PEB2020_GetProcAddress(
+                dll_Comdlg32 , "ChooseColorA" ));;
+
+            if( (void*)0 == fun_ChooseColorA ){
+                assert("[FAIL:ChooseColor:PTR]");
+            };;
+
+            PEB2020_FUNC
+            fun_CreateSolidBrush=(PEB2020_GetProcAddress(
+                dll_Gdi32 , "CreateSolidBrush" ));;
+
+            if( (void*)0 == fun_CreateSolidBrush ){
+                assert("[FAIL:CreateSolidBrush:PTR]");
+            };;
+
+        //:-----------------------------------:LOAD_FUNCTIONS://
+        //:GET_PARENT_WINDOW:################################://
+        //:##################################################://
+        #if( AAC2020_INCLUDE_GINAWIN <= 0 )
+
+            void*  hwnd  =(void*)fun_GetDesktopWindow(); 
+
+        #endif
+        #if( AAC2020_INCLUDE_GINAWIN >= 1 )
 
         //+Handle to window is NOT a windows device context! +//
         //- void*  hwnd  =(void*)AAC2020_GINAWIN_GetWinDC(); -//
-        void* hwnd=( AAC2020_GINAWIN_GET_han_win() );
+            void* hwnd=( AAC2020_GINAWIN_GET_han_win() );
 
-    #endif
-    //:######################################################://
-    //:####################################:GET_PARENT_WINDOW://
-    //:STUFF_I_DONT_FEEL_LIKE_ORGANIZING:--------------------://
+        #endif
+        //:##################################################://
+        //:################################:GET_PARENT_WINDOW://
+        //:STUFF_I_DONT_FEEL_LIKE_ORGANIZING:----------------://
 
-        /** Common dialog box structure **/
-        struct AAC2020_DUI_CHOOSECOLORA cc ={0}; 
-        
-        /** array of custom colors **/
-        static AAC2020_DUI_COLORREF acrCustClr[16]; 
-        
-        void*  hbrush; // brush handle
-        
-        static unsigned long 
-            rgbCurrent = 0x808080;   // initial color selection
-                                            
-        // Initialize AAC2020_DUI_CHOOSECOLORA 
-        cc.lStructSize  = sizeof(cc);
-        cc.hwndOwner    = hwnd;
-        cc.lpCustColors = ( unsigned long *) acrCustClr;
-        cc.rgbResult    = rgbCurrent;
-        cc.Flags        = ( 0 | 0x00002 /** CC_FULLOPEN **/ 
-                              | 0x00001 /** CC_RGBINIT  **/ );
-        
-        /** #COLOR_PICKER# **/
-        if (fun_ChooseColorA(&cc)== 1 /** TRUE **/ ) 
-        {
-            hbrush = (void*)fun_CreateSolidBrush(cc.rgbResult);
-            rgbCurrent = cc.rgbResult; 
+            /** Common dialog box structure **/
+            struct AAC2020_DUI_CHOOSECOLORA cc ={0}; 
+            
+            /** array of custom colors **/
+            static AAC2020_DUI_COLORREF acrCustClr[16]; 
+            
+            void*  hbrush; // brush handle
+            
+            // initial color selection
+            static unsigned long rgbCurrent = 0x808080;   
+                                                
+            // Initialize AAC2020_DUI_CHOOSECOLORA 
+            cc.lStructSize  = sizeof(cc);
+            cc.hwndOwner    = hwnd;
+            cc.lpCustColors = ( unsigned long *) acrCustClr;
+            cc.rgbResult    = rgbCurrent;
+            cc.Flags        = ( 0 | 0x00002 /** CC_FULLOPEN **/ 
+                                  | 0x00001 /** CC_RGBINIT  **/ 
+                                );;
+            
+            /** #COLOR_PICKER# **/
+            if (fun_ChooseColorA(&cc)== 1 /** TRUE **/ ) 
+            {
+                hbrush = (void*)fun_CreateSolidBrush(
+                                                cc.rgbResult);;
+                rgbCurrent = cc.rgbResult; 
 
-            if( hbrush ){ /** NOOP **/ };
+                if( hbrush ){ /** NOOP **/ };
 
-            printf("[OKAY!:fun_ChooseColorA:RETURNED_TRUTH]");
-        }else{
-            printf("[ERROR:fun_ChooseColorA:RETURNED_FALSE]");
-        };;
+                INFO("[OKAY!:fun_ChooseColorA:RETURNED_TRUTH]");
+            }else{
+                INFO("[ERROR:fun_ChooseColorA:RETURNED_FALSE]");
+            };;
 
-        if( 0 == rgbCurrent ){
-            printf("[ARE_WE_SURE_BLACK_WAS_SELECTED?]");
-        };;
+            if( 0 == rgbCurrent ){
+                INFO("[ARE_WE_SURE_BLACK_WAS_SELECTED?]");
+            };;
 
-    //:--------------------:STUFF_I_DONT_FEEL_LIKE_ORGANIZING://
+        //:----------------:STUFF_I_DONT_FEEL_LIKE_ORGANIZING://
 
-    return( rgbCurrent );
+        return( rgbCurrent );
 
-}
+    }
+
+#undef  INFO
+//:===============================:ASK_USER_TO_PICK_COLOR:___://

@@ -6,7 +6,155 @@
     
 *** ******************************************************** ***
 
+#_DUI_PICKCOLOR_KEPT_FOR_REFERENCE_#############################
 
+    /** This version of function adapts to if GINAWIN        **/
+    /** Library exists or not. Think I will NOT use this     **/
+    /** function but instead use                             **/
+    /** AAC2020_DUI_AskUserToPickColor_BWO , but will keep   **/
+    /** this code for reference.                             **/
+
+    AAC2020_DUI_AskUserToPickColor <--TALKING ABOUT THIS
+
+#############################_DUI_PICKCOLOR_KEPT_FOR_REFERENCE_#
+#_PARENT_ALWAYS_DESKTOP_HERE_DUI_###############################
+
+    //: Parent window always desktop window because      ://
+    //: we are in the version of function to be called   ://
+    //: before main window opens.                        ://
+
+###############################_PARENT_ALWAYS_DESKTOP_HERE_DUI_#
+#ABOUT_HEAP_FREE################################################
+
+    Kernel32.dll                     
+    Frees a memory block alloced     
+    from a heap by the HeapAlloc     
+    or HeapReAlloc function.     
+
+################################################ABOUT_HEAP_FREE#
+#_WHY_HW_COMMENTED_OUT_IN_CALL_BELOW_###########################
+
+    /** DATE[ 2020_10_30 ] ********************************* **/
+    /** GINAWIN is only meant for ONE window. So we should   **/
+    /** make as many variables FILESCOPE as possible to avoid**/
+    /** problems resulting from passing around variables.    **/
+    /** HENCE: "Hw" commented out in the call below.         **/
+
+    Msg = aac2020_ginawin_WindowLoop( /** Hw **/ );
+
+###########################_WHY_HW_COMMENTED_OUT_IN_CALL_BELOW_#
+@CALL_FROM_ANOTHER_THREAD@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    This function should be called from a different thread.
+    
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@CALL_FROM_ANOTHER_THREAD@
+#_WINTOP_IS_ANNOYING_###########################################
+    
+    Having "window always on top" is annoying as hell.
+    Don't do that. If you don't like it, others will
+    definitely hate it.
+
+###########################################_WINTOP_IS_ANNOYING_#
+#_SET_FLAG_AFTER_SETTING_DEVICE_CONTEXT_########################
+
+    EXTRACTED_ON_DATE[ 2020_12_09 ]
+
+    //|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯MC|//
+    //|PUT AFTER device context has been set,or your   MC|//
+    //|device context fetching function waiting on     MC|//
+    //|this flag to be set in this thread will end up  MC|//
+    //|with a NULL device context. Speaking Of:        MC|//
+    //|AAC2020_GINAWIN_GetWindowDeviceContext();       MC|//
+    AAC2020_GINAWIN.window_created =( 1 );
+
+########################_SET_FLAG_AFTER_SETTING_DEVICE_CONTEXT_#
+@STP_VAR@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    EXTRACTED_ON_DATE[ 2020_12_09 ]
+
+    int ok=( 1 );
+    /** ok: Single_Threaded_Promise_Variable( STP_VAR ) **/
+
+    We use the "ok" variable to un-branch single threaded
+    logic that would otherwise be heavily nested. So I think
+    of the structure just like if I were using a promise
+    in node.js or javascript.
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@STP_VAR@
+#_DONT_CALL_FUNCTION_POINTER_IN_SPINLOCK_#######################
+
+        //: CANDO: (NOT: T-o-d-o ):
+        //: Could call a function pointer here.
+        //: BUT current plan is to ABANDON multi-threadin.
+        //: BECAUSE: KEEP_IT_SIMPLE_STUPID.
+        //: Like in DOOM, game logic is tied to frame rate
+        //: because they KEEP_IT_SIMPLE_STUPID.
+
+#######################_DONT_CALL_FUNCTION_POINTER_IN_SPINLOCK_#
+#_DONT_LET_WINDOW_CODE_MAKE_OPENGL_CALLS_#######################
+
+    ************************************************************
+    Found this large comment in my window code above
+    [ aac2020_ginawin_WindowLoop ]. I think we should
+    NOT call GL calls from the window code. Because
+    window code is platform specific and we want to
+    avoid tight coupling so refactoring to another
+    platform isn't too hard.
+
+    BELOW_EXTRACTED_ON_DATE[ 2020_12_09 ]
+    ************************************************************
+
+    //|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//
+    //| Since you are discussing threads here,     |//
+    //| you are aware that GL commands can only    |//
+    //| be issued from a thread that has an        |//
+    //| active GL context,correct? And that a      |//
+    //| context can only be active in 0 or 1       |//
+    //| threads at a time. If you ever tried to    |//
+    //| issue commands from a different thread     |//
+    //| than the one that created your context,    |//
+    //| and you do not understand this then        |//
+    //| confusing run-time behvior would ensue;    |//
+    //| multi-threading is fine in GL,but you      |//
+    //| have to mind which threads have active     |//
+    //| contexts.                                  |//
+    //| stackoverflow.com/questions/21685932/      |//
+    //|____________________________________________|//
+    //# Might want to call update here by          #//
+    //# adding a render update callback?           #//
+    //# That would get it to fire during WM_PAINT  #//
+    //# AND get it on same thread, alleviating     #//
+    //# two possible problems.                     #//
+
+#######################_DONT_LET_WINDOW_CODE_MAKE_OPENGL_CALLS_#
+#_EXTRAFLUSH_INCASE_BADFMTSTR_##################################
+    
+    Extra fflush(stdout) between printf statements in case
+    the 2nd printf statement using a format string variable
+    has an invalid format that will cause a segfault.
+
+##################################_EXTRAFLUSH_INCASE_BADFMTSTR_#
+#_SETFOCUS_FAILS_IF_DIALOG_IS_OPEN_#############################
+
+    EXTRACTED_DATE[ 2020_12_09 ]FROM[ GINAWIN.F._ ]
+
+        //:NOTE: SetFocus: Will FAIL when other dialogs are
+        //:                opened as children of the main
+        //:                window. SetFocus probably should
+        //:                NOT be used in our 
+        //:               [ window_loop / window_tick ]
+
+#############################_SETFOCUS_FAILS_IF_DIALOG_IS_OPEN_#
+#_SETFOCUS_DOES_NOT_PUT_WINDOW_TOP_#############################
+
+    EXTRACTED_DATE[ 2020_12_09 ]FROM[ GINAWIN.F._ ]
+
+        //:NOTE: SetFocus: Is NOT responsible for window
+        //:                always being on top. That is
+        //:                0x00000008L /** WS_EX_TOPMOST **/ 
+        //:                Used during window creation.
+
+#############################_SETFOCUS_DOES_NOT_PUT_WINDOW_TOP_#
 #_ALWAYS_SHOW_MESSAGE_ON_CRASH_#################################
 
     If we are crashing the program. Always show the

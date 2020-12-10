@@ -77,6 +77,7 @@
         /** Are always shown before crashing system.     **/
 
         printf("[AAC2020_GINAWIN:ATEM_STR]:MESSAGE_BELOW]:\n");
+        fflush( stdout ); //:#_EXTRAFLUSH_INCASE_BADFMTSTR_#://
         printf( fmts , str );
         fflush( stdout );
     }
@@ -146,6 +147,7 @@
 
 //:=============================================:OKAY_MESSAGE://
 //:INFO_MESSAGE_IS_SILENCABLE:===============================://
+#define I32 int32_t /** GCC: <stdint.h> **/
 
     void
     aac2020_ginawin_Info( const char* msg_inf ){
@@ -158,9 +160,32 @@
 
             printf( "[AAC2020_GINAWIN:INFO]:%s\n" ,  msg_inf);
             fflush(stdout);
-
         };;
     }  
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    void
+    AAC2020_GINAWIN_Info_dec( 
+        const char* fmt_str
+    ,   I32         dec_val
+    )
+    {
+        if( AAC2020_SILENCE.GINAWIN >= 1 ){
+
+            /** DO NOTHING. Non errors Silenced. **/
+
+        }else{
+
+            printf( "[AAC2020_GINAWIN_Info_dec:BELOW]:\n");
+            fflush(stdout);//:#_EXTRAFLUSH_INCASE_BADFMTSTR_#://
+            printf( fmt_str , dec_val );
+            fflush(stdout);
+
+        };;
+    }
+
+#undef  I32
 //:===============================:INFO_MESSAGE_IS_SILENCABLE://
 //:ASSERT_CORRECT_SIZES_OF_TYPES:============================://
 #define ATEM     aac2020_ginawin_AboutToErrorMessage
@@ -935,14 +960,14 @@ aac2020_ginawin_TakeMessage(
     ){
         v_HWND Hw = ( AAC2020_GINAWIN.PW.W32.handle_to_window );
 
-        #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 ) //:##############://
+        #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 ) //:##########://
         #define H aac2020_ginawin_Halt
 
             if( ((void*)0) ==    Hw ){ H("[BAD_HAN_WIN]"); };
             if( ((void*)0) == ptr_M ){ H("[BAD_MSG_OBJ]"); };
 
         #undef  H
-        #endif //:###############################################://
+        #endif //:###########################################://
 
         /** kel_cal: keep_looping.THE_CALLER **/
         int kel_cal = ( 0 - 48221 ); //:ReturnThisFlag
@@ -951,7 +976,7 @@ aac2020_ginawin_TakeMessage(
         /** To add SINGLE THREADING support for this window  **/
         /** class.                                           **/
 
-        //:GET:U32F:---------------------------------------------://
+        //:GET:U32F:-----------------------------------------://
 
             struct aac2020_ginawin_functions_USER32*
             U32F = &(
@@ -962,44 +987,37 @@ aac2020_ginawin_TakeMessage(
             struct aac2020_ginawin_data_USER32* 
             U32DATA = &( U32F -> DATA);
 
-            #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 ) //:##########://    
+            #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 ) //:######://    
             #define H aac2020_ginawin_Halt
 
                 if( ((void*)0) == U32F    ){ H("[NO:U32F]"); };
                 if( ((void*)0) == U32DATA ){ H("[NO:DATA]"); };
 
             #undef  H
-            #endif //:###########################################://
+            #endif //:#######################################://
 
-        //:---------------------------------------------:GET:U32F://
+        //:-----------------------------------------:GET:U32F://
 
-        { //:SCOPE::::::::::::::::::::::::::::::::::::::::::SCOPE://
-        #define FUK aac2020_ginawin_Halt
+        { //:SCOPE::::::::::::::::::::::::::::::::::::::SCOPE://
+        #define H aac2020_ginawin_Halt
+        #define V ((void*)0) 
 
-            //:NOTE: SetFocus: Will FAIL when other dialogs are
-            //:                opened as children of the main
-            //:                window. SetFocus probably should
-            //:                NOT be used in our 
-            //:               [ window_loop / window_tick ]
-
-            //:NOTE: SetFocus: Is NOT responsible for window
-            //:                always being on top. That is
-            //:                0x00000008L /** WS_EX_TOPMOST **/ 
-            //:                Used during window creation.
+            //:#_SETFOCUS_FAILS_IF_DIALOG_IS_OPEN_#://
+            //:#_SETFOCUS_DOES_NOT_PUT_WINDOW_TOP_#://
             
-            int sw_show = U32DATA -> sw_show;
-            int   SW = U32F ->  ShowWindow(  Hw,sw_show); 
-            int   UW = U32F ->  UpdateWindow(Hw        ); 
-            void* SF = U32F ->  SetFocus(    Hw        );  
+            int  sw_show = U32DATA -> sw_show;
+            int       SW = U32F ->  ShowWindow(  Hw,sw_show); 
+            int       UW = U32F ->  UpdateWindow(Hw        ); 
+            void*     SF = U32F ->  SetFocus(    Hw        );  
 
-            if(         0  == SW ){ /** NOT AN ERROR **/ };
-            if(         0  != SW ){ /** NOT AN ERROR **/ };
+            if( 0  == SW ){ /** NOT AN ERROR **/ };
+            if( 0  != SW ){ /** NOT AN ERROR **/ };
+                
+            if( 0  == UW ){ H("[UpdateWindow:FAIL]"); };
+    ////    if( V  == SF ){ H("[SetFocus:::::FAIL]"); };
+            if(       SF ){ /** NOOP **/ };
 
-            if(         0  == UW ){ FUK("[UpdateWindow:FAIL]"); };
-        //  if( ((void*)0) == SF ){ FUK("[SetFocus:::::FAIL]"); };
-            if(               SF ){ /** NOOP **/ };
-
-            #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 ) //:##########://
+            #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 ) //:######://
              if( AAC2020_SILENCE.GINAWIN     <= 0 ){
 
                     static int counter = 0; counter++;
@@ -1008,10 +1026,11 @@ aac2020_ginawin_TakeMessage(
                     };;
 
             };;
-            #endif //:###########################################://
+            #endif //:#######################################://
 
-        #undef  FUK
-        } //:SCOPE::::::::::::::::::::::::::::::::::::::::::SCOPE://
+        #undef  H
+        #undef  V
+        } //:SCOPE::::::::::::::::::::::::::::::::::::::SCOPE://
 
         UINT_u32_4B          wm_quit     ;                
         wm_quit = U32DATA -> wm_quit     ;
@@ -1025,46 +1044,51 @@ aac2020_ginawin_TakeMessage(
 
         #if( AAC2020_CRASH_ON_VITAL_TODO >= 1 ) //:##########://
 
-            #error : I think code below is causing the  window crash.
+            #error : Maybe_Remove_This_I_Did_My_Best
+
+            I tried to fix the code here... And we got some
+            results with "nom > 1" showing in the printf
+            statements. But I must be doing something else
+            wrong somewhere else in window code.
 
         #endif //:###########################################://
 
-        
-        
-           //: if /** while **/ ( 
-            if(
-
-                /** M.message **/
-                (*ptr_M).message
-                !=
-                wm_quit
-
-            ){
+            //:IS_QUIT_MESSAGE:NO:---------------------------://
+            if( wm_quit != (*ptr_M).message ){
                 
                 //:While loop should be around this to empty
                 //:the queue.
                 I32 miv=( 0 ); /** miv:Message_Is_Available **/
                 I32 nom=( 0 ); /** Number_Of_Messages **/
 
+                //:DO_WHILE:---------------------------------://
                 do{
+                #define  TAKE  aac2020_ginawin_TakeMessage
+                #define  TRAN  U32F -> TranslateMessage
+                #define  DISP  U32F -> DispatchMessageW
+
                     //:#_GINAWIN_DOLOOP_ISNOTTHE_FINALFIX_#://
 
-                    miv=( aac2020_ginawin_TakeMessage( ptr_M /** &M **/ ) );
-
-                    if( miv >= 1 /** message_is_available **/ ){                        
-                        U32F -> TranslateMessage(    ptr_M /** &M **/ );
-                        U32F -> DispatchMessageW(    ptr_M /** &M **/ );
-                        nom++;
-                    };;
+                        miv=( TAKE( ptr_M  ) );
+                    if( miv >= 1             ){                        
+                        TRAN(       ptr_M  )  ;
+                        DISP(       ptr_M  )  ;
+                        nom++                 ;
+                    };;;;;;;;;;;;;;;;;;;;;;;;;;
 
                     /** Confirm this do-loop is necessary. **/
                     if( nom >1 && AAC2020_SILENCE.GINAWIN<= 0 ){
 
-                        printf("[nom]:%d\n", nom );
+                        AAC2020_GINAWIN_Info_dec(
+                        "[GINAWIN:nom]:%d\n", nom );
 
                     };;
 
+                #undef   TAKE
+                #undef   TRAN
+                #undef   DISP
                 }while( miv >= 1 );
+                //:---------------------------------:DO_WHILE://
 
                 #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 )
                  if( AAC2020_SILENCE.GINAWIN     <= 0 ){
@@ -1080,26 +1104,23 @@ aac2020_ginawin_TakeMessage(
 
                 kel_cal = ( 1 );
             };;
-
-            if(
-
-                /** M.message **/
-                (*ptr_M).message
-                ==
-                wm_quit
-    
-            ){
+            //:---------------------------:IS_QUIT_MESSAGE:NO://
+            //:IS_QUIT_MESSAGE:YES:--------------------------://
+            if( wm_quit == (*ptr_M).message ){
                 kel_cal = ( 0 );
 
                 #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 )
                  if( AAC2020_SILENCE.GINAWIN     <= 0 ){
 
-                    //:WTF_KLZ:WindowTickFunction_KeepLoopingZero
+                    /**  WTF:WindowTickFunction **/
+                    /**  KLZ: KeepLoopingZero   **/
+
                     INFO("[DEBUG#1:WTP_KLZ]\n"); 
                     
                 };;
                 #endif
             };;
+            //:--------------------------:IS_QUIT_MESSAGE:YES://
 
         //:-----------:WAS_MESSAGE_WHILE_LOOP_BEFORE_REFACTOR://
 
@@ -1110,372 +1131,356 @@ aac2020_ginawin_TakeMessage(
 #undef I32
 #undef INFO
 //:=================================:window_code.TICK_PRIVATE://
+//:window_code.WINDOW_LOOP:==================================://
+#define HALT aac2020_ginawin_Halt
 
-//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+    MSG_48B
+    aac2020_ginawin_WindowLoop(
+       /**  v_HWND Hw **/
+    ){
 
-//|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//
-//| Since you are discussing threads here,     |//
-//| you are aware that GL commands can only    |//
-//| be issued from a thread that has an        |//
-//| active GL context,correct? And that a      |//
-//| context can only be active in 0 or 1       |//
-//| threads at a time. If you ever tried to    |//
-//| issue commands from a different thread     |//
-//| than the one that created your context,    |//
-//| and you do not understand this then        |//
-//| confusing run-time behvior would ensue;    |//
-//| multi-threading is fine in GL,but you      |//
-//| have to mind which threads have active     |//
-//| contexts.                                  |//
-//| stackoverflow.com/questions/21685932/      |//
-//|____________________________________________|//
-//# Might want to call update here by          #//
-//# adding a render update callback?           #//
-//# That would get it to fire during WM_PAINT  #//
-//# AND get it on same thread, alleviating     #//
-//# two possible problems.                     #//
-MSG_48B
-aac2020_ginawin_WindowLoop(
-   /**  v_HWND Hw **/
-){
+        //##_DONT_LET_WINDOW_CODE_MAKE_OPENGL_CALLS_##//
 
-    v_HWND  Hw = AAC2020_GINAWIN.PW.W32.handle_to_window;
-    if( ((void*)0)==Hw ){ aac2020_ginawin_Halt("[454PM.F]");};
+        v_HWND  Hw = AAC2020_GINAWIN.PW.W32.handle_to_window;
+        if( ((void*)0)==Hw ){ HALT("[454PM.F]");};
 
-    MSG_48B M; /** Message Object. 48 Bytes In Size **/
+        MSG_48B M; /** Message Object. 48 Bytes In Size **/
 
-    //:SPINLOCK:---------------------------------------------://
-    while( 1 == aac2020_ginawin_WindowTick_private( 
-        /** Hw : Will be getting this from member variable **/
-            &M 
-    ) ){
+        //:SPINLOCK:-----------------------------------------://
+        while( 1 == aac2020_ginawin_WindowTick_private( 
+            /** Hw : Gotten from member variable **/
+                &M 
+        ) ){
 
-        //: CANDO: (NOT: T-o-d-o ):
-        //: Could call a function pointer here.
-        //: BUT current plan is to ABANDON multi-threadin.
-        //: BECAUSE: KEEP_IT_SIMPLE_STUPID.
-        //: Like in DOOM, game logic is tied to frame rate
-        //: because they KEEP_IT_SIMPLE_STUPID.
+            //:#_DONT_CALL_FUNCTION_POINTER_IN_SPINLOCK_#://
 
-    };; //:-----------------------------------------:SPINLOCK://
+        };; //:-------------------------------------:SPINLOCK://
 
-    AAC2020_GINAWIN
-    .window_just_closed = ('t'|'r'|'u'|'e');
+        AAC2020_GINAWIN
+        .window_just_closed = ('t'|'r'|'u'|'e');
 
-    //# [HACK]:Sleep a bit so other threads    #//
-    //#        see "window_just_closed" update.#//
-    //# You really should use a proper mutex.  #//
-    /** Sleep(64); TODO: Uncomment when you find the  **/
-    /**                  .DLL file with "Sleep" in it **/
-    /**                   because I am NOT including  **/
-    /**                   windows.h                   **/
+        //# [HACK]:Sleep a bit so other threads    #//
+        //#        see "window_just_closed" update.#//
+        //# You really should use a proper mutex.  #//
+        /** Sleep(64); TODO: Uncomment when you find the  **/
+        /**                  .DLL file with "Sleep" in it **/
+        /**                   because I am NOT including  **/
+        /**                   windows.h                   **/
 
-    return( M );
-} //[aac2020_ginawin_WindowLoop]//
+        return( M );
+    }  
 
+#undef HALT
+//:==================================:window_code.WINDOW_LOOP://
+//:window_code.MAKE_GL_COMPATIBLE:===========================://
+#define OKAY aac2020_ginawin_Okay
+#define HALT aac2020_ginawin_Halt
 
-void
-aac2020_ginawin_MakeWindowCompatibleWith_GL(
-    v_HWND  Hw
-){
+    void
+    aac2020_ginawin_MakeWindowCompatibleWith_GL(
+        v_HWND  Hw
+    ){
 
-    aac2020_ginawin_FUNCTION_POINTERS_struct*
-    FP = &(aac2020_ginawin_function_pointers);
+        /** con_win: ContextWindow / window_device_context **/
 
-    // - // - // - // - // - // - // - // - //
-
-    struct aac2020_ginawin_PW_WINDOWS*
-    W32 = &(
-        AAC2020_GINAWIN.PW.W32
-    );;
-
-    void* /** HDC **/
-    window_device_context =(
-        FP->USER32.GetWindowDC( Hw )
-    );;
-    int
-    pixel_format_number=(
-        FP->GDI32.ChoosePixelFormat(
-            window_device_context
-        , &( W32 -> pixel_format_descriptor )
-        )
-    );;
-    
-    int /** BOOL **/
-    setting_pixel_format_worked=(
-    FP->GDI32.SetPixelFormat(
-    /**/  window_device_context
-    ,     pixel_format_number
-    ,   &( W32 -> pixel_format_descriptor )
-    ));;
-    if( setting_pixel_format_worked ){
-        //: printf("[SPF:OK]\n");
-    }else{
-        aac2020_ginawin_Halt("[SPF:FAIL]\n");
-    };;
-
-    AAC2020_GINAWIN.PW.W32
-    .window_device_context=(
-        window_device_context
-    );;
-
-} //[aac2020_ginawin_MakeWindowCompatibleWith_GL]//
-
-
-//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
-
-void* /** Returns Handle To Window **/ 
-aac2020_ginawin_OPEN_WINDOW(
-
-    c_LPCWSTR_b16_2B 
-    unique_window_name
-
-)
-{
-
-    #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 )
-
-        //:OWIN:OPEN_WINDOW
-        wprintf( L"[OWIN:unique_window_name]%s\n" 
-                  , unique_window_name );;
-        
-    #endif
-
-    /** ok: Single_Threaded_Promise_Variable( STP_VAR ) **/
-    int ok=( 1 ); 
-
-    //:DECLARE_VARIABLES:------------------------------------://
-    #define V_P ((void*)0)
-
-        aac2020_ginawin_FUNCTION_POINTERS_struct* FP =( V_P );
-        v_HMODULE                                hin =( V_P );
-        struct aac2020_ginawin_data_USER32*  U32DATA =( V_P );
-        v_HWND                                    Hw =( V_P );
-    //: MSG_48B                                  Msg =( V_P );
-
-        int X   =( 0 - 8732 );
-        int Y   =( 0 - 8732 );
-        int WID =( 0 - 8732 );
-        int HIG =( 0 - 8732 );
-
-    #undef V_P
-    //:------------------------------------:DECLARE_VARIABLES://
-    if( ok > 0 ){ //:----------------------------------------://
-
+        aac2020_ginawin_FUNCTION_POINTERS_struct*
         FP = &(aac2020_ginawin_function_pointers);
 
-        //:hin: AKA[ handle_to_instance / handle_to_exe ]
-        hin=( FP -> KERNEL32.GetModuleHandleW( ((void*)0) ) );;
+        struct aac2020_ginawin_PW_WINDOWS*
+        W32 = &( AAC2020_GINAWIN.PW.W32 );
 
-        //: FTG_MODHAN: FailedToGetModuleHandle
-        if(NULL==hin){ aac2020_ginawin_Halt( "[FTG_MODHAN]" );};
+        void* /** HDC **/
+        con_win =( FP->USER32.GetWindowDC( Hw ) );;
 
-        //:FreeConsole();
-
-        U32DATA = &( FP->USER32.DATA);
-
-    };; //:---------------------------------------:( ok > 0 )://
-    if( ok > 0 ){ //:----------------------------------------://
-        if(!
-
-            aac2020_ginawin_RegisterWindow(
-                hin
-            ,   unique_window_name
+        int
+        pixel_format_number=(
+            FP->GDI32.ChoosePixelFormat(
+                con_win
+            , &( W32 -> pixel_format_descriptor )
             )
-
-        ){ 
-
-            const char* 
-            err_msg=( "[FailedToRegisterWindow]" );;
-
-            aac2020_ginawin_Alert( err_msg );
-            aac2020_ginawin_Halt(  err_msg );
-
-            ok=( 0 );
-            /** return( (void*)0 ); #ONE_EXIT_POINT_NOW# **/
-
-        };;
-
-    };; //:---------------------------------------:( ok > 0 )://
-    if( ok > 0 ){ //:----------------------------------------://
-
-        X   = AAC2020_GINAWIN.X   ;
-        Y   = AAC2020_GINAWIN.Y   ;
-        WID = AAC2020_GINAWIN.WID ;
-        HIG = AAC2020_GINAWIN.HIG ;
-
-        Hw=FP->USER32.CreateWindowExW(
-            //: dwExStyle   (EXT-窓style)
-        /**/ /** U32DATA -> ws_ex_topmost **/
-            0x00000000L /** Window always on top is annoying **/
-
-            //: lpClassName (窓class    )
-        ,   unique_window_name    
-
-            //: lpWindowName(窓titlebar )
-        ,   L"[GLEB_TITLE_BAR](題圌)"       
-
-            //: (窓style)
-        ,   (
-                U32DATA -> ws_overlappedwindow  | 
-                U32DATA -> cs_owndc             |
-            0)
-
-            //: x,y,w,h
-        ,   X,Y,WID,HIG       
-
-            //: hWndParent(parent窓)
-        ,   FP->USER32.GetDesktopWindow() 
-
-            //: hMenu(HandleToMenu)
-        ,   NULL        
-
-            //: hInstance(柯to例)
-        ,   hin                
-
-            //: lpParam( ??? )
-        ,   NULL               
         );;
-        if( ((void*)0) == Hw ){
-            aac2020_ginawin_Halt("[WindowCreateFail]");
-            ok =( 0 );
-            /** return( (void*)0 ); #ONE_EXIT_POINT_NOW# **/
-        };;
-
-    };; //:---------------------------------------:( ok > 0 )://
-    if( ok > 0 ){ //:----------------------------------------://
-
-        //:Store the handle to window in global state:
-        AAC2020_GINAWIN.PW.W32.handle_to_window=Hw;
-
-        //:Modifications to make window opengl compatible:
-        aac2020_ginawin_MakeWindowCompatibleWith_GL(
-            Hw
-        );;
-
-        //|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯MC|//
-        //|PUT AFTER device context has been set,or your   MC|//
-        //|device context fetching function waiting on     MC|//
-        //|this flag to be set in this thread will end up  MC|//
-        //|with a NULL device context. Speaking Of:        MC|//
-        //|AAC2020_GINAWIN_GetWindowDeviceContext();       MC|//
-        AAC2020_GINAWIN                                 //|MC|//
-        .window_created=1;                              //|MC|//
-        //|________________________________________________MC|//
-
-    };; //:---------------------------------------:( ok > 0 )://
-
-    //:Fail_Fast_If_Window_Is_Null:
-    if( ((void*)0) == Hw ){ aac2020_ginawin_Halt("[ER1122]");};
-    
-    /** #ONE_EXIT_POINT_NOW# **/
-    return( ok > 0 ? Hw : ((void*)0) );
-}
-
-//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
-
-//: typedef UINT_PTR WPARAM;
-//: typedef unsigned (64bit?int64:int) UINT_PTR
-//: Call this function on a separate thread!
-WPARAM_u64_8B 
-aac2020_ginawin_OPEN_WINDOW_LOOP_FOREVER(
-    //:UNICODE_STRING
-    c_LPCWSTR_b16_2B 
-    unique_window_name
-){
-
-    #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 )
-
-        //:OWLF:OPEN_WINDOW_LOOP_FOREVER
-        wprintf( L"[OWLF:unique_window_name]%s\n" 
-                  , unique_window_name );;
         
-    #endif
+        int /** BOOL **/
+        setting_pixel_format_worked=(
+        FP->GDI32.SetPixelFormat(
+        /**/  con_win
+        ,     pixel_format_number
+        ,   &( W32 -> pixel_format_descriptor )
+        ));;
 
-    void*   Hw  = ((void*)0); /** HandleToWindow **/
-    MSG_48B Msg = {0};        /** MessageObject  **/
+        if( setting_pixel_format_worked ){
+            OKAY("[SPF:GOOD:2020_12_09]\n");
+        }else{
+            HALT("[SPF:FAIL:2020_12_09]\n");
+        };;
 
-    Hw = aac2020_ginawin_OPEN_WINDOW( unique_window_name );
+        AAC2020_GINAWIN.PW.W32.window_device_context=(
+                    con_win /**window_device_context**/ );;
 
-    #define NiL ((void*)0)  //:##############################://
-    #define HAL aac2020_ginawin_Halt  //:####################://
-    #define WiN AAC2020_GINAWIN.PW.W32.handle_to_window  //:#://
+    }  
 
+#undef OKAY
+#undef HALT
+//:===========================:window_code.MAKE_GL_COMPATIBLE://
+//:window_code.OPEN_WINDOW:==================================://
+#define HALT aac2020_ginawin_Halt
+#define LERT aac2020_ginawin_Alert
+
+    void* /** Returns Handle To Window **/ 
+    aac2020_ginawin_OPEN_WINDOW(
+
+        c_LPCWSTR_b16_2B 
+        unique_window_name
+
+    )
+    {
+
+        #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 )
+         if( AAC2020_SILENCE.GINAWIN     <= 0 ){
+
+            //:OWIN:OPEN_WINDOW
+            wprintf( L"[OWIN:unique_window_name]%s\n" 
+                      , unique_window_name );;
+            
+        };;
+        #endif
+
+        //:DECLARE_VARIABLES:--------------------------------://
+        #define V_P ((void*)0)
+        #define FUN aac2020_ginawin_FUNCTION_POINTERS_struct
+        #define DAT struct aac2020_ginawin_data_USER32
+
+            int ok=( 1 ); //@STP_VAR@//
+
+            FUN*              FP =( V_P );
+            v_HMODULE        hin =( V_P );
+            DAT*         U32DATA =( V_P );
+            v_HWND            Hw =( V_P );
+        //: MSG_48B          Msg =( V_P );
+
+            int X   =( 0 - 8732 );
+            int Y   =( 0 - 8732 );
+            int WID =( 0 - 8732 );
+            int HIG =( 0 - 8732 );
+
+        #undef V_P
+        #undef FUN
+        #undef DAT
+        //:--------------------------------:DECLARE_VARIABLES://
+        if( ok > 0 ){ //:------------------------------------://
+
+            FP = &(aac2020_ginawin_function_pointers);
+
+            //:hin: AKA[ handle_to_instance / handle_to_exe ]
+            hin=( FP -> KERNEL32.GetModuleHandleW(
+                                                ((void*)0)  ));;
+
+            //: FTG_MODHAN: FailedToGetModuleHandle
+            if(NULL==hin){ HALT( "[FTG_MODHAN]" );};
+
+            //:FreeConsole();
+
+            U32DATA = &( FP->USER32.DATA);
+
+        };; //:-----------------------------------:( ok > 0 )://
+        if( ok > 0 ){ //:------------------------------------://
+            if(!
+
+                aac2020_ginawin_RegisterWindow(
+                    hin
+                ,   unique_window_name
+                )
+
+            ){ 
+
+                const char* 
+                err_msg=( "[FailedToRegisterWindow]" );;
+
+                LERT( err_msg );
+                HALT(  err_msg );
+
+                ok=( 0 );
+                /** return( (void*)0 ); #ONE_EXIT_POINT_NOW# **/
+
+            };;
+
+        };; //:-----------------------------------:( ok > 0 )://
+        if( ok > 0 ){ //:------------------------------------://
+
+            X   = AAC2020_GINAWIN.X   ;
+            Y   = AAC2020_GINAWIN.Y   ;
+            WID = AAC2020_GINAWIN.WID ;
+            HIG = AAC2020_GINAWIN.HIG ;
+
+            Hw=FP->USER32.CreateWindowExW(
+                //: dwExStyle   (EXT-窓style)
+            /**/ /** U32DATA -> ws_ex_topmost **/
+                0x00000000L /** #_WINTOP_IS_ANNOYING_#**/
+
+                //: lpClassName (窓class    )
+            ,   unique_window_name    
+
+                //: lpWindowName(窓titlebar )
+            ,   L"[GLEB_TITLE_BAR](題圌)"       
+
+                //: (窓style)
+            ,   (
+                    U32DATA -> ws_overlappedwindow  | 
+                    U32DATA -> cs_owndc             |
+                0)
+
+                //: x,y,w,h
+            ,   X,Y,WID,HIG       
+
+                //: hWndParent(parent窓)
+            ,   FP->USER32.GetDesktopWindow() 
+
+                //: hMenu(HandleToMenu)
+            ,   NULL        
+
+                //: hInstance(柯to例)
+            ,   hin                
+
+                //: lpParam( ??? )
+            ,   NULL               
+            );;
+            if( ((void*)0) == Hw ){
+                HALT("[WindowCreateFail]");
+                ok =( 0 );
+                /** return( (void*)0 ); #ONE_EXIT_POINT_NOW# **/
+            };;
+
+        };; //:-----------------------------------:( ok > 0 )://
+        if( ok > 0 ){ //:------------------------------------://
+
+            //:Store the handle to window in global state:
+            AAC2020_GINAWIN.PW.W32.handle_to_window=Hw;
+
+            //:Modifications to make window opengl compatible:
+            aac2020_ginawin_MakeWindowCompatibleWith_GL( Hw );
+
+            //:#_SET_FLAG_AFTER_SETTING_DEVICE_CONTEXT_#://
+            AAC2020_GINAWIN.window_created =( 1 );                             
+ 
+        };; //:-----------------------------------:( ok > 0 )://
+
+        //:Fail_Fast_If_Window_Is_Null:
+        if( ((void*)0) == Hw ){ HALT("[ER1122]");};
+        
+        /** #ONE_EXIT_POINT_NOW# **/
+        return( ok > 0 ? Hw : ((void*)0) );
+    }
+
+#undef  HALT
+#undef  LERT
+//:==================================:window_code.OPEN_WINDOW://
+//:window_code.OPEN_WINDOW_LOOP_FOREVER:=====================://
+#define NiL ((void*)0)   
+#define HAL aac2020_ginawin_Halt   
+#define WiN AAC2020_GINAWIN.PW.W32.handle_to_window  
+
+    //@CALL_FROM_ANOTHER_THREAD@//
+
+    WPARAM_u64_8B 
+    aac2020_ginawin_OPEN_WINDOW_LOOP_FOREVER(
+        //:UNICODE_STRING
+        c_LPCWSTR_b16_2B 
+        unique_window_name
+    ){
+
+        #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 )
+         if( AAC2020_SILENCE.GINAWIN     <= 0 ){
+
+            //:OWLF:OPEN_WINDOW_LOOP_FOREVER
+            wprintf( L"[OWLF:unique_window_name]%s\n" 
+                      , unique_window_name );;
+         
+        };;
+        #endif
+
+        void*   Hw  = ((void*)0); /** HandleToWindow **/
+        MSG_48B Msg = {0};        /** MessageObject  **/
+
+        Hw = aac2020_ginawin_OPEN_WINDOW( unique_window_name );
         if( NiL == Hw  ){ HAL("[NULLWIN:ONE:2020_10_30]"); };
         if( NiL == WiN ){ HAL("[NULLWIN:TWO:2020_10_30]"); };
 
-    #undef  NiL  //:#########################################://
-    #undef  HAL  //:#########################################://
-    #undef  WiN  //:#########################################://
+        //:#_WHY_HW_COMMENTED_OUT_IN_CALL_BELOW_#://
+        Msg = aac2020_ginawin_WindowLoop( /** Hw **/ );
 
-    /** DATE[ 2020_10_30 ] ********************************* **/
-    /** GINAWIN is only meant for ONE window. So we should   **/
-    /** make as many variables FILESCOPE as possible to avoid**/
-    /** problems resulting from passing around variables.    **/
-    /** HENCE: "Hw" commented out in the call below.         **/
-    Msg = aac2020_ginawin_WindowLoop( /** Hw **/ );
+        return Msg.wParam;
+    } 
 
-    return Msg.wParam;
-} 
+#undef  NiL   
+#undef  HAL   
+#undef  WiN   
+//:=====================:window_code.OPEN_WINDOW_LOOP_FOREVER://
+//:window_code.FORGOT_TO_INIT_WINDOW_SIZE:===================://
 
-//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+    void
+    aac2020_ginawin_ForgotToInitWindowSize(){
 
-void
-aac2020_ginawin_ForgotToInitWindowSize(){
-
-    aac2020_ginawin_Alert(
-        "[You_Forgot_To_Init_Window_Size]"
-    );;
-
-} //[aac2020_ginawin_ForgotToInitWindowSize]//
-
-//:Change window dimensions if they
-//:are NOT okay.
-int
-aac2020_ginawin_ChangeWinDimsIfNotOkay(){
-
-    struct_aac2020_ginawin_global_state*
-    GS = &(AAC2020_GINAWIN);
-
-    int window_size_changed = 0;
-
-    if( 
-        0 >= GS -> X   &&
-        0 >= GS -> Y   &&
-        0 >= GS -> WID &&
-        0 >= GS -> HIG &&
-    1){
-        aac2020_ginawin_ForgotToInitWindowSize();
-
-        GS -> X   =  0;
-        GS -> Y   =  0;
-        GS -> WID = 1024;
-        GS -> HIG = 64;
-        window_size_changed=1;
-    }else
-    if( 
-        0 >= GS -> WID || 
-        0 >= GS -> HIG ||
-    0){
-        printf(
-            "[XY Set, but window]\n"
-            "[size not__________]\n"
+        aac2020_ginawin_Alert(
+            "[You_Forgot_To_Init_Window_Size]"
         );;
 
-        if( GS -> WID <= 0 ){
-            printf("[ForgotToSet:WID]\n");
-            GS -> WID = 1024;
-            window_size_changed=2;
-        };; 
-        if( GS -> HIG <= 0 ){
-            printf("[ForgotToSet:HIG]\n");
-            GS -> HIG =  128;
-            window_size_changed=3;
-        };;
-    };;
+    }  
 
-    return( window_size_changed );
-} //[aac2020_ginawin_ChangeWinDimsIfNotOkay]//
+//:===================:window_code.FORGOT_TO_INIT_WINDOW_SIZE://
+//:window_code.CHANGE_WINDOW_DIMS_IF_NOT_OKAY:===============://
+#define INFO aac2020_ginawin_Info
+
+    int
+    aac2020_ginawin_ChangeWinDimsIfNotOkay(){
+
+        /** Change window dimensions if they are NOT okay. **/
+
+        struct_aac2020_ginawin_global_state*
+        GS = &(AAC2020_GINAWIN);
+
+        int window_size_changed = 0;
+
+        if( 
+            0 >= GS -> X   &&
+            0 >= GS -> Y   &&
+            0 >= GS -> WID &&
+            0 >= GS -> HIG &&
+        1){
+            aac2020_ginawin_ForgotToInitWindowSize();
+
+            GS -> X   =  0;
+            GS -> Y   =  0;
+            GS -> WID = 1024;
+            GS -> HIG = 64;
+            window_size_changed=1;
+        }else
+        if( 
+            0 >= GS -> WID || 
+            0 >= GS -> HIG ||
+        0){
+
+            INFO(
+                "[XY Set, but window]\n"
+                "[size not__________]\n"
+            );;
+
+            if( GS -> WID <= 0 ){
+                INFO("[ForgotToSet:WID]\n");
+                GS -> WID = 1024;
+                window_size_changed=2;
+            };; 
+            if( GS -> HIG <= 0 ){
+                INFO("[ForgotToSet:HIG]\n");
+                GS -> HIG =  128;
+                window_size_changed=3;
+            };;
+        };;
+
+        return( window_size_changed );
+    }  
+
+#undef  INFO
+//:===============:window_code.CHANGE_WINDOW_DIMS_IF_NOT_OKAY://
 
 //:##############################################:WINDOW_CODE://
 //:WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW://
@@ -1800,39 +1805,42 @@ void  aac2020_ginawin_FUNCTION_POINTERS_init( void ){
 
 //| Section:MULTI_THREADING_CODE:beg __________|//
 //|MCMCMCMCMCMCMCMCMCMCMCMCMCMCMCMCMCMCMCMCMCMC|//
-                                          //|MC|//
-void                                      //|MC|//
-aac2020_ginawin_PrintCustomThreadData(          //|MC|//
-                                          //|MC|//
-    v_HINSTANCE custom_data               //|MC|//
-                                          //|MC|//
-){                                        //|MC|//
-                                          //|MC|//
-    struct_aac2020_ginawin_global_state*        //|MC|//
-    GS = &(AAC2020_GINAWIN);       //|MC|//
-                                          //|MC|//
-    //!Both will print the same thing:       MC!//
-    ///////////////////////////////////// //|MC|//
-    printf(                            // //|MC|//
-        "[PARAMS]:( %d, %d )\n"        // //|MC|//
-    ,   ((aac2020_ginawin_PMYDATA)           // //|MC|//
-        GS->PW.W32.custom_data)->val1  // //|MC|//
-                                       // //|MC|//
-    ,   ((aac2020_ginawin_PMYDATA)           // //|MC|//
-        GS->PW.W32.custom_data)->val2  // //|MC|//
-    );                                 // //|MC|//
-                                       // //|MC|//
-    printf(                            // //|MC|//
-        "[PARAMS]:( %d, %d )\n"        // //|MC|//
-    ,   ((aac2020_ginawin_PMYDATA)           // //|MC|//
-        custom_data)->val1             // //|MC|//
-                                       // //|MC|//
-    ,   ((aac2020_ginawin_PMYDATA)           // //|MC|//
-        custom_data)->val2             // //|MC|//
-    );                                 // //|MC|//
-    ///////////////////////////////////// //|MC|//
-                                          //|MC|//
-} //[aac2020_ginawin_PrintCustomThreadData]//   //|MC|//
+          
+//:PRINT_CUSTOM_THREAD_DATA:=================================://                                 
+    void                                       
+    aac2020_ginawin_PrintCustomThreadData(     
+                                               
+        v_HINSTANCE custom_data                
+                                               
+    ){                                                                               
+        struct_aac2020_ginawin_global_state*   
+        GS = &(AAC2020_GINAWIN);        
+                
+        if( AAC2020_SILENCE.GINAWIN <= 0 ){
+            //!Both will print the same thing:!//    
+            /////////////////////////////////////  
+            printf(                            //               
+                "[AAC2020_GINAWIN:PARAMS]:( %d, %d )\n"          
+            ,   ((aac2020_ginawin_PMYDATA)                      
+                GS->PW.W32.custom_data)->val1  //               
+                                               //               
+            ,   ((aac2020_ginawin_PMYDATA)                      
+                GS->PW.W32.custom_data)->val2  //               
+            );                                 //               
+                                               //               
+            printf(                            //               
+                "[AAC2020_GINAWIN:PARAMS]:( %d, %d )\n"          
+            ,   ((aac2020_ginawin_PMYDATA)         
+                custom_data)->val1             //  
+                                               //  
+            ,   ((aac2020_ginawin_PMYDATA)         
+                custom_data)->val2             //  
+            );                                 //  
+            /////////////////////////////////////  
+        };;                                    
+    }  
+
+//:=================================:PRINT_CUSTOM_THREAD_DATA://
                                            
 DWORD_u32_4B 
 __stdcall /** WINAPI calling convention **/                      
@@ -1852,11 +1860,13 @@ aac2020_ginawin_THREAD_FUNCTION(                //|MC|//
     );;                                  
 
     #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 )
+     if( AAC2020_SILENCE.GINAWIN     <= 0 ){
 
         //:TFUN:THREAD_FUNCTION
         wprintf( L"[TFUN:unique_window_name]%s\n" 
                   , unique_window_name );;
         
+    };;
     #endif
 
 
@@ -1866,28 +1876,25 @@ aac2020_ginawin_THREAD_FUNCTION(                //|MC|//
     );;                                   //|MC|//
                                           //|MC|//
     return 0;                             //|MC|//
-} //[aac2020_ginawin_THREAD_FUNCTION]//         //|MC|//
-                                          //|MC|//
-void                                      //|MC|//
-aac2020_ginawin_AssertThreadCreated(){          //|MC|//
-    struct_aac2020_ginawin_global_state*        //|MC|//
-    GS = &(AAC2020_GINAWIN);       //|MC|//
-                                          //|MC|//
-    //!If thread NULL, creation failed:      MC!//
-    if(                                   //|MC|//
-        NULL                              //|MC|//
-        ==                                //|MC|//
-        GS->PW.W32.platform_window_thread //|MC|//
-    ){                                    //|MC|//
-        printf(                           //|MC|//
-            "[GLEB:THREAD_CREATE_FAIL]\n" //|MC|//
-        );;                               //|MC|//
-        fflush(stdout);                   //|MC|//
-        exit( 666 );                      //|MC|//
-    };;                                   //|MC|//
-} //[aac2020_ginawin_AssertThreadCreated]//     //|MC|//
-                                          //|MC|//
-void                                      //|MC|//
+} //[aac2020_ginawin_THREAD_FUNCTION]//          
+        
+//:ASSERT_THREAD_CREATED:====================================://
+#define HALT aac2020_ginawin_Halt
+                   
+    void                                      
+    aac2020_ginawin_AssertThreadCreated(){           
+        struct_aac2020_ginawin_global_state*         
+        GS = &(AAC2020_GINAWIN);        
+                                               
+        //!If thread NULL, creation failed: !//    
+        if( NULL == GS->PW.W32.platform_window_thread  ){                                     
+            HALT( "[GLEB:THREAD_CREATE_FAIL]\n" );                                                 
+        };;                                    
+    }     
+      
+#undef HALT
+//:====================================:ASSERT_THREAD_CREATED://                                   
+void                                      
 aac2020_ginawin_CreateThread(){                 //|MC|//
                                           //|MC|//
     struct_aac2020_ginawin_global_state*        //|MC|//
@@ -1999,21 +2006,20 @@ aac2020_ginawin_CorrectWindowIfNeeded(){        //|MC|//
                                           //|MC|//
 
 
-                                          //|MC|//
-void                                      //|MC|//
-aac2020_ginawin_HeapFreeFail(){                 //|MC|//
-                                          //|MC|//
-    printf(                               //|MC|//
-        "[GLEBSWIN:HeapFreeFail]\n"       //|MC|//
-    );;                                   //|MC|//
-                                          //|MC|//
-    fflush( stdout );                     //|MC|//
-    exit(666);                            //|MC|//
-                                          //|MC|//
-}                                         //|MC|//
-                                          //|MC|//
-//! af=="assert function"              !////|MC|//
-void                                      //|MC|//
+//:HEAP_FREE_FAIL:===========================================://
+#define HALT aac2020_ginawin_Halt
+                        
+    void                                       
+    aac2020_ginawin_HeapFreeFail(){            
+                                               
+        HALT( "[GLEBSWIN:HeapFreeFail]\n" );;                                                                           
+    }                                          
+
+#undef  HALT  
+//:===========================================:HEAP_FREE_FAIL://
+                                               
+//! af=="assert function"              !// 
+void                                       
 aac2020_ginawin_af_HeapFreeSuccess(             //|MC|//
     int was_heap_free_success             //|MC|//
 ){                                        //|MC|//
@@ -2024,68 +2030,64 @@ aac2020_ginawin_af_HeapFreeSuccess(             //|MC|//
     }                                     //|MC|//
                                           //|MC|//
 }                                         //|MC|//
-                                          //|MC|//
-void                                      //|MC|//
-aac2020_ginawin_FreeCustomDataIfExists(){       //|MC|//
-                                          //|MC|//
-    struct_aac2020_ginawin_global_state*        //|MC|//
-    GS = &(AAC2020_GINAWIN);       //|MC|//
-                                          //|MC|//
-    if( NULL == GS->PW.W32.custom_data ){ //|MC|//
-        return;                           //|MC|//
-    };;                                   //|MC|//
-                                          //|MC|//
-    aac2020_ginawin_FUNCTION_POINTERS_struct*   //|MC|//
-    FP = &(aac2020_ginawin_function_pointers);  //|MC|//
-                                          //|MC|//
-    //|--------------------------------|////|MC|//
-                                          //|MC|//
-    if(NULL==FP->KERNEL32.HeapFree){      //|MC|//
-        printf(                           //|MC|//
-            "[ERROR:4gotFetch:HeapFree]\n"//|MC|//
-        );;                               //|MC|//
-        fflush( stdout );                 //|MC|//
-        exit( 666 );                      //|MC|//
-    };;                                   //|MC|//
-                                          //|MC|//
-    //|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|////|MC|//
-    //|Kernel32.dll                    |////|MC|//
-    //|Frees a memory block alloced    |////|MC|//
-    //|from a heap by the HeapAlloc    |////|MC|//
-    //|or HeapReAlloc function.        |////|MC|//
-    BOOL_i32_4B                   //|  |////|MC|//
-    was_heap_free_success;        //|  |////|MC|//
-    was_heap_free_success=(       //|  |////|MC|//
-    FP->KERNEL32.HeapFree(        //|  |////|MC|//
-                                  //|  |////|MC|//
-        //|Heap where memory block     |////|MC|//
-        //|you want to free lives.     |////|MC|//
-    /**/FP->KERNEL32              //|  |////|MC|//
-       .GetProcessHeap()          //|  |////|MC|//
-                                  //|  |////|MC|//
-        //|DWORD dwFlags:              |////|MC|//
-        //|(heap free opts)            |////|MC|//
-    ,   0                         //|  |////|MC|//
-                                  //|  |////|MC|//
-        //|Pointer to memory           |////|MC|//
-        //|block to free:              |////|MC|//
-    ,   GS->PW.W32.custom_data    //|  |////|MC|//
-    ));;                          //|  |////|MC|//
-                                  //|  |////|MC|//
-    aac2020_ginawin_af_HeapFreeSuccess( //|  |////|MC|//
-        was_heap_free_success     //|  |////|MC|//
-    );;                           //|  |////|MC|//
-                                  //|  |////|MC|//
-    //| Ensure address is              |////|MC|//
-    //| NOT reused.                    |////|MC|//
-    GS->PW.W32.custom_data = NULL;//|  |////|MC|//
-                                  //|  |////|MC|//
-    //|________________________________|////|MC|//
-                                          //|MC|//
-    aac2020_ginawin_Okay("[CustomDataFreed]");    //|MC|//
-                                          //|MC|//
-} //[aac2020_ginawin_FreeCustomDataIfExists]//  //|MC|//
-                                          //|MC|//
+
+//:FREE_CUSTOM_DATA_IF_EXISTS:===============================://
+#define HALT aac2020_ginawin_Halt
+
+    void                                       
+    aac2020_ginawin_FreeCustomDataIfExists(){        
+            
+        //:FETCH_FUNCTION_POINTERS:--------------------------://
+
+            struct_aac2020_ginawin_global_state*         
+            GS = &(AAC2020_GINAWIN);        
+                                                   
+            if( NULL == GS->PW.W32.custom_data ){  
+                return;                            
+            };;                                    
+                                                   
+            aac2020_ginawin_FUNCTION_POINTERS_struct*    
+            FP = &(aac2020_ginawin_function_pointers);   
+                                                                                   
+            if(NULL==FP->KERNEL32.HeapFree){       
+                HALT("[ERROR:4gotFetch:HeapFree]\n" );                                                  
+            };;         
+                                
+        //:--------------------------:FETCH_FUNCTION_POINTERS://
+        //:#ABOUT_HEAP_FREE#:--------------------------------://
+
+            BOOL_i32_4B                    
+            was_heap_free_success;         
+            was_heap_free_success=(        
+            FP->KERNEL32.HeapFree(         
+                                           
+                    /** Heap where memory block **/  
+                    /** you want to free lives. **/  
+            /**/    FP->KERNEL32.GetProcessHeap()          
+                                            
+                    /** DWORD dwFlags: (heap free opts) **/
+            ,       0                          
+                                            
+                    /** Pointer to memory block to free: **/         
+            ,       GS->PW.W32.custom_data     
+            ));;                           
+                                          
+            aac2020_ginawin_af_HeapFreeSuccess(  
+                was_heap_free_success      
+            );;                            
+                                           
+            /** Ensure address is NOT reused. **/
+            GS->PW.W32.custom_data = NULL; 
+                                      
+        //:--------------------------------:#ABOUT_HEAP_FREE#://
+                                              
+        aac2020_ginawin_Okay("[CustomDataFreed]");    
+                                              
+    }  
+
+#undef  HALT
+//:===============================:FREE_CUSTOM_DATA_IF_EXISTS://
+                                         
 //! Close window thread and free       !////|MC|//
 //! custom data                        !////|MC|//
 void                                      //|MC|//
@@ -2138,49 +2140,49 @@ aac2020_ginawin_fe_WaitForSingleObject(){       //|MC|//
     };;                                   //|MC|//
                                           //|MC|//
 } //[aac2020_ginawin_fe_WaitForSingleObject]//  //|MC|//
-                                          //|MC|//
-void                                      //|MC|//
-aac2020_ginawin_WaitUntilWindowClosed(){        //|MC|//
-                                          //|MC|//
-    struct_aac2020_ginawin_global_state*        //|MC|//
-    GS = &(AAC2020_GINAWIN);       //|MC|//
-                                          //|MC|//
-    aac2020_ginawin_FUNCTION_POINTERS_struct*   //|MC|//
-    FP = &(aac2020_ginawin_function_pointers);  //|MC|//
-                                          //|MC|//
-    aac2020_ginawin_fe_WaitForSingleObject();   //|MC|//
-                                          //|MC|//
-    //!Wait until all threads          !////|MC|//
-    //!have terminated.                !////|MC|//
-    struct aac2020_ginawin_data_KERNEL32*       //|MC|//
-    K32D = &(                             //|MC|//
-        FP->KERNEL32.DATA                 //|MC|//
-    );;                                   //|MC|//
-                                          //|MC|//
-    DWORD_u32_4B dont_fail_me=(           //|MC|//
-    FP->KERNEL32.WaitForSingleObject(     //|MC|//
-    /**/GS->PW.W32.platform_window_thread //|MC|//
-    ,       K32D -> infinite              //|MC|//
-    ));;                                  //|MC|//
-    if( K32D -> wait_failed               //|MC|//
-        ==                                //|MC|//
-        dont_fail_me                      //|MC|//
-    ){                                    //|MC|//
-                                          //|MC|//
-        printf(                           //|MC|//
-            "[ThreadedWindowWaitFail]"    //|MC|//
-        );;                               //|MC|//
-                                          //|MC|//
-    }else{                                //|MC|//
-                                          //|MC|//
-        aac2020_ginawin_Okay(                     //|MC|//
-            "[ThreadedWindowClosed]"      //|MC|//
-        );;                               //|MC|//
-                                          //|MC|//
-    };;                                   //|MC|//
-                                          //|MC|//
-}                                         //|MC|//
-                                          //|MC|//
+      
+//:WAIT_UNTIL_WINDOWS_CLOSED:================================://
+#define INFO aac2020_ginawin_Info
+#define HALT aac2020_ginawin_Halt
+#define OKAY aac2020_ginawin_Okay
+                         
+    void                                       
+    aac2020_ginawin_WaitUntilWindowClosed(){   
+                                              
+        struct_aac2020_ginawin_global_state*        
+        GS = &(AAC2020_GINAWIN);        
+                                        
+        aac2020_ginawin_FUNCTION_POINTERS_struct*    
+        FP = &(aac2020_ginawin_function_pointers);   
+                                               
+        aac2020_ginawin_fe_WaitForSingleObject();    
+                                               
+        //!Wait until all threads !//        
+        //!have terminated.       !//        
+        struct aac2020_ginawin_data_KERNEL32*       
+        K32D = &( FP->KERNEL32.DATA );;                                    
+                                               
+        DWORD_u32_4B dont_fail_me=(            
+        FP->KERNEL32.WaitForSingleObject(      
+        /**/GS->PW.W32.platform_window_thread  
+        ,       K32D -> infinite               
+        ));;  
+                                 
+        if( K32D -> wait_failed  ==  dont_fail_me                       
+        ){                                                                   
+            /** Should this HALT instead of be INFO ? **/
+            INFO( "[ThreadedWindowWaitFail]" );                                                             
+        }else{                                                                  
+            OKAY( "[ThreadedWindowClosed]" );                                                                
+        };;                                    
+                                               
+    }     
+
+#undef  INFO
+#undef  HALT 
+#undef  OKAY
+//:================================:WAIT_UNTIL_WINDOWS_CLOSED://                                    
+                                           
 //|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|//
 //! A blocking call that loops forever.      MC!//
 //! Put it outside of your main loop to      MC!//
@@ -2355,6 +2357,9 @@ AAC2020_GINAWIN_GetWinDC(){
         #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 )
         #define H       aac2020_ginawin_Halt
         #define HAN_WIN AAC2020_GINAWIN.PW.W32.handle_to_window
+
+            //:Dont_Silence:BUGHUNT_001:sections
+            //:That are throwing errors.
 
             void* con_win = AAC2020_GINAWIN_GetWinDC();
             if( ((void*)0)== HAN_WIN ){ H("[2020_10_30:E1]"); }; 
@@ -2749,56 +2754,59 @@ aac2020_ginawin_InitGlobalStateContainer(       //|GS|//
     }    
 
 //: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://     
-                                                     
-int 
-AAC2020_GINAWIN_Demo( void ){
-    printf(
-        "[BEG:AAC2020_GINAWIN_Demonstration]\n"
-    );;
-    fflush(stdout);
-    
-    AAC2020_GINAWIN.X   = 22  ;
-    AAC2020_GINAWIN.Y   = 22  ;
-    AAC2020_GINAWIN.WID = 1024;
-    AAC2020_GINAWIN.HIG = 512 ;
+        
+//:DEMO_FUNC:================================================://
+                                             
+    int 
+    AAC2020_GINAWIN_Demo( void ){
+        aac2020_ginawin_Info( "[BEG:GINAWIN_Demonstration]\n" );
+        
+        AAC2020_GINAWIN.X   = 22  ;
+        AAC2020_GINAWIN.Y   = 22  ;
+        AAC2020_GINAWIN.WID = 1024;
+        AAC2020_GINAWIN.HIG = 512 ;
 
 
-    //:This creates our window:
-    AAC2020_GINAWIN_Init( AAC2020_GINAWIN__MULTI_THREADED );
-   
-    //:This gets our window's device
-    //:context, which can be used to
-    //:create OpenGL context.
-    //:GL=="Graphics Library"
-    AAC2020_GINAWIN_GetWinDC();
+        //:This creates our window:
+        AAC2020_GINAWIN_Init( AAC2020_GINAWIN__MULTI_THREADED );
+       
+        //:This gets our window's device
+        //:context, which can be used to
+        //:create OpenGL context.
+        //:GL=="Graphics Library"
+        AAC2020_GINAWIN_GetWinDC();
 
-    int X   = AAC2020_GINAWIN_GetClient_X  ();
-    int Y   = AAC2020_GINAWIN_GetClient_Y  ();
-    int WID = AAC2020_GINAWIN_GetClient_WID();
-    int HIG = AAC2020_GINAWIN_GetClient_HIG();
-    printf(
-    /**/"[CLIENT_DIMS]\n"
-    /**/" X  :%d\n"
-    /**/" Y  :%d\n"
-    /**/" WID:%d\n"
-    /**/" HIG:%d\n"
-    ,X,Y,WID,HIG
-    );;
+        int X   = AAC2020_GINAWIN_GetClient_X  ();
+        int Y   = AAC2020_GINAWIN_GetClient_Y  ();
+        int WID = AAC2020_GINAWIN_GetClient_WID();
+        int HIG = AAC2020_GINAWIN_GetClient_HIG();
 
-    //: Uncomment this line if you want
-    //: to observe proof that the window's
-    //: loop is off in another thread.
-    //: while( 1 ){ };
-   
-    //:Put this after your game loop
-    //:so that program does not exit
-    //:until window is closed.
-    AAC2020_GINAWIN_Wait();
+        if( AAC2020_SILENCE.GINAWIN <= 0 ){
 
-    printf(
-        "[END:AAC2020_GINAWIN_Demonstration]\n"
-    );;
-    fflush(stdout);
+            printf(
+            /**/"[CLIENT_DIMS]\n"
+            /**/" X  :%d\n"
+            /**/" Y  :%d\n"
+            /**/" WID:%d\n"
+            /**/" HIG:%d\n"
+            ,X,Y,WID,HIG
+            );;
 
-    return 0;
-} //[main]//
+        };;
+
+        //: Uncomment this line if you want
+        //: to observe proof that the window's
+        //: loop is off in another thread.
+        //: while( 1 ){ };
+       
+        //:Put this after your game loop
+        //:so that program does not exit
+        //:until window is closed.
+        AAC2020_GINAWIN_Wait();
+
+        aac2020_ginawin_Info("[GINAWIN_Demonstration]\n");
+
+        return 0;
+    }  
+
+//:================================================:DEMO_FUNC://

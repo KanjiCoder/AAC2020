@@ -19,8 +19,8 @@
         U08   IKEYBOX ; //:[ * ]://
         U08   IMOUBOX ; //:[ * ]://     X == YES
         U08   CEDITOR ; //:[ * ]://     _ == NO
-        U08   GINAWIN ; //:[ _ ]://     * == Doesn't Talk
-        U08   DUI     ; //:[ _ ]://          No Code We Can Add
+        U08   GINAWIN ; //:[ X ]://     * == Doesn't Talk
+        U08   DUI     ; //:[ X ]://          No Code We Can Add
         U08   GLEBIND ; //:[ _ ]://
         U08   GLCONST ; //:[ _ ]://
         U08   CPUNIFO ; //:[ _ ]://
@@ -33,28 +33,39 @@
         U08   PAINT5D ;
         
         }AAC2020_SILENCE={
+        #define off ( 1 ) //:Dont show me messages
+        #define O_N ( 0 ) //:Yes, show me messages.
+
             .SILENCE = 0 //:Set to 1 silences ALL SUB LIBRARIES
         
-        ,   .TODOMAN = 1 //:Todo_Manager:VITAL_TODO,MAYBE_TODO
-        ,   .FILEBOI = 0 
-        ,   .NATIKEY = 0
-        ,   .IKEYBOX = 0
-        ,   .IMOUBOX = 0
-        ,   .CEDITOR = 0
-        ,   .GINAWIN = 0
-        ,   .DUI     = 0
-        ,   .GLEBIND = 0
-        ,   .GLCONST = 0
-        ,   .CPUNIFO = 0
-        ,   .GRAQUAD = 0
-        ,   .FREE_01 = 0
-        ,   .FRAGBED = 0
-        ,   .PIXNAME = 0
-        ,   .GPUDATA = 0
-        ,   .PIXLOAD = 0
-        ,   .PAINT5D = 0
+        ,   .TODOMAN = off //:Todo_Manager:VITAL_TODO,MAYBE_TODO
+        ,   .FILEBOI = off
+        ,   .NATIKEY = off
+        ,   .IKEYBOX = off
+        ,   .IMOUBOX = off
+        ,   .CEDITOR = off
+        ,   .GINAWIN = off
+        ,   .DUI     = off
+        ,   .GLEBIND = O_N  //: TODO: Add silencing code ://
+        ,   .GLCONST = O_N  //: TODO: Add silencing code ://
+        ,   .CPUNIFO = O_N  //: TODO: Add silencing code ://
+        ,   .GRAQUAD = O_N  //: TODO: Add silencing code ://
+        ,   .FREE_01 = O_N  //: TODO: Add silencing code ://
+        ,   .FRAGBED = O_N  //: TODO: Add silencing code ://
+        ,   .PIXNAME = O_N  //: TODO: Add silencing code ://
+        ,   .GPUDATA = O_N  //: TODO: Add silencing code ://
+        ,   .PIXLOAD = O_N  //: TODO: Add silencing code ://
+        ,   .PAINT5D = O_N  //: TODO: Add silencing code ://
         
+        #undef off
+        #undef O_N
         };
+
+        #if( AAC2020_CRASH_ON_VITAL_TODO >= 1 )
+
+            #error: Finish Adding Silencing Code For Systems
+
+        #endif
         
 #undef  U08
 //:===========================================:LIBRARY_STRUCT://
