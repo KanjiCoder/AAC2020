@@ -4504,10 +4504,32 @@ void AAC2020_GLEBIND_Wait(){
 
 //:INIT:=====================================================://
 #define I_P AAC2020_GLEBIND_InfoPrint
+#define DEB AAC2020_GLEBIND_show_user_print_statements_DEBUG  
+#define INF AAC2020_GLEBIND_show_user_print_statements_INFO   
+#define V_E AAC2020_GLEBIND_unit_test_verbose_echo     
+#define P_F printf       
 
     void AAC2020_GLEBIND_Init(){ //:Initialize
 
         aac2020_glebind_is_initing = ( 1 );
+
+        //:Console_Message_Help:-----------------------------://
+            if( AAC2020_SILENCE.GLEBIND     <= 0 ){
+            if( DEB <= 0 && INF <= 0 && V_E <= 0 ){
+
+                /** SILENCE configured to show console       **/
+                /** messages. But all the fine grain         **/
+                /** categories for messages are shut off,    **/
+                /** meaning you might not see any messages   **/
+                /** from this [GLEBIND] system, though you   **/
+                /** are expecting to.                        **/
+
+                P_F("[WARN:Silenced_By_Fine_Grain_Controls]");
+
+            };;};;
+        //:-----------------------------:Console_Message_Help://
+
+
     
         I_P("[ABOUT_TO:TouchFile_OPEN_GL_SEARCH_PATHS]");
         AAC2020_GLEBIND_TouchFile_OPEN_GL_SEARCH_PATHS(
@@ -4523,7 +4545,11 @@ void AAC2020_GLEBIND_Wait(){
         aac2020_glebind_is_initing = ( 0 );
     }  
 
-#undef I_P
+#undef  I_P  //: 01 :----------------------------------------://
+#undef  DEB  //: 02 :----------------------------------------://
+#undef  INF  //: 03 :----------------------------------------://
+#undef  V_E  //: 04 :----------------------------------------://
+#undef  P_F  //: 05 :----------------------------------------://
 //:=====================================================:INIT://
 
 void AAC2020_GLEBIND_Demo(){
