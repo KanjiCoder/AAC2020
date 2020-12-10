@@ -1,0 +1,71 @@
+
+//:TODOMAN: TODO MANager
+
+//: #include <stdlib.h> //: exit(.....)
+//: #include <stdio.h>  //: printf(...)
+
+//:YOU_SHOULD_CALL_THESE_FROM_NOW_ON:========================://
+
+    void AAC2020_TODOMAN_Vital( const char* todo_message ){
+
+        //:#_ALWAYS_SHOW_MESSAGE_ON_CRASH_#://
+        int sho_msg=( 1 /**show_message:Default:TRUE**/ );
+        if( AAC2020_SILENCE.TODOMAN     >= 1 ){ sho_msg = 0; };
+       #if( AAC2020_CRASH_ON_VITAL_TODO >= 1 )
+                                              { sho_msg = 1; };
+       #endif
+
+        if( sho_msg >= 1 ){
+
+            printf( "[AAC2020_VITAL_TODO]:%s\n", todo_message );
+            fflush( stdout );
+        
+        };;
+
+        #if( AAC2020_CRASH_ON_VITAL_TODO >= 1 )
+            exit( 222 );
+        #endif
+
+    }
+    void AAC2020_TODOMAN_Maybe( const char* todo_message ){
+
+        //:#_ALWAYS_SHOW_MESSAGE_ON_CRASH_#://
+        int sho_msg=( 1 /**show_message:Default:TRUE**/ );
+        if( AAC2020_SILENCE.TODOMAN     >= 1 ){ sho_msg = 0; };
+       #if( AAC2020_CRASH_ON_MAYBE_TODO >= 1 )
+                                              { sho_msg = 1; };
+       #endif
+
+        if( sho_msg >= 1 ){
+
+            printf( "[AAC2020_MAYBE_TODO]:%s\n", todo_message );
+            fflush( stdout );
+
+        };;
+
+        #if( AAC2020_CRASH_ON_MAYBE_TODO >= 1 )
+            exit( 42 );
+        #endif
+
+    }
+
+//:========================:YOU_SHOULD_CALL_THESE_FROM_NOW_ON://
+//:DEPRECATED_FUNCTION_CALLS:================================://
+
+    #if( AAC2020_CRASH_ON_VITAL_TODO >= 1 ) //:##############://
+
+        #error: TODO:Remove_Any_Calls_To_These_Functions_Below
+
+    #endif //:###############################################://
+
+    void AAC2020_VITAL_TODO( const char* todo_message ){
+
+        AAC2020_TODOMAN_Vital( todo_message );
+    }
+
+    void AAC2020_MAYBE_TODO( const char* todo_message ){
+
+        AAC2020_TODOMAN_Maybe( todo_message );
+    }
+
+//:================================:DEPRECATED_FUNCTION_CALLS://

@@ -7,6 +7,36 @@
 *** ******************************************************** ***
 
 
+#_ALWAYS_SHOW_MESSAGE_ON_CRASH_#################################
+
+    If we are crashing the program. Always show the
+    todo message that caused the crash.
+
+    Even if( AAC2020_SILENCE.TODOMAN >= 1 )
+
+    Because... It would be a real pain in the ass to 
+    terminate the program and not show a reason why.
+    So do not allow that behavior.
+
+#################################_ALWAYS_SHOW_MESSAGE_ON_CRASH_#
+#_GINAWIN_DOLOOP_ISNOTTHE_FINALFIX_#############################
+
+    Now we wait and see if that stops the crashing.
+    I think it will because my guess is I was failing
+    to empty ( drain ) the message queue and after 
+    enough time of messages being built up, the
+    program decides it is being unresponsive.
+
+    Pressing CTLR+ALT+DEL
+    makes the program repsonsive again because it
+    [flushes/discards] the message queue.
+
+    Allowing you to have to wait for the queue to overflow
+    again before the program becomes unresponsive.
+
+    Well fuck... I was wrong....
+
+#############################_GINAWIN_DOLOOP_ISNOTTHE_FINALFIX_#
 #__END_OF_GINAWIN_BUGHUNT_001__#################################
 
     //: END_OF_THE_BUG_HUNT!                             ://
