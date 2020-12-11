@@ -512,10 +512,43 @@
             /** SOLID_RED_IS_GOOD_FOR_NOW_UNTIL_YOU_CAN **/
             /** CONFIRM_SEEING_OF_SOLID_RED_IN_SHADER   **/  
 
-            U08 v_R = 255; /** value: rgba.RED   **/
-            U08 v_G = 255; /** value: rgba.GREEN **/
-            U08 v_B = 255; /** value: rgba.BLUE  **/
+            U08 v_R =   0; /** value: rgba.RED   **/
+            U08 v_G =   0; /** value: rgba.GREEN **/
+            U08 v_B =   0; /** value: rgba.BLUE  **/
             U08 v_A = 255; /** value: rgba.ALPHA **/
+
+            //: p_x[ 0 , 1 , 0 , 1 , 0 , 1 , 0 , 1 ..  ]
+            //: p_y[ 0 , 1 , 0 , 1 , 0 , 1 , 0 , 1 ... ]
+    
+            //:    0  1  0  1  0  1  0  1
+
+            //:    1  _  X  _  X  _  X  _
+
+            //:    0  X  _  X  _  X  _  X
+
+            //:    1  _  X  _  X  _  X  _
+
+            //:    0  X  _  X  _  X  _  X
+
+            //:    1  _  X  _  X  _  X  _
+
+            //:    0  X  _  X  _  X  _  X
+
+            I32 e_x =( p_x          % 2  ); //:even_x
+            I32 e_y =(        p_y   % 2  ); //:even_y
+            I32 e_c =((e_x  + e_y ) % 2  ); //:even_c
+            if(  0 ==  e_c ){
+                v_R =( 255 );
+                v_G =(   0 );
+                v_B =(   0 );
+                v_A =( 255 );
+            }else{
+                v_R =(   0 );
+                v_G =(   0 );
+                v_B =( 255 );
+                v_A =( 255 );
+            };;
+            //: if( e_x | e_y | e_c ){ /** NOOP **/ };
 
             I32 max_dex =(
                 gpudata -> pix_wid

@@ -86,7 +86,7 @@
             //|Set output pixel color:_______________________|//
             //[USING_A_TEXEL_FETCH_OF_PAINT5D:_______________]//
         
-            "   #define    USE_TEXEL_FETCH ( 0 )             \n"
+            "   #define    USE_TEXEL_FETCH ( 1 )             \n"
             "                                                \n"
             "   #define    ARG_001 ( paint5d )               \n"
             "   ivec2      arg_002 = ivec2(   //             \n"
@@ -114,8 +114,8 @@
             "       /** What I am doing apparently.    **/   \n"
             "       FragColor = vec4(                        \n"
             "           texture(                             \n"
-            "           /**/ARG_001 // Texture_To_Sample     \n"
-            "           ,   arg_002 // Texel_Coordinates     \n"
+            "           /**/ARG_001   // Texture_To_Sample   \n"
+            "           ,  (vec2(arg_002)+0.5) / 512.0       \n"
             "           )                                    \n"
             "       );;                                      \n"
             "                                                \n"
