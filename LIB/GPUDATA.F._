@@ -73,18 +73,20 @@
 
         void
         aac2020_gpudata_Goal( const char* msg_gol ){
+        if( AAC2020_SILENCE.GPUDATA <= 0 ){
             printf("[aac2020_gpudata:goal:ok]:%s\n", msg_gol );
             fflush(stdout);
-        }
+        };;}
 
     //:===============================:GOALS_ARE_NEVER_ERRORS://
     //:NEITHER_ARE_OKAY_MESSAGES:============================://
 
         void
         aac2020_gpudata_Okay( const char* msg_gol ){
+        if( AAC2020_SILENCE.GPUDATA <= 0 ){
             printf("[aac2020_gpudata_Okay]:%s\n", msg_gol );
             fflush(stdout);
-        }
+        };;}
 
     //:============================:NEITHER_ARE_OKAY_MESSAGES://
 //:===========================:HALTING_FUNCTIONS_AND_MESSAGES://

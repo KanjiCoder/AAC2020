@@ -12,6 +12,7 @@
         struct AAC2020_SILENCE_LIBRARY_STRUCT{
         
         U08   SILENCE ; //:SPECIAL: Silences ALL if turned on.
+        U08   AACMAIN ; //:SPECIAL: #WHAT_IS_AAC_MAIN#
             
         U08   TODOMAN ; //:[ X ]://
         U08   FILEBOI ; //:[ X ]://  X: Has Silence Code Been
@@ -21,13 +22,13 @@
         U08   CEDITOR ; //:[ * ]://     _ == NO
         U08   GINAWIN ; //:[ X ]://     * == Doesn't Talk
         U08   DUI     ; //:[ X ]://          No Code We Can Add
-        U08   GLEBIND ; //:[ _ ]://
-        U08   GLCONST ; //:[ _ ]://
-        U08   CPUNIFO ; //:[ _ ]://
-        U08   GRAQUAD ; //:[ _ ]://
-        U08   FREE_01 ; //:[ _ ]://
-        U08   FRAGBED ; //:[ _ ]://
-        U08   PIXNAME ; //:[ _ ]://
+        U08   GLEBIND ; //:[ X ]://
+        U08   GLCONST ; //:[ * ]://
+        U08   CPUNIFO ; //:[ * ]://
+        U08   GRAQUAD ; //:[ X ]://
+        U08   FREE_01 ; //:[ * ]://
+        U08   FRAGBED ; //:[ X ]:// <<<< SKIPPED TO HERE BECAUSE SAW IN CONSOLE.
+        U08   PIXNAME ; //:[ * ]://
         U08   GPUDATA ; //:[ _ ]://
         U08   PIXLOAD ; //:[ _ ]://
         U08   PAINT5D ;
@@ -36,7 +37,8 @@
         #define off ( 1 ) //:Dont show me messages
         #define O_N ( 0 ) //:Yes, show me messages.
 
-            .SILENCE = 0 //:Set to 1 silences ALL SUB LIBRARIES
+            .SILENCE =  0  //: #_SILENCEALL_NOTIMPLEMENTED_# ://
+        ,   .AACMAIN = off //: #_WHAT_IS_AACMAIN_#           ://
         
         ,   .TODOMAN = off //:Todo_Manager:VITAL_TODO,MAYBE_TODO
         ,   .FILEBOI = off
@@ -46,14 +48,14 @@
         ,   .CEDITOR = off
         ,   .GINAWIN = off
         ,   .DUI     = off
-        ,   .GLEBIND = O_N  //: TODO: Add silencing code ://
-        ,   .GLCONST = O_N  //: TODO: Add silencing code ://
-        ,   .CPUNIFO = O_N  //: TODO: Add silencing code ://
-        ,   .GRAQUAD = O_N  //: TODO: Add silencing code ://
-        ,   .FREE_01 = O_N  //: TODO: Add silencing code ://
-        ,   .FRAGBED = O_N  //: TODO: Add silencing code ://
-        ,   .PIXNAME = O_N  //: TODO: Add silencing code ://
-        ,   .GPUDATA = O_N  //: TODO: Add silencing code ://
+        ,   .GLEBIND = off   
+        ,   .GLCONST = off  //: TODO: Add silencing code ://
+        ,   .CPUNIFO = off  //: TODO: Add silencing code ://
+        ,   .GRAQUAD = off  //: TODO: Add silencing code ://
+        ,   .FREE_01 = off  //: TODO: Add silencing code ://
+        ,   .FRAGBED = off  //: TODO: Add silencing code ://
+        ,   .PIXNAME = off  //: TODO: Add silencing code ://
+        ,   .GPUDATA = off  //: TODO: Add silencing code ://
         ,   .PIXLOAD = O_N  //: TODO: Add silencing code ://
         ,   .PAINT5D = O_N  //: TODO: Add silencing code ://
         

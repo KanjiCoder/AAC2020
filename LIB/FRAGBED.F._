@@ -11,6 +11,62 @@
         exit(666);
     }
 //:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+//:#INFO_MESSAGES_SDC#:======================================://
+#define U32  uint32_t  /** <stdint.h> **/
+#define P_F  printf
+#define F_F  fflush( stdout );
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void aac2020_fragbed_Info( const char* msg_inf ){
+        if( AAC2020_SILENCE.FRAGBED <= 0 ){ //:@LOUD@://
+            P_F( "[aac2020_fragbed:Info]:%s\n" ,  msg_inf);
+            F_F;
+        };;
+    }  
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void aac2020_fragbed_Info_str( 
+        const char* str_fmt /** Format String  (with:%s) **/
+    ,   const char* str_msg /** String:Message           **/
+    ){
+        if( AAC2020_SILENCE.FRAGBED <= 0 ){ //:@LOUD@://
+            P_F( "[aac2020_fragbed:Info_str:BELOW]" );
+            F_F;//:@ECHOFUNC_EXTRAFLUSH@://
+            P_F( str_fmt , str_msg );
+            F_F;(stdout);
+        };;
+    }  
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void aac2020_fragbed_Info_dec( 
+        const char* str_fmt /** Format String (with: %d)  **/
+    ,   U32         dec_msg /** Message:DECIMAL_VALUE     **/
+    ){
+        if( AAC2020_SILENCE.FRAGBED <= 0 ){ //:@LOUD@://
+            P_F( "[aac2020_fragbed:Info_dec:BELOW]" );
+            F_F; //:@ECHOFUNC_EXTRAFLUSH@://
+            P_F( str_fmt , dec_msg );
+            F_F;
+        };;
+    }  
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void aac2020_fragbed_Info_chr( 
+        const char* str_fmt /** Format String (with: %c)  **/
+    ,   char        chr_msg /** Message:Char_Value        **/
+    ){
+        if( AAC2020_SILENCE.FRAGBED <= 0 ){ //:@LOUD@://
+            P_F( "[aac2020_fragbed:Info_chr:BELOW]" );
+            F_F; //:@ECHOFUNC_EXTRAFLUSH@://
+            P_F( str_fmt , chr_msg );
+            F_F;
+        };;
+    }  
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+#undef  U32
+#undef  P_F
+#undef  F_F
+//:======================================:#INFO_MESSAGES_SDC#://
+//:COPY_HARD_CODED_SHADER_STRINGS:===========================://
+#define INFO     aac2020_fragbed_Info
+#define INFO_DEC aac2020_fragbed_Info_dec
+#define FUCK_YOU aac2020_fragbed_Halt
 
     const char*
     AAC2020_FRAGBED_CopyHardCodedShaderStrings(
@@ -27,14 +83,12 @@
         /** shader source loaded from disk.                  **/
 
         //:##################################################://
-        #define H aac2020_fragbed_Halt //:###################://
         if( ((void*)0) == AAC2020_FRAGBED_DEFAULT ){
-            H( "[NULL_FRAGBED_DEFAULT]" );
+            FUCK_YOU( "[NULL_FRAGBED_DEFAULT]" );
         };;
         if( strlen( AAC2020_FRAGBED_DEFAULT ) <= 0 ){
-            H("[ZERO_LEN_HARD_CODED_STR]");
+            FUCK_YOU("[ZERO_LEN_HARD_CODED_STR]");
         };;
-        #undef  H //:########################################://
         //:##################################################://
 
         //: noc: number_of_characters
@@ -50,8 +104,7 @@
             #if( AAC2020_GRAQUAD_BUGHUNT_001 >= 1 )
                 /** GRADQUAD BUGHUNT_001 led us into the     **/
                 /** NEXT file within our library chain.      **/
-                printf("[ABOUT_TO_COPY:noc]:%d\n", noc );
-                fflush(stdout); 
+                INFO_DEC("[ABOUT_TO_COPY:noc]:%d\n", noc );
             #endif
 
             //:copy_all_characters::- - - - - - - - - - - - -://
@@ -63,8 +116,7 @@
             #if( AAC2020_GRAQUAD_BUGHUNT_001 >= 1 )
                 /** GRADQUAD BUGHUNT_001 led us into the     **/
                 /** NEXT file within our library chain.      **/
-                printf("[DONE_COPYING:noc]:%d\n", noc );
-                fflush(stdout); 
+                INFO_DEC("[DONE_COPYING:noc]:%d\n", noc );
             #endif
 
         //:------------------------------:COPY_ALL_CHARACTERS://
@@ -74,8 +126,7 @@
                 /** YES: AAC2020_GRAQUAD_BUGHUNT_001  **/
                 /** NOT: AAC2020_FRAGBED_BUGHUNT_001  **/
                 //:MSR:MEMORY_STOMP_RISK
-                printf("[BEFORE:ADD_NUL_TERM:MSR]");
-                fflush(stdout); 
+                INFO("[BEFORE:ADD_NUL_TERM:MSR]");
             #endif
 
             //:add_null_term:MSR!:- - - - - - - - - - - - - -://
@@ -104,8 +155,7 @@
                 /** YES: AAC2020_GRAQUAD_BUGHUNT_001  **/
                 /** NOT: AAC2020_FRAGBED_BUGHUNT_001  **/
                 //:MSR:MEMORY_STOMP_RISK
-                printf("[AFTER::ADD_NUL_TERM:MSR]");
-                fflush(stdout); 
+                INFO("[AFTER::ADD_NUL_TERM:MSR]");
             #endif
 
         //:------------------:ADD_NULL_TERM:MEMORY_STOMP_RISK://
@@ -118,8 +168,16 @@
         return( aac2020_fragbed_default );
     }
 
-    #define U32 uint32_t /** GCC: <stdint.h> **/
-    U32 AAC2020_FRAGBED_LoadFileIfExists(
+#undef  INFO      
+#undef  INFO_DEC  
+#undef  FUCK_YOU  
+//:===========================:COPY_HARD_CODED_SHADER_STRINGS://
+//:LOAD_FILE_IF_EXISTS:======================================://
+#define U32       uint32_t /** GCC: <stdint.h> **/
+#define INFO_STR  aac2020_fragbed_Info_str
+
+    U32 
+    AAC2020_FRAGBED_LoadFileIfExists(
         #define ARG const char
         ARG*         frag_shader_nam //:EX:FRAGBED_001.frag
     ,   ARG*  *BYREF_frag_shader_str //:DESTINATION
@@ -245,8 +303,7 @@
            
             
             #if( AAC2020_FRAGBED_BUGHUNT_FileOnDiskNotify >= 1 )
-            printf("[file_YES_on_disk]:%s\n",frag_shader_nam);
-            fflush(stdout);
+            INFO_STR("[file_YES_on_disk]:%s\n",frag_shader_nam);
             #endif 
          
             file_exists=( 0 + 4 );
@@ -254,11 +311,9 @@
             file_exists=( 0 - 4 );
    
             #if( AAC2020_FRAGBED_BUGHUNT_FileOnDiskNotify >= 1 )
-            printf("[file_NOT_on_disk]:%s\n",frag_shader_nam);
-            fflush(stdout); 
+            INFO_STR("[file_NOT_on_disk]:%s\n",frag_shader_nam);
             #endif
           
-
         };;
         #undef  F_OK
         #undef  FNAM
@@ -301,35 +356,40 @@
 
         return( 0x00 );
     }
-    #undef U32
-
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-
-    #define U32 uint32_t /** GCC: <stdint.h> **/
-    U32 AAC2020_FRAGBED_SaveTextFileToDisk(
+   
+#undef  U32
+#undef  INFO_STR
+//:======================================:LOAD_FILE_IF_EXISTS://
+//:SAVE_TEXT_FILE_TO_DISK:===================================://
+#define P_F       printf
+#define U32       uint32_t /** GCC: <stdint.h> **/
+#define NIL       ((void*)0)
+#define INFO      aac2020_fragbed_Info
+#define INFO_STR  aac2020_fragbed_Info_str
+#define FATALERR  aac2020_fragbed_Halt
+    
+    U32 
+    AAC2020_FRAGBED_SaveTextFileToDisk(
         const char* frag_shader_nam //:Name_Of_File
     ,   const char* frag_shader_str //:Contents_Of_File
     )
     {
-        #define H aac2020_fragbed_Halt
-        if( ((void*)0) == frag_shader_nam ){ H("[NULLNAME]");};;
-        if( ((void*)0) == frag_shader_str ){ H("[NULL_STR]");};;
-        #undef  H 
+        if( NIL == frag_shader_nam ){ FATALERR("[NULLNAME]");};;
+        if( NIL == frag_shader_str ){ FATALERR("[NULL_STR]");};;
 
         //:##################################################://
+        if( AAC2020_SILENCE.FRAGBED <= 0 ){ //:##############://
         #if( AAC2020_FRAGBED_BUGHUNT_SaveTextFileToDisk >= 1 )
-        #define P printf
-        
+
             int frag_shader_len = strlen( frag_shader_str );
-            P("[DEBUG:AAC2020_FRAGBED_SaveTextFileToDisk]\n");
-            P("[frag_shader_nam]:%s\n"    , frag_shader_nam );
-            P("[frag_shader_str]:%s\n"    , frag_shader_str );
-            P("[frag_shader_len]:%d\n"    , frag_shader_len );
+            P_F("[DEBUG:AAC2020_FRAGBED_SaveTextFileToDisk]\n");
+            P_F("[frag_shader_nam]:%s\n"    , frag_shader_nam );
+            P_F("[frag_shader_str]:%s\n"    , frag_shader_str );
+            P_F("[frag_shader_len]:%d\n"    , frag_shader_len );
             fflush( stdout );
 
-        #undef  P
         #endif //:###########################################://
-        //:##################################################://
+        };; //:##############################################://
 
         //: noc:Number_Of_Characters:
         //: nob:Number_Of_Bytes     : (Ascii My Boy!)
@@ -344,16 +404,12 @@
             /** Print this before attempting to print        **/
             /** the string variables in case the string      **/
             /** vars cause a segfault or something.          **/
-            printf("[FATAL_ERROR:WE_HAVE_A_PROBLEM_CAPTAIN]\n");
-            fflush(stdout);
-
-            printf("[frag_shader_nam]%s\n",
+            INFO("[FATAL_ERROR:WE_HAVE_A_PROBLEM_CAPTAIN]\n");
+            INFO_STR("[frag_shader_nam]%s\n",
                      frag_shader_nam );;
-
-            printf("[frag_shader_str]%s\n",
+            INFO_STR("[frag_shader_str]%s\n",
                      frag_shader_str );;
-
-            aac2020_fragbed_Halt("[ERR:NNT]");
+            FATALERR("[ERR:NNT]");
         };;
 
         //:CREATE_BLANK_IF_NOT_EXIST:------------------------://
@@ -401,30 +457,33 @@
             
             }else{
                 
-                //:TODO: Figure out how to create folders so that
-                //:      this file save will work.
-                printf("[FILE_SAVE_FAIL]:%s\n"
-                        ,frag_shader_nam    );;
-                fflush(stdout);
-            
-                aac2020_fragbed_Halt("[FIX_THIS_YOU_FOOL]");
+                INFO_STR("[FILE_SAVE_FAIL]:%s\n" 
+                            ,frag_shader_nam    );;
+                FATALERR("[FIX_THIS_YOU_FOOL]");
             };;
         
         //:-------------------:CORE_ACTION:SaveTextFileToDisk://
 
         return( 0x00 );
     }
-    #undef U32
 
-    //:==============================:LOAD_FILE_AND_SAVE_FILE://
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-
+#undef  P_F       //: 01 :-----------------------------------://
+#undef  U32       //: 02 :-----------------------------------://
+#undef  NIL       //: 03 :-----------------------------------://
+#undef  INFO      //: 04 :-----------------------------------://
+#undef  INFO_STR  //: 05 :-----------------------------------://
+#undef  FATALERR  //: 06 :-----------------------------------://
+//:===================================:SAVE_TEXT_FILE_TO_DISK://
 //:SIMPLE_KEY_HANDLER:=======================================://
-#define U32   uint32_t /** GCC: <stdint.h> **/
-#define I32    int32_t /** GCC: <stdint.h> **/
-#define FN_01 aac2020_graquad_ReLoadShaderUniforms_iMouse
-#define FN_02 aac2020_graquad_ReLoadShaderUniforms_iTime
-#define FN_03 aac2020_graquad_ReLoadShaderUniforms_iResolution
+#define U32      uint32_t /** GCC: <stdint.h> **/
+#define I32       int32_t /** GCC: <stdint.h> **/
+#define INFO     aac2020_fragbed_Info
+#define INFO_CHR aac2020_fragbed_Info_chr
+#define FUCK_YOU aac2020_fragbed_Halt
+
+#define FN_01  aac2020_graquad_ReLoadShaderUniforms_iMouse
+#define FN_02  aac2020_graquad_ReLoadShaderUniforms_iTime
+#define FN_03  aac2020_graquad_ReLoadShaderUniforms_iResolution
 
     I32 
     AAC2020_FRAGBED_SimpleKeyHandler( 
@@ -446,16 +505,14 @@
 
         //:FTI:Forgot_To_Init:
         if( AAC2020_FRAGBED_inited <= 0 ){
-            printf("[FATAL_ERROR:AAC2020_FRAGBED:FTI]\n");
-            fflush(stdout); exit(666);
+            FUCK_YOU("[FATAL_ERROR:AAC2020_FRAGBED:FTI]\n");
         };;
 
         //:TODO: Swap loaded shaders here.
         if( chr_key >= 1 ){
 
-            printf("[AAC2020_FRAGBED_SimpleKeyHandler]...\n");
-            printf("[FRAGBED:KEY]:%c\n" , chr_key );
-            fflush(stdout);
+            INFO(    "[AAC2020_FRAGBED_SimpleKeyHandler]...\n");
+            INFO_CHR("[FRAGBED:KEY]:%c\n" , chr_key );
 
             #define P_1 AAC2020_FRAGBED_loaded_001_ptr //:###://
             #define P_2 AAC2020_FRAGBED_loaded_002_ptr //:###://
@@ -482,8 +539,7 @@
             case '8' :{ str = P_8; shader_found = 8; };break;
             case '9' :{ str = P_9; shader_found = 9; };break;
             default:{ 
-                printf("[PICK_SHADER_USING_NUMBER_KEY]\n");
-                fflush(stdout);
+                INFO("[PICK_SHADER_USING_NUMBER_KEY]\n");
             };};;
 
             #undef  P_1  //:#################################://
@@ -581,9 +637,7 @@
         }else
         if( chr_key <= 1 ){
 
-            printf("[AAC2020_FRAGBED:IGNORED_KEY]\n");
-            fflush(stdout);
-
+            INFO("[AAC2020_FRAGBED:IGNORED_KEY]\n");
         };;
 
         /**1:1 mapping between editor index and shader index**/
@@ -605,17 +659,25 @@
             BEST_NOT_TO_DO_WITH_SIDE_EFFECTS_CEDITOR_dex_edi );;
     }
 
-#undef  U32
-#undef  I32
-#undef  FN_01  
-#undef  FN_02  
-#undef  FN_03  
+#undef  U32       //: 01 :-----------------------------------://
+#undef  I32       //: 02 :-----------------------------------://
+#undef  INFO      //: 03 :-----------------------------------://
+#undef  INFO_CHR  //: 04 :-----------------------------------://
+#undef  FUCK_YOU  //: 05 :-----------------------------------://
+                  //: -- :-----------------------------------://
+#undef  FN_01     //: 06 :-----------------------------------://
+#undef  FN_02     //: 07 :-----------------------------------://
+#undef  FN_03     //: 08 :-----------------------------------://
 //:=======================================:SIMPLE_KEY_HANDLER://
+//:INIT:=====================================================://
+#define U32  uint32_t /** GCC: <stdint.h> **/
+#define INFO aac2020_fragbed_Info
 
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-
-    int AAC2020_FRAGBED_Init()
+    U32 
+    AAC2020_FRAGBED_Init( U32 u32 )
     {
+        if( u32 ){ /** Reserved_For_Future_Use **/ };
+
         //:LOAD_DEFAULT_SHADER_REFERENCES:-------------------://
         #define COPY AAC2020_FRAGBED_CopyHardCodedShaderStrings
 
@@ -630,12 +692,12 @@
             //:--------------------------:Mini_Unit_Test:COPY://
 
             #if( AAC2020_GRAQUAD_BUGHUNT_001 >= 1 )
-                printf("[BEG:MALCOPY:DEFAULT_SHADERS]\n");
-                fflush(stdout);
+                INFO("[BEG:MALCOPY:DEFAULT_SHADERS]\n");
             #endif
 
             /** SEE[ DOC/WHY_FRAGBED_DEFAULT_COPY.TXT ] **/
 
+            //:PAINT5D:OVERRIDE?:----------------------------://
             #if( AAC2020_INCLUDE_PAINT5D <= 0 )
 
                 AAC2020_FRAGBED_loaded_001_has=( 1 );
@@ -654,42 +716,45 @@
                 AAC2020_PAINT5D_DEFAULT_001 );;
 
             #endif
+            //:----------------------------:PAINT5D:OVERRIDE?://
+            //:Remaining_Non_Overridden_Shaders:-------------://
 
-            AAC2020_FRAGBED_loaded_002_has=( 2 );
-            AAC2020_FRAGBED_loaded_002_ptr=COPY( 
-            AAC2020_FRAGBED_DEFAULT_002 );;
+                AAC2020_FRAGBED_loaded_002_has=( 2 );
+                AAC2020_FRAGBED_loaded_002_ptr=COPY( 
+                AAC2020_FRAGBED_DEFAULT_002 );;
 
-            AAC2020_FRAGBED_loaded_003_has=( 3 );
-            AAC2020_FRAGBED_loaded_003_ptr=COPY( 
-            AAC2020_FRAGBED_DEFAULT_003 );;
+                AAC2020_FRAGBED_loaded_003_has=( 3 );
+                AAC2020_FRAGBED_loaded_003_ptr=COPY( 
+                AAC2020_FRAGBED_DEFAULT_003 );;
 
-            AAC2020_FRAGBED_loaded_004_has=( 4 );
-            AAC2020_FRAGBED_loaded_004_ptr=COPY( 
-            AAC2020_FRAGBED_DEFAULT_004 );;
+                AAC2020_FRAGBED_loaded_004_has=( 4 );
+                AAC2020_FRAGBED_loaded_004_ptr=COPY( 
+                AAC2020_FRAGBED_DEFAULT_004 );;
 
-            AAC2020_FRAGBED_loaded_005_has=( 5 );
-            AAC2020_FRAGBED_loaded_005_ptr=COPY( 
-            AAC2020_FRAGBED_DEFAULT_005 );;
+                AAC2020_FRAGBED_loaded_005_has=( 5 );
+                AAC2020_FRAGBED_loaded_005_ptr=COPY( 
+                AAC2020_FRAGBED_DEFAULT_005 );;
 
-            AAC2020_FRAGBED_loaded_006_has=( 6 );
-            AAC2020_FRAGBED_loaded_006_ptr=COPY( 
-            AAC2020_FRAGBED_DEFAULT_006 );;
+                AAC2020_FRAGBED_loaded_006_has=( 6 );
+                AAC2020_FRAGBED_loaded_006_ptr=COPY( 
+                AAC2020_FRAGBED_DEFAULT_006 );;
 
-            AAC2020_FRAGBED_loaded_007_has=( 7 );
-            AAC2020_FRAGBED_loaded_007_ptr=COPY( 
-            AAC2020_FRAGBED_DEFAULT_007 );;
+                AAC2020_FRAGBED_loaded_007_has=( 7 );
+                AAC2020_FRAGBED_loaded_007_ptr=COPY( 
+                AAC2020_FRAGBED_DEFAULT_007 );;
 
-            AAC2020_FRAGBED_loaded_008_has=( 8 );
-            AAC2020_FRAGBED_loaded_008_ptr=COPY( 
-            AAC2020_FRAGBED_DEFAULT_008 );;
+                AAC2020_FRAGBED_loaded_008_has=( 8 );
+                AAC2020_FRAGBED_loaded_008_ptr=COPY( 
+                AAC2020_FRAGBED_DEFAULT_008 );;
 
-            AAC2020_FRAGBED_loaded_009_has=( 9 );
-            AAC2020_FRAGBED_loaded_009_ptr=COPY( 
-            AAC2020_FRAGBED_DEFAULT_009 );;
+                AAC2020_FRAGBED_loaded_009_has=( 9 );
+                AAC2020_FRAGBED_loaded_009_ptr=COPY( 
+                AAC2020_FRAGBED_DEFAULT_009 );;
+
+            //:-------------:Remaining_Non_Overridden_Shaders://
 
             #if( AAC2020_GRAQUAD_BUGHUNT_001 >= 1 )
-                printf("[MID:MALCOPY:DEFAULT_SHADERS]\n");
-                fflush(stdout);
+                INFO("[MID:MALCOPY:DEFAULT_SHADERS]\n");
             #endif
 
                 //:DEBUG:ASSERT_NON_ZERO_DEFAULTS:-----------://
@@ -716,8 +781,7 @@
             AAC2020_all_default_shaders_malloc_copied=( 9 );
 
             #if( AAC2020_GRAQUAD_BUGHUNT_001 >= 1 )
-                printf("[END:MALCOPY:DEFAULT_SHADERS]\n");
-                fflush(stdout);
+                INFO("[END:MALCOPY:DEFAULT_SHADERS]\n");
             #endif
 
         #undef COPY
@@ -812,7 +876,9 @@
         //:-------------:LOAD_OVERRIDES_THEN_SAVE_ALL_TO_DISK://
 
         AAC2020_FRAGBED_inited =( 1 );
-        return( 0 );
+        return( 0x00 );
     }
 
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+#undef  U32
+#undef  INFO
+//:=====================================================:INIT://

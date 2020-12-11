@@ -15,25 +15,26 @@
 
     void
     aac2020_pixload_Okay( const char* msg_o_k )
-    {
+    {if(AAC2020_SILENCE.PIXLOAD <= 0 ){
         printf("[AAC2020_pixload.Okay]:%s\n", msg_o_k );
         fflush( stdout );
-    }
+    };;}
 
 //:=========================:OKAY_MESSAGE_FOR_POOR_MANS_DEBUG://
 //:INIT_NONE:================================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
+#define O_K aac2020_pixload_Okay
 
     U32
     AAC2020_PIXLOAD_InitNone( U32 u32)
     {
         if( u32 ){ /** Reserved For Future Use **/ };
-        printf("[OK:AAC2020_PIXLOAD_InitNone]");
-        fflush(stdout);
+        O_K("[AAC2020_PIXLOAD_InitNone]");
         return( 0x00 );
     }
 
 #undef  U32
+#undef  O_K
 //:================================================:INIT_NONE://
 //:HAS_SAMPLER:==============================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/

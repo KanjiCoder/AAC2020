@@ -9,7 +9,10 @@
         //:##################################################://
         #if( AAC2020_LAUNCH_COLOR_PICKER_ON_STARTUP >= 1 ) 
         #define G(a,b,c) a##_##b##_##c
-            printf("[Ask_User_To_Pick_Color]");
+            
+            if( AAC2020_SILENCE.AACMAIN <= 0 ){ //:@LOUD@://
+                printf("[AACMAIN:Ask_User_To_Pick_Color]"); 
+            };;
             
             //:  //: Doing it this way will be impossible
             //:  //: to easily GREP search for.

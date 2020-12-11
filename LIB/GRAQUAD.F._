@@ -58,7 +58,6 @@
     #define  PRIVATE_FUNCTION( stuff ) stuff
 
 //:================================:MACROS:ROOT_LEVEL_OOP.TOP://
-
 //:HALTING_FUNCTIONS:========================================://
 #define U32 uint32_t /** stdint.h **/
 
@@ -154,7 +153,58 @@
 
 #undef  U32
 //:========================================:HALTING_FUNCTIONS://
+//:ABOUT_TO_ERROR:===========================================://
 
+    void
+    aac2020_graquad_AboutToError( const char* msg_ate ){
+        /** NEVER SILENCE THIS MESSAGE **/
+        printf("[aac2020_graquad_AboutToError]:%s\n",msg_ate);
+        fflush(stdout);
+    }
+
+//:==========================================================://
+//:ALERT_FUNCTION:===========================================://
+
+    void
+    aac2020_graquad_Alert( const char* msg_ale ){
+    
+        printf("[aac2020_graquad:TooLazyToWriteOwn...]\n");
+        printf("[aac2020_graquad:Passing_Alert_Down..]\n");
+        fflush(stdout);
+        printf("[aac2020_graquad:msg_ale]%s\n" , msg_ale );
+        fflush(stdout);
+
+        /** Passing the alert message to "GLEBIND"  **/
+        /** because don't want to worry about       **/
+        /** dialog box creation here.               **/
+        aac2020_glebind_Alert( msg_ale );
+
+    }
+
+//:===========================================:ALERT_FUNCTION://
+//:INFO_FUNCTION:============================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+
+    void
+    aac2020_graquad_Info( const char* msg_inf ){
+    if( AAC2020_SILENCE.GRAQUAD <= 0 ){
+        printf("[aac2020_graquad_Info]:%s\n",msg_inf);
+        fflush(stdout);
+    };;}
+
+    void
+    aac2020_graquad_Info_dec( 
+        const char* msg_inf 
+    ,   U32         val_dec
+    ){if( AAC2020_SILENCE.GRAQUAD <= 0 ){
+        printf("[aac2020_graquad_Info_dec]...\n");
+        fflush(stdout);
+        printf( msg_inf , val_dec );
+        fflush(stdout);
+    };;}
+
+#undef  U32
+//:============================================:INFO_FUNCTION://
 //:WINDOW_RESIZE_CALLBACK_FUNCTION:==========================://
 //:CALLED_BY:AAC2020_OnWindowResize:=========================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
@@ -1083,174 +1133,179 @@ fn(       glBindVertexArray_0_ZERO )(){
 
 //////////////////////////////////////////////////
 
-
-//! Setup the single polygon used to render    !//
-//! pixels to the viewport. ------------------ !//
-PRIVATE_FUNCTION( static void )
-fn( QuadSetup )( void ){
-
-    fn( ErrChk )(
-        "[tesawin:FailedBeforeYouStarted]"
-    );;
-
-    fn( UseThatProgram )();
-
-
-    //:Create the raw vertex data (VAO):
-    //////////////////////////////////////////////
-    fn( glGenBuffers )();      //: GEN BUF
-    fn( glBindBuffer )();      //: BND BUF
-    fn( glBufferData )();      //: BUF DAT
-    //////////////////////////////////////////////
+//:QUAD_SETUP:===============================================://
+#define INFO aac2020_graquad_Info
     
-    //:Create VIEWS of that VAO known as VBO(s).
-    //////////////////////////////////////////////
-    
-    //:Create the vertex arrays:
-    fn( glGenVertexArrays )(); //: GEN VRT ARR
-    fn( glBindVertexArray )(); //: BND VRT ARR
-    
-    //:View (VBO) of POSITION info in VAO.
-    fn( glVertexAttribPointer )(
-    //-GA_MACRO_VERPOS_LAYOUT_LOCDEX-//
-          MACRO_LALODEX_verpos
-    ,3 //:Size_In_Elements
-    );;
-    
-    //:View (VBO) of TEXCOORDS info in VAO.
-    //:( vs_texcoord )
-    fn( glVertexAttribPointer )(
-    //-GA_MACRO_VERPOS_LAYOUT_LOCDEX-//
-        MACRO_LALODEX_verpos
-    ,2 //:Size_In_Elements
-    );;
-    
-    //////////////////////////////////////////////
-    
-    //| Unbind(de-select) the data you were    |//
-    //| working on so other state-full commands|//
-    //| do not accidentially modify your data. |//
-    fn( glBindBuffer_GL_ARRAY_BUFFER_0_ZERO )( );
-    fn( glBindVertexArray_0_ZERO            )( );
-    
-    
-//   //:#FUNCTION_EXECUTION_ORDER_MATTERS#://
-//   ga_MakeViewportTextureAndActivate( 1 );  <<<<<<<<<<<< BOARDWIN's job
-//   ga_ConfigureTextureSampling_PORPIX( 1 ); <<<<<<<<<<<< BOARDWIN's job
-//   ga_UploadTexturePixels_PORPIX( 1 );      <<<<<<<<<<<< BOARDWIN's job
-//
+    PRIVATE_FUNCTION( static void )
+    fn( QuadSetup )( void ){
 
-    printf("[endofquadsetup]\n");
-}
+        /** Setup the single polygon used to render    ***** **/
+        /** pixels to the viewport. ------------------ ***** **/
 
-#define V void ///////////////////////////////////
-PRIVATE_FUNCTION( static void )
-fn(    MakeContextCurrentAndSetWindowSize )( V ){
-//: ga_MakeContextCurrentAndSetWindowSize
-#undef  V ////////////////////////////////////////
-
-
-    //:Make context current:
-    int /** BOOL **/ make_current_worked = (0-777);
-    make_current_worked=(
-    AAC2020_GLEBIND_wglMakeCurrent(
-    /**/AAC2020_GINAWIN_GetWinDC_ExistsNoWait()
-    ,   AAC2020_GLEBIND.handle_to_gl_rendering_context
-    ));;
-
-    //:#CONVOLUTED_BUT_I_WILL_ALLOW_IT#://    
-    if(1 == make_current_worked ){
-        //:DO_NOTHING://
-    }else
-    if(1 != make_current_worked ){
-        int is_window_still_open=(
-            AAC2020_GINAWIN_IsWindowStillOpen()
+        fn( ErrChk )(
+            "[tesawin:FailedBeforeYouStarted]"
         );;
-        if(is_window_still_open > 0){
-            printf(
-            /**/"[GA:is_window_still_open]:%d\n"
-            ,        is_window_still_open
-            );;    
 
-            #define D   (aac2020_graquad.data)    ///////
-            #define MCF  make_current_fail ///////
-            #define NUM  D.MCF.NUM         ///////
-            #define MAX  D.MCF.MAX         ///////
+        fn( UseThatProgram )();
 
-            if( ++(NUM) > MAX ){
 
-                aac2020_glebind_Alert(
-                    "[MCF:FAIL:2019_08_04]\n"
+        //:Create the raw vertex data (VAO):
+        //////////////////////////////////////////////
+        fn( glGenBuffers )();      //: GEN BUF
+        fn( glBindBuffer )();      //: BND BUF
+        fn( glBufferData )();      //: BUF DAT
+        //////////////////////////////////////////////
+        
+        //:Create VIEWS of that VAO known as VBO(s).
+        //////////////////////////////////////////////
+        
+        //:Create the vertex arrays:
+        fn( glGenVertexArrays )(); //: GEN VRT ARR
+        fn( glBindVertexArray )(); //: BND VRT ARR
+        
+        //:View (VBO) of POSITION info in VAO.
+        fn( glVertexAttribPointer )(
+        //-GA_MACRO_VERPOS_LAYOUT_LOCDEX-//
+              MACRO_LALODEX_verpos
+        ,3 //:Size_In_Elements
+        );;
+        
+        //:View (VBO) of TEXCOORDS info in VAO.
+        //:( vs_texcoord )
+        fn( glVertexAttribPointer )(
+        //-GA_MACRO_VERPOS_LAYOUT_LOCDEX-//
+            MACRO_LALODEX_verpos
+        ,2 //:Size_In_Elements
+        );;
+        
+        //////////////////////////////////////////////
+        
+        //| Unbind(de-select) the data you were    |//
+        //| working on so other state-full commands|//
+        //| do not accidentially modify your data. |//
+        fn( glBindBuffer_GL_ARRAY_BUFFER_0_ZERO )( );
+        fn( glBindVertexArray_0_ZERO            )( );
+        
+        
+        //:#_OUTSIDE_OF_MY_PAY_GRADE_GRAQUAD_REMOVED_#://
+
+        INFO("[endofquadsetup]\n");
+    }
+
+#undef  INFO 
+//:===============================================:QUAD_SETUP://
+//:THIS_FUNCTION_LIES_ABOUT_WHAT_IT_DOES:====================://
+#define LERT     aac2020_graquad_Alert
+#define INFO     aac2020_graquad_Info
+#define INFO_DEC aac2020_graquad_Info_dec
+
+    PRIVATE_FUNCTION( static void )
+    fn(    MakeContextCurrentAndSetWindowSize )( void ){
+    //: ga_MakeContextCurrentAndSetWindowSize
+
+
+
+        //:wgl_make_current:---------------------------------://
+        //:make_context_current:-----------------------------://
+
+            int /** BOOL **/ make_current_worked = (0-777);
+            make_current_worked=(
+            AAC2020_GLEBIND_wglMakeCurrent(
+            /**/AAC2020_GINAWIN_GetWinDC_ExistsNoWait()
+            ,   AAC2020_GLEBIND.handle_to_gl_rendering_context
+            ));;
+
+            //:#CONVOLUTED_BUT_I_WILL_ALLOW_IT#://    
+            if(1 == make_current_worked ){
+                //:DO_NOTHING://
+            }else
+            if(1 != make_current_worked ){
+                int is_window_still_open=(
+                    AAC2020_GINAWIN_IsWindowStillOpen()
                 );;
+                if(is_window_still_open > 0){
+                    INFO_DEC(
+                    /**/"[GA:is_window_still_open]:%d\n"
+                    ,        is_window_still_open
+                    );;    
 
+                    #define D   (aac2020_graquad.data)    ///////
+                    #define MCF  make_current_fail ///////
+                    #define NUM  D.MCF.NUM         ///////
+                    #define MAX  D.MCF.MAX         ///////
+
+                    if( ++(NUM) > MAX ){
+
+                        LERT( "[MCF:FAIL:2019_08_04]\n" );;
+
+                    }else{
+                        INFO("[MCF:OK:AllowThisTime]\n");
+
+                        /** Sleep(2); **/
+                        //: return; #NAFOMEP#
+                    };;
+
+                    #undef  D    /////////////////////////
+                    #undef  MCF  /////////////////////////
+                    #undef  NUM  /////////////////////////
+                    #undef  MAX  /////////////////////////
+                }else{
+                    INFO("[MCF:OK:CaughtWhileClosing]\n" );
+                    //: return; #NAFOMEP#
+                };;
             }else{
-                printf(
-                    "[MCF:OK:AllowThisTime]\n"
-                );;
-
-                /** Sleep(2); **/
-                //: return; #NAFOMEP#
+                H("[2019_08_04:EDCL]");
             };;
 
-            #undef  D    /////////////////////////
-            #undef  MCF  /////////////////////////
-            #undef  NUM  /////////////////////////
-            #undef  MAX  /////////////////////////
-        }else{
-            printf(
-                "[MCF:OK:CaughtWhileClosing]\n"
-            );;
-            //: return; #NAFOMEP#
-        };;
-    }else{
-        H("[2019_08_04:EDCL]");
-    };;
+        //:---------------------------------:wgl_make_current://
+        //:-----------------------------:make_context_current://
+      
+          AAC2020_TODOMAN_Vital( "[GET_RID_OF_THIS_CODE_AND_RENAME_FUNCTION]" );
+          //: //:Set size of viewport:
+          //: int X   = AAC2020_GINAWIN_GetClient_X  ();
+          //: int Y   = AAC2020_GINAWIN_GetClient_Y  ();
+          //: int WID = AAC2020_GINAWIN_GetClient_WID();
+          //: int HIG = AAC2020_GINAWIN_GetClient_HIG();
+          //: AAC2020_GLEBIND.glViewport(
+          //: /**/(GLint) X
+          //: ,   (GLint) Y
+          //: ,   (GLint) WID
+          //: ,   (GLint) HIG
+          //: );;
 
-  //: //:Set size of viewport:
-  //: int X   = AAC2020_GINAWIN_GetClient_X  ();
-  //: int Y   = AAC2020_GINAWIN_GetClient_Y  ();
-  //: int WID = AAC2020_GINAWIN_GetClient_WID();
-  //: int HIG = AAC2020_GINAWIN_GetClient_HIG();
-  //: AAC2020_GLEBIND.glViewport(
-  //: /**/(GLint) X
-  //: ,   (GLint) Y
-  //: ,   (GLint) WID
-  //: ,   (GLint) HIG
-  //: );;
+    }
 
-}
-
- 
+#undef  LERT     
+#undef  INFO     
+#undef  INFO_DEC 
+//:====================:THIS_FUNCTION_LIES_ABOUT_WHAT_IT_DOES://
 //:BUILD_GRAPHICS_PIPELINE:OPENGL:===========================://
-#define U32 uint32_t /** GCC: <stdint.h> **/
+#define U32      uint32_t                             //: 01 ://
+#define INFO     aac2020_glebind_Info                 //: 02 ://
+#define INFO_DEC aac2020_glebind_Info_dec             //: 03 ://
+#define O_K_STAT ( 0 )                                //: 04 ://
 
     U32
     fn( BGP_OpenGL  )( 
 
-        //: A4[ #FEATURE:FAULT_TOLERANT_USER_FRAG_SHADERS# ] ://
-        //: If function fails, what should it do?            ://
-        //: AAC2020_GRAQUAD_FAIL_FAST                        ://
-        //: AAC2020_GRAQUAD_FAIL_CODE                        ://
-        int HOS /** Halt Or StatusCode (failure_method) **/
+        //:#HALT_OR_STATUS_CODE_AND_FAULT_TOLERANT_SHADERS#://
+        int h_o_s /** Halt Or StatusCode (failure_method) **/
 
     ){
-    #define OK ( 0 )
-
         #if( AAC2020_GRAQUAD_BUGHUNT_001 >= 1 ) //:##########://
 
-            printf("[BEG:BUILD_GRAPHICS_PIPELINE:OPENGL]\n");
-            printf("[HOS(failure_method)]:%d\n", HOS );
-            printf("[CODE==9001 , FAST==9002]\n");
-            fflush(stdout);
+            INFO(    "[BEG:BUILD_GRAPHICS_PIPELINE:OPENGL]\n");
+            INFO_DEC("[HOS(failure_method)]:%d\n", h_o_s     );
+            INFO(    "[CODE==9001 , FAST==9002]\n"           );
         
         #endif //:###########################################://
 
-        int status_code =( 0  /** success / OK **/ );
+        int status_code =( 0  /** success / O_K_STAT **/ );
         
         /** BGP_OpenGL: Build Graphics Pipeline. OpenGL.  **/
         /** Prev_Name: Init_NotSureWhatToCallThis_GLSetup **/
 
-        if( OK == status_code ){ //:-------------------------://
+        if( O_K_STAT == status_code ){ //:-------------------://
 
             /** Make Open GL Context Current **/
 
@@ -1265,7 +1320,7 @@ fn(    MakeContextCurrentAndSetWindowSize )( V ){
                 //:#HFC_ASO_BREAKAGE#::::::::::::::::::::::::://
                 assert( AAC2020_GRAQUAD_CURCON_FAIL == 0x2D4 );
                 status_code = aac2020_graquad_HOS( 
-                HOS , "[HALT:0x2D4(724)]" , 0x2D4 , 724  );;
+                h_o_s , "[HALT:0x2D4(724)]" , 0x2D4 , 724  );;
 
                 //:#WHY_WGL_FAIL_PRINTF_HERE#::::::::::::::::://
                 #define P printf //:#########################://
@@ -1278,7 +1333,7 @@ fn(    MakeContextCurrentAndSetWindowSize )( V ){
             };;
 
         };; //:----------------------------------------------://
-        if( OK == status_code ){ //:-------------------------://
+        if( O_K_STAT == status_code ){ //:-------------------://
 
             /** CreateShaderCode:                            **/
             /** Creates Vertex And Fragment Shader Code      **/
@@ -1296,12 +1351,12 @@ fn(    MakeContextCurrentAndSetWindowSize )( V ){
             status_code =(
                 //:aac2020_graquad_CreateShaderCode
                 fn(CreateShaderCode)( 
-                    HOS /** failure_method **/
+                    h_o_s /** failure_method **/
                 )
             );;
 
         };; //:----------------------------------------------://
-        if( OK == status_code ){ //:-------------------------://
+        if( O_K_STAT == status_code ){ //:-------------------://
             
             //[ EVERYTHING_ELSE_FAILS_FAST ----------------- ]//
             
@@ -1317,17 +1372,18 @@ fn(    MakeContextCurrentAndSetWindowSize )( V ){
 
         #if( AAC2020_GRAQUAD_BUGHUNT_001 >= 1 ) //:##########://
 
-            printf("[END:BUILD_GRAPHICS_PIPELINE:OPENGL]\n");
-            fflush(stdout);
+            INFO("[END:BUILD_GRAPHICS_PIPELINE:OPENGL]\n");
         
         #endif //:###########################################://
 
         return( status_code );
 
-    #undef OK
     }
 
-#undef U32
+#undef  U32                                           //: 01 ://
+#undef  INFO                                          //: 02 ://
+#undef  INFO_DEC                                      //: 03 ://
+#undef  O_K_STAT                                      //: 04 ://
 //:===========================:BUILD_GRAPHICS_PIPELINE:OPENGL://
 
 PRIVATE_FUNCTION( static void )
@@ -1344,50 +1400,46 @@ fn(Init_HaltIfChecksumsFail)(){
     };;
 } //[ga_HaltIfChecksumsFail]//
 
-//:Not certain if this
-PRIVATE_FUNCTION( static void )
-fn( Init )( void ){
+//:INIT:=====================================================://
+//:aac2020_graquad_Init:=====================================://
+#define HUN aac2020_graquad_Hunt
 
-    if( 0 != aac2020_graquad_inited ){
-        aac2020_graquad_Halt("[NOT_IDEMPOTENT_INIT]");
-    };;
+    //:Not certain if this
+    PRIVATE_FUNCTION( static void )
+    fn( Init )( void ){
 
-    //+ Commented out. + + + + + + + + + + + + + + + + + + + +//
-    //- COG_Init();    - - - - - - - - - - - - - - - - - - - -//
-    /**   Initialize after other dependencies. But don't     **/
-    /**   Initialize dependencies inside here. That works,   **/
-    /**   but makes the logic a lot harder to follow.        **/
-    /**   It also could create a very large init chain       **/
-    /**   that unecessarily creates a very deeply            **/
-    /**   nested stack.                                      **/
-    //- - - - - - - - - - - - - ---- - - - - - - - - - - - - -//
-    //+ - - - - - - - - - - - - ---- - - - - - - - - - - - - +//
+        if( 0 != aac2020_graquad_inited ){
+            aac2020_graquad_Halt("[NOT_IDEMPOTENT_INIT]");
+        };;
 
+        //:#KEEP_INIT_CHAIN_FLAT_NOT_NESTED#://
 
-    fn( Init_HaltIfChecksumsFail )( );
-    fn( Init_Data )( );
+        fn( Init_HaltIfChecksumsFail )( );
+        fn( Init_Data )( );
 
-    //: If this fails, crash immediately. :::::::::::::::::::://
-    fn( BGP_OpenGL )( AAC2020_GRAQUAD_FAIL_FAST );
+        //: If this fails, crash immediately. :::::::::::::::://
+        fn( BGP_OpenGL )( AAC2020_GRAQUAD_FAIL_FAST );
 
 
-    #if( AAC2020_GRAQUAD_BUGHUNT_001 >= 1 )
-        printf("\n");
-        printf("[EXITING:GRAQUAD.Init()]\n");
-        printf("\n");
-        fflush(stdout);
-    #endif
+        #if( AAC2020_GRAQUAD_BUGHUNT_001 >= 1 )
+            HUN("\n");
+            HUN("[EXITING:GRAQUAD.Init()]\n");
+            HUN("\n");
+        #endif
 
-    /** **************************************************** ***
-        iMouse listener callback moved to: BASUNIF.F._   
+        /** ************************************************ ***
+            iMouse listener callback moved to: BASUNIF.F._   
 
-        AAC2020_GINAWIN_OnMouseMove_SetCallback(
-        AAC2020_*******_ReLoadShaderUniforms_iMouse );;
-    *** **************************************************** **/
+            AAC2020_GINAWIN_OnMouseMove_SetCallback(
+            AAC2020_*******_ReLoadShaderUniforms_iMouse );;
+        *** ************************************************ **/
 
-    aac2020_graquad_inited=( 777 );return;
-}
+        aac2020_graquad_inited=( 777 );return;
+    }
 
+#undef  HUN
+//:=====================================================:INIT://
+//:=====================================:aac2020_graquad_Init://
 
 //:DONT_DO_THIS:=============================================://
 /** ******************************************************** ***
@@ -1667,147 +1719,135 @@ fn( Init )( void ){
     //:==================:RE_LOAD_SHADER_UNIFORMS:iResolution://
 
 //:================================:SHADER_UNIFORM_RE_LOADING://
+//:PRIVATE_LOOP_TICK:========================================://
+#define FUN_ATE aac2020_graquad_AboutToError
+#define FUN_ERR aac2020_graquad_Halt
 
-PRIVATE_FUNCTION( static void )
-fn( LoopTick )( void ){
+    PRIVATE_FUNCTION( static void )
+    fn( LoopTick )( void ){
 
-    if( aac2020_graquad_inited <= 0 ){  
-        //:FTI:Forgot_To_Init
-        aac2020_graquad_Halt("[FTI:2020_11_17]");
-    };;
-
-    //:WINDOW_RESIZE_HANDLING:===============================://
-    
-        /** Handling in tick function to:            * * * * **/
-        /** 1: Avoid using a callback.               * * * * **/
-        /** 2: Avoid calling OpenGL on window thread * * * * **/
-        if( AAC2020_CPUNIFO_iResolution_wid !=
-            AAC2020_GRAQUAD_last_resize_wid  
-            ||
-            AAC2020_CPUNIFO_iResolution_hig !=
-            AAC2020_GRAQUAD_last_resize_hig  
-        ){
-
-            //:Resize_OpenGL_Viewport_To_New_Screen_Size:----://
-
-                AAC2020_GLEBIND.glViewport(
-                    0 , 0 //: x,y
-                ,    
-                AAC2020_GRAQUAD_last_resize_wid=(
-                  AAC2020_GINAWIN_GetClient_WID())
-                ,
-                AAC2020_GRAQUAD_last_resize_hig=(
-                  AAC2020_GINAWIN_GetClient_HIG()) 
-                );;
-
-            //:----:Resize_OpenGL_Viewport_To_New_Screen_Size://
-
-            
+        if( aac2020_graquad_inited <= 0 ){  
+            //:FTI:Forgot_To_Init
+            aac2020_graquad_Halt("[FTI:2020_11_17]");
         };;
 
- 
-
+        //:WINDOW_RESIZE_HANDLING:===========================://
         
+            /** Handling in tick function to:            * * **/
+            /** 1: Avoid using a callback.               * * **/
+            /** 2: Avoid calling OpenGL on window thread * * **/
+            if( AAC2020_CPUNIFO_iResolution_wid !=
+                AAC2020_GRAQUAD_last_resize_wid  
+                ||
+                AAC2020_CPUNIFO_iResolution_hig !=
+                AAC2020_GRAQUAD_last_resize_hig  
+            ){
 
+                //:Resize_OpenGL_Viewport_To_New_Screen_Size:://
 
-    //:===============================:WINDOW_RESIZE_HANDLING://
+                    AAC2020_GLEBIND.glViewport(
+                        0 , 0 //: x,y
+                    ,    
+                    AAC2020_GRAQUAD_last_resize_wid=(
+                      AAC2020_GINAWIN_GetClient_WID())
+                    ,
+                    AAC2020_GRAQUAD_last_resize_hig=(
+                      AAC2020_GINAWIN_GetClient_HIG()) 
+                    );;
 
-    /** AKA: aac2020_graquad_LoopTick **/
-    //:GA_LoopTick  //:#ORIGINALLY_GA_LOOPTICK#
+                //::Resize_OpenGL_Viewport_To_New_Screen_Size://
 
-    //:UPDATE_BASIC_UNIFORMS:--------------------------------://
-    /** Originally this code called from the future using    **/
-    /** a callback. But decided.                             **/
-    /**                                                      **/
-    /** 1: Calling from future violates LIBCHAN design.      **/
-    /** 2: Callbacks made the code harder to follow.         **/
-    /**    Avoid them when possible.                         **/
-    /**                                                      **/
-    /**    (Still a fan of using callback to create   )      **/
-    /**    (abstract classes, like my tilemap entities)      **/
-    /**    (that exist by rendering themselves as     )      **/
-    /**    (tiles on a tilemap using function pointers)      **/
-    /**    (to GetTile and SetTile functions.         )      **/
-    /**  * * * * * * * * * * * * *** * * * * * * * * * * * * **/
+                
+            };;
+        //:===========================:WINDOW_RESIZE_HANDLING://
+
+        /** AKA: aac2020_graquad_LoopTick **/
+        //:GA_LoopTick  //:#ORIGINALLY_GA_LOOPTICK#
+
+        //:UPDATE_BASIC_UNIFORMS:----------------------------://
+     
+            //:#_BASIC_UNIFORM_UPDATE_DOESNT_USE_CALLBACKS_#://
 
         aac2020_graquad_ReLoadShaderUniforms_iMouse      (0x00);
         aac2020_graquad_ReLoadShaderUniforms_iTime       (0x00);
         aac2020_graquad_ReLoadShaderUniforms_iResolution (0x00);
 
-    //:--------------------------------:UPDATE_BASIC_UNIFORMS://
+        //:----------------------------:UPDATE_BASIC_UNIFORMS://
 
+        //[ GUTTED_THIS_FUNCTION. Does_Nothing. ]//
+        fn( HandleWindowLoopMessage_WM_PAINT )( );
 
-    //[ GUTTED_THIS_FUNCTION. Does_Nothing. ]//
-    fn( HandleWindowLoopMessage_WM_PAINT )( );
+        int /** BOOL **/ make_current_worked=(
+        AAC2020_GLEBIND_wglMakeCurrent(
+        /**/AAC2020_GINAWIN_GetWinDC_ExistsNoWait()
+        ,   AAC2020_GLEBIND.handle_to_gl_rendering_context
+        ));;if(!make_current_worked){
+ 
+            //:MCF_ILT:MakeCurrentFailInLoopTick
+            FUN_ATE("[ErrorBelowAcceptableIfClosingWindow]" );
+            FUN_ERR("[MCF_ILT]" ); 
 
-    int /** BOOL **/ make_current_worked=(
-    AAC2020_GLEBIND_wglMakeCurrent(
-    /**/AAC2020_GINAWIN_GetWinDC_ExistsNoWait()
-    ,   AAC2020_GLEBIND.handle_to_gl_rendering_context
-    ));;if(!make_current_worked){
-        //:MCF_ILT:MakeCurrentFailInLoopTick
-        fn(Halt)("[MCF_ILT]"); 
-    };;
+        };;
 
-    //[ GUTTED_THIS_FUNCTION. Does_Nothing. ]//
-    fn( CheckForWindowResizeFlagAndAct )( ); 
-   
+        //[ GUTTED_THIS_FUNCTION. Does_Nothing. ]//
+        fn( CheckForWindowResizeFlagAndAct )( ); 
+       
 
-    AAC2020_GLEBIND.glClearColor(0.0f,0.1f,0.5f, 1.0f);
+        AAC2020_GLEBIND.glClearColor(0.0f,0.1f,0.5f, 1.0f);
 
-    #if(MACRO_AAC2020_GRAQUAD_DEBUG_MODE>=1) ////////////
-    fn(ErrChk)("[glClearColor]"); //#<<<<<<<<<<<<<<<PerformanceHit/[MAN_HIT]? #//
-    #endif ///////////////////////////////////////
+        #if(MACRO_AAC2020_GRAQUAD_DEBUG_MODE>=1) ////////////
+        fn(ErrChk)("[glClearColor]"); //#<<<<<<<<<<<<<<<PerformanceHit/[MAN_HIT]? #//
+        #endif ///////////////////////////////////////
 
-    AAC2020_GLEBIND.glClear( 
-        AAC2020_GLEBIND.MAS.gl_color_buffer_bit
-    );;
+        AAC2020_GLEBIND.glClear( 
+            AAC2020_GLEBIND.MAS.gl_color_buffer_bit
+        );;
 
-    #if(MACRO_AAC2020_GRAQUAD_DEBUG_MODE>=1) ////////////
-    fn(ErrChk)("[glClear]"); //#<<<<<<<<<<<<<<<<<<<<<PerformanceHit/[MAN_HIT]? #//
-    #endif ///////////////////////////////////////
+        #if(MACRO_AAC2020_GRAQUAD_DEBUG_MODE>=1) ////////////
+        fn(ErrChk)("[glClear]"); //#<<<<<<<<<<<<<<<<<<<<<PerformanceHit/[MAN_HIT]? #//
+        #endif ///////////////////////////////////////
 
-    //:######################################################://
-    #define GLE unsigned int /** GLenum **/ //:##############://
+        //:##################################################://
+        #define GLE unsigned int /** GLenum **/ //:##########://
 
-        GLE err; /** GLenum:err **/
+            GLE err; /** GLenum:err **/
 
-    #undef  GLE //:##########################################://
-    //:######################################################://
+        #undef  GLE //:######################################://
+        //:##################################################://
 
-    glBindVertexArray(
-        aac2020_graquad.data.tri.ga.VAO
-    );;fn(ErrChk)("[2019_08_04_0518PM]");
-    //:     LoopTick:glBindVertexArray
+        glBindVertexArray(
+            aac2020_graquad.data.tri.ga.VAO
+        );;fn(ErrChk)("[2019_08_04_0518PM]");
+        //:     LoopTick:glBindVertexArray
 
-    int four_4_quad=(
-        aac2020_graquad.data
-       .we_have_4_corner_verts_making_quad
-    );;
-    
-    //: Draw the triangle !
-    AAC2020_GLEBIND.glDrawArrays(
-    /**/AAC2020_GLEBIND.MOD.gl_triangle_strip
-    ,   0  //: Starting from vertex 0;
-    ,   four_4_quad
-    );;
-    err = AAC2020_GLEBIND.glGetError();
-    if( err != AAC2020_GLEBIND.ERR.gl_no_error ){
-        fn(Halt)("[FAIL:glDrawArrays]");
-    };; 
+        int four_4_quad=(
+            aac2020_graquad.data
+           .we_have_4_corner_verts_making_quad
+        );;
+        
+        //: Draw the triangle !
+        AAC2020_GLEBIND.glDrawArrays(
+        /**/AAC2020_GLEBIND.MOD.gl_triangle_strip
+        ,   0  //: Starting from vertex 0;
+        ,   four_4_quad
+        );;
+        err = AAC2020_GLEBIND.glGetError();
+        if( err != AAC2020_GLEBIND.ERR.gl_no_error ){
+            fn(Halt)("[FAIL:glDrawArrays]");
+        };; 
 
-    AAC2020_GINAWIN_SwapBuffers();
-    
-    //[ DON'T DO THIS.                         ]//
-    //[ Your triangle will vanish!             ]//
-    //- AAC2020_GLEBIND.glDisableVertexAttribArray(0);    -//
-    //- fn(ErrChk)("[DisVerAttArr]");          -//
+        AAC2020_GINAWIN_SwapBuffers();
+        
+        //:#_DONT_DISABLE_VERTEX_ATTRIB_ARRAY_IN_GRAQUAD_#://
 
-    //: ga_completed_loop_ticks++;
-    aac2020_graquad.data.COM_LOP_TIK++;
+        //: ga_completed_loop_ticks++;
+        aac2020_graquad.data.COM_LOP_TIK++;
 
-}
+    }
 
+#undef  FUN_ATE
+#undef  FUN_ERR
+//:========================================:PRIVATE_LOOP_TICK//
 //: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
 //:PUBLIC_LOOP_TICK:=========================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/

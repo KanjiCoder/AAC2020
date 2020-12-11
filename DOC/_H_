@@ -6,6 +6,224 @@
     
 *** ******************************************************** ***
 
+#_DONT_DISABLE_VERTEX_ATTRIB_ARRAY_IN_GRAQUAD_##################
+
+    //[ DON'T DO THIS.                                   ]//
+    //[ Your triangle will vanish!                       ]//
+    //- AAC2020_GLEBIND.glDisableVertexAttribArray(0);   -//
+    //- fn(ErrChk)("[DisVerAttArr]");                    -//
+
+##################_DONT_DISABLE_VERTEX_ATTRIB_ARRAY_IN_GRAQUAD_#
+#_BASIC_UNIFORM_UPDATE_DOESNT_USE_CALLBACKS_####################
+
+    EXTRACTED_FROM[ GRAQUAD.F._ ]ON_DATE[ 2020_12_11 ]
+
+    ------------------------------------------------------------
+    Originally this code called from the future using   
+    a callback. But decided.                            
+                                                        
+    1: Calling from future violates LIBCHAN design.     
+    2: Callbacks made the code harder to follow.        
+    Avoid them when possible.                          
+                                                       
+    (Still a fan of using callback to create   )       
+    (abstract classes, like my tilemap entities)       
+    (that exist by rendering themselves as     )       
+    (tiles on a tilemap using function pointers)       
+    (to GetTile and SetTile functions.         )       
+    ------------------------------------------------------------
+
+    aac2020_graquad_ReLoadShaderUniforms_iMouse      (0x00);
+    aac2020_graquad_ReLoadShaderUniforms_iTime       (0x00);
+    aac2020_graquad_ReLoadShaderUniforms_iResolution (0x00);
+
+####################_BASIC_UNIFORM_UPDATE_DOESNT_USE_CALLBACKS_#
+@SAFETY_DOUBLE_FLUSH@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    Incase printf parameters cause segfault, have a basic
+    print and flush BEFORE your real call to printf.
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@SAFETY_DOUBLE_FLUSH@
+#_SILENCEALL_NOTIMPLEMENTED_####################################
+#_SILENCE_ALL_NOT_IMPLEMENTED_##################################
+
+    ************************************************************
+    I forgot to implement AAC2020_SILENCE.SILENCE
+    while I was refactoring. I doubt I will ever want to
+    use this, so just leave it unimplemented until a need
+    arises for you to use it.
+
+    WRITTEN_ON[ DATE[ 2020_12_11 ]
+    ************************************************************
+    
+####################################_SILENCEALL_NOTIMPLEMENTED_#
+##################################_SILENCE_ALL_NOT_IMPLEMENTED_#
+#_WHAT_IS_AACMAIN_##############################################
+
+    #WHAT_IS_AAC_MAIN# : What Is AACMAIN ?
+    ------------------------------------------------------------
+
+        AACMAIN is a ficticious namespace.
+        It is the namespace of code without a namespace.
+
+        AKA: MAIN code. The code that couples together 
+             all of the LIBCHAN sub-library code and runs it.
+
+        ADDED[ AAC2020_SILENCE.AACMAIN ]ON_DATE[ 2020_12_11 ]
+
+        So I have a way to silence top-level code that is not
+        part of any sub-library in the LIBCHAN.
+    ------------------------------------------------------------
+
+##############################################_WHAT_IS_AACMAIN_#
+#_OUTSIDE_OF_MY_PAY_GRADE_GRAQUAD_REMOVED_######################
+
+    Legacy comment from a previous project.
+    This comment is probably 100% useless now.
+    COMMENTARY_WRITTEN[ 2020_12_11 ]
+
+    //:#FUNCTION_EXECUTION_ORDER_MATTERS#://
+    ga_MakeViewportTextureAndActivate( 1 );  << BOARDWIN's job
+    ga_ConfigureTextureSampling_PORPIX( 1 ); << BOARDWIN's job
+    ga_UploadTexturePixels_PORPIX( 1 );      << BOARDWIN's job
+  
+######################_OUTSIDE_OF_MY_PAY_GRADE_GRAQUAD_REMOVED_#
+#KEEP_INIT_CHAIN_FLAT_NOT_NESTED################################
+    
+    Extracted_From[ GRAQUAD.F ]ON_DATE[ 2020_12_11 ]
+
+            Commented out. + + + + + + + + + + + + + + + + + + +  
+            COG_Init();    - - - - - - - - - - - - - - - - - - -  
+            Initialize after other dependencies. But don't      
+            Initialize dependencies inside here. That works,    
+            but makes the logic a lot harder to follow.         
+            It also could create a very large init chain        
+            that unecessarily creates a very deeply             
+            nested stack.                                       
+            - - - - - - - - - - - - ---- - - - - - - - - - - - -  
+            - - - - - - - - - - - - ---- - - - - - - - - - - - -  
+
+################################KEEP_INIT_CHAIN_FLAT_NOT_NESTED#
+#HALT_OR_STATUS_CODE_AND_FAULT_TOLERANT_SHADERS#################
+
+        COMMENTARY: (DATE[ 2020_12_11 ])
+        ********************************************************
+        The hashtag in the extracted comment below cannot be
+        found. Probably back when I was putting each comment
+        in it's own file. (BAD IDEA ADMINISTRATIVELY)
+
+        HALT_OR_STATUS_CODE (HOS)
+        Is basically telling you should you HALT or return
+        a status code if things go wrong. This enables you to
+        wrap the function in a FAIL_FAST and FAULT_TOLERANT
+        version.
+
+        Fault tolerant version is needed if we are going
+        to allow users of the game to modify the shader
+        source code at will by editing shader source
+        in the "MOD" folder.
+        ********************************************************
+
+        EXTRACTED_COMMENT: ( From: GRAQUAD.F._ ON:2020_12_11 )
+        ********************************************************
+        //: A4[ #FEATURE:FAULT_TOLERANT_USER_FRAG_SHADERS# ] ://
+        //: If function fails, what should it do?            ://
+        //: AAC2020_GRAQUAD_FAIL_FAST                        ://
+        //: AAC2020_GRAQUAD_FAIL_CODE                        ://
+        ********************************************************
+
+#################HALT_OR_STATUS_CODE_AND_FAULT_TOLERANT_SHADERS#
+#DLL_LOADING_WILL_FAIL_STOP_HERE################################
+
+    EXTRACTED_FROM[ GLEBIND.F ]ON_DATE[ 2020_12_11 ]
+
+            Without search paths, we will fail to load   
+            the DLL. Best to stop here so the console    
+            output's last message is the ROOT problem. 
+  
+            fflush(stdout);exit(666);
+
+################################DLL_LOADING_WILL_FAIL_STOP_HERE#
+#_DONT_GET_SO_MARCO_HEAVY_WITH_DEBUG_PRINTS_####################
+
+    ************************************************************
+    This code was a bad idea. 
+    Refactoring_This[ AAC2020_GLEBIND_MM_DEBUGPRINT_01 ]
+    Refactoring___To[ aac2020_glebind_Hunt ]
+    ************************************************************
+
+    #define AAC2020_GLEBIND_MV_DEBUGPRINT_01 0                       
+    #if(AAC2020_GLEBIND_MV_DEBUGPRINT_01 <= 0)                       
+                                                                     
+        //: emp_mac_arg:empty_macro_arg ://                          
+        #define AAC2020_GLEBIND_MM_DEBUGPRINT_01( emp_mac_arg )      
+                                                                     
+    #else                                                            
+                                                                     
+        void AAC2020_GLEBIND_MM_DEBUGPRINT_01( const char* m ){      
+            printf("[AAC2020_GLEBIND:DP_01]:%s\n",m);                
+            fflush(stdout);                                          
+        }                                                            
+                                                                     
+    #endif   
+
+####################_DONT_GET_SO_MARCO_HEAVY_WITH_DEBUG_PRINTS_#
+
+
+#_DO_NOT_INIT_WINDOW_CODE_HERE_#################################
+ 
+    //:POSSIBLE_SOURCE_OF_REFACTOR_PROBLEMS:=================://
+
+        /** This might be okay. The vital piece is that a    **/
+        /** window must exist before you are able to create  **/
+        /** an openGL context. AAC2020_GINAWIN_Init(...)     **/
+        /** will do this. However, calling it here goes      **/
+        /** against the LIBCHAN (library chain) code         **/
+        /** structure we are trying to make.                 **/
+        /** -John Mark Isaac Madison DATE[ 2020_11_01 ]      **/
+
+        //[ ************************************************ ]//
+        //- AAC2020_GINAWIN_Init(); <------ Commented out.   -//
+        //[ ************************************************ ]//
+
+        printf("*********************************\n");
+        printf(
+        "[DEBUG_NOTE:Originally_GLEB_Inited_GLEB_SWIN_here]\n"
+        );;
+        printf("*********************************\n");
+
+    //:=================:POSSIBLE_SOURCE_OF_REFACTOR_PROBLEMS://
+    /** **************************************************** **/
+
+#################################_DO_NOT_INIT_WINDOW_CODE_HERE_#
+#POINTER_SATED_ASSERTS_NON_NULL_PTR#############################
+
+    Used to make sure function pointer is NOT null.      
+    Hopefully can swap out for macro in the future to    
+    remove this overhead when in a release mode.         
+
+#############################POINTER_SATED_ASSERTS_NON_NULL_PTR#
+#GLEBIND_FORGOT_TO_INIT_ERROR_CHECK#############################
+
+    Forgetting to INIT is a root error, so crash  
+    here first before checking function pointer.  
+
+#############################GLEBIND_FORGOT_TO_INIT_ERROR_CHECK#
+@ECHOFUNC_EXTRAFLUSH@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    Denotes an extra fflush(stdout) in an echo/print
+    type function. Typically to help prevent not seeing
+    any messages because the message string itself 
+    in a worst case scenario could be responsible for
+    a SEGFAULT.
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ECHOFUNC_EXTRAFLUSH@
+#INFO_MESSAGES_SD###############################################
+
+    Section containing "INFO" message functions.
+    But contains: _str & _dec overloaded varieties.
+
+###############################################INFO_MESSAGES_SD#
 #_DUI_PICKCOLOR_KEPT_FOR_REFERENCE_#############################
 
     /** This version of function adapts to if GINAWIN        **/
