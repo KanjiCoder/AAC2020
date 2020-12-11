@@ -6,6 +6,185 @@
     
 *** ******************************************************** ***
 
+
+@NEVER_SILENCE_ME@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    NEVER_SILENCE_ME: Means that we should not add any code
+                      to silence messages from this function.
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@NEVER_SILENCE_ME@
+#BRACKET_COMMENT_NOTATION_EXPLAINED#############################
+
+    This is a bad choice....
+    This is a [ bad / immoral ] choice.
+    This is a [ bad / incorrect ] choice.
+
+#############################BRACKET_COMMENT_NOTATION_EXPLAINED#
+@DOUBLE_PRINT_FLUSH@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @DOUBLE_PRINT_FLUSH@ :
+
+    Before printing actual message content, we print
+    a simple message first and flush console so that
+    in advent of complex printf message causing a segfault,
+    we still have some type of feedback to grab onto to
+    find the location of where things went wrong.
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@DOUBLE_PRINT_FLUSH@
+@GETTER@PUTTER@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @GETTER@: Denote function is a GETTER function.
+    @PUTTER@: Denote function is a PUTTER function.
+
+    @SETTER@: DONT_FUCKING_DO_THIS.
+              (Delta between Get & Set is only 1 letter. )
+              (Delta between Get & Put is      2 letters. )
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@GETTER@PUTTER@
+@VDAWEA@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    VDAWEA:values_dont_agree_with_each_other
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@VDAWEA@
+#_GPUDATA_INPUT_OBJECT_IS_OUTPUT_OBJECT_########################
+
+        AAC2020_PIXLOAD_sam_get <-- DONT USE.
+
+        PIK: AAC2020_PIXLOAD_sam_loc( &gpudata ) <--[A]
+        PIK: AAC2020_PIXLOAD_sam_val( &gpudata ) <--[B]
+
+        [A]: Loads sampler location into: gpudata->sam_loc
+        [B]: Loads sampler    value into: gpudata->sam_val
+
+        BOTH ARE FAULT TOLERANT.
+        (No look before you leap required)
+
+########################_GPUDATA_INPUT_OBJECT_IS_OUTPUT_OBJECT_#
+#DEFINITELY_FORGOT_TO_INIT_44044################################
+
+    Sampler LOCATION (sam_loc) is inited to 44044
+    in PIXNAME.D._ . This is an intentional TRAP value
+    so that we can locate the source of the problem
+    if sampler is flagged as not existing. ( sam_loc < 0 ).
+
+    ( If not locate, at least remove PIXNAME filescope        )
+    ( variable initialization from the list of possibilities. )
+
+################################DEFINITELY_FORGOT_TO_INIT_44044#
+#_WE_DONT_CONTROL_THE_SAMPLER_LOCATION_#########################
+
+    sam_loc : CAN BE ZERO , we don't CONTROL this value.
+
+    sam_val : MUST NOT BE ZERO.
+              ( We control this value. And while OpenGL allows)
+              ( us to sample from texture slot 0 (sam_val==0) )
+              ( AAC2020 code base dis-allows this in the name )
+              ( of avoiding error prone code.                 )
+
+#########################_WE_DONT_CONTROL_THE_SAMPLER_LOCATION_#
+#I_THINK_SHOULD_BE_ERROR_0338AM#################################
+
+    #I_THINK_SHOULD_BE_ERROR_0338AM#:
+
+    Because we look before we leap, we should always see
+    that a texture sampler is flagged as existing inside
+    the[ aac2020_pixload_PushSampler ]function.
+
+    REMOVED_THIS_COMMENTARY_FROM:PIXLOAD.F._ :
+
+        Do nothing. Just always re-fetch the        
+        Uniform after uploading the texture data.   
+        You just uploaded (512*512*4) bytes,        
+        what is 4 more (uint32 sampler uniform) ?   
+        
+        DO_NOTHING_HERE  
+
+#################################I_THINK_SHOULD_BE_ERROR_0338AM#
+#_SAM_VAL_ZERO_NEVER_USED_IN_THIS_CODE_BASE_####################
+#_WE_NEVER_USE___ZERO_FOR___SAM_VAL_############################
+
+    In reference to this.... AGAIN!
+    #_2ND_GUESSING_PIXLOAD_TEX_SAM_ERR_#    
+
+    sam_val cannot be ZERO because WE DONT USE ZERO
+    AS A TEXTURE SLOT IN THIS CODE BASE.
+
+    Zero however IS a valid address in terms of
+    open gl uniform locations. It is just not a valid
+    address for this code base.
+
+############################_WE_NEVER_USE___ZERO_FOR___SAM_VAL_#
+####################_SAM_VAL_ZERO_NEVER_USED_IN_THIS_CODE_BASE_#
+#_DEBUGGING_2020_12_11_NOTES_###################################
+
+    I [ THINK ]....
+        I may be confusing "sam_loc" with "sam_val"
+
+        "sam_val" === "tex_lot"
+
+        "sam_loc" === ADDRESS_OF[ pix_name ]IN_GLSL_SHADER
+                (  You do not control this value and     )
+                (  cannot expect it to be anything .     )
+                (  VALID SETUP MEANS: sam_loc >= 0       )
+                (  Unfortunately, zero is valid address  )
+
+    CONSOLE_MESSAGES:
+    ************************************************************
+    [aac2020_paint5d_Info_dec]...
+    [AAC2020_PAINT5D_init_call_count]:2
+
+    [aac2020_paint5d_Okay]:
+            [OH_FUCK...Code_Below_Was_Never_Ran_Before]
+
+    [FATAL_ERROR:AAC2020_pixload]:[IMPROPER_SETUP:sam_loc]
+    [ENTER_TO_EXIT]:
+    ************************************************************
+
+##################################_DEBUGGING_2020_12_11_NOTES_##
+#_EDITOR_INIT_SPAM_GAURD_#######################################
+
+    GOOD_SPAM_GAURD:-------------------------------------------:
+
+        Because[ AAC2020_CEDITOR_nex_edi ]AND
+               [ AAC2020_CEDITOR_dex_edi ]
+        
+            Are set at a more coarse higher-level managing
+            scope. ( AAC2020_HandleInput ), this is less 
+            prone to breakage.
+
+            However, having state tightly coupled with
+            a "HandleInput" function does seem a bit 
+            [ wonky / bad / improper / ugly ] and we 
+            might want to think about how to revisit this.
+
+        if( AAC2020_CEDITOR_nex_edi 
+        ==  AAC2020_CEDITOR_dex_edi
+        ){
+            O_K("[PAINT5D:Init_Already_Up_To_Date]");
+        };;
+
+    :-------------------------------------------:GOOD_SPAM_GAURD:
+    BAD_SPAM_GAURD:--------------------------------------------:
+    
+        This spam gaurd is bad because it relies on 
+        EVERY SINGLE EDITOR correctly setting the
+       (AAC2020_CEDITOR_dex_ini) flag.
+
+        Highly Error Prone.
+        Also prone to re-breaking all the time
+        as new systems are added.
+
+        /** Editor Initialization Spam Gaurd **/
+        if( AAC2020_CEDITOR_dex_ini ==
+            AAC2020_CEDITOR_paint5d
+        ){
+            O_K("[PAINT5D:Init_Already_Up_To_Date]");
+            return( 0x00 );
+        };;
+
+    :-------------------------------------------:BAD_SPAM_GAURD:
+
+#######################################_EDITOR_INIT_SPAM_GAURD_#
 #_DONT_DISABLE_VERTEX_ATTRIB_ARRAY_IN_GRAQUAD_##################
 
     //[ DON'T DO THIS.                                   ]//

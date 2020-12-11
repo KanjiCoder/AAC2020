@@ -78,13 +78,12 @@
             ERR("[LIKELY_UNINTENTIONAL_RECURSION]"); 
         };;
 
-        /** Editor Initialization Spam Gaurd **/
-        if( AAC2020_CEDITOR_dex_ini ==
-            AAC2020_CEDITOR_paint5d
-        ){
-            O_K("[Init_Already_Up_To_Date]");
-            return( 0x00 );
-        };;
+            /** #_EDITOR_INIT_SPAM_GAURD_# **/
+            if( AAC2020_CEDITOR_nex_edi 
+            ==  AAC2020_CEDITOR_dex_edi
+            ){
+                O_K("[PAINT5D:Init_Already_Up_To_Date]");
+            };;
 
         /** We are now initilaizing paint5d **/
         AAC2020_CEDITOR_dex_ing=( 
@@ -149,16 +148,34 @@
             AAC2020_PIXLOAD_UploadTexture( &( DAT ) );
             
 
-            /** Set .sam_has to true if has the sampler **/
-            /** Identified by .pix_nam                  **/
-            AAC2020_PIXLOAD_sam_has( &( DAT ) );
+            //:get_paint5d_sampler_location:-----------------://
+            #define HAS_CHK AAC2020_PIXLOAD_HasSampler
+            #define INF_DEC aac2020_paint5d_Info_dec
 
-            /** Keep the error prone way of doing this  **/
-            /** As a redundancy to check for agreement. **/
-            I32 has = AAC2020_PIXLOAD_HasSampler( "paint5d" );
-            if( DAT.sam_has != has ){
-                aac2020_paint5d_Halt("[WTF_MY_FRIEND]");
-            };;
+                //:#_GPUDATA_INPUT_OBJECT_IS_OUTPUT_OBJECT_#://
+                AAC2020_PIXLOAD_sam_has    ( &( DAT ) );
+                AAC2020_PIXLOAD_sam_loc    ( &( DAT ) );
+                AAC2020_PIXLOAD_sam_val_PUT( &( DAT ) );
+
+                if( DAT.sam_has >= 1 && DAT.sam_loc <=(0 - 1) ){
+                    ERR("[FULL_OF_LIES:@VDAWEA@:001]");
+                }else 
+                if( DAT.sam_has <= 0 && DAT.sam_loc >=(  0  ) ){
+                    ERR("[FULL_OF_LIES:@VDAWEA@:002]");
+                };;
+
+                /** Keep the error prone way of doing this   **/
+                /** As a redundancy to check for agreement.  **/
+
+                I32 has = HAS_CHK( "paint5d" );
+                if( DAT.sam_has != has ){ ERR("[WTF:0433AM]");};
+
+                INF_DEC( "[DAT.sam_loc]:%d\n" , DAT.sam_loc );
+                INF_DEC( "[DAT.sam_val]:%d\n" , DAT.sam_val );
+
+            #undef  HAS_CHK
+            #undef  INF_DEC
+            //:-----------------:get_paint5d_sampler_location://
 
             if( has >= 1 ){
 

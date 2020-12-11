@@ -72,7 +72,7 @@
                 /**       with a single keypress.         **/
                 printf("\n[KP]\n\n");
 
-                AAC2020_CEDITOR_dex_edi=(
+                AAC2020_CEDITOR_nex_edi=(
                 AAC2020_FRAGBED_SimpleKeyHandler(
                     AAC2020_IKEYBOX_k_p
                         ));;
@@ -94,14 +94,14 @@
          if( AAC2020_IKEYBOX_dirty   <= 0 ){//::============:://
 
             #if( AAC2020_INCLUDE_PAINT5D >  0 ) //::########:://
-             if( AAC2020_CEDITOR_dex_edi == 1 ){
+             if( AAC2020_CEDITOR_nex_edi == 1 ){
             
                 AAC2020_PAINT5D_Init( 0x00 ); /**@IDEMPOTENT@**/
 
             };;
             #endif //::#####################################:://
             #if( AAC2020_INCLUDE_1234567 >  0 ) //::########:://
-             if( AAC2020_CEDITOR_dex_edi == 2 ){
+             if( AAC2020_CEDITOR_nex_edi == 2 ){
             
                 /** Future_Editor #002 Code Here **/
                 AAC2020_1234567_Init( 0x00 ); /**@IDEMPOTENT@**/
@@ -109,7 +109,7 @@
             };;
             #endif //::#####################################:://
             #if( AAC2020_INCLUDE_1234567 >  0 ) //::########:://
-             if( AAC2020_CEDITOR_dex_edi == 3 ){
+             if( AAC2020_CEDITOR_nex_edi == 3 ){
             
                 /** Future_Editor #003 Code Here **/
                 AAC2020_1234567_Init( 0x00 ); /**@IDEMPOTENT@**/
@@ -117,7 +117,7 @@
             };;
             #endif //::#####################################:://
             #if( AAC2020_INCLUDE_1234567 >  0 ) //::########:://
-             if( AAC2020_CEDITOR_dex_edi == 4 ){
+             if( AAC2020_CEDITOR_nex_edi == 4 ){
             
                 /** Future_Editor #004 Code Here **/
                 AAC2020_1234567_Init( 0x00 ); /**@IDEMPOTENT@**/
@@ -134,6 +134,14 @@
         #if( AAC2020_INCLUDE_IKEYBOX >= 1 ) //:##############://
 
             AAC2020_IKEYBOX_dirty = 1 ;
+
+        #endif //:###########################################://
+        #if( AAC2020_INCLUDE_CEDITOR >= 1 ) //:##############://
+
+            /** Update Loaded Editor Index **/
+
+            AAC2020_CEDITOR_dex_edi=(
+            AAC2020_CEDITOR_nex_edi  );;
 
         #endif //:###########################################://
 

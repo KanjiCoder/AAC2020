@@ -21,6 +21,23 @@
     };;}
 
 //:=========================:OKAY_MESSAGE_FOR_POOR_MANS_DEBUG://
+//:ABOUT_TO_ERROR_MESSAGE:===================================://
+#define I32 int32_t /** GCC: <stdint.h> **/
+
+    void
+    aac2020_pixload_AboutToError_dec( /**@NEVER_SILENCE_ME@**/
+        const char* str_fmt 
+    ,   I32         val_dec
+    ){
+        printf("[aac2020_pixload_AboutToError]...\n");
+        fflush(stdout); /**@DOUBLE_PRINT_FLUSH@**/
+
+        printf( str_fmt , val_dec );
+        fflush(stdout);
+    }
+
+#undef  I32
+//:===================================:ABOUT_TO_ERROR_MESSAGE://
 //:INIT_NONE:================================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
 #define O_K aac2020_pixload_Okay
@@ -78,6 +95,131 @@
 #undef  U32
 #undef  I32
 //:==============================================:HAS_SAMPLER://
+//:GET_SAMPLER:==============================================://
+#define I32 int32_t /** GCC: <stdint.h> **/
+#define ERR aac2020_pixload_Halt
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    AAC2020_PIXLOAD_sam_loc( /**@GETTER@**/
+        struct AAC2020_GPUDATA * gpudata
+    )
+    {
+
+        //[ TEMP.Can_Remove_Once_Sprint#002#Is_Finished. ]//
+        if( strcmp( gpudata -> pix_nam , "paint5d" ) != 0 ){
+            ERR("[WTF_MY_MAN_WHAT_THE_HELL]");
+        };;
+
+        I32 sam_loc=(
+        AAC2020_GLEBIND.glGetUniformLocation(
+                    ( aac2020_graquad.data.POG_IID ) 
+                ,   ( gpudata -> pix_nam           )
+                ));;
+
+        /** Set Return Value **/
+        if( sam_loc <  0 ){ gpudata -> sam_loc =( 0 - 112 ); };
+        if( sam_loc >= 0 ){ gpudata -> sam_loc =( sam_loc ); };
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    AAC2020_PIXLOAD_sam_val( /**@GETTER@**/
+        struct AAC2020_GPUDATA * gpudata
+    )
+    {
+        if( ((void*)0) ==gpudata ){ /** NOOP **/ };
+
+        //:TODO: Maybe write and use this function?
+        //:      Could make pushsampler code simpler.
+        ERR("[This_Could_Simplify_The_Push_Sampler_Code]");
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+#undef  I32
+#undef  ERR
+//:==============================================:GET_SAMPLER://
+//:PUT_SAMPLER:==============================================://
+#define ERR  aac2020_pixload_Halt                     //: 01 ://
+#define DAT  gpudata                                  //: 02 ://
+#define A_D  aac2020_pixload_AboutToError_dec         //: 03 ://
+#define U32  uint32_t /** GCC: <stdint.h> **/         //: 04 ://
+
+    U32
+    AAC2020_PIXLOAD_sam_val_PUT( /**@PUTTER@**/
+        struct AAC2020_GPUDATA * gpudata
+    )
+    {
+        U32 was_put=( 0x00 /** FAILED_CODE **/ );
+
+        //:error_checking:-----------------------------------://
+
+            if(( DAT -> sam_loc <  0 && DAT -> sam_has >= 1 )
+            || ( DAT -> sam_loc >= 0 && DAT -> sam_has <= 0 )){
+            
+                ERR("[PIXLOAD_MIS_MATCHED_FLAGS]");
+            
+            };;
+
+            if( DAT -> tex_lot >= 1
+            &&  DAT -> tex_lot <= 9
+            ){
+                /** GOOD. We didn't fuck up. **/
+            }else{
+                /** Zero is always an error, but maybe one **/
+                /** day we will have more than 9 textures. **/
+                ERR("[PROBABLY_INVALID_TEXTURE_SLOT_VALUE]");
+            };;
+
+        //:-----------------------------------:error_checking:// 
+        
+        if( DAT -> sam_loc < 0 && DAT -> sam_has <= 0 ){
+        
+            //: A_D( "[DAT->sam_has]:%d\n", DAT->sam_has  );
+            //: A_D( "[DAT->sam_loc]:%d\n", DAT->sam_loc  );
+            //: ERR( "[USE:AAC2020_PIXLOAD_sam_loc:FIRST]");
+
+            //:fail gracefully. Just don't put the sampler
+            //:value in place.
+
+            was_put=( 0x00 /** FAILED_CODE **/ );
+        
+        }else{
+
+        //:actual_function_logic:----------------------------://
+
+            //:Set Value Of Texture Sampler On GPU:
+            AAC2020_GLEBIND.glUniform1i(
+                    ( DAT -> sam_loc ) //:<-- ADDRESS
+            ,       ( DAT -> tex_lot ) //:<-- VALUE
+            );;
+
+            //:- - - - - - - - - - - -- - - - - - - - - - - -://
+            //:Check that that actually happened:
+            //:And Sync GPU side value with gpudata value.
+            //:- - - - - - - - - - - -- - - - - - - - - - - -://
+                AAC2020_GLEBIND.glGetUniformiv(
+                    ( aac2020_graquad.data.POG_IID)
+                ,   ( DAT -> sam_loc     )     //:<--READ
+                ,  &( DAT -> sam_val     ) );; //:<--WRITE
+
+                //:Is_textureSlot_SyncedWith_SamplerValue ?
+                if( DAT -> tex_lot
+                !=  DAT -> sam_val ){
+                    ERR("[MISSION_FAILED_2020_12_11_0529AM]");
+                }else{
+                    was_put=( 1 /** Success_Is_One **/ );
+                };;
+            //:- - - - - - - - - - - -- - - - - - - - - - - -://
+
+        //:----------------------------:actual_function_logic://
+        };;
+
+        return( was_put /** Return 1 on success **/ );
+    }
+                                                    
+#undef  ERR                                           //: 01 ://
+#undef  DAT                                           //: 02 ://
+#undef  A_D                                           //: 03 ://
+#undef  U32                                           //: 04 ://
+//:==============================================:PUT_SAMPLER://
 //:PUSH_SAMPLER:=============================================://
 #define U32 uint32_t  /** GCC: <stdint.h> **/
 #define I32  int32_t  /** GCC: <stdint.h> **/
@@ -99,17 +241,27 @@
 
     )
     {
+        //:error_checking:-----------------------------------://
 
-        /** Hackish hardcoded debug. Must have all     **/
-        /** GPUDATA.pix_nam values in project in order **/
-        /** to not report error when there is none.    **/
-        if( strcmp(gpudata->pix_nam , "paint5d") != 0   
-        &&  strcmp(gpudata->pix_nam , "todo_02") != 0 
-        &&  strcmp(gpudata->pix_nam , "todo_03") != 0 
-        ){
-            aac2020_pixload_Halt("[2020_12_09:WHATEVER]");
-        };;
+            /** Hackish hardcoded debug. Must have all     **/
+            /** GPUDATA.pix_nam values in project in order **/
+            /** to not report error when there is none.    **/
+            if( strcmp(gpudata->pix_nam , "paint5d") != 0   
+            &&  strcmp(gpudata->pix_nam , "todo_02") != 0 
+            &&  strcmp(gpudata->pix_nam , "todo_03") != 0 
+            ){
+                aac2020_pixload_Halt("[2020_12_09:WHATEVER]");
+            };;
 
+            I32 wastefull_double_check=(
+            AAC2020_PIXLOAD_HasSampler( gpudata->pix_nam ));;
+    
+            if( wastefull_double_check <= 0 ){
+                //:DNL_BYP:DID_NOT_LOOK_BEFORE_YOU_LEPT
+                ERR("[NOSAMPLER:DID_NOT_LOOK_BEFORE_YOU_LEPT]");
+            };;
+
+        //:-----------------------------------:error_checking://
 
         /** ************************************************ ***
         [ AAC2020_PIXLOAD_PushSampler ]<--YOU_ARE_IN_HERE
@@ -141,16 +293,20 @@
         #define OHH_NOO aac2020_pixload_Halt
 
             /** gpudata -> tex_sam.sam_loc **/
-            if( gpudata ->         sam_loc <= 0 ){
+            if( gpudata ->         sam_loc <= ( 0 - 1 ) ){
 
-                /** NEVER USE LOCATION 0 **/
+                if( ( 0 - 44044 ) == gpudata->sam_loc ){
+                    ERR("[#DEFINITELY_FORGOT_TO_INIT_44044#]");
+                };;
+
+                //:#_WE_DONT_CONTROL_THE_SAMPLER_LOCATION_#://
                 OHH_NOO("[IMPROPER_SETUP:sam_loc]");
 
             }else
             /** gpudata -> tex_sam.sam_val **/
             if( gpudata ->         sam_val <= 0 ){
                 
-                /** #_2ND_GUESSING_PIXLOAD_TEX_SAM_ERR_# **/
+                //:#_WE_NEVER_USE___ZERO_FOR___SAM_VAL_#://
                 OHH_NOO("[IMPROPER_SETUP:sam_val]");
 
             };;
@@ -179,12 +335,7 @@
         };;
         if( gpudata -> sam_has <= 0 ){
             
-            /** Do nothing. Just always re-fetch the       * **/
-            /** Uniform after uploading the texture data.  * **/
-            /** You just uploaded (512*512*4) bytes,       * **/
-            /** what is 4 more (uint32 sampler uniform) ?  * **/
-
-            /** DO_NOTHING_HERE **/
+            ERR("[#I_THINK_SHOULD_BE_ERROR_0338AM#]");
 
         };;
 
