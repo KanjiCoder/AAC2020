@@ -1,0 +1,82 @@
+/** ******************************************************** ***
+
+USAGE: PUT:
+
+        AAC2020_TAUDEPO_Put( 
+            AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+        ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+        ,   AAC2020_TAUDEPO.P5D_VP1 //:DEX_VAR
+        ,   x0,x1,y0,y1
+        );;
+
+USAGE: GET:
+
+        AAC2020_TAUDEPO_Get( 
+            AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+        ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+        ,   AAC2020_TAUDEPO.P5D_VP1 //:DEX_VAR
+        ,  &(x0),&(x1),&(y0),&(y1)
+        );;
+
+*** ******************************************************** **/
+//:PUT:======================================================://
+#define PUT AAC2020_TAUDEPO_Get /** @TAU_PUT@ **/
+#define U32 uint32_t /** GCC: <stdint.h> **/
+#define U08  uint8_t /** GCC: <stdint.h> **/
+#define I08    i32_t /** GCC: <stdint.h> **/
+
+    /** #_CONSISTENT_SIGNATURES_TRUMP_PARANOID_ERROR_CHECKS_#**/
+
+    I08
+    AAC2020_TAUDEPO_Put( 
+        U08 DEX_TAU_000_015 //:EX: AAC2020_TAUDEPO_TAU_015
+    ,   U08 DEX_SUB_000_015 //:EX: AAC2020_TAUDEPO_PAINT5D
+    ,   U08 DEX_VAR_000_255 //:EX: AAC2020_TAUDEPO_P5D_VP0
+
+    ,   U32 I_0 //:<-- Data Slot #1, offset index == 0
+    ,   U32 I_1 //:<-- Data Slot #1, offset index == 1
+    ,   U32 I_2 //:<-- Data Slot #1, offset index == 2
+    ,   U32 I_3 //:<-- Data Slot #1, offset index == 3
+    )
+    {
+
+        AAC2020_TODOMAN_Vital( "[FILLTHISFUNCTIONOUT_PUT]");
+
+    }
+
+#undef  PUT
+#undef  U32
+#undef  U08
+#undef  I08
+//:======================================================:PUT://
+//:GET:======================================================://
+#define GET AAC2020_TAUDEPO_Get /** @TAU_GET@ **/
+#define U32 uint32_t /** GCC: <stdint.h> **/
+#define U08  uint8_t /** GCC: <stdint.h> **/
+#define I08    i32_t /** GCC: <stdint.h> **/
+
+    /** #_CONSISTENT_SIGNATURES_TRUMP_PARANOID_ERROR_CHECKS_#**/
+
+    void /** #_KEEP_TAUGET_VOID_TO_AVOID_CONFUSION_# **/
+    AAC2020_TAUDEPO_Get( 
+        U08 DEX_TAU_000_015 //:EX: AAC2020_TAUDEPO.TAU_015
+    ,   U08 DEX_SUB_000_015 //:EX: AAC2020_TAUDEPO.PAINT5D
+    ,   U08 DEX_VAR_000_255 //:EX: AAC2020_TAUDEPO.P5D_VP0
+
+        //:RETURN_VALUE_USING_UP_TO_FOUR_OUTPUT_PARAMETERS:
+    ,   U32* I_0 //:<-- Data Slot #1, offset index == 0
+    ,   U32* I_1 //:<-- Data Slot #1, offset index == 1
+    ,   U32* I_2 //:<-- Data Slot #1, offset index == 2
+    ,   U32* I_3 //:<-- Data Slot #1, offset index == 3
+    )
+    {
+
+        AAC2020_TODOMAN_Vital( "[FILLTHISFUNCTIONOUT_GET]");
+
+    }
+
+#undef  GET
+#undef  U32
+#undef  U08
+#undef  I08
+//:======================================================:GET://

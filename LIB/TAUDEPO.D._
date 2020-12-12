@@ -1,0 +1,199 @@
+/** ******************************************************** ***
+
+    :VIEWPORT_TYPES:-------------------------------------------:
+
+        VP0:Viewport_Zero(0): (Destination/Screen Viewport)
+        VP1:Viewport_One( 1): (Offscreen/Source/BitmapData)
+        VPC:Viewport_Canvas : (Or: Window/OpenGL)
+
+    :-------------------------------------------:VIEWPORT_TYPES:
+
+            |<-----512----->| 128x128 = 16,384
+        --- +---+---+---+---+
+        128 | 0 | 1 | 2 | 3 |
+        --- +---+---+---+---+
+            | 4 | 5 | 6 | 7 |
+            +---+---+---+---+
+            | 8 | 9 |10 |11 |
+            +---+---+---+---+
+            |12 |13 |14 | +---+
+            +---+---+---+ |TAU| <-- TAU_015
+                          +-|-+
+                            |
+                    +-------+
+                    |
+            +-------+-------+
+            |               |
+            V               V
+    ------- +---+---+---+---+-------  0: TAUDEPO ( Common )
+       |    | 0 | 1 | 2 | 3 |   |     1: PAINT5D TAU(s)             
+       |    +---+---+---+---+   |     2: System #2 TAU(s)
+       |    | 4 | 5 | 6 | 7 |   |     3: System #3 TAU(s)
+      TAU   +---+---+---+---+  128    4: System #4 TAU(s)
+       |    | 8 | 9 |   |   |   |    
+       |    +---+---+---+---+   |     ....
+       |    |   |   |   |   |   |     9: LAST SYSTEM IS 9
+    ------- +-|-+---+---+---+------- 
+              |
+              +---[ 32x32 ]
+           
+*** ******************************************************** **/
+
+/** #_TAUDEPO_SHOULD_BE_DEFINES_# **/
+
+//:DEX_TAU_000_015:==========================================://
+
+    //:MAYBE_DO: Add common offset to all of these
+    //:          DEX_TAU_000_015 values so we don't
+    //:          accidentially mix with DEX_SUB_000_015 .
+ 
+    #define AAC2020_TAUDEPO_TAU_000 (  0 )  
+    #define AAC2020_TAUDEPO_TAU_001 (  1 )  
+    #define AAC2020_TAUDEPO_TAU_002 (  2 )  
+    #define AAC2020_TAUDEPO_TAU_003 (  3 )  
+    #define AAC2020_TAUDEPO_TAU_004 (  4 )  
+    #define AAC2020_TAUDEPO_TAU_005 (  5 )  
+    #define AAC2020_TAUDEPO_TAU_006 (  6 )  
+    #define AAC2020_TAUDEPO_TAU_007 (  7 )  
+    #define AAC2020_TAUDEPO_TAU_008 (  8 )  
+    #define AAC2020_TAUDEPO_TAU_009 (  9 )  
+    #define AAC2020_TAUDEPO_TAU_010 ( 10 )  
+    #define AAC2020_TAUDEPO_TAU_011 ( 11 )  
+    #define AAC2020_TAUDEPO_TAU_012 ( 12 )  
+    #define AAC2020_TAUDEPO_TAU_013 ( 13 )  
+    #define AAC2020_TAUDEPO_TAU_014 ( 14 )  
+    #define AAC2020_TAUDEPO_TAU_015 ( 15 )  
+
+//:==========================================:DEX_TAU_000_015://
+//:DEX_SUB_000_015:==========================================://
+    
+    /** What subsystem are the uniforms for?                 **/
+    /** TAUDEPO sub system uniforms are meant to be          **/
+    /** common uniforms shared between all sub systems.      **/
+
+    /** "uniform" here means "texture(pixel)as_uniform(TAU)" **/
+
+    #define AAC2020_TAUDEPO_SUB_TAUDEPO ( 0 )
+    #define AAC2020_TAUDEPO_SUB_PAINT5D ( 1 )
+    #define AAC2020_TAUDEPO_SUB_TODO_02 ( 2 )
+    #define AAC2020_TAUDEPO_SUB_TODO_03 ( 3 )
+
+//:==========================================:DEX_SUB_000_015://
+//:DEX_VAR_000_255:==========================================://
+
+    #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vp0 //:@_VP0_@://
+    #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vp1 //:@_VP1_@://
+    #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vpc //:@_VPC_@://
+
+//:==========================================:DEX_VAR_000_255://
+//:LIBRARY_STRUCT:===========================================://
+#define U08 uint8_t /** GCC: <stdint.h> **/
+
+    /** DEX_TAU_000_015 : TAU [ SET / BLOCK ] Section        **/
+    /** DEX_SUB_000_015 : Sub System [Index/Enumeration/IID] **/
+    /** DEX_VAR_000_255 : ( dex_var % 4 == 0 ) (Var Location)**/
+
+    struct AAC2020_TAUDEPO_PUBLIC_LIBRARY_STRUCT{
+
+        U08 lax_comma_formatting_hack ;
+
+        //:DEX_TAU_000_015:----------------------------------://
+
+            const U08 TAU_000 ;
+            const U08 TAU_001 ;
+            const U08 TAU_002 ;
+            const U08 TAU_003 ;
+            const U08 TAU_004 ;
+            const U08 TAU_005 ;
+            const U08 TAU_006 ;
+            const U08 TAU_007 ;
+            const U08 TAU_008 ;
+            const U08 TAU_009 ;
+            const U08 TAU_010 ;
+            const U08 TAU_011 ;
+            const U08 TAU_012 ;
+            const U08 TAU_013 ;
+            const U08 TAU_014 ;
+            const U08 TAU_015 ;
+
+        //:----------------------------------:DEX_TAU_000_015://
+        //:DEX_SUB_000_015:----------------------------------://
+
+            cosnt U08 TAUDEPO ;
+            cosnt U08 PAINT5D ;
+            cosnt U08 TODO_02 ;
+            cosnt U08 TODO_03 ;
+
+        //:----------------------------------:DEX_SUB_000_015://
+        //:DEX_SUB_000_015:----------------------------------://
+
+                //:TAUDEPO(TAU):- - - - - - - - - - - - - - -://
+
+                    cosnt U08 TAU_ExampleVariable_01 ;
+                    cosnt U08 TAU_ExampleVariable_02 ;
+                    cosnt U08 TAU_ExampleVariable_03 ;
+
+                //:- - - - - - - - - - - - - - -:TAUDEPO(TAU)://
+                //:PAINT5D(P5D):- - - - - - - - - - - - - - -://
+
+                    cosnt U08 P5D_VPC ;
+                    cosnt U08 P5D_VP0 ;
+                    cosnt U08 P5D_VP1 ;
+
+                //:- - - - - - - - - - - - - - -:PAINT5D(P5D)://
+                //:TODO_02(TD2):- - - - - - - - - - - - - - -://
+
+                    cosnt U08 TD2_ExampleVariable_01 ;
+                    cosnt U08 TD2_ExampleVariable_02 ;
+                    cosnt U08 TD2_ExampleVariable_03 ;
+
+                //:- - - - - - - - - - - - - - -:TODO_02(TD2)://
+                //:TODO_03(TD3):- - - - - - - - - - - - - - -://
+
+                    cosnt U08 TD3_ExampleVariable_01 ;
+                    cosnt U08 TD3_ExampleVariable_02 ;
+                    cosnt U08 TD3_ExampleVariable_03 ;
+
+                //:- - - - - - - - - - - - - - -:TODO_03(TD3)://
+
+        //:----------------------------------:DEX_SUB_000_015://
+
+
+    }AAC2020_TAUDEPO={
+
+        .lax_comma_formatting_hack =( 0 )
+
+        //:DEX_TAU_000_015 : TAU [ SET / BLOCK ] Section
+    ,       .TAU_000 = ( AAC2020_TAUDEPO_TAU_000     )
+    ,       .TAU_001 = ( AAC2020_TAUDEPO_TAU_001     )
+    ,       .TAU_002 = ( AAC2020_TAUDEPO_TAU_002     )
+    ,       .TAU_003 = ( AAC2020_TAUDEPO_TAU_003     )
+    ,       .TAU_004 = ( AAC2020_TAUDEPO_TAU_004     )
+    ,       .TAU_005 = ( AAC2020_TAUDEPO_TAU_005     )
+    ,       .TAU_006 = ( AAC2020_TAUDEPO_TAU_006     )
+    ,       .TAU_007 = ( AAC2020_TAUDEPO_TAU_007     )
+    ,       .TAU_008 = ( AAC2020_TAUDEPO_TAU_008     )
+    ,       .TAU_009 = ( AAC2020_TAUDEPO_TAU_009     )
+    ,       .TAU_010 = ( AAC2020_TAUDEPO_TAU_010     )
+    ,       .TAU_011 = ( AAC2020_TAUDEPO_TAU_011     )
+    ,       .TAU_012 = ( AAC2020_TAUDEPO_TAU_012     )
+    ,       .TAU_013 = ( AAC2020_TAUDEPO_TAU_013     )
+    ,       .TAU_014 = ( AAC2020_TAUDEPO_TAU_014     )
+    ,       .TAU_015 = ( AAC2020_TAUDEPO_TAU_015     )
+    
+        //:DEX_SUB_000_015 : Sub System [Index/Enumeration/IID]
+    ,       .TAUDEPO = ( AAC2020_TAUDEPO_SUB_TAUDEPO )
+    ,       .PAINT5D = ( AAC2020_TAUDEPO_SUB_PAINT5D )
+    ,       .TODO_02 = ( AAC2020_TAUDEPO_SUB_TODO_02 )
+    ,       .TODO_03 = ( AAC2020_TAUDEPO_SUB_TODO_03 )
+
+        //:DEX_VAR_000_255 : Sub System Variable Locations:
+
+    ,       .P5D_VPC = ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vpc )
+    ,       .P5D_VP0 = ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vp0 )
+    ,       .P5D_VP1 = ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vp1 )
+     
+    };
+
+#undef  U08
+//:===========================================:LIBRARY_STRUCT://

@@ -6,6 +6,198 @@
     
 *** ******************************************************** ***
 
+
+#TAUDEPO_SIGNATURE_SKETCHING####################################
+
+    This is how I want to use the TAUDEPO system:
+
+    THIS! A bit clunky. But easy to figure out where
+    everything is comming from.
+
+        ********************************************************
+        AAC2020_TAUDEPO_Put( 
+            AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+        ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+        ,   AAC2020_TAUDEPO.P5D_VP1 //:DEX_VAR
+        ,   x0,x1,y0,y1
+        );;
+        ********************************************************
+
+    Maybe NOT with #defines for everything? 
+
+        #define PUT AAC2020_TAUDEPO_Put
+        #define TAU AAC2020_TAUDEPO
+            PUT(TAU.TAU_015 , TAU.PAINT5D, TAU.VIEWPORT1, 
+                x0,x1,y0,y1 );
+        #undef PUT
+        #undef TAU
+
+    CLOSER....
+
+        #define TAU_PUT AAC2020_TAUDEPO_Put
+
+            TAU_PUT( TAU_015 , PAINT5D, VIEWPORT1, x0,x1,y0,y1 )
+
+        #undef TAU_PUT
+
+
+    CLOSE_BUT_NOT_WHAT_I_DECIDED_ON:
+
+        TAU_PUT_000( PAINT5D,VIEWPORT1,x0,x1,y0,y1 );
+        TAU_PUT_015( PAINT5D,VIEWPORT1,x0,x1,y0,y1 );
+
+        TAU_PUT( PAINT5D , VIEWPORT1 , x0 ,x1, y0, y1 )
+        TAU_PUT( PAINT5D , ITIME     , it ,__, __, __ );
+
+####################################TAUDEPO_SIGNATURE_SKETCHING#
+@_VP0_@@_VP1_@@_VPC_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@VP0@@VP1@@VPC@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    :VIEWPORT_TYPES:-------------------------------------------:
+
+@_VP0_@   VP0:Viewport_Zero(0): (Destination/Screen Viewport)
+@_VP1_@   VP1:Viewport_One( 1): (Offscreen/Source/BitmapData)
+@_VPC_@   VPC:Viewport_Canvas : (Or: Window/OpenGL)
+
+    :-------------------------------------------:VIEWPORT_TYPES:
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@_VP0_@@_VP1_@@_VPC_@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@VP0@@VP1@@VPC@
+#_UNIFORM_SIGNATURES_TRUMP_PARANOID_ERROR_CHECKS_###############
+#_UNIFORMITY_OF_CODE_TRUMPS_PARANOID_ERROR_CHECKING_############
+#_CONSISTENT_SIGNATURES_TRUMP_PARANOID_ERROR_CHECKS_############
+
+    I was thinking about using the LATTER signature because
+    it would help the compiler catch accidential mixing
+    of wrong types.... 
+
+    Lets not make the code less consistent just because
+    we are paranoid.
+
+    I08
+    AAC2020_TAUDEPO_Put( 
+        U08 DEX_TAU_000_015  <--- GOOD
+    ,   U08 DEX_SUB_000_015  <--- GOOD
+    ,   U08 DEX_VAR_000_255  <--- GOOD
+        ....
+    )
+
+    I08
+    AAC2020_TAUDEPO_Put( 
+        U08 DEX_TAU_000_015  <--- BAD
+    ,   U08 DEX_SUB_000_015  <--- BAD
+    ,   I32 DEX_VAR_000_255  <--- BAD
+        ....
+    )
+ 
+############_CONSISTENT_SIGNATURES_TRUMP_PARANOID_ERROR_CHECKS_#
+############_UNIFORMITY_OF_CODE_TRUMPS_PARANOID_ERROR_CHECKING_#
+###############_UNIFORM_SIGNATURES_TRUMP_PARANOID_ERROR_CHECKS_#
+#_TAUDEPO_SHOULD_BE_DEFINES_####################################
+
+    //: Example Value For: DEX_TAU_000_015
+
+        #define AAC2020_TAUDEPO_TAU_000 ( 0 )  
+
+
+
+    //: Example Value For: DEX_SUB_000_015
+
+        #define AAC2020_TAUDEPO_SUB_PAINT5D ( 1 )
+
+
+
+    //: Example value For: DEX_VAR_000_255
+
+        #define AAC2020_TAUDEPO_VAR_vp0
+
+
+
+####################################_TAUDEPO_SHOULD_BE_DEFINES_#
+#_TAUDEPO_SHOULD_NOT_BE_A_LIBRARY_STRUCT_#######################
+
+    ************************************************************
+    We cannot INJECT the needed values into hard coded 
+    shader source strings if we use anything besides
+    defines ( #define ) for our TAUDEPO constants.
+    ************************************************************
+
+    struct AAC2020_TAUDEPO_PUBLIC_LIBRARY_STRUCT{
+
+        //:DEX_TAU_000_015 : TAU [ SET / BLOCK ] Section
+        //:DEX_SUB_000_015 : Sub System [Index/Enumeration/IID]
+        //:DEX_VAR_000_255 : ( dex_var % 4 == 0 ) (Var Location)
+
+    }AAC2020_TAUDEPO={
+
+        /** These are NOT texture slots, we just use the **/
+        /** numbers for the texture slots to facilitate  **/
+        /** TIGHT COUPLING and SIMPLICITY.               **/
+
+        //:DEX_TAU_000_015 : TAU [ SET / BLOCK ] Section
+            .TAU_000 = 0
+            .TAU_001 = 0
+            .TAU_002 = 0
+                 .........
+       
+        //:DEX_SUB_000_015 : Sub System [Index/Enumeration/IID]
+            .TAUDEPO = AAC2020_PIXNAME_taudepo_tex_lot //: 0 ://
+    ,       .PAINT5D = AAC2020_PIXNAME_paint5d_tex_lot //: 1 ://
+    ,       .TODO_02 = AAC2020_PIXNAME_paint5d_tex_lot //: 2 ://
+    ,       .TODO_03 = AAC2020_PIXNAME_paint5d_tex_lot //: 3 ://
+     
+    };
+
+#######################_TAUDEPO_SHOULD_NOT_BE_A_LIBRARY_STRUCT_#
+#_TAUDEPO_JUSTIFICATION_FOR_LIBRARY_STRUCT_#####################
+    
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    I WAS WRONG ABOUT THIS. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    SEE[ #_TAUDEPO_SHOULD_NOT_BE_A_LIBRARY_STRUCT_# ]
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    *******************************************
+    Shorthand access using a library struct is 
+    much LESS convoluted than without.
+    *******************************************
+    ------------------------------------------------------------
+    FUCK_THIS:
+
+        #define T( name ) AAC2020_TAUDEPO_##name
+
+            T(TAU_015) //: AAC2020_TAUDEPO_TAU_015
+
+    USE__THIS:
+
+        #define T AAC2020_TAUDEPO
+
+            T.TAU_015  //: AAC2020_TAUDEPO.TAU_015
+
+    ------------------------------------------------------------
+######################_TAUDEPO_JUSTIFICATION_FOR_LIBRARY_STRUCT_
+
+#_KEEP_TAUGET_VOID_TO_AVOID_CONFUSION_##########################
+
+    If AAC2020_TAUDEPO_Get returns by both 
+    output parameters (points to U32) and by a return 
+    value, it is likely to be used improperly.
+
+    Someone might think the return value is the value
+    we are trying to get with the getter. And that isn't
+    an INSANE assumption to make.
+
+##########################_KEEP_TAUGET_VOID_TO_AVOID_CONFUSION_#
+@TAU_PUT@@TAU_GET@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @TAU_PUT@ :Shorthand For AAC2020_TAUDEPO_Put
+
+    @TAU_GET@ :Shorthand For AAC2020_TAUDEPO_Get
+
+    AAC2020_TAU_Put : TYPO_OF[ AAC2020_TAUDEPO_Put ]
+    AAC2020_TAU_Get : TYPO_OF[ AAC2020_TAUDEPO_Get ]
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@TAU_PUT@@TAU_GET@
 #FILL_PATTERN###################################################
 
     [ fill-pattern ]SEE[ AAC2020_PIXLOAD_TestPattern ]
