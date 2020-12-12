@@ -76,6 +76,11 @@
               #error "[OUT_OF_ORDER:AAC2020_INCLUDE_PIXLOAD]"
 #endif
 #endif
+#if( 0                           != AAC2020_INCLUDE_TAUDEPO )
+#if( macro_libchan_order_TAUDEPO != AAC2020_INCLUDE_TAUDEPO )
+              #error "[OUT_OF_ORDER:AAC2020_INCLUDE_TAUDEPO]"
+#endif
+#endif
 #if( 0                           != AAC2020_INCLUDE_PAINT5D )
 #if( macro_libchan_order_PAINT5D != AAC2020_INCLUDE_PAINT5D )
               #error "[OUT_OF_ORDER:AAC2020_INCLUDE_PAINT5D]"
@@ -138,7 +143,10 @@
     #if( macro_libchan_order_PIXLOAD != 18 )
     #error "[TAIL_ORDER_FAIL:PIXLOAD]"  
     #endif                              
-    #if( macro_libchan_order_PAINT5D != 19 )
+    #if( macro_libchan_order_TAUDEPO != 19 )
+    #error "[TAIL_ORDER_FAIL:TAUDEPO]"
+    #endif
+    #if( macro_libchan_order_PAINT5D != 20 )
     #error "[TAIL_ORDER_FAIL:PAINT5D]"
     #endif
 
@@ -169,7 +177,8 @@
     #undef  macro_libchan_order_PIXNAME   //:----## 16 ##----://
     #undef  macro_libchan_order_GPUDATA   //:----## 17 ##----://
     #undef  macro_libchan_order_PIXLOAD   //:----## 18 ##----://
-    #undef  macro_libchan_order_PAINT5D   //:----## 19 ##----://
+    #undef  macro_libchan_order_TAUDEPO   //:----## 19 ##----://
+    #undef  macro_libchan_order_PAINT5D   //:----## 20 ##----://
  
     //:==========:DONT_POLLUTE_OTHER_PEOPLES_CODE_WITH_MACROS://
 

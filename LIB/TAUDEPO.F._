@@ -19,11 +19,89 @@ USAGE: GET:
         );;
 
 *** ******************************************************** **/
+//:COM:======================================================://
+
+    I32
+    aac2020_taudepo_pix_dex(
+        U08 DEX_TAU_000_015 //:EX: AAC2020_TAUDEPO_TAU_015
+    ,   U08 DEX_SUB_000_015 //:EX: AAC2020_TAUDEPO_PAINT5D
+    ,   U08 DEX_VAR_000_255 //:EX: AAC2020_TAUDEPO_P5D_VP0
+    )
+    {
+        /** ************************************************ ***
+        Use this as a template to write the GLSL equivalent.    
+        This code reads+writes on the CPU side. We need a       
+        version of this transcribed to GLSL to __read_only__    
+        from the GPU side. ---------------------------------    
+        *** ************************************************ **/
+
+        U32 pix_dex=( 0 - 404 ); //:Return:Variable
+
+        //:error_check_range_of_inputs:----------------------://
+
+            assert( DEX_TAU_000_015 <=  15 );
+            assert( DEX_SUB_000_015 <=  15 );
+            assert( DEX_VAR_000_255 <= 255 );
+
+        //:----------------------:error_check_range_of_inputs://
+        //:local_subcell_xy(s):------------------------------://
+
+            //: dex_tau's cell location: SEE[ #DIA_TAU_CEL# ]
+            I32 t_x =  DEX_TAU_000_015       %   4 ;
+            I32 t_y = (DEX_TAU_000_015 - t_x)/   4 ;
+
+            //: dex_sub's cell location: SEE[ #DIA_SUB_CEL# ]
+            I32 s_x =  DEX_SUB_000_015       %   4 ;
+            I32 s_y = (DEX_SUB_000_015 - s_x)/   4 ;
+
+            //: dex_var's cell location: SEE[ #DIA_VAR_CEL# ]
+            I32 v_x =  DEX_VAR_000_255       %  16 ;
+            I32 v_y = (DEX_VAR_000_255 - v_x)/  16 ;
+
+        //:------------------------------:local_subcell_xy(s)://
+        //:check_our_math:-----------------------------------://
+        #define A asssert
+
+            A( 512 / 4 == 128 ); //: 128x128_tau_cells 
+            A( 128 / 4 ==  32 ); //: 032x032_sub_cells 
+         
+            A( 16 * 16 == 256 ); //:256 unique variables.
+            A(  2 * 2  ==   4 ); //:  4 pixels per variable.
+            A( 32 / 16 ==   2 ); //: 16 cells per sub-division.    
+            A( 32*32/256 == 4 ); //:  4_pixels_per_variable
+
+        #undef  A
+        //:-----------------------------------:check_our_math://
+        //:global_pixel_xy_on_512x512:-----------------------://
+
+            I32 p_x =( 0
+            +  (t_x * (512 / 4) ) //: 128x128_tau_cells
+            +  (s_x * (128 / 4) ) //: 032x032_sub_cells
+            +  (v_x * (    2  ) ) //: 002x002 pixels per var
+            );;                   //:(002x002:4_pixels_per_var)
+
+            I32 p_y =( 0
+            +  (t_y * (512 / 4) ) //: 128x128_tau_cells
+            +  (s_y * (128 / 4) ) //: 032x032_sub_cells
+            +  (v_y * (    2  ) ) //: 002x002 pixels per var 
+            );;                   //:(002x002:4_pixels_per_var)
+
+        //:-----------------------:global_pixel_xy_on_512x512://
+
+                //:XY_TO_INDEX_FORMULA_FOR_TOP_LEFT_PIXEL
+                //:OF_OUR_2X2_CLUSTER_OF_PIXELS_REPRESENTING
+                //:A_SINGLE_VARIABLE.
+                pix_dex = p_x + ( 512 * p_y);
+        return( pix_dex );
+    }
+
+//:======================================================:COM://
 //:PUT:======================================================://
-#define PUT AAC2020_TAUDEPO_Get /** @TAU_PUT@ **/
-#define U32 uint32_t /** GCC: <stdint.h> **/
-#define U08  uint8_t /** GCC: <stdint.h> **/
-#define I08    i32_t /** GCC: <stdint.h> **/
+#define PUT AAC2020_TAUDEPO_Put /** @TAU_PUT@ **/     //: 01 ://
+#define U32 uint32_t      /** GCC: <stdint.h> **/     //: 02 ://
+#define U08  uint8_t      /** GCC: <stdint.h> **/     //: 03 ://
+#define I08    i32_t      /** GCC: <stdint.h> **/     //: 04 ://
+#define PIX AAC2020_PIXNAME_taudepo_cpu_pix           //: 05 ://
 
     /** #_CONSISTENT_SIGNATURES_TRUMP_PARANOID_ERROR_CHECKS_#**/
 
@@ -33,27 +111,58 @@ USAGE: GET:
     ,   U08 DEX_SUB_000_015 //:EX: AAC2020_TAUDEPO_PAINT5D
     ,   U08 DEX_VAR_000_255 //:EX: AAC2020_TAUDEPO_P5D_VP0
 
-    ,   U32 I_0 //:<-- Data Slot #1, offset index == 0
-    ,   U32 I_1 //:<-- Data Slot #1, offset index == 1
-    ,   U32 I_2 //:<-- Data Slot #1, offset index == 2
-    ,   U32 I_3 //:<-- Data Slot #1, offset index == 3
+    ,   U32 val_001 //:<-- Data Slot #1, offset index == 0
+    ,   U32 val_002 //:<-- Data Slot #2, offset index == 1
+    ,   U32 val_003 //:<-- Data Slot #3, offset index == 2
+    ,   U32 val_004 //:<-- Data Slot #4, offset index == 3
     )
     {
+        I32 pix_dex = aac2020_taudepo_pix_dex(
+            DEX_TAU_000_015
+        ,   DEX_SUB_000_015        
+        ,   DEX_VAR_000_255    
+        );;
 
-        AAC2020_TODOMAN_Vital( "[FILLTHISFUNCTIONOUT_PUT]");
+        //:      |<-------COMPONENT_INDEX-------->|
+        //:      |    |<----- PIXEL_INDEX ------->|
+        I32 c_1 = 4 * ( ( pix_dex +   0  +   0 ) );  //:TOP_LEF
+        I32 c_2 = 4 * ( ( pix_dex +   1  +   0 ) );  //:TOP_RIG
+        I32 c_3 = 4 * ( ( pix_dex + 512  +   0 ) );  //:BOT_LEF
+        I32 c_4 = 4 * ( ( pix_dex + 512  +   1 ) );  //:BOT_RIG
 
+        PIX[ c_1 + 0 ]=(U08)( ( val_001 >> 24 ) && 0xFF );
+        PIX[ c_1 + 1 ]=(U08)( ( val_001 >> 16 ) && 0xFF );
+        PIX[ c_1 + 2 ]=(U08)( ( val_001 >>  8 ) && 0xFF );
+        PIX[ c_1 + 3 ]=(U08)( ( val_001 >>  0 ) && 0xFF );
+
+        PIX[ c_2 + 0 ]=(U08)( ( val_002 >> 24 ) && 0xFF );
+        PIX[ c_2 + 1 ]=(U08)( ( val_002 >> 16 ) && 0xFF );
+        PIX[ c_2 + 2 ]=(U08)( ( val_002 >>  8 ) && 0xFF );
+        PIX[ c_2 + 3 ]=(U08)( ( val_002 >>  0 ) && 0xFF );
+
+        PIX[ c_3 + 0 ]=(U08)( ( val_003 >> 24 ) && 0xFF );
+        PIX[ c_3 + 1 ]=(U08)( ( val_003 >> 16 ) && 0xFF );
+        PIX[ c_3 + 2 ]=(U08)( ( val_003 >>  8 ) && 0xFF );
+        PIX[ c_3 + 3 ]=(U08)( ( val_003 >>  0 ) && 0xFF );
+
+        PIX[ c_4 + 0 ]=(U08)( ( val_004 >> 24 ) && 0xFF );
+        PIX[ c_4 + 1 ]=(U08)( ( val_004 >> 16 ) && 0xFF );
+        PIX[ c_4 + 2 ]=(U08)( ( val_004 >>  8 ) && 0xFF );
+        PIX[ c_4 + 3 ]=(U08)( ( val_004 >>  0 ) && 0xFF );
     }
 
-#undef  PUT
-#undef  U32
-#undef  U08
-#undef  I08
+#undef  PUT                                           //: 01 ://
+#undef  U32                                           //: 02 ://
+#undef  U08                                           //: 03 ://
+#undef  I08                                           //: 04 ://
+#undef  PIX                                           //: 05 ://
 //:======================================================:PUT://
 //:GET:======================================================://
-#define GET AAC2020_TAUDEPO_Get /** @TAU_GET@ **/
-#define U32 uint32_t /** GCC: <stdint.h> **/
-#define U08  uint8_t /** GCC: <stdint.h> **/
-#define I08    i32_t /** GCC: <stdint.h> **/
+#define GET AAC2020_TAUDEPO_Get /** @TAU_GET@ **/     //: 01 ://
+#define U32 uint32_t      /** GCC: <stdint.h> **/     //: 02 ://
+#define U08  uint8_t      /** GCC: <stdint.h> **/     //: 03 ://
+#define I08    i32_t      /** GCC: <stdint.h> **/     //: 04 ://
+#define PIX AAC2020_PIXNAME_taudepo_cpu_pix           //: 05 ://
 
     /** #_CONSISTENT_SIGNATURES_TRUMP_PARANOID_ERROR_CHECKS_#**/
 
@@ -64,19 +173,75 @@ USAGE: GET:
     ,   U08 DEX_VAR_000_255 //:EX: AAC2020_TAUDEPO.P5D_VP0
 
         //:RETURN_VALUE_USING_UP_TO_FOUR_OUTPUT_PARAMETERS:
-    ,   U32* I_0 //:<-- Data Slot #1, offset index == 0
-    ,   U32* I_1 //:<-- Data Slot #1, offset index == 1
-    ,   U32* I_2 //:<-- Data Slot #1, offset index == 2
-    ,   U32* I_3 //:<-- Data Slot #1, offset index == 3
+    ,   U32* val_001 //:<-- Data Slot #1, offset index == 0
+    ,   U32* val_002 //:<-- Data Slot #1, offset index == 1
+    ,   U32* val_003 //:<-- Data Slot #1, offset index == 2
+    ,   U32* val_004 //:<-- Data Slot #1, offset index == 3
     )
     {
+        I32 pix_dex = aac2020_taudepo_pix_dex(
+            DEX_TAU_000_015
+        ,   DEX_SUB_000_015        
+        ,   DEX_VAR_000_255    
+        );;
 
-        AAC2020_TODOMAN_Vital( "[FILLTHISFUNCTIONOUT_GET]");
+        //:      |<-------COMPONENT_INDEX-------->|
+        //:      |    |<----- PIXEL_INDEX ------->|
+        I32 c_1 = 4 * ( ( pix_dex +   0  +   0 ) );  //:TOP_LEF
+        I32 c_2 = 4 * ( ( pix_dex +   1  +   0 ) );  //:TOP_RIG
+        I32 c_3 = 4 * ( ( pix_dex +   0  + 512 ) );  //:BOT_LEF
+        I32 c_4 = 4 * ( ( pix_dex +   1  + 512 ) );  //:BOT_RIG
+        //:.........................| X |+| Y |..............://
 
+        assert( sizeof( PIX ) == 1 /** 1 byte **/ );
+
+        (*val_001)=( 0x00
+        |   24 << PIX[ c_1 + 0 ]
+        |   16 << PIX[ c_1 + 1 ]
+        |    8 << PIX[ c_1 + 2 ]
+        |    0 << PIX[ c_1 + 3 ]
+        );;
+
+        (*val_002)=( 0x00
+        |   24 << PIX[ c_2 + 0 ]
+        |   16 << PIX[ c_2 + 1 ]
+        |    8 << PIX[ c_2 + 2 ]
+        |    0 << PIX[ c_2 + 3 ]
+        );;
+
+        (*val_003)=( 0x00
+        |   24 << PIX[ c_3 + 0 ]
+        |   16 << PIX[ c_3 + 1 ]
+        |    8 << PIX[ c_3 + 2 ]
+        |    0 << PIX[ c_3 + 3 ]
+        );;
+
+        (*val_004)=( 0x00
+        |   24 << PIX[ c_4 + 0 ]
+        |   16 << PIX[ c_4 + 1 ]
+        |    8 << PIX[ c_4 + 2 ]
+        |    0 << PIX[ c_4 + 3 ]
+        );;
     }
 
-#undef  GET
-#undef  U32
-#undef  U08
-#undef  I08
+#undef  GET                                           //: 01 ://
+#undef  U32                                           //: 02 ://
+#undef  U08                                           //: 03 ://
+#undef  I08                                           //: 04 ://
+#undef  PIX                                           //: 05 ://
 //:======================================================:GET://
+//:INIT:=====================================================://
+
+    U32
+    AAC2020_TAUDEPO_Init( U32 u32 ){
+
+        if( u32 ){ /** reserved for future use **/ };
+
+
+        AAC2020_TODOMAN_Vital( "[INIT_TAUDEPO]" );
+
+
+        return( 0x00 );
+    }
+
+//:=====================================================:INIT://

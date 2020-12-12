@@ -106,6 +106,7 @@ _Static_assert( AAC2020_INCLUDE_GRAQUAD == 13 ,       "13");
     FRAGBED
     GPUDATA
     PIXNAME
+    TAUDEPO
     PAINT5D
 *** ******************************************************** **/
 
@@ -121,8 +122,6 @@ _Static_assert( AAC2020_INCLUDE_GRAQUAD == 13 ,       "13");
 
     #endif
     //:=========================================:INIT:GINAWIN://
-
-
     //:INIT:GLEBIND:=========================================://
     #if(            AAC2020_INCLUDE_GLEBIND >=  1 )
 
@@ -135,8 +134,6 @@ _Static_assert( AAC2020_INCLUDE_GRAQUAD == 13 ,       "13");
 
     #endif
     //:=========================================:INIT:GLEBIND://
-
-
     //:INIT:GLCONST:=========================================://
     #if(            AAC2020_INCLUDE_GLCONST >=  1 )
 
@@ -149,8 +146,6 @@ _Static_assert( AAC2020_INCLUDE_GRAQUAD == 13 ,       "13");
 
     #endif
     //:=========================================:INIT:GLCONST://
-
-
     //:INIT:GRAQUAD:=========================================://
     #if(            AAC2020_INCLUDE_GRAQUAD >=  1 )
 
@@ -163,8 +158,6 @@ _Static_assert( AAC2020_INCLUDE_GRAQUAD == 13 ,       "13");
 
     #endif
     //:=========================================:INIT:GRAQUAD://
-
-
     //:INIT:FRAGBED:=========================================://
     #if(            AAC2020_INCLUDE_FRAGBED >=  1 )
 
@@ -177,8 +170,6 @@ _Static_assert( AAC2020_INCLUDE_GRAQUAD == 13 ,       "13");
 
     #endif
     //:=========================================:INIT:FRAGBED://
-
-
     //:INIT:GPUDATA:=========================================://
     #if(            AAC2020_INCLUDE_GPUDATA >=  1 )
 
@@ -191,8 +182,6 @@ _Static_assert( AAC2020_INCLUDE_GRAQUAD == 13 ,       "13");
 
     #endif
     //:=========================================:INIT:GPUDATA://
-
-
     //:INIT:PIXNAME:=========================================://
     #if(            AAC2020_INCLUDE_PIXNAME >=  1 )
 
@@ -205,8 +194,18 @@ _Static_assert( AAC2020_INCLUDE_GRAQUAD == 13 ,       "13");
 
     #endif
     //:=========================================:INIT:PIXNAME://
+    //:INIT:TAUDEPO:=========================================://
+    #if(            AAC2020_INCLUDE_TAUDEPO >=  1 )
 
+        #define  FMACROS_TAUDEPO_Init       AAC2020_TAUDEPO_Init
 
+    #endif
+    #if(    AAC2020_INCLUDE_TAUDEPO == 0 )
+
+        #define  FMACROS_TAUDEPO_Init(  DISCARDED_ARGUMENT )       
+
+    #endif
+    //:=========================================:INIT:TAUDEPO://
     //:INIT:PAINT5D:=========================================://
     #if(            AAC2020_INCLUDE_PAINT5D >=  1 )
 
@@ -228,22 +227,24 @@ _Static_assert( AAC2020_INCLUDE_GRAQUAD == 13 ,       "13");
     ( SEE: LIBCHAN.TOP._ )  <--[ Official List        ]
 
     SILENCE ( 1 ) Controls Silencing of non-debug messages.
-    FILEBOI ( 2 ) File System Access Calls.
-    NATIKEY ( 3 ) Native Keyboard To Library Cross Platform Keys
-    IKEYBOX ( 4 ) Collection Of Keys Pressed To Avoid Callbacks
-    IMOUBOX ( 5 ) Collection Of Mouse Data   To Avoid Callbacks
-    CEDITOR ( 6 ) Current Editor In Focus. (#_EDITOR_CENTRIC_#)
-    GINAWIN ( 7 ) Graphics_Init_And_WINDOW (Native Window Code)
-    DUI     ( 8 ) Dialog_UI(s) (NATIVE,WIN32)EXAMPLE:ColorPicker
-    GLEBIND ( 9 ) open GL Easy BINDings (FUNCTIONS)
-    GLCONST (10 ) open GL CONSTants     (DATA     )
-    CPUNIFO (11 ) CPU UNIFOrms (Uniforms Synced To CPU side)
-    GRAQUAD (12 ) GRAdient QUAD (Fragment Shader Surface)
-    FREE_01 (13 ) Free Spot, no code here.
-    FRAGBED (14 ) Fragment Shader Test Bed (Usable Program)
-    PIXNAME (15 ) PIXelNAME: Names+Data for every subsystem.
-    GPUDATA (16 ) Temp Container For Passing Around PIXNAME data
-    PIXLOAD (17 ) Used to load [PIXNAME/GPUDATA] onto GPU.
-    PAINT5D (18 ) Initialize and control PIXNAME_paint5d data
+    TODOMAN ( 2 ) Replaces: AAC2020_VITAL_TODO and MAYBE_TODO
+    FILEBOI ( 3 ) File System Access Calls.
+    NATIKEY ( 4 ) Native Keyboard To Library Cross Platform Keys
+    IKEYBOX ( 5 ) Collection Of Keys Pressed To Avoid Callbacks
+    IMOUBOX ( 6 ) Collection Of Mouse Data   To Avoid Callbacks
+    CEDITOR ( 7 ) Current Editor In Focus. (#_EDITOR_CENTRIC_#)
+    GINAWIN ( 8 ) Graphics_Init_And_WINDOW (Native Window Code)
+    DUI     ( 9 ) Dialog_UI(s) (NATIVE,WIN32)EXAMPLE:ColorPicker
+    GLEBIND (10 ) open GL Easy BINDings (FUNCTIONS)
+    GLCONST (11 ) open GL CONSTants     (DATA     )
+    CPUNIFO (12 ) CPU UNIFOrms (Uniforms Synced To CPU side)
+    GRAQUAD (13 ) GRAdient QUAD (Fragment Shader Surface)
+    FREE_01 (14 ) Free Spot, no code here.
+    FRAGBED (15 ) Fragment Shader Test Bed (Usable Program)
+    PIXNAME (16 ) PIXelNAME: Names+Data for every subsystem.
+    GPUDATA (17 ) Temp Container For Passing Around PIXNAME data
+    PIXLOAD (18 ) Used to load [PIXNAME/GPUDATA] onto GPU.
+    TAUDEPO (19 ) Texture_As_Uniform: DEPOt
+    PAINT5D (20 ) Initialize and control PIXNAME_paint5d data
 
 *** ******************************************************** **/

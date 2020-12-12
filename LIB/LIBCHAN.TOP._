@@ -62,8 +62,9 @@
     #define AAC2020_MAC_LIBCHAN_017 (17 )
     #define AAC2020_MAC_LIBCHAN_018 (18 )
     #define AAC2020_MAC_LIBCHAN_019 (19 )
+    #define AAC2020_MAC_LIBCHAN_020 (20 )
 
-    #define AAC2020_MAC_LIBCHAN_MAX (19 ) //:<-- Complile_Limit
+    #define AAC2020_MAC_LIBCHAN_MAX (20 ) //:<-- Complile_Limit
 
 //:============================================:LIBRARY_CHAIN://
 //:DATA:DATA_BEFORE_FUNCTIONS:===============================://
@@ -231,32 +232,24 @@
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_019 )
 
-        //: #PATTERN_BREAKER# ------------------------------ ://
-        //: You might be expecting:                          ://
-        //: 1: AAC2020_INCLUDE_GPUDATA_PAINT5D               ://
-        //: 2: INCLUDE_GPUDATA_PAINT5D                       ://
-        //: But using shorter namespacing for our            ://
-        //: includes to avoid running over column limit.     ://
-        //: ------------------------------------------------ ://
-        #define AAC2020_INCLUDE_GPUDATA_PAINT5D "DO_NOT_USE"
-        #define INCLUDE_GPUDATA_PAINT5D         "DO_NOT_USE"
+        #include               "TAUDEPO.D._"    
+        #define AAC2020_INCLUDE_TAUDEPO (19 )
+        #else   //:     INCLUDE_TAUDEPO ( - )
+        #define AAC2020_INCLUDE_TAUDEPO ( 0 )
+        #endif
 
-        //:GPUDATA_PAINT5D: -------------------------------- ://
-        //:        Graphical Data For a 5-Dimensional        ://
-        //:        MS-PAINT 95 like program.                 ://
-        //:                                                  ://
-        //:        Dimensions:                               ://
-        //:        1. Tile X                                 ://
-        //:        2. Tile Y                                 ://
-        //:        3. Tile Size                              ://
-        //:        4. Tile Layer                             ://
-        //:        5. Tile Color                             ://
-        //:   NOT: "LIB/PAINT5D.D._" << #PATTERN_BREAKER     ://
-        #include               "PAINT5D.D._"    
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_020 )
 
-        #include "PAINT5D_DEFAULT_SHADERS\P5D_001._"
+        /** #PAINT5D_OLD_LIBCHAN_NOTES# **/
 
-        #define AAC2020_INCLUDE_PAINT5D (19 )
+           
+        /** @IAM_DIFFERENT_NOTICE_ME@ **/
+        #include "PAINT5D_DEFAULT_SHADERS\P5D_001._"  
+
+
+
+        #include               "PAINT5D.D._"   
+        #define AAC2020_INCLUDE_PAINT5D (20 )
         #else   //:     INCLUDE_PAINT5D ( - )
         #define AAC2020_INCLUDE_PAINT5D ( 0 )
         #endif
@@ -420,29 +413,18 @@
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_019 )
 
-        //: #PATTERN_BREAKER# ------------------------------ ://
-        //: You might be expecting:                          ://
-        //: 1: AAC2020_INCLUDE_GPUDATA_PAINT5D               ://
-        //: 2: INCLUDE_GPUDATA_PAINT5D                       ://
-        //: But using shorter namespacing for our            ://
-        //: includes to avoid running over column limit.     ://
-        //: ------------------------------------------------ ://
-        #define AAC2020_INCLUDE_GPUDATA_PAINT5D "DO_NOT_USE"
-        #define INCLUDE_GPUDATA_PAINT5D         "DO_NOT_USE"
+        #include               "TAUDEPO.F._"        
+        #define AAC2020_INCLUDE_TAUDEPO (19 )
+        #else   //:     INCLUDE_TAUDEPO ( - )
+        #define AAC2020_INCLUDE_TAUDEPO ( 0 )
+        #endif
 
-        //:GPUDATA_PAINT5D: -------------------------------- ://
-        //:        Graphical Data For a 5-Dimensional        ://
-        //:        MS-PAINT 95 like program.                 ://
-        //:                                                  ://
-        //:        Dimensions:                               ://
-        //:        1. Tile X                                 ://
-        //:        2. Tile Y                                 ://
-        //:        3. Tile Size                              ://
-        //:        4. Tile Layer                             ://
-        //:        5. Tile Color                             ://
-        //:   NOT: "LIB/PAINT5D.F._" << #PATTERN_BREAKER     ://
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_020 )
+
+        /** #PAINT5D_OLD_LIBCHAN_NOTES# **/
+
         #include               "PAINT5D.F._"        
-        #define AAC2020_INCLUDE_PAINT5D (19 )
+        #define AAC2020_INCLUDE_PAINT5D (20 )
         #else   //:     INCLUDE_PAINT5D ( - )
         #define AAC2020_INCLUDE_PAINT5D ( 0 )
         #endif
