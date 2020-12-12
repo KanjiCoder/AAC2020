@@ -549,25 +549,30 @@
 //:INIT_ALL:=================================================://
 #define INI_ALL_ERR  aac2020_gpudata_Halt
 
+#define TEX_LOT_000  AAC2020_PIXNAME_taudepo_tex_lot
 #define TEX_LOT_001  AAC2020_PIXNAME_paint5d_tex_lot
 #define TEX_LOT_002  AAC2020_PIXNAME_todo_02_tex_lot
 #define TEX_LOT_003  AAC2020_PIXNAME_todo_03_tex_lot
 
+#define TEX_HAN_000  AAC2020_PIXNAME_taudepo_tex_han
 #define TEX_HAN_001  AAC2020_PIXNAME_paint5d_tex_han
 #define TEX_HAN_002  AAC2020_PIXNAME_todo_02_tex_han
 #define TEX_HAN_003  AAC2020_PIXNAME_todo_03_tex_han
 
+#define SAM_LOC_000  AAC2020_PIXNAME_taudepo_tex_sam.sam_loc
 #define SAM_LOC_001  AAC2020_PIXNAME_paint5d_tex_sam.sam_loc
 #define SAM_LOC_002  AAC2020_PIXNAME_todo_02_tex_sam.sam_loc
 #define SAM_LOC_003  AAC2020_PIXNAME_todo_03_tex_sam.sam_loc
 
+#define SAM_VAL_000  AAC2020_PIXNAME_taudepo_tex_sam.sam_val
 #define SAM_VAL_001  AAC2020_PIXNAME_paint5d_tex_sam.sam_val
 #define SAM_VAL_002  AAC2020_PIXNAME_todo_02_tex_sam.sam_val
 #define SAM_VAL_003  AAC2020_PIXNAME_todo_03_tex_sam.sam_val
 
+    #define TAUDEPO &( AAC2020_PIXNAME_taudepo[ 0 ] )
     #define PAINT5D &( AAC2020_PIXNAME_paint5d[ 0 ] )
-    #define TODO_01 &( AAC2020_PIXNAME_todo_02[ 0 ] )
-    #define TODO_02 &( AAC2020_PIXNAME_todo_03[ 0 ] )
+    #define TODO_02 &( AAC2020_PIXNAME_todo_02[ 0 ] )
+    #define TODO_03 &( AAC2020_PIXNAME_todo_03[ 0 ] )
 
         //:WEBGL: glCreateTexture   OPENGL: glGenTextures
            
@@ -694,10 +699,12 @@
 
             //:synonymous_texture_slots:. . . . . . . . . . .://
 
+                assert( 0 == TEX_LOT_000 );
                 assert( 1 == TEX_LOT_001 );   
                 assert( 2 == TEX_LOT_002 );   
                 assert( 3 == TEX_LOT_003 );   
 
+                assert( 0 == AAC2020_PIXNAME_taudepo_tex_lot );
                 assert( 1 == AAC2020_PIXNAME_paint5d_tex_lot );
                 assert( 2 == AAC2020_PIXNAME_todo_02_tex_lot );
                 assert( 3 == AAC2020_PIXNAME_todo_03_tex_lot );
@@ -711,17 +718,24 @@
                 #define MAK_ONE ( 1 ) /* MAKE_JUST_ONE_TEXTURE*/
                 #define GEN_TEX  AAC2020_GLEBIND.glGenTextures 
      
+                    GEN_TEX( MAK_ONE , &( TEX_HAN_000 ) );
                     GEN_TEX( MAK_ONE , &( TEX_HAN_001 ) );
                     GEN_TEX( MAK_ONE , &( TEX_HAN_002 ) );
                     GEN_TEX( MAK_ONE , &( TEX_HAN_003 ) );
 
                     ASS( GEN_TEX == GET_TEX );
 
-                    /** Check Generated Texture Handles */
+                    /** Check Generated Texture Handles .... **/
+                    /** ------------------------------------ **/
                     ASS( TEX_HAN_001 != TEX_HAN_002 );
                     ASS( TEX_HAN_002 != TEX_HAN_003 );
                     ASS( TEX_HAN_003 != TEX_HAN_001 );
-        
+                    /** ------------------------------------ **/
+                    ASS( TEX_HAN_000 != TEX_HAN_001 );
+                    ASS( TEX_HAN_000 != TEX_HAN_002 );
+                    ASS( TEX_HAN_000 != TEX_HAN_003 );
+                    /** ------------------------------------ **/
+
                 #undef   ASS
                 #undef   MAK_ONE        
                 #undef   GEN_TEX   
@@ -733,20 +747,24 @@
             #define G_L  aac2020_gpudata_glGetUniformLocation
             #define G_V  aac2020_gpudata_glGetUniformiv 
 
+            #define L_0 AAC2020_PIXNAME_taudepo_tex_sam.sam_loc
             #define L_1 AAC2020_PIXNAME_paint5d_tex_sam.sam_loc
             #define L_2 AAC2020_PIXNAME_todo_02_tex_sam.sam_loc
             #define L_3 AAC2020_PIXNAME_todo_03_tex_sam.sam_loc
 
+            #define V_0 AAC2020_PIXNAME_taudepo_tex_sam.sam_val
             #define V_1 AAC2020_PIXNAME_paint5d_tex_sam.sam_val
             #define V_2 AAC2020_PIXNAME_todo_02_tex_sam.sam_val
             #define V_3 AAC2020_PIXNAME_todo_03_tex_sam.sam_val
  
                 /* #_BAD_IDEA_001_#  (Removed From This Code) */
     
+                        assert( L_0 == SAM_LOC_000 );
                         assert( L_1 == SAM_LOC_001 );
                         assert( L_2 == SAM_LOC_002 );
                         assert( L_3 == SAM_LOC_003 );
 
+                        assert( V_0 == SAM_VAL_000 );
                         assert( V_1 == SAM_VAL_001 );
                         assert( V_2 == SAM_VAL_002 );
                         assert( V_3 == SAM_VAL_003 );
@@ -754,10 +772,12 @@
                         assert( G_L == GET_LOC     );
                         assert( G_V == GET_VAL     );
 
+                            L_0 = G_L( PID , TAUDEPO );
                             L_1 = G_L( PID , PAINT5D );
-                            L_2 = G_L( PID , TODO_01 );
-                            L_3 = G_L( PID , TODO_02 );
+                            L_2 = G_L( PID , TODO_02 );
+                            L_3 = G_L( PID , TODO_03 );
 
+                G_V( PID ,  L_0  , &( V_0 ) );
                 G_V( PID ,  L_1  , &( V_1 ) );
                 G_V( PID ,  L_2  , &( V_2 ) );
                 G_V( PID ,  L_3  , &( V_3 ) );
@@ -766,13 +786,15 @@
             #undef  G_L  //: . . . . . . . . . . . . . .: 02 ://
             #undef  G_V  //: . . . . . . . . . . . . . .: 03 ://
                          //: . . . . . . . . . . . . . .: -- ://
-            #undef  L_1  //: . . . . . . . . . . . . . .: 04 ://
-            #undef  L_2  //: . . . . . . . . . . . . . .: 05 ://
-            #undef  L_3  //: . . . . . . . . . . . . . .: 06 ://
+            #undef  L_0  //: . . . . . . . . . . . . . .: 04 ://
+            #undef  L_1  //: . . . . . . . . . . . . . .: 05 ://
+            #undef  L_2  //: . . . . . . . . . . . . . .: 06 ://
+            #undef  L_3  //: . . . . . . . . . . . . . .: 07 ://
                          //: . . . . . . . . . . . . . .: -- ://
-            #undef  V_1  //: . . . . . . . . . . . . . .: 07 ://
-            #undef  V_2  //: . . . . . . . . . . . . . .: 08 ://
-            #undef  V_3  //: . . . . . . . . . . . . . .: 09 ://
+            #undef  V_0  //: . . . . . . . . . . . . . .: 08 ://
+            #undef  V_1  //: . . . . . . . . . . . . . .: 09 ://
+            #undef  V_2  //: . . . . . . . . . . . . . .: 10 ://
+            #undef  V_3  //: . . . . . . . . . . . . . .: 11 ://
 
             //:. . . . . . . . . . . . .:get_texture_samplers://
                 
@@ -787,6 +809,7 @@
         
             /**#_GPU_DATA_IS_A_TEMPORARY_HELPER_OBJECT_ONLY_#**/
 
+            struct AAC2020_GPUDATA g0; //:TEMP_HELPER
             struct AAC2020_GPUDATA g1; //:TEMP_HELPER
             struct AAC2020_GPUDATA g2; //:TEMP_HELPER
             struct AAC2020_GPUDATA g3; //:TEMP_HELPER
@@ -798,6 +821,12 @@
             //: gupdata.pix_hig   
             //: gupdata.pix_arr   
             //:----------------------------------:CTRL_F_HELP://
+
+            g0.tex_lot = AAC2020_PIXNAME_taudepo_tex_lot ;
+            g0.tex_han = AAC2020_PIXNAME_taudepo_tex_han ;
+            g0.pix_wid = ( 512 );
+            g0.pix_hig = ( 512 );
+            g0.cpu_pix =&( AAC2020_PIXNAME_taudepo_cpu_pix[0] );  
         
             g1.tex_lot = AAC2020_PIXNAME_paint5d_tex_lot ;
             g1.tex_han = AAC2020_PIXNAME_paint5d_tex_han ;
@@ -826,7 +855,12 @@
                 /**             should be different. **/
                 if( g1.tex_han == g2.tex_han  
                 ||  g2.tex_han == g3.tex_han 
-                ||  g3.tex_han == g1.tex_han ){
+                ||  g3.tex_han == g1.tex_han 
+                //: Compare g0 against everything:
+                ||  g0.tex_han == g1.tex_han
+                ||  g0.tex_han == g2.tex_han
+                ||  g0.tex_han == g3.tex_han
+                ){
                     ERR("[SOME_TEXTURE_HANDLES_IDENTICAL]");
                 }else{
                     O_K("[SmokeTest:Texture_Handles_Differ]");
@@ -839,10 +873,12 @@
         #define UPLOAD_TEXTURE aac2020_gpudata_IIA_UploadTexture
         #define UPLOAD_TEX_ERR aac2020_gpudata_ERR_UploadTexture
         
+                if( g0.tex_lot != 0 ){ UPLOAD_TEX_ERR("[G0]");};
                 if( g1.tex_lot != 1 ){ UPLOAD_TEX_ERR("[G1]");};
                 if( g2.tex_lot != 2 ){ UPLOAD_TEX_ERR("[G2]");};
                 if( g3.tex_lot != 3 ){ UPLOAD_TEX_ERR("[G3]");};
         
+                UPLOAD_TEXTURE(  &(g0)  ); //: gpu_000 ://
                 UPLOAD_TEXTURE(  &(g1)  ); //: gpu_001 ://
                 UPLOAD_TEXTURE(  &(g2)  ); //: gpu_002 ://
                 UPLOAD_TEXTURE(  &(g3)  ); //: gpu_003 ://
@@ -866,22 +902,27 @@
         #undef  GET_LOC  //:............................: -- ://
         #undef  GET_VAL  //:............................: -- ://
 //: - - - - - - - - - - - - - ---- - - - - - - - - - - -: -- ://
+    #undef  TAUDEPO      //:............................: -- ://
     #undef  PAINT5D      //:............................: -- ://
-    #undef  TODO_01      //:............................: -- ://
     #undef  TODO_02      //:............................: -- ://
-//: - - - - - - - - - - - - - ---- - - - - - - - - - - -: -- ://                        : -- ://
+    #undef  TODO_03      //:............................: -- ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - -: -- ://
+#undef  TEX_LOT_000                         
 #undef  TEX_LOT_001      //:                            : -- ://
 #undef  TEX_LOT_002      //:                            : -- ://
 #undef  TEX_LOT_003      //:                            : -- ://
 //: - - - - - - - - - - - - - ---- - - - - - - - - - - -: -- ://
+#undef  TEX_HAN_000
 #undef  TEX_HAN_001      //:                            : -- ://
 #undef  TEX_HAN_002      //:                            : -- ://
 #undef  TEX_HAN_003      //:                            : -- ://
 //: - - - - - - - - - - - - - ---- - - - - - - - - - - -: -- ://
+#undef  SAM_LOC_000      //: TAUDEPO.sam_loc ...........: -- ://
 #undef  SAM_LOC_001      //: PAINT5D.sam_loc ...........: -- ://
 #undef  SAM_LOC_002      //: TODO_02.sam_Loc ...........: -- ://
 #undef  SAM_LOC_003      //: TODO_03.sam_Loc ...........: -- ://
 //: - - - - - - - - - - - - - ---- - - - - - - - - - - -: -- ://
+#undef  SAM_VAL_000
 #undef  SAM_VAL_001      //:                            : -- ://
 #undef  SAM_VAL_002      //:                            : -- ://
 #undef  SAM_VAL_003      //:                            : -- ://
