@@ -53,6 +53,7 @@
 #define ERR   aac2020_paint5d_Halt                    //: 03 ://
 #define O_K   aac2020_paint5d_Okay                    //: 04 ://
 #define I_D   aac2020_paint5d_Info_dec                //: 05 ://
+#define INF   aac2020_paint5d_Info                    //: 06 ://
 
     U32
     AAC2020_PAINT5D_Init( U32 u32 )
@@ -201,15 +202,12 @@
                 /** Whether this is a good or bad message **/
                 /** depends on you looking at code and    **/
                 /** deciding.                             **/
-                aac2020_paint5d_Info("[NO_TEXTURE_SAMPLER]");
+                INF("[NO_TEXTURE_SAMPLER:PAINT5D]");
     
             };;
-            
-            AAC2020_VITAL_TODO("[Add centralized switchboard to silence non-error messages from different sub-libraries]");
-
-
+           
         #undef DAT
-        #undef VAR
+        #undef F_S
         //:------------------------:LOAD_INITIAL_TEXTURE_DATA://
         //:ERROR_CHECK:--------------------------------------://
 
@@ -240,4 +238,5 @@
 #undef  ERR                                           //: 03 ://
 #undef  O_K                                           //: 04 ://
 #undef  I_D                                           //: 05 ://
+#undef  INF                                           //: 06 ://
 //:=======================================:INITIALIZE_PAINT5D://

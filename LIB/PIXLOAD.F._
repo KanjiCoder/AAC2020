@@ -104,12 +104,6 @@
         struct AAC2020_GPUDATA * gpudata
     )
     {
-
-        //[ TEMP.Can_Remove_Once_Sprint#002#Is_Finished. ]//
-        if( strcmp( gpudata -> pix_nam , "paint5d" ) != 0 ){
-            ERR("[WTF_MY_MAN_WHAT_THE_HELL]");
-        };;
-
         I32 sam_loc=(
         AAC2020_GLEBIND.glGetUniformLocation(
                     ( aac2020_graquad.data.POG_IID ) 
@@ -144,7 +138,7 @@
 
     U32
     AAC2020_PIXLOAD_sam_val_PUT( /**@PUTTER@**/
-        struct AAC2020_GPUDATA * gpudata
+        struct AAC2020_GPUDATA * gpudata /** DAT **/
     )
     {
         U32 was_put=( 0x00 /** FAILED_CODE **/ );
@@ -158,6 +152,19 @@
             
             };;
 
+            U32 are_tau=(0==strcmp(DAT->pix_nam,"taudepo"));
+
+            if( DAT -> tex_lot == 0 && are_tau ){
+
+                /** taudepo is the only thing ever allowed **/
+                /** to use texture slot zero.              **/
+
+            }else
+            if( DAT -> tex_lot != 0 && are_tau ){
+
+                ERR("[TAUDEPO_MUST_USE_TEXTURE_SLOT_ZERO]");
+
+            }else
             if( DAT -> tex_lot >= 1
             &&  DAT -> tex_lot <= 9
             ){
@@ -165,7 +172,8 @@
             }else{
                 /** Zero is always an error, but maybe one **/
                 /** day we will have more than 9 textures. **/
-                ERR("[PROBABLY_INVALID_TEXTURE_SLOT_VALUE]");
+
+                ERR("[INVALID_TEXTURE_SLOT_VALUE_2020]");
             };;
 
         //:-----------------------------------:error_checking:// 

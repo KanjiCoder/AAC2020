@@ -240,20 +240,162 @@ USAGE: GET:
 #undef  U08                                           //: 04 ://
 #undef  PIX                                           //: 05 ://
 //:======================================================:GET://
+//:LOGGING_AND_HALTING:======================================://
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    void
+    aac2020_taudepo_Info_any(
+        const char* str_fmt
+    ,   void*       poi_dat
+    ){ if( AAC2020_SILENCE.TAUDEPO <= 0 ){
+    
+        printf("[AAC2020_TAUDEPO_Info_any]...\n");
+        fflush(stdout);
+        printf( str_fmt , poi_dat );
+        printf("\n");
+        fflush(stdout);
+
+    };;}
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    void 
+    aac2020_taudepo_Halt( const char* msg_err ){
+        printf("[AAC2020_TAUDEPO_Halt:msg_err]:%s\n",msg_err);
+        fflush(stdout);
+        exit( 123 );
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+//:======================================:LOGGING_AND_HALTING://
 //:INIT:=====================================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
+#define I32  int32_t /** GCC: <stdint.h> **/
+#define DAT gpudata_taudepo
+#define F_S( name ) AAC2020_PIXNAME_##name
+#define CMP strcmp
+#define LOG aac2020_taudepo_Info_any
+#define ERR aac2020_taudepo_Halt
+#define V_P void*
+#define I64  int64_t
 
     U32
     AAC2020_TAUDEPO_Init( U32 u32 ){
+        if( u32 ){ /** Reserved for future use **/ };
 
-        if( u32 ){ /** reserved for future use **/ };
+        LOG("\t\t[NOTE:taudepo_texture_init_here...]\n"
+            "\t\t[NOTE::::::GPUDATA_InitInstanceAll]\n" , 0 );
+
+        AAC2020_TODOMAN_Vital("[THIS_SHOULD_RE_INIT_EVERY_TIME_WE_SWITCH_EDITORS]");
+
+        //:LOAD_INITIAL_TEXTURE_DATA:------------------------://
 
 
-        AAC2020_TODOMAN_Vital( "[INIT_TAUDEPO]" );
+            /** #_TODOS_CAN_BREAK_COLUMN_LIMIT_# **/
+            /** For now just load a test pattern to confirm we    * * * * * **/
+            /** have data. But once that is done, we will want to * * * * * **/
+            /** load from a save file on disk on startup.         * * * * * **/
+            AAC2020_VITAL_TODO("[Eventually_This_Should_Load_Save_File_Data]");
 
+
+
+            struct AAC2020_GPUDATA gpudata_taudepo ={ 0 };
+
+
+            if( CMP( &(F_S( taudepo )[0]) ,"taudepo" )!= 0 ){
+                aac2020_taudepo_Halt("[TAU_BAD_NAME_2020]");
+            };;
+
+
+            //: FILE_SCOPE(  F_S  ) --> TEMP_STRUCT(  DAT  );
+            DAT.tex_lot =    F_S( taudepo_tex_lot          );
+            DAT.tex_han =    F_S( taudepo_tex_han          ); 
+            DAT.sam_loc =    F_S( taudepo_tex_sam.sam_loc  );
+            DAT.sam_val =    F_S( taudepo_tex_sam.sam_val  );
+            DAT.sam_has =    F_S( taudepo_tex_sam_HAS      );
+            DAT.pix_wid =  ( 512                           );
+            DAT.pix_hig =  ( 512                           );
+            DAT.pix_nam = &( F_S( taudepo )[0]             );
+
+            DAT.cpu_pix =&( 
+                AAC2020_PIXNAME_taudepo_cpu_pix[0] 
+            );;
+
+            //:Upload Texture As Is. Do not put any test
+            //:patterns on it, that will corrupt your 
+            //:texture_as_uniform values.
+            AAC2020_PIXLOAD_UploadTexture( &( DAT ) );
+            
+            //:get_taudepo_sampler_location:-----------------://
+            #define HAS_CHK AAC2020_PIXLOAD_HasSampler
+
+                //:#_GPUDATA_INPUT_OBJECT_IS_OUTPUT_OBJECT_#://
+                AAC2020_PIXLOAD_sam_has    ( &( DAT ) );
+                AAC2020_PIXLOAD_sam_loc    ( &( DAT ) );
+                AAC2020_PIXLOAD_sam_val_PUT( &( DAT ) );
+
+                if( DAT.sam_has >= 1 && DAT.sam_loc <=(0 - 1) ){
+                    ERR("[FULL_OF_LIES:@VDAWEA@:001]");
+                }else 
+                if( DAT.sam_has <= 0 && DAT.sam_loc >=(  0  ) ){
+                    ERR("[FULL_OF_LIES:@VDAWEA@:002]");
+                };;
+
+                /** Keep the error prone way of doing this   **/
+                /** As a redundancy to check for agreement.  **/
+
+                I32 has = HAS_CHK( "taudepo" );
+                if( DAT.sam_has != has ){ ERR("[WTF:0433AM]");};
+
+                LOG( "[DAT.sam_loc]:%d\n" , (V_P)(I64)DAT.sam_loc );
+                LOG( "[DAT.sam_val]:%d\n" , (V_P)(I64)DAT.sam_val );
+
+            #undef  HAS_CHK
+            //:-----------------:get_taudepo_sampler_location://
+
+            if( has >= 1 ){
+
+                /** Update Texture Sampler Uniform On GPU **/
+
+                aac2020_pixload_PushSampler(  &( DAT ) );
+
+                /** Persist Changes: **/
+
+                //: TEMP_STRUCT(  DAT  ) --> FILE_SCOPE(  F_S  )
+                F_S( taudepo_tex_lot         ) = DAT.tex_lot ;
+                F_S( taudepo_tex_han         ) = DAT.tex_han ;
+                F_S( taudepo_tex_sam.sam_loc ) = DAT.sam_loc ;
+                F_S( taudepo_tex_sam.sam_val ) = DAT.sam_val ;
+                F_S( taudepo_tex_sam_HAS     ) = DAT.sam_has ;
+                //:                    ( 512 ) = DAT.pix_wid ://
+                //:                    ( 512 ) = DAT.pix_hig ://
+                //:                 "taudepo" ~=~DAT.pix_nam ://
+    
+                LOG("[HAS_TEXTURE_SAMPLER]",((void*)0));
+            }else{
+
+                /** Whether this is a good or bad message **/
+                /** depends on you looking at code and    **/
+                /** deciding.                             **/
+                LOG("[NO_TEXTURE_SAMPLER:TAUDEPO]",((void*)0));
+    
+            };;
+           
+        
+        //:------------------------:LOAD_INITIAL_TEXTURE_DATA://
 
         return( 0x00 );
     }
 
 #undef  U32
+#undef  I32
+#undef  DAT
+#undef  F_S
+#undef  CMP
+#undef  LOG 
+#undef  ERR 
+#undef  V_P
+#undef  I64
 //:=====================================================:INIT://
