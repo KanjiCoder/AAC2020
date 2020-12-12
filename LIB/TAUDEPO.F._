@@ -20,6 +20,8 @@ USAGE: GET:
 
 *** ******************************************************** **/
 //:COM:======================================================://
+#define I32  int32_t      /** GCC: <stdint.h> **/     //: 01 ://
+#define U08  uint8_t      /** GCC: <stdint.h> **/     //: 02 ://
 
     I32
     aac2020_taudepo_pix_dex(
@@ -35,13 +37,15 @@ USAGE: GET:
         from the GPU side. ---------------------------------    
         *** ************************************************ **/
 
-        U32 pix_dex=( 0 - 404 ); //:Return:Variable
+        I32 pix_dex=( 0 - 404 ); //:Return:Variable
 
         //:error_check_range_of_inputs:----------------------://
 
             assert( DEX_TAU_000_015 <=  15 );
             assert( DEX_SUB_000_015 <=  15 );
-            assert( DEX_VAR_000_255 <= 255 );
+            
+        /// assert( DEX_VAR_000_255 <= 255 );
+            assert( sizeof( DEX_VAR_000_255 ) == 1 );
 
         //:----------------------:error_check_range_of_inputs://
         //:local_subcell_xy(s):------------------------------://
@@ -60,17 +64,17 @@ USAGE: GET:
 
         //:------------------------------:local_subcell_xy(s)://
         //:check_our_math:-----------------------------------://
-        #define A asssert
+        #define ASS assert
 
-            A( 512 / 4 == 128 ); //: 128x128_tau_cells 
-            A( 128 / 4 ==  32 ); //: 032x032_sub_cells 
-         
-            A( 16 * 16 == 256 ); //:256 unique variables.
-            A(  2 * 2  ==   4 ); //:  4 pixels per variable.
-            A( 32 / 16 ==   2 ); //: 16 cells per sub-division.    
-            A( 32*32/256 == 4 ); //:  4_pixels_per_variable
+            ASS( 512 / 4 == 128 ); //: 128x128_tau_cells 
+            ASS( 128 / 4 ==  32 ); //: 032x032_sub_cells 
+             
+            ASS( 16 * 16 == 256 ); //:256 unique variables 
+            ASS(  2 * 2  ==   4 ); //:  4 pixels per variable 
+            ASS( 32 / 16 ==   2 ); //: 16 cells per sub-division    
+            ASS( 32*32/256 == 4 ); //:  4_pixels_per_variable
 
-        #undef  A
+        #undef  ASS
         //:-----------------------------------:check_our_math://
         //:global_pixel_xy_on_512x512:-----------------------://
 
@@ -95,17 +99,19 @@ USAGE: GET:
         return( pix_dex );
     }
 
+#undef  I32                                           //: 01 ://
+#undef  U08                                           //: 02 ://
 //:======================================================:COM://
 //:PUT:======================================================://
 #define PUT AAC2020_TAUDEPO_Put /** @TAU_PUT@ **/     //: 01 ://
-#define U32 uint32_t      /** GCC: <stdint.h> **/     //: 02 ://
-#define U08  uint8_t      /** GCC: <stdint.h> **/     //: 03 ://
-#define I08    i32_t      /** GCC: <stdint.h> **/     //: 04 ://
+#define I32  int32_t      /** GCC: <stdint.h> **/     //: 02 ://
+#define U32 uint32_t      /** GCC: <stdint.h> **/     //: 03 ://
+#define U08  uint8_t      /** GCC: <stdint.h> **/     //: 04 ://
 #define PIX AAC2020_PIXNAME_taudepo_cpu_pix           //: 05 ://
 
     /** #_CONSISTENT_SIGNATURES_TRUMP_PARANOID_ERROR_CHECKS_#**/
 
-    I08
+    U08
     AAC2020_TAUDEPO_Put( 
         U08 DEX_TAU_000_015 //:EX: AAC2020_TAUDEPO_TAU_015
     ,   U08 DEX_SUB_000_015 //:EX: AAC2020_TAUDEPO_PAINT5D
@@ -149,19 +155,23 @@ USAGE: GET:
         PIX[ c_4 + 1 ]=(U08)( ( val_004 >> 16 ) && 0xFF );
         PIX[ c_4 + 2 ]=(U08)( ( val_004 >>  8 ) && 0xFF );
         PIX[ c_4 + 3 ]=(U08)( ( val_004 >>  0 ) && 0xFF );
+
+       
+        AAC2020_TODOMAN_Maybe("[Return_Bitmask_OfChangedVars]");
+        return( 0x00 );
     }
 
 #undef  PUT                                           //: 01 ://
-#undef  U32                                           //: 02 ://
-#undef  U08                                           //: 03 ://
-#undef  I08                                           //: 04 ://
+#undef  I32                                           //: 02 ://
+#undef  U32                                           //: 03 ://
+#undef  U08                                           //: 04 ://
 #undef  PIX                                           //: 05 ://
 //:======================================================:PUT://
 //:GET:======================================================://
 #define GET AAC2020_TAUDEPO_Get /** @TAU_GET@ **/     //: 01 ://
-#define U32 uint32_t      /** GCC: <stdint.h> **/     //: 02 ://
-#define U08  uint8_t      /** GCC: <stdint.h> **/     //: 03 ://
-#define I08    i32_t      /** GCC: <stdint.h> **/     //: 04 ://
+#define I32  int32_t      /** GCC: <stdint.h> **/     //: 02 ://
+#define U32 uint32_t      /** GCC: <stdint.h> **/     //: 03 ://
+#define U08  uint8_t      /** GCC: <stdint.h> **/     //: 04 ://
 #define PIX AAC2020_PIXNAME_taudepo_cpu_pix           //: 05 ://
 
     /** #_CONSISTENT_SIGNATURES_TRUMP_PARANOID_ERROR_CHECKS_#**/
@@ -225,12 +235,13 @@ USAGE: GET:
     }
 
 #undef  GET                                           //: 01 ://
-#undef  U32                                           //: 02 ://
-#undef  U08                                           //: 03 ://
-#undef  I08                                           //: 04 ://
+#undef  I32                                           //: 02 ://
+#undef  U32                                           //: 03 ://
+#undef  U08                                           //: 04 ://
 #undef  PIX                                           //: 05 ://
 //:======================================================:GET://
 //:INIT:=====================================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
 
     U32
     AAC2020_TAUDEPO_Init( U32 u32 ){
@@ -244,4 +255,5 @@ USAGE: GET:
         return( 0x00 );
     }
 
+#undef  U32
 //:=====================================================:INIT://
