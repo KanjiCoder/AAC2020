@@ -45,6 +45,17 @@ _Static_assert( AAC2020_INCLUDE_GRAQUAD == 14 ,       "14");
 
 #endif
 //:==================================================:GRAQUAD://
+//:TAUDEPO:==================================================://
+#if(            AAC2020_INCLUDE_TAUDEPO >=  1 )
+_Static_assert( AAC2020_INCLUDE_TAUDEPO == 20 ,       "20");
+
+    #define  FMACROS_TAUDEPO_LoopTick   AAC2020_TAUDEPO_LoopTick
+#endif
+#if(    AAC2020_INCLUDE_TAUDEPO == 0 )
+
+    #define  FMACROS_TAUDEPO_LoopTick( DISCARDED_ARGUMENT )    
+#endif
+//:==================================================:TAUDEPO://
 
 
 //:AUTO_GENERATED:InitNone:==================================://

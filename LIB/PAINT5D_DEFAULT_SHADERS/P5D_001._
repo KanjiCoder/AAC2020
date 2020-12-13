@@ -18,6 +18,7 @@
                         //[:::::SHADERTOY__COMPATIBILITY:::::]//
                         "#define fragCoord gl_FragCoord      \n"
                         "uniform vec3 iResolution;           \n"
+                        "uniform usampler2D taudepo;         \n"
                         "uniform usampler2D paint5d;         \n"
                                         
                     //|(( INN ))_____________________________|//
@@ -126,12 +127,23 @@
     "   }else{                                               \n"
     "                                                        \n"
                         //|Set output pixel color:___________|//
-    "                   FragColor = vec4(                    \n"
-    "                      /**/0.0                           \n"
-    "                      ,  (u_v.x/2.0)                    \n"
-    "                      ,   u_v.x                         \n"
-    "                      ,   1.0f                          \n"
-    "                   );;                                  \n"  
+        "   if( gfc.x-0.5 < 512.0 && gfc.y-0.5 < 512.0 ){      "
+        "                                                      "
+        "       FragColor = texelFetch(                        "
+        "           taudepo                /** sampler **/     "
+        "       ,   ivec2( gfc.xy - 0.5 )  /** pixel   **/     "
+        "       ,   int( 0 )               /** L.O.D.  **/     "
+        "       );;                                            "
+        "                                                      "
+        "   }else{                                             "
+        "       FragColor = vec4(                              "
+        "       /**/0.0                                        "
+        "       ,  (u_v.x/2.0)                                 "
+        "       ,   u_v.x                                      "
+        "       ,   1.0f                                       "
+        "       );;                                            "
+        "   };;                                                "
+
     "   };;                                                  \n"
     "} //:main://                                          \n\0"
     ); /////////////////////////////////////////////////////////

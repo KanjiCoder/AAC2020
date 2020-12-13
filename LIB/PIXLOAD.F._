@@ -254,11 +254,12 @@
             /** Hackish hardcoded debug. Must have all     **/
             /** GPUDATA.pix_nam values in project in order **/
             /** to not report error when there is none.    **/
-            if( strcmp(gpudata->pix_nam , "paint5d") != 0   
+            if( strcmp(gpudata->pix_nam , "taudepo") != 0
+            &&  strcmp(gpudata->pix_nam , "paint5d") != 0   
             &&  strcmp(gpudata->pix_nam , "todo_02") != 0 
             &&  strcmp(gpudata->pix_nam , "todo_03") != 0 
             ){
-                aac2020_pixload_Halt("[2020_12_09:WHATEVER]");
+                ERR("[2020_12_13_0405AM_BAD_SELECTION]");
             };;
 
             I32 wastefull_double_check=(
@@ -287,18 +288,24 @@
         /** then crash the system.                           **/
         /** ------------------------------------------------ **/
 
-        if( gpudata -> tex_lot <= 0 ){
+        if( 0 == gpudata -> tex_lot      ){
+            if( strcmp( gpudata -> pix_nam , "taudepo")==0 ){
 
-            /** Texture Slot If Configured On CPU Side **/
-            /** And then uploaded to GPU. This is how  **/
-            /** I know this value should never be <= 0 **/
-            /** Because.. I DONT USE ZERO FOR THIS.    **/
+                O_K("[taudepo:USES_TEXTURE_SLOT_ZERO]");
+            }else{
 
-            aac2020_pixload_Halt("[TEX_LOT_NEVER_ZERONEG]");
+                ERR("[ONLY:taudepo:CAN_USE_TEXTURE_SLOT_ZERO]");
+            };;
+        }else
+        if(      gpudata -> tex_lot <  0 ){
+
+            //:#_CHANGED_MY_MIND_ON_ZERO_#://
+            aac2020_pixload_Halt("[TEX_LOT_never_NEGATIVE]");
         };;
 
         if( gpudata -> sam_has >= 1 ){
         #define OHH_NOO aac2020_pixload_Halt
+        #define OHH_KAY aac2020_pixload_Okay
 
             /** gpudata -> tex_sam.sam_loc **/
             if( gpudata ->         sam_loc <= ( 0 - 1 ) ){
@@ -313,10 +320,19 @@
             }else
             /** gpudata -> tex_sam.sam_val **/
             if( gpudata ->         sam_val <= 0 ){
-                
-                //:#_WE_NEVER_USE___ZERO_FOR___SAM_VAL_#://
-                OHH_NOO("[IMPROPER_SETUP:sam_val]");
+            #define S_C strcmp 
 
+                if( 0 ==      gpudata -> sam_val 
+                &&  0 == S_C( gpudata -> pix_nam , "taudepo" )
+                ){
+                    OHH_KAY("[taudepo's:sam_val:is:ZERO(0)]");
+                }else{
+                    //:#_ONLY_TAUDEPO_CAN_USE_TEX_LOT_ZERO_#://
+                    //:#_CHANGED_MY_MIND_ON_TEX_LOT_ZERO_#://
+                    OHH_NOO("[IMPROPER_SETUP:sam_val]");
+                };;
+
+            #undef S_C /** S_C: String_Compare **/
             };;
  
                        /** tex_sam.sam_val **/
@@ -339,6 +355,8 @@
             ){
                 OHH_NOO("[OUT_OF_DATE_UNIFORM_VALUE]");
             };;
+        
+        #undef OHH_KAY
         #undef OHH_NOO
         };;
         if( gpudata -> sam_has <= 0 ){
@@ -426,7 +444,13 @@
 
                        /** tex_sam.sam_val **/
             if( gpudata ->         sam_val <= 0 ){
-                ERR("[FETCHED:NEG_OR_ZERO_SAMPLER_VALUE]");
+                if(0 == gpudata -> sam_val 
+                && 0 == strcmp( gpudata -> pix_nam , "taudepo" )
+                ){
+                    O_K("[FETCHED:ZERO:FOR:taudepo.sam_val]");
+                }else{
+                    ERR("[FETCHED:NEG_OR_ZERO_SAMPLER_VALUE]");
+                };;
             };;
 
         //:--------------------------------:GET_SAMPLER_VALUE://

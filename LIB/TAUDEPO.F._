@@ -285,6 +285,15 @@ USAGE: GET:
     AAC2020_TAUDEPO_Init( U32 u32 ){
         if( u32 ){ /** Reserved for future use **/ };
 
+        /** When fragment shader changes (dex_edi) the    **/
+        /** TAUDEPO must re-wire up it's texture samplers **/
+        /** to the new shader program. This is the reason **/
+        /** for the INITED_WITH variable below.           **/
+        AAC2020_TAUDEPO_dex_edi_INITED_WITH=( 
+        AAC2020_CEDITOR_dex_edi              );;
+
+
+
         LOG("\t\t[NOTE:taudepo_texture_init_here...]\n"
             "\t\t[NOTE::::::GPUDATA_InitInstanceAll]\n" , 0 );
 
@@ -399,3 +408,36 @@ USAGE: GET:
 #undef  V_P
 #undef  I64
 //:=====================================================:INIT://
+//:LOOP_TICK:================================================://
+#define LOG aac2020_taudepo_Info_any
+#define U32 uint32_t /** GCC: <stdint.h> **/
+
+    U32
+    AAC2020_TAUDEPO_LoopTick( U32 u32 ){
+        if( u32 ){ /** reserved for future use **/ };
+
+        /** ************************************************ **/
+        /** Part of SPRINT#003. Video: IID:0041              **/
+        /**             Recorded Date: 2020_12_13            **/
+        /**             @2 hours 55 minutes                  **/
+        /**                                                  **/
+        /** Every time we switch editors a new fragment      **/
+        /** shader is loaded (used as rendering code)        **/
+        /** (for active editor). And we need to re-wire      **/
+        /** the TAUDEPO texture sampler. Thus RE-INIT.       **/
+        /** ************************************************ **/
+
+        if( AAC2020_TAUDEPO_dex_edi_INITED_WITH
+        !=  AAC2020_CEDITOR_dex_edi
+        ){
+            LOG("[RE_INITING_TAUDEPO]",((void*)0));
+
+            AAC2020_TAUDEPO_Init( 0x00 );
+        };;
+
+        return( 0x00 );
+    }
+
+#undef  LOG 
+#undef  U32 
+//:================================================:LOOP_TICK://
