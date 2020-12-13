@@ -5,8 +5,131 @@
     SO WE HAVE A RECORD OF WHAT WAS DONE IN WHAT ORDER.
     
 *** ******************************************************** ***
+#DO_SWITCH######################################################
+
+    #DO_SWITCH#: Using a do-while(0) loop to create 
+                 switch-like structure that does not    
+                 require compile time constants for
+                 each case.
+
+    EXAMPLE: ORIGINAL SWITCH STATEMENT: (2020_12_13)
+
+            switch( chr_key ){
+            case '1' :{ str = P_1; dex_fou = 1; };break;
+            case '2' :{ str = P_2; dex_fou = 2; };break;
+            case '3' :{ str = P_3; dex_fou = 3; };break;
+            case '4' :{ str = P_4; dex_fou = 4; };break;
+            case '5' :{ str = P_5; dex_fou = 5; };break;
+            case '6' :{ str = P_6; dex_fou = 6; };break;
+            case '7' :{ str = P_7; dex_fou = 7; };break;
+            case '8' :{ str = P_8; dex_fou = 8; };break;
+            case '9' :{ str = P_9; dex_fou = 9; };break;
+            default:{ 
+                INFO("[PICK_SHADER_USING_NUMBER_KEY]\n");
+            };};;
+
+    EXAMPLE: REFACTORED INTO DO_SWITCH (2020_12_13)
+
+            ****************************************************
+            Intead of compile time constants '1'  -to- '9'
+            We are comparing against vars BED_001 -to- BED_009
+            ****************************************************
+
+            //:#DO_SWITCH#:==================================://
+            #define KEY chr_key
+            #define BIF if( dex_fou > 0 ){break;};
+            do{
+                if( KEY == BED_001 ){ str = P_1; dex_fou = 1; };
+            BIF
+                if( KEY == BED_002 ){ str = P_2; dex_fou = 2; };
+            BIF
+                if( KEY == BED_003 ){ str = P_3; dex_fou = 3; };
+            BIF
+                if( KEY == BED_004 ){ str = P_4; dex_fou = 4; };
+            BIF
+                if( KEY == BED_005 ){ str = P_5; dex_fou = 5; };
+            BIF
+                if( KEY == BED_006 ){ str = P_6; dex_fou = 6; };
+            BIF
+                if( KEY == BED_007 ){ str = P_7; dex_fou = 7; };
+            BIF
+                if( KEY == BED_008 ){ str = P_8; dex_fou = 8; };
+            BIF
+                if( KEY == BED_009 ){ str = P_9; dex_fou = 9; };
+            BIF
+            }while( 0 );
+            #undef  KEY   /** chr_key , key pressed **/
+            #undef  BIF   /** BIF:Break_If_Found    **/
+            //:==================================:#DO_SWITCH#://
+
+######################################################DO_SWITCH#
+#_MINIMAL_MENTAL_INDIRECTION_###################################
+
+    WRITTEN_ON_DATE[ 2020_12_13 ]
+
+    Example: AAC2020_KEYBIND.FRAGBED
+
+        These bindings add less mental indirection than
+        they do physical indirection.
+
+        bed_000 == '0'
+        bed_001 == '1'
+        bed_002 == '2'
+
+        000 maps to 0
+        001 maps to 1
+        002 maps to 2
+
+        ETC. We only have to remember the "bed_" prefix
+        and the overall pattern. But we don't need to
+        individually memorize the re-mapping for each
+        variable since the pattern is consistent.
+
+###################################_MINIMAL_MENTAL_INDIRECTION_#
+#LAX_COMMA_HACK#################################################
+
+    A variable who's only existance is to allow me to 
+    put commas in front each variable in an initializer 
+    list. See (AAC2020_KEYBIND) for example.
+
+#################################################LAX_COMMA_HACK#
+#_PAINT5D_KEY_BINDING_JUSTIFY_REASON_###########################
 
 
+    ************************************************************
+    We want the muscle memory to be intuitive.
+    The HIGH keys go FORWARD.            (q,w,e,r,t,y,u,i,o,p)
+    The LOW  keys go BACKWARDS.          (z,x,c,v,b,n,m)
+    The MID  keys are not directional.   (a,s,d,f,g,h,j,k,l)
+
+    EXCEPTION: E,S,D,F for (WASD-Like directional movement)
+
+    ************************************************************
+
+,   .PAINT5D.p5d_lef = 'S'
+,   .PAINT5D.p5d_rig = 'F'
+,   .PAINT5D.p5d_upp = 'E'
+,   .PAINT5D.p5d_dow = 'D'
+
+,   .PAINT5D.p5d_v_n = 'T' /**[V]alue(oftile)[N]ext **/
+,   .PAINT5D.p5d_v_b = 'B' /**[V]alue(oftile)[B]ack **/
+
+    //: G in the middle. Because is both + and - .
+,   .PAINT5D.p5d_tog = 'G' /**Toggle Tile On Off. (SET/UNSET)**/
+
+    //: TILE_SIZE:
+    //: W: Feels like moving UP  . Which is progressive.
+    //: X: Feels like moving DOWN. Which is backwards.
+,   .PAINT5D.p5d_e_n = 'W' /** tile size [E]xponent [N]ext **/
+,   .PAINT5D.p5d_e_b = 'X' /** tile size [E]xponent [B]ack **/
+
+    //: ZOOM_IN_OUT:
+    //: R: Feels like moving UP  . Which is progressive.
+    //: V: Feels like moving DOWN. Which is backwards.
+,   .PAINT5D.p5d_z_o = 'R' /** Zoom OUT (Moving UP and over) **/
+,   .PAINT5D.p5d_z_i = 'V' /** Zoom INN (Digging DOWN lower) **/
+
+###########################_PAINT5D_KEY_BINDING_JUSTIFY_REASON_#
 @ONLY4NOW@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
     @ONLY4NOW@ :

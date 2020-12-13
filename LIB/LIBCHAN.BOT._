@@ -21,6 +21,26 @@
               #error "[OUT_OF_ORDER:AAC2020_INCLUDE_NATIKEY]"
 #endif
 #endif
+#if( 0                           != AAC2020_INCLUDE_IKEYBOX )
+#if( macro_libchan_order_IKEYBOX != AAC2020_INCLUDE_IKEYBOX )
+              #error "[OUT_OF_ORDER:AAC2020_INCLUDE_IKEYBOX]"
+#endif
+#endif
+#if( 0                           != AAC2020_INCLUDE_IMOUBOX )
+#if( macro_libchan_order_IMOUBOX != AAC2020_INCLUDE_IMOUBOX )
+              #error "[OUT_OF_ORDER:AAC2020_INCLUDE_IMOUBOX]"
+#endif
+#endif
+#if( 0                           != AAC2020_INCLUDE_KEYBIND )
+#if( macro_libchan_order_KEYBIND != AAC2020_INCLUDE_KEYBIND )
+              #error "[OUT_OF_ORDER:AAC2020_INCLUDE_KEYBIND]"
+#endif
+#endif
+#if( 0                           != AAC2020_INCLUDE_CEDITOR )
+#if( macro_libchan_order_CEDITOR != AAC2020_INCLUDE_CEDITOR )
+              #error "[OUT_OF_ORDER:AAC2020_INCLUDE_CEDITOR]"
+#endif
+#endif
 #if( 0                           != AAC2020_INCLUDE_GINAWIN )
 #if( macro_libchan_order_GINAWIN != AAC2020_INCLUDE_GINAWIN )
               #error "[OUT_OF_ORDER:AAC2020_INCLUDE_GINAWIN]"
@@ -106,47 +126,50 @@
     #endif                              
     #if( macro_libchan_order_IMOUBOX !=  6 )
     #error "[TAIL_ORDER_FAIL:IMOUBOX]"  
+    #endif     
+    #if( macro_libchan_order_KEYBIND !=  7 )
+    #error "[TAIL_ORDER_FAIL:KEYBIND]"  
     #endif                              
-    #if( macro_libchan_order_CEDITOR !=  7 )
+    #if( macro_libchan_order_CEDITOR !=  8 )
     #error "[TAIL_ORDER_FAIL:CEDITOR]"  
     #endif                              
-    #if( macro_libchan_order_GINAWIN !=  8 )
+    #if( macro_libchan_order_GINAWIN !=  9 )
     #error "[TAIL_ORDER_FAIL:GINAWIN]"  
     #endif                              
-    #if( macro_libchan_order_DUI     !=  9 )
+    #if( macro_libchan_order_DUI     != 10 )
     #error "[TAIL_ORDER_FAIL:DUI]"      
     #endif                              
-    #if( macro_libchan_order_GLEBIND != 10 )
+    #if( macro_libchan_order_GLEBIND != 11 )
     #error "[TAIL_ORDER_FAIL:GLEBIND]"  
     #endif                              
-    #if( macro_libchan_order_GLCONST != 11 )
+    #if( macro_libchan_order_GLCONST != 12 )
     #error "[TAIL_ORDER_FAIL:GLCONST]"  
     #endif                              
-    #if( macro_libchan_order_CPUNIFO != 12 )
+    #if( macro_libchan_order_CPUNIFO != 13 )
     #error "[TAIL_ORDER_FAIL:CPUNIFO]"  
     #endif                              
-    #if( macro_libchan_order_GRAQUAD != 13 )
+    #if( macro_libchan_order_GRAQUAD != 14 )
     #error "[TAIL_ORDER_FAIL:GRAQUAD]"  
     #endif                              
-    #if( macro_libchan_order_FREE_01 != 14 )
+    #if( macro_libchan_order_FREE_01 != 15 )
     #error "[TAIL_ORDER_FAIL:FREE_01]"  
     #endif                              
-    #if( macro_libchan_order_FRAGBED != 15 )
+    #if( macro_libchan_order_FRAGBED != 16 )
     #error "[TAIL_ORDER_FAIL:FRAGBED]"  
-    #endif                              
-    #if( macro_libchan_order_PIXNAME != 16 )
+    #endif                                
+    #if( macro_libchan_order_PIXNAME != 17 )
     #error "[TAIL_ORDER_FAIL:PIXNAME]"  
     #endif                                
-    #if( macro_libchan_order_GPUDATA != 17 )
+    #if( macro_libchan_order_GPUDATA != 18 )
     #error "[TAIL_ORDER_FAIL:GPUDATA]"  
-    #endif                                               
-    #if( macro_libchan_order_PIXLOAD != 18 )
+    #endif                                             
+    #if( macro_libchan_order_PIXLOAD != 19 )
     #error "[TAIL_ORDER_FAIL:PIXLOAD]"  
     #endif                              
-    #if( macro_libchan_order_TAUDEPO != 19 )
-    #error "[TAIL_ORDER_FAIL:TAUDEPO]"
-    #endif
-    #if( macro_libchan_order_PAINT5D != 20 )
+    #if( macro_libchan_order_TAUDEPO != 20 )
+    #error "[TAIL_ORDER_FAIL:TAUDEPO]"    
+    #endif                                
+    #if( macro_libchan_order_PAINT5D != 21 )
     #error "[TAIL_ORDER_FAIL:PAINT5D]"
     #endif
 
@@ -165,20 +188,21 @@
     #undef  macro_libchan_order_NATIKEY   //:----## 04 ##----://
     #undef  macro_libchan_order_IKEYBOX   //:----## 05 ##----://
     #undef  macro_libchan_order_IMOUBOX   //:----## 06 ##----://
-    #undef  macro_libchan_order_CEDITOR   //:----## 07 ##----://
-    #undef  macro_libchan_order_GINAWIN   //:----## 08 ##----://
-    #undef  macro_libchan_order_DUI       //:----## 09 ##----://
-    #undef  macro_libchan_order_GLEBIND   //:----## 10 ##----://
-    #undef  macro_libchan_order_GLCONST   //:----## 11 ##----://
-    #undef  macro_libchan_order_CPUNIFO   //:----## 12 ##----://
-    #undef  macro_libchan_order_GRAQUAD   //:----## 13 ##----://
-    #undef  macro_libchan_order_FREE_01   //:----## 14 ##----://
-    #undef  macro_libchan_order_FRAGBED   //:----## 15 ##----://
-    #undef  macro_libchan_order_PIXNAME   //:----## 16 ##----://
-    #undef  macro_libchan_order_GPUDATA   //:----## 17 ##----://
-    #undef  macro_libchan_order_PIXLOAD   //:----## 18 ##----://
-    #undef  macro_libchan_order_TAUDEPO   //:----## 19 ##----://
-    #undef  macro_libchan_order_PAINT5D   //:----## 20 ##----://
+    #undef  macro_libchan_order_KEYBIND   //:----## 07 ##----://
+    #undef  macro_libchan_order_CEDITOR   //:----## 08 ##----://
+    #undef  macro_libchan_order_GINAWIN   //:----## 09 ##----://
+    #undef  macro_libchan_order_DUI       //:----## 10 ##----://
+    #undef  macro_libchan_order_GLEBIND   //:----## 11 ##----://
+    #undef  macro_libchan_order_GLCONST   //:----## 12 ##----://
+    #undef  macro_libchan_order_CPUNIFO   //:----## 13 ##----://
+    #undef  macro_libchan_order_GRAQUAD   //:----## 14 ##----://
+    #undef  macro_libchan_order_FREE_01   //:----## 15 ##----://
+    #undef  macro_libchan_order_FRAGBED   //:----## 16 ##----://
+    #undef  macro_libchan_order_PIXNAME   //:----## 17 ##----://
+    #undef  macro_libchan_order_GPUDATA   //:----## 18 ##----://
+    #undef  macro_libchan_order_PIXLOAD   //:----## 19 ##----://
+    #undef  macro_libchan_order_TAUDEPO   //:----## 20 ##----://
+    #undef  macro_libchan_order_PAINT5D   //:----## 21 ##----://
  
     //:==========:DONT_POLLUTE_OTHER_PEOPLES_CODE_WITH_MACROS://
 

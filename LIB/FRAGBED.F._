@@ -485,6 +485,20 @@
 #define FN_02  aac2020_graquad_ReLoadShaderUniforms_iTime
 #define FN_03  aac2020_graquad_ReLoadShaderUniforms_iResolution
 
+/** These should be number keys 0 -to- 9 unless you've got   **/
+/** a working editor already and you absolutely need those   **/
+/** keys for something else. ............................... **/
+#define BED_000  AAC2020_KEYBIND.FRAGBED.bed_000
+#define BED_001  AAC2020_KEYBIND.FRAGBED.bed_001
+#define BED_002  AAC2020_KEYBIND.FRAGBED.bed_002
+#define BED_003  AAC2020_KEYBIND.FRAGBED.bed_003
+#define BED_004  AAC2020_KEYBIND.FRAGBED.bed_004
+#define BED_005  AAC2020_KEYBIND.FRAGBED.bed_005
+#define BED_006  AAC2020_KEYBIND.FRAGBED.bed_006
+#define BED_007  AAC2020_KEYBIND.FRAGBED.bed_007
+#define BED_008  AAC2020_KEYBIND.FRAGBED.bed_008
+#define BED_009  AAC2020_KEYBIND.FRAGBED.bed_009
+
     I32 
     AAC2020_FRAGBED_SimpleKeyHandler( 
         signed char chr_key 
@@ -524,23 +538,40 @@
             #define P_8 AAC2020_FRAGBED_loaded_008_ptr //:###://
             #define P_9 AAC2020_FRAGBED_loaded_009_ptr //:###://
 
-            int   shader_found =(   0    );
+            /**   dex_fou : inDEX_FOUnd (index of found item)**/
+            /**   dex_fou == shader_found (when dex_fou >= 1)**/
+
+            int   dex_fou =(   0    ); 
+
             if(   shader_index_loaded ){ /**@QUELCHNOTUSED@**/};
             const char*    str =((void*)0); //:frag_shader_str
 
-            switch( chr_key ){
-            case '1' :{ str = P_1; shader_found = 1; };break;
-            case '2' :{ str = P_2; shader_found = 2; };break;
-            case '3' :{ str = P_3; shader_found = 3; };break;
-            case '4' :{ str = P_4; shader_found = 4; };break;
-            case '5' :{ str = P_5; shader_found = 5; };break;
-            case '6' :{ str = P_6; shader_found = 6; };break;
-            case '7' :{ str = P_7; shader_found = 7; };break;
-            case '8' :{ str = P_8; shader_found = 8; };break;
-            case '9' :{ str = P_9; shader_found = 9; };break;
-            default:{ 
-                INFO("[PICK_SHADER_USING_NUMBER_KEY]\n");
-            };};;
+            //:#DO_SWITCH#:==================================://
+            #define KEY chr_key
+            #define BIF if( dex_fou > 0 ){break;};
+            do{
+                if( KEY == BED_001 ){ str = P_1; dex_fou = 1; };
+            BIF
+                if( KEY == BED_002 ){ str = P_2; dex_fou = 2; };
+            BIF
+                if( KEY == BED_003 ){ str = P_3; dex_fou = 3; };
+            BIF
+                if( KEY == BED_004 ){ str = P_4; dex_fou = 4; };
+            BIF
+                if( KEY == BED_005 ){ str = P_5; dex_fou = 5; };
+            BIF
+                if( KEY == BED_006 ){ str = P_6; dex_fou = 6; };
+            BIF
+                if( KEY == BED_007 ){ str = P_7; dex_fou = 7; };
+            BIF
+                if( KEY == BED_008 ){ str = P_8; dex_fou = 8; };
+            BIF
+                if( KEY == BED_009 ){ str = P_9; dex_fou = 9; };
+            BIF
+            }while( 0 );
+            #undef  KEY   /** chr_key , key pressed **/
+            #undef  BIF   /** BIF:Break_If_Found    **/
+            //:==================================:#DO_SWITCH#://
 
             #undef  P_1  //:#################################://
             #undef  P_2  //:#################################://
@@ -555,7 +586,7 @@
 
             int should_re_load_the_shader_uniforms=( 0 );
             
-            if( shader_found > 0 ){
+            if( dex_fou > 0 ){
 
                 //: These shaders can be user edited and     ://
                 //: loaded from disk. So use the more fault  ://
@@ -568,9 +599,9 @@
                 );;
 
                 should_re_load_the_shader_uniforms = ( 1 );
-                shader_index_loaded = ( shader_found );
+                shader_index_loaded = ( dex_fou );
             }else
-            if( shader_found <= 0 ){
+            if( dex_fou <= 0 ){
 
                 if( '0' == chr_key ){
 
@@ -659,15 +690,27 @@
             BEST_NOT_TO_DO_WITH_SIDE_EFFECTS_CEDITOR_dex_edi );;
     }
 
-#undef  U32       //: 01 :-----------------------------------://
-#undef  I32       //: 02 :-----------------------------------://
-#undef  INFO      //: 03 :-----------------------------------://
-#undef  INFO_CHR  //: 04 :-----------------------------------://
-#undef  FUCK_YOU  //: 05 :-----------------------------------://
-                  //: -- :-----------------------------------://
-#undef  FN_01     //: 06 :-----------------------------------://
-#undef  FN_02     //: 07 :-----------------------------------://
-#undef  FN_03     //: 08 :-----------------------------------://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#undef  U32                                           //: 01 ://
+#undef  I32                                           //: 02 ://
+#undef  INFO                                          //: 03 ://
+#undef  INFO_CHR                                      //: 04 ://
+#undef  FUCK_YOU                                      //: 05 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://                                               //: -- ://
+#undef  FN_01                                         //: 06 ://
+#undef  FN_02                                         //: 07 ://
+#undef  FN_03                                         //: 08 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#undef  BED_000                                       //: 09 ://
+#undef  BED_001                                       //: 10 ://
+#undef  BED_002                                       //: 11 ://
+#undef  BED_003                                       //: 12 ://
+#undef  BED_004                                       //: 13 ://
+#undef  BED_005                                       //: 14 ://
+#undef  BED_006                                       //: 15 ://
+#undef  BED_007                                       //: 16 ://
+#undef  BED_008                                       //: 17 ://
+#undef  BED_009                                       //: 18 ://
 //:=======================================:SIMPLE_KEY_HANDLER://
 //:INIT:=====================================================://
 #define U32  uint32_t /** GCC: <stdint.h> **/
