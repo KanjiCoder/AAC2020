@@ -6,6 +6,59 @@
     
 *** ******************************************************** ***
 
+#PAIRED_IDENTICAL_BLOCKS_OF_4_LINES#############################
+
+    Same idea as #PAIRED_IDENTICAL_BLOCKS_OF_3_LINES#
+    But 4 lines instead of 3.
+
+#############################PAIRED_IDENTICAL_BLOCKS_OF_4_LINES#
+#PAIRED_IDENTICAL_BLOCKS_OF_3_LINES#############################
+
+    PAIRED_IDENTICAL_BLOCKS_OF_3_LINES:
+
+        Marks a place in source code where an identical
+        block of source code should exist.
+
+        The identical blocks of code in question should
+        be exactly 3 lines of code each. For a total
+        of 6 lines. ( But only 3 unique lines )
+
+        Doing this because writing a common helper function
+        would be more code than just cut+paste and would add
+        extra indirection which would make the code
+        harder to understand.
+
+#############################PAIRED_IDENTICAL_BLOCKS_OF_3_LINES#
+@AFD@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @AFD@: Allow_Forward_Declaration:
+    
+        Typically my code is written WITHOUT forward 
+        declarations to maintain strict ordering of
+        functions.
+
+        However, unit tests can become VERY FUCKING LONG.
+        And I'd rather not have to scroll through all of
+        that stuff to see the code I care about.
+
+        Thus, unit tests will always be at bottom of file.
+
+        Unit tests are typically called LAZILY by the
+        initializer functions so that it is VERY DIFFICULT
+        to shut off unit tests.
+
+        This rigidity is by design to avoid "Code Rot"
+        of the unit tests.
+
+        Code Rot Scenario:
+        1. Someone disables unit tests.
+        2. 3 months pass.
+        3. Someone enables unit tests.
+        4. Unit test fail all over the place and
+           no one has any fucking clue how to fix them
+           because now errors have compounded in the program.
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@AFD@
 #_ONLY_TAUDEPO_CAN_USE_TEX_LOT_ZERO_############################
 
     Originally I never wanted to use texture slot (tex_lot)
