@@ -1,0 +1,148 @@
+//: KEYBIND.D._
+
+/** KEYBOARD BINDINGS FOR EACH SUB SYSTEM ARE INTENTIONALLY  **/
+/** LOOSELY COUPLED. Each sub system's keyboard bindings     **/
+/** should be an instance of a UNIQUE TYPE                   **/
+/** (not a common key bindings struct.                       **/
+/** If two editors have common key bindings, we manually     **/
+/** copy over the relevant data when switching between       **/
+/** those two editors.                                       **/
+/**                                                          **/
+/** PROBLEM: say editor 1 & 3 have things in common and      **/
+/**          we switch from: 1 --> 2 --> 3 so                **/
+/**          settings from 1 are never copied to 3.          **/
+/**          How do we solve this?                           **/
+/**                                                          **/
+/**          ANSWER: ( TOO COMPLEX. DO NOT DO THIS )         **/
+/**          You keep a list of previously visited editors   **/
+/**          and each editor gets a chance to copy over      **/
+/**          settings with priority based on how recently    **/
+/**          they were visited.                              **/
+/**          BAD! TOO MANY PERMUTATIONS AND EXECUTION PATHS. **/
+/**                                                          **/
+/**          ANSWER #2: ( VALID SOLUTION #1 )                **/
+/**          Any settings that are common between any        **/
+/**          two editors are put into a "COMMON_BINDINGS"    **/
+/**          struct. The COMON_BINDINGS struct is            **/
+/**          persistent. And it is WRITTEN TO and READ FROM  **/
+/**          when switching from one editor to another.      **/
+/**                                                          **/
+/**          ANSWER #3: ( VALID SOLUTION #2 )                **/
+/**          FUCK THIS, JUST DON'T WRITE ANY CODE.           **/
+/**          DONT SHARE SETTINGS BETWEEN EDITORS.            **/
+/**                                                          **/
+
+//:LIBRARY_STRUCT:===========================================://
+#define U08 uint8_t /** GCC: <stdint.h> **/
+#define CHR char   
+
+    struct AAC2020_KEYBIND_PUBLIC_LIBRARY_STRUCT{
+
+        /** ALL BINDINGS SHOULD BE UPPER CASE!!! **/
+        
+        U08 syntax_lax_comma_hack;
+
+        struct AAC2020_KEYBIND_fragbed_is_always_listening{
+            CHR xxxxxxx ;  //: #LAX_COMMA_HACK#
+
+            /** ******************************************** **/
+            /** These keys control which fragment shader in  **/
+            /** FRAGBED is active. It also controls which    **/
+            /** [ EDITOR (example:PAINT5D) ] is active.      **/
+            /** There is a tight 1:1 coupling between        **/
+            /** fragment shader # and editor #               **/    
+            /**                                              **/
+            /** fragment shader #1 is used for editor #1     **/
+            /** fragment shader #2 is used for editor #2     **/
+            /** fragment shader #3 is used for editor #3  ETC**/
+            /** ******************************************** **/
+
+            CHR bed_000 ; //:Shader Slot 0 (IREADY     shader)
+            CHR bed_001 ; //:Shader Slot 1 (PAINT5D overrides)
+            CHR bed_002 ; //:Shader Slot 2 <-- Available 
+            CHR bed_003 ; //:Shader Slot 3 <-- Available 
+            CHR bed_004 ; //:Shader Slot 4 <-- Available 
+            CHR bed_005 ; //:Shader Slot 5 <-- Available 
+            CHR bed_006 ; //:Shader Slot 6 <-- Available 
+            CHR bed_007 ; //:Shader Slot 7 <-- Available 
+            CHR bed_008 ; //:Shader Slot 8 <-- Available 
+            CHR bed_009 ; //:Shader Slot 9 <-- Available 
+
+        }FRAGBED;
+        struct AAC2020_KEYBIND_number_key_to_press_0{ 
+
+            /** NO MEMBERS. Only Sub Editors Get Keybindings.**/
+
+            CHR keep_this_struct_empty;
+
+        }TAUDEPO;
+        struct AAC2020_KEYBIND_number_key_to_press_1{
+            //: - - - - - - - - - - - -- - - - - - - - - - - ://
+            CHR xxxxxxx  ;  //: #LAX_COMMA_HACK#
+            //: - - - - - - - - - - - -- - - - - - - - - - - ://
+            CHR p5d_lef  ;  //: MOVE                        LEFT
+            CHR p5d_rig  ;  //: MOVE                       RIGHT
+            CHR p5d_upp  ;  //: MOVE                          UP
+            CHR p5d_dow  ;  //: MOVE                        DOWN
+            //: - - - - - - - - - - - -- - - - - - - - - - - ://
+            CHR p5d_v_n  ;  //: TILE_VALUE                  NEXT
+            CHR p5d_v_b  ;  //: TILE_VALUE                  BACK
+            //: - - - - - - - - - - - -- - - - - - - - - - - ://
+            CHR p5d_tog  ;  //: TILE_TOGGLE              ADD_SUB
+            //: - - - - - - - - - - - -- - - - - - - - - - - ://
+            CHR p5d_e_n  ;  //: TILE_EXPONENT(til_exp)      NEXT
+            CHR p5d_e_b  ;  //: TILE_EXPONENT(til_exp)      BACK
+            //: - - - - - - - - - - - -- - - - - - - - - - - ://
+            CHR p5d_z_o  ;  //: ZOOM_IN_OR_OUT               OUT
+            CHR p5d_z_i  ;  //: ZOOM_IN_OR_OUT               INN
+            //: - - - - - - - - - - - -- - - - - - - - - - - ://
+        }PAINT5D;
+        struct AAC2020_KEYBIND_number_key_to_press_2{
+            CHR xxxxxxx  ;  //: #LAX_COMMA_HACK#
+        }TODO_02;
+        struct AAC2020_KEYBIND_number_key_to_press_3{
+            CHR xxxxxxx  ;  //: #LAX_COMMA_HACK#
+        }TODO_03;
+
+
+    }AAC2020_KEYBIND={
+        .syntax_lax_comma_hack = 0
+    ,   .TAUDEPO={ .keep_this_struct_empty = '_' }
+    ,   .FRAGBED={
+             .xxxxxxx =( 0 )//:#_MINIMAL_MENTAL_INDIRECTION_#://
+            ,.bed_000 = '0'
+            ,.bed_001 = '1'
+            ,.bed_002 = '2'
+            ,.bed_003 = '3'
+            ,.bed_004 = '4'
+            ,.bed_005 = '5'
+            ,.bed_006 = '6'
+            ,.bed_007 = '7'
+            ,.bed_008 = '8'
+            ,.bed_009 = '9'
+        }
+    ,   .PAINT5D={
+             .xxxxxxx =( 0 )  //:#_PAINT5D_BINDING_CHOICES_#://
+            ,.p5d_lef = 'S'   //: MOVE:LEFT
+            ,.p5d_rig = 'F'   //: MOVE:RIGHT
+            ,.p5d_upp = 'E'   //: MOVE:UPP
+            ,.p5d_dow = 'D'   //: MOVE:DOWN
+            ,.p5d_v_n = 'T'   //: VALUE:NEXT ( tile type )
+            ,.p5d_v_b = 'B'   //: VALUE:BACK ( tile type )
+            ,.p5d_tog = 'G'   //: TOGGLE (set or unset tile)
+            ,.p5d_e_n = 'W'   //: TILE_EXPONENT(til_exp)NEXT
+            ,.p5d_e_b = 'X'   //: TILE_EXPONENT(til_exp)BACK
+            ,.p5d_z_o = 'R'   //: ZOOM_OUT
+            ,.p5d_z_i = 'V'   //: ZOOM_INN
+        }
+    ,   .TODO_02={
+            .xxxxxxx =( 0 )
+        }
+    ,   .TODO_03={
+            .xxxxxxx =( 0 )
+        }
+    };
+
+#undef  U08 
+#undef  CHR 
+//:===========================================:LIBRARY_STRUCT://
