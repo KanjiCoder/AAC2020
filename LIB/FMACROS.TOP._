@@ -47,7 +47,7 @@ _Static_assert( AAC2020_INCLUDE_GRAQUAD == 14 ,       "14");
 //:==================================================:GRAQUAD://
 //:TAUDEPO:==================================================://
 #if(            AAC2020_INCLUDE_TAUDEPO >=  1 )
-_Static_assert( AAC2020_INCLUDE_TAUDEPO == 20 ,       "20");
+_Static_assert( AAC2020_INCLUDE_TAUDEPO == 21 ,       "21");
 
     #define  FMACROS_TAUDEPO_LoopTick   AAC2020_TAUDEPO_LoopTick
 #endif
@@ -75,6 +75,9 @@ _Static_assert( AAC2020_INCLUDE_TAUDEPO == 20 ,       "20");
 [REPLACE_KEYS]
     CPUNIFO
     PIXLOAD
+    TAUDIRT
+    TAUTYPE
+    TAUSYNC
 *** ******************************************************** **/
 //[| InitNone:BEG |]=========================================]//
 //:InitNone:CPUNIFO:- - - - - - - - - - - - - - - - - - - - -://
@@ -93,6 +96,30 @@ _Static_assert( AAC2020_INCLUDE_TAUDEPO == 20 ,       "20");
 #define      FMACROS_PIXLOAD_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:PIXLOAD://
+//:InitNone:TAUDIRT:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_TAUDIRT >=  1 )
+#define      FMACROS_TAUDIRT_InitNone AAC2020_TAUDIRT_InitNone
+#endif
+#if( AAC2020_INCLUDE_TAUDIRT == 0 )
+#define      FMACROS_TAUDIRT_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:TAUDIRT://
+//:InitNone:TAUTYPE:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_TAUTYPE >=  1 )
+#define      FMACROS_TAUTYPE_InitNone AAC2020_TAUTYPE_InitNone
+#endif
+#if( AAC2020_INCLUDE_TAUTYPE == 0 )
+#define      FMACROS_TAUTYPE_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:TAUTYPE://
+//:InitNone:TAUSYNC:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_TAUSYNC >=  1 )
+#define      FMACROS_TAUSYNC_InitNone AAC2020_TAUSYNC_InitNone
+#endif
+#if( AAC2020_INCLUDE_TAUSYNC == 0 )
+#define      FMACROS_TAUSYNC_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:TAUSYNC://
 //[=========================================[| InitNone:END |]//
 
 

@@ -64,8 +64,11 @@
     #define AAC2020_MAC_LIBCHAN_019 (19 )
     #define AAC2020_MAC_LIBCHAN_020 (20 )
     #define AAC2020_MAC_LIBCHAN_021 (21 )
+    #define AAC2020_MAC_LIBCHAN_022 (22 )
+    #define AAC2020_MAC_LIBCHAN_023 (23 )
+    #define AAC2020_MAC_LIBCHAN_024 (24 )
 
-    #define AAC2020_MAC_LIBCHAN_MAX (21 ) //:<-- Complile_Limit
+    #define AAC2020_MAC_LIBCHAN_MAX (24 ) //:<-- Complile_Limit
 
 //:============================================:LIBRARY_CHAIN://
 //:DATA:DATA_BEFORE_FUNCTIONS:===============================://
@@ -215,8 +218,7 @@
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_017 )
 
-        //:#_PIXNAME_PATTERN_BREAKER_#://
-        #include           "PIXNAME.D._"        
+        #include               "PIXNAME.D._"        
         #define AAC2020_INCLUDE_PIXNAME (17 )
         #else   //:     INCLUDE_PIXNAME ( - )
         #define AAC2020_INCLUDE_PIXNAME ( 0 )
@@ -241,24 +243,45 @@
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_020 )
 
-        #include               "TAUDEPO.D._"    
-        #define AAC2020_INCLUDE_TAUDEPO (20 )
-        #else   //:     INCLUDE_TAUDEPO ( - )
-        #define AAC2020_INCLUDE_TAUDEPO ( 0 )
+        #include               "TAUDIRT.D._"    
+        #define AAC2020_INCLUDE_TAUDIRT (20 )
+        #else   //:     INCLUDE_TAUDIRT ( - )
+        #define AAC2020_INCLUDE_TAUDIRT ( 0 )
         #endif
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_021 )
 
+        #include               "TAUDEPO.D._"    
+        #define AAC2020_INCLUDE_TAUDEPO (21 )
+        #else   //:     INCLUDE_TAUDEPO ( - )
+        #define AAC2020_INCLUDE_TAUDEPO ( 0 )
+        #endif
+
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_022 )
+
+        #include               "TAUTYPE.D._"    
+        #define AAC2020_INCLUDE_TAUTYPE (22 )
+        #else   //:     INCLUDE_TAUTYPE ( - )
+        #define AAC2020_INCLUDE_TAUTYPE ( 0 )
+        #endif
+
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_023 )
+
+        #include               "TAUSYNC.D._"    
+        #define AAC2020_INCLUDE_TAUSYNC (23 )
+        #else   //:     INCLUDE_TAUSYNC ( - )
+        #define AAC2020_INCLUDE_TAUSYNC ( 0 )
+        #endif
+
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_024 )
+
         /** #PAINT5D_OLD_LIBCHAN_NOTES# **/
 
-           
         /** @IAM_DIFFERENT_NOTICE_ME@ **/
         #include "PAINT5D_DEFAULT_SHADERS\P5D_001._"  
 
-
-
         #include               "PAINT5D.D._"   
-        #define AAC2020_INCLUDE_PAINT5D (21 )
+        #define AAC2020_INCLUDE_PAINT5D (24 )
         #else   //:     INCLUDE_PAINT5D ( - )
         #define AAC2020_INCLUDE_PAINT5D ( 0 )
         #endif
@@ -430,18 +453,42 @@
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_020 )
 
-        #include               "TAUDEPO.F._"        
-        #define AAC2020_INCLUDE_TAUDEPO (20 )
-        #else   //:     INCLUDE_TAUDEPO ( - )
-        #define AAC2020_INCLUDE_TAUDEPO ( 0 )
+        #include               "TAUDIRT.F._"        
+        #define AAC2020_INCLUDE_TAUDIRT (20 )
+        #else   //:     INCLUDE_TAUDIRT ( - )
+        #define AAC2020_INCLUDE_TAUDIRT ( 0 )
         #endif
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_021 )
 
+        #include               "TAUDEPO.F._"        
+        #define AAC2020_INCLUDE_TAUDEPO (21 )
+        #else   //:     INCLUDE_TAUDEPO ( - )
+        #define AAC2020_INCLUDE_TAUDEPO ( 0 )
+        #endif
+
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_022 )
+
+        #include               "TAUTYPE.F._"        
+        #define AAC2020_INCLUDE_TAUTYPE (22 )
+        #else   //:     INCLUDE_TAUTYPE ( - )
+        #define AAC2020_INCLUDE_TAUTYPE ( 0 )
+        #endif
+
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_023 )
+
+        #include               "TAUSYNC.F._"        
+        #define AAC2020_INCLUDE_TAUSYNC (23 )
+        #else   //:     INCLUDE_TAUSYNC ( - )
+        #define AAC2020_INCLUDE_TAUSYNC ( 0 )
+        #endif
+
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_024 )
+
         /** #PAINT5D_OLD_LIBCHAN_NOTES# **/
 
         #include               "PAINT5D.F._"        
-        #define AAC2020_INCLUDE_PAINT5D (21 )
+        #define AAC2020_INCLUDE_PAINT5D (24 )
         #else   //:     INCLUDE_PAINT5D ( - )
         #define AAC2020_INCLUDE_PAINT5D ( 0 )
         #endif

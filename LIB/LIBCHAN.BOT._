@@ -96,9 +96,24 @@
               #error "[OUT_OF_ORDER:AAC2020_INCLUDE_PIXLOAD]"
 #endif
 #endif
+#if( 0                           != AAC2020_INCLUDE_TAUDIRT )
+#if( macro_libchan_order_TAUDIRT != AAC2020_INCLUDE_TAUDIRT )
+              #error "[OUT_OF_ORDER:AAC2020_INCLUDE_TAUDIRT]"
+#endif
+#endif
 #if( 0                           != AAC2020_INCLUDE_TAUDEPO )
 #if( macro_libchan_order_TAUDEPO != AAC2020_INCLUDE_TAUDEPO )
               #error "[OUT_OF_ORDER:AAC2020_INCLUDE_TAUDEPO]"
+#endif
+#endif
+#if( 0                           != AAC2020_INCLUDE_TAUTYPE )
+#if( macro_libchan_order_TAUTYPE != AAC2020_INCLUDE_TAUTYPE )
+              #error "[OUT_OF_ORDER:AAC2020_INCLUDE_TAUTYPE]"
+#endif
+#endif
+#if( 0                           != AAC2020_INCLUDE_TAUSYNC )
+#if( macro_libchan_order_TAUSYNC != AAC2020_INCLUDE_TAUSYNC )
+              #error "[OUT_OF_ORDER:AAC2020_INCLUDE_TAUSYNC]"
 #endif
 #endif
 #if( 0                           != AAC2020_INCLUDE_PAINT5D )
@@ -166,10 +181,19 @@
     #if( macro_libchan_order_PIXLOAD != 19 )
     #error "[TAIL_ORDER_FAIL:PIXLOAD]"  
     #endif                              
-    #if( macro_libchan_order_TAUDEPO != 20 )
+    #if( macro_libchan_order_TAUDIRT != 20 )
+    #error "[TAIL_ORDER_FAIL:TAUDIRT]"    
+    #endif    
+    #if( macro_libchan_order_TAUDEPO != 21 )
     #error "[TAIL_ORDER_FAIL:TAUDEPO]"    
-    #endif                                
-    #if( macro_libchan_order_PAINT5D != 21 )
+    #endif   
+    #if( macro_libchan_order_TAUTYPE != 22 )
+    #error "[TAIL_ORDER_FAIL:TAUTYPE]"    
+    #endif   
+    #if( macro_libchan_order_TAUSYNC != 23 )
+    #error "[TAIL_ORDER_FAIL:TAUSYNC]"    
+    #endif                            
+    #if( macro_libchan_order_PAINT5D != 24 )
     #error "[TAIL_ORDER_FAIL:PAINT5D]"
     #endif
 
@@ -201,8 +225,11 @@
     #undef  macro_libchan_order_PIXNAME   //:----## 17 ##----://
     #undef  macro_libchan_order_GPUDATA   //:----## 18 ##----://
     #undef  macro_libchan_order_PIXLOAD   //:----## 19 ##----://
-    #undef  macro_libchan_order_TAUDEPO   //:----## 20 ##----://
-    #undef  macro_libchan_order_PAINT5D   //:----## 21 ##----://
+    #undef  macro_libchan_order_TAUDIRT   //:----## 20 ##----://
+    #undef  macro_libchan_order_TAUDEPO   //:----## 21 ##----://
+    #undef  macro_libchan_order_TAUTYPE   //:----## 22 ##----://
+    #undef  macro_libchan_order_TAUSYNC   //:----## 23 ##----://
+    #undef  macro_libchan_order_PAINT5D   //:----## 24 ##----://
  
     //:==========:DONT_POLLUTE_OTHER_PEOPLES_CODE_WITH_MACROS://
 
