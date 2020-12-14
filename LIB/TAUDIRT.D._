@@ -1,3 +1,38 @@
 //: 1234567
 //: TAUDIRT.D._ : Dirty flags for TAUDEPO
 #include "TAUDIRT.G._"
+
+//:HELPER_STRUCTS:===========================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+
+    struct AAC2020_TAUDIRT_rec_inc{
+
+        U32 x_0; //:BOUND:LEF
+        U32 x_1; //:BOUND:RIG
+
+        U32 y_0; //:BOUND:TOP (graphicsl top-left origin)
+        U32 y_1; //:BOUND:BOT (graphical top-left origin)
+    };
+
+#undef  U32
+//:===========================================:HELPER_STRUCTS://
+//:DIRT_FLAG_VARS:===========================================://
+#define TYP struct AAC2020_TAUDIRT_rec_inc
+#define U08 uint8_t /** GCC: <stdint.h> **/
+
+    /** Grouped Block Dirty Flags **/
+    U08 AAC2020_TAUDIRT_512_DIR =( 0 );
+    U08 AAC2020_TAUDIRT_128_DIR =( 0 );
+    
+    /** Individual Cell Dirty Flags **/
+    U08 AAC2020_TAUDIRT_512_CEL[16] ={ 0 };
+    U08 AAC2020_TAUDIRT_128_CEL[16] ={ 0 };
+
+    /** Rectangular Region Of Dirty Cells Optimization. **/
+    TYP AAC2020_TAUDIRT_512_REC ={ 0 };
+    TYP AAC2020_TAUDIRT_128_REC ={ 0 };
+
+#undef  TYP
+#undef  U08
+//:===========================================:DIRT_FLAG_VARS://
+
