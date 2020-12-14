@@ -1,0 +1,13 @@
+
+//: G._: Gaurd File To Enforce Library Ordering.
+
+#if( AAC2020_INCLUDE_TAUDIRT < 1 ) //:should_already_be_included
+#if( AAC2020_INCLUDE_TAUDEPO < 1 ) //:should_already_be_included
+#if( AAC2020_INCLUDE_TAUTYPE > 0 ) //:<--YOU_ARE_HERE
+#if( AAC2020_INCLUDE_TAUSYNC > 0 ) //:-----------------------://
+    #error  "[order_is:|taudirt|taudepo|TAUTYPE|tausync]" 
+    #error  "[order_is:|TAUDIRT|TAUDEPO|TAUTYPE|TAUSYNC]" 
+#endif  //: 01 ://
+#endif  //: 02 ://
+#endif  //: 03 ://
+#endif  //: 04 ://
