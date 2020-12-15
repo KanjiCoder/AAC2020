@@ -2,6 +2,345 @@
 //: TAUSYNC.F._ : Gpu Sync of TAUDEPO. Uses TAUDIRT.D._
 //:               to only update the dirty regions of memory.
 
+//:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=====================://
+    void 
+    aac2020_tausync_Halt( const char* msg_err )
+    {
+        printf("[FATAL_ERROR:AAC2020_tausync]:%s\n", msg_err );
+        fflush(stdout);
+        exit( 202 /** two_oh_two **/ );
+    }
+//:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+//:POINT_STRUCT:=============================================://
+#define I32 int32_t /** GCC: <stdint.h> **/
+
+    struct  
+    aac2020_tausync_ixy{  //:<-- private!
+
+        I32 i_x; //:integer  x coordinate
+        I32 i_y; //:integer  y coordinate
+        I32 i_d; //:intenger inDex
+    };
+
+#undef  I32
+//:=============================================:POINT_STRUCT://
+//:TEXTURE_UPDATE_SUBSECTION:================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+#define REC struct AAC2020_TAUDIRT_rec_inc 
+#define PBR pixel_bounding_rect
+
+    U32 //:<-- return[ number_of_pixels_pushed ]
+    aac2020_tausync_TexturePush_32x32_Region_Max(
+
+        REC* pixel_bounding_rect
+
+    )
+    {
+        U32 number_of_pixels_pushed=( 0 );
+
+        //:is_rect_correct_size?:----------------------------://
+
+            /** RANGE[ 0 -to- 31 ]INCLUSIVE **/
+
+            if( (*PBR).x_1 - (*PBR).x_0 + 1 >= 32 ){
+                aac2020_tausync_Halt("[PBR_OOB_POS:X]");
+            };;
+            if( (*PBR).y_1 - (*PBR).y_0 + 1 >= 32 ){
+                aac2020_tausync_Halt("[PBR_OOB_POS:Y]");
+            };;
+
+            if( (*PBR).x_1 - (*PBR).x_0 + 1 <   0 ){
+                aac2020_tausync_Halt("[PBR_OOB_NEG:X]");
+            };;
+            if( (*PBR).y_1 - (*PBR).y_0 + 1 <   0 ){
+                aac2020_tausync_Halt("[PBR_OOB_NEG:Y]");
+            };;
+
+        //:-----------------------------:is_rect_correct_size://
+
+        AAC2020_TODOMAN_Vital( "[ACTUAL_SUBTEX2D_PUSH_HERE]" );
+
+        U32 wid = ( (*PBR).x_1  -  (*PBR).x_0    +    1 );
+        U32 hig = ( (*PBR).y_1  -  (*PBR).y_0    +    1 );
+                  number_of_pixels_pushed = ( wid * hig ); 
+        return(   number_of_pixels_pushed  );
+    }
+
+#undef  PBR
+#undef  U32  
+#undef  REC  
+//:================================:TEXTURE_UPDATE_SUBSECTION://
+//:GPU_SYNC:=================================================://
+#define U08        uint8_t /** GCC: <stdint.h> **/    //: 01 ://
+#define I32        int32_t /** GCC: <stdint.h> **/    //: 02 ://
+#define U32       uint32_t /** GCC: <stdint.h> **/    //: 03 ://
+#define ANY        AAC2020_TAUDIRT_DIR_ANY            //: 04 ://
+#define REC struct AAC2020_TAUDIRT_rec_inc            //: 05 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#define C_0 struct AAC2020_TAUDIRT_l_A_04x04_TAU_Pix_512 /*6 :*/
+#define C_1 struct AAC2020_TAUDIRT_l_B_04x04_SUB_Pix_128 /*7 :*/
+#define C_2 struct AAC2020_TAUDIRT_l_C_16x16_VAR_Pix_032 /*8 :*/
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#define IXY struct aac2020_tausync_ixy                //: 09 ://
+#define PBR pixel_bounding_rect                       //: 10 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+
+    void
+    aac2020_tausync_Run( void ){ 
+
+        //#  TODO: Unit test that "PRETENDS" to push up to   #//
+        //#        the GPU and just checks that our math     #//
+        //#        is correct.                               #//
+        AAC2020_TODOMAN_Vital( "[NEEDS_DRY_RUN_UNIT_TEST]" );
+
+        /** ************************************************ **/
+        /** Does a sub texture push to any dirty             **/
+        /** 32x32 chunk. We look at the[ rec_032 ]           **/
+        /** value of AAC2020_TAUDIRT_l_C_16x16_VAR_Pix_032   **/
+        /** to figure out the BOUNDS of the dirty pixels     **/
+        /** within the 32x32 chunk ( #DIA_VAR_CEL# )         **/
+        /** ************************************************ **/
+
+        if( ANY.is_dirty_0 <= 0 ){
+            aac2020_tausync_Halt("[LOOK_BEFORE_YOU_LEAP]");
+        };;
+
+        U08 u_x =( 0 ); //: <--- pixel_bounding_rect.x_0
+        U08 u_y =( 0 ); //: <--- pixel_bounding_rect.y_0
+        REC pixel_bounding_rect={ 0 };
+
+        /** Assumes something is dirty. **/
+
+        //: @tau@  DEX_TAU_000_015 : AAC2020_TAUDEPO_TAU_015 ://
+        //: @sub@  DEX_SUB_000_015 : AAC2020_TAUDEPO_PAINT5D ://
+        //: @var@  DEX_VAR_000_255 : AAC2020_TAUDEPO_P5D_VP0 ://
+
+        REC* r0 = ((void*)0); //:rec_512
+        REC* r1 = ((void*)0); //:rec_128   
+        REC* r2 = ((void*)0); //:rec_032
+        U08  r3 = 0x00000000; //:<--- For illustrative purpose
+
+    //: C_0* c_0 <--- c_0 not needed.
+        C_1* c_1 = ((void*)0);
+        C_2* c_2 = ((void*)0);
+        U08* c_3 = ((void*)0);//:<----Terminal corner pixel  ://
+                              //:     ( @UPPER_LEFT_PIXEL@ ) ://
+                              //:     of a 4x4 cluster in    ://
+                              //:     #DIA_VAR_CEL#          ://
+
+ 
+        IXY t0 = { 0 }; /** [ i_x , i_y ] point **/
+        IXY t1 = { 0 };
+        IXY t2 = { 0 };
+
+
+        //:TRAVERSE_THAT_BITCH:------------------------------://
+       
+         r0 =          &( ANY.rec_512 );   /** #DIA_TAU_CEL# **/
+        c_1 =             ANY.cel_512  ;
+
+        //:@tau@:
+        for( t0.i_x = r0->x_0 ; t0.i_x <= r0->x_1 ; t0.i_x++ ){
+        for( t0.i_y = r0->y_0 ; t0.i_y <= r0->y_1 ; t0.i_y++ ){
+        t0.i_d = t0.i_x + ( t0.i_y  *  4 /** wid==4 **/ );
+        assert(      t0.i_d >= 0 && t0.i_d <= ( ( 4*4 ) - 1 ) );
+        assert( c_1[ t0.i_d ].is_dirty_1 >= 1 );
+                c_1[ t0.i_d ].is_dirty_1 =( 0 );
+            
+         r1 =&( c_1[ t0.i_d ].rec_128 );   /** #DIA_SUB_CEL# **/
+        c_2 =   c_1[ t0.i_d ].cel_128  ;
+
+        //:@sub@
+        for( t1.i_x = r1->x_0 ; t1.i_x <= r1->x_1 ; t1.i_x++ ){
+        for( t1.i_y = r1->y_0 ; t1.i_y <= r1->y_1 ; t1.i_y++ ){
+        t1.i_d = t1.i_x + ( t1.i_y  *  4 /** wid==4 **/ );
+        assert(      t1.i_d >= 0 && t1.i_d <= ( ( 4*4 ) - 1 ) );
+        assert( c_2[ t1.i_d ].is_dirty_2 >= 1 );
+                c_2[ t1.i_d ].is_dirty_2 =( 0 );
+
+         r2 =&( c_2[ t1.i_d ].rec_032 );   /** #DIA_VAR_CEL# **/
+        c_3 =   c_2[ t1.i_d ].cel_032  ;
+
+        //:@var@
+        for( t2.i_x = r2->x_0 ; t2.i_x <= r2->x_1 ; t2.i_x++ ){
+        for( t2.i_y = r2->y_0 ; t2.i_y <= r2->y_1 ; t2.i_y++ ){
+        t2.i_d = t2.i_x + ( t2.i_y  * 16 /** wid==16 **/ );
+        assert(      t2.i_d >= 0 && t2.i_d <= ( (16*16) - 1 ) );
+        assert( c_3[ t2.i_d ] /** is_dirty_3 **/ >= 1 );
+                c_3[ t2.i_d ] /** is_dirty_3 **/ =( 0 );
+
+        r3= c_3[ t2.i_d ];
+        if( r3 >  0x00 ){    /** ******** NOOP HERE ******** **/
+            /** ******************************************** **/
+            /** KEEP_THIS_FOR_REFERENCE_TO_UNDERSTAND_CODE   **/
+            /** Pretend to do something with top-left pixel  **/
+            /** of @cel_032@ 2x2 cluster. Here               **/
+            /** ******************************************** **/
+        };;                  /** ******** NOOP HERE ******** **/
+            
+            /** -------------------------------------------- **/
+            /** And so on and so on down the rabbit hole     **/
+            /** Actually no. Stop here and @just_push_it@    **/
+            /** -------------------------------------------- **/
+
+            if( t2.i_x >= r2 -> x_1 //:last_x_of_inclusive_range
+            &&  t2.i_y >= r2 -> y_1 //:last_y_of_inclusive_range
+            ){
+                /** **************************************** **/
+                /** Hack: The inner VAR loop is NOT necessary**/
+                /**       unless you are bug-checking your   **/
+                /**       algorithm.                         **/
+                /**                                          **/
+                /**       On last 4x4 ( @cel_032@[ t2.i_d ] )**/
+                /**       we will do our texture push.       **/
+                /** **************************************** **/
+
+                //:upper_left:OF:DIA_VAR_CELL:---------------://
+                //:              DIA_VAR_CELL ~=~ @cel_128@
+                    u_x =( 0
+
+                            //:@cel_512@(s) are 128x128 pixels
+                     +      ( t0.i_x * 128 ) 
+
+                            //:@cel_128@(s) are  32x32  pixels
+                     +      ( t1.i_x *  32 )
+
+                            //[ #_DONT_ADD_THE_DEEPEST_2X2_# ]//
+                            //:@cel_032@(s) are   2x2   pixels
+                //:  +      ( t2.i_x *   2 )
+
+                    );;
+                    u_y =( 0
+
+                            //:@cel_512@(s) are 128x128 pixels
+                     +      ( t0.i_y * 128 ) 
+
+                            //:@cel_128@(s) are  32x32  pixels
+                     +      ( t1.i_y *  32 )
+
+                            //[ #_DONT_ADD_THE_DEEPEST_2X2_# ]//
+                            //:@cel_032@(s) are   2x2   pixels
+                //:  +      ( t2.i_y *   2 )
+                    );;
+
+                //:---------------:upper_left:OF:DIA_VAR_CELL://
+                //:Final_Selection_Rectangle:----------------://
+                #define NONE    (  0 )
+                #define one1    (  1 )
+                #define two2    (  2 )
+                #define REC_032 ( r2 ) /** #DIA_VAR_CEL# **/
+                                       /** @cel_128@     **/
+
+                /** PBR == pixel_bounding_rect **/
+                
+                    /** @cel_032@(s) are   2x2   pixels **/
+
+                    /** ************************************ ***
+
+                      @UPPER_LEFT_PIXEL@ [ PBR.x_0 , PBR.x_1 ]
+                      |
+                    +-V-+---+
+                    |   |   |                    
+                    +---+---+                    
+                    |   |   <-- @cel_032@( s ) lower left pixel                    
+                    +---+---+
+
+                             ( this_is_why_we_plus[ NONE ] )
+                                   |     |
+                                   V     V
+                          +--PBR[ x_0 , y_0 ]
+                          |
+>>>>>>>>>>>>>>>     --- +-V-+---+---+---+---+---+---+---+---+
+this_is_why_we       |  |   |   |                           |
+multiply_by__2    two2  +---+---+                           +
+(   @two2@   )       |  |   |   |                           |
+>>>>>>>>>>>>>>>     --- +---+---+                           +
+                        |                                   |
+                        +                                   +
+                        |                                   |
+                        +                                   +
+                        |           #DIA_VAR_CEL#           |
+                        +        ( SEE:  TAUDEPO.D._ )      +
+                        |                                   |
+                        +                                   +
+                        |                                   |
+                        +                           +---+---+
+                        |                           |   |   |
+                        +                           +---+---+
+                        |                           |   |   |
+                        +---+---+---+---+---+---+---+---+-^-+
+                                                          |
+                                       PBR[ x_1 , y_1 ]---+
+
+                                             ^     ^
+                                             |     |
+                            ( this_is_why_we_plus[ one1 ] )
+
+                    *** ************************************ **/
+
+                    //:[ REC_032 === r2 ]--------------------://
+
+                    PBR.x_0 = u_x +( (*r2).x_0 * two2) +NONE ;
+                    PBR.x_1 = u_x +( (*r2).x_1 * two2) +one1 ;
+                                    
+                    PBR.y_0 = u_y +( (*r2).y_0 * two2) +NONE ;
+                    PBR.y_1 = u_y +( (*r2).y_1 * two2) +one1 ;
+
+                    //:--------------------[ REC_032 === r2 ]://
+
+                #undef NONE
+                #undef one1
+                #undef two2
+                #undef REC_032
+                //:----------------:Final_Selection_Rectangle://
+
+                /** Expecting bounds to be at MOST   **/
+                /** 32 wide by 32 high, no greater.  **/
+                aac2020_tausync_TexturePush_32x32_Region_Max(
+                    &( pixel_bounding_rect )
+                );;
+
+            };;
+
+        };;};; //: [ r2 & t2 ](   deepest level )
+
+        };;};; //: [ r1 & t1 ](    middle level )
+
+        };;};; //: [ r0 & t0 ]( outermost level )
+ 
+        //:------------------------------:TRAVERSE_THAT_BITCH://
+
+        ANY.is_dirty_0 =( 0 ); //:Mark Outermost Clean.
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    void
+    AAC2020_TAUSYNC_Run( void ){
+
+        if( AAC2020_TAUDIRT_DIR_ANY.is_dirty_0 >= 1 ){
+
+            aac2020_tausync_Run();
+
+        };;
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#undef  U08                                           //: 01 ://
+#undef  U32                                           //: 02 ://
+#undef  I32                                           //: 03 ://
+#undef  ANY                                           //: 04 ://
+#undef  REC                                           //: 05 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#undef  C_0                                           //: 06 ://
+#undef  C_1                                           //: 07 ://
+#undef  C_2                                           //: 08 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#undef  IXY                                           //: 09 ://
+#undef  PBR                                           //: 10 ://
+//:=================================================:GPU_SYNC://
 //:INIT_NONE:================================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
 
@@ -12,4 +351,5 @@
     }
 
 #undef  U32
+#undef  ANY
 //:================================================:INIT_NONE://

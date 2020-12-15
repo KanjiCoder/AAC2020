@@ -6,6 +6,274 @@
     
 *** ******************************************************** ***
 
+@one1@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@two2@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@NONE@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @one1@ : If you see a #define like this, there is probably
+             a diagramatic explanation of what @one1@
+             represents.
+
+    @two2@ : DITTO above.
+    @NONE@ : DITTO above.
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@one1@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@two2@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@NONE@
+#_DONT_ADD_THE_DEEPEST_2X2_#####################################
+
+    ************************************************************
+    In[ TAUSYNC.F._ ]We DONT want to find the upper-left
+    origin of individual 2x2 pixel clusters. Because we don't
+    want to PUSH individual 2x2 pixel chunks at a time.
+
+    We want to step one level out and take the entire
+    range of dirty 2x2 pixels within #DIA_VAR_CEL# (@cel_128@)
+
+    We should be pushing a rectangular region in the
+    size ranges (min -&- max) of [ 1x1 -and- 32x32 ].
+
+    ** * * * * * * * * * * * * ****** * * * * * * * * * * * * **
+
+    Code as it was in TAUSYNC.F._ at the time of writing this.
+    (Found In Function[ aac2020_tausync_Run ] )
+
+    ************************************************************
+
+                //:upper_left:OF:DIA_VAR_CELL:---------------://
+                //:              DIA_VAR_CELL ~=~ @cel_128@
+                    u_x =( 0
+
+                            //:@cel_512@(s) are 128x128 pixels
+                     +      ( t0.i_x * 128 ) 
+
+                            //:@cel_128@(s) are  32x32  pixels
+                     +      ( t1.i_x *  32 )
+
+                            //[ #_DONT_ADD_THE_DEEPEST_2X2_# ]//
+                            //:@cel_032@(s) are   2x2   pixels
+                //:  +      ( t2.i_x *   2 )
+
+                    );;
+                    u_y =( 0
+
+                            //:@cel_512@(s) are 128x128 pixels
+                     +      ( t0.i_y * 128 ) 
+
+                            //:@cel_128@(s) are  32x32  pixels
+                     +      ( t1.i_y *  32 )
+
+                            //[ #_DONT_ADD_THE_DEEPEST_2X2_# ]//
+                            //:@cel_032@(s) are   2x2   pixels
+                //:  +      ( t2.i_y *   2 )
+                    );;
+
+                //:---------------:upper_left:OF:DIA_VAR_CELL://
+
+#####################################_DONT_ADD_THE_DEEPEST_2X2_#
+@just_push_it@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @just_push_it@ : Talking about a texture push my friend.
+                     DATE[ 2020_12_15 ]
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@just_push_it@
+@LEVEL_A( l_A )@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@LEVEL_B( l_B )@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@LEVEL_C( l_C )@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    SEE_DIAGRAM_IN[ LIB/TAUDEPO.D._ ]
+
+    [ l_A , l_B , l_C ] are shorthand notation for
+    the different nesting levels of our dirty rectangle
+    marking regions.
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@LEVEL_A( l_A )@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@LEVEL_B( l_B )@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@LEVEL_C( l_C )@
+@INTERN_BOTTOM@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @INTERN_BOTTOM@ 
+        Means the "externed" variable at the top of the
+        file is declared "~interned~" at the bottom of
+        the same file.
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@INTERN_BOTTOM@
+#_FIRST_TAUDIRT_ATTEMPT_WAS_WRONG_##############################
+
+    ************************************************************
+    These calculations for TAUDIRTY are WRONG!
+    But they have the right line of thinking.
+    Kept here for reference as I fix my mistakes.
+
+    When I mean "wrong" I don't mean "typo". I mean the
+    underlying logic has a huge flaw. We need a nested
+    data structure to have a proper "quad-tree".
+
+    ( Really a hexakaideca-ish tree )
+
+    ************************************************************
+
+    :DATA:-----------------------------------------------------:
+
+    Is ANYTHING at all dirty?  
+
+    U08 AAC2020_TAUDIRT_DIR_ANY =( 0 );
+
+    Grouped Block Dirty Flags 
+
+    U08 AAC2020_TAUDIRT_DIR_512 =( 0 );
+    U08 AAC2020_TAUDIRT_DIR_128 =( 0 );
+    U08 AAC2020_TAUDIRT_DIR_032 =( 0 );
+    
+    Individual Cell Dirty Flags 
+
+    U08 AAC2020_TAUDIRT_CEL_512[ 16] ={ 0 }; //: 4 x  4 cells.
+    U08 AAC2020_TAUDIRT_CEL_128[ 16] ={ 0 }; //: 4 x  4 cells.
+    U08 AAC2020_TAUDIRT_CEL_032[256] ={ 0 }; //:16 x 16 cells.
+    
+    Rectangular Region Of Dirty Cells Optimization.  
+    ( REC === AAC2020_TAUDIRT_rec_inc )
+
+    REC AAC2020_TAUDIRT_REC_512 = { 0 };
+    REC AAC2020_TAUDIRT_REC_128 = { 0 };
+    REC AAC2020_TAUDIRT_REC_032 = { 0 };
+
+    :-----------------------------------------------------:DATA:
+
+        //:DIRTY_SECTOR_MANAGEMENT:--------------------------://
+        #define DIR_ANY AAC2020_TAUDIRT_DIR_ANY       //: 01 ://
+        //:     DIR_512 AAC2020_TAUDIRT_DIR_512       //: 02 ://
+        //:     DIR_128 AAC2020_TAUDIRT_DIR_128       //: 03 ://
+        //:     DIR_032 AAC2020_TAUDIRT_DIR_032       //: 04 ://
+                                                      //: -- ://
+        #define CEL_512 AAC2020_TAUDIRT_CEL_512       //: 05 ://
+        #define CEL_128 AAC2020_TAUDIRT_CEL_128       //: 06 ://
+        #define CEL_032 AAC2020_TAUDIRT_CEL_032       //: 07 ://
+                                                      //: -- ://
+        #define REC_512 AAC2020_TAUDIRT_REC_512       //: 08 ://
+        #define REC_128 AAC2020_TAUDIRT_REC_128       //: 09 ://  
+        #define REC_032 AAC2020_TAUDIRT_REC_032       //: 10 ://
+                                                      //: -- ://
+        #define TAU_015 DEX_TAU_000_015               //: 11 ://
+        #define SUB_015 DEX_SUB_000_015               //: 12 ://
+        #define VAR_255 DEX_VAR_000_255               //: 13 ://
+
+            //:Get_Dirty_Cell_XY_Tiles:----------------------://
+
+                /** 512x512 pixels, 004x004 (016) cells **/
+
+                x_A  =  CEL_512       %  16 ;
+                y_A  = (CEL_512 - x_A)/  16 ;
+
+                /** 128x128 pixels, 004x004 (016) cells. **/
+
+                x_B  =  CEL_128       %  16 ;
+                y_B  = (CEL_128 - x_B)/  16 ;
+
+                /** 032x032 pixels, 016x016 (256) cells **/
+
+                x_C  =  CEL_032       % 256 ;
+                y_C  = (CEL_032 - x_C)/ 256 ;
+
+            //:----------------------:Get_Dirty_Cell_XY_Tiles://
+            //:Expand_Dirty_Rect_Selections:-----------------://
+            #define MIN AAC2020_TAUDIRT_Min           //: 01 ://
+            #define MAX AAC2020_TAUDIRT_Max           //: 02 ://
+
+                /** >= 1 : REC is @VALID, use MIN+MAX   **/
+                /** <= 0 : REC is @@JUNK, re-initialize **/
+
+            //: #DIA_TAU_CEL# (BELOW) ://
+
+                ;;;;;;if( CEL_512[ TAU_015 ] >= 1  ){ //: @VALID
+
+                    REC_512.x_0 = MIN( REC_512.x_0 , x_A );
+                    REC_512.x_1 = MAX( REC_512.x_1 , x_A );
+
+                    REC_512.y_0 = MIN( REC_512.y_0 , y_A );
+                    REC_512.y_1 = MAX( REC_512.y_1 , y_A );
+
+                }else if( CEL_512[ TAU_015 ] <= 0 ){ //:  @@JUNK
+
+                    REC_512.x_0 =    (               x_A );
+                    REC_512.x_1 =    (               x_A );
+                                                 
+                    REC_512.y_0 =    (               y_A );
+                    REC_512.y_1 =    (               y_A );
+
+                }else{ aac2020_taudepo_Halt("[WTF:CEL_512]"); };
+
+            //: #DIA_SUB_CEL# (BELOW) ://
+
+                ;;;;;;if( CEL_128[ SUB_015 ] >= 1  ){ //: @VALID
+
+                    REC_128.x_0 = MIN( REC_128.x_0 , x_B );
+                    REC_128.x_1 = MAX( REC_128.x_1 , x_B );
+
+                    REC_128.y_0 = MIN( REC_128.y_0 , y_B );
+                    REC_128.y_1 = MAX( REC_128.y_1 , y_B );
+
+                }else if( CEL_128[ SUB_015 ] <= 0 ){ //:  @@JUNK
+
+                    REC_128.x_0 =    (               x_B );
+                    REC_128.x_1 =    (               x_B );
+                                                 
+                    REC_128.y_0 =    (               y_B );
+                    REC_128.y_1 =    (               y_B );
+
+                }else{ aac2020_taudepo_Halt("[WTF:CEL_128]"); };
+
+            //: #DIA_VAR_CEL# (BELOW) ://
+
+                ;;;;;;if( CEL_032[ VAR_255 ] >= 1  ){ //: @VALID
+
+                    REC_032.x_0 = MIN( REC_032.x_0 , x_C );
+                    REC_032.x_1 = MAX( REC_032.x_1 , x_C );
+
+                    REC_032.y_0 = MIN( REC_032.y_0 , y_C );
+                    REC_032.y_1 = MAX( REC_032.y_1 , y_C );
+
+                }else if( CEL_032[ VAR_255 ] <= 0 ){ //:  @@JUNK
+
+                    REC_032.x_0 =    (               x_C );
+                    REC_032.x_1 =    (               x_C );
+                                                 
+                    REC_032.y_0 =    (               y_C );
+                    REC_032.y_1 =    (               y_C );
+
+                }else{ aac2020_taudepo_Halt("[WTF:CEL_032]"); };
+
+            #undef  MIN                               //: 01 ://
+            #undef  MAX                               //: 02 ://
+            //:-----------------:Expand_Dirty_Rect_Selections://
+            //:Mark_Individual_Cells_As_Dirty:---------------://
+
+                DIR_ANY =( 1 );
+                CEL_512[ TAU_015 ]=( 1 );
+                CEL_128[ SUB_015 ]=( 1 );
+                CEL_032[ VAR_255 ]=( 1 );
+
+            //:---------------:Mark_Individual_Cells_As_Dirty://
+
+        #undef  DIR_ANY AAC2020_TAUDIRT_DIR_ANY       //: 01 ://
+        //:     DIR_512 AAC2020_TAUDIRT_DIR_512       //: 02 ://
+        //:     DIR_128 AAC2020_TAUDIRT_DIR_128       //: 03 ://
+        //:     DIR_032 AAC2020_TAUDIRT_DIR_032       //: 04 ://
+                                                      //: -- ://
+        #undef  CEL_512 AAC2020_TAUDIRT_CEL_512       //: 05 ://
+        #undef  CEL_128 AAC2020_TAUDIRT_CEL_128       //: 06 ://
+        #undef  CEL_032 AAC2020_TAUDIRT_CEL_032       //: 07 ://
+                                                      //: -- ://
+        #undef  REC_512 AAC2020_TAUDIRT_REC_512       //: 08 ://
+        #undef  REC_128 AAC2020_TAUDIRT_REC_128       //: 09 ://  
+        #undef  REC_032 AAC2020_TAUDIRT_REC_032       //: 10 ://
+                                                      //: -- ://
+        #undef  TAU_015 DEX_TAU_000_015               //: 11 ://
+        #undef  SUB_015 DEX_SUB_000_015               //: 12 ://
+        #undef  VAR_255 DEX_VAR_000_255               //: 13 ://
+        //:--------------------------:DIRTY_SECTOR_MANAGEMENT://
+
+##############################_FIRST_TAUDIRT_ATTEMPT_WAS_WRONG_#
 #PAIRED_IDENTICAL_BLOCKS_OF_4_LINES#############################
 
     Same idea as #PAIRED_IDENTICAL_BLOCKS_OF_3_LINES#

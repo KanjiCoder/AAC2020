@@ -1,6 +1,44 @@
 //: 1234567
 //: TAUDIRT.F._ : DATA ONLY LIBRARY
 
+//:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=====================://
+    void 
+    aac2020_taudirt_Halt( const char* msg_err )
+    {
+        printf("[FATAL_ERROR:aac2020_taudirt]:%s\n", msg_err );
+        fflush(stdout);
+        exit( 586 /** Sterling Heights Area Code **/ );
+    }
+//:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+//:MIN_MAX_HELPER:===========================================://
+#define U08 uint8_t /** GCC: <stdint.h> **/
+
+    U08
+    AAC2020_TAUDIRT_Min( U08 bou_old , U08 bou_new ){
+        U08     bou_min ;
+            if(              bou_old <     bou_new ){ 
+                bou_min =    bou_old ;     
+            };;                                                        
+            if(              bou_new <     bou_old ){ 
+                bou_min =    bou_new ;
+            };;
+        return( bou_min );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    U08
+    AAC2020_TAUDIRT_Max( U08 bou_old , U08 bou_new ){
+        U08     bou_max ;
+            if(              bou_old >     bou_new ){ 
+                bou_max =    bou_old ;     
+            };;                                            
+            if(              bou_new >     bou_old ){ 
+                bou_max =    bou_new ;
+            };;
+        return( bou_max );
+    }
+
+ #undef  U08
+//:===========================================:MIN_MAX_HELPER://
 //:INIT_NONE:================================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
 
@@ -12,3 +50,282 @@
 
 #undef  U32
 //:================================================:INIT_NONE://
+//:MAIN_LOGIC:DOTADIW:=======================================://
+#define     U08 uint8_t /** GCC: <stdint.h> **/       //: 01 ://
+#define     REC struct AAC2020_TAUDIRT_rec_inc        //: 02 ://
+                                                      //: -- ://
+#define TAU_015 DEX_TAU_000_015                       //: 03 ://
+#define SUB_015 DEX_SUB_000_015                       //: 04 ://
+#define VAR_255 DEX_VAR_000_255                       //: 05 ://
+                                                      //: -- ://
+#define     X_x AAC2020_TAUDIRT_l_A_04x04_TAU_Pix_512 //: 06 ://
+#define     u_U AAC2020_TAUDIRT_l_B_04x04_SUB_Pix_128 //: 07 ://
+#define     O_o AAC2020_TAUDIRT_l_C_16x16_VAR_Pix_032 //: 08 ://
+
+    void
+    aac2020_taudirt_DirtySectorUpdate(
+        U08 DEX_TAU_000_015 //:EX: AAC2020_TAUDEPO_TAU_015
+    ,   U08 DEX_SUB_000_015 //:EX: AAC2020_TAUDEPO_PAINT5D
+    ,   U08 DEX_VAR_000_255 //:EX: AAC2020_TAUDEPO_P5D_VP0
+    )
+    {
+        /** hackish debugging **/
+        aac2020_taudirt_DirtySectorUpdate_call_times++;
+
+        //:Declare:Cell_XY_Tiles:----------------------------://
+
+            U08 x_A; //: @LEVEL_A( l_A )@ 
+            U08 y_A; //: AAC2020_TAUDIRT_l_A_04x04_TAU_Pix_512
+
+            U08 x_B; //: @LEVEL_B( l_B )@
+            U08 y_B; //: AAC2020_TAUDIRT_l_B_04x04_SUB_Pix_128
+
+            U08 x_C; //: @LEVEL_C( l_C )@
+            U08 y_C; //: AAC2020_TAUDIRT_l_C_16x16_VAR_Pix_032
+
+        //:----------------------------:Declare:Cell_XY_Tiles://
+        //:Get_Dirty:Cell_XY_Tiles:--------------------------://
+        
+            /** 512x512 pixels, 004x004 (016) cells **/
+        
+            x_A  =  TAU_015       %   4 ;   //: @LEVEL_A( l_A )@ 
+            y_A  = (TAU_015 - x_A)/   4 ;   //: @LEVEL_A( l_A )@ 
+        
+            /** 128x128 pixels, 004x004 (016) cells. **/
+        
+            x_B  =  SUB_015       %   4 ;   //: @LEVEL_B( l_B )@
+            y_B  = (SUB_015 - x_B)/   4 ;   //: @LEVEL_B( l_B )@
+        
+            /** 032x032 pixels, 016x016 (256) cells **/
+        
+            x_C  =  VAR_255       %  16 ;   //: @LEVEL_C( l_C )@
+            y_C  = (VAR_255 - x_C)/  16 ;   //: @LEVEL_C( l_C )@
+        
+        //:--------------------------:Get_Dirty:Cell_XY_Tiles://
+        //:Dirty_Rect_Optimization:--------------------------://
+        #define  A          AAC2020_TAUDIRT_DIR_ANY
+        #define  T          DEX_TAU_000_015
+        #define  S          DEX_SUB_000_015
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        #define  REC_512  ( A                      .rec_512    )
+        #define  REC_128  ( A.cel_512[T]           .rec_128    )
+        #define  REC_032  ( A.cel_512[T].cel_128[S].rec_032    )
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        #define  DIRTY_0  ( A                      .is_dirty_0 )
+        #define  DIRTY_1  ( A.cel_512[T]           .is_dirty_1 )
+        #define  DIRTY_2  ( A.cel_512[T].cel_128[S].is_dirty_2 )
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+
+            //:Expand_Dirty_Rect_Selections:-----------------://
+            #define MIN AAC2020_TAUDIRT_Min           //: 01 ://
+            #define MAX AAC2020_TAUDIRT_Max           //: 02 ://
+
+                /** >= 1 : REC is @VALID, use MIN+MAX   **/
+                /** <= 0 : REC is @@JUNK, re-initialize **/
+
+            //: #DIA_TAU_CEL# (BELOW) ://
+
+                ;;;;;;if( DIRTY_0 >= 1  ){ //: @VALID
+
+                    REC_512.x_0 = MIN( REC_512.x_0 , x_A );
+                    REC_512.x_1 = MAX( REC_512.x_1 , x_A );
+
+                    REC_512.y_0 = MIN( REC_512.y_0 , y_A );
+                    REC_512.y_1 = MAX( REC_512.y_1 , y_A );
+
+                }else if( DIRTY_0 <= 0 ){ //:  @@JUNK
+
+                    REC_512.x_0 =    (               x_A );
+                    REC_512.x_1 =    (               x_A );
+                                                 
+                    REC_512.y_0 =    (               y_A );
+                    REC_512.y_1 =    (               y_A );
+
+                }else{ aac2020_taudirt_Halt("[WTF:CEL_512]"); };
+
+            //: #DIA_SUB_CEL# (BELOW) ://
+
+                ;;;;;;if( DIRTY_1 >= 1  ){ //: @VALID
+
+                    REC_128.x_0 = MIN( REC_128.x_0 , x_B );
+                    REC_128.x_1 = MAX( REC_128.x_1 , x_B );
+
+                    REC_128.y_0 = MIN( REC_128.y_0 , y_B );
+                    REC_128.y_1 = MAX( REC_128.y_1 , y_B );
+
+                }else if( DIRTY_1 <= 0 ){ //:  @@JUNK
+
+                    REC_128.x_0 =    (               x_B );
+                    REC_128.x_1 =    (               x_B );
+                                                 
+                    REC_128.y_0 =    (               y_B );
+                    REC_128.y_1 =    (               y_B );
+
+                }else{ aac2020_taudirt_Halt("[WTF:CEL_128]"); };
+
+            //: #DIA_VAR_CEL# (BELOW) ://
+
+                ;;;;;;if( DIRTY_2 >= 1  ){ //: @VALID
+
+                    REC_032.x_0 = MIN( REC_032.x_0 , x_C );
+                    REC_032.x_1 = MAX( REC_032.x_1 , x_C );
+
+                    REC_032.y_0 = MIN( REC_032.y_0 , y_C );
+                    REC_032.y_1 = MAX( REC_032.y_1 , y_C );
+
+                }else if( DIRTY_2 <= 0 ){ //:  @@JUNK
+
+                    REC_032.x_0 =    (               x_C );
+                    REC_032.x_1 =    (               x_C );
+                                                 
+                    REC_032.y_0 =    (               y_C );
+                    REC_032.y_1 =    (               y_C );
+
+                }else{ aac2020_taudirt_Halt("[WTF:CEL_032]"); };
+
+            #undef  MIN                               //: 01 ://
+            #undef  MAX                               //: 02 ://
+            //:-----------------:Expand_Dirty_Rect_Selections://
+
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        #undef        A                               //: 01 ://
+        #undef        S                               //: 02 ://
+        #undef        T                               //: 03 ://
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        #undef  REC_512                               //: 04 ://
+        #undef  REC_128                               //: 05 ://
+        #undef  REC_032                               //: 06 ://
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        #undef  DIRTY_0                               //: 07 ://
+        #undef  DIRTY_1                               //: 08 ://
+        #undef  DIRTY_2                               //: 09 ://
+        //:--------------------------:Dirty_Rect_Optimization://
+        //:Declare_Sub_Cells:--------------------------------://
+        #define          TYP( nam ) struct AAC2020_TAUDIRT_##nam
+        #define CEL_512  TYP( l_B_04x04_SUB_Pix_128 )
+        #define CEL_128  TYP( l_C_16x16_VAR_Pix_032 )
+        #define CEL_032  U08   
+
+            CEL_512* cel_512=((void*)0);  /**  @cel_512@   **/
+            CEL_128* cel_128=((void*)0);  /**  @cel_128@   **/
+            CEL_032* cel_032=((void*)0);  /**  @cel_032@   **/
+
+        #undef TYP                                    //: 01 ://
+        #undef CEL_512                                //: 02 ://
+        #undef CEL_128                                //: 03 ://
+        #undef CEL_032                                //: 04 ://
+        //:--------------------------------:Declare_Sub_Cells://
+        //:Assign_Sub_Cells:---------------------------------://
+        #define ANY AAC2020_TAUDIRT_DIR_ANY /* 0 deep   : 01 :*/
+        #define l_A AAC2020_TAUDIRT_DIR_ANY /* 0 deep   : 02 :*/
+        #define l_B cel_512                 /* 1 deep   : 03 :*/
+        #define l_C cel_128                 /* 2 deep   : 04 :*/
+
+            cel_512 = &( l_A  . cel_512[ TAU_015 ] );
+            cel_128 = &( l_B -> cel_128[ SUB_015 ] );
+            cel_032 = &( l_C -> cel_032[ VAR_255 ] );
+
+            #define  T  TAU_015 //: 01 ://
+            #define  S  SUB_015 //: 02 ://
+            #define  V  VAR_255 //: 03 ://
+            #define C0  cel_512 //: 04 ://
+            #define C1  cel_128 //: 05 ://
+            #define C2  cel_032 //: 06 ://
+
+            assert( cel_512 ==&( ANY.C0[ T ]                 ));
+            assert( cel_128 ==&( ANY.C0[ T ].C1[ S ]         ));
+            assert( cel_032 ==&( ANY.C0[ T ].C1[ S ].C2[ V ] ));
+        
+            #undef   T          //: 01 ://
+            #undef   S          //: 02 ://
+            #undef   V          //: 03 ://
+            #undef  C0          //: 04 ://
+            #undef  C1          //: 05 ://
+            #undef  C2          //: 06 ://
+              
+        #undef  ANY                                   //: 01 ://
+        #undef  l_A                                   //: 02 ://
+        #undef  l_B                                   //: 03 ://
+        #undef  l_C                                   //: 04 ://
+        //:---------------------------------:Assign_Sub_Cells://
+        //:General_Dirty_Flags:------------------------------://
+        #define ANY AAC2020_TAUDIRT_DIR_ANY /* 0 deep   : 01 :*/
+        #define l_A AAC2020_TAUDIRT_DIR_ANY /* 0 deep   : 02 :*/
+        #define l_B  (        cel_512   )   /* 1 deep   : 03 :*/
+        #define l_C  (        cel_128   )   /* 2 deep   : 04 :*/
+        U08*    l_D  = l_C -> cel_032   ;   /* 3 deep   : 05 :*/
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        #define   A  assert                           //: 01 ://
+        #define   T TAU_015                           //: 02 ://
+        #define   S SUB_015                           //: 03 ://
+                                                      //: -- ://
+        #define C_0 cel_512                           //: 04 ://
+        #define C_1 cel_128                           //: 05 ://
+        #define C_2 cel_032                           //: 06 ://
+
+            A( &(l_A) == &( ANY                          )   );                   
+            A(   l_B  == &( ANY.C_0[ T ]                 )   );          
+            A(   l_C  == &( ANY.C_0[ T ].C_1[ S ]        )   );
+            A(   l_D  == &( ANY.C_0[ T ].C_1[ S ].C_2[0] )   );
+
+        #undef    A                                   //: 01 ://
+        #undef    T                                   //: 02 ://
+        #undef    S                                   //: 03 ://
+                                                      //: -- ://
+        #undef  C_0                                   //: 04 ://
+        #undef  C_1                                   //: 05 ://
+        #undef  C_2                                   //: 06 ://
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        #define IS_DIRTY_3   VAR_255 //:*********************://
+
+            l_A  . is_dirty_0  =( 1 ); /** NESTING_LEVEL : 0 **/
+            l_B -> is_dirty_1  =( 1 ); /** NESTING_LEVEL : 1 **/
+            l_C -> is_dirty_2  =( 1 ); /** NESTING_LEVEL : 2 **/
+            l_D[   IS_DIRTY_3 ]=( 1 ); /** NESTING_LEVEL : 3 **/
+
+            //:Check_Your_Pointer_Logic:---------------------://
+            #define A assert //:-----------------------------://
+
+                /** Cross Check Memory Addresses.            **/
+                /** ( Look up SAME addresses in a DIFFERENT )**/
+                /** ( way to check your LOOKUP logic.       )**/
+
+                    A( &(     l_A  . is_dirty_0 )
+                    == &(     ANY  . is_dirty_0 ) );
+
+                    A( &(     l_B -> is_dirty_1 )
+                    == &( cel_512 -> is_dirty_1 ) );
+
+                    A( &(     l_C -> is_dirty_2   ) 
+                    == &( cel_128 -> is_dirty_2 ) );;
+
+                    A( &(     l_D[   IS_DIRTY_3 ] )==cel_032 );
+
+            #undef  A //:------------------------------------://
+            //:---------------------:Check_Your_Pointer_Logic://
+
+        #undef  IS_DIRTY_3 //:*******************************://
+
+        #undef  ANY                                   //: 01 ://
+        #undef  l_A                                   //: 02 ://
+        #undef  l_B                                   //: 03 ://
+        #undef  l_C                                   //: 04 ://
+    //: @undef  l_D                                   //: 05 ://
+        //:------------------------------:General_Dirty_Flags://
+    }
+
+    #ifdef  A  
+        #error "[FORGOT_TO_UNDEFINE_A:2020]"
+    #endif
+                                                    
+#undef      U08                                       //: 01 ://
+#undef      REC                                       //: 02 ://
+                                                      //: -- ://
+#undef  TAU_015                                       //: 03 ://
+#undef  SUB_015                                       //: 04 ://
+#undef  VAR_255                                       //: 05 ://
+                                                      //: -- ://
+#undef      X_x                                       //: 06 ://
+#undef      u_U                                       //: 07 ://
+#undef      O_o                                       //: 08 ://
+//:=======================================:MAIN_LOGIC:DOTADIW://

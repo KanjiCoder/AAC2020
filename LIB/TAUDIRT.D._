@@ -2,37 +2,92 @@
 //: TAUDIRT.D._ : Dirty flags for TAUDEPO
 #include "TAUDIRT.G._"
 
-//:HELPER_STRUCTS:===========================================://
-#define U32 uint32_t /** GCC: <stdint.h> **/
+    //:#_FIRST_TAUDIRT_ATTEMPT_WAS_WRONG_#://
+
+//:PRETEND_IAM_THE_ONLY_ONE:=================================://
+#define l_A  struct AAC2020_TAUDIRT_l_A_04x04_TAU_Pix_512
+
+extern  l_A  AAC2020_TAUDIRT_DIR_ANY;    /** @INTERN_BOTTOM@ **/
+
+#undef  l_A
+//:=================================:PRETEND_IAM_THE_ONLY_ONE://
+//:HACKISH_DEBUGGING:========================================://
+#define I32 int32_t /** GCC: <stdint.h> **/
+
+    I32 aac2020_taudirt_DirtySectorUpdate_call_times=( 0 );
+
+#undef  I32
+//:========================================:HACKISH_DEBUGGING://
+//:HELPER:RECT:==============================================://
+#define U08  uint8_t /** GCC: <stdint.h> **/
+
+
+    /**   RECTANGLE IS ____NOT____ PERSISTED ON GPU MEMORY   **/
+    /**   Thus we can use 8 bits instead of 32  ..........   **/
 
     struct AAC2020_TAUDIRT_rec_inc{
 
-        U32 x_0; //:BOUND:LEF
-        U32 x_1; //:BOUND:RIG
+        U08 x_0; //:BOUND:LEF
+        U08 x_1; //:BOUND:RIG
 
-        U32 y_0; //:BOUND:TOP (graphicsl top-left origin)
-        U32 y_1; //:BOUND:BOT (graphical top-left origin)
+        U08 y_0; //:BOUND:TOP (graphicsl top-left origin)
+        U08 y_1; //:BOUND:BOT (graphical top-left origin)
     };
 
-#undef  U32
-//:===========================================:HELPER_STRUCTS://
-//:DIRT_FLAG_VARS:===========================================://
-#define TYP struct AAC2020_TAUDIRT_rec_inc
-#define U08 uint8_t /** GCC: <stdint.h> **/
-
-    /** Grouped Block Dirty Flags **/
-    U08 AAC2020_TAUDIRT_512_DIR =( 0 );
-    U08 AAC2020_TAUDIRT_128_DIR =( 0 );
-    
-    /** Individual Cell Dirty Flags **/
-    U08 AAC2020_TAUDIRT_512_CEL[16] ={ 0 };
-    U08 AAC2020_TAUDIRT_128_CEL[16] ={ 0 };
-
-    /** Rectangular Region Of Dirty Cells Optimization. **/
-    TYP AAC2020_TAUDIRT_512_REC ={ 0 };
-    TYP AAC2020_TAUDIRT_128_REC ={ 0 };
-
-#undef  TYP
 #undef  U08
-//:===========================================:DIRT_FLAG_VARS://
+//:==============================================:HELPER:RECT://
+//:HELPER:DIRTY_MARKERS:=====================================://
+#define U08  uint8_t /** GCC: <stdint.h> **/
+#define REC  struct AAC2020_TAUDIRT_rec_inc
+#define l_A  struct AAC2020_TAUDIRT_l_A_04x04_TAU_Pix_512
+#define l_B  struct AAC2020_TAUDIRT_l_B_04x04_SUB_Pix_128
+#define l_C  struct AAC2020_TAUDIRT_l_C_16x16_VAR_Pix_032
+
+    struct /** l_C **/ AAC2020_TAUDIRT_l_C_16x16_VAR_Pix_032{   
+
+        /** C: LOWEST / DEEPEST / INNERMOST Nesting Level: C **/
+
+        U08 is_dirty_2;  //:  #DIA_VAR_CEL#  (SEE: TAUDEPO.D._)
+    
+         //:@_PAIRED_ARRAYS_@://
+        U08  cel_032[256]; //:<-- is_dirty_3[ 256 ]
+        REC  rec_032     ; //:    (16x16 grid of flags)
+
+    };
+    struct /** l_B **/ AAC2020_TAUDIRT_l_B_04x04_SUB_Pix_128{   
+
+        /** B: Middle Nesting Level: B **/
+
+        U08 is_dirty_1;  //:  #DIA_SUB_CEL#  (SEE: TAUDEPO.D._)
+
+         //:@_PAIRED_ARRAYS_@://
+        l_C  cel_128[ 16]; //:<-- is_dirty_2[ 16 ]
+        REC  rec_128     ;
+
+    };
+    struct /** l_A **/ AAC2020_TAUDIRT_l_A_04x04_TAU_Pix_512{   
+
+        /** A: OUTER_MOST (TOP) Nesting Level: A **/
+
+        U08 is_dirty_0;  //:  #DIA_TAU_CEL#  (SEE: TAUDEPO.D._)
+
+        //:@_PAIRED_ARRAYS_@://
+        l_B  cel_512[ 16]; //:<-- is_dirty_1[ 16 ] 
+        REC  rec_512     ; //:dirty_cell_bounding_box
+                           //:4x4 cells is 16 array slots.
+    };
+
+#undef  U08
+#undef  REC
+#undef  l_A
+#undef  l_B
+#undef  l_C
+//:=====================================:HELPER:DIRTY_MARKERS://
+//:PRETEND_IAM_THE_ONLY_ONE:=================================://
+#define l_A  struct AAC2020_TAUDIRT_l_A_04x04_TAU_Pix_512
+
+    l_A AAC2020_TAUDIRT_DIR_ANY ={ 0 };
+
+#undef  l_A
+//:=================================:PRETEND_IAM_THE_ONLY_ONE://
 

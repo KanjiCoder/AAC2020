@@ -130,6 +130,18 @@ USAGE: GET:
     ,   U32 val_004 //:<-- Data Slot #4, offset index == 3
     )
     {
+        //:DIRTY_SECTOR_MANAGEMENT:--------------------------://
+
+            /** #_FIRST_TAUDIRT_ATTEMPT_WAS_WRONG_# **/
+            
+            aac2020_taudirt_DirtySectorUpdate(
+                DEX_TAU_000_015  //: l_A (level: A)
+            ,   DEX_SUB_000_015  //: l_B (level: B)
+            ,   DEX_VAR_000_255  //: l_C (level: C)
+            );;
+
+        //:--------------------------:DIRTY_SECTOR_MANAGEMENT://
+
         I32 pix_dex = aac2020_taudepo_pix_dex(
             DEX_TAU_000_015
         ,   DEX_SUB_000_015        
@@ -814,6 +826,15 @@ USAGE: GET:
 
             AAC2020_TAUDEPO_UnitTest_pix_dex( 0x00 );
             AAC2020_TAUDEPO_UnitTest_Get_Put( 0x00 );
+
+        if( AAC2020_SILENCE.TAUDEPO <= 0 ){
+        #define P printf 
+
+            P("[taudirt_DirtySectorUpdate_call_times]:%d\n"
+            ,aac2020_taudirt_DirtySectorUpdate_call_times );
+
+        #undef  P
+        };;
 
         INF("[O_K:UNIT_TEST_PASSED_2020]", ((void*)0) );
         return( 0x00 );
