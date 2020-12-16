@@ -20,7 +20,7 @@ extern  l_A  AAC2020_TAUDIRT_DIR_ANY;    /** @INTERN_BOTTOM@ **/
 //:========================================:HACKISH_DEBUGGING://
 //:HELPER:RECT:==============================================://
 #define U08  uint8_t /** GCC: <stdint.h> **/
-
+#define I32  int32_t /** GCC: <stdint.h> **/
 
     /**   RECTANGLE IS ____NOT____ PERSISTED ON GPU MEMORY   **/
     /**   Thus we can use 8 bits instead of 32  ..........   **/
@@ -34,7 +34,24 @@ extern  l_A  AAC2020_TAUDIRT_DIR_ANY;    /** @INTERN_BOTTOM@ **/
         U08 y_1; //:BOUND:BOT (graphical top-left origin)
     };
 
+
+    /** Debugging Rectangle for PRIVATE use in test code **/
+    /** SEE[ aac2020_taudirt_DirtySectorAsk ]            **/
+
+    struct aac2020_taudirt_rec_bug{
+
+        I32 x_0; //:LEF ( ON: AAC2020_PIXNAME_taudepo_cpu_pix )
+        I32 x_1; //:RIG ( ON: AAC2020_PIXNAME_taudepo_cpu_pix )
+                   
+        I32 y_0; //:TOP ( ON: AAC2020_PIXNAME_taudepo_cpu_pix )
+        I32 y_1; //:BOT ( ON: AAC2020_PIXNAME_taudepo_cpu_pix )
+
+    };
+
+
+
 #undef  U08
+#undef  I32
 //:==============================================:HELPER:RECT://
 //:HELPER:DIRTY_MARKERS:=====================================://
 #define U08  uint8_t /** GCC: <stdint.h> **/

@@ -72,16 +72,17 @@
 #undef  U32
 //:================================================:INIT_NONE://
 //:MAIN_LOGIC:DOTADIW:=======================================://
-#define     U08 uint8_t /** GCC: <stdint.h> **/       //: 01 ://
-#define     REC struct AAC2020_TAUDIRT_rec_inc        //: 02 ://
+#define     I32 int32_t /** GCC: <stdint.h> **/       //: 01 ://
+#define     U08 uint8_t /** GCC: <stdint.h> **/       //: 02 ://
+#define     REC struct AAC2020_TAUDIRT_rec_inc        //: 03 ://
                                                       //: -- ://
-#define TAU_015 DEX_TAU_000_015                       //: 03 ://
-#define SUB_015 DEX_SUB_000_015                       //: 04 ://
-#define VAR_255 DEX_VAR_000_255                       //: 05 ://
+#define TAU_015 DEX_TAU_000_015                       //: 04 ://
+#define SUB_015 DEX_SUB_000_015                       //: 05 ://
+#define VAR_255 DEX_VAR_000_255                       //: 06 ://
                                                       //: -- ://
-#define     X_x AAC2020_TAUDIRT_l_A_04x04_TAU_Pix_512 //: 06 ://
-#define     u_U AAC2020_TAUDIRT_l_B_04x04_SUB_Pix_128 //: 07 ://
-#define     O_o AAC2020_TAUDIRT_l_C_16x16_VAR_Pix_032 //: 08 ://
+#define     X_x AAC2020_TAUDIRT_l_A_04x04_TAU_Pix_512 //: 07 ://
+#define     u_U AAC2020_TAUDIRT_l_B_04x04_SUB_Pix_128 //: 08 ://
+#define     O_o AAC2020_TAUDIRT_l_C_16x16_VAR_Pix_032 //: 09 ://
 
     void
     aac2020_taudirt_DirtySectorUpdate(
@@ -338,17 +339,250 @@
     #ifdef  A  
         #error "[FORGOT_TO_UNDEFINE_A:2020]"
     #endif
-                                                    
-#undef      U08                                       //: 01 ://
-#undef      REC                                       //: 02 ://
+
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+//: BELOW: Complimentary function for testing.               ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+
+    I32 /** PRIVATE FUNCTION **/
+    aac2020_taudirt_DirtySectorAsk(
+        U08 DEX_TAU_000_015 //:EX: AAC2020_TAUDEPO_TAU_015
+    ,   U08 DEX_SUB_000_015 //:EX: AAC2020_TAUDEPO_PAINT5D
+    ,   U08 DEX_VAR_000_255 //:EX: AAC2020_TAUDEPO_P5D_VP0
+
+        /** Private Debugging Rectangle Output Parameter **/
+
+    ,   struct aac2020_taudirt_rec_bug* rec  
+
+    )
+    {
+        /** #_DIRTY_SECTOR_ASK_IS_A_BIT_MUCH_BUT_HELPFUL_# **/
+
+        I32 rof=( 0 /** result_of_function **/ );
+
+        /** ************************************************ ***
+        3 Possible States:
+
+            1. VAR == CLEAN , VAR  OUTSIDE_DIRTY_RECT ==>  0
+            2. VAR == CLEAN , VAR  INSIDE__DIRTY_RECT ==> -1
+            3. VAR == DIRTY , VAR  INSIDE__DIRTY_RECT ==> +1
+
+        1  Invalid/Impossible State:
+
+            4. VAR == DIRTY , VAR OUTSIDE_DIRTY_RECT
+
+        Dirty Rectangle Returns ABSOLUTE coords inside:
+
+            AAC2020_PIXNAME_taudepo_cpu_pix
+
+        *** ************************************************ **/
+
+        /** Is the datapoint itself dirty ? - - - - - - - - -**/
+
+            U08 data_point_dirty=(
+            AAC2020_TAUDIRT_DIR_ANY
+                .cel_512[ TAU_015 ]
+                .cel_128[ SUB_015 ]
+                .cel_032[ VAR_255 ] );;
+
+        /** Deepest Dirty Rectangle - - - - - - - - - - - - -**/
+
+            struct AAC2020_TAUDIRT_rec_inc*
+            rec_032=&(
+               AAC2020_TAUDIRT_DIR_ANY
+                .cel_512[ TAU_015 ]
+                .cel_128[ SUB_015 ]
+                .rec_032            );;
+
+        //:Convert_Indexes_To_XY_Cell_Locations:-------------://
+
+            /**  TAUDEPO.D._ : #DIA_TAU_CEL# is  4x4  cells  **/
+
+            I32 t_x =  DEX_TAU_000_015       % 4 ;
+            I32 t_y = (DEX_TAU_000_015 - t_x)/ 4 ;
+
+            /**  TAUDEPO.D._ : #DIA_SUB_CEL# is  4x4  cells  **/
+
+            I32 s_x =  DEX_SUB_000_015       % 4 ;
+            I32 s_y = (DEX_SUB_000_015 - s_x)/ 4 ;
+
+            /**  TAUDEPO.D._ : #DIA_VAR_CEL# is 16x16 cells  **/
+
+            I32 v_x =  DEX_VAR_000_255       % 16 ;
+            I32 v_y = (DEX_VAR_000_255 - v_x)/ 16 ;
+
+        //:-------------:Convert_Indexes_To_XY_Cell_Locations://
+        //:Calculate_ABSOLUTE_dirty_rectangle:---------------://
+
+            I32 x_b =( 0 /** xyb: XY base value **/
+            +   ( t_x*128 ) /** Each cell 128x128 pixels **/
+            +   ( s_x* 32 ) /** Each cell  32x32  pixels **/
+            );;
+            I32 y_b =( 0 /** xyb: XY base value **/
+            +   ( t_y*128 ) /** Each cell 128x128 pixels **/
+            +   ( s_y* 32 ) /** Each cell  32x32  pixels **/
+            );;
+
+            (*rec).x_0 = ( x_b + (rec_032 -> x_0*2) ) + 0;
+            (*rec).x_1 = ( x_b + (rec_032 -> x_1*2) ) + 1;
+            (*rec).y_0 = ( y_b + (rec_032 -> y_0*2) ) + 0;
+            (*rec).y_1 = ( y_b + (rec_032 -> y_1*2) ) + 1;
+
+        //:---------------:Calculate_ABSOLUTE_dirty_rectangle://
+        //:Calculate_ABSOLUTE_var_pixel_XY:------------------://
+        #define A (128) /**  @cel_512@ is 128x128 pixels     **/
+        #define B ( 32) /**  @cel_128@ is  32x32  pixels     **/
+        #define C (  2) /**  @cel_032@ is   2x2   pixels     **/
+
+            I32 x_v =( 0 /** xyv: XY base value : VARIABLE   **/
+            +   ( t_x*128 ) /** Each cell 128x128 pixels     **/
+            +   ( s_x* 32 ) /** Each cell  32x32  pixels     **/
+            +   ( v_x*  2 ) /** Each  VAR   2x2   pixels     **/
+            );;
+            I32 y_v =( 0 /** xyv: XY base value : VARIABLE   **/
+            +   ( t_y*128 ) /** Each cell 128x128 pixels     **/
+            +   ( s_y* 32 ) /** Each cell  32x32  pixels     **/
+            +   ( v_y*  2 ) /** Each  VAR   2x2   pixels     **/
+            );;
+
+            assert( t_x >= 0 && t_x <= (  4-1) );
+            assert( s_x >= 0 && s_x <= (  4-1) );
+            assert( v_x >= 0 && v_x <= ( 16-1) );
+
+            assert( t_y >= 0 && t_y <= (  4-1) );
+            assert( s_y >= 0 && s_y <= (  4-1) );
+            assert( v_y >= 0 && v_y <= ( 16-1) );
+
+            /** Check Our Math. +1 because [x_v,y_v] is      **/
+            /** absolute orign location of a 2x2 pixel cell  **/
+            /** on the 512x512 [bitmap/texture]              **/
+            assert( (4-1)*128+(4-1)*32+(16-1)*2+1==(512-1) );
+            assert( (4-1)*  A+(4-1)* B+(16-1)*C+1==(512-1) );
+        
+        #undef A
+        #undef B
+        #undef C
+        //:------------------:Calculate_ABSOLUTE_var_pixel_XY://
+        //:Error_Check_Bounds:-------------------------------://
+
+            /** We expect the entire 2x2 pixel region that   **/
+            /** stores a variable to either be 100% inside   **/
+            /** or 100% outside the dirty rectangle.         **/
+
+            I32 in_bounds_check_TOP = ( 0 );
+            I32 in_bounds_check_BOT = ( 0 );
+
+            if( (x_v + 1 ) >= (*rec).x_0    //:  +---+---+   ://
+            &&  (x_v + 1 ) <= (*rec).x_1    //:  |   |   |   ://
+            &&  (y_v + 1 ) >= (*rec).y_0    //:  +---+---+   ://
+            &&  (y_v + 1 ) <= (*rec).y_1    //:  |   |BOT|   ://
+            ){                              //:  +---+---+   ://
+                in_bounds_check_BOT=( 1 );  //:              ://
+            };;                             //:  @cel_032@   ://
+                                            //:              ://
+            if( (x_v + 0 ) >= (*rec).x_0    //:  +---+---+   ://
+            &&  (x_v + 0 ) <= (*rec).x_1    //:  |TOP|   |   ://
+            &&  (y_v + 0 ) >= (*rec).y_0    //:  +---+---+   ://
+            &&  (y_v + 0 ) <= (*rec).y_1    //:  |   |   |   ://
+            ){                              //:  +---+---+   ://
+                in_bounds_check_TOP=( 1 );
+            };;
+
+            if( in_bounds_check_BOT != in_bounds_check_TOP ){
+
+                aac2020_taudirt_Halt("[BAD_DIRTY_RECT:2020]");
+
+            };;
+
+            /**  My way of saying, the choice is arbitrary **/
+            /**  while maintaining symmetry in the code    **/
+
+            I32 in_bounds_check=(
+                in_bounds_check_TOP
+            +   in_bounds_check_BOT
+            );;
+
+        //:-------------------------------:Error_Check_Bounds://
+        //:Decide_What_To_Return:----------------------------://
+
+            /** ******************************************** ***
+            1. VAR == CLEAN , VAR  OUTSIDE_DIRTY_RECT ==>  0
+            2. VAR == CLEAN , VAR  INSIDE__DIRTY_RECT ==> -1
+            3. VAR == DIRTY , VAR  INSIDE__DIRTY_RECT ==> +1
+            *** ******************************************** **/
+
+            I32 OUTSIDE_DIRTY_RECT = ( in_bounds_check  <= 0 );
+            I32 INSIDE__DIRTY_RECT = ( in_bounds_check  >= 1 );
+            I32 CLEAN              = ( data_point_dirty == 0 );
+            I32 DIRTY              = ( data_point_dirty  > 0 );
+
+            assert( CLEAN != DIRTY );
+
+            rof=( 404 );
+            if( CLEAN && OUTSIDE_DIRTY_RECT ){ rof =( 0    ); };
+            if( CLEAN && INSIDE__DIRTY_RECT ){ rof =( 0 -1 ); };
+            if( DIRTY && INSIDE__DIRTY_RECT ){ rof =( 0 +1 ); };
+
+            if( 404 == rof ){
+                aac2020_taudirt_Halt("[INVALID_CASE:ROF:404]");
+            };;
+
+        //:----------------------------:Decide_What_To_Return://
+        //:Error_Check_Mass_Flags:---------------------------://
+
+            /** ******************************************** **/
+            /** If the datapoint itself is dirty, then all   **/
+            /** flags that lead up to this dirty datapoint   **/
+            /** should also be flagged as dirty.             **/
+            /**                                              **/
+            /** If this is NOT the case, we don't have       **/
+            /** a proper QUAD_LIKE-tree                      **/
+            /** ******************************************** **/
+
+            if( data_point_dirty ){
+
+                U08 l_0=(
+                AAC2020_TAUDIRT_DIR_ANY    .is_dirty_0     );;
+                U08 l_1=(
+                AAC2020_TAUDIRT_DIR_ANY
+                    .cel_512[ TAU_015 ]    .is_dirty_1     );;
+                U08 l_2=(
+                AAC2020_TAUDIRT_DIR_ANY
+                    .cel_512[ TAU_015 ]
+                    .cel_128[ SUB_015 ]    .is_dirty_2     );;
+                U08 l_3=(
+                AAC2020_TAUDIRT_DIR_ANY
+                    .cel_512[ TAU_015 ]
+                    .cel_128[ SUB_015 ]
+                    .cel_032[ VAR_255 ] /**.is_dirty_3 **/ );;
+
+                if( l_0<= 0 || l_1<= 0 || l_2<= 0 || l_3<= 0 ){
+
+                    aac2020_taudirt_Halt(
+                        "[all_flags_to_data_should_be_dirty]"
+                    );;
+
+                };;
+            };;
+
+        //:---------------------------:Error_Check_Mass_Flags://
+
+        return( rof /** result_of_function **/ );
+
+    }
+
+                 
+#undef      I32                                       //: 01 ://                                   
+#undef      U08                                       //: 02 ://
+#undef      REC                                       //: 03 ://
                                                       //: -- ://
-#undef  TAU_015                                       //: 03 ://
-#undef  SUB_015                                       //: 04 ://
-#undef  VAR_255                                       //: 05 ://
+#undef  TAU_015                                       //: 04 ://
+#undef  SUB_015                                       //: 05 ://
+#undef  VAR_255                                       //: 06 ://
                                                       //: -- ://
-#undef      X_x                                       //: 06 ://
-#undef      u_U                                       //: 07 ://
-#undef      O_o                                       //: 08 ://
+#undef      X_x                                       //: 07 ://
+#undef      u_U                                       //: 08 ://
+#undef      O_o                                       //: 09 ://
 //:=======================================:MAIN_LOGIC:DOTADIW://
 //:FORCE_CLEAR_FOR_UNIT_TEST:================================://
 #define ANY AAC2020_TAUDIRT_DIR_ANY
@@ -395,6 +629,13 @@
         /** mucking around with the data with our    **/
         /** tests. --------------------------------- **/
 
+        //:ERASE_THE_ACTUAL_BUFFER_AS_WELL:------------------://
+
+            for( I32 dex = 0; dex <= ((512*512*4)-1) ; dex++ ){
+                AAC2020_PIXNAME_taudepo_cpu_pix[ dex ]=(0x00);
+            };;
+
+        //:------------------:ERASE_THE_ACTUAL_BUFFER_AS_WELL://
         //:NON_RECURSIVELY_TRAVERSE_TREE:--------------------://
         #define D_0 "MAKE_PATTERN_OBVIOUS"            //: 01 ://
         #define D_1  ANY.cel_512[ d_1 ]               //: 02 ://
@@ -439,24 +680,74 @@
 #undef  I32
 //:================================:FORCE_CLEAR_FOR_UNIT_TEST://
 //:UNIT_TEST:================================================://
-#define U32 uint32_t /** GCC: <stdint.h> **/
-#define U08  uint8_t /** GCC: <stdint.h> **/
-#define UTF aac2020_taudirt_unit_test_flag
-#define L_A struct AAC2020_TAUDIRT_l_A_04x04_TAU_Pix_512
-#define ANY AAC2020_TAUDIRT_DIR_ANY
-#define LOG aac2020_taudirt_Info_any
+#define I32  int32_t /** GCC: <stdint.h> **/              /*01*/
+#define U32 uint32_t /** GCC: <stdint.h> **/              /*02*/
+#define U08  uint8_t /** GCC: <stdint.h> **/              /*03*/
+#define UTF aac2020_taudirt_unit_test_flag                /*04*/
+#define L_A struct AAC2020_TAUDIRT_l_A_04x04_TAU_Pix_512  /*05*/
+#define ANY AAC2020_TAUDIRT_DIR_ANY                       /*06*/
+#define LOG aac2020_taudirt_Info_any                      /*07*/
+#define ASK aac2020_taudirt_DirtySectorAsk                /*08*/
+#define ERR aac2020_taudirt_UnitTestFail                  /*09*/
+#define REC struct aac2020_taudirt_rec_bug                /*10*/
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    aac2020_taudirt_UnitTestFail(
+        const char* msg_err
+    )
+    {
+        /** A seperate unit test fail function so that       **/
+        /** the failure messages ( msg_err ) do not have     **/
+        /** to identify they are comming from a unit test    **/
 
+        printf("[aac2020_taudirt_UnitTestFail]:%s\n", msg_err);
+        fflush(stdout);
+        exit( 101 );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    U08
+    aac2020_taudirt_NonNegativeDebugRectangle( 
+        struct aac2020_taudirt_rec_bug * rec
+    )
+    {
+        U08 non_neg=( 0 /** @_INIT_TO_ZERO_@ **/ );
+
+        if( rec -> x_0 >= 0 ){ non_neg++; };
+        if( rec -> x_1 >= 0 ){ non_neg++; };
+        if( rec -> y_0 >= 0 ){ non_neg++; };
+        if( rec -> y_1 >= 0 ){ non_neg++; };
+ 
+        return( non_neg );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     void  
     aac2020_taudirt_UnitTest( void ){ //:@PRIVATE_NAMESPACE@://
 
+        I32 ask=( 0 - 666 ); /** Result of ASK( ... )  **/
+        U08 T = 0; /** T: TAU_015  EX: TAUDEPO_TAU_015 **/
+        U08 S = 0; /** S: SUB_015  EX: TAUDEPO_PAINT5D **/
+        U08 V = 0; /** V: VAR_015  EX: TAUDEPO_P5D_VP0 **/
+        REC R={ 0 };
 
-        AAC2020_TODOMAN_Vital( "[Finish test logic]" );
+        /** Smoke Test. Nothing Fancy. **/
+       
+        ask = ASK( T , S , V , &R );
+        if( ask > 0 ){ ERR("[WTF_MY_MAN:2020_12_16:143PM]"); };
+    
 
+
+
+
+
+
+
+
+
+
+        
+        AAC2020_TODOMAN_Vital( "[Finish_This_Unit_Test]");
     }
-
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-
     U32
     AAC2020_TAUDIRT_UnitTest( U32 u32 )
     {
@@ -478,8 +769,8 @@
             L_A* bak_001=((void*)0);    /** TAUDIRT's TREE   **/
             U08* bak_002=((void*)0);    /** TAUDEPO's PIXELS **/
 
-            bak_001=(L_A*)( malloc( SIZ_001 ) );
-            bak_002=(U08*)( malloc( SIZ_002 ) );
+            bak_001=(L_A*)( malloc( SIZ_001 ) );/* @DANGER_1@ */
+            bak_002=(U08*)( malloc( SIZ_002 ) );/* @DANGER_2@ */
         
             memcpy( bak_001 , &(BAK_001   ) , SIZ_001 );
             memcpy( bak_002 , &(BAK_002[0]) , SIZ_002 );
@@ -514,8 +805,8 @@
             memcpy( &(BAK_001   ) ,  bak_001 , SIZ_001 );
             memcpy( &(BAK_002[0]) ,  bak_002 , SIZ_002 );
 
-            free( bak_001 );
-            free( bak_002 );
+            free( bak_001 );                    /* @DANGER_1@ */
+            free( bak_002 );                    /* @DANGER_2@ */
             
         #undef  BAK_001                               //: 01 ://
         #undef  BAK_002                               //: 02 ://
@@ -529,10 +820,14 @@
     }
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-#undef  U32
-#undef  U08
-#undef  UTF
-#undef  L_A
-#undef  ANY
-#undef  LOG
+#undef  I32                                           //: 01 ://
+#undef  U32                                           //: 02 ://
+#undef  U08                                           //: 03 ://
+#undef  UTF                                           //: 04 ://
+#undef  L_A                                           //: 05 ://
+#undef  ANY                                           //: 06 ://
+#undef  LOG                                           //: 07 ://
+#undef  ASK                                           //: 08 ://
+#undef  ERR                                           //: 09 ://
+#undef  REC                                           //: 10 ://
 //:================================================:UNIT_TEST://
