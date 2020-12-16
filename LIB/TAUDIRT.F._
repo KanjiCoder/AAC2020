@@ -10,6 +10,23 @@
         exit( 586 /** Sterling Heights Area Code **/ );
     }
 //:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+//:LOG_AFTER_HALT:===========================================://
+
+    void
+    aac2020_taudirt_Info_any(
+        const char* str_fmt
+    ,   void*       dat_any  /** Optional Data **/
+    )
+    { if( AAC2020_SILENCE.TAUDIRT <= 0 ){
+
+        /** Same Line As Next Printf **/
+        printf("[taudirt_log]....(   " ); fflush( stdout );
+        printf( str_fmt , dat_any      ); fflush( stdout );
+        printf(               "   )\n" ); fflush( stdout );
+
+    };; }
+
+//:===========================================:LOG_AFTER_HALT://
 //:MIN_MAX_HELPER:===========================================://
 #define U08 uint8_t /** GCC: <stdint.h> **/
 
@@ -45,6 +62,10 @@
     U32
     AAC2020_TAUDIRT_InitNone( U32 u32 ){
         if( u32 ){ /** reserved for future use **/ };
+
+        extern U32 AAC2020_TAUDIRT_UnitTest( U32 u32 );
+                   AAC2020_TAUDIRT_UnitTest( 0x00 );
+
         return( 0x00 );
     }
 
@@ -329,3 +350,189 @@
 #undef      u_U                                       //: 07 ://
 #undef      O_o                                       //: 08 ://
 //:=======================================:MAIN_LOGIC:DOTADIW://
+//:FORCE_CLEAR_FOR_UNIT_TEST:================================://
+#define ANY AAC2020_TAUDIRT_DIR_ANY
+#define C_R aac2020_taudirt_ClearRect
+#define I32 int32_t /** GCC: <stdint.h> **/
+
+    void
+    aac2020_taudirt_ClearRect(
+        struct AAC2020_TAUDIRT_rec_inc * rec_inc
+                                     /** rec_512  <-- Inputs **/
+                                     /** rec_128  <-- Inputs **/
+                                     /** rec_032  <-- Inputs **/
+    )
+    {
+        /** Since rectangle is signed, we will clear it  **/
+        /** by giving it out of bound trap values.       **/
+        rec_inc -> x_0 =( 0x66 /** 0x66 == 102 @TRAP_VALUE@**/);
+        rec_inc -> x_1 =( 0x77 /** 0x77 == 119 @TRAP_VALUE@**/);
+        rec_inc -> y_0 =( 0x88 /** 0x88 == 136 @TRAP_VALUE@**/);
+        rec_inc -> y_1 =( 0x99 /** 0x99 == 153 @TRAP_VALUE@**/);
+
+        /** ************************************************ ***
+            Anything greater than 15 is out of range 
+            so we should use a more unique value than
+            "0xFF" maybe... 0x77 ( decimal: 119 )
+
+            #DIA_TAU_CEL# : xy_range[ 0 -to- ( 4  - 1 ) ]  
+            #DIA_SUB_CEL# : xy_range[ 0 -to- ( 4  - 1 ) ]  
+            #DIA_VAR_CEL# : xy_range[ 0 -to- ( 16 - 1 ) ]  
+
+        *** ************************************************ **/
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    void
+    aac2020_taudirt_ForceClearForUnitTest( void )
+    {
+        /** FUNCTION_SUMMARY: FoceClearForUnitTest:  **/
+        /** Only to be used BEFORE and after calling **/
+        /** Unit test so that we can make sure we    **/
+        /** are working with predictable state and   **/
+        /** restoring to zeroed-out state after      **/
+        /** mucking around with the data with our    **/
+        /** tests. --------------------------------- **/
+
+        //:NON_RECURSIVELY_TRAVERSE_TREE:--------------------://
+        #define D_0 "MAKE_PATTERN_OBVIOUS"            //: 01 ://
+        #define D_1  ANY.cel_512[ d_1 ]               //: 02 ://
+        #define D_2      cel_128[ d_2 ]               //: 03 ://
+        #define D_3      cel_032[ d_3 ]               //: 04 ://
+
+            I32 d_0; I32 d_1; I32 d_2; I32 d_3;
+        
+            for( d_0 = 0 ; d_0 <=   0 ; d_0 ++ ){ //:@NES_LEV@:0
+
+                        ANY.is_dirty_0 = ( 0 );
+                C_R( &( ANY.rec_512         ));
+
+            for( d_1 = 0 ; d_1 <=  15 ; d_1 ++ ){ //:@NES_LEV@:1
+
+                        D_1.is_dirty_1 =( 0 );
+                C_R( &( D_1.rec_128        ));
+
+            for( d_2 = 0 ; d_2 <=  15 ; d_2 ++ ){ //:@NES_LEV@:2
+
+                        D_1.D_2.is_dirty_2 =( 0 );
+                C_R( &( D_1.D_2.rec_032        ));
+
+            for( d_3 = 0 ; d_3 <= 255 ; d_3 ++ ){ //:@NES_LEV@:3
+
+                        /** is_dirty_3 , conceptually **/
+
+                        D_1.D_2.D_3 = ( 0x00 );
+
+            };; };; };; };; //:  @NON_INDENTED_LOOP_LEVELS@  ://
+
+        #undef  D_0                                   //: 01 ://
+        #undef  D_1                                   //: 02 ://
+        #undef  D_2                                   //: 03 ://
+        #undef  D_3                                   //: 04 ://
+        //:--------------------:NON_RECURSIVELY_TRAVERSE_TREE://
+
+    }
+
+#undef  ANY
+#undef  C_R
+#undef  I32
+//:================================:FORCE_CLEAR_FOR_UNIT_TEST://
+//:UNIT_TEST:================================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+#define U08  uint8_t /** GCC: <stdint.h> **/
+#define UTF aac2020_taudirt_unit_test_flag
+#define L_A struct AAC2020_TAUDIRT_l_A_04x04_TAU_Pix_512
+#define ANY AAC2020_TAUDIRT_DIR_ANY
+#define LOG aac2020_taudirt_Info_any
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    void  
+    aac2020_taudirt_UnitTest( void ){ //:@PRIVATE_NAMESPACE@://
+
+
+        AAC2020_TODOMAN_Vital( "[Finish test logic]" );
+
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    U32
+    AAC2020_TAUDIRT_UnitTest( U32 u32 )
+    {
+        if( UTF >= 1 ){ return(0x00); };UTF=(  1 );
+        if( u32 ){ /** reserved for future use **/ };
+
+        LOG( "[ENTERING:AAC2020_TAUDIRT_UnitTest]",0);
+
+        //:#TAUDEPO_DATA_BACKUP_OR_RESTORE#------------------://
+        #define BAK_001  AAC2020_TAUDIRT_DIR_ANY
+        #define BAK_002  AAC2020_PIXNAME_taudepo_cpu_pix
+        #define SIZ_001  sizeof( AAC2020_TAUDIRT_DIR_ANY )
+        #define SIZ_002  ( 512 * 512 * 4 )
+
+            /** BACKUP : #BAK_NUM_WHATEVER# : BACKUP **/
+
+            /** @_DONT_ABUSE_THE_STACK_@ **/
+
+            L_A* bak_001=((void*)0);    /** TAUDIRT's TREE   **/
+            U08* bak_002=((void*)0);    /** TAUDEPO's PIXELS **/
+
+            bak_001=(L_A*)( malloc( SIZ_001 ) );
+            bak_002=(U08*)( malloc( SIZ_002 ) );
+        
+            memcpy( bak_001 , &(BAK_001   ) , SIZ_001 );
+            memcpy( bak_002 , &(BAK_002[0]) , SIZ_002 );
+            
+        #undef  BAK_001                               //: 01 ://
+        #undef  BAK_002                               //: 02 ://
+        #undef  SIZ_001                               //: 03 ://
+        #undef  SIZ_002                               //: 04 ://
+        //:-----------------:#TAUDEPO_DATA_BACKUP_OR_RESTORE#://
+        //:DO_AFTER_DATA_BACKUP:-----------------------------://
+
+            aac2020_taudirt_ForceClearForUnitTest( );
+
+        //:-----------------------------:DO_AFTER_DATA_BACKUP://
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+
+
+            /** Actual Test Logic Without The Boilerplate **/
+
+            aac2020_taudirt_UnitTest( /** VOID **/  );
+
+
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        //:#TAUDEPO_DATA_BACKUP_OR_RESTORE#------------------://
+        #define BAK_001  AAC2020_TAUDIRT_DIR_ANY
+        #define BAK_002  AAC2020_PIXNAME_taudepo_cpu_pix
+        #define SIZ_001  sizeof( AAC2020_TAUDIRT_DIR_ANY )
+        #define SIZ_002  ( 512 * 512 * 4 )
+
+            /** RESTORE **/
+        
+            memcpy( &(BAK_001   ) ,  bak_001 , SIZ_001 );
+            memcpy( &(BAK_002[0]) ,  bak_002 , SIZ_002 );
+
+            free( bak_001 );
+            free( bak_002 );
+            
+        #undef  BAK_001                               //: 01 ://
+        #undef  BAK_002                               //: 02 ://
+        #undef  SIZ_001                               //: 03 ://
+        #undef  SIZ_002                               //: 04 ://
+        //:-----------------:#TAUDEPO_DATA_BACKUP_OR_RESTORE#://
+
+        LOG( "[EXITING:AAC2020_TAUDIRT_UnitTest]",0);
+
+        return( 0x00 );
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+#undef  U32
+#undef  U08
+#undef  UTF
+#undef  L_A
+#undef  ANY
+#undef  LOG
+//:================================================:UNIT_TEST://

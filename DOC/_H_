@@ -6,6 +6,93 @@
     
 *** ******************************************************** ***
 
+@TRAP_VALUE@@_TRAP_VALUE_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    A trap value is typically a BOGUS initialization value
+    that is intentionally [ wrong / invalid ]. If we FORGET
+    to overwrite the trap value before using the value,
+    a fatal error is usually triggered.
+
+    The idea here is to help us catch problems quickly by
+    intentionally setting invalid state where we can.
+
+    Essentially we are setting "TRAP"(S) for ourselves
+    in the code to make the code more "FAIL FAST" than
+    it would otherwise be.
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@TRAP_VALUE@@_TRAP_VALUE_@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@TRAP_VALUE@@_TRAP_VALUE_@
+@_DONT_ABUSE_THE_STACK_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    It's definitely easier and less error prone to avoid
+    malloc. However in some cases we need to malloc memory
+    to avoid abusing the stack.
+
+    Stack space is limited and we shouldn't put large
+    memory allocations on it.
+    
+    The limit for stack seems to be around...
+
+    100 bytes per stack frame....
+
+    So... Lets say any array more than 32 bytes should
+    be malloced.
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@_DONT_ABUSE_THE_STACK_@
+@_NO_POINTERS_IN_THIS_SECTION_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    It is intentional that none of the members in any of    
+    the data within this code section do NOT use pointers.
+    Usage of pointers here would wreck what we are working
+    towards.
+
+    Specifically, AAC2020_TAUDIRT_UnitTest needs to
+    backup[ AAC2020_TAUDIRT_DIR_ANY ] before the test is ran
+    and if the object containes pointers we cannot easily
+    do a deep copy.
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@_NO_POINTERS_IN_THIS_SECTION_@
+#BAK_NUM_WHATEVER###############################################
+
+        I am tired of trying to figure out names.         
+        Just call them "bak_###" for "backup # whatever"  
+
+###############################################BAK_NUM_WHATEVER#
+#TAUDEPO_DATA_BACKUP_OR_RESTORE#################################
+
+    /** ************************************************ **/
+    /** We should copy over TAUDEPO's buffer before we   **/
+    /** run our test so we can restore it when finished. **/
+    /** Since we run our tests on game bootup, this      **/
+    /** step is probably NOT NECESSARY, but just in case **/
+    /** we should do this as a good habit.               **/
+    /** ************************************************ **/
+
+#################################TAUDEPO_DATA_BACKUP_OR_RESTORE#
+@NON_INDENTED_LOOP_LEVELS@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    My column space is limited and even when it isn't much
+    of the time I can seem the patterns a lot better when
+    I keep all levels of multiple nested loops at the
+    same indentation level. WRITTEN_ON_DATE[ 2020_12_16 ]
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@NON_INDENTED_LOOP_LEVELS@
+@NES_LEV@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @NES_LEV@ : shorthand for "Nesting Level"
+                of a tree structure. Nesting level 0
+                being top level, having not drilled down
+                into the tree.
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@NES_LEV@
+@PRIVATE_NAMESPACE@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    lowercase namespaces means that a function is "private".
+    I use "private" loosely to mean
+    "You better know what the fuck you are doing"
+    "with this function call"
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@PRIVATE_NAMESPACE@
 @one1@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @two2@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @NONE@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@

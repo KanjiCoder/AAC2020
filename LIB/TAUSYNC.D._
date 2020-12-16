@@ -2,10 +2,17 @@
 //: TAUSYNC.D._ : Gpu Sync of TAUDEPO. Uses TAUDIRT.D._
 //:               to only update the dirty regions of memory.
 #include "TAUSYNC.G._"             
-
 //: -------------------------------------------------------- ://
 //: TAUSYNC is a FUNCTION ONLY library.                      ://
 //: However, it does use values from TAUDIRTY to             ://
 //: figure out what regions of "taudepo" memory need         ://
 //: to be re-uploaded to the GPU.                            ://
 //: -------------------------------------------------------- ://
+//:UNIT_TEST:================================================://
+#define U08 uint8_t /** GCC: <stdint.h> **/
+
+        /** True if unit test is RUNNING or has RAN **/
+        U08 aac2020_tausync_unit_test_flag =( 0 );
+
+#undef  U08
+//:================================================:UNIT_TEST://
