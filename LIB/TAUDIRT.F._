@@ -361,6 +361,9 @@
         I32 rof=( 0 /** result_of_function **/ );
 
         /** ************************************************ ***
+        //( @VID_IID@[ 0045 ]TIME[ 6H21M30S     )//  
+        //( @VID_URL@[ TODO_YOUTUBE_VIDEO_URL ] )//
+
         3 Possible States:
 
             1. VAR == CLEAN , VAR  OUTSIDE_DIRTY_RECT ==>  0
@@ -411,6 +414,24 @@
             I32 v_x =  DEX_VAR_000_255       % 16 ;
             I32 v_y = (DEX_VAR_000_255 - v_x)/ 16 ;
 
+                //:check_our_math:---------------------------://
+
+                    if( 0 == DEX_TAU_000_015
+                    &&  0 == DEX_SUB_000_015
+                    &&  0 == DEX_VAR_000_255
+                    ){
+                    
+                        assert( 0 == t_x );
+                        assert( 0 == t_y );
+                        assert( 0 == s_x );
+                        assert( 0 == s_y );
+                        assert( 0 == v_x );
+                        assert( 0 == v_y );
+
+                    };;
+
+                //:---------------------------:check_our_math://
+
         //:-------------:Convert_Indexes_To_XY_Cell_Locations://
         //:Calculate_ABSOLUTE_dirty_rectangle:---------------://
 
@@ -422,6 +443,16 @@
             +   ( t_y*128 ) /** Each cell 128x128 pixels **/
             +   ( s_y* 32 ) /** Each cell  32x32  pixels **/
             );;
+
+            /** ******************************************** **/
+            /** #_PAIRED_COMMENT_2020_12_16_0439PM_#         **/
+            /** IF_YOU_SEE: 400 , 201 , 100 , 51             **/
+            /** For rectangle output, you are using the      **/
+            /** TRAP values and you shouldn't do that.       **/
+            /** ******************************************** **/
+
+            //: @VID_IID@[ 0045 ]TIME[ 7H 19M 49S ] ://
+            AAC2020_TODOMAN_Vital( "[return_negative_rect_if_dirty_rect_is_invalid]");
 
             (*rec).x_0 = ( x_b + (rec_032 -> x_0*2) ) + 0;
             (*rec).x_1 = ( x_b + (rec_032 -> x_1*2) ) + 1;
@@ -599,10 +630,15 @@
     {
         /** Since rectangle is signed, we will clear it  **/
         /** by giving it out of bound trap values.       **/
-        rec_inc -> x_0 =( 0x66 /** 0x66 == 102 @TRAP_VALUE@**/);
-        rec_inc -> x_1 =( 0x77 /** 0x77 == 119 @TRAP_VALUE@**/);
-        rec_inc -> y_0 =( 0x88 /** 0x88 == 136 @TRAP_VALUE@**/);
-        rec_inc -> y_1 =( 0x99 /** 0x99 == 153 @TRAP_VALUE@**/);
+
+        rec_inc -> x_0 =( 200  /** @TRAP_VALUE@ **/ );
+        rec_inc -> x_1 =( 100  /** @TRAP_VALUE@ **/ );
+        rec_inc -> y_0 =(  50  /** @TRAP_VALUE@ **/ );
+        rec_inc -> y_1 =(  25  /** @TRAP_VALUE@ **/ );
+
+        /** #_PAIRED_COMMENT_2020_12_16_0439PM_#             **/
+        /** KEEP_TRAP_VALUES[ 200,100,50,25 ] Otherwise      **/
+        /** commentary we are paired with is no longer valid.**/
 
         /** ************************************************ ***
             Anything greater than 15 is out of range 
@@ -723,19 +759,84 @@
     void  
     aac2020_taudirt_UnitTest( void ){ //:@PRIVATE_NAMESPACE@://
 
+        //: Testing Philosophy: #_BTS_BEATS_TOM_# ://
+
         I32 ask=( 0 - 666 ); /** Result of ASK( ... )  **/
-        U08 T = 0; /** T: TAU_015  EX: TAUDEPO_TAU_015 **/
-        U08 S = 0; /** S: SUB_015  EX: TAUDEPO_PAINT5D **/
-        U08 V = 0; /** V: VAR_015  EX: TAUDEPO_P5D_VP0 **/
+        U08   T   = 0; /** T: TAU_015  EX: TAUDEPO_TAU_015 **/
+        U08   S   = 0; /** S: SUB_015  EX: TAUDEPO_PAINT5D **/
+        U08   V   = 0; /** V: VAR_255  EX: TAUDEPO_P5D_VP0 **/
+        I32 V32   = 0;
         REC R={ 0 };
+
+        R.x_0=( 111 );
+        R.x_1=( 222 );
+        R.y_0=( 333 );
+        R.y_1=( 444 );
 
         /** Smoke Test. Nothing Fancy. **/
        
         ask = ASK( T , S , V , &R );
-        if( ask > 0 ){ ERR("[WTF_MY_MAN:2020_12_16:143PM]"); };
+        if( ask != 0 ){ 
+            ERR("[WTF_MY_MAN:2020_12_16:143PM]"); 
+        }else{
+            #define I64 int64_t /** GCC: <stdint.h> **/
+            LOG( "\n\n" , 0 );
+            LOG( "[R.x_0]:%d" , (void*)(I64)R.x_0 );
+            LOG( "[R.x_1]:%d" , (void*)(I64)R.x_1 );
+            LOG( "[R.y_0]:%d" , (void*)(I64)R.y_0 );
+            LOG( "[R.y_1]:%d" , (void*)(I64)R.y_1 );
+            LOG( "\n\n" , 0 );
+            #undef  I64
+        };;
+
+        for(   T = 0 ;   T <= ( 16 - 1 ) ;   T++ ){
+        for(   S = 0 ;   S <= ( 16 - 1 ) ;   S++ ){
+        for( V32 = 0 ; V32 <= (256 - 1 ) ; V32++ ){
+        V=( (U08)V32 );
+
+            ask = ASK( T , S , V , &R );
+            if( ask != 0 ){
+        
+                /** If this fails, it might be because the   **/
+                /** rectangle MUST exist somewhere, even if  **/
+                /** the entire rectangle itself is INVALID   **/
+                /** @VID_IID@[ 0045 ]TIME[ 6H26M30 ]         **/
+                /** @VID_URL@[ TODO............... ]         **/
+        
+                ERR("[The_Simplist_Of_Tests_Has_Failed]");
+        
+            };;
+        
+        };;};;};;
     
+         printf("\n\n\n");
+         LOG("[ESCAPED_THE_LOOP]",0);
+         printf("\n\n\n");
 
-
+    ///  for( p_x = 0 ; p_x <= ( 512-1) ; p_x ++ ){
+    ///  for( p_y = 0 ; p_y <= ( 512-1) ; p_y ++ ){
+    /// 
+    ///      //:Convert [p_x,p_y]TO[ TAU , SUB , VAR ]Indexes
+    /// 
+    ///      //:Make sure sector is NOT dirty.
+    /// 
+    ///  };;};;
+    /// 
+    ///  for( p_x = 0 ; p_x <= ( 512-1) ; p_x ++ ){
+    ///  for( p_y = 0 ; p_y <= ( 512-1) ; p_y ++ ){
+    /// 
+    ///      //:Convert [p_x,p_y]TO[ TAU , SUB , VAR ]Indexes
+    /// 
+    ///     
+    ///      //:make sure sector NOT dirty.
+    /// 
+    ///      //:flag sector as dirty.
+    /// 
+    ///      //:make sure sector IS dirty.
+    /// 
+    ///  };;};;
+    /// 
+    ///  for( TAU, SUB, & VAR ).....
 
 
 
@@ -751,6 +852,8 @@
     U32
     AAC2020_TAUDIRT_UnitTest( U32 u32 )
     {
+        //: Testing Philosophy: #_BTS_BEATS_TOM_# ://
+
         if( UTF >= 1 ){ return(0x00); };UTF=(  1 );
         if( u32 ){ /** reserved for future use **/ };
 
@@ -758,27 +861,30 @@
 
         //:#TAUDEPO_DATA_BACKUP_OR_RESTORE#------------------://
         #define BAK_001  AAC2020_TAUDIRT_DIR_ANY
-        #define BAK_002  AAC2020_PIXNAME_taudepo_cpu_pix
+    /// #define BAK_002  AAC2020_PIXNAME_taudepo_cpu_pix
         #define SIZ_001  sizeof( AAC2020_TAUDIRT_DIR_ANY )
-        #define SIZ_002  ( 512 * 512 * 4 )
+    /// #define SIZ_002  ( 512 * 512 * 4 )
 
+            //( @VID_IID@[ 0045 ]TIME[ 5H33M0S    ] )//  
+            //( @VID_URL@[ TODO_YOUTUBE_VIDEO_URL ] )//
+            
             /** BACKUP : #BAK_NUM_WHATEVER# : BACKUP **/
 
             /** @_DONT_ABUSE_THE_STACK_@ **/
 
             L_A* bak_001=((void*)0);    /** TAUDIRT's TREE   **/
-            U08* bak_002=((void*)0);    /** TAUDEPO's PIXELS **/
+    ////    U08* bak_002=((void*)0);    /** TAUDEPO's PIXELS **/
 
             bak_001=(L_A*)( malloc( SIZ_001 ) );/* @DANGER_1@ */
-            bak_002=(U08*)( malloc( SIZ_002 ) );/* @DANGER_2@ */
+    ////    bak_002=(U08*)( malloc( SIZ_002 ) );/* @DANGER_2@ */
         
             memcpy( bak_001 , &(BAK_001   ) , SIZ_001 );
-            memcpy( bak_002 , &(BAK_002[0]) , SIZ_002 );
+    ////    memcpy( bak_002 , &(BAK_002[0]) , SIZ_002 );
             
         #undef  BAK_001                               //: 01 ://
-        #undef  BAK_002                               //: 02 ://
+    /// #undef  BAK_002                               //: 02 ://
         #undef  SIZ_001                               //: 03 ://
-        #undef  SIZ_002                               //: 04 ://
+    /// #undef  SIZ_002                               //: 04 ://
         //:-----------------:#TAUDEPO_DATA_BACKUP_OR_RESTORE#://
         //:DO_AFTER_DATA_BACKUP:-----------------------------://
 
@@ -796,22 +902,22 @@
         //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
         //:#TAUDEPO_DATA_BACKUP_OR_RESTORE#------------------://
         #define BAK_001  AAC2020_TAUDIRT_DIR_ANY
-        #define BAK_002  AAC2020_PIXNAME_taudepo_cpu_pix
+    /// #define BAK_002  AAC2020_PIXNAME_taudepo_cpu_pix
         #define SIZ_001  sizeof( AAC2020_TAUDIRT_DIR_ANY )
-        #define SIZ_002  ( 512 * 512 * 4 )
+    /// #define SIZ_002  ( 512 * 512 * 4 )
 
             /** RESTORE **/
         
             memcpy( &(BAK_001   ) ,  bak_001 , SIZ_001 );
-            memcpy( &(BAK_002[0]) ,  bak_002 , SIZ_002 );
+    ////    memcpy( &(BAK_002[0]) ,  bak_002 , SIZ_002 );
 
             free( bak_001 );                    /* @DANGER_1@ */
-            free( bak_002 );                    /* @DANGER_2@ */
+    ////    free( bak_002 );                    /* @DANGER_2@ */
             
         #undef  BAK_001                               //: 01 ://
-        #undef  BAK_002                               //: 02 ://
+    /// #undef  BAK_002                               //: 02 ://
         #undef  SIZ_001                               //: 03 ://
-        #undef  SIZ_002                               //: 04 ://
+    /// #undef  SIZ_002                               //: 04 ://
         //:-----------------:#TAUDEPO_DATA_BACKUP_OR_RESTORE#://
 
         LOG( "[EXITING:AAC2020_TAUDIRT_UnitTest]",0);

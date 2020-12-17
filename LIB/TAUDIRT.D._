@@ -66,41 +66,35 @@ extern  l_A  AAC2020_TAUDIRT_DIR_ANY;    /** @INTERN_BOTTOM@ **/
 
         /** C: LOWEST / DEEPEST / INNERMOST Nesting Level: C **/
 
-        U08 is_dirty_2;  //:  #DIA_VAR_CEL#  (SEE: TAUDEPO.D._)
-    
-         //:@_PAIRED_ARRAYS_@://
+        //: @_PAIRED_ARRAYS_@  @_LOCAL_RECTANGLE_@ : rec_032 ://
         U08  cel_032[256]; //:<-- is_dirty_3[ 256 ]
         REC  rec_032     ; //:    (16x16 grid of flags)
-
+        U08 is_dirty_2   ; //:[ #DIA_VAR_CEL# ]IN[ TAUDEPO.D._ ] 
     };
     struct /** l_B **/ AAC2020_TAUDIRT_l_B_04x04_SUB_Pix_128{   
 
         /** B: Middle Nesting Level: B **/
 
-        U08 is_dirty_1;  //:  #DIA_SUB_CEL#  (SEE: TAUDEPO.D._)
-
-         //:@_PAIRED_ARRAYS_@://
+        //: @_PAIRED_ARRAYS_@  @_LOCAL_RECTANGLE_@ ->rec_128 ://
         l_C  cel_128[ 16]; //:<-- is_dirty_2[ 16 ]
-        REC  rec_128     ;
-
+        REC  rec_128     ; //:    ( 4x4 grid of flags )
+        U08 is_dirty_1   ; //:[ #DIA_SUB_CEL# ]IN[ TAUDEPO.D._ ] 
     };
     struct /** l_A **/ AAC2020_TAUDIRT_l_A_04x04_TAU_Pix_512{   
 
         /** A: OUTER_MOST (TOP) Nesting Level: A **/
 
-        U08 is_dirty_0;  //:  #DIA_TAU_CEL#  (SEE: TAUDEPO.D._)
-
-        //:@_PAIRED_ARRAYS_@://
+        //: @_PAIRED_ARRAYS_@  @_LOCAL_RECTANGLE_@ ->rec_512 ://
         l_B  cel_512[ 16]; //:<-- is_dirty_1[ 16 ] 
-        REC  rec_512     ; //:dirty_cell_bounding_box
-                           //:4x4 cells is 16 array slots.
+        REC  rec_512     ; //:4x4 dirty cells, 16 array slots.
+        U08 is_dirty_0   ; //:[ #DIA_TAU_CEL# ]IN[ TAUDEPO.D._ ] 
     };
 
-#undef  U08
-#undef  REC
-#undef  l_A
-#undef  l_B
-#undef  l_C
+#undef  U08                                           //: 01 ://
+#undef  REC                                           //: 02 ://
+#undef  l_A                                           //: 03 ://
+#undef  l_B                                           //: 04 ://
+#undef  l_C                                           //: 05 ://
 //:=====================================:HELPER:DIRTY_MARKERS://
 //:PRETEND_IAM_THE_ONLY_ONE:=================================://
 #define l_A  struct AAC2020_TAUDIRT_l_A_04x04_TAU_Pix_512

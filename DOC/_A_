@@ -1,0 +1,240 @@
+
+_A_: for "Ascii Diagrams"
+
+BIT_LAYOUT: 
+    Bit layouts for sub-systems are subject to change
+    as I discover what gives the best tradeoff for
+    design leverage -vs- range of expressibility.
+
+
+//:PAINT5D:BIT_LAYOUT:=======================================://
+
+PAINT5D: Used to create base material/texutres.
+         
+    --------------------------------------------------------
+    Do we want 3 layers per design? The quarkmap naturally
+    accomidates that. But might be... too much depth for
+    base materials.
+
+    What are the 5 dimensions of paint5d?
+
+        1. x position of tile
+        2. y position of tile
+        3. tile size exponent
+        4. tile [value/color]
+        5. LAYER INDEX... I think... Yes it is.
+
+    So... 3 layers per design MIGHT be a bit overkill, but
+    it is what I originally put in my specification when
+    thinking it out. So maybe stick with it?
+    --------------------------------------------------------
+
+    BIT_LEVERAGE:----------------------------------------------:
+
+    BIT LEVERAGE: 16 base materials can be designed if 
+                  we stick to 2 bit color for everything.
+
+        R   [11] [11] [11] [11]   1 byte, 8 bits, 2 bit color
+        G   [11] [11] [11] [11]   1 byte, 8 bits, 2 bit color
+        B   [11] [11] [11] [11]   1 byte, 8 bits, 2 bit color
+        A   [11] [11] [11] [11]   1 byte, 8 bits, 2 bit color
+        
+        BIN[ 00 ] : EMPTY / BLACK
+        BIN[ 01 ] : MonoChrome Dark
+        BIN[ 10 ] : MonoChrome Mid
+        BIN[ 11 ] : MonoChrome Light
+
+        We will need a hard coded color pallet.
+        The configuration pixel in bottom-right 
+        corner of the data will do that for us.
+
+        Do we want one enumeration, or break apart the
+        bits to pack different configurations that can
+        be mixed or matched?
+
+                        TETRACLUSTER
+                             |
+                     +-------+------+
+                    /                \
+        [R|G|B|A]   [11] [11] [11] [11] 
+                 
+
+        IDEA:
+        ConfigPixel.RED: 0xFF --> [ 0xF && 0xF ]
+            0 - 15 : Tetracluster GLOBAL spread from "R"
+            0 - 15 : Tetracluster LOCAL  spread from self.
+
+            GLOBAL_SPREAD:
+
+                GLOBAL_SPREAD == 0
+                [11] [11] [11] [11] 
+                |<--- PURERED --->|
+
+                GLOBAL_SPREAD == 15
+                [11]        [11]       [11]       [11] 
+                |<--BlueIsh      RED      Greenish-->|
+
+            INNER_SPREAD: ( SATURATION ):
+             0 == very low saturation, but still colored.
+            15 == full saturation.
+
+                Hard coded luminosities:
+
+                [00]: Always Black
+                [01]: Light / Pastel version of monochrome color
+                [10]: Medium version of monochrome color.
+                [11]: Dark version of monochrome color.
+
+        Same idea applies to GREEN, BLUE, ALPHA....
+
+        RED: Hues clustered around RED.
+             4 TETRACLUSTER(s) == 4 designs by artist.
+
+        GRE: Hues clustered around GRE.
+             4 TETRACLUSTER(s) == 4 designs by artist.
+
+        BLU: Hues clustered around BLU.
+             4 TETRACLUSTER(s) == 4 designs by artist.
+
+        ALP: COMPOUNDED?
+               |    |    |    |    |
+            R  |[11]|[11]|[11]|[11]|
+            G  |[11]|[11]|[11]|[11]|
+            B  |[11]|[11]|[11]|[11]|
+            A  |[11]|[11]|[11]|[11]|
+               |    |    |    |    |
+
+               |    |    |    |    |
+            R  |[01]|[  ]|[  ]|[  ]|
+            G  |[  ]|[01]|[  ]|[  ]|
+            B  |[  ]|[  ]|[01]|[  ]|
+            A  |[  ]|[  ]|[  ]|[01]|
+               |    |    |    |    |
+
+               |    |    |    |    |
+            R  |[01]|[02]|[03]|[04]|
+            G  |[04]|[01]|[02]|[03]|
+            B  |[03]|[04]|[01]|[02]|
+            A  |[02]|[03]|[04]|[01]|
+               |    |    |    |    |
+
+            The different ALPHA bits could pick from the
+            other designs and draw with them.
+
+        ALP: SIMPLE INSTEAD OF COMPOUNDED:
+
+            Alpha channel is used for a greyscale design.
+            Maybe these designs are used as a "glow channel".
+            That can be overlayed over things when
+            designing AUSET64 data.
+
+        :-----------------------------------------:BIT_LEVERAGE:
+
+//:=======================================:PAINT5D:BIT_LAYOUT://
+//:AUSET64:BIT_LAYOUT:=======================================://
+
+    |<-------------- 512 -------------->|
+    |<----- 256 ----->|                 |
+    |<--128->|        |                 |
+    +--+--+--+--+--+--+--+--+--+--+--+--+
+    |        |        |        |        |
+    |   FM       WC   |                 |
+    |        |        |        |        |
+    +-- -- -- -- -- --|-- -- -- -- -- --+
+    |        |        |        |        |
+    |   EC       CC   |                 |
+    |        |        |        |        |
+    +=================|=================+
+    |        |        |        |        |
+    |                 |                 |
+    |        |        |        |        |
+    +-- -- -- -- -- --|-- -- -- -- -- --+
+    |        |        |        |        |
+    |                 |                 |
+    |        |        |        |        |
+    +--+--+--+--+--+--+--+--+--+--+--+--+
+
+    Create 4 AUSET(s) that contain 4 TILE(S) each.
+    4 Tiles will be used to generate the full 16 sub-tiles
+    needed to render a full auset (auset==auto_tile_set).
+
+    Each Tile Design By artist gets a 128x128 pixel block
+    of memory.
+
+    64x64 == most granular and smallest tile size.
+    32x32 .. next largest
+    16x16 .. larger
+     8x8  .. larger
+     4x4  .. larger
+     2x2  .. larger
+     1x1  .. The largest tile type covers ENTIRE TILE.
+
+    METHOD_1: (Of auto tile source partitions)
+
+    FILERMATERIAL  WALL_CAP
+    +---+---+---+  +-------+---+   <--+
+    |   |   |   |  |       |   |      |
+    + - +---+ - +  |       | - |      |
+    |   |   |   |  |       |   |      |
+    + - +---+ - +  +       | - |      |
+    |   |   |   |  |       |   |      |
+    +---+---+---+  +-------+---+      |
+                                      +----[ FM,WC,EC,CC ]
+    +-----------+  +-------+---+      |
+    |   |   |   |  |       |   |      |     Are drawn by 
+    | - +-------+  |       | - |      |     artist and used
+    |   |          |       |   |      |     as generation source
+    | - +-------+  +-------+ - |      |     to create 16
+    |   |   |   |  |   |   |   |      |     sub-tiles of the
+    +-----------+  +-----------+   <--+     AUSET.
+    EDGE_CAP       CORNER_CAP
+
+    Why this way?
+
+    Because I find when drawing auto tile sets...
+    The 16 unique tiles are pretty redundant most of the
+    time. That redundancy is WASTED SPACE. And we need
+    to leverage our memory as much as possible here.
+
+    NOTE:
+
+        When artist draws tiles, they should NOT account
+        for lighting. Lighting will be handled by engine.
+
+    Alternative Method: (METHOD_2)
+
+
+        +-----------+  +-----------+
+        |   |   |   |  |   |   |   |
+        | - +-------+  +-------+ - |
+        |   |       |  |       |   |
+        | - |       |  |       | - |
+        |   |       |  |       |   |
+        +---+-------+  +-------+---+
+        +---+-------+  +-------+---+
+        |   |       |  |       |   |
+        | - |       |  |       | - |
+        |   |       |  |       |   |
+        | - +-------+  +-------+ - |
+        |   |   |   |  |   |   |   |
+        +-----------+  +-----------+
+
+        The 4 artist graphics are like this so artist
+        can maximize differentiation between
+        TOP, LEFT, BOTTOM, and RIGHT edges of auto tiles.
+        The "unused" space in middle will be reserved
+        for a conceptual "FM"/"FILLERMATERIAL" tile.
+
+    Thought: Can we overlay method_1 and method_2 since
+             we have 3 layers to work with?
+
+             layer_1 uses method_1
+             layer_2 uses method_2
+             layer_3 uses method_3 (not invented yet)
+
+    All of this is subject to change as we code and
+    figure out what works.
+
+
+//:=======================================:AUSET64:BIT_LAYOUT://
+
