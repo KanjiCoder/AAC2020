@@ -9,11 +9,67 @@
     //[   VIDEO COMMENT TIMESTAMP EXAMPLE   ]//
 *** ******************************************************** ***
 
+@too_granular@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
+    @too_granular: Means that the code is commented out because
+                   it is literally too granular. And whatever
+                   operation you are performing needs to be
+                   done at a coarser level.
 
+    EXAMPLES:
+    ------------------------------------------------------------
+    1: TAUSYNC.F._ :: aac2020_tausync_Run
+    
+        We shouldn't push individual 2x2 clusters of pixels
+        in a texture push. We should push the entire dirty
+        region that exists on the 32x32 cluster of pixels
+        within one of the #DIA_VAR_CEL# partitions.
+        ( #DIA_VAR_CEL# : SEE: TAUDEPO.D._ )
+                
+    ------------------------------------------------------------
 
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@too_granular@
+@u_x@@u_y@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
+    @u_x: Upper_Left_Pixel_X (EXAMPLE: SEE: TAUSYNC.F._ )
+    @u_y: Upper_Left_Pixel_Y (EXAMPLE: SEE: TAUSYNC.F._ )
 
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@u_x@@u_y@
+@2x2_VAR@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @2x2_VAR@: Referring to a 2x2 cluster of pixels
+               stored on "taudepo" memory allocation
+               that is used to encode 
+               [variable/uniform] in GPU texture memory.
+
+               SEE[ @2x2_VAR@ ]ON_DIAGRAM[ #DIA_VAR_CEL# ]
+               CURRENTLY_IN[ TAUDEPO.D._ ]
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2x2_VAR@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@DEEPEST_DEEP@
+@DEEPEST_DEEP@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    GENERALLY:
+        Means we have drilled down as deep as we can into
+        a tree structure. May also be notated so you realize
+        why some type of pattern has broken down in this
+        section of code.
+
+    ************************************************************
+    RELATED_TO: TAUDEPO.D._ 
+                TAUDIRT.D._     
+                TAUSYNC.F._
+
+    The pattern breaks down a bit once you get to the
+    terminal DEPTH.
+
+    Conceptually, [ r3 == c_4 ] at the deepest depth.
+
+    Because we don't need to overlay FLAGS on top of
+    a datastructure to be dived into at this bottomed-out
+    level.
+    ************************************************************
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@DEEPEST_DEEP@
 @VID_URL@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
     @VID_URL@

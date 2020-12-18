@@ -100,6 +100,7 @@
 //: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
 #define IXY struct aac2020_tausync_ixy                //: 09 ://
 #define PBR pixel_bounding_rect                       //: 10 ://
+#define SKP continue                                  //: 11 ://
 //: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
 
     void
@@ -161,7 +162,7 @@
         for( t0.i_y = r0->y_0 ; t0.i_y <= r0->y_1 ; t0.i_y++ ){
         t0.i_d = t0.i_x + ( t0.i_y  *  4 /** wid==4 **/ );
         assert(      t0.i_d >= 0 && t0.i_d <= ( ( 4*4 ) - 1 ) );
-        assert( c_1[ t0.i_d ].is_dirty_1 >= 1 );
+            if( c_1[ t0.i_d ].is_dirty_1 <= 0 ){ SKP; };
                 c_1[ t0.i_d ].is_dirty_1 =( 0 );
             
          r1 =&( c_1[ t0.i_d ].rec_128 );   /** #DIA_SUB_CEL# **/
@@ -172,7 +173,7 @@
         for( t1.i_y = r1->y_0 ; t1.i_y <= r1->y_1 ; t1.i_y++ ){
         t1.i_d = t1.i_x + ( t1.i_y  *  4 /** wid==4 **/ );
         assert(      t1.i_d >= 0 && t1.i_d <= ( ( 4*4 ) - 1 ) );
-        assert( c_2[ t1.i_d ].is_dirty_2 >= 1 );
+            if( c_2[ t1.i_d ].is_dirty_2 <= 0 ){ SKP; };
                 c_2[ t1.i_d ].is_dirty_2 =( 0 );
 
          r2 =&( c_2[ t1.i_d ].rec_032 );   /** #DIA_VAR_CEL# **/
@@ -183,10 +184,12 @@
         for( t2.i_y = r2->y_0 ; t2.i_y <= r2->y_1 ; t2.i_y++ ){
         t2.i_d = t2.i_x + ( t2.i_y  * 16 /** wid==16 **/ );
         assert(      t2.i_d >= 0 && t2.i_d <= ( (16*16) - 1 ) );
-        assert( c_3[ t2.i_d ] /** is_dirty_3 **/ >= 1 );
+            if( c_3[ t2.i_d ] /** is_dirty_3 **/ <= 0 ){ SKP; };
                 c_3[ t2.i_d ] /** is_dirty_3 **/ =( 0 );
 
-        r3= c_3[ t2.i_d ];
+        r3= c_3[ t2.i_d ]; //:<---[ @2x2_VAR@ ]
+    //:c_4= c_3[ t2.i_d ]; //:<---[ r3 == c_4 ](@DEEPEST_DEEP@)
+
         if( r3 >  0x00 ){    /** ******** NOOP HERE ******** **/
             /** ******************************************** **/
             /** KEEP_THIS_FOR_REFERENCE_TO_UNDERSTAND_CODE   **/
@@ -213,8 +216,8 @@
                 /** **************************************** **/
 
                 //:upper_left:OF:DIA_VAR_CELL:---------------://
-                //:              DIA_VAR_CELL ~=~ @cel_128@
-                    u_x =( 0
+                //:             #DIA_VAR_CELL# ~=~ @cel_128@
+        /*@u_x*/    u_x =( 0
 
                             //:@cel_512@(s) are 128x128 pixels
                      +      ( t0.i_x * 128 ) 
@@ -224,10 +227,10 @@
 
                             //[ #_DONT_ADD_THE_DEEPEST_2X2_# ]//
                             //:@cel_032@(s) are   2x2   pixels
-                //:  +      ( t2.i_x *   2 )
+                //:  +      ( t2.i_x *   2 ) <--@too_granular@
 
                     );;
-                    u_y =( 0
+        /*@u_y*/    u_y =( 0
 
                             //:@cel_512@(s) are 128x128 pixels
                      +      ( t0.i_y * 128 ) 
@@ -237,7 +240,7 @@
 
                             //[ #_DONT_ADD_THE_DEEPEST_2X2_# ]//
                             //:@cel_032@(s) are   2x2   pixels
-                //:  +      ( t2.i_y *   2 )
+                //:  +      ( t2.i_y *   2 ) <--@too_granular@
                     );;
 
                 //:---------------:upper_left:OF:DIA_VAR_CELL://
@@ -314,7 +317,7 @@ multiply_by__2    two2  +---+---+                           +
                 /** Expecting bounds to be at MOST   **/
                 /** 32 wide by 32 high, no greater.  **/
                 aac2020_tausync_TexturePush_32x32_Region_Max(
-                    &( pixel_bounding_rect )
+                    &( pixel_bounding_rect /** PBR **/ )
                 );;
 
             };;
@@ -357,6 +360,7 @@ multiply_by__2    two2  +---+---+                           +
 //: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
 #undef  IXY                                           //: 09 ://
 #undef  PBR                                           //: 10 ://
+#undef  SKP                                           //: 11 ://
 //:=================================================:GPU_SYNC://
 //:INIT_NONE:================================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
