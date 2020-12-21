@@ -7,8 +7,14 @@
 //:=============================EXTRACTED_FROM[ AAC2020.C11 ]://
 //:INCLUDE_DIRECTIVES:=======================================://
 
-    #include "../DEP/lodepng.h"       /** lodev.org/lodepng/ **/
-    #include "../DEP/lodepng.c"       /** lodev.org/lodepng/ **/
+    #define  AAC2020_INCLUDE_LODEPNG ( 1 )
+    #if(     AAC2020_INCLUDE_LODEPNG >=1 ) //:###############://
+
+            /** lodev.org/lodepng/ **/
+            #include "../DEP/lodepng.h"       
+            #include "../DEP/lodepng.c"   
+
+    #endif //:###############################################://
 
     #include "../DEP/PEB2020/PEB2020.H" /** LoadLibraryA     **/
     #include "../DEP/PEB2020/PEB2020.H" /** GetProcAddress   **/

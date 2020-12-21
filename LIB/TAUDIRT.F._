@@ -1,5 +1,9 @@
-//: 1234567
-//: TAUDIRT.F._ : DATA ONLY LIBRARY
+//:----------------------------------------------------------://
+//: TAUDIRT.F._ : DATA ONLY LIBRARY                          ://
+//:                                                          ://
+//: DOTADIW: aac2020_taudirt_DirtySectorUpdate( );           ://
+//:  HELPER: aac2020_taudirt_DirtySectorAsk(    );           ://
+//:----------------------------------------------------------://
 
 //:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=====================://
     void 
@@ -27,24 +31,48 @@
     };; }
 
 //:===========================================:LOG_AFTER_HALT://
+//:CONSOLE_PADDING:==========================================://
+#define I32 int32_t /** GCC: <stdint.h> **/
+
+    void
+    aac2020_taudirt_ConsolePadding(
+        I32 num_newlines_to_add
+    )
+    { if( AAC2020_SILENCE.TAUDIRT <= 0 ){
+
+        for( I32 i = 0; i < num_newlines_to_add; i++ ){
+
+            printf("\n");
+
+        };;
+
+        fflush(stdout);
+
+    };; }
+
+#undef  I32
+//:==========================================:CONSOLE_PADDING://
 //:MIN_MAX_HELPER:===========================================://
 #define U08 uint8_t /** GCC: <stdint.h> **/
 
     U08
     AAC2020_TAUDIRT_Min( U08 bou_old , U08 bou_new ){
-        U08     bou_min ;
+        U08     bou_min =(   bou_old +     bou_new ) / 2 ;
+
             if(              bou_old <     bou_new ){ 
                 bou_min =    bou_old ;     
             };;                                                        
             if(              bou_new <     bou_old ){ 
                 bou_min =    bou_new ;
             };;
+
         return( bou_min );
     }
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     U08
     AAC2020_TAUDIRT_Max( U08 bou_old , U08 bou_new ){
-        U08     bou_max ;
+        U08     bou_max =(   bou_old +     bou_new ) / 2 ;
+
             if(              bou_old >     bou_new ){ 
                 bou_max =    bou_old ;     
             };;                                            
@@ -56,6 +84,67 @@
 
  #undef  U08
 //:===========================================:MIN_MAX_HELPER://
+//:RECTANGLE_UTILITY_FUNCTIONS:------------------------------://
+#define U08  uint8_t /** GCC: <stdint.h> **/
+#define REC  struct AAC2020_TAUDIRT_rec_inc
+#define CHR  const char
+
+    //:REC_INSIDE_REC_CHECK:---------------------------------://
+
+        U08
+        AAC2020_TAUDIRT_rec_inc_A_in_B(
+            REC* A
+        ,   REC* B
+        )
+        {
+            /** ADDED_ON_DATE[ 2020_12_19 ]        **/
+            /** VID_IID[ 0051 ]TIME[ 02H 23M 04S ] **/
+
+            U08 IS_rec_inc_A_in_B =( 203 /** TRAP_VALUE **/ );
+                                       
+            if( 1                       
+            &&    ( A -> x_0 )    >=    ( B -> x_0 )
+            &&    ( A -> x_1 )    <=    ( B -> x_1 )
+                                        
+            &&    ( A -> y_0 )    >=    ( B -> y_0 )
+            &&    ( A -> y_1 )    <=    ( B -> y_1 )
+            ){
+                IS_rec_inc_A_in_B = ( 1 );
+            }else{
+                IS_rec_inc_A_in_B = ( 0 );
+            };;
+
+            return( IS_rec_inc_A_in_B );
+        }
+
+    //:---------------------------------:REC_INSIDE_REC_CHECK://
+    //:PRINT:------------------------------------------------://
+
+        void
+        aac2020_taudirt_rec_inc_Print(
+            CHR* rect_name /** identifying information   **/
+        ,   REC* rect_self /** Actual Rectangle To Print **/
+        )
+        {
+            printf("\n\n"  );
+
+            printf( "\t\t[rec_inc:rect_name]:%s\n" , rect_name);
+            printf( "\t\t[rec_inc:rect_self]:::\n"            );
+            printf( "\t\t[x_0]:%d\n" , rect_self -> x_0    );
+            printf( "\t\t[x_1]:%d\n" , rect_self -> x_1    );
+            printf( "\t\t[y_0]:%d\n" , rect_self -> y_0    );
+            printf( "\t\t[y_1]:%d\n" , rect_self -> y_1    );
+
+            printf("\n\n"  );
+            fflush( stdout );
+        }
+
+    //:------------------------------------------------:PRINT://
+
+#undef  U08
+#undef  REC
+#undef  CHR
+//:------------------------------:RECTANGLE_UTILITY_FUNCTIONS://
 //:INIT_NONE:================================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
 
@@ -144,9 +233,45 @@
         #define  DIRTY_2  ( A.cel_512[T].cel_128[S].is_dirty_2 )
         //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
 
+            #if( AAC2020_TAUDIRT_BUG_001 )  //:##############://
+
+                /** Can only check the expansion of dirty  * **/
+                /** rectangles if the dirty rectangle was  * **/
+                /** previously VALID.                      * **/
+
+                    U08 chk_512=( DIRTY_0 );
+                    U08 chk_128=( DIRTY_1 );
+                    U08 chk_032=( DIRTY_2 );
+
+                /** Previous dirty rectangle should ALWAYS   **/
+                /** fit inside the NEW dirty rectangle.      **/
+
+                    REC prv_512={0};
+                    REC prv_128={0};
+                    REC prv_032={0};
+                    
+                    prv_512.x_0 = ( REC_512.x_0 );
+                    prv_512.x_1 = ( REC_512.x_1 );
+                    prv_512.y_0 = ( REC_512.y_0 );
+                    prv_512.y_1 = ( REC_512.y_1 );
+                                        
+                    prv_128.x_0 = ( REC_128.x_0 );
+                    prv_128.x_1 = ( REC_128.x_1 );
+                    prv_128.y_0 = ( REC_128.y_0 );
+                    prv_128.y_1 = ( REC_128.y_1 );
+                                        
+                    prv_032.x_0 = ( REC_032.x_0 );
+                    prv_032.x_1 = ( REC_032.x_1 );
+                    prv_032.y_0 = ( REC_032.y_0 );
+                    prv_032.y_1 = ( REC_032.y_1 );
+
+            #endif //:#######################################://
+
             //:Expand_Dirty_Rect_Selections:-----------------://
             #define MIN AAC2020_TAUDIRT_Min           //: 01 ://
             #define MAX AAC2020_TAUDIRT_Max           //: 02 ://
+            #define P_R aac2020_taudirt_rec_inc_Print //: 03 ://
+            #define LOG aac2020_taudirt_Info_any      //: 04 ://
 
                 /** >= 1 : REC is @VALID, use MIN+MAX   **/
                 /** <= 0 : REC is @@JUNK, re-initialize **/
@@ -191,15 +316,15 @@
 
                 }else{ aac2020_taudirt_Halt("[WTF:CEL_128]"); };
 
-            //: #DIA_VAR_CEL# (BELOW) ://
+            //: #DIA_VAR_CEL# (BELOW)   #IID_0051_3H_45#     ://
 
                 ;;;;;;if( DIRTY_2 >= 1  ){ //: @VALID
+            
+                    REC_032.x_0 = MIN( prv_032.x_0 , x_C );
+                    REC_032.x_1 = MAX( prv_032.x_1 , x_C );
 
-                    REC_032.x_0 = MIN( REC_032.x_0 , x_C );
-                    REC_032.x_1 = MAX( REC_032.x_1 , x_C );
-
-                    REC_032.y_0 = MIN( REC_032.y_0 , y_C );
-                    REC_032.y_1 = MAX( REC_032.y_1 , y_C );
+                    REC_032.y_0 = MIN( prv_032.y_0 , y_C );
+                    REC_032.y_1 = MAX( prv_032.y_1 , y_C );
 
                 }else if( DIRTY_2 <= 0 ){ //:  @@JUNK
 
@@ -213,7 +338,77 @@
 
             #undef  MIN                               //: 01 ://
             #undef  MAX                               //: 02 ://
+            #undef  P_R                               //: 03 ://
+            #undef  LOG                               //: 04 ://
             //:-----------------:Expand_Dirty_Rect_Selections://
+
+            #if( AAC2020_TAUDIRT_BUG_001 ) //:###############://
+            #define A_in_B  AAC2020_TAUDIRT_rec_inc_A_in_B
+            #define ERR     aac2020_taudirt_Halt
+            #define P_F     printf
+            #define P_R     aac2020_taudirt_rec_inc_Print
+
+                /** Previous dirty rectangle should ALWAYS   **/
+                /** fit inside the NEW dirty rectangle.      **/
+
+                /** DEBUG_CODE[ DOUBLE_TROUBLE_2020_12_18 ]  **/
+
+                U08 i_1=( A_in_B( &(prv_512) , &(REC_512) ) );
+                U08 i_2=( A_in_B( &(prv_128) , &(REC_128) ) );
+                U08 i_3=( A_in_B( &(prv_032) , &(REC_032) ) );
+
+                U08 f_t =( 0 ); /** FAIL TIMES **/
+                U08 f_1 =( 0 ); /** FAIL #1 (chk_512) **/
+                U08 f_2 =( 0 ); /** FAIL #1 (chk_512) **/
+                U08 f_3 =( 0 ); /** FAIL #1 (chk_512) **/
+
+                if( chk_512 >= 1 ){
+                if( i_1     <= 0 ){
+                    //: ERR("[chk_512_FAIL:2020_12_19]");
+                    f_t++;
+                    f_1=( 1 );
+
+                    P_R( "[prv_512]:", &( prv_512 ) );
+                    P_R( "[REC_512]:", &( REC_512 ) );
+
+                };;};;
+                if( chk_128 >= 1 ){
+                if( i_2     <= 0 ){
+                    //: ERR("[chk_128_FAIL:2020_12_19]");
+                    f_t++;
+                    f_2=( 2 );
+
+                    P_R( "[prv_128]:", &( prv_128 ) );
+                    P_R( "[REC_128]:", &( REC_128 ) );
+
+                };;};;
+                if( chk_032 >= 1 ){
+                if( i_3     <= 0 ){
+                    //: ERR("[chk_032_FAIL:2020_12_19]");
+                    f_t++;
+                    f_3=( 3 );
+
+                    P_R( "[prv_032]:", &( prv_032 ) );
+                    P_R( "[REC_032]:", &( REC_032 ) );
+
+                    P_F( "[x_C]:%d\n" , x_C );
+                    P_F( "[y_C]:%d\n" , y_C );
+
+                };;};;
+
+                if( f_t >= 1 ){
+                    P_F("[fail_times:(f_t)]:%d\n", f_t );
+                    if( f_1 ){ P_F("[chk_512_FAIL:2020]\n"); };
+                    if( f_2 ){ P_F("[chk_128_FAIL:2020]\n"); };
+                    if( f_3 ){ P_F("[chk_032_FAIL:2020]\n"); };
+                    ERR("[DOES_MARCELLUS_WALLUS_LOOK_LIKE...]");
+                };;
+             
+            #undef A_in_B
+            #undef ERR
+            #undef P_F
+            #undef P_R 
+            #endif //:#######################################://
 
         //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
         #undef        A                               //: 01 ://
@@ -691,12 +886,55 @@
 #undef      O_o                                       //: 09 ://
 //:=======================================:MAIN_LOGIC:DOTADIW://
 //:RECT_FUNCS_FOR_UNIT_TEST:=================================://
-#define I32 int32_t /** GCC: <stdint.h> **/
-#define U08 uint8_t /** GCC: <stdint.h> **/
-#define REC struct aac2020_taudirt_rec_bug
-#define R_1 (*r_1)
-#define R_2 (*r_2)
-#define CHR const char
+#define I32 int32_t /** GCC: <stdint.h> **/           //: 01 ://
+#define U08 uint8_t /** GCC: <stdint.h> **/           //: 02 ://
+#define REC struct aac2020_taudirt_rec_bug            //: 03 ://
+#define R_1 (*r_1)                                    //: 04 ://
+#define R_2 (*r_2)                                    //: 05 ://
+#define CHR const char                                //: 06 ://
+#define MIN aac2020_taudirt_Min_i32                   //: 07 ://
+#define MAX aac2020_taudirt_Max_i32                   //: 08 ://
+#define ERR aac2020_taudirt_Halt                      //: 09 ://
+#define P_R aac2020_taudirt_rec_bug_Print             //: 10 ://
+    //:MIN_MAX_HELPER:---------------------------------------://
+
+        /** ************************************************ ***
+        nschaaf1234: youre calling them min max 
+                     helper above, so you could call 
+                     them min and max helper
+
+        VID_IID[ 0050 ]TIME[ 1H 58M 32S ]
+        *** ************************************************ **/
+
+        I32
+        aac2020_taudirt_Min_i32( I32 bou_old , I32 bou_new ){
+            I32     bou_min =(       bou_old +     bou_new )/2;
+
+                if(                  bou_old <     bou_new ){ 
+                    bou_min =        bou_old ;     
+                };;                                                            
+                if(                  bou_new <     bou_old ){ 
+                    bou_min =        bou_new ;
+                };;
+            return( bou_min );
+        }
+
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+
+        I32
+        aac2020_taudirt_Max_i32( I32 bou_old , I32 bou_new ){
+            I32     bou_max =(       bou_old +     bou_new )/2;
+                                     
+                if(                  bou_old >     bou_new ){ 
+                    bou_max =        bou_old ;     
+                };;                                                
+                if(                  bou_new >     bou_old ){ 
+                    bou_max =        bou_new ;
+                };;
+            return( bou_max );
+        }
+
+    //:---------------------------------------:MIN_MAX_HELPER://
     //:COMPARE:----------------------------------------------://
 
         I32 /** like strcmp, return 0 if same. **/
@@ -758,50 +996,174 @@
         }
 
     //:--------------------------------------:CALC_GLOBAL_2X2://
-    //:MIN_MAX_HELPER:---------------------------------------://
+    //:CALC_GLOBAL_32X32:------------------------------------://
 
-        /** ************************************************ ***
-        nschaaf1234: youre calling them min max 
-                     helper above, so you could call 
-                     them min and max helper
+        void
+        aac2020_taudirt_rec_bug_CalcGlobal32X32(
+            REC* rec                                  //: 01 ://
+        ,   U08    T  /** TAU_015 **/                 //: 02 ://
+        ,   U08    S  /** SUB_015 **/                 //: 03 ://
+                                                      //: -- ://
+        ,   U08    v1 /** BOTH_ARE: VAR_0255 **/      //: 04 ://
+        ,   U08    v2 /** BOTH_ARE: VAR_0255 **/      //: 05 ://
+        )
+        {
+            if( v1 == v2 ){ ERR("[v1_EQUAL_v2]"); };
 
-        VID_IID[ 0050 ]TIME[ 1H 58M 32S ]
-        *** ************************************************ **/
+            /** Use the [ v1 & v2 ] to draw a selection area **/
+            /** of 2x2 global rectangles that we will then   **/
+            /** merge in the next block of logic.            **/
 
-        I32
-        aac2020_taudirt_Min_i32( I32 bou_old , I32 bou_new ){
-            I32     bou_min ;
-                if(              bou_old <     bou_new ){ 
-                    bou_min =    bou_old ;     
-                };;                                                        
-                if(              bou_new <     bou_old ){ 
-                    bou_min =    bou_new ;
+                REC r_1 ={ 0 };
+                REC r_2 ={ 0 };
+
+                aac2020_taudirt_rec_bug_CalcGlobal2X2(
+                    &r_1, T,S,v1 );;
+
+                aac2020_taudirt_rec_bug_CalcGlobal2X2(
+                    &r_2, T,S,v2 );;
+
+                #if( AAC2020_TAUDIRT_BUG_002 >= 1 ) //:######://
+
+                    if( 0 == T && 0 == S ){
+                        /** OKAY **/
+                    }else{
+                        /** Both are NOT zero. Thus  both    **/
+                        /** point cannot be in 0-31 range.   **/
+
+                        if( r_1.x_0 >= 0 && r_1.x_1 <= (32-1) ){
+                        if( r_1.y_0 >= 0 && r_1.y_1 <= (32-1) ){
+                        if( r_2.x_0 >= 0 && r_2.x_1 <= (32-1) ){
+                        if( r_2.y_0 >= 0 && r_2.y_1 <= (32-1) ){
+                       
+                            ERR("[FUCKITALL_2020_12_19_148PM]");
+
+                        };;};;};;};;
+                    };;
+
+                #endif //:###################################://
+
+                if( 0
+                ||  r_1.x_0 == r_2.x_0
+                ||  r_1.x_1 == r_2.x_1
+                ||  r_1.y_0 == r_2.y_0
+                ||  r_1.y_1 == r_2.y_1
+                ){
+                    ERR("[NO_WAY_IN_HELL]");
                 };;
-            return( bou_min );
+
+                if( 0
+                ||  r_1.x_1 - r_1.x_0 + 1 != 2 
+                ||  r_1.y_1 - r_1.y_0 + 1 != 2 
+                ||  r_2.x_1 - r_2.x_0 + 1 != 2 
+                ||  r_2.y_1 - r_2.y_0 + 1 != 2 
+                ){
+                    ERR("[NOT_2X2_CLUSTER]");
+                };;
+
+            
+            /** merge rectangles. Take the SMALLEST top-left **/
+            /** and the largest top-right.                   **/
+
+                I32 min_x_0 =MIN( r_1.x_0 , r_2.x_0 );
+                I32 min_y_0 =MIN( r_1.y_0 , r_2.y_0 );
+
+                I32 min_x_1 =MAX( r_1.x_1 , r_2.x_1 );
+                I32 min_y_1 =MAX( r_1.y_1 , r_2.y_1 );
+
+                rec -> x_0 = min_x_0 ;
+                rec -> y_0 = min_y_0 ;
+
+                rec -> x_1 = min_x_1 ;
+                rec -> y_1 = min_y_1 ;
+
+
+                /** ***************************************** **
+                +----------------------+---+---+
+                |                      | _0|   |
+                |                      +---+---+
+                |                      |   | _1|
+                |                      +---+---+
+                |                    /         |
+                |                 [r_1]        |
+                |                              |
+                |                              |
+                |        [r_2]                 |
+                |         /                    |
+                +---+---+                      |
+                | _0|   |                      |
+                +---+---+                      |
+                |   | _1|                      |
+                +---+---+----------------------+
+                *** **************************************** **/
+
+                if( (*rec).x_1   -   (*rec).x_0   +   1 != 32
+                ||  (*rec).y_1   -   (*rec).y_0   +   1 != 32
+                ){
+                    ERR("[BADPARAMS_PROBABLY_GIVEN_TO_FUNC]");
+                };;
+
+            #if( AAC2020_TAUDIRT_BUG_002 >= 1 ) //:##########://
+
+                if(   1
+                &&    0 == (*rec).x_0
+                &&   31 == (*rec).x_1
+                &&    0 == (*rec).y_0
+                &&   31 == (*rec).y_1
+                ){
+                    if( 0 == T && 0 == S ){
+        
+                        /** OKAY **/
+                    
+                    }else{
+
+                        printf("[:T]:%d\n",  T );
+                        printf("[:S]:%d\n",  S );
+                        printf("[v1]:%d\n", v1 );
+                        printf("[v2]:%d\n", v2 );
+
+                        P_R( "[WTF_IS:r_1]:" , &r_1 );
+                        P_R( "[WTF_IS:r_2]:" , &r_2 );
+                        P_R( "[WTF_IS:rec]:" ,  rec );
+
+                        printf("MIN(%d,%d)==(%d)\n",r_1.x_0
+                                                   ,r_2.x_0
+                                                   ,min_x_0);;
+
+                        printf("MAX(%d,%d)==(%d)\n",r_1.x_1
+                                                   ,r_2.x_1
+                                                   ,min_x_1);;
+
+                        printf("MIN(%d,%d)==(%d)\n",r_1.y_0
+                                                   ,r_2.y_0
+                                                   ,min_y_0);;
+
+                        printf("MAX(%d,%d)==(%d)\n",r_1.y_1
+                                                   ,r_2.y_1
+                                                   ,min_y_1);;
+
+                        /** VID_IID[ 0051 ]TIME[ 7H 41M 49S ]**/
+                        ERR("[WTF_FUCK_ALL_OF_THIS]");
+                    
+                    };;
+                };;
+
+
+            #endif //:#######################################://
         }
 
-        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+    //:------------------------------------:CALC_GLOBAL_32X32://
 
-        I32
-        aac2020_taudirt_Max_i32( I32 bou_old , I32 bou_new ){
-            I32     bou_max ;
-                if(              bou_old >     bou_new ){ 
-                    bou_max =    bou_old ;     
-                };;                                            
-                if(              bou_new >     bou_old ){ 
-                    bou_max =    bou_new ;
-                };;
-            return( bou_max );
-        }
-
-    //:---------------------------------------:MIN_MAX_HELPER://
-
-#undef  I32
-#undef  U08
-#undef  REC
-#undef  R_1
-#undef  R_2 
-#undef  CHR
+#undef  I32                                           //: 01 ://
+#undef  U08                                           //: 02 ://
+#undef  REC                                           //: 03 ://
+#undef  R_1                                           //: 04 ://
+#undef  R_2                                           //: 05 ://
+#undef  CHR                                           //: 06 ://
+#undef  MIN                                           //: 07 ://
+#undef  MAX                                           //: 08 ://
+#undef  ERR                                           //: 09 ://
+#undef  P_R                                           //: 10 ://
 //:=================================:RECT_FUNCS_FOR_UNIT_TEST://
 //:FORCE_CLEAR_FOR_UNIT_TEST:================================://
 #define ANY AAC2020_TAUDIRT_DIR_ANY
@@ -911,14 +1273,14 @@
 #define L_A struct AAC2020_TAUDIRT_l_A_04x04_TAU_Pix_512  /*05*/
 #define ANY AAC2020_TAUDIRT_DIR_ANY                       /*06*/
 #define LOG aac2020_taudirt_Info_any                      /*07*/
-#define ASK aac2020_taudirt_DirtySectorAsk                /*08*/
-#define ERR aac2020_taudirt_UnitTestFail                  /*09*/
-#define REC struct aac2020_taudirt_rec_bug                /*10*/
-#define CMP aac2020_taudirt_rec_bug_CMP                   /*11*/
-#define P_R aac2020_taudirt_rec_bug_Print                 /*12*/
-#define G_2 aac2020_taudirt_rec_bug_CalcGlobal2X2         /*13*/
-#define MIN aac2020_taudirt_Min_i32                       /*14*/
-#define MAX aac2020_taudirt_Max_i32                       /*15*/
+#define ERR aac2020_taudirt_UnitTestFail                  /*08*/
+#define REC struct aac2020_taudirt_rec_bug                /*09*/
+#define CMP aac2020_taudirt_rec_bug_CMP                   /*10*/
+#define P_R aac2020_taudirt_rec_bug_Print                 /*11*/
+#define G_2 aac2020_taudirt_rec_bug_CalcGlobal2X2         /*12*/
+#define MIN aac2020_taudirt_Min_i32                       /*13*/
+#define MAX aac2020_taudirt_Max_i32                       /*14*/
+#define PAD aac2020_taudirt_ConsolePadding                /*15*/
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     void
     aac2020_taudirt_UnitTestFail(
@@ -977,8 +1339,141 @@
         R.x_1=( 222 );
         R.y_0=( 333 );
         R.y_1=( 444 );
-       
-        //:SMOKE_TEST:---------------------------------------://
+
+        //:DOUBLE_MARKING_TEST:------------------------------://
+        #define ASK aac2020_taudirt_DirtySectorAsk
+        #define MRK aac2020_taudirt_DirtySectorUpdate
+    
+            LOG("[DOUBLE_MARKING_TEST:BEG...]",0);
+
+            aac2020_taudirt_ForceClearForUnitTest();
+
+            //: VID_IID[ 0051 ]TIME[ 1H 39M 35S ] -----------://
+            //:                                              ://
+            //:               +---+---+                      ://
+            //:               | 0 |   |                      ://
+            //:               +---+---+   +---[2,2]          ://
+            //:               |   | 1 |   |                  ://
+            //:               +---+---+   V                  ://
+            //:               +---+---+ +---+---+            ://
+            //:               |   |   | | 2 |   |            ://
+            //:               +---+---+ +---+---+            ://
+            //:               |   |   | |   | 3 | <--[3,3]   ://
+            //:               +---+---+ +---+---+            ://
+            //:-------------------------^       ^------------://
+                            ////        |       |           ////
+            E.x_0 =( 2 );   ////        |       |           ////
+            E.x_1 =( 3 );   ////        +-------+           ////
+            E.y_0 =( 2 );   ////        rec_032:            ////
+            E.y_1 =( 3 );   ////        [x_0]:1             ////
+                            ////        [x_1]:1             ////
+                            ////        [y_0]:1             ////
+                            ////        [y_1]:1             ////
+                            ////                            ////
+                          /** ****************************** ***
+
+                          Calling "MRK" function twice results
+                          in error [DOUBLE_TROUBLE_2020_12_18].
+                          Fix this. DATE[ 2020_12_19 ]
+
+                          THE PROBLEM IS IN THE [ MRK ] FUNC!
+                          ( __NOT__ the "ASK" function      )
+                          ON_DATE[ 2020_12_19:753AM ]
+
+                          MRK==aac2020_taudirt_DirtySectorUpdate
+                
+                          *** ****************************** **/
+
+                          MRK( 0 , 0 , 17      ); //:@MRK_TWICE
+                          MRK( 0 , 0 , 17      ); //:@MRK_TWICE
+                    ask = ASK( 0 , 0 , 17 , &R );
+                    if( CMP( &E, &R ) != 0 ){
+                        P_R("[E:EXPECTED]:", &E );
+                        P_R("[R:GOT_THIS]:", &R );
+                        ERR("[PARTICULARSETOFSKILLS:FAIL]");
+                    }else{
+                        LOG("[PARTICULARSETOFSKILLS:PASS]",0);
+                    };;
+
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+
+            aac2020_taudirt_ForceClearForUnitTest();
+            
+            //: VID_IID[ 0051 ]TIME[ 1H 34M 55S ] -----------://
+            //:                                              ://
+            //:               +---+---+                      ://
+            //:               |   |   |                      ://
+            //:               +---+---+                      ://
+            //:               |   |   |                      ://
+            //:               +---+---+                      ://
+            //:               +---+---+                      ://
+            //:      [ 0,2 ]-->   |   |                      ://
+            //:               +---+---+                      ://
+            //:               |   |   <--[ 1,3 ]             ://
+            //:               +---+---+                      ://
+            //:----------------------------------------------://
+
+
+            E.x_0 = ( 0 );
+            E.x_1 = ( 1 );
+            E.y_0 = ( 2 );
+            E.y_1 = ( 3 );
+
+                          MRK( 0 , 0 , 16      );
+                          MRK( 0 , 0 , 16      );
+                    ask = ASK( 0 , 0 , 16 , &R );
+                    if( CMP( &E, &R ) != 0 ){
+                        P_R("[E:EXPECTED]:", &E );
+                        P_R("[R:GOT_THIS]:", &R );
+                        ERR("[DOUBLETAP16_ZOMBIELAND:FAIL]");
+                    }else{
+                        LOG("[DOUBLETAP16_ZOMBIELAND:PASS]",0);
+                    };;
+
+
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+
+            aac2020_taudirt_ForceClearForUnitTest();
+            //: 
+            //:   [upper_left:x_v]:2
+            //:   [upper_left:y_v]:0
+            //:            |
+            //:            V
+            //:         [ 2,0 ]     x_0 == 2
+            //: +---+---++-|-+---+  x_1 == 3
+            //: |   |   ||   |   |
+            //: +---+---++---+---+  y_0 == 0
+            //: |   |   ||   |   |  y_1 == 1
+            //: +---+---++---+-|-+
+            //:             [ 3,1 ]
+
+            E.x_0 = ( 2 );
+            E.x_1 = ( 3 );
+            E.y_0 = ( 0 );
+            E.y_1 = ( 1 );
+
+                          MRK( 0 , 0 , 1      );
+                          MRK( 0 , 0 , 1      );
+                    ask = ASK( 0 , 0 , 1 , &R );
+                    if( CMP( &E, &R ) != 0 ){
+                        P_R("[E:EXPECTED]:", &E );
+                        P_R("[R:GOT_THIS]:", &R );
+                        ERR("[OH_NO_ITS_THE_END_OF_THE_WORLD]");
+                    };;
+
+
+            LOG("[DOUBLE_MARKING_TEST:END...]",0);
+
+        #undef  ASK
+        #undef  MRK
+        //:------------------------------:DOUBLE_MARKING_TEST://
+        //:GET_READY_FOR_SMOKE_TESTS:------------------------://
+
+            aac2020_taudirt_ForceClearForUnitTest();
+
+        //:------------------------:GET_READY_FOR_SMOKE_TESTS://
+        //:SMOKE_TEST_A:-------------------------------------://
+        #define ASK aac2020_taudirt_DirtySectorAsk
 
             ask = ASK( T , S , V , &R );
             if( ask != 0 ){ 
@@ -994,10 +1489,13 @@
                 #undef  I64
             };;
 
-        //:---------------------------------------:SMOKE_TEST://
+        #undef  ASK
+        //:-------------------------------------:SMOKE_TEST_A://
         //:LOOPING_SMOKE_TEST:-------------------------------://
+        #define ASK aac2020_taudirt_DirtySectorAsk
 
-            /** Is everything clean? **/
+            /** Is everything clean? Check Entire Canvas. **/
+            /** VID_IID[ 0051 ]TIME[ 0H 48M 48s ]         **/
 
             for(   T = 0 ;   T <= ( 16 - 1 ) ;   T++ ){
             for(   S = 0 ;   S <= ( 16 - 1 ) ;   S++ ){
@@ -1021,7 +1519,310 @@
             
             };;};;};;
 
+        #undef ASK
         //:-------------------------------:LOOPING_SMOKE_TEST://
+        //:SMOKE_TEST_B:-------------------------------------://
+        #define MRK aac2020_taudirt_DirtySectorUpdate
+        #define ASK aac2020_taudirt_DirtySectorAsk
+
+            /** Does ForceClear actually work?               **/
+            /** All bets are off if we THINK we are working  **/
+            /** with a blank slate, but are in fact NOT.     **/
+
+            for( I32 whatever = 0; whatever <= 1; whatever ++ ){
+                T = S = V = 0 ;
+
+                /** Set dirty data at [ 0, 0, 0] an then **/
+                /** look at the dirty regions.           **/
+
+                    ask = ASK( T , S , V , &R );
+                if( ask != 0 ){ ERR("[NOT_57_KETCHUPS]"); };
+                          MRK( T , S , V      );
+                    ask = ASK( T , S , V , &R );
+                if( ask != 1 ){ 
+
+                    P_R( "[STILL_A_TRAP_RECTANGLE?]", &R );
+                    ERR("[HEINZ_CONSPIRACY]"); 
+                };
+
+                //: VID_IID[ 0051 ]TIME[ 0H 33M 05S ] ://
+                E.x_0 = ( 0 ); //:Expecting 2x2 inclusive rect.
+                E.x_1 = ( 1 );
+                E.y_0 = ( 0 );
+                E.y_1 = ( 1 );
+
+                if( CMP( &R , &E ) == 0 ){
+
+                    LOG("[RECTANGLES_LOOKING_GOOD!]",0);
+            
+                }else{
+
+                    ERR("[RECTANGLES_LOOKING_BAD]"    );
+
+                };;
+
+                /** Code put in loop to make sure the  **/
+                /** forceClear command actually works. **/
+
+                aac2020_taudirt_ForceClearForUnitTest();
+
+                LOG("[next:whatever]",0);
+            };; //:next[ whatever ]
+
+            PAD( 4 ); //:Log Padding
+        #undef  MRK 
+        #undef  ASK
+        //:-------------------------------------:SMOKE_TEST_B://
+        //:SMOKE_TEST_C:-------------------------------------://
+        #define MRK aac2020_taudirt_DirtySectorUpdate
+        #define ASK aac2020_taudirt_DirtySectorAsk
+
+            /** Set TWO points near [0,0] on cpuside bitmap  **/
+            /** And make sure the dirty rectangle is the     **/
+            /** proper size and location.                    **/
+
+            aac2020_taudirt_ForceClearForUnitTest();
+
+                     T = 0;
+                     S = 0;
+                     V = 0;
+                MRK( T , S , V      );
+          
+                    ask = ASK( T , S , V , &R );
+                if( ask != 1 ){ 
+                    ERR("[PANGOLINS_ARE_POKEMON]"); 
+                };;
+                E.x_0 = ( 0 );  //:  +---+---+
+                E.x_1 = ( 1 );  //:  | 0 |   |
+                E.y_0 = ( 0 );  //:  +---+---+
+                E.y_1 = ( 1 );  //:  |   | 1 |
+                                //:  +---+---+
+
+                if( CMP( &R , &E ) != 0 ){ 
+                    P_R("[GOTTEN:(R)]" , &R );
+                    P_R("[EXPECT:(E)]" , &E );
+                    ERR("[BAD_SKYS_AHEAD]");
+                }else{
+                    LOG("[GOOD_SKYS_AHEAD]",0);
+                };;
+
+            aac2020_taudirt_ForceClearForUnitTest();
+
+                      MRK( 0 , 0 , 0 );
+                      MRK( 0 , 0 , 1 );
+                ask = ASK( 0 , 0 , 0 , &R );
+
+                                //:       | V==0  | V==1  |
+                                //:       |<  0  >|<  1  >|
+                E.x_0 = ( 0 );  //:       +---+---+---+---+
+                E.x_1 = ( 3 );  //:[0,0]--> A |   |   |   |
+                E.y_0 = ( 0 );  //:       +---+---+---+---+
+                E.y_1 = ( 1 );  //:       |   |   |   | B |
+                                //:       +---+---+---+-|-+
+                                //:                     |
+                                //:              [3,1]--+
+                             
+                if( CMP( &R , &E ) != 0 ){ 
+                    ERR("[SMOKE_TEST_C:FAILED_AT_THE_END]");
+                }else{
+                    LOG("[SMOKE_TEST_C:PASSED_AT_THE_END]",0);
+                };;
+
+                PAD(4);
+        
+        #undef MRK
+        #undef PAD
+        //:-------------------------------------:SMOKE_TEST_C://
+        //:IS_DIRTY_RECT_2X2_PIXELS:-------------------------://
+        #define PUT aac2020_taudirt_DirtySectorUpdate
+        #define GET aac2020_taudirt_DirtySectorAsk
+
+            /** VID_IID[ 0051 ]TIME[ 4H 10M 28S ] **/
+
+            aac2020_taudirt_ForceClearForUnitTest();
+
+            T = 8 ; S = 9 ; V = 10 ;
+            a_0 = GET( T,S,V, &(R) );
+                  PUT( T,S,V       );
+            ask = GET( T,S,V, &(R) );
+
+            if( 0
+            ||      ( R.x_1 - R.x_0 + 1 ) != 2
+            ||      ( R.y_1 - R.y_0 + 1 ) != 2
+            ){
+                ERR("[DIRTY_GLOBAL_RECT_SHOULD_BE_2X2_HERE]");
+            };;
+
+        #undef PUT
+        #undef GET
+        //:-------------------------:IS_DIRTY_RECT_2X2_PIXELS://
+        //:KITTY_CORNER_CLUSTERS:----------------------------://
+        #define PUT aac2020_taudirt_DirtySectorUpdate
+        #define GET aac2020_taudirt_DirtySectorAsk
+        { //:SCOPE
+
+            REC TL={0};  //: @TEMP_STACK_VARS_FOR_SCOPE@ ://
+            REC TR={0};  //: @TEMP_STACK_VARS_FOR_SCOPE@ ://
+            REC BL={0};  //: @TEMP_STACK_VARS_FOR_SCOPE@ ://
+            REC BR={0};  //: @TEMP_STACK_VARS_FOR_SCOPE@ ://
+
+            aac2020_taudirt_ForceClearForUnitTest();
+            PUT( 0,0,0 +0  +0    ); //: cluster[ 0 , 0 ]@CL00@
+            GET( 0,0,0 +0  +0,&TL); //: cluster[ 0 , 0 ]@CL00@
+            if( 0
+            ||      ( TL.x_1 - TL.x_0 + 1 ) != 2  //:2x2_cluster
+            ||      ( TL.y_1 - TL.y_0 + 1 ) != 2  //:2x2_cluster
+            ){
+                ERR("[KITTY_CORNER_CLUSTERS:TOP_LEF(TL)]");
+            };;
+
+            aac2020_taudirt_ForceClearForUnitTest();
+            PUT( 0,0,0 +1  +0    ); //: cluster[ 1 , 0 ]@CL10@
+            GET( 0,0,0 +1  +0,&TR); //: cluster[ 1 , 0 ]@CL10@
+            if( 0
+            ||      ( TR.x_1 - TR.x_0 + 1 ) != 2  //:2x2_cluster
+            ||      ( TR.y_1 - TR.y_0 + 1 ) != 2  //:2x2_cluster
+            ){
+                ERR("[KITTY_CORNER_CLUSTERS:TOP_RIG(TR)]");
+            };;
+
+            aac2020_taudirt_ForceClearForUnitTest();
+            PUT( 0,0,0 +0 +16    ); //: cluster[ 0 , 1 ]@CL01@
+            GET( 0,0,0 +0 +16,&BL); //: cluster[ 0 , 1 ]@CL01@
+            if( 0
+            ||      ( BL.x_1 - BL.x_0 + 1 ) != 2  //:2x2_cluster
+            ||      ( BL.y_1 - BL.y_0 + 1 ) != 2  //:2x2_cluster
+            ){
+                ERR("[KITTY_CORNER_CLUSTERS:BOT_LEF(BL)]");
+            };;
+
+            aac2020_taudirt_ForceClearForUnitTest();
+            PUT( 0,0,0 +1 +16    ); //: cluster[ 1 , 1 ]@CL11@
+            GET( 0,0,0 +1 +16,&BR); //: cluster[ 1 , 1 ]@CL11@
+            if( 0
+            ||      ( BR.x_1 - BR.x_0 + 1 ) != 2  //:2x2_cluster
+            ||      ( BR.y_1 - BR.y_0 + 1 ) != 2  //:2x2_cluster
+            ){
+                ERR("[KITTY_CORNER_CLUSTERS:BOT_RIG(BR)]");
+            };;
+
+            /** Sizes were correct, but were the dirty  **/
+            /** rectangles in the correct locations?    **/
+
+            /** ******************************************** ***
+
+            VID_IID[ 0051 ]TIME[ 4H 50M 29S ]
+
+                                       +---+  #DIA_TAU_CEL#
+               @TL       @TR           | 0 |  +---+---+---+
+                |         |            +---+  | 1 | 2 | 3 |
+            +---+---+ +---+---+        V  +---+---+---+---+
+            V       V V       V        V  | 4 | 5 | 6 | 7 |
+                                       V  +---+---+---+---+
+            +---+---+ +---+---+.....   V  | 8 | 9 |10 |11 |
+            |   |   | |   |   | \  .   V  +---+---+---+---+
+            +---+---+ +---+---+  | .   V  |12 |13 |14 |15 |
+            |   |   | |   |   |  | .   V  +---+---+---+---+
+            +---+---+ +---+---+  | .   V
+            +---+---+ +---+---+  | .   +---+  #DIA_SUB_CEL#
+            |   |   | |   |   |  |<<<<<| 0 |  +---+---+---+
+            +---+---+ +---+---+  | .   +---+  | 1 | 2 | 3 |
+            |   |   | |   |   |  | .      +---+---+---+---+
+            +---+---+ +---+---+ /  .      | 4 | 5 | 6 | 7 |
+            .                      .      +---+---+---+---+
+            ^       ^ ^       ^    .      | 8 | 9 |10 |11 |
+            +---+---+ +---+---+    .      +---+---+---+---+
+            .   |         |        .      |12 |13 |14 |15 |
+            .  @BL       @BR       .      +---+---+---+---+
+            .                      .
+            . #DIA_VAR_CEL#        .
+            ........................
+
+            *** ******************************************** **/
+
+                if( 0
+                ||  TL.x_0 != 0             /** @TL **/
+                ||  TL.x_1 != 1
+                ||  TL.y_0 != 0
+                ||  TL.y_1 != 1
+                ){ ERR("[KCC:TOP_LEF(TL):BAD_DIMS]"); };
+
+                if( 0
+                ||  TR.x_0 != 2             /** @TR **/
+                ||  TR.x_1 != 3
+                ||  TR.y_0 != 0
+                ||  TR.y_1 != 1
+                ){ ERR("[KCC:TOP_RIG(TR):BAD_DIMS]"); };
+
+                if( 0
+                ||  BL.x_0 != 0             /** @BL **/
+                ||  BL.x_1 != 1
+                ||  BL.y_0 != 2
+                ||  BL.y_1 != 3
+                ){ ERR("[KCC:BOT_LEF(BL):BAD_DIMS]"); };
+
+                if( 0
+                ||  BR.x_0 != 2             /** @BR **/
+                ||  BR.x_1 != 3
+                ||  BR.y_0 != 2
+                ||  BR.y_1 != 3
+                ){ ERR("[KCC:BOT_RIG(BR):BAD_DIMS]"); };
+
+        } //:SCOPE
+        #undef PUT
+        #undef GET
+        //:----------------------------:KITTY_CORNER_CLUSTERS://
+        //:TRY_TO_MAKE_4X4_DIRTY_REGION:---------------------://
+        #define PUT aac2020_taudirt_DirtySectorUpdate
+        #define GET aac2020_taudirt_DirtySectorAsk
+
+            /** VID_IID[ 0051 ]TIME[ 4H 14M 01S ] **/
+
+            aac2020_taudirt_ForceClearForUnitTest();
+
+            //:  T S V ......);
+            PUT( 0,0,0 +0  +0);  //: cluster[ 0 , 0 ] @CL00@
+            PUT( 0,0,0 +1  +0);  //: cluster[ 1 , 0 ] @CL10@
+            PUT( 0,0,0 +0 +16);  //: cluster[ 0 , 1 ] @CL01@
+            PUT( 0,0,0 +1 +16);  //: cluster[ 1 , 1 ] @CL11@
+
+            /** As long as T & S are the same, we will **/
+            /** get the same internal dirty rectangle. **/
+            /**                                        **/
+            /** V value is in-cosequential here        **/
+            GET( 0,0,255, &R );
+
+            if( 0
+            ||      ( R.x_1 - R.x_0 + 1 ) != 4
+            ||      ( R.y_1 - R.y_0 + 1 ) != 4
+            ){
+                /** ***************************************** **
+
+                    VID_IID[ 0051 ]TIME[ 4H 30M 48S ]
+
+                    If this gets tripped it means the MERGING 
+                    of dirty rectangle logic is WRONG because  
+                    we already queried the sizes and bounds 
+                    of the individual bounding rectangles in
+                    section: 
+
+                    KITTY_CORNER_CLUSTERS
+
+                *** **************************************** **/
+
+                ERR("[DIRTY_GLOBAL_RECT_SHOULD_BE_4X4_HERE]");
+            };;
+         
+            if( 0
+            ||  R.x_0 != 0              
+            ||  R.x_1 != 3
+            ||  R.y_0 != 0
+            ||  R.y_1 != 3
+            ){ ERR("[BAD_POSITION_OF_4X4_RECT]"); };
+
+        #undef PUT
+        #undef GET
+        //:---------------------:TRY_TO_MAKE_4X4_DIRTY_REGION://
         //:ARBITRARY_POINT_TEST:-----------------------------://
         #define PUT aac2020_taudirt_DirtySectorUpdate
         #define GET aac2020_taudirt_DirtySectorAsk
@@ -1073,12 +1874,33 @@
 
             //:- - - - - - - - - - - -- - - - - - - - - - - -://
             
-            V = 10 ;
+            T = 8 ; S = 9 ; V = 11 ;  //:<--onlychanged[ V ]
             a_0 = GET( T,S,V, &(R) );
                   PUT( T,S,V       );
             ask = GET( T,S,V, &(R) );
-            if( 1 <= a_0 ){ ERR("[EveryoneAtTheParty:01]" ); };
-            if( 1 != ask ){ ERR("[EveryoneAtTheParty:02]" ); };
+            if( 0 == a_0 ){ 
+
+                /** OK: a_0 is CLEAN and OUTSIDE dirty rect **/
+
+            }else{
+                G_2( &G , T,S,V ); //:Expected 2x2 dirty area.
+
+                P_R("[dirty_party_rectangle]:", &(R) );
+                P_R("[new_dirty_2x2_area:::]:", &(G) );
+
+                ERR("[EveryoneAtTheParty:01]" ); 
+
+            };;
+            if( ask >= 1 ){ 
+
+                /** GOOD: Dirty and inside dirty rectangle **/
+
+            }else{
+
+                ERR("[EveryoneAtTheParty:02]" );  
+
+            };;
+
             G_2( &G , T,S,V );
 
                 //:expand_expected:--------------------------://
@@ -1105,50 +1927,502 @@
         #undef  PUT
         #undef  GET
         //:-----------------------------:ARBITRARY_POINT_TEST://
+        //:KITTY_CORNER_TRANSPOSITION_TEST:------------------://
+        #define PUT aac2020_taudirt_DirtySectorUpdate /***** **/
+        #define GET aac2020_taudirt_DirtySectorAsk    /***** **/
+        /** ************************************************ ***
+            @TAU_CEL@   @SUB_CEL@    @VAR_CEL@
+            0 1 2 3     0 1 2 3      +--+--+--+--+...
+            4 5[6]7     4 5 6 7    0 |          
+            8 9 A B     8[9]A B      +--+--+--+--+...
+            C D E F     C D E F    1 |
+                                     +--+--+--+--+...
+                                   2 |
+                                     +--+--+--+--+...
+                                   3 |
+                                     +--+--+--+--+...
+                                   4 |
+                                     +--+--+--+--+...
+                                   5 |
+                                     +--+--+--+--+...
+                                   6 |
+                                     +--+--+--+--+...
+                                   7 |        |VC|
+                                     +--+--+--+|-+...
+                                      0   1  2 |3
+                                               |
+                                             [ 3,7 ] @vc@
+        *** *********************************************** ***/
+        aac2020_taudirt_ForceClearForUnitTest(); 
 
+            T = 6;
+            S = 9;
+            V = 3 + ( 16 * 7); //: @vc@ ://
 
+            t_x = 2;
+            t_y = 1;
 
+            s_x = 1;
+            s_y = 2;
 
+            v_x = 3;
+            v_y = 7;
 
-    
-         printf("\n\n\n");
-         LOG("[ESCAPED_THE_LOOP]",0);
-         printf("\n\n\n");
-
-    ///  for( p_x = 0 ; p_x <= ( 512-1) ; p_x ++ ){
-    ///  for( p_y = 0 ; p_y <= ( 512-1) ; p_y ++ ){
-    /// 
-    ///      //:Convert [p_x,p_y]TO[ TAU , SUB , VAR ]Indexes
-    /// 
-    ///      //:Make sure sector is NOT dirty.
-    /// 
-    ///  };;};;
-    /// 
-    ///  for( p_x = 0 ; p_x <= ( 512-1) ; p_x ++ ){
-    ///  for( p_y = 0 ; p_y <= ( 512-1) ; p_y ++ ){
-    /// 
-    ///      //:Convert [p_x,p_y]TO[ TAU , SUB , VAR ]Indexes
-    /// 
-    ///     
-    ///      //:make sure sector NOT dirty.
-    /// 
-    ///      //:flag sector as dirty.
-    /// 
-    ///      //:make sure sector IS dirty.
-    /// 
-    ///  };;};;
-    /// 
-    ///  for( TAU, SUB, & VAR ).....
-
-
-
-
-
-
-
-
+            /** Calculate Expected Global Dirty Rect **/
+            E.x_0 = (t_x*128)+(s_x*32)+((v_x*2)+0 );
+            E.x_1 = (t_x*128)+(s_x*32)+((v_x*2)+1 );
+            E.y_0 = (t_y*128)+(s_y*32)+((v_y*2)+0 );
+            E.y_1 = (t_y*128)+(s_y*32)+((v_y*2)+1 );
         
-        AAC2020_TODOMAN_Vital( "[Finish_This_Unit_Test]");
+                    PUT( T , S , V      );
+                ask=GET( T , S , V , &R );
+
+                assert( 1 == ask );
+                if( 0
+                ||  E.x_0 != R.x_0 
+                ||  E.x_1 != R.x_1 
+                ||  E.y_0 != R.y_0 
+                ||  E.y_1 != R.y_1 
+                ){
+                    ERR("[KITTY_CORNER_TRANSPOSITION_TEST]");
+                };;
+
+        #undef GET
+        #undef PUT
+        //:------------------:KITTY_CORNER_TRANSPOSITION_TEST://
+        //:MEGA_32X32_DIRTY_RECT_TEST:-----------------------://
+        #define PUT aac2020_taudirt_DirtySectorUpdate
+        #define GET aac2020_taudirt_DirtySectorAsk
+        #define P_F printf
+        { //:SCOPE
+
+            U08 TAU;
+            U08 SUB;  
+
+            E.x_0 =( 0 - 666 );
+            E.x_1 =( 0 - 666 );
+            E.y_0 =( 0 - 666 );
+            E.y_1 =( 0 - 666 );
+
+            R.x_0 =( 0 - 666 );
+            R.x_1 =( 0 - 666 );
+            R.y_0 =( 0 - 666 );
+            R.y_1 =( 0 - 666 );
+    
+            /** VID_IID[ 0051 ]TIME[ 5H 37M 22S ] **/
+   
+            aac2020_taudirt_ForceClearForUnitTest();
+
+            I32 v_x;
+            I32 v_y;
+
+            U08 v1 = 15 ; /** Extreme TOP RIGHT of 16x16 **/
+            U08 v2 = ( 255 - 15 ); /** BOT LEFT of 16x16 **/
+
+            /** ASSERT: index v1 == [ 15 , 0 ] **/
+                v_x =  v1       % 16 ;
+                v_y = (v1 - v_x)/ 16 ;
+            if( v_x != 15 || v_y != 0 ){
+                ERR("[YOU_DONT_KNOW_INDEX_TO_XY:XXX]");
+            };;
+
+            /** ASSERT: index v2 == [ 0 , 15 ] **/
+                v_x =  v2       % 16 ;
+                v_y = (v2 - v_x)/ 16 ;
+            if( v_x !=  0 || v_y != 15 ){
+                ERR("[YOU_DONT_KNOW_INDEX_TO_XY:YYY]");
+            };;
+
+            for( TAU = 0 ; TAU <= 15 ; TAU ++ ){
+            for( SUB = 0 ; SUB <= 15 ; SUB ++ ){
+
+                //:cell_bounds:------------------------------://
+
+                PUT( TAU , SUB ,v1     );     
+                PUT( TAU , SUB ,v2     );
+                GET( TAU , SUB ,v2, &R );
+
+                //:------------------------------:cell_bounds://
+                //:pixel_bounds:-----------------------------://
+
+                    E.x_0 =( 44044 );
+                    E.x_1 =( 44044 );
+                    E.y_0 =( 44044 );
+                    E.y_1 =( 44044 );
+                    aac2020_taudirt_rec_bug_CalcGlobal32X32(
+                        &E  ,   TAU,SUB  ,  v1,v2   );;
+
+                    //:fuck_this:----------------------------://
+
+                        /** VID_IID[ 0051 ]TIME[ 7H 26M 45S ]**/
+
+                        REC r_1={0};
+                        REC r_2={0};
+                        I32 top_x_1; /** TOP_LEFT x 1 & 2  **/
+                        I32 top_x_2; /** TOP_LEFT x 1 & 2  **/
+                        I32 top_y_1; /** TOP_LEFT x 1 & 2  **/
+                        I32 top_y_2; /** TOP_LEFT x 1 & 2  **/
+
+                        I32 t1x =  TAU       %  4 ;
+                        I32 t1y = (TAU - t1x)/  4 ;
+                        I32 s1x =  SUB       %  4 ;
+                        I32 s1y = (SUB - s1x)/  4 ;
+                        I32 v1x =   v1       % 16 ;   //: v1 ://
+                        I32 v1y = ( v1 - v1x)/ 16 ;   //: v1 ://
+                                                      
+                        I32 t2x =  TAU       %  4 ;   
+                        I32 t2y = (TAU - t2x)/  4 ;   
+                        I32 s2x =  SUB       %  4 ;   
+                        I32 s2y = (SUB - s2x)/  4 ;   
+                        I32 v2x =   v2       % 16 ;   //: v2 ://
+                        I32 v2y = ( v2 - v2x)/ 16 ;   //: v2 ://
+
+                        top_x_1 =( 128*t1x)+(32*s1x)+(2*v1x);
+                        top_y_1 =( 128*t1y)+(32*s1y)+(2*v1y);
+
+                        top_x_2 =( 128*t2x)+(32*s2x)+(2*v2x);
+                        top_y_2 =( 128*t2y)+(32*s2y)+(2*v2y);
+
+                        r_1.x_0 = top_x_1 + 0;
+                        r_1.x_1 = top_x_1 + 1;
+                        r_1.y_0 = top_y_1 + 0;
+                        r_1.y_1 = top_y_1 + 1;
+
+                        r_2.x_0 = top_x_2 + 0;
+                        r_2.x_1 = top_x_2 + 1;
+                        r_2.y_0 = top_y_2 + 0;
+                        r_2.y_1 = top_y_2 + 1;
+
+                        REC F ={0};
+
+                        F.x_0 = MIN( r_1.x_0 , r_2.x_0 );
+                        F.x_1 = MAX( r_1.x_1 , r_2.x_1 );
+
+                        F.y_0 = MIN( r_1.y_0 , r_2.y_0 );
+                        F.y_1 = MAX( r_1.y_1 , r_2.y_1 );
+
+
+                    //:----------------------------:fuck_this://
+
+                    if( R.x_1 - R.x_0 + 1 != 32
+                    ||  R.y_1 - R.y_0 + 1 != 32 ){
+
+                        ERR("[32x32_Smoke_Test_Fail:(R)]");
+                    };;
+                    if( E.x_1 - E.x_0 + 1 != 32
+                    ||  E.y_1 - E.y_0 + 1 != 32 ){
+
+                        ERR("[32x32_Smoke_Test_Fail:(E)]");
+                    };;
+                    if( F.x_1 - F.x_0 + 1 != 32
+                    ||  F.y_1 - F.y_0 + 1 != 32 ){
+
+                        ERR("[32x32_Smoke_Test_Fail:(F)]");
+                    };;
+ 
+
+                    if( 0
+                    ||  R.x_0 != E.x_0 //: <-- pixel_bounds
+                    ||  R.x_1 != E.x_1 //: <-- pixel_bounds
+                    ||  R.y_0 != E.y_0 //: <-- pixel_bounds
+                    ||  R.y_1 != E.y_1 //: <-- pixel_bounds
+                    ){
+                        P_R( "[whats_my_rect?](R)", &R );
+                        P_R( "[whats_my_rect?](E)", &E );
+                        P_R( "[fuck_all_this!](F)", &F );
+
+                        P_F("[TAU|SUB|v2]:[ %d | %d | %d ]\n"
+                        ,     TAU,SUB,v2 );
+
+                        ERR("[MEGA_32X32_DIRTY_RECT_TEST]");
+                    };;
+        
+                //:-----------------------------:pixel_bounds://
+            };;};;
+
+        } //:SCOPE
+        #undef GET
+        #undef PUT
+        #undef P_F
+        //:-----------------------:MEGA_32X32_DIRTY_RECT_TEST://
+        //:DIRTY_GROW_TEST:----------------------------------://
+        #define PUT aac2020_taudirt_DirtySectorUpdate
+        #define GET aac2020_taudirt_DirtySectorAsk
+        { //:SCOPE
+
+            /** Make sure dirty rectangle expands in the way **/
+            /** you think it should. **/
+
+            aac2020_taudirt_ForceClearForUnitTest();
+
+            I32 wid_hig;
+            I32     d_x; /** DIAGONAL: X       **/
+            I32     d_y; /** DIAGONAL: Y       **/
+            I32     b_x; /** base (top_left) x **/
+            I32     b_y; /** base (top_left) y **/
+
+            for( T = 0; T <= 15; T++ ){ //: <-- @1D_INDEX@
+            for( S = 0; S <= 15; S++ ){ //: <-- @1D_INDEX@
+
+                /** Loop through #DIA_VAR_CEL# using  **/
+                /** @2D_INDEX@ values: [ d_x , d_y ]  **/
+                /** "d" is for diagonal.              **/
+
+                t_x =   T       % 4 ; /** #DIA_TAU_CEL# **/
+                t_y = ( T - t_x)/ 4 ; /** Is: 4x4 cells **/ 
+                s_x =   S       % 4 ; /** #DIA_SUB_CEL# **/
+                s_y = ( S - s_x)/ 4 ; /** Is: 4x4 cells **/
+
+                b_x = (t_x*128)+(s_x*32);
+                b_y = (t_y*128)+(s_y*32);
+    
+                wid_hig=( 0 );
+
+                for( I32 diag = 0; diag <= (16-1); diag++ ){
+
+                    d_x=( diag );
+                    d_y=( diag );
+                  
+                    V = d_x + ( 16 * d_y);
+
+                    /** WHY +2 ? SEE: Commentary Before:     **/
+                    /** VID_IID[ 0052 ]TIME[ 00H 13M 12S ]   **/
+
+                    PUT( T,S,V    );
+                    GET( T,S,V,&R );
+                    wid_hig=( wid_hig + 2 );
+
+                    if( R.x_1 - R.x_0 + 1 == wid_hig  
+                    &&  R.y_1 - R.y_0 + 1 == wid_hig  
+                    ){
+                        /** Good. We predicted correctly. **/
+                    }else{
+                        
+                        P_R( "[R]:", &R );
+                        printf("[wid_hig]:%d\n", wid_hig );
+    
+                        ERR("[UNDERSTAND_5G_STRIKES_BACK]");
+                    };;
+
+                    E.x_0 = ( b_x + (  0  ) + 0 );
+                    E.y_0 = ( b_y + (  0  ) + 0 );
+                    E.x_1 = ( b_x + (d_x*2) + 1 );
+                    E.y_1 = ( b_y + (d_y*2) + 1 );
+
+                    if( 0
+                    ||  E.x_0 != R.x_0
+                    ||  E.x_1 != R.x_1
+                    ||  E.y_0 != R.y_0
+                    ||  E.y_1 != R.y_1
+                    ){
+
+                        P_R( "[R]:", &R ); //:Gotten
+                        P_R( "[E]:", &E ); //:Expected
+
+                        ERR("[PLEASURE_ISLAND_4]");
+                    };;
+
+                };; //:[diag]://
+
+            };;};;  //:[S, T]://
+
+        } //:SCOPE
+        #undef PUT
+        #undef GET
+        //:----------------------------------:DIRTY_GROW_TEST://
+        //:PIXEL_BY_PIXEL_TEST:------------------------------://
+        #define PUT aac2020_taudirt_DirtySectorUpdate
+        #define GET aac2020_taudirt_DirtySectorAsk
+        { //:SCOPE
+
+            /** Make all datapoints clean. **/
+            aac2020_taudirt_ForceClearForUnitTest();
+
+                T=0; S=0; V=0;
+                ask=( GET(T,S,V,&R) );
+                if( ask <= 0 /** CLEAN DATA POINT **/ ){
+
+                    /**GOOD: Data Point Is Clean As Expected **/
+
+                }else{
+
+                /** ERR:Reported Clean Data Point As Dirty **/
+                    ERR("[WTF_2020_12_19_734PM]");
+
+                };;
+            
+            aac2020_taudirt_ForceClearForUnitTest();
+
+            I32 prev_V =( 0 ); /** previous V value **/
+
+            I32 r_x = 0; /** remainder x **/
+            I32 r_y = 0; /** remainder y **/
+
+            I32 p_x = 0; /** pixel x **/
+            I32 p_y = 0; /** pixel y **/
+
+            /** p_y THEN p_x for the loop so     * * * * * * **/
+            /** that we go in  scanline order.   * * * * * * **/
+            /** VID_IID[ 0052 ]TIME[ 1H 24M 29S ]* * * * * * **/
+
+            /** WHY += 2 ? VID_IID[ 0052 ]TIME[ 1H 49M 57S ] **/
+
+            for(    p_y = 0 ; p_y <= ( 512-1) ; p_y += 2 ){
+            for(    p_x = 0 ; p_x <= ( 512-1) ; p_x += 2 ){
+            
+                    t_x = ( p_x / 128 );
+                    t_y = ( p_y / 128 );
+
+                    assert( t_x >= 0 && t_x <= ( 4 - 1 ) );
+                    assert( t_y >= 0 && t_y <= ( 4 - 1 ) );
+                    
+                    r_x = ( p_x - ( t_x * 128 ) );
+                    r_y = ( p_y - ( t_y * 128 ) );
+
+                    assert( r_x >= 0 && r_x <= ( 128 - 1 ) );
+                    assert( r_y >= 0 && r_y <= ( 128 - 1 ) );
+
+                    s_x = ( r_x / 32 );
+                    s_y = ( r_y / 32 );
+
+                    assert( s_x >= 0 && s_x <= ( 4 - 1 ) );
+                    assert( s_y >= 0 && s_y <= ( 4 - 1 ) );
+
+                    r_x = ( p_x - ( t_x * 128 ) - ( s_x * 32 ));
+                    r_y = ( p_y - ( t_y * 128 ) - ( s_y * 32 ));
+
+                    assert( r_x >= 0 && r_x <= ( 32 - 1 ) );
+                    assert( r_y >= 0 && r_y <= ( 32 - 1 ) );
+
+                    v_x = ( r_x / 2 );
+                    v_y = ( r_y / 2 );
+
+                    if( 1
+                    &&   ( v_x >= 0 && v_x <= (16 - 1 ) )
+                    &&   ( v_y >= 0 && v_y <= (16 - 1 ) )
+                    ){
+                        /** Good. Do nothing. **/
+                    }else{
+
+                        printf("[v_x]:%d\n" , v_x );
+                        printf("[v_y]:%d\n" , v_y );
+
+                        ERR("[STREAM_IN_CORRECT_CATEGORY!]");
+                    };;
+
+                    /** ************************************ **/
+                    /** VID_IID[ 0052 ]TIME[ 59M 18S ]       **/
+                    /** We aren't sure if this math is       **/
+                    /** correct so just throw in some        **/
+                    /** asserts.                             **/
+                    /** VID_IID[ 0052 ]TIME[ 1H 17M 28S ]    **/
+                    /** Decided to interlace asserts.        **/
+                    /** ************************************ **/
+
+                    /** We need to transform 2D tile coords  **/
+                    /** into their 1D index counterparts     **/
+                    /** because every variable slot is       **/
+                    /** an [INDEX/ENUMERATION]               **/
+                    /** VID_IID[ 0052 ]TIME[ 1H 36M 15S ]    **/
+
+                    prev_V =( V );
+
+                    T = t_x + ( t_y  *  4 /** wid== 4 **/ );       
+                    S = s_x + ( s_y  *  4 /** wid== 4 **/ );       
+                    V = v_x + ( v_y  * 16 /** wid==16 **/ );   
+
+                    /** VID_IID[ 0052 ]TIME[ 2H 2M 19S ] **/
+                    #define A assert
+                    A( ((I32)T)+0 >=0 &&       T    <= ( 16-1));
+                    A( ((I32)S)+0 >=0 &&       S    <= ( 16-1));
+                    A( ((I32)V)+0 >=0 && ((I32)V)+0 <= (256-1));
+                    #undef  A
+
+                    /** VID_IID[ 0052 ]TIME[ 1H 56M 44S ] **/
+                    if( p_x == 0 && p_y == 0 ){
+
+                        if( V != 0 ){ ERR("[AMISTAKE2020]");};
+
+                    }else{
+                        if( V == prev_V ){
+                            ERR("[V_IS_PREV_V]");
+                        };;
+                    };;
+
+                    //:| IID_0053 |--------------------------://
+                    /** FIXED_ON_DATE[ 2020_12_21 ]          **/
+                    /** @VID_IID[ 0053 ]TIME[ 1H 32M 37S ]   **/
+                    if( GET(T,S,V,&R) <= 0 /** CLEAN DATA **/ ){
+
+                        /** GOOD: DATA IS CLEAN AS EXPECTED **/
+
+                    }else{
+                        printf("[T]:%d\n"   ,  T  );
+                        printf("[S]:%d\n"   ,  S  );
+                        printf("[V]:%d\n"   ,  V  );
+
+                        printf("[p_x]:%d\n" , p_x );
+                        printf("[p_y]:%d\n" , p_y );
+
+                        ERR("[EXP_CLEAN_2020_12_19]");
+                    };;
+                        PUT(T,S,V   );
+                    if( GET(T,S,V,&R) >= 1 ){
+                        /** GOOD: DATA IS DIRTY AS EXPECTED **/
+                    }else{
+                        ERR("[EXP_DIRTY_2020_12_19]");
+                    };;
+                    //:--------------------------| IID_0053 |://
+
+            };;};;
+
+        } //:SCOPE
+        #undef PUT
+        #undef GET
+        //:------------------------------:PIXEL_BY_PIXEL_TEST://
+    
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    aac2020_taudirt_UnitTest_UtilFuncs( void )
+    {
+
+        /**   AAC2020_TAUDIRT_rec_inc_Min     **/
+        /** YOU MEAN: AAC2020_TAUDIRT_Min     **/
+        /**       OR: aac2020_taudirt_Min_i32 **/
+
+        /**   AAC2020_TAUDIRT_rec_inc_Max     **/
+        /** YOU MEAN: AAC2020_TAUDIRT_Max     **/
+        /**       OR: aac2020_taudirt_Max_i32 **/
+
+        /** Tests === edge case. **/
+
+        if( 0
+        ||  AAC2020_TAUDIRT_Min    (1,1) != 1 
+        ||  AAC2020_TAUDIRT_Max    (2,2) != 2 
+        ||  aac2020_taudirt_Min_i32(3,3) != 3 
+        ||  aac2020_taudirt_Max_i32(4,4) != 4 
+        ){
+            ERR("[CAN_YOU_EVEN_MIN_MAX_BRO:PART_1]");
+        };;
+
+        if( 0
+        ||  AAC2020_TAUDIRT_Min    (1,2) != 1 
+        ||  AAC2020_TAUDIRT_Max    (1,2) != 2 
+        ||  aac2020_taudirt_Min_i32(1,2) != 1 
+        ||  aac2020_taudirt_Max_i32(1,2) != 2 
+        ){
+            ERR("[CAN_YOU_EVEN_MIN_MAX_BRO:PART_2]");
+        };;
+
+        if( 0
+        ||  AAC2020_TAUDIRT_Min    (2,1) != 1 
+        ||  AAC2020_TAUDIRT_Max    (2,1) != 2 
+        ||  aac2020_taudirt_Min_i32(2,1) != 1 
+        ||  aac2020_taudirt_Max_i32(2,1) != 2 
+        ){
+            ERR("[CAN_YOU_EVEN_MIN_MAX_BRO:PART_3]");
+        };;
     }
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     U32
@@ -1160,6 +2434,10 @@
         if( u32 ){ /** reserved for future use **/ };
 
         LOG( "[ENTERING:AAC2020_TAUDIRT_UnitTest]",0);
+
+        //:UNIT_TEST_UTILITY_FUNCTIONS:----------------------://
+            aac2020_taudirt_UnitTest_UtilFuncs();
+        //:----------------------:UNIT_TEST_UTILITY_FUNCTIONS://
 
         //:#TAUDEPO_DATA_BACKUP_OR_RESTORE#------------------://
         #define BAK_001  AAC2020_TAUDIRT_DIR_ANY
@@ -1235,12 +2513,12 @@
 #undef  L_A                                           //: 05 ://
 #undef  ANY                                           //: 06 ://
 #undef  LOG                                           //: 07 ://
-#undef  ASK                                           //: 08 ://
-#undef  ERR                                           //: 09 ://
-#undef  REC                                           //: 10 ://
-#undef  CMP                                           //: 11 ://
-#undef  P_R                                           //: 12 ://
-#undef  G_2                                           //: 13 ://
-#undef  MIN                                           //: 14 ://
-#undef  MAX                                           //: 15 ://
+#undef  ERR                                           //: 08 ://
+#undef  REC                                           //: 09 ://
+#undef  CMP                                           //: 10 ://
+#undef  P_R                                           //: 11 ://
+#undef  G_2                                           //: 12 ://
+#undef  MIN                                           //: 13 ://
+#undef  MAX                                           //: 14 ://
+#undef  PAD                                           //: 15 ://
 //:================================================:UNIT_TEST://
