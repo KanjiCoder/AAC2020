@@ -10,9 +10,34 @@
 //: -------------------------------------------------------- ://
 //:UNIT_TEST:================================================://
 #define U08 uint8_t /** GCC: <stdint.h> **/
+#define I32 int32_t /** GCC: <stdint.h> **/
+#define FLT float
 
         /** True if unit test is RUNNING or has RAN **/
         U08 aac2020_tausync_unit_test_flag =( 0 );
 
+        /** @N_P@ : Give us more feedback in our unit tests. **/
+        I32 aac2020_tausync_num_dirty_pix_pushed =( 0 );
+
+        const U08
+        aac2020_tausync_DRY_RUN_FOR_UNIT_TESTS =( 0x77 );
+
+        const U08
+        aac2020_tausync_WET_RUN_FOR_PRODUCTION =( 0x99 );
+
+        /** ************************************************ ***
+            Get an rough idea of the size of the dirty        
+            rectangles that were pushed in a given            
+            UnitTest_Test. @VID_IID[ 0054 ]TIME[ 0H 27M 02S ] 
+
+            RUN_AVE: RUNning_AVErage
+        *** ************************************************ **/   
+            FLT aac2020_tausync_RUN_AVE_num_pix =( 0 );
+            FLT aac2020_tausync_RUN_AVE_pix_wid =( 0 );
+            FLT aac2020_tausync_RUN_AVE_pix_hig =( 0 );
+        /** ************************************************ **/
+
 #undef  U08
+#undef  I32
+#undef  FLT
 //:================================================:UNIT_TEST://

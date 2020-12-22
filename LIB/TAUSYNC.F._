@@ -41,10 +41,44 @@
 
 #undef  I32
 //:=============================================:POINT_STRUCT://
+//:RECTANGLE_HELPER_FUNCTIONS:===============================://
+#define REC struct AAC2020_TAUDIRT_rec_inc
+#define CHR const char
+#define ERR aac2020_tausync_Halt
+
+    void
+    aac2020_tausync_Validate_rec_inc(
+
+        REC* rec
+    ,   CHR* rec_nam /** rectangle name. **/
+
+    )
+    {
+        assert( ((void*)0) != rec );
+        
+        if( 0
+        ||  (*rec).x_0  >  (*rec).x_1  /** EQUAL(==) IS_OKAY **/
+        ||  (*rec).y_0  >  (*rec).y_1  /** DONT_USE[ >= ]    **/
+        /** @VID_IID[ 0054 ]TIME[ 5H 18M 24S ]               **/
+        /** Logically And Visually Analogous Statements.     **/
+        ){
+
+            printf( "[INV_REC_DET:rec_nam]:%s\n", rec_nam );;
+            ERR("[INV_REC_DET:INVERTED_RECTANGLE_DETECTED]");
+            
+        };;
+
+    }
+
+#undef REC
+#undef CHR
+#undef ERR
+//:===============================:RECTANGLE_HELPER_FUNCTIONS://
 //:TEXTURE_UPDATE_SUBSECTION:================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
 #define REC struct AAC2020_TAUDIRT_rec_inc 
 #define PBR pixel_bounding_rect
+#define ERR aac2020_tausync_Halt
 
     U32 //:<-- return[ number_of_pixels_pushed ]
     aac2020_tausync_TexturePush_32x32_Region_Max(
@@ -60,17 +94,17 @@
             /** RANGE[ 0 -to- 31 ]INCLUSIVE **/
 
             if( (*PBR).x_1 - (*PBR).x_0 + 1 >= 32 ){
-                aac2020_tausync_Halt("[PBR_OOB_POS:X]");
+                ERR("[PBR_OOB_POS:X]");
             };;
             if( (*PBR).y_1 - (*PBR).y_0 + 1 >= 32 ){
-                aac2020_tausync_Halt("[PBR_OOB_POS:Y]");
+                ERR("[PBR_OOB_POS:Y]");
             };;
 
             if( (*PBR).x_1 - (*PBR).x_0 + 1 <   0 ){
-                aac2020_tausync_Halt("[PBR_OOB_NEG:X]");
+                ERR("[PBR_OOB_NEG:X]");
             };;
             if( (*PBR).y_1 - (*PBR).y_0 + 1 <   0 ){
-                aac2020_tausync_Halt("[PBR_OOB_NEG:Y]");
+                ERR("[PBR_OOB_NEG:Y]");
             };;
 
         //:-----------------------------:is_rect_correct_size://
@@ -86,6 +120,7 @@
 #undef  PBR
 #undef  U32  
 #undef  REC  
+#undef  ERR
 //:================================:TEXTURE_UPDATE_SUBSECTION://
 //:GPU_SYNC:=================================================://
 #define U08        uint8_t /** GCC: <stdint.h> **/    //: 01 ://
@@ -102,9 +137,80 @@
 #define PBR pixel_bounding_rect                       //: 10 ://
 #define SKP continue                                  //: 11 ://
 //: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#define DRY aac2020_tausync_DRY_RUN_FOR_UNIT_TESTS    //: 12 ://
+#define WET aac2020_tausync_WET_RUN_FOR_PRODUCTION    //: 13 ://
+#define P32 aac2020_tausync_TexturePush_32x32_Region_Max /*14:*/
+#define ERR aac2020_tausync_Halt                      //: 15 ://
+#define LOG aac2020_tausync_Info_any                  //: 16 ://
 
-    void
-    aac2020_tausync_Run( void ){ 
+    I32 /** num_dirty_sectors_pushed_to_gpu **/
+
+    aac2020_tausync_Run( 
+
+        /** ************************************************ **/
+        /** @VID_IID[ 053 ]TIME[ 4H 31M 38 ]                 **/
+        /** DRY: aac2020_tausync_DRY_RUN_FOR_UNIT_TESTS      **/
+        /** WET: aac2020_tausync_WET_RUN_FOR_PRODUCTION      **/
+        /**                                                  **/
+        /**      [ DRY ] will not actually push anything to  **/
+        /**      the GPU, while [ WET ] will push the pixels **/
+        /**      to the GPU.                                 **/
+        /** ************************************************ **/
+
+        U08 DRY_orr_WET
+
+    )
+    {
+
+        /** @VID_IID[ 0054 ]TIME[ 7H 14M 4S ]     **/
+        /** Fail Closer and Closer To The Source  **/
+        /** Of the problem until it is done.      **/
+        /** -DoomGuy 2020                         **/
+        /** @VID_IID[ 0054 ]TIME[ 7H 24M 18S ]    **/
+        /** We are onto something... add          **/
+        /** "got_to_level" variables.             **/
+        U08 debug_got_into_texture_pushing_area_001=( 0 );
+        U08 debug_got_into_texture_pushing_area_002=( 0 );
+        U08 debug_got_to_level_0=(                    0 );
+        U08 debug_got_to_level_1=(                    0 );
+        U08 debug_got_to_level_2=(                    0 );
+
+        if( 0
+        || DRY_orr_WET == aac2020_tausync_DRY_RUN_FOR_UNIT_TESTS
+        || DRY_orr_WET == aac2020_tausync_WET_RUN_FOR_PRODUCTION
+        ){ /** GOOD. Correct enum input. **/ }else{
+            ERR("[aac2020_tausync_Run:BAD_ENUM_SUPPLIED]");
+        };;
+
+        //:#_ZERO_OUT_HISTOGRAM_#:---------------------------://
+        //:#_RESET_HISTOGRAM_#:------------------------------://
+        #define    A assert 
+        #define ZERO ( 0 )
+
+            /** MUST_INIT_TO_ZERO_HERE                       **/
+            /** @VID_IID[ 0053 ]TIME[ 6M 57M 32S ]           **/
+            I32     num_dirty_sectors_pushed_to_gpu =(ZERO);
+            
+            aac2020_tausync_num_dirty_pix_pushed=(ZERO);
+            
+            /** N_P == aac2020_tausync_num_dirty_pix_pushed  **/
+            /** n_B == num_dirty_sectors_pushed_to_gpu       **/
+            /** SECTOR == BLOCK (Synonymous Language)        **/
+
+            aac2020_tausync_RUN_AVE_num_pix = ( ZERO );
+            aac2020_tausync_RUN_AVE_pix_wid = ( ZERO );
+            aac2020_tausync_RUN_AVE_pix_hig = ( ZERO );
+
+            A( 0 == num_dirty_sectors_pushed_to_gpu         ); 
+            A( 0 == aac2020_tausync_num_dirty_pix_pushed    );
+            A( 0 == aac2020_tausync_RUN_AVE_num_pix );
+            A( 0 == aac2020_tausync_RUN_AVE_pix_wid );
+            A( 0 == aac2020_tausync_RUN_AVE_pix_hig );
+
+        #undef A
+        #undef ZERO
+        //:------------------------------:#_RESET_HISTOGRAM_#://
+        //:---------------------------:#_ZERO_OUT_HISTOGRAM_#://
 
         //#  TODO: Unit test that "PRETENDS" to push up to   #//
         //#        the GPU and just checks that our math     #//
@@ -120,7 +226,7 @@
         /** ************************************************ **/
 
         if( ANY.is_dirty_0 <= 0 ){
-            aac2020_tausync_Halt("[LOOK_BEFORE_YOU_LEAP]");
+            aac2020_tausync_Halt("[LOOK_BEFORE_YOU_LEAP:2020]");
         };;
 
         U08 u_x =( 0 ); //: <--- pixel_bounding_rect.x_0
@@ -136,20 +242,20 @@
         REC* r0 = ((void*)0); //:rec_512
         REC* r1 = ((void*)0); //:rec_128   
         REC* r2 = ((void*)0); //:rec_032
-        U08  r3 = 0x00000000; //:<--- For illustrative purpose
+    //: U08  r3 = 0x00000000; <--- For illustrative purpose  ://
 
     //: C_0* c_0 <--- c_0 not needed.
         C_1* c_1 = ((void*)0);
         C_2* c_2 = ((void*)0);
         U08* c_3 = ((void*)0);//:<----Terminal corner pixel  ://
-                              //:     ( @UPPER_LEFT_PIXEL@ ) ://
-                              //:     of a 4x4 cluster in    ://
-                              //:     #DIA_VAR_CEL#          ://
+                              //:  ( @UPPER_LEFT_PIXEL@ )    ://
+                              //:  of a 4x4 cluster in       ://
+                              //:  #DIA_VAR_CEL#             ://
 
  
         IXY t0 = { 0 }; /** [ i_x , i_y ] point **/
         IXY t1 = { 0 };
-        IXY t2 = { 0 };
+    //- IXY t2 = { 0 }; -//
 
 
         //:TRAVERSE_THAT_BITCH:------------------------------://
@@ -158,6 +264,7 @@
         c_1 =             ANY.cel_512  ;
 
         //:@tau@:
+        aac2020_tausync_Validate_rec_inc( r0 , "[R0_TAU]" );
         for( t0.i_x = r0->x_0 ; t0.i_x <= r0->x_1 ; t0.i_x++ ){
         for( t0.i_y = r0->y_0 ; t0.i_y <= r0->y_1 ; t0.i_y++ ){
         t0.i_d = t0.i_x + ( t0.i_y  *  4 /** wid==4 **/ );
@@ -168,7 +275,10 @@
          r1 =&( c_1[ t0.i_d ].rec_128 );   /** #DIA_SUB_CEL# **/
         c_2 =   c_1[ t0.i_d ].cel_128  ;
 
+        debug_got_to_level_0=( 0xA );
+
         //:@sub@
+        aac2020_tausync_Validate_rec_inc( r1 , "[R1_SUB]" );
         for( t1.i_x = r1->x_0 ; t1.i_x <= r1->x_1 ; t1.i_x++ ){
         for( t1.i_y = r1->y_0 ; t1.i_y <= r1->y_1 ; t1.i_y++ ){
         t1.i_d = t1.i_x + ( t1.i_y  *  4 /** wid==4 **/ );
@@ -179,33 +289,44 @@
          r2 =&( c_2[ t1.i_d ].rec_032 );   /** #DIA_VAR_CEL# **/
         c_3 =   c_2[ t1.i_d ].cel_032  ;
 
-        //:@var@
-        for( t2.i_x = r2->x_0 ; t2.i_x <= r2->x_1 ; t2.i_x++ ){
-        for( t2.i_y = r2->y_0 ; t2.i_y <= r2->y_1 ; t2.i_y++ ){
-        t2.i_d = t2.i_x + ( t2.i_y  * 16 /** wid==16 **/ );
-        assert(      t2.i_d >= 0 && t2.i_d <= ( (16*16) - 1 ) );
-            if( c_3[ t2.i_d ] /** is_dirty_3 **/ <= 0 ){ SKP; };
-                c_3[ t2.i_d ] /** is_dirty_3 **/ =( 0 );
+        debug_got_to_level_1=( 0xB );
+        if( c_3 ){ /** Silence_GCC_Compiler_Warning **/ };
 
-        r3= c_3[ t2.i_d ]; //:<---[ @2x2_VAR@ ]
-    //:c_4= c_3[ t2.i_d ]; //:<---[ r3 == c_4 ](@DEEPEST_DEEP@)
+//--    //:@var@ - - - - - - - - - - - - - - - - - - - - - - - -
+////    aac2020_tausync_Validate_rec_inc( r2 , "[R2_VAR]" );    
+////    for( t2.i_x = r2->x_0 ; t2.i_x <= r2->x_1 ; t2.i_x++ ){ 
+////    for( t2.i_y = r2->y_0 ; t2.i_y <= r2->y_1 ; t2.i_y++ ){ 
+////    t2.i_d = t2.i_x + ( t2.i_y  * 16 /** wid==16 **/ );     
+////    assert(      t2.i_d >= 0 && t2.i_d <= ( (16*16) - 1 ) );
+////        if( c_3[ t2.i_d ] /** is_dirty_3 **/ <= 0 ){ SKP; };
+////            c_3[ t2.i_d ] /** is_dirty_3 **/ =( 0 );        
+////                                                            
+////    r3= c_3[ t2.i_d ]; //:<---[ @2x2_VAR@ ]                 
+//////:c_4= c_3[ t2.i_d ]; //:<---[ r3 == c_4 ](@DEEPEST_DEEP@) 
+//// - - - - - - - - - - - - - - - - - - - - - - - - - - - - -//          
 
-        if( r3 >  0x00 ){    /** ******** NOOP HERE ******** **/
-            /** ******************************************** **/
-            /** KEEP_THIS_FOR_REFERENCE_TO_UNDERSTAND_CODE   **/
-            /** Pretend to do something with top-left pixel  **/
-            /** of @cel_032@ 2x2 cluster. Here               **/
-            /** ******************************************** **/
-        };;                  /** ******** NOOP HERE ******** **/
+        debug_got_to_level_2=( 0xC );
+
+////    if( r3 >  0x00 ){    /** ******** NOOP HERE ******** **/
+////        /** ******************************************** **/
+////        /** KEEP_THIS_FOR_REFERENCE_TO_UNDERSTAND_CODE   **/
+////        /** Pretend to do something with top-left pixel  **/
+////        /** of @cel_032@ 2x2 cluster. Here               **/
+////        /** ******************************************** **/
+////    };;                  /** ******** NOOP HERE ******** **/
             
             /** -------------------------------------------- **/
             /** And so on and so on down the rabbit hole     **/
             /** Actually no. Stop here and @just_push_it@    **/
             /** -------------------------------------------- **/
 
-            if( t2.i_x >= r2 -> x_1 //:last_x_of_inclusive_range
-            &&  t2.i_y >= r2 -> y_1 //:last_y_of_inclusive_range
+            if( 
+                /** @VID_IID[ 0054 ]TIME[ 7H 38M 41S ]       **/
+                /** #STUPIDCODE_REPLACED_WITH_1_EQUALS_1#    **/
+                1 == 1 
             ){
+                debug_got_into_texture_pushing_area_001=( 1 );
+
                 /** **************************************** **/
                 /** Hack: The inner VAR loop is NOT necessary**/
                 /**       unless you are bug-checking your   **/
@@ -306,6 +427,10 @@ multiply_by__2    two2  +---+---+                           +
                     PBR.y_0 = u_y +( (*r2).y_0 * two2) +NONE ;
                     PBR.y_1 = u_y +( (*r2).y_1 * two2) +one1 ;
 
+                    /** @VID_IID[ 0054 ]TIME[ 4H 52M 14S ]   **/
+                    /** Check For Inverted/Invalid REC       **/
+                    assert( PBR.x_1 >= PBR.x_0 );
+                    assert( PBR.y_1 >= PBR.y_0 );
                     //:--------------------[ REC_032 === r2 ]://
 
                 #undef NONE
@@ -313,16 +438,91 @@ multiply_by__2    two2  +---+---+                           +
                 #undef two2
                 #undef REC_032
                 //:----------------:Final_Selection_Rectangle://
+                //:TO_PUSH_OR_NOT_TO_PUSH_32X32:-------------://
+                #define FN( name ) aac2020_tausync_##name
+                #define PUSH_32X32_CHUNK P32
+                
+                    assert( &( P32 ) == 
+                        &FN( TexturePush_32x32_Region_Max ) );;
+                    assert( &( PUSH_32X32_CHUNK ) == 
+                        &FN( TexturePush_32x32_Region_Max ) );;
 
-                /** Expecting bounds to be at MOST   **/
-                /** 32 wide by 32 high, no greater.  **/
-                aac2020_tausync_TexturePush_32x32_Region_Max(
-                    &( pixel_bounding_rect /** PBR **/ )
+                    /** ************************************ **/
+                    /** DRY RUN IS FOR UNIT TESTS        * * **/
+                    /** DO NOTHING HERE.                 * * **/
+                    /** ___NO___ texture push to GPU     * * **/
+                    /**                                  * * **/
+                    /**VID_IID[ 0053 ]TIME[ 4H 39M 06S ] * * **/
+                    /** ************************************ **/
+
+                    if( DRY_orr_WET == DRY ){
+
+                        /** DO NOTHING **/
+
+                    }else
+                    if( DRY_orr_WET == WET ){
+
+                        /** @VID_IID[ 0053 ]TIME[ 4H 51M 6S ]**/
+                        /** Expecting bounds to be at MOST   **/
+                        /** 32 wide by 32 high, no greater.  **/
+
+                        PUSH_32X32_CHUNK(
+                            &( pixel_bounding_rect /** PBR **/ )
+                        );;
+
+                    }else{
+                        ERR( "[#EDCL#:2020_12_21_0438PM]");
+                    };;
+    
+                #undef FN
+                #undef PUSH_32X32_CHUNK 
+                //:-------------:TO_PUSH_OR_NOT_TO_PUSH_32X32://
+  
+                I32 num_pix=( /**num_pix:[N]umber_of_[P]ixels**/
+
+                    /** VID_IID[ 0053 ]TIME[ 3H 23M 04S ] **/
+                    //:     1         0
+                    ( PBR.x_1 - PBR.x_0 + 1 )  //: <<<< X ONLY
+                *   ( PBR.y_1 - PBR.y_0 + 1 )  //: <<<< Y ONLY
+                    //:     1         0
                 );;
+                I32 pix_wid=(  PBR.x_1 - PBR.x_0 + 1  );
+                I32 pix_hig=(  PBR.y_1 - PBR.y_0 + 1  );
+                assert(  (pix_wid*pix_hig) == num_pix );
+
+                /** Update Accumulators(ACCUM) **/
+
+                //:ACCUM:TOTALS:-----------------------------://
+                #define SEC num_dirty_sectors_pushed_to_gpu
+                #define PIX aac2020_tausync_num_dirty_pix_pushed
+
+                    SEC +=(    1    );
+                    PIX +=( num_pix ); /** PIX === N_P **/
+
+                    debug_got_into_texture_pushing_area_002=(1);
+                #undef  SEC
+                #undef  PIX
+                //:-----------------------------:ACCUM:TOTALS://
+                //:ACCUM:RUNNING_AVERAGES:-------------------://
+                #define AVE_N_P aac2020_tausync_RUN_AVE_num_pix
+                #define AVE_WID aac2020_tausync_RUN_AVE_pix_wid
+                #define AVE_HIG aac2020_tausync_RUN_AVE_pix_hig
+               
+                    /** VID_IID[ 0054 ]TIME[ 0M 39M 5S ]     **/
+                    /** ACCUM: Accumulator.                  **/
+
+                    AVE_N_P=( (AVE_N_P+num_pix )/2 );
+                    AVE_WID=( (AVE_WID+pix_wid )/2 );
+                    AVE_HIG=( (AVE_HIG+pix_hig )/2 );
+
+                #undef  AVE_N_P 
+                #undef  AVE_WID 
+                #undef  AVE_HIG 
+                //:-------------------:ACCUM:RUNNING_AVERAGES://
 
             };;
 
-        };;};; //: [ r2 & t2 ](   deepest level )
+//-     };;};; //: [ r2 & t2 ](   deepest level )  - - - - - -//
 
         };;};; //: [ r1 & t1 ](    middle level )
 
@@ -331,18 +531,73 @@ multiply_by__2    two2  +---+---+                           +
         //:------------------------------:TRAVERSE_THAT_BITCH://
 
         ANY.is_dirty_0 =( 0 ); //:Mark Outermost Clean.
+
+        //:FUCK_THIS_DEBUGGING:------------------------------://
+        #define AREA_001 debug_got_into_texture_pushing_area_001
+        #define AREA_002 debug_got_into_texture_pushing_area_002
+        #define LEV_0000 debug_got_to_level_0
+        #define LEV_0001 debug_got_to_level_1
+        #define LEV_0002 debug_got_to_level_2
+ 
+            if( 0
+            ||  debug_got_into_texture_pushing_area_001 <= 0
+            ||  debug_got_into_texture_pushing_area_002 <= 0
+            ){
+                printf("\n");
+                printf("[AREA_001]:%d\n", AREA_001  );
+                printf("[AREA_002]:%d\n", AREA_002  );
+                printf("\n");
+                printf("[LEV_0000]:%d\n", LEV_0000  );
+                printf("[LEV_0001]:%d\n", LEV_0001  );
+                printf("[LEV_0002]:%d\n", LEV_0002  );
+                printf("\n"); 
+
+                ERR("[NEVER_GOT_INTO_THE_AREA_2020]");
+            };;
+
+        #undef  AREA_001
+        #undef  AREA_002
+        #undef  LEV_0000
+        #undef  LEV_0001
+        //:------------------------------:FUCK_THIS_DEBUGGING://
+
+        return( num_dirty_sectors_pushed_to_gpu );
     }
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
-    void
-    AAC2020_TAUSYNC_Run( void ){
+    I32 /** Return Number Of Dirty Sectors Pushed To GPU. **/
+
+    AAC2020_TAUSYNC_Run( 
+
+        U08 DRY_orr_WET 
+
+    )
+    {
+        if( 0
+        || DRY_orr_WET == aac2020_tausync_DRY_RUN_FOR_UNIT_TESTS
+        || DRY_orr_WET == aac2020_tausync_WET_RUN_FOR_PRODUCTION
+        ){ /** GOOD. Correct enum input. **/ }else{
+            ERR("[AAC2020_TAUSYNC_Run:BAD_ENUM_SUPPLIED]");
+        };;
+
+        I32 num_dirty_sectors_pushed_to_gpu =( 0 - 6660666 );
 
         if( AAC2020_TAUDIRT_DIR_ANY.is_dirty_0 >= 1 ){
 
-            aac2020_tausync_Run();
+            num_dirty_sectors_pushed_to_gpu=( 
+                aac2020_tausync_Run( DRY_orr_WET )
+            );;
+
+        }else{
+
+            num_dirty_sectors_pushed_to_gpu         = ( 0 );
+            aac2020_tausync_num_dirty_pix_pushed    = ( 0 );
+            LOG("[ROOT_OF_TREE_CLEAN:SKIPPING_SYNC]\n", 0 );
 
         };;
+
+        return( num_dirty_sectors_pushed_to_gpu );
     }
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
@@ -361,6 +616,12 @@ multiply_by__2    two2  +---+---+                           +
 #undef  IXY                                           //: 09 ://
 #undef  PBR                                           //: 10 ://
 #undef  SKP                                           //: 11 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#undef  DRY                                           //: 12 ://
+#undef  WET                                           //: 13 ://
+#undef  P32                                           //: 14 ://
+#undef  ERR                                           //: 15 ://
+#undef  LOG                                           //: 16 ://
 //:=================================================:GPU_SYNC://
 //:INIT_NONE:================================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
@@ -379,9 +640,494 @@ multiply_by__2    two2  +---+---+                           +
 #undef  ANY
 //:================================================:INIT_NONE://
 //:UNIT_TEST:================================================://
-#define U32 uint32_t /** GCC: <stdint.h> **/
-#define UTF aac2020_tausync_unit_test_flag
-#define LOG aac2020_tausync_Info_any
+#define U08  uint8_t /** GCC: <stdint.h> **/              /*01*/
+#define U32 uint32_t /** GCC: <stdint.h> **/              /*02*/
+#define I32  int32_t /** GCC: <stdint.h> **/              /*03*/
+#define I64  int64_t /** GCC: <stdint.h> **/              /*04*/
+#define UTF aac2020_tausync_unit_test_flag                /*05*/
+#define LOG aac2020_tausync_Info_any                      /*06*/
+#define N_P aac2020_tausync_num_dirty_pix_pushed          /*07*/
+#define ERR aac2020_tausync_UnitTestFail                  /*08*/
+#define L_A struct AAC2020_TAUDIRT_l_A_04x04_TAU_Pix_512  /*09*/
+#define DRY aac2020_tausync_DRY_RUN_FOR_UNIT_TESTS        /*10*/
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    void
+    aac2020_tausync_UnitTestFail( 
+        const char* msg_err
+    )
+    {
+        printf("[aac2020_tausync_UnitTestFail]: %s\n", msg_err);
+        fflush( stdout );
+        exit( 38 );
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    void
+    aac2020_tausync_DIRTY_FOUR_PIXELS_OF_EACH_BLOCK( void )
+    {
+
+        //:variable_declaration:-----------------------------://
+
+            //-     N_P =( 0 /** Num_PIXELS_pushed **/    ); -//
+            I32     n_B =( 0 /** Num_BLOCKS_pushed **/    );
+            I32 exp_n_B =( 0 /** EXPECTED: n_B     **/    );
+
+            U08   T =( 0  /**  @tau@  #DIA_TAU_CEL#   **/ );
+            U08   S =( 0  /**  @sub@  #DIA_SUB_CEL#   **/ );
+            U08   V =( 0  /**  @var@  #DIA_VAR_CEL#   **/ );
+
+            U32  p1 =( 0  /** Part 1 of 4 pix_var @p1 **/ );
+            U32  p2 =( 0  /** Part 1 of 4 pix_var @p2 **/ );
+            U32  p3 =( 0  /** Part 1 of 4 pix_var @p3 **/ );
+            U32  p4 =( 0  /** Part 1 of 4 pix_var @p4 **/ );
+
+        //:-----------------------------:variable_declaration://
+
+            aac2020_taudirt_ForceClearForUnitTest();
+        
+            /** N x N x N loop to hit EVERY 32x32 block. **/
+
+        //- N_P = ( 0 ); /** num_dirty_pix_pushed        -//
+            n_B = ( 0 ); /** num_dirty_blocks_pushed     **/
+
+            /** VID_IID[ 0053 ]TIME[ 4H 9M 12S ] **/
+            for( T = 0; T <= (  16 - 1 ); T++ ){ /* 4x4 == 16 */
+            for( S = 0; S <= (  16 - 1 ); S++ ){ /* 4x4 == 16 */
+            for( V = 0; V <= (    0    ); V++ ){ 
+
+                /** #V_IS_ZERO_TO_ZERO_FOR_THIS_TEST# **/
+                /** @VID_IID[ 0053 ]TIME[ 7H 4M 50S ] **/
+
+                p1 = 1 ;
+                p2 = 2 ;
+                p3 = 3 ;
+                p4 = 4 ;
+
+                /** SYNC cannot really be tested without     **/
+                /** creating some dirty data to sync with    **/
+                /** the GPU. VID_IID[ 0053 ]TIME[ 4H 24M 1S ]**/
+                AAC2020_TAUDEPO_Put( 
+                    T  //:DEX_TAU : First Subdivision Level
+                ,   S  //:DEX_SUB : 2nd   Subdivision Level
+                ,   V  //:DEX_VAR : 3rd   Subdivision Level
+                ,   p1,p2,p3,p4
+                );;
+
+            };;};;};; //:NEXT[ T , S , V ]
+
+            /** Clean up our data. **/
+            /** DRY == aac2020_tausync_DRY_RUN_FOR_UNIT_TESTS**/
+        //: n_B = AAC2020_TAUSYNC_Run( DRY );
+            n_B = aac2020_tausync_Run( DRY );
+
+            /** @VID_IID[ 0053 ]TIME[ 4H 55M 34S ]           **/
+            /** Number of dirty pixels should MATCH          **/
+            /** number of dirty 32x32 cells for this test.   **/
+
+            if( 
+                /** * * * * * * * * * **** * * * * * * * * * **/
+                /** VID_IID[ 0054 ]TIME[ 0H 56M 56S ]        **/
+                /** Each variable is stored in 4 pixels, so  **/
+                /** If we set ONE variable per 32x32 block   **/
+                /** We should expect to see EXACTLY          **/
+                /** 4X as many pixels UPDATED as dirty       **/
+                /** sectors UPDATED.                         **/
+                /** * * * * * * * * * **** * * * * * * * * * **/
+                /** SEE[ #DIA_VAR_CEL# ]                     **/
+                /** 1VAR==4PIX==[@p1 & @p2 & @p3 & @p4]      **/
+                /** 1SECTOR==@cel_128[ @sub@ ]               **/
+                /** * * * * * * * * * **** * * * * * * * * * **/
+
+                ( N_P / 4 ) != n_B 
+            ){ 
+
+                printf("[DEC:N_P]:%d\n"  , N_P );
+                printf("[DEC:n_B]:%d\n"  , n_B );
+
+                printf("[HEX:N_P]:%0x\n" , N_P );
+                printf("[HEX:n_B]:%0x\n" , n_B );
+
+                exp_n_B =( (4*4) * (4*4) );
+                assert( 256 == exp_n_B );
+                printf("[exp_n_B]:%d\n" , exp_n_B );
+
+                #define RA_P aac2020_tausync_RUN_AVE_num_pix
+                #define RA_W aac2020_tausync_RUN_AVE_pix_wid
+                #define RA_H aac2020_tausync_RUN_AVE_pix_hig
+
+                    printf("[RA_P]:%f\n", RA_P );
+                    printf("[RA_W]:%f\n", RA_W );
+                    printf("[RA_H]:%f\n", RA_H );
+
+                #undef  RA_P 
+                #undef  RA_W 
+                #undef  RA_H 
+
+                if( 4 == N_P / n_B ){
+                    /** SOLUTION: V loop needed to be  **/
+                    /** from 0 to 0 inclusive.         **/
+                    printf("[************************]\n");
+                    printf("[N_P_is_exactly_4X_of_n_B]\n");
+                    printf("[************************]\n");
+                };;
+
+                if( 64 == n_B / N_P ){
+                    printf("[************************]\n");
+                    printf("[N_P_is_one_64TH_of_n_B..]\n");
+                    printf("[************************]\n");
+                };;
+
+                ERR("[UTF_2020_12_21_452PM]"); 
+
+            };;
+
+            assert(   1024 == (4*4) * (4*4) * ( 4 ) );
+            assert( 0x0400 == 1024 );
+
+            assert(    256 == (4*4) * (4*4) * ( 1 ) );
+            assert( 0x0100 == 256 );
+     
+            if( 0x0400 != N_P ){ ERR("[UTF_20201221_4PM_A]");};
+            if( 0x0100 != n_B ){ ERR("[UTF_20201221_4PM_B]");};
+
+            if( AAC2020_SILENCE.TAUSYNC <= 0 ){
+            #define P printf 
+
+                P("\t[GRASP_AT_STRAWS:act:n_B]:%d\n" , n_B );
+                P("\t[GRASP_AT_STRAWS:act:N_P]:%d\n" , N_P );
+
+            #undef  P
+            };;
+
+    }
+
+    void
+    aac2020_tausync_UnitTest( void ){
+
+        LOG( "[aac2020_tausync_UnitTest:BEG]" , ((void*)0) );
+
+        //:variable_declarations:----------------------------://
+
+            /** VID_IID[ 0053 ]TIME[ 4H 6M 36S ] **/
+
+                //- N_P =( 0 /** Num_PIXELS_pushed **/ );    -//
+                I32 n_B =( 0 /** Num_BLOCKS_pushed **/ );
+        
+                I32 exp_n_B =( 0 /** EXPECTED: n_B **/ );
+                I32 exp_N_P =( 0 /** EXPECTED: N_P **/ );
+
+            /** VID_IID[ 0053 ]TIME[ 4H 5M 42S ] **/
+
+                U08   T =( 0  /**  @tau@  #DIA_TAU_CEL#  **/ );
+                U08   S =( 0  /**  @sub@  #DIA_SUB_CEL#  **/ );
+                U08   V =( 0  /**  @var@  #DIA_VAR_CEL#  **/ );
+
+                if( V ){ /** NOOP:SILENCE_THE_COMPILER **/ };
+
+            /** VID_IID[ 0053 ]TIME[ 4H 11M 21S ]            **/
+            /** SEE[ #DIA_VAR_CEL# ]IN[ TAUDEPO.D._ ]        **/
+            /** pix_var means: PIXel_VARiable                **/
+
+                U32  p1 =( 0  /** Part 1 of 4 pix_var @p1 **/ );
+                U32  p2 =( 0  /** Part 1 of 4 pix_var @p2 **/ );
+                U32  p3 =( 0  /** Part 1 of 4 pix_var @p3 **/ );
+                U32  p4 =( 0  /** Part 1 of 4 pix_var @p4 **/ );
+
+        //:----------------------------:variable_declarations://
+        //:Smoke_Test:---------------------------------------://
+    
+            aac2020_taudirt_ForceClearForUnitTest();
+
+            /** SETUP TEST **/
+
+            //- N_P = ( 0 ); <-- Function should set this.   -//
+                n_B = AAC2020_TAUSYNC_Run( DRY );
+
+            /** STF: Smoke_Test_Failed **/
+
+                if( N_P != 0 || n_B != 0 ){ 
+                    ERR("[TAUSYNC_STF_2020]");
+                };;
+
+        //:---------------------------------------:Smoke_Test://
+        //:DIRTY_FOUR_PIXELS_OF_EACH_BLOCK:------------------://
+
+            /** VID_IID[ 0054 ]TIME[ 2H 11M 22S ]         **/
+            /** I think that this test MIGHT NOT be       **/
+            /** idempotent. Lets call it TWICE in a loop. **/
+
+            for( I32 whatever = 1 ; whatever <= 3; whatever++ ){
+              aac2020_tausync_DIRTY_FOUR_PIXELS_OF_EACH_BLOCK();
+            };;
+
+        //:------------------:DIRTY_FOUR_PIXELS_OF_EACH_BLOCK://
+        //:MORPH_TO_KITTY_CORNER_TEST:-----------------------://
+        { //:SCOPE
+
+            /** ******************************************** ***
+            VID_IID[ 0054 ]TIME[ 4H 7M 15S ]  
+
+            Cut and pasted all of the code from
+            aac2020_tausync_DIRTY_FOUR_PIXELS_OF_EACH_BLOCK
+            and will now slowly MORPH this code into
+            the code for KITTY_CORNER_TEST until
+            this section ( MORPH_TO_KITTY_CORNER_TEST )
+            starts to exhibit the same weird
+            behavior.
+
+            *** ******************************************** **/
+
+            //:PAIRED_CODE_BLOCK_001:------------------------://
+            /** I_DONT_REMEMBER_WHAT_THIS_COMMENT_IS_FOR     **/
+            /** @VID_IID[ 0054 ]TIME[ 1H_14M_23S ]           **/
+            I32 number_of_inner_loop_iterations =( 0 );  /** **/
+            aac2020_taudirt_ForceClearForUnitTest();     /** **/
+            n_B = ( 0 ); /** num_dirty_blocks_pushed         **/
+            //:------------------------:PAIRED_CODE_BLOCK_001://
+
+            //:PAIRED_CODE_BLOCK_002:------------------------://
+            /** @VID_IID[ 0054 ]TIME[ 1H_43M_38S ] * * * * * **/
+            /** Why -1 & +1 in the same formula    * * * * * **/
+            U08 top_rig =( 16 - 1 ); //:1D index of XYLOC
+            U08 bot_lef = (U08)( (I32)( (16*16) -1 -16 +1 ) );
+            U08 bot_lef_chk = 0 + ( 16 /**WID**/ * (16-1) );
+            assert( bot_lef == bot_lef_chk );
+            assert( 240 == bot_lef );
+            p1 =( 1 );
+            p2 =( 2 );
+            p3 =( 3 );
+            p4 =( 4 );
+            aac2020_taudepo_CAT_BUG_Put=( 0 );
+            if( top_rig     ){ /** NOOP **/ };
+            if( bot_lef     ){ /** NOOP **/ };
+            if( bot_lef_chk ){ /** NOOP **/ };
+            //:------------------------:PAIRED_CODE_BLOCK_002://
+
+            /** VID_IID[ 0053 ]TIME[ 4H 9M 12S ] **/
+            for( T = 0; T <= (  16 - 1 ); T++ ){ /* 4x4 == 16 */
+            for( S = 0; S <= (  16 - 1 ); S++ ){ /* 4x4 == 16 */
+
+                /** #V_IS_ZERO_TO_ZERO_FOR_THIS_TEST# **/
+                /** @VID_IID[ 0053 ]TIME[ 7H 4M 50S ] **/
+
+                assert( sizeof(T) == 1 );
+                assert( sizeof(S) == 1 );
+
+                p1 = 1 ;
+                p2 = 2 ;
+                p3 = 3 ;
+                p4 = 4 ;
+
+                /** SYNC cannot really be tested without     **/
+                /** creating some dirty data to sync with    **/
+                /** the GPU. VID_IID[ 0053 ]TIME[ 4H 24M 1S ]**/
+                AAC2020_TAUDEPO_Put( 
+                    T      //:DEX_TAU : First Subdivision Level
+                ,   S      //:DEX_SUB : 2nd   Subdivision Level
+                ,   top_rig  //:top_rig : 3rd   Subdivision Level
+                ,   p1,p2,p3,p4
+                );;
+
+                AAC2020_TAUDEPO_Put( 
+                    T  //:DEX_TAU : First Subdivision Level
+                ,   S  //:DEX_SUB : 2nd   Subdivision Level
+                ,   bot_lef  //:<-- FAILS_WHEN_SET_TO[ bot_lef ]
+                ,   p1,p2,p3,p4
+                );;
+
+                number_of_inner_loop_iterations++;
+
+            };;};; //:NEXT[ T , S , V ]
+
+            /** Clean up our data. **/
+            /** DRY == aac2020_tausync_DRY_RUN_FOR_UNIT_TESTS**/
+        //: n_B = AAC2020_TAUSYNC_Run( DRY );
+            n_B = aac2020_tausync_Run( DRY ); //:<--PRIVATE
+
+            /** @VID_IID[ 0053 ]TIME[ 4H 55M 34S ]           **/
+            /** Number of dirty pixels should MATCH          **/
+            /** number of dirty 32x32 cells for this test.   **/
+
+            if( 1
+            &&  0 != N_P
+            &&  0 != n_B
+            ){
+
+                LOG("[TABLE_FLIP:N_P]:%d" , (void*)(I64)N_P );
+                LOG("[TABLE_FLIP:n_B]:%d" , (void*)(I64)n_B );
+
+            }else
+            if( 0
+            ||  0 == N_P
+            ||  0 == n_B
+            ){
+                if( 0 == N_P ){ printf("[BLUE_KNIFE_2020]\n");};
+                if( 0 == n_B ){ printf("[RED_BARREL_2020]\n");};
+                printf("[ITS_FUCKING_ZERO:N_P]:%d\n", N_P );
+                printf("[ITS_FUCKING_ZERO:n_B]:%d\n", n_B );
+
+                printf( "[top_rig]:%d\n" , top_rig );
+                printf( "[bot_lef]:%d\n" , bot_lef );
+
+                #define WID ( 16 )
+
+                    /** t_x: Top_whateverthefuck_x (top_rig) **/
+                    /** t_y: Top_whateverthefuck_y (top_rig) **/
+                    U08 t_x =  top_rig       % WID  ;
+                    U08 t_y = (top_rig - t_x)/ WID  ;
+
+                    /** b_x: Top_whateverthefuck_x (bot_lef) **/
+                    /** b_y: Top_whateverthefuck_y (bot_lef) **/
+                    U08 b_x =  bot_lef       % WID  ;
+                    U08 b_y = (bot_lef - b_x)/ WID  ;
+
+                    printf("[top_rig.t_x]:%d\n", t_x );
+                    printf("[top_rig.t_y]:%d\n", t_y );
+
+                    printf("[bot_lef.b_x]:%d\n", b_x );
+                    printf("[bot_lef.b_y]:%d\n", b_y );
+
+                #undef  WID
+                ERR("[FlipTheFuckingTable_2020_12_22_131AM]");
+            };;
+
+
+        } //:SCOPE
+        //:-----------------------:MORPH_TO_KITTY_CORNER_TEST://
+        //:KITTY_CORNER_TEST:--------------------------------://
+        { //:SCOPE
+
+            //:PAIRED_CODE_BLOCK_001:------------------------://
+            /** I_DONT_REMEMBER_WHAT_THIS_COMMENT_IS_FOR     **/
+            /** @VID_IID[ 0054 ]TIME[ 1H_14M_23S ]           **/
+            I32 number_of_inner_loop_iterations =( 0 );  /** **/
+            aac2020_taudirt_ForceClearForUnitTest();     /** **/
+            n_B = ( 0 ); /** num_dirty_blocks_pushed         **/
+            //:------------------------:PAIRED_CODE_BLOCK_001://
+
+            //:PAIRED_CODE_BLOCK_002:------------------------://
+            /** @VID_IID[ 0054 ]TIME[ 1H_43M_38S ] * * * * * **/
+            /** Why -1 & +1 in the same formula    * * * * * **/
+            U08 top_rig =( 16 - 1 ); //:1D index of XYLOC
+            U08 bot_lef =( (16*16) -1 -16 +1 );
+            U08 bot_lef_chk = 0 + ( 16 /**WID**/ * (16-1) );
+            assert( bot_lef == bot_lef_chk );
+            p1 =( 1 );
+            p2 =( 2 );
+            p3 =( 3 );
+            p4 =( 4 );
+            aac2020_taudepo_CAT_BUG_Put=( 0 );
+            if( top_rig     ){ /** NOOP **/ };
+            if( bot_lef     ){ /** NOOP **/ };
+            if( bot_lef_chk ){ /** NOOP **/ };
+            //:------------------------:PAIRED_CODE_BLOCK_002://
+
+            for( T = 0; T <= (  16 - 1 ); T++ ){ /* 4x4 == 16 */
+            for( S = 0; S <= (  16 - 1 ); S++ ){ /* 4x4 == 16 */ 
+
+                assert( sizeof( T ) == 1 );
+                assert( sizeof( S ) == 1 );
+
+                /** **************************************** **/
+                /** THIS DID NOT CHANGE ALL ZERO RESULT      **/
+                /** AAC2020_TAUDEPO_Put( 0,0,0,  1,2,3,4 );  **/
+                /** @VID_IID[ 0054 ]TIME[ 3H 2M 32S ]        **/
+                /** I think I am going to be stuck here for  **/
+                /** a few hours. Fuck this. WTF MAN.         **/
+                /**                                          **/
+                /** PROBLEM: calling AAC2020_TAUDEPO_Put     **/
+                /**          and all histogram variables     **/
+                /**          are reporting ZERO back.        **/
+                /**                                          **/
+                /** **************************************** **/
+                
+                AAC2020_TAUDEPO_Put( 
+                    T           //:TAU: DEX_TAU : 1st SubDivLev
+                ,   S           //:SUB: DEX_SUB : 2nd SubDivLev
+                ,top_rig        //:VAR: DEX_VAR : 3rd SubDivLev
+                ,   p1,p2,p3,p4 //: <--[ pixels == 1 uniform ]
+                );;
+
+                AAC2020_TAUDEPO_Put( 
+                    T           //:TAU: DEX_TAU : 1st SubDivLev
+                ,   S           //:SUB: DEX_SUB : 2nd SubDivLev
+                ,bot_lef        //:VAR: DEX_VAR : 3rd SubDivLev
+                ,   p1,p2,p3,p4 //: <--[ pixels == 1 uniform ]
+                );;
+
+                number_of_inner_loop_iterations++;
+
+            };;};; //:NEXT[ T , S  ]://
+
+            assert( number_of_inner_loop_iterations >= 1 );
+
+            //: n_B = AAC2020_TAUSYNC_Run( DRY ); <------PUBLIC
+                n_B = aac2020_tausync_Run( DRY ); //:<--PRIVATE
+
+            exp_n_B =( (4*4) * (4*4) * (  1  ) );
+            exp_N_P =( (4*4) * (4*4) * (32*32) );
+            assert(  exp_N_P == ( 512 * 512 )  );
+
+            //:err_if_not_expected:--------------------------://
+            #define NUM_PIX aac2020_tausync_RUN_AVE_num_pix
+            #define PIX_WID aac2020_tausync_RUN_AVE_pix_wid
+            #define PIX_HIG aac2020_tausync_RUN_AVE_pix_hig
+            #define       P printf
+
+                if( 0
+                ||  exp_n_B != n_B 
+                ||  exp_N_P != N_P 
+                ){
+                    printf("\n\n");
+                    printf("\t[exp_n_B]:%d\n" , exp_n_B );
+                    printf("\t[exp_N_P]:%d\n" , exp_N_P );
+                    printf("\n");
+                    printf("\t[act:n_B]:%d\n" ,     n_B );
+                    printf("\t[act:N_P]:%d\n" ,     N_P );
+                    printf("\n\n");
+
+                    printf("\n\n");
+                    printf( "\t[NUM_PIX]:%f\n" , NUM_PIX );
+                    printf( "\t[PIX_WID]:%f\n" , PIX_WID );
+                    printf( "\t[PIX_HIG]:%f\n" , PIX_HIG );
+                    printf("\n\n");
+
+                    P("[number_of_inner_loop_iterations]:%d\n"
+                      , number_of_inner_loop_iterations );;
+
+                    P("[aac2020_taudepo_CAT_BUG_Put]:%d\n"
+                      , aac2020_taudepo_CAT_BUG_Put );;
+
+                    ERR("\t[TAUSYNC_KITTY_CORNER_TEST_FAILED]");
+                };;
+
+            #undef  NUM_PIX                           //: 01 ://
+            #undef  PIX_WID                           //: 02 ://
+            #undef  PIX_HIG                           //: 03 ://
+            #undef        P                           //: 04 ://
+            //:--------------------------:err_if_not_expected://
+
+        } //:SCOPE
+        //:--------------------------------:KITTY_CORNER_TEST://
+        //:CONFIRM_PIXEL_VALUES_ON_TEXTURE_MEMORY:-----------://
+
+
+            AAC2020_TODOMAN_Vital(
+                "[TODO:CONFIRM_PIXEL_VALUES_ON_TEXTURE_MEMORY]" 
+            );;
+
+
+        //:-----------:CONFIRM_PIXEL_VALUES_ON_TEXTURE_MEMORY://
+
+
+
+        LOG( "[aac2020_tausync_UnitTest:END]" , ((void*)0) );
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
     U32
     AAC2020_TAUSYNC_UnitTest( U32 u32 ){
@@ -394,12 +1140,76 @@ multiply_by__2    two2  +---+---+                           +
         /** passed their tests before testing this.          **/
         AAC2020_TAUDIRT_UnitTest( 0x00 );
 
+        //:#TAUSYNC_DATA_BACKUP_OR_RESTORE#------------------://
+        #define BAK_001  AAC2020_TAUDIRT_DIR_ANY
+        #define BAK_002  AAC2020_PIXNAME_taudepo_cpu_pix
+        #define SIZ_001  sizeof( AAC2020_TAUDIRT_DIR_ANY )
+        #define SIZ_002  ( 512 * 512 * 4 )
+            
+            /** BACKUP : #BAK_NUM_WHATEVER# : BACKUP **/
+
+            /** @_DONT_ABUSE_THE_STACK_@ **/
+
+            L_A* bak_001=((void*)0);    /** TAUDIRT's TREE   **/
+            U08* bak_002=((void*)0);    /** TAUDEPO's PIXELS **/
+        
+            bak_001=(L_A*)( malloc( SIZ_001 ) );/* @DANGER_1@ */
+            bak_002=(U08*)( malloc( SIZ_002 ) );/* @DANGER_2@ */
+        
+            memcpy( bak_001 , &(BAK_001   ) , SIZ_001 );
+            memcpy( bak_002 , &(BAK_002[0]) , SIZ_002 );
+            
+        #undef  BAK_001                               //: 01 ://
+        #undef  BAK_002                               //: 02 ://
+        #undef  SIZ_001                               //: 03 ://
+        #undef  SIZ_002                               //: 04 ://
+        //:-----------------:#TAUSYNC_DATA_BACKUP_OR_RESTORE#://
+        //:DO_AFTER_DATA_BACKUP:-----------------------------://
+
+            aac2020_taudirt_ForceClearForUnitTest( );
+
+        //:-----------------------------:DO_AFTER_DATA_BACKUP://
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+
+
+            /** Actual Test Logic Without The Boilerplate **/
+
+            aac2020_tausync_UnitTest( /** VOID **/  );
+
+
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        //:#TAUSYNC_DATA_BACKUP_OR_RESTORE#------------------://
+        #define BAK_001  AAC2020_TAUDIRT_DIR_ANY /** L_A **/
+        #define BAK_002  AAC2020_PIXNAME_taudepo_cpu_pix
+        #define SIZ_001  sizeof( AAC2020_TAUDIRT_DIR_ANY )
+        #define SIZ_002  ( 512 * 512 * 4 )
+
+            /** RESTORE **/
+        
+            memcpy( &(BAK_001   ) ,  bak_001 , SIZ_001 );
+            memcpy( &(BAK_002[0]) ,  bak_002 , SIZ_002 );
+        
+            free( bak_001 );                    /* @DANGER_1@ */
+            free( bak_002 );                    /* @DANGER_2@ */
+            
+        #undef  BAK_001                               //: 01 ://
+        #undef  BAK_002                               //: 02 ://
+        #undef  SIZ_001                               //: 03 ://
+        #undef  SIZ_002                               //: 04 ://
+        //:-----------------:#TAUSYNC_DATA_BACKUP_OR_RESTORE#://
 
         LOG("[EXITING:TAUSYNC_UnitTest]",0);
         return( 0x00 );
     }
 
-#undef  U32
-#undef  UTF
-#undef  LOG
+#undef  U08                                           //: 01 ://
+#undef  U32                                           //: 02 ://
+#undef  I32                                           //: 03 ://
+#undef  I64                                           //: 04 ://
+#undef  UTF                                           //: 05 ://
+#undef  LOG                                           //: 06 ://
+#undef  N_P                                           //: 07 ://
+#undef  ERR                                           //: 08 ://
+#undef  L_A                                           //: 09 ://
+#undef  DRY                                           //: 10 ://
 //:================================================:UNIT_TEST://

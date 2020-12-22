@@ -63,9 +63,9 @@ l_C: LEVEL_C :- - - - - - | - | - - - - - - - - - - - - - - -://
          |  |9        @UPPER_LEFT_PIXEL@     |        |      |
          |  |                       _  |     |        |      |
          |  |....                  / +-V-+---+ ----   |      |
-         |  |                     /  |   |   |  |     |      |
+         |  |                     /  |@p1|@p2|  |     |      |
          |  |30      @cel_032@---<   +---+---+ 2x2 Variable  |
-         |  |31                   \_ |   |   |  |     |      |
+         |  |31                   \_ |@p3|@p4|  |     |      |
         --- +------------------------+---+---+ ---- --+---------
                                      ^       ^                         
                                      ^       ^
@@ -83,12 +83,23 @@ END: NO_DEEPER_NESTING :- - - - - - - - - - - - - - - - - - -://
 
 //:MISC_SECTION:=============================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
+#define I32  int32_t /** GCC: <stdint.h> **/
 
     U32 AAC2020_TAUDEPO_dex_edi_INITED_WITH =( 0xFFFFFFFF );
 
-    U32 TAUDEPO_have_we_ran_unit_test_yet   =( 0 );
+    /** PROTECT FROM ACCIDENTIAL RECURSION VIA LAZY TESTS.   **/
+    /** UTF_ROR: Unit_Test_Function: Ran_Or_Running          **/
+    /** @VID_IID[ 0054 ]TIME[ 3H 47M 59S ]                   **/
+
+    U32 aac2020_taudepo_UTF_ROR   =( 0 );
+
+    /** CAT: CAll_Times   * * * * * * * **/
+    /** BUG: deBUG        * * * * * * * **/
+    I32 aac2020_taudepo_CAT_BUG_Put =( 0 );
+
 
 #undef  U32
+#undef  I32
 //:=============================================:MISC_SECTION://
 //:DEX_TAU_000_015:==========================================://
 

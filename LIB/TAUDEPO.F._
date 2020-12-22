@@ -19,6 +19,36 @@ USAGE: GET:
         );;
 
 *** ******************************************************** **/
+//:LOGGING_AND_HALTING:======================================://
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    void
+    aac2020_taudepo_Info_any(
+        const char* str_fmt
+    ,   void*       poi_dat
+    ){ if( AAC2020_SILENCE.TAUDEPO <= 0 ){
+    
+        printf("[AAC2020_TAUDEPO_Info_any]...\n");
+        fflush(stdout);
+        printf( str_fmt , poi_dat );
+        printf("\n");
+        fflush(stdout);
+
+    };;}
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    void 
+    aac2020_taudepo_Halt( const char* msg_err ){
+        printf("[AAC2020_TAUDEPO_Halt:msg_err]:%s\n",msg_err);
+        fflush(stdout);
+        exit( 123 );
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+//:======================================:LOGGING_AND_HALTING://
 //:COM:======================================================://
 #define I32  int32_t      /** GCC: <stdint.h> **/     //: 01 ://
 #define U08  uint8_t      /** GCC: <stdint.h> **/     //: 02 ://
@@ -115,6 +145,7 @@ USAGE: GET:
 #define U32 uint32_t      /** GCC: <stdint.h> **/     //: 03 ://
 #define U08  uint8_t      /** GCC: <stdint.h> **/     //: 04 ://
 #define PIX AAC2020_PIXNAME_taudepo_cpu_pix           //: 05 ://
+#define ERR aac2020_taudepo_Halt                      //: 06 ://
 
     /** #_CONSISTENT_SIGNATURES_TRUMP_PARANOID_ERROR_CHECKS_#**/
 
@@ -130,6 +161,20 @@ USAGE: GET:
     ,   U32 val_004 //:<-- Data Slot #4, offset index == 3
     )
     {
+        aac2020_taudepo_CAT_BUG_Put++;
+
+        //:error_check_inputs:-------------------------------://
+            
+            if( 0
+            ||        DEX_TAU_000_015    >=  16 
+            ||        DEX_SUB_000_015    >=  16 
+            ||  ((I32)DEX_VAR_000_255)+0 >= 256 /**@STFU_GCC@**/
+            ){
+                /** @VID_IID[ 0054 ]TIME[ 3H 21M 41S ] **/
+                ERR("[TAUDEPO:ARGUMENTS_ARE_OUT_OF_BOUNDS]");
+            };;
+
+        //:-------------------------------:error_check_inputs://
         //:DIRTY_SECTOR_MANAGEMENT:--------------------------://
 
             /** #_FIRST_TAUDIRT_ATTEMPT_WAS_WRONG_# **/
@@ -186,6 +231,7 @@ USAGE: GET:
 #undef  U32                                           //: 03 ://
 #undef  U08                                           //: 04 ://
 #undef  PIX                                           //: 05 ://
+#undef  ERR                                           //: 06 ://
 //:======================================================:PUT://
 //:GET:======================================================://
 #define GET AAC2020_TAUDEPO_Get /** @TAU_GET@ **/     //: 01 ://
@@ -260,36 +306,6 @@ USAGE: GET:
 #undef  U08                                           //: 04 ://
 #undef  PIX                                           //: 05 ://
 //:======================================================:GET://
-//:LOGGING_AND_HALTING:======================================://
-
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-
-    void
-    aac2020_taudepo_Info_any(
-        const char* str_fmt
-    ,   void*       poi_dat
-    ){ if( AAC2020_SILENCE.TAUDEPO <= 0 ){
-    
-        printf("[AAC2020_TAUDEPO_Info_any]...\n");
-        fflush(stdout);
-        printf( str_fmt , poi_dat );
-        printf("\n");
-        fflush(stdout);
-
-    };;}
-
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-
-    void 
-    aac2020_taudepo_Halt( const char* msg_err ){
-        printf("[AAC2020_TAUDEPO_Halt:msg_err]:%s\n",msg_err);
-        fflush(stdout);
-        exit( 123 );
-    }
-
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-
-//:======================================:LOGGING_AND_HALTING://
 //:INIT:=====================================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
 #define I32  int32_t /** GCC: <stdint.h> **/
@@ -305,11 +321,25 @@ USAGE: GET:
     AAC2020_TAUDEPO_Init( U32 u32 ){
         if( u32 ){ /** Reserved for future use **/ };
 
-        if( TAUDEPO_have_we_ran_unit_test_yet <= 0 ){
+        if( aac2020_taudepo_UTF_ROR <= 0 ){
+                                                  
+            /** ******************************************** **/
+            /** @VID_IID[ 0054 ]TIME[ 3H 34M 58S ]           **/
+            /**                                              **/
+            /** Avoid accidential recursion. Technically     **/
+            /** Setting this flag here is not logically      **/
+            /** 100% true to the variable name,              **/
+            /** but if we set it at the END of the function, **/
+            /** there is the chance that we could            **/
+            /** accidentially LAZILY CALL this               **/
+            /** unit test again while it is still            **/
+            /** running.                                     **/    
+            /** ******************************************** **/
+            aac2020_taudepo_UTF_ROR=( 77077 );
 
             /** AFD: Allow Forward Declaration. **/
-            extern U32 AAC2020_TAUDEPO_UnitTest_AFD( U32  );
-                       AAC2020_TAUDEPO_UnitTest_AFD( 0x00 );
+            extern U32 aac2020_taudepo_UnitTest_AFD( U32  );
+                       aac2020_taudepo_UnitTest_AFD( 0x00 );
         };;
 
         /** When fragment shader changes (dex_edi) the    **/
@@ -425,7 +455,7 @@ USAGE: GET:
         
         //:------------------------:LOAD_INITIAL_TEXTURE_DATA://
 
-        TAUDEPO_have_we_ran_unit_test_yet=( 1 /** YES **/ );
+        aac2020_taudepo_UTF_ROR=( 1 /** YES **/ );
         return( 0x00 );
     }
 
@@ -821,7 +851,7 @@ USAGE: GET:
     }
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     U32                  /**@AFD@ : Allow_Forward_Declaration**/
-    AAC2020_TAUDEPO_UnitTest_AFD( U32 u32 ){
+    aac2020_taudepo_UnitTest_AFD( U32 u32 ){
         if( u32 ){ /** reserved for future use **/ };
 
             AAC2020_TAUDEPO_UnitTest_pix_dex( 0x00 );
