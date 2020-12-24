@@ -17,6 +17,8 @@
         U08 aac2020_tausync_unit_test_flag =( 0 );
 
         /** @N_P@ : Give us more feedback in our unit tests. **/
+        /**         This actually includes CLEAN PIXELS      **/
+        /**         caught inside of the dirty rectangle TOO.**/
         I32 aac2020_tausync_num_dirty_pix_pushed =( 0 );
 
         const U08
@@ -30,12 +32,35 @@
             rectangles that were pushed in a given            
             UnitTest_Test. @VID_IID[ 0054 ]TIME[ 0H 27M 02S ] 
 
+            @VID_IID[ 0057 ]TIME[ 2H 32M 29S ]
+            Final debugging feature: Averages of the GLOBAL
+            upper-left corners of the dirty pixel regions
+            that were pushed to the GPU.
+
             RUN_AVE: RUNning_AVErage
-        *** ************************************************ **/   
+        *** ************************************************ **/ 
+    
+            /** @VID_IID[ 0054 ]TIME[ 0H 27M 02S ] **/
             FLT aac2020_tausync_RUN_AVE_num_pix =( 0 );
             FLT aac2020_tausync_RUN_AVE_pix_wid =( 0 );
             FLT aac2020_tausync_RUN_AVE_pix_hig =( 0 );
+
+            /** @VID_IID[ 0057 ]TIME[ 2H 32M 29S ] **/
+            /** @VID_IID[ 0057 ]TIME[ 2H 38M 11S ] **/
+            FLT aac2020_tausync_RUN_AVE_pix_x_0 =( 0 );
+            FLT aac2020_tausync_RUN_AVE_pix_x_1 =( 0 );
+            FLT aac2020_tausync_RUN_AVE_pix_y_0 =( 0 );
+            FLT aac2020_tausync_RUN_AVE_pix_y_1 =( 0 );
+             
         /** ************************************************ **/
+
+        /** VID_IID[ 0057 ]TIME[ 05H 12M 09S ]    **/
+        /** The LAST used PixelBoundingRect(PBR)  **/
+        /** that was pushed to the GPU.           **/
+        I32 aac2020_tausync_PBR_x_0 =( 0 );  //: @DEBUG_VAR@ ://
+        I32 aac2020_tausync_PBR_x_1 =( 0 );  //: @DEBUG_VAR@ ://
+        I32 aac2020_tausync_PBR_y_0 =( 0 );  //: @DEBUG_VAR@ ://
+        I32 aac2020_tausync_PBR_y_1 =( 0 );  //: @DEBUG_VAR@ ://
 
 #undef  U08
 #undef  I32
