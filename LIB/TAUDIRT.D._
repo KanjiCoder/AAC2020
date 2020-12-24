@@ -68,6 +68,18 @@ extern  l_A  AAC2020_TAUDIRT_DIR_ANY;    /** @INTERN_BOTTOM@ **/
 
     struct AAC2020_TAUDIRT_rec_inc{
 
+        #if( AAC2020_CRASH_ON_VITAL_TODO >= 1 ) //:##########://
+
+            #error "[SEE_COMMENT_IN_SOURCE_2020_12_24_1129AM]"
+
+            If we want to maximize our bit usage, we should   
+            make these SIGNED 8 bit integers. Because we only 
+            need to go from 0 -to- 15 with our addressing.   
+
+            @VID_IID[ 0058 ]TIME[ 0H 33M 02S ]
+
+        #endif //:###########################################://
+
         U08 x_0; //:BOUND:LEF
         U08 x_1; //:BOUND:RIG
 

@@ -8,6 +8,28 @@
 //: figure out what regions of "taudepo" memory need         ://
 //: to be re-uploaded to the GPU.                            ://
 //: -------------------------------------------------------- ://
+//:BUG_HUNTING_DEFINES:======================================://
+
+    /** @VID_IID[ 0058 ]TIME[ 0H 59M 26S ]DATE[ 2020_12_24 ] **/
+    /** Searching for error due to integer overflow.   * * * **/
+    #define AAC2020_TAUSYNC_MACRO_DEBUG_001 ( 1 )
+
+//:======================================:BUG_HUNTING_DEFINES://
+//:HELPER_RECTANGLE:=========================================://
+#define I16 int16_t /** GCC: <stdint.h> **/
+
+    struct 
+    AAC2020_TAUSYNC_rec_inc{
+
+        I16 x_0 ;
+        I16 x_1 ;
+        I16 y_0 ;
+        I16 y_1 ;
+
+    };
+
+#undef  I16
+//:=========================================:HELPER_RECTANGLE://
 //:UNIT_TEST:================================================://
 #define U08 uint8_t /** GCC: <stdint.h> **/
 #define I32 int32_t /** GCC: <stdint.h> **/
@@ -27,6 +49,7 @@
         const U08
         aac2020_tausync_WET_RUN_FOR_PRODUCTION =( 0x99 );
 
+        //:DEBUG_VARIABLES:----------------------------------://
         /** ************************************************ ***
             Get an rough idea of the size of the dirty        
             rectangles that were pushed in a given            
@@ -47,10 +70,10 @@
 
             /** @VID_IID[ 0057 ]TIME[ 2H 32M 29S ] **/
             /** @VID_IID[ 0057 ]TIME[ 2H 38M 11S ] **/
-            FLT aac2020_tausync_RUN_AVE_pix_x_0 =( 0 );
-            FLT aac2020_tausync_RUN_AVE_pix_x_1 =( 0 );
-            FLT aac2020_tausync_RUN_AVE_pix_y_0 =( 0 );
-            FLT aac2020_tausync_RUN_AVE_pix_y_1 =( 0 );
+            FLT aac2020_tausync_RUN_AVE_pix_x_0 =( 0 ); 
+            FLT aac2020_tausync_RUN_AVE_pix_x_1 =( 0 ); 
+            FLT aac2020_tausync_RUN_AVE_pix_y_0 =( 0 ); 
+            FLT aac2020_tausync_RUN_AVE_pix_y_1 =( 0 ); 
              
         /** ************************************************ **/
 
@@ -61,6 +84,8 @@
         I32 aac2020_tausync_PBR_x_1 =( 0 );  //: @DEBUG_VAR@ ://
         I32 aac2020_tausync_PBR_y_0 =( 0 );  //: @DEBUG_VAR@ ://
         I32 aac2020_tausync_PBR_y_1 =( 0 );  //: @DEBUG_VAR@ ://
+
+        //:----------------------------------:DEBUG_VARIABLES://
 
 #undef  U08
 #undef  I32

@@ -88,6 +88,7 @@
 #define U08  uint8_t /** GCC: <stdint.h> **/
 #define REC  struct AAC2020_TAUDIRT_rec_inc
 #define CHR  const char
+#define ERR  aac2020_taudirt_Halt
 
     //:REC_INSIDE_REC_CHECK:---------------------------------://
 
@@ -140,10 +141,41 @@
         }
 
     //:------------------------------------------------:PRINT://
+    //:RECT_VALIDATE_USED_BY:TAUSYNC.F._:--------------------://
+
+        void
+        aac2020_taudirt_Validate_rec_inc(
+
+            REC* rec
+        ,   CHR* rec_nam /** rectangle name. **/
+
+        )
+        {
+            /** @VID_IID[ 0058 ]TIME[ 01H 21M 28S ]          **/
+            /** Moved out of TAUSYNC.F._ and renamed func.   **/
+
+            assert( ((void*)0) != rec );
+            
+            if( 0
+            ||  (*rec).x_0  >  (*rec).x_1  /** EQUAL(==)OKAY **/
+            ||  (*rec).y_0  >  (*rec).y_1  /** DONT_USE[ >= ]**/
+            /** @VID_IID[ 0054 ]TIME[ 5H 18M 24S ]           **/
+            /** Logically And Visually Analogous Statements. **/
+            ){
+
+                /** INV_REC_DET: INVERTED_RECTANGLE_DETECTED **/
+                printf( "[INV_REC_DET:rec_nam]:%s\n", rec_nam );
+                ERR(    "[INV_REC_DET:TAUDIRT:2020]");
+                
+            };;
+        }
+
+    //:--------------------:RECT_VALIDATE_USED_BY:TAUSYNC.F._://
 
 #undef  U08
 #undef  REC
 #undef  CHR
+#undef  ERR
 //:------------------------------:RECTANGLE_UTILITY_FUNCTIONS://
 //:INIT_NONE:================================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
@@ -1182,6 +1214,18 @@
     {
         /** Since rectangle is signed, we will clear it  **/
         /** by giving it out of bound trap values.       **/
+
+        #if( AAC2020_CRASH_ON_VITAL_TODO >= 1 ) //:##########://
+
+            #error Trap values cannot exceed 127
+            #error If we decide to use I08 for
+            #error AAC2020_TAUDIRT_rec_inc
+
+            #error @TRAP_VALUE@
+
+            @VID_IID[ 0058 ]TIME[ 0H 33M 02S ]
+
+        #endif //:###########################################://
 
         rec_inc -> x_0 =( 200  /** @TRAP_VALUE@ **/ );
         rec_inc -> x_1 =( 100  /** @TRAP_VALUE@ **/ );
