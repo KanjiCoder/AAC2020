@@ -1,14 +1,340 @@
 //: 1234567
 //: TAUTYPE.F._ : FUNCTIONS for operating on TAUTYPE.D._ types.
 
+//:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=====================://
+    void 
+    aac2020_tautype_Halt( const char* msg_err )
+    {
+        printf("[FATAL_ERROR:aac2020_tautype]:%s\n", msg_err );
+        fflush(stdout);
+        exit( 202 );
+    }
+//:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
 //:INIT_NONE:================================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
 
     U32
     AAC2020_TAUTYPE_InitNone( U32 u32 ){
         if( u32 ){ /** reserved for future use **/ };
+
+        /** @VID_IID[ 0060 ]TIME[ 02H 02M 48S ](WRITTEN)     **/
+        /** @VID_IID[ 0060 ]TIME[ 02H 14M 48S ](FIXED)       **/
+        /** Tests At Bottom Of File Via Forward Declaration  **/
+
+        extern  U32 AAC2020_TAUTYPE_UnitTest( U32  );
+                    AAC2020_TAUTYPE_UnitTest( 0x00 );
+
         return( 0x00 );
     }
 
 #undef  U32
 //:================================================:INIT_NONE://
+//:INCLUSIVE_RECTANGLE:aac2020_tautype_rec_inc:==============://
+//:inclusive_rectangle:AAC2020_TAUTYPE_REC_INC:==============://
+#define I32  int32_t /** GCC: <stdint.h> **/          //: 01 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 02 ://
+#define U08 uint8_t  /** GCC: <stdint.h> **/          //: 03 ://
+#define ERR aac2020_tautype_Halt                      //: 04 ://
+
+    /** **************************************************** ***
+    @VID_IID[ 0060 ]TIME[ 1H 57M 30S ]
+    Finished First Draft Of: 
+        1: aac2020_tautype_rec_inc_EnforceBounds
+        2: AAC2020_TAUTYPE_rec_inc_ZoomPull
+        3: AAC2020_TAUTYPE_rec_inc_Tran
+    *** **************************************************** **/
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    void
+    aac2020_tautype_rec_inc_EnforceBounds(
+        I32* INPUT_OUTPUT_PARAM_x_0_i32 //: @BYREF@
+    ,   I32* INPUT_OUTPUT_PARAM_x_1_i32 //: @BYREF@
+    ,   I32* INPUT_OUTPUT_PARAM_y_0_i32 //: @BYREF@
+    ,   I32* INPUT_OUTPUT_PARAM_y_1_i32 //: @BYREF@
+    )
+    {
+        //:extract_or_restore_values:------------------------://
+
+            I32 x_0_i32 = (*INPUT_OUTPUT_PARAM_x_0_i32);
+            I32 x_1_i32 = (*INPUT_OUTPUT_PARAM_x_1_i32);
+            I32 y_0_i32 = (*INPUT_OUTPUT_PARAM_y_0_i32);
+            I32 y_1_i32 = (*INPUT_OUTPUT_PARAM_y_1_i32);
+
+        //:------------------------:extract_or_restore_values://
+
+                //:back_off_the_boarders:--------------------://
+
+                    //:back_off:lower_bound:-----------------://
+
+                        if( x_0_i32 < 0 ){ 
+
+                            I32 delta_x = ( 0 - x_0_i32 );
+
+                            x_1_i32 += ( delta_x );
+                            x_0_i32 += ( delta_x );
+
+                        };;
+                        if( y_0_i32 < 0 ){ 
+
+                            I32 delta_y = ( 0 - y_0_i32 );
+
+                            y_1_i32 += ( delta_y );
+                            y_0_i32 += ( delta_y );
+
+                        };;
+
+                    //:-----------------:back_off:lower_bound://
+                    //:back_off:upper_bound:-----------------://
+
+                        if( x_1_i32 > ( 512 - 1 ) ){
+
+                            //: @_MINUS_FIVE_ELEVEN_@
+                            I32 delta_x = ( x_1_i32 - 511 );
+                            
+                            x_1_i32 -= ( delta_x );
+                            x_0_i32 -= ( delta_x );
+
+                        };;
+                        if( y_1_i32 < ( 512 - 1 ) ){
+
+                            //: @_MINUS_FIVE_ELEVEN_@
+                            I32 delta_y = ( y_1_i32 - 511 );
+                            
+                            y_1_i32 -= ( delta_y );
+                            y_0_i32 -= ( delta_y );
+
+                        };;
+
+                    //:-----------------:back_off:upper_bound://
+
+                //:--------------------:back_off_the_boarders://
+
+        //:extract_or_restore_values:------------------------://
+
+            (*INPUT_OUTPUT_PARAM_x_0_i32) = x_0_i32 ;
+            (*INPUT_OUTPUT_PARAM_x_1_i32) = x_1_i32 ;
+            (*INPUT_OUTPUT_PARAM_y_0_i32) = y_0_i32 ;
+            (*INPUT_OUTPUT_PARAM_y_1_i32) = y_1_i32 ;
+
+        //:------------------------:extract_or_restore_values://
+
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    void
+    AAC2020_TAUTYPE_rec_inc_ZoomPull(
+        U08 tau_015  //: INDEX:tau: EX: AAC2020_TAUDEPO.TAU_015  
+    ,   U08 sub_015  //: INDEX:sub: EX: AAC2020_TAUDEPO.PAINT5D  
+    ,   U08 var_255  //: INDEX:var: EX: AAC2020_TAUDEPO.P5D_VP1  
+    ,   I32 zom_u32  //: Amount To Zoom In And Out In Pixels
+    )
+    {
+        U32 x_0 =( 0xFFFFFFFF /** TRAP_VALUE **/ );
+        U32 x_1 =( 0xFFFFFFFF /** TRAP_VALUE **/ );
+        U32 y_0 =( 0xFFFFFFFF /** TRAP_VALUE **/ );
+        U32 y_1 =( 0xFFFFFFFF /** TRAP_VALUE **/ );
+
+        //:Get_Or_Put_Bitmap_Variables:----------------------://
+
+            /** @GETS_HERE@: AAC2020_PIXNAME_taudepo_cpu_pix **/
+            AAC2020_TAUDEPO_Get( 
+                tau_015
+            ,   sub_015
+            ,   var_255
+            ,   &(x_0),&(x_1),&(y_0),&(y_1)
+            );;
+
+            I32 x_0_i32 =( (I32) x_0 );
+            I32 x_1_i32 =( (I32) x_1 );
+            I32 y_0_i32 =( (I32) y_0 );
+            I32 y_1_i32 =( (I32) y_1 );
+
+        //:----------------------:Get_Or_Put_Bitmap_Variables://
+
+        AAC2020_TODOMAN_Vital( "[TODO:Camera_Initial_Size]");
+
+        I32 wid =( x_1_i32 - x_0_i32 + 1 );
+        I32 hig =( y_1_i32 - y_0_i32 + 1 );
+        if( wid != hig ){ ERR("[CAM_NOT_SQUARE:ZOOMPULL]"); };
+        if( wid  > 512 ){ ERR("[WID_OVER_512:::ZOOMPULL]"); };
+        if( hig  > 512 ){ ERR("[HIG_OVER_512:::ZOOMPULL]"); };
+
+        //:gaurd_from_zooming_in_or_out_too_much:------------://
+
+            /**  @VID_IID[ 0060 ]TIME[ 1H 33M 26S ]          **/
+            /**  I thought some comparisons needed to use    **/
+            /**  a "+" sign. But turns out all comparisons   **/
+            /**  should be "-" for correct bounds checks.    **/
+
+            if( 1
+            &&  ( wid - zom_u32 ) >=   1 //: #_NEG_FOR_ALL_# ://
+            &&  ( hig - zom_u32 ) >=   1 //: #_NEG_FOR_ALL_# ://
+            &&  ( wid - zom_u32 ) <= 512 //: #_NEG_FOR_ALL_# ://
+            &&  ( hig - zom_u32 ) <= 512 //: #_NEG_FOR_ALL_# ://
+            ){
+                x_0_i32 = ( x_0_i32 + zom_u32 );
+                x_1_i32 = ( x_1_i32 - zom_u32 );
+                y_0_i32 = ( y_0_i32 + zom_u32 );
+                y_1_i32 = ( y_1_i32 - zom_u32 );
+
+                aac2020_tautype_rec_inc_EnforceBounds(
+                    &( x_0_i32 )
+                ,   &( x_1_i32 )
+                ,   &( y_0_i32 )
+                ,   &( y_1_i32 )
+                );;
+            };;
+
+        //:------------:gaurd_from_zooming_in_or_out_too_much://
+        //:Get_Or_Put_Bitmap_Variables:----------------------://
+
+            assert( x_0_i32 >= 0 && x_0_i32 <= ( 512 - 1 ) );
+            assert( x_1_i32 >= 0 && x_1_i32 <= ( 512 - 1 ) );
+            assert( y_0_i32 >= 0 && y_0_i32 <= ( 512 - 1 ) );
+            assert( y_1_i32 >= 0 && y_1_i32 <= ( 512 - 1 ) );
+
+            x_0 = (U32) x_0_i32 ;
+            x_1 = (U32) x_1_i32 ;
+            y_0 = (U32) y_0_i32 ;
+            y_1 = (U32) y_1_i32 ;
+
+            /** @PUTS_HERE@: AAC2020_PIXNAME_taudepo_cpu_pix **/
+            AAC2020_TAUDEPO_Put( 
+                tau_015
+            ,   sub_015
+            ,   var_255
+            ,   x_0 , x_1 , y_0 , y_1 
+            );;
+
+        //:----------------------:Get_Or_Put_Bitmap_Variables://
+    }
+    
+    void  AAC2020_TAUTYPE_rec_in_ZoomPush( ){
+        ERR("[DO_NOT_USE_THIS_USE:ZoomPull]");
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    void
+    AAC2020_TAUTYPE_rec_inc_Tran(
+        U08 tau_015  //: INDEX:tau: EX: AAC2020_TAUDEPO.TAU_015  
+    ,   U08 sub_015  //: INDEX:sub: EX: AAC2020_TAUDEPO.PAINT5D  
+    ,   U08 var_255  //: INDEX:var: EX: AAC2020_TAUDEPO.P5D_VP1     
+    ,   I32 tra_i_x  //: Amount to translate in pixels: X-axis
+    ,   I32 tra_i_y  //: Amount to translate in pixels: Y-axis
+    )
+    {
+        U32 x_0 =( 0xFFFFFFFF /** TRAP_VALUE **/ );
+        U32 x_1 =( 0xFFFFFFFF /** TRAP_VALUE **/ );
+        U32 y_0 =( 0xFFFFFFFF /** TRAP_VALUE **/ );
+        U32 y_1 =( 0xFFFFFFFF /** TRAP_VALUE **/ );
+
+        //:Get_Or_Put_Bitmap_Variables:----------------------://
+
+            /** @GETS_HERE@: AAC2020_PIXNAME_taudepo_cpu_pix **/
+            AAC2020_TAUDEPO_Get( 
+                tau_015
+            ,   sub_015
+            ,   var_255
+            ,   &(x_0),&(x_1),&(y_0),&(y_1)
+            );;
+
+            I32 x_0_i32 =( (I32) x_0 );
+            I32 x_1_i32 =( (I32) x_1 );
+            I32 y_0_i32 =( (I32) y_0 );
+            I32 y_1_i32 =( (I32) y_1 );
+
+        //:----------------------:Get_Or_Put_Bitmap_Variables://
+
+        AAC2020_TODOMAN_Vital( "[TODO:Camera_Initial_Size]");
+
+        I32 wid =( x_1_i32 - x_0_i32 + 1 );
+        I32 hig =( y_1_i32 - y_0_i32 + 1 );
+        if( wid != hig ){ ERR("[CAM_NOT_SQUARE:TRAN]"); };
+        if( wid  > 512 ){ ERR("[WID_OVER_512:::TRAN]"); };
+        if( hig  > 512 ){ ERR("[HIG_OVER_512:::TRAN]"); };
+
+        x_0_i32 = ( x_0_i32 + tra_i_x );
+        x_1_i32 = ( x_1_i32 + tra_i_x );
+        y_0_i32 = ( y_0_i32 + tra_i_y );
+        y_1_i32 = ( y_1_i32 + tra_i_y );
+
+        aac2020_tautype_rec_inc_EnforceBounds(
+            &( x_0_i32 )
+        ,   &( x_1_i32 )
+        ,   &( y_0_i32 )
+        ,   &( y_1_i32 )
+        );;
+
+        //:Get_Or_Put_Bitmap_Variables:----------------------://
+
+            assert( x_0_i32 >= 0 && x_0_i32 <= ( 512 - 1 ) );
+            assert( x_1_i32 >= 0 && x_1_i32 <= ( 512 - 1 ) );
+            assert( y_0_i32 >= 0 && y_0_i32 <= ( 512 - 1 ) );
+            assert( y_1_i32 >= 0 && y_1_i32 <= ( 512 - 1 ) );
+
+            x_0 = (U32) x_0_i32 ;
+            x_1 = (U32) x_1_i32 ;
+            y_0 = (U32) y_0_i32 ;
+            y_1 = (U32) y_1_i32 ;
+
+            /** @PUTS_HERE@: AAC2020_PIXNAME_taudepo_cpu_pix **/
+            AAC2020_TAUDEPO_Put( 
+                tau_015
+            ,   sub_015
+            ,   var_255
+            ,   x_0 , x_1 , y_0 , y_1 
+            );;
+
+        //:----------------------:Get_Or_Put_Bitmap_Variables://
+
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+#undef  I32                                           //: 01 ://
+#undef  U32                                           //: 02 ://
+#undef  U08                                           //: 03 ://
+#undef  ERR                                           //: 04 ://
+//:==============:AAC2020_TAUTYPE_REC_INC:inclusive_rectangle://
+//:==============:aac2020_tautype_rec_inc:INCLUSIVE_RECTANGLE://
+//:UNIT_TEST:================================================://
+#define I32  int32_t  /** GCC: <stdint.h> **/         //: 01 ://
+#define U32 uint32_t  /** GCC: <stdint.h> **/         //: 02 ://
+#define U08  uint8_t  /** GCC: <stdint.h> **/         //: 03 ://
+#define ERR aac2020_tautype_Halt                      //: 04 ://
+
+    void
+    aac2020_tautype_UnitTest( void )
+    {
+
+
+
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    U32
+    AAC2020_TAUTYPE_UnitTest( U32 u32 )
+    {
+        if( u32 ){ /** reserved for future use **/ };
+
+        AAC2020_TODOMAN_Vital("[WriteRectangleTests]");
+
+        //: TODO: Backup data with re-usable function.
+
+        aac2020_tautype_UnitTest( /** void **/ );
+
+        //: TODO: Restore data with re-usable function.
+
+
+        return( 0x00 );
+    }
+
+#undef  I32                                           //: 01 ://
+#undef  U32                                           //: 02 ://
+#undef  U08                                           //: 03 ://
+#undef  ERR                                           //: 04 ://
+//:================================================:UNIT_TEST://

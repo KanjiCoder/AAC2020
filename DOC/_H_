@@ -9,7 +9,407 @@
     //[   VIDEO COMMENT TIMESTAMP EXAMPLE   ]//
 *** ******************************************************** ***
 
+@BYREF@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
+    @BYREF@:
+        When you see this, it means you should think of
+        the argument in the function as something being
+        "passed in by reference".
+
+        C does not have references like C++.
+
+        But references are basically just pointers
+        that are not allowed to be de-referenced.
+
+        Well... That's not quite right...
+
+        They are pointers that cannot be re-assigned
+        to a new memory address.
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@BYREF@
+#_NEG_FOR_ALL_##################################################
+
+    _NEG_FOR_ALL_: All calculations on all lines use the
+                   NEGATIVE sign.
+
+    EXAMPLE:
+        AAC2020_TAUTYPE_rec_inc_ZoomPull's section:
+        gaurd_from_zooming_in_or_out_too_much
+    
+        Needs to be all negatives to correctly do it's
+        bounds checking. @VID_IID[ 0060 ]TIME[ 1H 32M 25S ]
+
+##################################################_NEG_FOR_ALL_#
+#_TAKEN_FROM_SDF_013_###########################################
+
+            //:#FIND_POINT_ON_SCREEN_PLANE#
+            /** ************************************ ***
+            Could possibly use these as slice planes.
+            But for now using these to navigate our
+            voxel map bounds.
+
+            [ A ]Is_Directly_Above[ E ]On_Z_Axis
+            [ B ]Is_Directly_Above[ F ]On_Z_Axis
+            [ C ]Is_Directly_Above[ G ]On_Z_Axis
+            [ D ]Is_Directly_Above[ H ]On_Z_Axis
+            
+                        (In World/Frag Coords)
+                            [0,0,0] 
+                                \
+                A_B              \
+            A----|------B  A -->  +=======+  <-- B
+            |    |      |        /.       .\
+            | rwC_001   |       / .       . \
+            |    |      |      /  .       .  \
+            C----|------D  C->+===============+<-D
+                C_D           [   ._....._.   ]
+                              [  /         \  ]
+                              [ .           . ]
+                              [/             \]
+                              +===============+<-H
+
+                              +===============+  
+                              [\             /]
+                              [ .           . ]
+                              [  \_......._/  ]
+                E_F           [   .       .   ]
+            E----|------F  G->+===============+<-H
+            |    |      |      \  .       .  /
+            | rwC_002   |       \ .       . /
+            |    |      |        \.       ./
+            G----|------H  E -->  +=======+  <-- F
+                G_H          
+                            
+            *** ************************************ **/
+###########################################_TAKEN_FROM_SDF_013_#
+#_SDF_PATENT_SHADER_PLANK_UNITS_################################
+
+    EXTRACTED_FROM[ R:/G/SDF2020/SDF_019._ ]
+
+    //:KEY:--------------------------------------------------://
+    VARS:
+
+        rfp : reset_flag_pixel
+        rfb : reset_flag__byte (Alpha channel of rfp)
+        fcc : frag_Centered_coord
+        f_c : frag_coord (Discreet_Integer_Pixel_Value)
+        csC : cross_section_COLOR
+        csL : cross_section_LOCAL. RANGE[ 0 - 15 ]
+        csF : cross_section_FIRST_FLOOR_OF_GIVEN_COLOR
+        csG : csG==csF. Use csF. csG == cs:GlobalFloorIndex
+        csI : cross_section_INDEX ( USE: csL )
+        csX : cross_section CELL_64_64 location, X-axis
+        csY : cross_section CELL_64_64 lcoation, Y-axis
+        coX : Crosssection_Origin:X (left pixel of csX)
+        coY : Crosssection_Origin:Y (top  pixel of cxY)
+        p_x : ACTUAL pixel:x location on texture.
+        p_y : ACTUAL pixel:y location on texture.
+        p_z : NO SUCH FUCKING THING. 2D Texture.
+        c4d : Color_4_Dimensional. ( vec4 type )
+        byt : BYTe (0-255 value, a U32 (uint32))
+        v_i : Voxel 1D Index specifying voxel [X,Y,Z]
+        v_d : No such thing. DO_NOT_USE_FOR[ v_i ]
+        v_x : Voxel_X( von[0].x /|/ von_000.x )
+        v_y : Voxel_Y( von[0].y /|/ von_000.y )
+        v_z : Voxel_Z( von[0].z /|/ von_000.y )
+        c4x : NOT_USED_AMBIGUOUS_COULD_IDENTIFY[ csX | cqX ]
+        c4y : NOT_USED_AMBIGUOUS_COULD_IDENTIFY[ csY | cqY ]
+        cqX : RGBA Cell Quadrant X ( 0 or 1 )
+        cqY : RGBA Cell Quadrant Y ( 0 or 1 )
+        t_x : Tile_X : ONLY_FOR_2D_Data! (Not Voxels)
+        t_y : Tile_Y : ONLY_FOR_2D_Data! (Not Voxels)
+        t_z : NO_SUCH_THING( Tiles Are Now Only 2D  )
+        v3d : Voxel_location_3D ( ivec3( v_x , v_y , v_z ) )
+        cmX : Chopped_Misslesilo_X (512x512 [cqX,cqY] org)
+        cmY : Chopped_Misslesilo_Y (512x512 [cqX,cqY] org)
+        msX : You_Probably_Mean[ cmX ]FIX_IT!
+        msY : You_Probably_Mean[ cmY ]FIX_IT!
+
+
+        v_i_512 : v_i , abstracting data as 512x512 bitmap.
+        p_x_512 : p_x , abstracting data as 512x512 bitmap.
+        p_y_512 : p_y , abstracting data as 512x512 bitmap.
+        p_x_256 : p_x , ACTUAL  location on 256x256 bitmap.
+        p_y_256 : p_y , ACTUAL  location on 256x256 bitmap.
+        pxy_256 : DONT_USE. USE[ xyc_256 ]
+        xyc_256 : ivec3( p_x , p_y , csC )
+
+        tib: TIle__Byte (Tiles  are 2D)
+        vob: VOxel_Byte (Voxels are 2D)
+      
+    TOKENS:
+
+        D01: Diagram # 1
+
+    FUNCS:
+       
+        v_i_512_CTO_vob : GET_VOB ,use: DEX
+            v3d_CTO_vob : GET_VOB ,use: ivec3( v_x,v_y,v_z )
+
+    NOT_ACTUALLY_FUNCTIONS:
+
+        GET_vob_USE_dex ---> USE[ v_i_512_CTO_vob ]
+        GET_vob_USE_v3d ---> USE[     v3d_CTO_vob ]
+        VOB_XYZ -----------> USE[     v3d_CTO_vob ]
+        VOB_DEX -----------> USE[ v_i_512_CTO_vob ]
+
+    SHORTHAND_PHRASES:
+
+        GET_TIB : GET TIle__BYTE ( Tile  Value 0 - 255 )
+        GET_VOB : GET VOxel_BYTE ( Voxel Value 0 - 255 )
+     
+    AVOID:
+
+        fpc: Looks too much like "percent something..."
+             Use "fcc" instead.
+
+        z64 : Active Layer Of Voxel Map in 2D view.
+              USE[ v_z ](Voxel_Z)
+
+        c6x : Cell 64 X: X voxel cell in 2D crossSectionView
+              USE[ v_x ](Voxel_X)
+
+        c6y : Cell 64 Y: Y voxel cell in 2D crossSectionView
+              USE[ v_y ](Voxel_Y)
+
+    @SIXTEEN_FLOORS_OF_EACH_COLOR@
+        Think of a skyscraper where the bottom
+        16 floors are RED, next 16 floors green,
+        next 16 floors BLUE, last 16 floors ALPHA.
+
+        AND... @EACH_FLOOR_IS_64_BY_64@
+
+    //:--------------------------------------------------:KEY://
+
+/** ******************************************************** ***
+
+    #PIXEL_255_ALPHA############################################
+
+        Bottom Left Corner Pixel [255,255] ALPHA BITS:
+
+        MSB: 1  :  Data Initilialized Bit
+             1  :  2D or 3D view of tilemap?
+                :  0 : 2D view
+                :  1 : 3D view
+        
+             1  : ---+
+             1  :    |
+             1  :    +-- What layer are we on?
+             1  :    +-- Number in range:[0 - 63]
+             1  :    |   (When 2D view is selected)
+        LSB  1  : ---+
+
+    ############################################PIXEL_127_ALPHA#
+    #TILE_DATA_LAYOUT###########################################
+
+        ( 512 x 512 ) === ( 64 x 64 x 64 )
+
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+          +--- Tip Of Missle Silo.                    
+          |    High values mean we are DEEPER into    
+          V    the data.                              
+    ====+---+===================================================
+        | R |  <-- csC == 0  (  0 <= v_z  <= 15 )   
+        +---+
+        | G |  <-- csC == 1  ( 16 <= v_z  <= 31 )      
+        +---+  
+        | B |  <-- csC == 2  ( 32 <= v_z  <= 47 )    
+        +---+
+        | A |  <-- csC == 3  ( 48 <= v_z  <= 63 )   
+        +---+
+
+        @---+ @---+  @ == [ cmX , cmY ]
+        | R | | G |
+        +---+ +---+     cm === "Chopped_Missilesilo"
+        @---+ @---+     Imagine we pre-fabricate
+        | B | | A |     the colored floors of missle
+        +---+ +---+     silo in factory and lay it out
+        |         /     in a 512x512 field.
+        |        /
+        |       |                          ( CRO_SEC )
+        |       |                          ( 64 x 64 )
+        |<-512->|         |<-256->|             |
+    --- +---+---+ ------- +-------+      +-+-+-+V+
+     |  | R | G |         |       |      |_|_|_|_|
+    D01 +---+---+         |   G   | -->  |_|_|_|_|
+     |  | B | A | \       |       |      |_|_|_|_|
+    --- +-^-+---+  \_____ +-------+      +_|_|_|_+
+          |                           ___|       |
+         cqX == 0                    /           |
+         cqY == 1                   /            |
+         csC == 2                  /             |
+                                  /              |
+                                 |<- 256 pixel ->|
+    @16_64X64_FLOORS_ON_4X4_GRID@+---+---+---+---+ ---
+                    |           /| 0 | 1 | 2 | 3 |  |
+                    +----------> +---+---+---+---+  |
+                             /   | 4 | 5 | 6 | 7 |  |
+        [+][coX,coY]+---------->[+]--+---+---+---+  4
+           [csL== 8]|      /     | 8 | 9 |10 |11 | cell
+    +---------------------+      +---+---+---+---+  |
+    |                            |12 |13 |14 |15 |  |
+    +   +----------------------- +---+---+-^-+---+ ---
+    |   |                                  |
+    |   |                              CELL_64_64  
+    |   |                              csL === 14
+    |   |                              csY ===  3
+    |   |                              csX ===  2
+    |   |   +---+
+    |   |   | R | CRO_SEC(S):  0 -to- 15 (16 total)
+    |   |   +---+ 
+    |   |   
+    |   +-- +---+
+    |       | G | CRO_SEC(S): 16 -to- 31 (16 total)
+    +---+-- +---+
+            
+            +---+
+            | B | CRO_SEC(S):32 -to- 47 (16 total)
+            +---+
+            
+            +---+
+            | A | CRO_SEC(S): 48 -to- 64 (16 total)
+            +---+
+
+    ###########################################TILE_DATA_LAYOUT#
+    #WHY_VOB_DEX################################################
+
+        Because we need to somehow encode [X,Y,Z]
+        value of voxel location as a single integer
+        that we can pass around in our 
+        stack addresses ( sta_add ).
+
+    ################################################WHY_VOB_DEX#
+    #EXTRA_MAPS:################################################
+
+        Once we are ACTUALLY using a 512-x-512 texture
+        we will have 3 extra maps worth of data.
+
+        I think we could do it like this:
+
+        MAP_001: Original Voxel Map
+        MAP_002: Lighting       Map
+        MAP_003: Sprites or other moving entities.
+        MAP_004: Elemental Things. Fire, Water, ETC.
+
+    #################################################EXTRA_MAPS#
+    #FRACTAL_AUTO_TILING_NESTING################################
+        ._.
+        |_| 1x1                (VON_005 /|/ sta_con[5])  
+         |
+        .V._._.
+        |_|_|_|
+        |_|_|_| 3x3            (VON_004 /|/ sta_con[4])
+        |_|_|_| 
+         \   /
+          \ /
+        ._.V._._._._._.
+        |_|_|_| |_|_|_|
+        |_|_|_| |_|_|_|
+        |_|_|_| |_|_|_|
+        |_ _ _   _ _ _| 7x7    (VON_003 /|/ sta_con[3])
+        |_|_|_| |_|_|_| ( 7x7 of PREVIOUS )
+        |_|_|_| |_|_|_| ( NOT: 7x7 pixels )
+        |_|_|_|_|_|_|_|   
+         \           /
+          \         /
+           \       /  Each cell in the 
+            \     /   15x15 (VON_002) below 
+             \   /    is a 7x7 (VON_003)
+              \ /
+        ._._ _ V._._._._._._._._._._._.
+        |_|_|_|_|_|_|_| |_|_|_| |_|_|_|
+        |_|_|_| |_|_|_| |_|_|_| |_|_|_|
+        |_|_|_| |_|_|_| |_|_|_| |_|_|_|
+        |_ _ _   _ _ _| |_ _ _   _ _ _|
+        |_|_|_| |_|_|_| |_|_|_| |_|_|_|
+        |_|_|_| |_|_|_| |_|_|_| |_|_|_|
+        |_|_|_|_|_|_|_| |_|_|_|_|_|_|_|
+        |_ _ _ _ _ _ _   _ _ _ _ _ _ _|
+        |_|_|_| |_|_|_| |_|_|_| |_|_|_|
+        |_|_|_| |_|_|_| |_|_|_| |_|_|_|
+        |_|_|_| |_|_|_| |_|_|_| |_|_|_|
+        |_ _ _   _ _ _| |_ _ _   _ _ _|
+        |_|_|_| |_|_|_| |_|_|_| |_|_|_|
+        |_|_|_| |_|_|_| |_|_|_| |_|_|_|
+        |_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|
+        15x15: (VON_002 /|/ sta_con[2])
+        
+        +----+   +----+
+        | 31 | X | 31 | 31x31  (VON_001 /|/ sta_con[1])
+        +----+   +----+
+        
+        +----+   +----+
+        | 63 | X | 63 | 63x63  (VON_000 /|/ sta_con[0])
+        +----+   +----+
+    
+        We stop marching into sub-divided space when
+        we hit VON_005. The size of VON_005 is one
+        pixel. (1 frag coord).
+        
+        V5R (  1 ) //:   VON_005 Relative Span       ://////////
+        V4R (  3 ) //:   VON_004 Relative Span       ://////////
+        V3R (  7 ) //:   VON_003 Relative Span       ://////////
+        V2R ( 15 ) //:   VON_002 Relative Span       ://////////
+        V1R ( 31 ) //:   VON_001 Relative Span       ://////////
+        V0R ( 63 ) //:   VON_000 Relative Span       ://////////
+        
+        //:Absolute_Spans::::::::::::::::::::::::::::://////////
+        //:---------------------------------:123456::://////////
+        //:                                 :      ::://////////
+        V5A (  1                        ) //:     1::://////////
+        V4A (  1 * 3                    ) //:     3::://////////
+        V3A (  1 * 3 * 7                ) //:    21::://////////
+        V2A (  1 * 3 * 7 * 15           ) //:   315::://////////
+        V1A (  1 * 3 * 7 * 15 * 31      ) //:  9765::://////////
+        V0A (  1 * 3 * 7 * 15 * 31 * 63 ) //:615195::://////////
+        //:                                 :      ::://////////
+        //:---------------------------------:123456::://////////
+        //:WIKIPEDIA:                              ::://////////
+        All integers with 7 or fewer decimal digits::://////////
+        [...]can be converted exactly into an IEEE ::://////////
+        754 single-precision floating-point value. ::://////////
+        //:---------------------------------:123456::://////////
+        
+        Lets encode it as this in the .IMAGE code:
+        
+        I32 V_R[6] =I32[6](  1 , 3 , 7 , 15, 31, 63 );
+        I32 V_A[6] =I32[6]( 
+            (  1 * 3 * 7 * 15 * 31 * 63 ) //:V0A
+        ,   (  1 * 3 * 7 * 15 * 31      ) //:V1A
+        ,   (  1 * 3 * 7 * 15           ) //:V2A
+        ,   (  1 * 3 * 7                ) //:V3A
+        ,   (  1 * 3                    ) //:V4A
+        ,   (  1                        ) //:V5A
+        );;
+        
+        Because we want to keep everything ABSOLUTE
+        rather than [local/relative], there is probably
+        no need for V_R[6]. Grid collision divides by
+        V_A[6] to figure out where you are in space.
+        
+    ################################FRACTAL_AUTO_TILING_NESTING#
+    #QUADRANT_XY_BIT_SHIFT_SANITY_CHECK#########################
+
+        Sanity Check For: 
+        csC = (cqY << 1 ) | ( cqX << 0 );
+
+        +---+---+
+        | 0 | 1 |
+        +---+---+
+        | 2 | 3 |
+        +---+---+
+
+        0 : x==0 , y==0 ,  bin:00  dec:00
+        1 : x==1 , y==0 ,  bin:01  dec:01
+        2 : x==0 , y==1 ,  bin:10  dec:02
+        3 : x==1 , y==1 ,  bin:11  dec:03
+
+    #########################QUADRANT_XY_BIT_SHIFT_SANITY_CHECK#
+               
+*** ******************************************************** **/
+
+
+################################_SDF_PATENT_SHADER_PLANK_UNITS_#
 #_WHY_NO_INSTANCES_IN_GPUDATA_##################################
 
     UPDATE_DATE[2020_12_25]: ***********************************
