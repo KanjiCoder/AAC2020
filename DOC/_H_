@@ -10,6 +10,352 @@
 *** ******************************************************** ***
 
 
+#_WHY_NO_INSTANCES_IN_GPUDATA_##################################
+
+    UPDATE_DATE[2020_12_25]: ***********************************
+
+        GPUDATA now serves as a TEMPORARY container for 
+        passing information about sub-system texture 
+        memory.
+    
+        All of the data LIVES in file scope variables.
+
+        Because: FLAT IS BETTER THAN NESTED.
+
+        Specifically in:
+
+        PIXNAME.D._
+
+            This also gives us a high level summary of all of
+            the important 512x512 system data allocations
+            in the entire game engine within one file.
+
+    ***********************************: UPDATE_DATE[2020_12_25]
+
+    EXTRACTED_FROM[ DOC/WHY_NO_INSTANCE_IN_GPUDATA.TXT ]
+
+    WHY_NO_INSTANCES_IN_GPUDATA: (WRITTEN_BEFORE[ 2020_12_25 ])
+    -------------------------------------------------------- 
+    I will NOT have instances of AAC2020_GPUDATA             
+    in [ this / GPUDATA.D._ / GPUDATA.H._ ] file.            
+                                                             
+    This is because RIGHT NOW I want a texture for           
+    graphics, and much later I know I'll be adding           
+    another texture for ENEMY_POSITIONS or something         
+    non-graphical in nature.                                 
+                                                             
+    Comming BACK to this GPUDATA library to add              
+    something of that much significance would                
+    be a violation of my layered design.                     
+    -------------------------------------------------------- 
+
+##################################_WHY_NO_INSTANCES_IN_GPUDATA_#
+#_WHY_GPUDATA_PAINT5D_##########################################
+
+    UPDATE[ 2020_12_25 ]: **************************************
+
+        After working with "AAC2020_GPUDATA_PAINT5D"
+        I have decided this namespace pattern breaker
+        is a pain in the ass and have re-named it to
+        "AAC2020_PAINT5D".
+
+    **************************************: UPDATE[ 2020_12_25 ]
+
+    EXTRACTED_FROM[ DOC/WHY_GPU_DATA_PAINT5D.TXT ]
+
+    WHY_GPUDATA_PAINT5D:
+
+        AAC2020_GPUDATA_PAINT5D: 
+        
+            Memory For a 5 Dimensional
+            MS-PAINT program. I was thinking about 
+            calling it "AAC2020_GPUDATA_GENERIC" because
+            I wanted a chunk of memory I wasn't sure what
+            to do with I could start to work with.
+        
+            HOWEVER!
+        
+            I want to avoid being ABSTRACT whenever 
+            possible to make the project easier to follow.
+        
+            So the first instance of AAC2020_GPUDATA
+            in our project will be:
+        
+                VAR:   AAC2020_GPUDATA_PAINT5D_dat
+                FILE:  AAC2020_GPUDATA_PAINT5D.D._
+
+            ----------------------------------------------------
+
+            The end goal is a GAME. However, whenever possible,
+            compiling up to a non-terminal point in our
+            LIBCHAN (library_chain) should yeild a usable 
+            product.
+
+            Therefore, when we compile up to:
+
+##########################################_WHY_GPUDATA_PAINT5D_#
+#_WHY_GPU_DATA_#################################################
+
+    EXTRACTED_FROM[ DOC/WHY_GPUDATA.TXT ]
+
+    This was NOT named GRADATA (graphics data)
+            because from past experience I know that 
+            some of the data on the GPU will be used for
+            rendering while other data on the GPU may be
+            used for things like storing the current 
+            position of enemies.
+    
+            GPUDATA will keep a local CPU cache of the
+            arrays of data it pushes to the GPU. Being
+            careful to always keep both sets of data
+            in sync (the same).
+    
+            The reason for this is that querying GPU values
+            for CPU tasks will use up on bandwidth AND be
+            relatively slow.
+
+#################################################_WHY_GPU_DATA_#
+#_WHY_FRAGBED_DEFAULT_COPY_#####################################
+
+    EXTRACTED_FROM[ DOC/WHY_FRAGBED_DEFAULT_COPY.TXT ]
+
+    WHY_FRAGBED_DEFAULT_COPY:
+
+        We copy all of the default shaders hard coded
+        into the .EXE's memory (.text segment) so that
+        all of our shader pointers are FREEABLE pointers.
+
+        This [consistency/regularity/normalization] makes
+        the code simpler. But it also means a bigger memory
+        footprint.
+
+#####################################_WHY_FRAGBED_DEFAULT_COPY_#
+#_WHY_COG_IN_DIAGRAM_###########################################
+
+    EXTRACTED_FROM[ DOC/WHY_COG_IN_DIAGRAM.TXT ]
+
+    WHY_COG_IN_DIAGRAM:
+
+    COG.H is in our diagram because previous experience
+    has told me that setting up OpenCL <==> OpenGL 
+    interop is NOT a trivial task.
+
+    If we decide to add OpenCL or Vulkan to the project,
+    the COG.H library will be stubbed into this position.
+
+    However, Since it might also be doing OpenGL <==> Vulkan
+    or Vulkan <==> OpenCL interop, we need a different name.
+
+           123_123
+    Maybe: GINTLAY (Graphics_INTerop_LAYer)
+           1234567
+
+###########################################_WHY_COG_IN_DIAGRAM_#
+#_PREVIOUS_PROJECT_#############################################
+
+    EXTRACTED_FROM[ DOC/PREVIOUS_PROJECT.TXT ]
+
+    RANT:(BEGIN)
+
+    I write so much code that I sometimes lose track of things
+    written a long time ago. Brain research on memorization
+    says that forming linked lists in your head can help
+    remember things. This makes sense. Because memory is
+    just associations. And if you have an orphaned WIKIPEDIA
+    article (metaphore) in your head, there is no way to get
+    there. You need both memory AND a mechanism for retrieval.
+
+    RANT:( END ) 
+
+
+    Comment below extracted from AAC2020.C11 .
+
+    //: PREVIOUS_LIBRARY: A2_JC.JS ------------------------- ://
+    //: CURRENT__LIBRARY: AAC2020                            ://
+    //:                                                      ://
+    //: Re-write of A2JC ( R:\G\A2_JC ) into C only code.    ://
+    //: A2_JC:DEMO[ file:///R:/G/A2_JC/AA2.HTM         ]     ://
+    //: A2_JC:ANIM[ https://imgur.com/XiNdLvT          ]     ://
+    //: A2_JC:GITH[ github.com/HeavyMetalCookies/A2_JC ]     ://
+    //: ---------------------------------------------------- ://
+
+#############################################_PREVIOUS_PROJECT_#
+#_LIBRARY_CHAIN_################################################
+
+    EXTRACTED_FROM[ DOC/LIBRARY_CHAIN.TXT ]
+
+    ******************************************************** ***
+                                                             
+    Goal: Project composed of a chain of libraries (LIBCHAN)    
+        that we can split at ANY POINT to do a binary search  
+        on the project.                                       
+                                                             
+    Why:                                                     
+            1.  DEBUGGING:                                   
+                For those really hard to debug moments       
+                when you've introduced undefined behavior.   
+                                                             
+            2.  UNDERSTANDING:                                  
+                I think the reason my boss had such a better    
+                understanding of the code base at "IDB" was     
+                because he was around to BUILD it. By keeping   
+                a [ layered / chained ] approach, the goal is   
+                for a newcomer to this code to know exactly how 
+                the project was built. Understanding the        
+                [ journey / path ] taken to build up this code  
+                to where it is now is vital to an expert level  
+                understanding of the code.                      
+    Rules:                                                      
+                                                            
+        1. Build up project in small DOTADIW pieces.        
+        2. LOWER LIBRARIES CANNOT REFERENCE HIGHER LIBS     
+                                                            
+        DOTADIW: Do One Thing And Do It Well                
+                                                            
+    ******************************************************** **/
+
+################################################_LIBRARY_CHAIN_#
+#_DATA_THEN_FUNCTIONS_##########################################
+
+    EXTRACTED_FROM[ DOC/DATA_THEN_FUNCTIONS.TXT ]
+
+    DATA_THEN_FUNCTIONS
+
+        Everything is either data or functions.
+        
+        Why:(BEG)
+        |
+        |   Take a dependency problem where classes
+        |   "A" and "B" both reference each other in their
+        |   implementations:
+        |   
+        |       The_Problem: -------------------------------- ::
+        | 
+        |           #include MY_CLASS_A.C
+        |           #include MY_CLASS_B.C
+        | 
+        |       :: -------------------------------- :The_Problem
+        |   
+        |   ABOVE won't compile without forward declarations.
+        |   I am not a fan of this trickery.
+        | 
+        |       My_Fix: ------------------------------------- ::
+        | 
+        |       //:DATA BEFORE FUNCTIONS:
+        | 
+        |           #include MY_CLASS_A.D._
+        |           #include MY_CLASS_B.D._
+        | 
+        | 
+        |       //:FUNCTIONS AFTER DATA:
+        | 
+        |           #include MY_CLASS_A.F._
+        |           #include MY_CLASS_B.F._
+        |           
+        |       :: ------------------------------------- :My_Fix
+        Why:(END)
+
+##########################################_DATA_THEN_FUNCTIONS_#
+##_DOCUMENTATION_DOT_TXT_2020_12_25_############################
+
+    EXTRACTED_FROM[ DOC/DOCUMENTATION.TXT ]
+
+    ******************************************************** 
+                                                             
+    This file ( DOCUMENTATION.TXT ) only exists because I    
+    figured someone new to the project would probably        
+    start here. Actual documentation in files listed below.  
+                                                             
+    ******************************************************** 
+    ******************************************************** 
+                                                             
+    SUMMARY  (S): FILE[ DOC/_S_ ]                            
+    FUNCTION (S): FILE[ DOC/_F_ ]                            
+    DATA     (S): FILE[ DOC/_D_ ] 
+    HASHTAG  (S): FILE[ DOC/_H_ ] ( #WHATEVER# , @WHATEVER@ )
+    
+    ********************************************************  
+    ********************************************************  
+    #WHATEVER#  Cut comments out from source code and replace
+                with hastag summary. #HASHTAG_COMMENT#
+                
+    @WHATEVER@  Will be found in HASHTAG DOCUMENTATION (_H_)
+                Do not split into a "at" _A_ file because
+                sometimes HASHTAG _H_ documentation includes
+                diagrams where we need to use "@" to 
+                succinctly point out variable.
+                
+                Example:
+                
+                @EOV@              
+                   \
+                    +---+---+  EOV: Example Origin Variable
+                    |   |   |
+                    +---+---+
+                    |   |   |
+                    +---+---+
+    
+    ********************************************************  
+
+#############################_DOCUMENTATION_DOT_TXT_2020_12_25_#
+#_GAKU_DESIGN_NOTES_TXT_########################################
+
+    EXTRACTED_FROM[ DOC/DESIGN_NOTES.TXT ]
+
+    From: GAKU.H
+
+    We want a dependency something conceptually like this:
+    ( A Bindings layer for OpenGL and others, then a )
+    ( COG layer that creates interops between different )
+    ( graphics libraries. )
+
+    //|¯¯|¯¯|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|¯¯|¯¯|//
+    //|  |  |                                |  |  |//
+    /* //|--|// */#include "../COG/COG.H"  //|--|  |// 
+    //|  |  |                                |  |  |//
+    //|  |  |      GLEB_SWIN  <--Gets Win32  |  |  |//
+    //|  |  |         ||         Window      |  |  |//
+    //|  |  |         ||                     |  |  |//
+    //|  |  Gets      ||               Gets  |  |  |//
+    //|  |OpenGL --> GLEB     CLEB <-- OpenCL|  |  |//
+    //|  Context         \   /         Context  |  |//
+    //|  |  |             \ /                |  |  |//
+    //|  |  |             COG <===== CO:CO_mpute|  |//
+    //|  |  |                         G:G_raphics  |//
+    //|  |  |              |            Gets GLCL  |//
+    //|  |  |              |            Context |  |//
+    //|  |  |    +---+---GA_KU---+---+       |  |  |//
+    //|  |  |    |                   |       |  |  |//
+    //|  |  |    |GA: OpenGL Code    |       |  |  |//
+    //|  |  |    |                   |       |  |  |//
+    //|  |  |    |KU: OpenCL Code    |       |  |  |//
+    //|  |  |    |                   |       |  |  |//
+    //|  |  |    |GAKU: Coordination |       |  |  |//
+    //|  |  |    |      GA<==>KU code|       |  |  |//
+    //|  |  |    |                   |       |  |  |//
+    //|  |  |    |GAKUSHARE:         |       |  |  |//
+    //|  |  |    |Implementation of  |       |  |  |//
+    //|  |  |    |GA<==KU            |       |  |  |//
+    //|  |  |    |coordination code. |       |  |  |//
+    //|  |  |    |                   |       |  |  |//
+    //|  |  |    |GAKU/GAKU_ is only |       |  |  |//
+    //|  |  |    |PUBLIC namespace   |       |  |  |//
+    //|  |  |    |to be used by      |       |  |  |//
+    //|  |  |    |other libraries    |       |  |  |//
+    //|  |  |    |down the chain.    |       |  |  |//
+    //|  |  |    +-------------------+       |  |  |//
+    //|  |--|                                |--|  |//
+    //|  |  |                                |  |  |//
+    //|__|__|________________________________|__|__|//
+
+    Commit Messages:
+
+        WHITESPACE_CRASH:
+            Blanks lines with WHITESPACE characters 
+            cause file reading to crash. Specifically
+            OPEN_GL_SEARCH_PATHS.TXT
+
+########################################_GAKU_DESIGN_NOTES_TXT_#
 @TREE_LEVEL@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
     @TREE_LEVEL@: 
