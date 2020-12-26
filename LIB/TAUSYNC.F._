@@ -1616,48 +1616,23 @@ multiply_by__2    two2  +---+---+                           +
         AAC2020_TAUDIRT_UnitTest( 0x00 );
 
         //:#TAUSYNC_DATA_BACKUP_OR_RESTORE#------------------://
-        #define BAK_001  AAC2020_TAUDIRT_DIR_ANY
-        #define BAK_002  AAC2020_PIXNAME_taudepo_cpu_pix
-        #define SIZ_001  sizeof( AAC2020_TAUDIRT_DIR_ANY )
-        #define SIZ_002  ( 512 * 512 * 4 )
-            
+        #define DIR_ANY  AAC2020_TAUDIRT_DIR_ANY
+
             /** BACKUP : #BAK_NUM_WHATEVER# : BACKUP **/
 
             /** @_DONT_ABUSE_THE_STACK_@ **/
 
-            void* bak_001=((void*)0);    /** TAUDIRT's TREE   **/
-            U08*  bak_002=((void*)0);    /** TAUDEPO's PIXELS **/
+            void* dir_any=((void*)0);   /** TAUDIRT's TREE   **/
+            U08*  taudepo=((void*)0);   /** TAUDEPO's PIXELS **/
         
-////////    bak_001=(L_A*)( malloc( SIZ_001 ) );/* @DANGER_1@ */
-////////    bak_002=(U08*)( malloc( SIZ_002 ) );/* @DANGER_2@ */
-////////
-////////    memcpy( bak_001 , &(BAK_001   ) , SIZ_001 );
-////////    memcpy( bak_002 , &(BAK_002[0]) , SIZ_002 );
-
             AAC2020_PIXBACK_Backup_void(
-                     &( AAC2020_TAUDIRT_DIR_ANY )
-            ,        &( bak_001                 )
-            ,   sizeof( AAC2020_TAUDIRT_DIR_ANY )
+                     &( DIR_ANY )  //: <-- FileScope  Data
+            ,        &( dir_any )  //: <-- Backup     Copy
+            ,   sizeof( DIR_ANY )  //: <-- Number Of Bytes
             );;
+            AAC2020_PIXBACK_Backup_taudepo( &taudepo );
 
-
-    ////   AAC2020_PIXBACK_Backup( &(BAK_002[0]) , &bak_002 ,
-    ////        ( 512 * 512 * 4 ) );;
-
-            AAC2020_PIXBACK_Backup_taudepo( &bak_002 );
-
-
-////////    AAC2020_PIXBACK_Backup( &(BAK_001 )   , &bak_001 ,
-////////        sizeof( AAC2020_TAUDIRT_DIR_ANY ) );;
-
- 
-
-
-            
-        #undef  BAK_001                               //: 01 ://
-        #undef  BAK_002                               //: 02 ://
-        #undef  SIZ_001                               //: 03 ://
-        #undef  SIZ_002                               //: 04 ://
+        #undef  DIR_ANY
         //:-----------------:#TAUSYNC_DATA_BACKUP_OR_RESTORE#://
         //:DO_AFTER_DATA_BACKUP:-----------------------------://
 
@@ -1674,34 +1649,19 @@ multiply_by__2    two2  +---+---+                           +
 
         //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
         //:#TAUSYNC_DATA_BACKUP_OR_RESTORE#------------------://
-        #define BAK_001  AAC2020_TAUDIRT_DIR_ANY /** L_A **/
-        #define BAK_002  AAC2020_PIXNAME_taudepo_cpu_pix
-        #define SIZ_001  sizeof( AAC2020_TAUDIRT_DIR_ANY )
-        #define SIZ_002  ( 512 * 512 * 4 )
+        #define DIR_ANY  AAC2020_TAUDIRT_DIR_ANY
 
             /** RESTORE **/
-        
-////////    memcpy( &(BAK_001   ) ,  bak_001 , SIZ_001 );
-////////    memcpy( &(BAK_002[0]) ,  bak_002 , SIZ_002 );
-        
-////////    free( bak_001 );                    /* @DANGER_1@ */
-////////    free( bak_002 );                    /* @DANGER_2@ */
-
-    ////    AAC2020_PIXBACK_Restore(
-    ////        &(BAK_002[0]) , &bak_002 , (512*512*4) );;
 
             AAC2020_PIXBACK_Restore_void(
-                     &( AAC2020_TAUDIRT_DIR_ANY )
-            ,        &( bak_001                 )
-            ,   sizeof( AAC2020_TAUDIRT_DIR_ANY )
+                     &( DIR_ANY )  //: <-- FileScope  Data
+            ,        &( dir_any )  //: <-- Backup     Copy
+            ,   sizeof( DIR_ANY )  //: <-- Number Of Bytes
             );;
-            AAC2020_PIXBACK_Restore_taudepo( &bak_002 );
 
-            
-        #undef  BAK_001                               //: 01 ://
-        #undef  BAK_002                               //: 02 ://
-        #undef  SIZ_001                               //: 03 ://
-        #undef  SIZ_002                               //: 04 ://
+            AAC2020_PIXBACK_Restore_taudepo( &taudepo );
+
+        #undef  DIR_ANY
         //:-----------------:#TAUSYNC_DATA_BACKUP_OR_RESTORE#://
 
         //[ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ]//

@@ -11,6 +11,24 @@
         exit( 111 );
     }
 //:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+//:LOG_AFTER_HALT:===========================================://
+
+    void
+    aac2020_pixback_Info_any(
+        const char* str_fmt
+    ,   void*       dat_any   
+    )
+    { if( AAC2020_SILENCE.PIXBACK <= 0 ){
+
+        /** Same Line As Next Printf **/
+        printf("[pixback_log]....(   " ); fflush( stdout );
+        printf( str_fmt , dat_any      ); fflush( stdout );
+        printf(               "   )\n" ); fflush( stdout );
+
+    };; }
+
+//:===========================================:LOG_AFTER_HALT://
+
 //:INIT_NONE:================================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
 
@@ -21,6 +39,9 @@
 
         /** @VID_IID[ 0H 37M 29S ]          **/
         /** And then no work was ever done. **/
+
+        extern U32 AAC2020_PIXBACK_UnitTest( U32  );
+                   AAC2020_PIXBACK_UnitTest( 0x00 );
 
         return( 0x00 );
     }
@@ -165,3 +186,147 @@
 #undef  I32
 #undef  U08
 //:========================:BACKUP_THINGS_THAT_ARE_NOT_PIXELS://
+//:UNIT_TEST:================================================://
+#define I32  int32_t /** GCC: <stdint.h> **/
+#define U32 uint32_t /** GCC: <stdint.h> **/
+#define U08  uint8_t /** GCC: <stdint.h> **/
+#define ERR  aac2020_pixback_Halt
+#define LOG  aac2020_pixback_Info_any
+
+    U32
+    AAC2020_PIXBACK_UnitTest( U32 u32 )
+    {
+        if( u32 ){ /** Reserved For Future Use **/ };
+
+        /** @VID_IID[ 0061 ]TIME[ 03H 59M 32S ] . . . . . . .**/
+        /** First Draft Of Unit Test Finished. It Passes. . .**/
+
+        LOG( "[AAC2020_PIXBACK_UnitTest:BEG]",0);
+
+        //:variable_and_data_assignments:--------------------://
+
+            U08 v_1; /** [value1 / var1 ] **/
+            U08 v_2; /** [value2 / var2 ] **/
+            void* backup_data =((void*)0);
+
+            //:Two_Arrays_Must_Have_Identical_data:----------://
+
+                I32 backup_test_data[ 8 ]={                    
+                /**/0x0A0A0A0A   ,   0x2e777777     
+                ,   0x74697774   ,   0x632e6863     
+                ,   0x6b2f6d6f   ,   0x696a6e61     
+                ,   0x65646f63   ,   0x000A0A72     
+                };;      
+
+                I32 backup_test_copy[ 8 ]={                    
+                /**/0x0A0A0A0A   ,   0x2e777777     
+                ,   0x74697774   ,   0x632e6863     
+                ,   0x6b2f6d6f   ,   0x696a6e61     
+                ,   0x65646f63   ,   0x000A0A72     
+                };;   
+
+            //:----------:Two_Arrays_Must_Have_Identical_data://
+            //:Must_Have_Some_Different_Data:----------------://
+
+                I32 mess_it_up[ 8 ]={                    
+                /**/0x0A0A0A0A   ,   0x7777772e                  
+                ,   0x74776974   ,   0x63682e63                  
+                ,   0x6f6d2f6b   ,   0x616e6a69                  
+                ,   0x636f6465   ,   0x720A0A00                  
+                };;   
+
+            //:----------------:Must_Have_Some_Different_Data://
+
+        //:--------------------:variable_and_data_assignments://
+        //:backup_and_verify:--------------------------------://
+
+            LOG("[PIXBACK:backup_and_verify]",0);
+
+            AAC2020_PIXBACK_Backup_void(
+                &( backup_test_data[ 0 ] ) //:<-- Non Freeable
+            ,   &( backup_data           ) //:<-- @REF_TO_PTR@
+            ,    ( 8 * 4                 ) //:<-- UNITS:BYTES
+            );;           
+
+            /** @VID_IID[ 0061 ]TIME[ 03H 19M 8S ] **/
+            /** Confirm Memory Copied Correctly.   **/
+
+            for( I32 dex = 0 ; dex <= ((8 * 4) - 1) ; dex++ ){
+
+                v_1 = ((U08*)&( backup_test_data[ 0 ] ))[ dex ];
+                v_2 = ((U08*)   backup_data            )[ dex ];
+
+                if( v_1 != v_2 ){
+                    ERR("[COPY_IN_UNIT_TEST_FAILED:BACKUP]");
+                };;
+
+            };;
+
+        //:--------------------------------:backup_and_verify://
+        //:mess_up_the_original_data:------------------------://
+
+            LOG("[PIXBACK:mess_up_the_original_data]",0);
+
+            U08 some_dont_match=( 0 );
+            for( I32 mit = 0 ; mit <= ( 8 - 1 ) ; mit ++ ){
+
+                /** mit : Mess_It_Up **/
+
+                v_1 = backup_test_data[ mit ];
+                v_2 = mess_it_up[       mit ];
+                if( v_1 != v_2 ){ some_dont_match++; };
+
+                backup_test_data[ mit ] = mess_it_up[ mit ];
+                
+            };;
+            /** @VID_IID[ 0061 ]TIME[ 03H 32M 32S ]          **/
+            /** If all new values match, then we really      **/
+            /** haven't messed up anything and we can't      **/
+            /** see the visible effects of restoration.      **/
+            assert( some_dont_match >= 1 );
+        //:------------------------:mess_up_the_original_data://
+        //:restore_and_verify:-------------------------------://
+
+            LOG("[PIXBACK:restore_and_verify:001]",0);
+
+            AAC2020_PIXBACK_Restore_void(
+                &( backup_test_data[ 0 ] ) //:<-- Non Freeable
+            ,   &( backup_data           ) //:<-- @REF_TO_PTR@
+            ,    ( 8 * 4                 ) //:<-- Units:BYTES
+            );;    
+
+            LOG("[PIXBACK:restore_and_verify:002]",0);
+
+            /** @VID_IID[ 0061 ]TIME[ 03H 26M 59S ]          **/
+            /** Once again, the original data should MATCH   **/
+            /** the backup data. Since we just restored      **/
+            /** using the backup.                            **/
+
+            assert( ((void*)0) == backup_data );
+
+            for( I32 dex = 0 ; dex <= ((8 * 4) - 1) ; dex++ ){
+
+                v_1 = ((U08*)&( backup_test_data[ 0 ] ))[ dex ];
+                v_2 = ((U08*)&( backup_test_copy[ 0 ] ))[ dex ];
+
+                if( v_1 != v_2 ){
+                    ERR("[COPY_IN_UNIT_TEST_FAILED:RESTORE]");
+                };;
+
+            };;
+
+            LOG("[PIXBACK:restore_and_verify:003]",0);
+
+        //:-------------------------------:restore_and_verify://
+
+        LOG( "[AAC2020_PIXBACK_UnitTest:END]",0);
+
+        return( 0x00 );
+    }
+
+#undef  I32
+#undef  U32
+#undef  U08
+#undef  ERR
+#undef  LOG
+//:================================================:UNIT_TEST://
