@@ -73,8 +73,9 @@
     #define AAC2020_MAC_LIBCHAN_022 (22 )
     #define AAC2020_MAC_LIBCHAN_023 (23 )
     #define AAC2020_MAC_LIBCHAN_024 (24 )
+    #define AAC2020_MAC_LIBCHAN_025 (25 )
 
-    #define AAC2020_MAC_LIBCHAN_MAX (24 ) //:<-- Complile_Limit
+    #define AAC2020_MAC_LIBCHAN_MAX (25 ) //:<-- Complile_Limit
 
 //:============================================:LIBRARY_CHAIN://
 //:DATA:DATA_BEFORE_FUNCTIONS:===============================://
@@ -232,54 +233,62 @@
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_018 )
 
-        //:#_GPUDATA_IS_NOT_LIMITED_TO_GRAPHICS_#://
-        #include           "GPUDATA.D._"        
-        #define AAC2020_INCLUDE_GPUDATA (18 )
-        #else   //:     INCLUDE_GPUDATA ( - )
-        #define AAC2020_INCLUDE_GPUDATA ( 0 )
+        #include               "PIXBACK.D._"        
+        #define AAC2020_INCLUDE_PIXBACK (18 )
+        #else   //:     INCLUDE_PIXBACK ( - )
+        #define AAC2020_INCLUDE_PIXBACK ( 0 )
         #endif
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_019 )
 
+        //:#_GPUDATA_IS_NOT_LIMITED_TO_GRAPHICS_#://
+        #include               "GPUDATA.D._"        
+        #define AAC2020_INCLUDE_GPUDATA (19 )
+        #else   //:     INCLUDE_GPUDATA ( - )
+        #define AAC2020_INCLUDE_GPUDATA ( 0 )
+        #endif
+
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_020 )
+
         #include               "PIXLOAD.D._"        
-        #define AAC2020_INCLUDE_PIXLOAD (19 )
+        #define AAC2020_INCLUDE_PIXLOAD (20 )
         #else   //:     INCLUDE_PIXLOAD ( - )
         #define AAC2020_INCLUDE_PIXLOAD ( 0 )
         #endif              //: 123_123 ://
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_020 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_021 )
 
         #include               "TAUDIRT.D._"    
-        #define AAC2020_INCLUDE_TAUDIRT (20 )
+        #define AAC2020_INCLUDE_TAUDIRT (21 )
         #else   //:     INCLUDE_TAUDIRT ( - )
         #define AAC2020_INCLUDE_TAUDIRT ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_021 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_022 )
 
         #include               "TAUDEPO.D._"    
-        #define AAC2020_INCLUDE_TAUDEPO (21 )
+        #define AAC2020_INCLUDE_TAUDEPO (22 )
         #else   //:     INCLUDE_TAUDEPO ( - )
         #define AAC2020_INCLUDE_TAUDEPO ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_022 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_023 )
 
         #include               "TAUTYPE.D._"    
-        #define AAC2020_INCLUDE_TAUTYPE (22 )
+        #define AAC2020_INCLUDE_TAUTYPE (23 )
         #else   //:     INCLUDE_TAUTYPE ( - )
         #define AAC2020_INCLUDE_TAUTYPE ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_023 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_024 )
 
         #include               "TAUSYNC.D._"    
-        #define AAC2020_INCLUDE_TAUSYNC (23 )
+        #define AAC2020_INCLUDE_TAUSYNC (24 )
         #else   //:     INCLUDE_TAUSYNC ( - )
         #define AAC2020_INCLUDE_TAUSYNC ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_024 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_025 )
 
         /** #PAINT5D_OLD_LIBCHAN_NOTES# **/
 
@@ -287,7 +296,7 @@
         #include "PAINT5D_DEFAULT_SHADERS\P5D_001._"  
 
         #include               "PAINT5D.D._"   
-        #define AAC2020_INCLUDE_PAINT5D (24 )
+        #define AAC2020_INCLUDE_PAINT5D (25 )
         #else   //:     INCLUDE_PAINT5D ( - )
         #define AAC2020_INCLUDE_PAINT5D ( 0 )
         #endif
@@ -433,8 +442,7 @@
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_017 )
 
-        //:#_PIXNAME_PATTERN_BREAKER_#://
-        #include           "PIXNAME.F._"        
+        #include               "PIXNAME.F._"        
         #define AAC2020_INCLUDE_PIXNAME (17 )
         #else   //:     INCLUDE_PIXNAME ( - )
         #define AAC2020_INCLUDE_PIXNAME ( 0 )
@@ -442,59 +450,67 @@
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_018 )
 
-        //:#_GPUDATA_IS_NOT_LIMITED_TO_GRAPHICS_#://
-        #include               "GPUDATA.F._"        
-        #define AAC2020_INCLUDE_GPUDATA (18 )
-        #else   //:     INCLUDE_GPUDATA ( - )
-        #define AAC2020_INCLUDE_GPUDATA ( 0 )
+        #include               "PIXBACK.F._"        
+        #define AAC2020_INCLUDE_PIXBACK (18 )
+        #else   //:     INCLUDE_PIXBACK ( - )
+        #define AAC2020_INCLUDE_PIXBACK ( 0 )
         #endif
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_019 )
 
+        //:#_GPUDATA_IS_NOT_LIMITED_TO_GRAPHICS_#://
+        #include               "GPUDATA.F._"        
+        #define AAC2020_INCLUDE_GPUDATA (19 )
+        #else   //:     INCLUDE_GPUDATA ( - )
+        #define AAC2020_INCLUDE_GPUDATA ( 0 )
+        #endif
+
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_020 )
+
         #include               "PIXLOAD.F._"        
-        #define AAC2020_INCLUDE_PIXLOAD (19 )
+        #define AAC2020_INCLUDE_PIXLOAD (20 )
         #else   //:     INCLUDE_PIXLOAD ( - )
         #define AAC2020_INCLUDE_PIXLOAD ( 0 )
         #endif              //: 123_123 ://
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_020 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_021 )
 
         #include               "TAUDIRT.F._"        
-        #define AAC2020_INCLUDE_TAUDIRT (20 )
+        #define AAC2020_INCLUDE_TAUDIRT (21 )
         #else   //:     INCLUDE_TAUDIRT ( - )
         #define AAC2020_INCLUDE_TAUDIRT ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_021 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_022 )
 
         #include               "TAUDEPO.F._"        
-        #define AAC2020_INCLUDE_TAUDEPO (21 )
+        #define AAC2020_INCLUDE_TAUDEPO (22 )
         #else   //:     INCLUDE_TAUDEPO ( - )
         #define AAC2020_INCLUDE_TAUDEPO ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_022 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_023 )
 
         #include               "TAUTYPE.F._"        
-        #define AAC2020_INCLUDE_TAUTYPE (22 )
+        #define AAC2020_INCLUDE_TAUTYPE (23 )
         #else   //:     INCLUDE_TAUTYPE ( - )
         #define AAC2020_INCLUDE_TAUTYPE ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_023 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_024 )
 
         #include               "TAUSYNC.F._"        
-        #define AAC2020_INCLUDE_TAUSYNC (23 )
+        #define AAC2020_INCLUDE_TAUSYNC (24 )
         #else   //:     INCLUDE_TAUSYNC ( - )
         #define AAC2020_INCLUDE_TAUSYNC ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_024 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_025 )
 
         /** #PAINT5D_OLD_LIBCHAN_NOTES# **/
 
         #include               "PAINT5D.F._"        
-        #define AAC2020_INCLUDE_PAINT5D (24 )
+        #define AAC2020_INCLUDE_PAINT5D (25 )
         #else   //:     INCLUDE_PAINT5D ( - )
         #define AAC2020_INCLUDE_PAINT5D ( 0 )
         #endif

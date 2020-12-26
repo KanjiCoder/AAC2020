@@ -1625,14 +1625,34 @@ multiply_by__2    two2  +---+---+                           +
 
             /** @_DONT_ABUSE_THE_STACK_@ **/
 
-            L_A* bak_001=((void*)0);    /** TAUDIRT's TREE   **/
-            U08* bak_002=((void*)0);    /** TAUDEPO's PIXELS **/
+            void* bak_001=((void*)0);    /** TAUDIRT's TREE   **/
+            U08*  bak_002=((void*)0);    /** TAUDEPO's PIXELS **/
         
-            bak_001=(L_A*)( malloc( SIZ_001 ) );/* @DANGER_1@ */
-            bak_002=(U08*)( malloc( SIZ_002 ) );/* @DANGER_2@ */
-        
-            memcpy( bak_001 , &(BAK_001   ) , SIZ_001 );
-            memcpy( bak_002 , &(BAK_002[0]) , SIZ_002 );
+////////    bak_001=(L_A*)( malloc( SIZ_001 ) );/* @DANGER_1@ */
+////////    bak_002=(U08*)( malloc( SIZ_002 ) );/* @DANGER_2@ */
+////////
+////////    memcpy( bak_001 , &(BAK_001   ) , SIZ_001 );
+////////    memcpy( bak_002 , &(BAK_002[0]) , SIZ_002 );
+
+            AAC2020_PIXBACK_Backup_void(
+                     &( AAC2020_TAUDIRT_DIR_ANY )
+            ,        &( bak_001                 )
+            ,   sizeof( AAC2020_TAUDIRT_DIR_ANY )
+            );;
+
+
+    ////   AAC2020_PIXBACK_Backup( &(BAK_002[0]) , &bak_002 ,
+    ////        ( 512 * 512 * 4 ) );;
+
+            AAC2020_PIXBACK_Backup_taudepo( &bak_002 );
+
+
+////////    AAC2020_PIXBACK_Backup( &(BAK_001 )   , &bak_001 ,
+////////        sizeof( AAC2020_TAUDIRT_DIR_ANY ) );;
+
+ 
+
+
             
         #undef  BAK_001                               //: 01 ://
         #undef  BAK_002                               //: 02 ://
@@ -1661,17 +1681,36 @@ multiply_by__2    two2  +---+---+                           +
 
             /** RESTORE **/
         
-            memcpy( &(BAK_001   ) ,  bak_001 , SIZ_001 );
-            memcpy( &(BAK_002[0]) ,  bak_002 , SIZ_002 );
+////////    memcpy( &(BAK_001   ) ,  bak_001 , SIZ_001 );
+////////    memcpy( &(BAK_002[0]) ,  bak_002 , SIZ_002 );
         
-            free( bak_001 );                    /* @DANGER_1@ */
-            free( bak_002 );                    /* @DANGER_2@ */
+////////    free( bak_001 );                    /* @DANGER_1@ */
+////////    free( bak_002 );                    /* @DANGER_2@ */
+
+    ////    AAC2020_PIXBACK_Restore(
+    ////        &(BAK_002[0]) , &bak_002 , (512*512*4) );;
+
+            AAC2020_PIXBACK_Restore_void(
+                     &( AAC2020_TAUDIRT_DIR_ANY )
+            ,        &( bak_001                 )
+            ,   sizeof( AAC2020_TAUDIRT_DIR_ANY )
+            );;
+            AAC2020_PIXBACK_Restore_taudepo( &bak_002 );
+
             
         #undef  BAK_001                               //: 01 ://
         #undef  BAK_002                               //: 02 ://
         #undef  SIZ_001                               //: 03 ://
         #undef  SIZ_002                               //: 04 ://
         //:-----------------:#TAUSYNC_DATA_BACKUP_OR_RESTORE#://
+
+        //[ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ]//
+        //+ DO NOT DO THIS!! RESTORE CODE RESTORES THE TREE! +//
+        //+ THIS WOULD JUST ZERO OUT THE TREE, WHICH MIGHT   +//
+        //+ NOT BE THE CORRECT STATE.                        +//
+        //+ @VID_IID[ 0061 ]TIME[ 01H 12M 17S ]              +//
+        //- aac2020_taudirt_ForceClearForUnitTest( );        -//    
+        //[ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ]//
 
         LOG("[EXITING:TAUSYNC_UnitTest]",0);
         return( 0x00 );

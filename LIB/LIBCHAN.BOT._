@@ -86,6 +86,11 @@
               #error "[OUT_OF_ORDER:AAC2020_INCLUDE_PIXNAME]"
 #endif
 #endif
+#if( 0                           != AAC2020_INCLUDE_PIXBACK )
+#if( macro_libchan_order_PIXBACK != AAC2020_INCLUDE_PIXBACK )
+              #error "[OUT_OF_ORDER:AAC2020_INCLUDE_PIXBACK]"
+#endif
+#endif
 #if( 0                           != AAC2020_INCLUDE_GPUDATA )
 #if( macro_libchan_order_GPUDATA != AAC2020_INCLUDE_GPUDATA )
               #error "[OUT_OF_ORDER:AAC2020_INCLUDE_GPUDATA]"
@@ -174,26 +179,29 @@
     #endif                                
     #if( macro_libchan_order_PIXNAME != 17 )
     #error "[TAIL_ORDER_FAIL:PIXNAME]"  
+    #endif     
+    #if( macro_libchan_order_PIXBACK != 18 )
+    #error "[TAIL_ORDER_FAIL:PIXBACK]"  
     #endif                                
-    #if( macro_libchan_order_GPUDATA != 18 )
+    #if( macro_libchan_order_GPUDATA != 19 )
     #error "[TAIL_ORDER_FAIL:GPUDATA]"  
-    #endif                                             
-    #if( macro_libchan_order_PIXLOAD != 19 )
-    #error "[TAIL_ORDER_FAIL:PIXLOAD]"  
+    #endif                                           
+    #if( macro_libchan_order_PIXLOAD != 20 )
+    #error "[TAIL_ORDER_FAIL:PIXLOAD]"    
     #endif                              
-    #if( macro_libchan_order_TAUDIRT != 20 )
+    #if( macro_libchan_order_TAUDIRT != 21 )
     #error "[TAIL_ORDER_FAIL:TAUDIRT]"    
-    #endif    
-    #if( macro_libchan_order_TAUDEPO != 21 )
+    #endif                              
+    #if( macro_libchan_order_TAUDEPO != 22 )
     #error "[TAIL_ORDER_FAIL:TAUDEPO]"    
-    #endif   
-    #if( macro_libchan_order_TAUTYPE != 22 )
+    #endif                              
+    #if( macro_libchan_order_TAUTYPE != 23 )
     #error "[TAIL_ORDER_FAIL:TAUTYPE]"    
-    #endif   
-    #if( macro_libchan_order_TAUSYNC != 23 )
+    #endif                              
+    #if( macro_libchan_order_TAUSYNC != 24 )
     #error "[TAIL_ORDER_FAIL:TAUSYNC]"    
-    #endif                            
-    #if( macro_libchan_order_PAINT5D != 24 )
+    #endif                                
+    #if( macro_libchan_order_PAINT5D != 25 )
     #error "[TAIL_ORDER_FAIL:PAINT5D]"
     #endif
 
@@ -223,13 +231,14 @@
     #undef  macro_libchan_order_FREE_01   //:----## 15 ##----://
     #undef  macro_libchan_order_FRAGBED   //:----## 16 ##----://
     #undef  macro_libchan_order_PIXNAME   //:----## 17 ##----://
-    #undef  macro_libchan_order_GPUDATA   //:----## 18 ##----://
-    #undef  macro_libchan_order_PIXLOAD   //:----## 19 ##----://
-    #undef  macro_libchan_order_TAUDIRT   //:----## 20 ##----://
-    #undef  macro_libchan_order_TAUDEPO   //:----## 21 ##----://
-    #undef  macro_libchan_order_TAUTYPE   //:----## 22 ##----://
-    #undef  macro_libchan_order_TAUSYNC   //:----## 23 ##----://
-    #undef  macro_libchan_order_PAINT5D   //:----## 24 ##----://
+    #undef  macro_libchan_order_PIXBACK   //:----## 18 ##----://
+    #undef  macro_libchan_order_GPUDATA   //:----## 19 ##----://
+    #undef  macro_libchan_order_PIXLOAD   //:----## 20 ##----://
+    #undef  macro_libchan_order_TAUDIRT   //:----## 21 ##----://
+    #undef  macro_libchan_order_TAUDEPO   //:----## 22 ##----://
+    #undef  macro_libchan_order_TAUTYPE   //:----## 23 ##----://
+    #undef  macro_libchan_order_TAUSYNC   //:----## 24 ##----://
+    #undef  macro_libchan_order_PAINT5D   //:----## 25 ##----://
  
     //:==========:DONT_POLLUTE_OTHER_PEOPLES_CODE_WITH_MACROS://
 

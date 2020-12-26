@@ -1,0 +1,167 @@
+//: PIXBACK.F._:
+
+//:Backup functions for PIXNAME's data.
+
+//:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=====================://
+    void 
+    aac2020_pixback_Halt( const char* msg_err )
+    {
+        printf("[FATAL_ERROR:aac2020_pixback]:%s\n", msg_err );
+        fflush(stdout);
+        exit( 111 );
+    }
+//:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+//:INIT_NONE:================================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+
+    U32
+    AAC2020_PIXBACK_InitNone( U32 u32 )
+    {
+        if( u32 ){ /** Reserved for future use **/ };
+
+        /** @VID_IID[ 0H 37M 29S ]          **/
+        /** And then no work was ever done. **/
+
+        return( 0x00 );
+    }
+
+#undef  U32
+//:================================================:INIT_NONE://
+//:GENERIC_PIXNAME_BACKUP_CODE:==============================://
+#define U08 uint8_t /** GCC: <stdint.h> **/
+#define I32 int32_t /** GCC: <stdint.h> **/
+
+    void
+    AAC2020_PIXBACK_Backup(
+
+        U08*  pixname_data //:<-- Non Freeable
+    ,   U08* *BYREF_backup //:<-- @REFERENCE_TO_A_POINTER@
+    ,   I32   size_of_data //:<-- Measured_In_Bytes
+    )
+    {
+        assert( ((void*)0) !=  pixname_data  );
+        assert( ((void*)0) !=  BYREF_backup  ); //:@REFS_N_NIL@
+        assert( ((void*)0) ==(*BYREF_backup) );
+
+        (*BYREF_backup)=( malloc( size_of_data ) );
+        memcpy(
+            (*BYREF_backup)
+        ,    pixname_data
+        ,    size_of_data
+        );;
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    void
+    AAC2020_PIXBACK_Restore(
+
+        U08*  pixname_data //:<-- @NON_FREEABLE_FILESCOPE_VAR@
+    ,   U08* *BYREF_backup //:<-- @REFERENCE_TO_A_POINTER@
+    ,   I32   size_of_data //:<-- Measured_In_Bytes
+    )
+    {
+        assert( ((void*)0) !=  pixname_data  );
+        assert( ((void*)0) !=  BYREF_backup  );
+        assert( ((void*)0) !=(*BYREF_backup) );
+
+        //:copy_and_free:------------------------------------://
+
+            memcpy(
+                pixname_data
+            ,  (*BYREF_backup)
+            ,   size_of_data
+            );;
+
+            free( (*BYREF_backup) );
+                  (*BYREF_backup)=((void*)0);
+
+        //:------------------------------------:copy_and_free://
+
+        assert( ((void*)0) ==(*BYREF_backup) );
+    }
+
+#undef  U08 
+#undef  I32 
+//:==============================:GENERIC_PIXNAME_BACKUP_CODE://
+//:SPECIFIC_BACKUP_RESTORE:taudepo:==========================://
+#define U08 uint8_t /** GCC: <stdint.h> **/
+#define ERR aac2020_pixback_Halt
+
+    void
+    AAC2020_PIXBACK_Backup_taudepo(
+        U08* *BYREF_backup //:<-- @REFERENCE_TO_A_POINTER@
+    )
+    {
+        if( ((void*)0)==  BYREF_backup  ){ ERR("[PIXBACK01]");};
+        if( ((void*)0)!=(*BYREF_backup) ){ ERR("[PIXBACK02]");};
+        AAC2020_PIXBACK_Backup(
+            &( AAC2020_PIXNAME_taudepo_cpu_pix[0] )
+        ,   BYREF_backup      //:<-- @REFERENCE_TO_A_POINTER@
+        ,   ( 512 * 512 * 4 ) //:<-- Measured_In_Bytes
+        );;
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    void
+    AAC2020_PIXBACK_Restore_taudepo(
+        U08* *BYREF_backup //:<-- @REFERENCE_TO_A_POINTER@
+    )
+    {
+        if( ((void*)0)==  BYREF_backup  ){ ERR("[PIXBACK03]");};
+        if( ((void*)0)==(*BYREF_backup) ){ ERR("[PIXBACK04]");};
+        AAC2020_PIXBACK_Restore(
+            &( AAC2020_PIXNAME_taudepo_cpu_pix[0] )
+        ,   BYREF_backup      //:<-- @REFERENCE_TO_A_POINTER@
+        ,   ( 512 * 512 * 4 ) //:<-- Measured_In_Bytes
+        );;
+        if( ((void*)0)!=(*BYREF_backup) ){ ERR("[PIXBACK05]");};
+    }
+
+#undef  U08
+#undef  ERR
+//:==========================:SPECIFIC_BACKUP_RESTORE:taudepo://
+//:BACKUP_THINGS_THAT_ARE_NOT_PIXELS:========================://
+#define I32 int32_t /** GCC: <stdint.h> **/
+#define U08 uint8_t /** GCC: <stdint.h> **/
+
+    void
+    AAC2020_PIXBACK_Backup_void(
+        void*  pixname_data //:<-- Non Freeable
+    ,   void* *BYREF_backup //:<-- @REFERENCE_TO_A_POINTER@
+    ,   I32    size_of_data //:<-- Measured_In_Bytes
+    )
+    {
+        /** @VID_IID[ 0061 ]TIME[ 2H 40M 23S ]      **/
+        /** It's just a simple wrapper with re-cast **/
+        AAC2020_PIXBACK_Backup(
+
+             (U08* )pixname_data //:<-- Non Freeable
+        ,    (U08**)BYREF_backup //:<-- @REFERENCE_TO_A_POINTER@
+        ,           size_of_data //:<-- Measured_In_Bytes
+        );;
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    void
+    AAC2020_PIXBACK_Restore_void(
+        void*  pixname_data //:<-- Non Freeable
+    ,   void* *BYREF_backup //:<-- @REFERENCE_TO_A_POINTER@
+    ,   I32    size_of_data //:<-- Measured_In_Bytes
+    )
+    {
+        /** @VID_IID[ 0061 ]TIME[ 2H 40M 23S ]      **/
+        /** It's just a simple wrapper with re-cast **/
+        AAC2020_PIXBACK_Restore(
+
+             (U08* )pixname_data //:<-- Non Freeable
+        ,    (U08**)BYREF_backup //:<-- @REFERENCE_TO_A_POINTER@
+        ,           size_of_data //:<-- Measured_In_Bytes
+        );;
+    }
+
+#undef  I32
+#undef  U08
+//:========================:BACKUP_THINGS_THAT_ARE_NOT_PIXELS://
