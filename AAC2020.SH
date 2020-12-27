@@ -18,8 +18,6 @@
                                                                \
             -Wno-overlength-strings                            \
                                                                \
-            -D MACRO_COMPILE_ONLY_THIS_FILE_AS_DEMO            \
-                                                               \
             -std=c11                                           \
             -m64 ###############################################
                                     ####                    ####

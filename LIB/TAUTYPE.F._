@@ -10,6 +10,24 @@
         exit( 202 );
     }
 //:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+//:LOG_AFTER_HALT:===========================================://
+
+    void
+    aac2020_tautype_Info_any(
+        const char* str_fmt
+    ,   void*       dat_any   
+    )
+    { if( AAC2020_SILENCE.TAUTYPE <= 0 ){
+
+        /** Same Line As Next Printf **/
+        printf("[tautype_log]....(   " ); fflush( stdout );
+        printf( str_fmt , dat_any      ); fflush( stdout );
+        printf(               "   )\n" ); fflush( stdout );
+
+    };; }
+
+//:===========================================:LOG_AFTER_HALT://
+
 //:INIT_NONE:================================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
 
@@ -70,18 +88,16 @@
                         if( x_0_i32 < 0 ){ 
 
                             I32 delta_x = ( 0 - x_0_i32 );
-
-                            x_1_i32 += ( delta_x );
+                            
                             x_0_i32 += ( delta_x );
-
+                            x_1_i32 += ( delta_x );
                         };;
                         if( y_0_i32 < 0 ){ 
 
                             I32 delta_y = ( 0 - y_0_i32 );
 
-                            y_1_i32 += ( delta_y );
                             y_0_i32 += ( delta_y );
-
+                            y_1_i32 += ( delta_y );
                         };;
 
                     //:-----------------:back_off:lower_bound://
@@ -92,18 +108,16 @@
                             //: @_MINUS_FIVE_ELEVEN_@
                             I32 delta_x = ( x_1_i32 - 511 );
                             
-                            x_1_i32 -= ( delta_x );
                             x_0_i32 -= ( delta_x );
-
+                            x_1_i32 -= ( delta_x );
                         };;
-                        if( y_1_i32 < ( 512 - 1 ) ){
+                        if( y_1_i32 > ( 512 - 1 ) ){
 
                             //: @_MINUS_FIVE_ELEVEN_@
                             I32 delta_y = ( y_1_i32 - 511 );
                             
-                            y_1_i32 -= ( delta_y );
                             y_0_i32 -= ( delta_y );
-
+                            y_1_i32 -= ( delta_y );
                         };;
 
                     //:-----------------:back_off:upper_bound://
@@ -131,6 +145,8 @@
     ,   I32 zom_u32  //: Amount To Zoom In And Out In Pixels
     )
     {
+        AAC2020_TODOMAN_Vital( "[TODO:Camera_Initial_Size]");
+
         U32 x_0 =( 0xFFFFFFFF /** TRAP_VALUE **/ );
         U32 x_1 =( 0xFFFFFFFF /** TRAP_VALUE **/ );
         U32 y_0 =( 0xFFFFFFFF /** TRAP_VALUE **/ );
@@ -152,15 +168,15 @@
             I32 y_1_i32 =( (I32) y_1 );
 
         //:----------------------:Get_Or_Put_Bitmap_Variables://
+        //:check_size_before_transform:----------------------://
 
-        AAC2020_TODOMAN_Vital( "[TODO:Camera_Initial_Size]");
+            I32 wid =( x_1_i32 - x_0_i32 + 1 );
+            I32 hig =( y_1_i32 - y_0_i32 + 1 );
+            if( wid != hig ){ ERR("[CAM_NOT_SQUA:ZOOMPULL]"); };
+            if( wid  > 512 ){ ERR("[WID_OVER_512:ZOOMPULL]"); };
+            if( hig  > 512 ){ ERR("[HIG_OVER_512:ZOOMPULL]"); };
 
-        I32 wid =( x_1_i32 - x_0_i32 + 1 );
-        I32 hig =( y_1_i32 - y_0_i32 + 1 );
-        if( wid != hig ){ ERR("[CAM_NOT_SQUARE:ZOOMPULL]"); };
-        if( wid  > 512 ){ ERR("[WID_OVER_512:::ZOOMPULL]"); };
-        if( hig  > 512 ){ ERR("[HIG_OVER_512:::ZOOMPULL]"); };
-
+        //:----------------------:check_size_before_transform://
         //:gaurd_from_zooming_in_or_out_too_much:------------://
 
             /**  @VID_IID[ 0060 ]TIME[ 1H 33M 26S ]          **/
@@ -168,11 +184,9 @@
             /**  a "+" sign. But turns out all comparisons   **/
             /**  should be "-" for correct bounds checks.    **/
 
-            if( 1
-            &&  ( wid - zom_u32 ) >=   1 //: #_NEG_FOR_ALL_# ://
-            &&  ( hig - zom_u32 ) >=   1 //: #_NEG_FOR_ALL_# ://
-            &&  ( wid - zom_u32 ) <= 512 //: #_NEG_FOR_ALL_# ://
-            &&  ( hig - zom_u32 ) <= 512 //: #_NEG_FOR_ALL_# ://
+            if( 1 == 1
+                /** @VID_IID[ 0063 ]TIME[ 04H 25M 30S ] **/
+                /** #_REMOVED_GAURD_CODE_2020_12_26_#   **/
             ){
                 x_0_i32 = ( x_0_i32 + zom_u32 );
                 x_1_i32 = ( x_1_i32 - zom_u32 );
@@ -186,6 +200,143 @@
                 ,   &( y_1_i32 )
                 );;
             };;
+
+            //:did_we_wreck_our_rect:------------------------://
+            //:did_we_wreck_our_rect:INVERTED:---------------://
+            #define F float
+            #define I I32
+
+                if( x_0_i32 > x_1_i32 ){
+
+                    /** ************************************ ***    
+                    u == "unknown" . Solve for the uknown.
+                    ( x_0_i32 - u )           == ( x_1_i32 + u )
+                      x_0_i32 - x_1_i32       == u + u
+                      x_0_i32 - x_1_i32       == 2 * u
+                    ( x_0_i32 - x_1_i32 ) / 2 == u
+                    *** ************************************ **/
+
+                    /** c: check value. ...................  **/
+                    /** @VID_IID[ 0063 ]TIME[ 04H 36M 57S ]  **/
+                    F c = ( ((F)x_0_i32) - ((F)x_1_i32) ) / 2.0;
+                    I u = (     x_0_i32  -     x_1_i32  ) / 2  ;
+        
+                    /** Make sure math is discrete(integers) **/
+                    assert( ((F)c) == ((F)u) );
+
+                    /** Un-invert the rectangle **/
+                    x_0_i32 =( x_0_i32 - u );
+                    x_1_i32 =( x_1_i32 + u );
+    
+                    /** Assert actually un-inverted.  **/
+                    /** Also should be co-incidential **/
+                    assert( x_0_i32 == x_1_i32 );
+                };;
+
+            #undef  F
+            #undef  I
+            //:---------------:did_we_wreck_our_rect:INVERTED://
+            //:did_we_wreck_our_rect:TOO_BIG:----------------://
+            assert( x_0_i32 <= x_1_i32 );
+            assert( y_0_i32 <= y_1_i32 );
+
+                //:------------------------------------------://
+                //: FIX IN THIS ORDER:                       ://
+                //: 1. Shrink back to at least 512 x 512     ://
+                //: 2. Translate back into boundaries of     ://
+                //:    the [ worldspace / dataspace ]        ://
+                //: @VID_IID[ 0063 ]TIME[ 04H 44M 21S ]      ://
+                //:------------------------------------------://
+
+                //:fix_number:001:- - - - - - - - - - - - - -://
+                #define F float
+                #define I I32
+
+                    wid =( x_1_i32 - x_0_i32 + 1 );
+                    hig =( y_1_i32 - y_0_i32 + 1 );
+
+                    if( wid > 512 ){
+                        /** ******************************** ***
+                        ((x_1_i32-u) - (x_0_i32+u) + 1)== 512
+                         (x_1_i32-u) - (x_0_i32+u)     == 511
+                          x_1_i32-u  -  x_0_i32-u      == 511
+                          x_1_i32 - x_0_i32 - 511 = +u +u
+                         (x_1_i32 - x_0_i32 - 511)/2 =  u
+                          
+                            Distribute the negative one!
+                            (4-1) -(5 -1) == -1
+                             4-1  - 5 -1  == -3
+                             4-1  - 5 +1  == -1
+                        *** ******************************** **/
+    
+                        I u =( (x_1_i32 - x_0_i32 - 511)/2 );
+                        F c =( 
+                         ((F)(x_1_i32 - x_0_i32 - 511)) / 2.0 );
+                        if( ((F)u) != ((F)c) ){
+
+                            printf( "[F_u]:%f\n", ((F)u) );
+                            printf( "[F_c]:%f\n", ((F)c) );
+                            ERR("[FU_FC_2020_12_26_1001PM]");
+                        };;
+
+        #error TODO: YOLO_2020
+        //:     If u value is fractional, we need to
+        //:     round UP that value and pull the rectangle
+        //:     in to be a 511 instead of 512.
+        //:     Basically, if rectangle started out odd,
+        //:     there is no way to correct it back to 
+        //:     exactly 512.
+
+                        x_0_i32 = x_0_i32 + u ;
+                        x_1_i32 = x_1_i32 - u ;
+                        assert( x_0_i32 <= x_1_i32 );
+                        if( 1 
+                        &&  x_1_i32  - x_0_i32 + 1 !=( 512 + 0 )
+                        &&  x_1_i32  - x_0_i32 + 1 !=( 512 - 1 )
+                        ){
+                            ERR("[BADSHRINKMYFRIEND_X_AXIS]");
+                        };;
+
+                    };;
+                    if( hig > 512 ){
+
+                        I u =( (y_1_i32 - y_0_i32 - 511)/2 );
+                        F c =( 
+                         ((F)(y_1_i32 - y_0_i32 - 511)) / 2.0 );
+                        assert( ((F)u) == ((F)c) );
+
+                        y_0_i32 = y_0_i32 + u ;
+                        y_1_i32 = y_1_i32 - u ;
+                        assert( y_0_i32 <= y_1_i32 );
+                        assert( y_1_i32  - y_0_i32 + 1 == 512 );
+                    };;
+
+                #undef  F
+                #undef  I
+                //:- - - - - - - - - - - - - -:fix_number:001://
+                //:fix_number:002:- - - - - - - - - - - - - -://
+
+                    assert( x_0_i32 <= x_1_i32 );
+                    assert( y_0_i32 <= y_1_i32 );
+
+                    aac2020_tautype_rec_inc_EnforceBounds(
+                        &( x_0_i32 ) //: @BYREF@
+                    ,   &( x_1_i32 ) //: @BYREF@
+                    ,   &( y_0_i32 ) //: @BYREF@
+                    ,   &( y_1_i32 ) //: @BYREF@
+                    );;   
+
+                    assert( x_0_i32 <= x_1_i32     );
+                    assert( y_0_i32 <= y_1_i32     );
+                    assert( x_0_i32 >=         0   );
+                    assert( y_0_i32 >=         0   );
+                    assert( x_1_i32 <= ( 512 - 1 ) );
+                    assert( y_1_i32 <= ( 512 - 1 ) );
+
+                //:- - - - - - - - - - - - - -:fix_number:002://
+
+            //:----------------:did_we_wreck_our_rect:TOO_BIG://
+            //:------------------------:did_we_wreck_our_rect://
 
         //:------------:gaurd_from_zooming_in_or_out_too_much://
         //:Get_Or_Put_Bitmap_Variables:----------------------://
@@ -305,13 +456,396 @@
 #define U32 uint32_t  /** GCC: <stdint.h> **/         //: 02 ://
 #define U08  uint8_t  /** GCC: <stdint.h> **/         //: 03 ://
 #define ERR aac2020_tautype_Halt                      //: 04 ://
+#define LOG aac2020_tautype_Info_any                  //: 05 ://
+#define NUM_TEST__CASES_001 ( 19 )                    //: 06 ://
+#define NUM_TEST_INPUTS_001 ( 10 )                    //: 07 ://
+#define NUM_TEST__CASES_002 ( 20 )                    //: 08 ://
+#define NUM_TEST_INPUTS_002 (  9 )                    //: 09 ://
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
     void
     aac2020_tautype_UnitTest( void )
     {
+        LOG("[aac2020_tautype_UnitTest:BEG]",((void*)0) );
+
+        /** UTC: Unit_Test_Code  ..........................  **/
+        /** @VID_IID[ 0063]TIME [ 3H 13M 21S ] ............  **/
+        extern void aac2020_tautype_UTC_rec_inc_Tran(  void  );
+                    aac2020_tautype_UTC_rec_inc_Tran(/*VOID*/);
+
+        extern void aac2020_tautype_UTC_rec_inc_Zoom(  void  );
+                    aac2020_tautype_UTC_rec_inc_Zoom(/*VOID*/);
+
+        LOG("[aac2020_tautype_UnitTest:END]",((void*)0) );
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    void
+    aac2020_tautype_UTC_rec_inc_Zoom( void )
+    {
+        LOG("[aac2020_tautype_UTC_rec_inc_Zoom:BEG]",0);
+
+        /** THIS_FUNCTION: ZOOM of viewport tests **/
+
+        I32 arr[ NUM_TEST_INPUTS_002 
+               * NUM_TEST__CASES_002 ]={
+    //001 002 003 004 |       005       | 006 007 008 009 
+    //___ ___ ___ ___ , _______ _______ , ___ ___ ___ ___
+    //x_0 x_1 y_0 y_1       zom_i32       x_0 x_1 y_0 y_1
+    //___ ___ ___ ___ , _______ _______ , ___ ___ ___ ___
+        0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:00
+    ,   0,100,  0,100 ,    0+      1    ,   1, 99,  1, 99 //:01
+    , 100,200,100,200 ,    0-      1    ,  99,201, 99,201 //:02
+    ,   0,  0,  0,  0 ,    0-   9001    ,   0,511,  0,511 //:03
+        
+        //:TESTS: T_L: OVERGROW:
+    ,   0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:04
+    ,   0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:05
+    ,   0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:06
+        
+        //:TESTS: T_R: OVERGROW:
+    ,   0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:07
+    ,   0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:08
+    ,   0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:09
+        
+        //:TESTS: B_L: OVERGROW:
+    ,   0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:10
+    ,   0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:11
+    ,   0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:12
+        
+        //:TESTS: B_R: OVERGROW:
+    ,   0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:13
+    ,   0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:14
+    ,   0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:15
+
+    ,   0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:16
+    ,   0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:17
+    ,   0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:18
+    ,   0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:19
+    //___ ___ ___ ___ , _______ _______ , ___ ___ ___ ___
+    // INITIAL_VALUES |    ZOOM AMOUNT  | EXPECTED VALUES
+    //___ ___ ___ ___ , ___ ___ ___ ___ , ___ ___ ___ ___
+    //001 002 003 004 |       005       | 006 007 008 009
+    };; //<-- tes_tra //
+
+        //:Set initial values for tests:
+        U32 put_x_0;
+        U32 put_x_1;
+        U32 put_y_0;
+        U32 put_y_1;
+
+        //:Bounds_Of_Inclusive_Rectangle: ACTUAL(ACT)
+        U32 act_x_0;
+        U32 act_x_1;
+        U32 act_y_0;
+        U32 act_y_1;
+
+        //:Bounds_Of_Inclusive_Rectangle: EXPECTED(EXP)
+        U32 exp_x_0;
+        U32 exp_x_1;
+        U32 exp_y_0;
+        U32 exp_y_1;
+
+        //:Zoom Amounts. @VID_IID[ 0063 ]TIME[ 03H 30M 51S ] ://
+        //:POSITIVE: Zooms  IN by shrinking the rectangle.   ://
+        //:NEGATIVE: Zooms OUT by growing   the rectangle.   ://
+        I32 zom_i32 =( 0 );
+
+        I32 number_of_tests_ran=( 0 );
 
 
+        I32 m_i =( NUM_TEST__CASES_002 - 1 ); //: max_index
+        for( I32 t_i ; t_i <= m_i ; t_i ++ ){
 
+            //:load_current_test_values:---------------------://
+
+                /** @VID_IID[ 0063 ]TIME[ 3H 48M 40S ] **/
+                /** Why the magic number nine( 9 )     **/
+                assert( 9 == NUM_TEST_INPUTS_002 );
+
+                put_x_0 = arr[ ( t_i * 9 ) + 0 ];
+                put_x_1 = arr[ ( t_i * 9 ) + 1 ];
+                put_y_0 = arr[ ( t_i * 9 ) + 2 ];
+                put_y_1 = arr[ ( t_i * 9 ) + 3 ];
+
+                zom_i32 = arr[ ( t_i * 9 ) + 4 ];
+
+                exp_x_0 = arr[ ( t_i * 9 ) + 5 ];
+                exp_x_1 = arr[ ( t_i * 9 ) + 6 ];
+                exp_y_0 = arr[ ( t_i * 9 ) + 7 ];
+                exp_y_1 = arr[ ( t_i * 9 ) + 8 ];
+
+            //:---------------------:load_current_test_values://
+            //:set_init_rectangle_and_verify:----------------://
+
+                AAC2020_TAUDEPO_Put( 
+                   AAC2020_TAUDEPO.TAU_015   //:DEX_TAU
+                ,  AAC2020_TAUDEPO.PAINT5D   //:DEX_SUB
+                ,  AAC2020_TAUDEPO.P5D_VP1   //:DEX_VAR
+                ,  put_x_0     //: <-- X_AXIS [ _0 x_ ]
+                ,  put_x_1     //: <-- X_AXIS [ _1 x_ ]
+                ,  put_y_0     //: <-- Y_AXIS [ _0 y_ ]
+                ,  put_y_1     //: <-- Y_AXIS [ _1 y_ ]
+                );;
+
+                AAC2020_TAUDEPO_Get( 
+                   AAC2020_TAUDEPO.TAU_015   //:DEX_TAU
+                ,  AAC2020_TAUDEPO.PAINT5D   //:DEX_SUB
+                ,  AAC2020_TAUDEPO.P5D_VP1   //:DEX_VAR
+                ,  &(act_x_0)  //: <-- X_AXIS [ _0 x_ ]
+                ,  &(act_x_1)  //: <-- X_AXIS [ _1 x_ ]
+                ,  &(act_y_0)  //: <-- Y_AXIS [ _0 y_ ]
+                ,  &(act_y_1)  //: <-- Y_AXIS [ _1 y_ ]
+                );;
+
+                if( 0
+                || put_x_0 != act_x_0 
+                || put_x_1 != act_x_1 
+                || put_y_0 != act_y_0 
+                || put_y_1 != act_y_1 
+                ){
+                    ERR("[MISSION_FAILED:2020_12_26:0737PM]");
+                };;
+
+            //:----------------:set_init_rectangle_and_verify://
+            //:translate_and_check:--------------------------://
+
+                AAC2020_TAUTYPE_rec_inc_ZoomPull(
+                   AAC2020_TAUDEPO.TAU_015   //:DEX_TAU
+                ,  AAC2020_TAUDEPO.PAINT5D   //:DEX_SUB
+                ,  AAC2020_TAUDEPO.P5D_VP1   //:DEX_VAR
+                ,  zom_i32  
+                );;
+                
+                AAC2020_TAUDEPO_Get( 
+                   AAC2020_TAUDEPO.TAU_015   //:DEX_TAU
+                ,  AAC2020_TAUDEPO.PAINT5D   //:DEX_SUB
+                ,  AAC2020_TAUDEPO.P5D_VP1   //:DEX_VAR
+                ,  &(act_x_0)  //: <-- X_AXIS [ _0 x_ ]
+                ,  &(act_x_1)  //: <-- X_AXIS [ _1 x_ ]
+                ,  &(act_y_0)  //: <-- Y_AXIS [ _0 y_ ]
+                ,  &(act_y_1)  //: <-- Y_AXIS [ _1 y_ ]
+                );;
+
+                if( 0
+                ||  exp_x_0 != act_x_0
+                ||  exp_x_1 != act_x_1
+                ||  exp_y_0 != act_y_0
+                ||  exp_y_1 != act_y_1
+                ){
+
+                    printf( "[test_index(t_i)]:%d\n" , t_i );
+
+                    printf( "[exp_x_0:V:act_x_0]:(%d)(%d)\n"
+                            , exp_x_0 , act_x_0 );;
+                    printf( "[exp_x_1:V:act_x_1]:(%d)(%d)\n"
+                            , exp_x_1 , act_x_1 );;
+
+                    printf( "[exp_y_0:V:act_y_0]:(%d)(%d)\n"
+                            , exp_y_0 , act_y_0 );;
+                    printf( "[exp_y_1:V:act_y_1]:(%d)(%d)\n"
+                            , exp_y_1 , act_y_1 );;
+
+                    ERR("[2020_12_26:ZOOM_TEST_FAILED]");
+                };;
+
+            //:--------------------------:translate_and_check://
+
+        number_of_tests_ran++;
+        };; //:NEXT[ t_i ](Test Index)
+
+        if( number_of_tests_ran != NUM_TEST__CASES_002 ){
+            ERR("[TESTS_NOT_ACTUALLY_RAN_2020_12_26]");
+        };;
+
+        LOG("[aac2020_tautype_UTC_rec_inc_Zoom:END]",0);
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    void
+    aac2020_tautype_UTC_rec_inc_Tran( void )
+    {
+        /** THIS_FUNCTION: Translation of viewport tests **/
+
+        /** arr: array of test cases.          **/
+        /** @VID_IID[ 0063 ]TIME[ 1H 35M 40S ] **/
+
+        I32 arr[ NUM_TEST_INPUTS_001 
+               * NUM_TEST__CASES_001 ]={
+    //001 002 003 004 |   005  |  006   | 007 008 009 010 
+    //___ ___ ___ ___ , _______ _______ , ___ ___ ___ ___
+    //x_0 x_1 y_0 y_1     o_x     o_y     x_0 x_1 y_0 y_1
+    //___ ___ ___ ___ , _______ _______ , ___ ___ ___ ___
+        0,  0,  0,  0 , 0+    1,0+    1 ,   1,  1,  1,  1 //:00
+    ,   3,  3,  7,  7 , 0+    7,0+    3 ,  10, 10, 10, 10 //:01
+    ,  10, 10, 10, 10 , 0-    7,0-    3 ,   3,  3,  7,  7 //:02
+        
+        //:TESTS: x_0 UNDERFLOW:
+    ,   0,  0,  0,  0 , 0-    1,0-    0 ,   0,  0,  0,  0 //:03
+    ,   0, 49, 33, 82 , 0-  100,0-    0 ,   0, 49, 33, 82 //:04
+    , 100,149,133,182 , 0-  200,0-    0 ,   0, 49,133,182 //:05
+        
+        //:TESTS: x_1 OVERFLOW:
+    , 511,511,511,511 , 0+    1,0+    0 , 511,511,511,511 //:06
+    , 462,511,333,382 , 0+    1,0+    0 , 462,511,333,382 //:07
+    , 262,311,133,182 , 0+  500,0+    0 , 462,511,133,182 //:08
+        
+        //:TESTS: y_0 UNDERFLOW:
+    ,   0,  0,  0,  0 , 0-    0,0-    1 ,   0,  0,  0,  0 //:09
+    ,  33, 82,  0, 49 , 0-    0,0-  100 ,  33, 82,  0, 49 //:10
+    , 133,182,100,149 , 0-    0,0-  200 , 133,182,  0, 49 //:11
+        
+        //:TESTS: y_1 OVERFLOW:
+    , 511,511,511,511 , 0+    0,0+    1 , 511,511,511,511 //:12
+    , 333,382,462,511 , 0+    0,0+    1 , 333,382,462,511 //:13
+    , 133,182,262,311 , 0+    0,0+  500 , 133,182,462,511 //:14
+
+    ,   0,511,  0,511 , 0+ 8500,0+ 8500 ,   0,511,  0,511 //:15
+    ,   0,511,  0,511 , 0- 8500,0- 8500 ,   0,511,  0,511 //:16
+    ,   0,100,200,300 , 0- 8500,0-    0 ,   0,100,200,300 //:17
+    , 200,300,  0,100 , 0-    0,0- 8500 , 200,300,  0,100 //:18
+    //___ ___ ___ ___ , _______ _______ , ___ ___ ___ ___
+    // INITIAL_VALUES |    XY OFFSET    | EXPECTED VALUES
+    //___ ___ ___ ___ , ___ ___ ___ ___ , ___ ___ ___ ___
+    //001 002 003 004 |   005  |  006   | 007 008 009 010
+    };; //<-- tes_tra //
+
+        //:Set initial values for tests:
+        U32 put_x_0;
+        U32 put_x_1;
+        U32 put_y_0;
+        U32 put_y_1;
+
+        //:Bounds_Of_Inclusive_Rectangle: ACTUAL(ACT)
+        U32 act_x_0;
+        U32 act_x_1;
+        U32 act_y_0;
+        U32 act_y_1;
+
+        //:Bounds_Of_Inclusive_Rectangle: EXPECTED(EXP)
+        U32 exp_x_0;
+        U32 exp_x_1;
+        U32 exp_y_0;
+        U32 exp_y_1;
+
+        //: @VID_IID[ 0063 ]TIME[ 02H 24M 01S ] .............://
+        //:#_CAL_VALUES_WERE_BAD_IDEA_IN_TAUTYPE_TESTS_#.....://
+
+        //:Translation_Amounts_Used_In_Tests:
+        I32 tra_i_x =( 0 );
+        I32 tra_i_y =( 0 );
+
+        I32 m_i =( NUM_TEST__CASES_001 - 1 ); //: max_index
+        for( I32 t_i ; t_i <= m_i ; t_i ++ ){
+
+            assert( 10 == NUM_TEST_INPUTS_001 );
+
+            //:load_current_test_values:---------------------://
+
+                put_x_0 = arr[ ( t_i * 10 ) + 0 ];
+                put_x_1 = arr[ ( t_i * 10 ) + 1 ];
+                put_y_0 = arr[ ( t_i * 10 ) + 2 ];
+                put_y_1 = arr[ ( t_i * 10 ) + 3 ];
+
+                tra_i_x = arr[ ( t_i * 10 ) + 4 ];
+                tra_i_y = arr[ ( t_i * 10 ) + 5 ];
+
+                exp_x_0 = arr[ ( t_i * 10 ) + 6 ];
+                exp_x_1 = arr[ ( t_i * 10 ) + 7 ];
+                exp_y_0 = arr[ ( t_i * 10 ) + 8 ];
+                exp_y_1 = arr[ ( t_i * 10 ) + 9 ];
+
+            //:---------------------:load_current_test_values://
+            //:set_init_rectangle_and_verify:----------------://
+
+                AAC2020_TAUDEPO_Put( 
+                   AAC2020_TAUDEPO.TAU_015   //:DEX_TAU
+                ,  AAC2020_TAUDEPO.PAINT5D   //:DEX_SUB
+                ,  AAC2020_TAUDEPO.P5D_VP1   //:DEX_VAR
+                ,  put_x_0     //: <-- X_AXIS [ _0 x_ ]
+                ,  put_x_1     //: <-- X_AXIS [ _1 x_ ]
+                ,  put_y_0     //: <-- Y_AXIS [ _0 y_ ]
+                ,  put_y_1     //: <-- Y_AXIS [ _1 y_ ]
+                );;
+
+                AAC2020_TAUDEPO_Get( 
+                   AAC2020_TAUDEPO.TAU_015   //:DEX_TAU
+                ,  AAC2020_TAUDEPO.PAINT5D   //:DEX_SUB
+                ,  AAC2020_TAUDEPO.P5D_VP1   //:DEX_VAR
+                ,  &(act_x_0)  //: <-- X_AXIS [ _0 x_ ]
+                ,  &(act_x_1)  //: <-- X_AXIS [ _1 x_ ]
+                ,  &(act_y_0)  //: <-- Y_AXIS [ _0 y_ ]
+                ,  &(act_y_1)  //: <-- Y_AXIS [ _1 y_ ]
+                );;
+
+                if( 0
+                || put_x_0 != act_x_0 
+                || put_x_1 != act_x_1 
+                || put_y_0 != act_y_0 
+                || put_y_1 != act_y_1 
+                ){
+                    ERR("[TAUTYPE_rec_inc:T_TEST:GETPUT_FAIL]");
+                };;
+
+            //:----------------:set_init_rectangle_and_verify://
+            //:calculate_expected_outputs:-------------------://
+
+                /** @VID_IID[ 0063 ]TIME[ 2H 22M 20S ] **/
+                /** This was a bad idea.               **/
+                /** Stashed calculations in _H_ file   **/
+            
+            //:-------------------:calculate_expected_outputs://
+            //:translate_and_check:--------------------------://
+
+                AAC2020_TAUTYPE_rec_inc_Tran(
+                   AAC2020_TAUDEPO.TAU_015   //:DEX_TAU
+                ,  AAC2020_TAUDEPO.PAINT5D   //:DEX_SUB
+                ,  AAC2020_TAUDEPO.P5D_VP1   //:DEX_VAR
+                ,     tra_i_x  
+                ,     tra_i_y  
+                );;
+                
+                AAC2020_TAUDEPO_Get( 
+                   AAC2020_TAUDEPO.TAU_015   //:DEX_TAU
+                ,  AAC2020_TAUDEPO.PAINT5D   //:DEX_SUB
+                ,  AAC2020_TAUDEPO.P5D_VP1   //:DEX_VAR
+                ,  &(act_x_0)  //: <-- X_AXIS [ _0 x_ ]
+                ,  &(act_x_1)  //: <-- X_AXIS [ _1 x_ ]
+                ,  &(act_y_0)  //: <-- Y_AXIS [ _0 y_ ]
+                ,  &(act_y_1)  //: <-- Y_AXIS [ _1 y_ ]
+                );;
+
+                if( 0
+                ||  exp_x_0 != act_x_0
+                ||  exp_x_1 != act_x_1
+                ||  exp_y_0 != act_y_0
+                ||  exp_y_1 != act_y_1
+                ){
+
+                    printf( "[test_index(t_i)]:%d\n" , t_i );
+
+                    printf( "[exp_x_0:V:act_x_0]:(%d)(%d)\n"
+                            , exp_x_0 , act_x_0 );;
+                    printf( "[exp_x_1:V:act_x_1]:(%d)(%d)\n"
+                            , exp_x_1 , act_x_1 );;
+
+                    printf( "[exp_y_0:V:act_y_0]:(%d)(%d)\n"
+                            , exp_y_0 , act_y_0 );;
+                    printf( "[exp_y_1:V:act_y_1]:(%d)(%d)\n"
+                            , exp_y_1 , act_y_1 );;
+
+                    ERR("[TAUTYPE_rec_inc_FAIL_001]");
+                };;
+
+                //: #_HORRIBLE_IDEA_REMOVED_2020_12_26_# ://
+                //: @VID_IID[ 0063 ]TIME[ 02H 27M 43S ]  ://
+
+            //:--------------------------:translate_and_check://
+
+        };; //:NEXT[ t_i ](Test Index)
     }
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
@@ -321,20 +855,27 @@
     {
         if( u32 ){ /** reserved for future use **/ };
 
-        AAC2020_TODOMAN_Vital("[WriteRectangleTests]");
+        U08* backup_taudepo=( (void*) 0 );
 
-        //: TODO: Backup data with re-usable function.
+        AAC2020_PIXBACK_Backup_taudepo( &( backup_taudepo ) );
 
         aac2020_tautype_UnitTest( /** void **/ );
 
-        //: TODO: Restore data with re-usable function.
+        AAC2020_PIXBACK_Restore_taudepo( &( backup_taudepo ) );
 
 
         return( 0x00 );
     }
 
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
 #undef  I32                                           //: 01 ://
 #undef  U32                                           //: 02 ://
 #undef  U08                                           //: 03 ://
 #undef  ERR                                           //: 04 ://
+#undef  LOG                                           //: 05 ://
+#undef  NUM_TEST__CASES_001                           //: 06 ://
+#undef  NUM_TEST_INPUTS_001                           //: 07 ://
+#undef  NUM_TEST__CASES_002                           //: 08 ://
+#undef  NUM_TEST_INPUTS_002                           //: 09 ://
 //:================================================:UNIT_TEST://

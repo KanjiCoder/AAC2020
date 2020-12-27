@@ -9,6 +9,86 @@
     //[   VIDEO COMMENT TIMESTAMP EXAMPLE   ]//
 *** ******************************************************** ***
 
+#_REMOVED_GAURD_CODE_2020_12_26_################################
+
+        if( 1
+            &&  ( wid - zom_u32 ) >=   1 //: #_NEG_FOR_ALL_# ://
+            &&  ( hig - zom_u32 ) >=   1 //: #_NEG_FOR_ALL_# ://
+            &&  ( wid - zom_u32 ) <= 512 //: #_NEG_FOR_ALL_# ://
+            &&  ( hig - zom_u32 ) <= 512 //: #_NEG_FOR_ALL_# ://
+        ){
+
+            removed gaurd code on: 2020_12_26
+            @VID_IID[ 0063 ]TIME[ 04H 23M 53S ]
+
+        };;
+
+################################_REMOVED_GAURD_CODE_2020_12_26_#
+#_CAL_VALUES_WERE_BAD_IDEA_IN_TAUTYPE_TESTS_####################
+#_HORRIBLE_IDEA_REMOVED_2020_12_26_#############################
+
+    //: @VID_IID[ 01H 52M 14S ]                          ://
+    //: Like "exp_***" values, but calculated in our     ://
+    //: loop. Use to cross check against hard coded      ://
+    //: expected values in our test table.               ://
+    I32 cal_x_0;                                         
+    I32 cal_x_1;
+    I32 cal_y_0;
+    I32 cal_y_1;
+
+    ------------------------------------------------------------
+
+    /** @VID_IID[ 0063 ]TIME[ 01H 51M 06S ]      **/
+    /** calculated expected outputs to cross     **/
+    /** check against hard coded expected outputs**/
+    
+    cal_x_0 = ((I32)act_x_0) + ((I32)tra_i_x) ;
+    cal_x_1 = ((I32)act_x_1) + ((I32)tra_i_x) ;
+    cal_y_0 = ((I32)act_y_0) + ((I32)tra_i_y) ;
+    cal_y_1 = ((I32)act_y_1) + ((I32)tra_i_y) ;
+    
+    /** @VID_IID[ 0063 ]TIME[ 2H 01M 59S ]       **/ 
+    /** Our calculated expected values were not  **/
+    /** accounting for clamping within the bounds**/
+    
+    /** MIN CAP **/
+    if( cal_x_0 <=   0 ){ cal_x_0 =   0; };
+    if( cal_x_1 <=   0 ){ cal_x_1 =   0; };
+    if( cal_y_0 <=   0 ){ cal_y_0 =   0; };
+    if( cal_y_1 <=   0 ){ cal_y_1 =   0; };
+    
+    /** MAX CAP == ( 512 - 1 == 511 ) **/
+    if( cal_x_0 >= 511 ){ cal_x_0 = 511; };
+    if( cal_x_1 >= 511 ){ cal_x_1 = 511; };
+    if( cal_y_0 >= 511 ){ cal_y_0 = 511; };
+    if( cal_y_1 >= 511 ){ cal_y_1 = 511; };
+
+
+    //:PASTED_HERE_ON[ 2020_12_26 ]                      ://
+    //:PASTED_VIDEO[ @VID_IID[ 0063 ]TIME[ 2M 27M 15S ]  ://
+    if( 0    /** expected(exp) == actual(act) **/
+    || cal_x_0 != (I32)act_x_0 //: exp == act ://
+    || cal_x_1 != (I32)act_x_1 //: exp == act ://
+    || cal_y_0 != (I32)act_y_0 //: exp == act ://
+    || cal_y_1 != (I32)act_y_1 //: exp == act ://
+    ){
+        printf( "[test_index(t_i)]:%d\n" , t_i );
+    
+        printf( "[cal_x_0:V:act_x_0]:(%d)(%d)\n"
+                , cal_x_0 , act_x_0 );;
+        printf( "[cal_x_1:V:act_x_1]:(%d)(%d)\n"
+                , cal_x_1 , act_x_1 );;
+    
+        printf( "[cal_y_0:V:act_y_0]:(%d)(%d)\n"
+                , cal_y_0 , act_y_0 );;
+        printf( "[cal_y_1:V:act_y_1]:(%d)(%d)\n"
+                , cal_y_1 , act_y_1 );;
+    
+        ERR("[CALC_VALUES_NO_MATCH_TEST_TABLE]");
+    };;
+
+####################_CAL_VALUES_WERE_BAD_IDEA_IN_TAUTYPE_TESTS_#
+#############################_HORRIBLE_IDEA_REMOVED_2020_12_26_#
 @REFERENCE_TO_A_POINTER@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @REF_TO_PTR@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
