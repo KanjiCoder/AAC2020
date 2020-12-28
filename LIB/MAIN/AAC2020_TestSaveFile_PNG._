@@ -1,4 +1,6 @@
 //:MAIN_ENTRY_POINT.TEST_SAVE_PNG_FILE:======================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+
     int
     AAC2020_TestSaveFile_PNG()
     {
@@ -6,12 +8,14 @@
         /**  Try saving a 512x512 png image using the        **/
         /**  color picker value to set color of all pixels.  **/
 
+        /** Should probably malloc that 512x512 bitmap. **/
+        AAC2020_TODOMAN_Vital("[A_BIT_BIG_FOR_THE_STACK_2020]");
+
         unsigned char pix_arr[512*512*4]; //:AKA[ image ]
         unsigned int  pix_wid=( 512 );
         unsigned int  pix_hig=( 512 );
 
         //:Extract RGBA:
-        #define U32 uint32_t /** unsigned long **/
         #define HEX AAC2020_last_picked_color_hex
 
             U32 R = (HEX >> 24) & 0xFF;
@@ -20,7 +24,6 @@
             U32 A = (HEX >>  0) & 0xFF;
      
         #undef  HEX
-        #undef  U32
 
         //:Make all alpha 100%:
         for( int i = 0 ; i < (512*512) ; i++ ){
@@ -42,20 +45,56 @@
             //: AAC2020_FILEBOI_TouchFolder("./MOD");
             AAC2020_FILEBOI_TouchFile( FILE_PNG );
 
-            unsigned int result=( 
-                lodepng_encode32_file( 
+            U32 result = ( 11223344 /** TRAPVALUE **/ );
 
-                    FILE_PNG
+            #if( AAC2020_INCLUDE_LODEPNG >= 1 ) //:##########://
 
-                ,   pix_arr  //:AKA[ image ]
-                ,   pix_wid 
-                ,   pix_hig
-                )
-            );;
+                result=( 
+                    lodepng_encode32_file( 
+
+                        FILE_PNG
+
+                    ,   pix_arr  //:AKA[ image ]
+                    ,   pix_wid 
+                    ,   pix_hig
+                    )
+                );;
+
+            #endif //:#######################################://
+            #if( AAC2020_INCLUDE_LODEPNG <= 0 ) //:##########://
+
+                /** @VID_IID[ 3H 17M 18S ] ***************** **/
+                /** When lodepng is not included, we just    **/
+                /** want to pretend it returned success      **/
+                /** so that we do not crash the program.     **/
+                /** ((( result = ( 0 ) )))                   **/
+                /** **************************************** **/
+
+                result = ( 0 );
+
+                /** @VID_IID[ 0065 ]TIME[ 3H 19M 29S ]   * * **/
+                /** SILENCE THE COMPILER.                * * **/
+                if( pix_arr[0]> 1 ){ /** NOOP: NO:LODEPNG **/ };
+                if( pix_wid   > 1 ){ /** NOOP: NO:LODEPNG **/ };
+                if( pix_hig   > 1 ){ /** NOOP: NO:LODEPNG **/ };
+
+                printf("\n\n");
+                printf("[*********************************]\n");
+                printf("[PNG_FILE_IS_JUST_A_STUB_FILE.....]\n");
+                printf("[PLEASE_INCLUDE_LODEPNG_TO_FIX....]\n");
+                printf("[SET:AAC2020_INCLUDE_LODEPNG >= 1 ]\n");
+                printf("[*********************************]\n");
+                printf("[SHOULD_BE_IN: LIBCHAN.TOP._ .....]\n");
+                printf("[*********************************]\n");
+                printf("\n\n");
+
+            #endif //:#######################################://
 
         #undef  FILE_PNG
         //:------------------------------------:SAVE_FILE_PNG://
 
         return( result );
     } 
+
+#undef  U32
 //:======================:MAIN_ENTRY_POINT.TEST_SAVE_PNG_FILE://
