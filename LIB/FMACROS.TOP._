@@ -1,32 +1,17 @@
 
 //[ ABOUT_SEE[ DOC/_H_ ]SEARCH[ #_ABOUT_F_MACROS_TOP_# ]     ]//
 
-//:IKEYBOX:==================================================://
-#if(            AAC2020_INCLUDE_IKEYBOX >=  1 )
-_Static_assert( AAC2020_INCLUDE_IKEYBOX ==  5 ,        "5");
+//:LOOP_TICK__LoopTick:||||||||||||||||||||||||||||||||||||||://
 
-    /** Only make macros out of functions that are        **/
-    /** common to multiple libraries and called together. **/
-
-#endif
-#if(     AAC2020_INCLUDE_IKEYBOX == 0 )
-
-    /** Only make macros out of functions that are        **/
-    /** common to multiple libraries and called together. **/
-
-#endif
-//:==================================================:IKEYBOX://
 //:CPUNIFO:==================================================://
 #if(            AAC2020_INCLUDE_CPUNIFO >=  1 )
 _Static_assert( AAC2020_INCLUDE_CPUNIFO == 13 ,        "13");
 
     #define  FMACROS_CPUNIFO_LoopTick   AAC2020_CPUNIFO_LoopTick
-
 #endif
 #if(     AAC2020_INCLUDE_CPUNIFO == 0 )
 
     #define  FMACROS_CPUNIFO_LoopTick( DISCARDED_ARGUMENT )
-
 #endif
 //:==================================================:CPUNIFO://
 //:GRAQUAD:==================================================://
@@ -34,14 +19,10 @@ _Static_assert( AAC2020_INCLUDE_CPUNIFO == 13 ,        "13");
 _Static_assert( AAC2020_INCLUDE_GRAQUAD == 14 ,       "14");
 
     #define  FMACROS_GRAQUAD_LoopTick   AAC2020_GRAQUAD_LoopTick
-
-
 #endif
 #if(    AAC2020_INCLUDE_GRAQUAD == 0 )
 
     #define  FMACROS_GRAQUAD_LoopTick( DISCARDED_ARGUMENT )    
-     
-
 #endif
 //:==================================================:GRAQUAD://
 //:TAUDEPO:==================================================://
@@ -55,6 +36,19 @@ _Static_assert( AAC2020_INCLUDE_TAUDEPO == 22 ,       "22");
     #define  FMACROS_TAUDEPO_LoopTick( DISCARDED_ARGUMENT )    
 #endif
 //:==================================================:TAUDEPO://
+//:TAUSYNC:==================================================://
+#if(            AAC2020_INCLUDE_TAUSYNC >=  1 )
+_Static_assert( AAC2020_INCLUDE_TAUSYNC == 24 ,       "24");
+
+    #define  FMACROS_TAUSYNC_LoopTick   AAC2020_TAUSYNC_LoopTick
+#endif
+#if(    AAC2020_INCLUDE_TAUSYNC == 0 )
+
+    #define  FMACROS_TAUSYNC_LoopTick( DISCARDED_ARGUMENT )    
+#endif
+//:==================================================:TAUSYNC://
+
+//:||||||||||||||||||||||||||||||||||||||:LOOP_TICK__LoopTick://
 
 
 //:AUTO_GENERATED:InitNone:==================================://

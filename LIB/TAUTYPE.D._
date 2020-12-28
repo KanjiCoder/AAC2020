@@ -1,6 +1,23 @@
 //: 1234567
 //: TAUTYPE.D._ : TextureAsUniformDepo(TAUDEPO)'s TYPES
-#include "TAUTYPE.G._"             
+#include "TAUTYPE.G._"      
+
+//:UNIT_TEST_DEBUGGING_HACKS:================================://
+
+#define I32 int32_t /** GCC: <stdint.h> **/
+
+    /** @VID_IID[ 0065 ]TIME[ 1H 22M 04S ]             . . . **/
+    /** Make our functions aware that unit tests are   . . . **/
+    /** running and do extra checks dependent on what  . . . **/
+    /** test index is currently active.                . . . **/
+    /** VERY HACKISH BUT WHATEVER WORKS MAN.           . . . **/
+
+    #define aac2020_tautype_DEBUG_ZOOM ( 1 )
+    I32 aac2020_tautype_UTC_rec_inc_zoom_test_index = ( 0 - 1 );
+        
+#undef  I32
+
+//:================================:UNIT_TEST_DEBUGGING_HACKS://
 
 /** ******************************************************** ***
     +-------+-------+-------+-------+-------+-------+-------+

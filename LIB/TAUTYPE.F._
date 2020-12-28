@@ -206,15 +206,7 @@
             #define F float
             #define I I32
 
-                if( x_0_i32 > x_1_i32 ){
-
-                    /** ************************************ ***    
-                    u == "unknown" . Solve for the uknown.
-                    ( x_0_i32 - u )           == ( x_1_i32 + u )
-                      x_0_i32 - x_1_i32       == u + u
-                      x_0_i32 - x_1_i32       == 2 * u
-                    ( x_0_i32 - x_1_i32 ) / 2 == u
-                    *** ************************************ **/
+                if( x_0_i32 > x_1_i32 ){ //:#_INV_ZOOMFIX_#_://
 
                     /** c: check value. ...................  **/
                     /** @VID_IID[ 0063 ]TIME[ 04H 36M 57S ]  **/
@@ -231,6 +223,20 @@
                     /** Assert actually un-inverted.  **/
                     /** Also should be co-incidential **/
                     assert( x_0_i32 == x_1_i32 );
+                };;
+                if( y_0_i32 > y_1_i32 ){ //:#_INV_ZOOMFIX_#_://
+
+                    //: @DITTO_Y_AXIS@ ://
+
+                    F c = ( ((F)y_0_i32) - ((F)y_1_i32) ) / 2.0;
+                    I u = (     y_0_i32  -     y_1_i32  ) / 2  ;
+        
+                    assert( ((F)c) == ((F)u) );
+
+                    y_0_i32 =( y_0_i32 - u );
+                    y_1_i32 =( y_1_i32 + u );
+
+                    assert( y_0_i32 == y_1_i32 );
                 };;
 
             #undef  F
@@ -254,62 +260,92 @@
 
                     wid =( x_1_i32 - x_0_i32 + 1 );
                     hig =( y_1_i32 - y_0_i32 + 1 );
+                I32 wid_odd=( wid % 2 ); 
+                I32 hig_odd=( hig % 2 ); 
+                U08 wid_fix=( 0 ); //: @IID[ 0065 ]T[ 00:33:10 ]
+                U08 hig_fix=( 0 ); //: @IID[ 0065 ]T[ 00:33:10 ]
 
-                    if( wid > 512 ){
-                        /** ******************************** ***
-                        ((x_1_i32-u) - (x_0_i32+u) + 1)== 512
-                         (x_1_i32-u) - (x_0_i32+u)     == 511
-                          x_1_i32-u  -  x_0_i32-u      == 511
-                          x_1_i32 - x_0_i32 - 511 = +u +u
-                         (x_1_i32 - x_0_i32 - 511)/2 =  u
-                          
-                            Distribute the negative one!
-                            (4-1) -(5 -1) == -1
-                             4-1  - 5 -1  == -3
-                             4-1  - 5 +1  == -1
-                        *** ******************************** **/
+                    if( wid > 512 ){ //:#_OVERGROW_PULL_FIX_#://
+                        wid_fix=( 1 );
+                        /**@VID_IID[ 0065 ]TIME[ 0H 13M 44S ]**/
     
                         I u =( (x_1_i32 - x_0_i32 - 511)/2 );
                         F c =( 
                          ((F)(x_1_i32 - x_0_i32 - 511)) / 2.0 );
-                        if( ((F)u) != ((F)c) ){
-
-                            printf( "[F_u]:%f\n", ((F)u) );
-                            printf( "[F_c]:%f\n", ((F)c) );
-                            ERR("[FU_FC_2020_12_26_1001PM]");
+                        assert( ((I)u) == ((I)c) ); //:@DELTA_1@
+                        if(     ((F)u) != ((F)c) ){
+                            //:#_PULL_MORE_IF_U_IS_FRACTION_#://
+                            u =( u + 1 ); //:<-- Ceil( f )
+                            assert( wid_odd >= 1 );
                         };;
-
-        #error TODO: YOLO_2020
-        //:     If u value is fractional, we need to
-        //:     round UP that value and pull the rectangle
-        //:     in to be a 511 instead of 512.
-        //:     Basically, if rectangle started out odd,
-        //:     there is no way to correct it back to 
-        //:     exactly 512.
-
-                        x_0_i32 = x_0_i32 + u ;
-                        x_1_i32 = x_1_i32 - u ;
-                        assert( x_0_i32 <= x_1_i32 );
-                        if( 1 
-                        &&  x_1_i32  - x_0_i32 + 1 !=( 512 + 0 )
-                        &&  x_1_i32  - x_0_i32 + 1 !=( 512 - 1 )
-                        ){
-                            ERR("[BADSHRINKMYFRIEND_X_AXIS]");
-                        };;
-
+                        x_0_i32 = x_0_i32 + u ; //: 0 --> <-- 1
+                        x_1_i32 = x_1_i32 - u ; //: 0 --> <-- 1
                     };;
-                    if( hig > 512 ){
+                    if( hig > 512 ){ //:#_OVERGROW_PULL_FIX_#://
+                        hig_fix=( 1 );
+                        /**@VID_IID[ 0065 ]TIME[ 0H 34M 31S ]**/
 
                         I u =( (y_1_i32 - y_0_i32 - 511)/2 );
                         F c =( 
                          ((F)(y_1_i32 - y_0_i32 - 511)) / 2.0 );
-                        assert( ((F)u) == ((F)c) );
+                        assert( ((I)u) == ((I)c) ); //:@DELTA_1@
+                        if(     ((F)u) != ((F)c) ){
+                            //:#_PULL_MORE_IF_U_IS_FRACTION_#://
+                            u =( u + 1 ); //:<-- Ceil( f )
+                            assert( hig_odd >= 1 );
+                        };;
 
-                        y_0_i32 = y_0_i32 + u ;
-                        y_1_i32 = y_1_i32 - u ;
-                        assert( y_0_i32 <= y_1_i32 );
-                        assert( y_1_i32  - y_0_i32 + 1 == 512 );
+                        y_0_i32 = y_0_i32 + u ; //: 0 --> <-- 1
+                        y_1_i32 = y_1_i32 - u ; //: 0 --> <-- 1
+        
                     };;
+
+                    //:assert_valid_size_correction:---------://
+
+                        wid = ( x_1_i32  - x_0_i32 + 1 );
+                        hig = ( y_1_i32  - y_0_i32 + 1 );
+
+                        assert( x_0_i32 <= x_1_i32 );
+                        assert( y_0_i32 <= y_1_i32 );
+
+                        //: wid_fix  :- - - - - - - - - - - -://
+                        if( wid_fix >= 1 ){
+
+                        if( (512 + 0) == wid && 0 == wid_odd ){
+                            /** Okay: Even Rectangle Shrunk **/
+                        }else
+                        if( (512 - 1) == wid && 1 == wid_odd ){
+                            /** Okay: Odd  Rectangle Shrunk **/
+                        }else{
+                            ERR("[BADSHRINK_2020:X_AXIS]");
+                        };;
+
+                            if( wid < ( 512 - 1 ) ){
+                                ERR("[TOO_MUCH_SHRINK:X_AXIS]");
+                            };;
+
+                        };;
+                        //:- - - - - - - - - - - -:  wid_fix ://
+                        //: hig_fix  :- - - - - - - - - - - -://
+                        if( hig_fix >= 1 ){
+
+                        if( (512 + 0) == hig && 0 == hig_odd ){
+                            /** Okay: Even Rectangle Shrunk **/
+                        }else
+                        if( (512 - 1) == hig && 1 == hig_odd ){
+                            /** Okay: Odd  Rectangle Shrunk **/
+                        }else{
+                            ERR("[BADSHRINK_2020:Y_AXIS]");
+                        };;
+
+                            if( wid < ( 512 - 1 ) ){
+                                ERR("[TOO_MUCH_SHRINK:Y_AXIS]");
+                            };;
+
+                        };;
+                        //:- - - - - - - - - - - -:  hig_fix ://
+                        
+                    //:---------:assert_valid_size_correction://
 
                 #undef  F
                 #undef  I
@@ -360,10 +396,35 @@
             );;
 
         //:----------------------:Get_Or_Put_Bitmap_Variables://
+
+        #if( aac2020_tautype_DEBUG_ZOOM >= 1 ) //:###########://
+        /** [ Unit Test ] [ Test Case ] Aware Tests **/
+        #define T_I aac2020_tautype_UTC_rec_inc_zoom_test_index
+
+            if( 3 == T_I ){
+              
+                /** **************************************** **/
+                /** @VID_IID[ 0065 ][ 02H 16M 48S ] ........ **/
+                /** This is an interesting and hackish idea  **/
+                /** But we never ended up needing it.        **/
+                /** We COULD remove, or we could keep it here**/
+                /** for future reference to see one of our   **/
+                /** hackish solutions for when unit testing  **/
+                /** gets a bit difficult and we are          **/
+                /** beginning to get frusterated and lost.   **/
+                /** **************************************** **/
+            };;
+
+        #undef T_I //:---------------------------------------://
+        #endif //:###########################################://
     }
     
     void  AAC2020_TAUTYPE_rec_in_ZoomPush( ){
+
+        /** @VID_IID[ 0065 ]TIME[ 2H 0M 5S ]        **/
+        /** To push use pull with a negative number **/
         ERR("[DO_NOT_USE_THIS_USE:ZoomPull]");
+
     }
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
@@ -459,7 +520,7 @@
 #define LOG aac2020_tautype_Info_any                  //: 05 ://
 #define NUM_TEST__CASES_001 ( 19 )                    //: 06 ://
 #define NUM_TEST_INPUTS_001 ( 10 )                    //: 07 ://
-#define NUM_TEST__CASES_002 ( 20 )                    //: 08 ://
+#define NUM_TEST__CASES_002 ( 24 )                    //: 08 ://
 #define NUM_TEST_INPUTS_002 (  9 )                    //: 09 ://
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
@@ -498,32 +559,40 @@
         0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:00
     ,   0,100,  0,100 ,    0+      1    ,   1, 99,  1, 99 //:01
     , 100,200,100,200 ,    0-      1    ,  99,201, 99,201 //:02
-    ,   0,  0,  0,  0 ,    0-   9001    ,   0,511,  0,511 //:03
+    ,   0,  0,  0,  0 ,    0-   9001    ,   0,510,  0,510 //:03
         
         //:TESTS: T_L: OVERGROW:
-    ,   0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:04
-    ,   0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:05
-    ,   0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:06
+    ,   0,  9,  0,  9 ,    0-   9090    ,   0,511,  0,511 //:04
+    ,   0,  9,  0,  9 ,    0-      1    ,   0, 11,  0, 11 //:05
+    ,   0,  9,  0,  9 ,    0-    250    ,   0,509,  0,509 //:06
         
         //:TESTS: T_R: OVERGROW:
-    ,   0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:07
-    ,   0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:08
-    ,   0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:09
+    , 502,511,  0,  9 ,    0-   9090    ,   0,511,  0,511 //:07
+    , 502,511,  0,  9 ,    0-      1    , 500,511,  0, 11 //:08
+    , 502,511,  0,  9 ,    0-    250    ,   2,511,  0,509 //:09
         
         //:TESTS: B_L: OVERGROW:
-    ,   0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:10
-    ,   0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:11
-    ,   0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:12
+    ,   0,  9,502,511 ,    0-   9090    ,   0,511,  0,511 //:10
+    ,   0,  9,502,511 ,    0-      1    ,   0, 11,500,511 //:11
+    ,   0,  9,502,511 ,    0-    250    ,   0,509,  2,511 //:12
         
         //:TESTS: B_R: OVERGROW:
-    ,   0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:13
-    ,   0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:14
-    ,   0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:15
+    , 502,511,502,511 ,    0-   9090    ,   0,511,  0,511 //:13
+    , 502,511,502,511 ,    0-      1    , 500,511,500,511 //:14
+    , 502,511,502,511 ,    0-    250    ,   2,511,  2,511 //:15
 
-    ,   0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:16
-    ,   0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:17
-    ,   0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:18
-    ,   0,  0,  0,  0 ,    0+      0    ,   0,  0,  0,  0 //:19
+        //:TESTS: INVERSION FIX: (CORNERS: T_L,T_R,B_L,B_R)
+    ,   0,  0,  0,  0 ,    0+   1234    ,   0,  0,   0,  0 //:16
+    , 511,511,  0,  0 ,    0+   1234    , 511,511,   0,  0 //:17
+    ,   0,  0, 511,511,    0+   1234    ,  0,  0 , 511,511 //:18
+    , 511,511, 511,511,    0+   1234    , 511,511, 511,511 //:19
+
+        //:TESTS: INVERSION FIX: (CORNERS: T_L,T_R,B_L,B_R)
+    ,  10, 10,  10, 10,    0+   1234    ,  10, 10,  10, 10 //:20
+    , 501,501,  10, 10,    0+   1234    , 501,501,  10, 10 //:21
+    ,  10, 10, 501,501,    0+   1234    ,  10, 10, 501,501 //:22
+    , 501,501, 501,501,    0+   1234    , 501,501, 501,501 //:23
+
     //___ ___ ___ ___ , _______ _______ , ___ ___ ___ ___
     // INITIAL_VALUES |    ZOOM AMOUNT  | EXPECTED VALUES
     //___ ___ ___ ___ , ___ ___ ___ ___ , ___ ___ ___ ___
@@ -558,6 +627,8 @@
 
         I32 m_i =( NUM_TEST__CASES_002 - 1 ); //: max_index
         for( I32 t_i ; t_i <= m_i ; t_i ++ ){
+
+            aac2020_tautype_UTC_rec_inc_zoom_test_index=( t_i );
 
             //:load_current_test_values:---------------------://
 

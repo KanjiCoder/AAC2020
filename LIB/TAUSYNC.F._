@@ -12,6 +12,8 @@
     }
 //:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
 //:LOG_AFTER_HALT:===========================================://
+#define I32  int32_t /** GCC: <stdint.h> **/
+#define U64 uint64_t /** GCC: <stdint.h> **/
 
     void
     aac2020_tausync_Info_any(
@@ -27,6 +29,22 @@
 
     };; }
 
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    void
+    aac2020_tausync_Info_dec(
+        const char* str_fmt
+    ,   I32         dat_dec
+    )
+    {
+        aac2020_tausync_Info_any(
+            str_fmt
+        ,   ( void* )( (U64)dat_dec )
+        );;
+    }
+
+#undef  I32
+#undef  U64
 //:===========================================:LOG_AFTER_HALT://
 //:POINT_STRUCT:=============================================://
 #define I32 int32_t /** GCC: <stdint.h> **/
@@ -66,23 +84,41 @@
         U32 number_of_pixels_pushed=( 0 );
 
         //:is_rect_correct_size?:----------------------------://
-
+        #define M_S ( 32 ) /** Max Side Length **/
+        #define L_D aac2020_tausync_Info_dec
+        
             /** RANGE[ 0 -to- 31 ]INCLUSIVE **/
 
-            if( (*PBR).x_1 - (*PBR).x_0 + 1 >= 32 ){
-                ERR("[PBR_OOB_POS:X]");
-            };;
-            if( (*PBR).y_1 - (*PBR).y_0 + 1 >= 32 ){
-                ERR("[PBR_OOB_POS:Y]");
+            if( 0
+            ||  ( (*PBR).x_1 - (*PBR).x_0 + 1 > M_S ) //:POS_X
+            ||  ( (*PBR).y_1 - (*PBR).y_0 + 1 > M_S ) //:POS_Y
+            ||  ( (*PBR).x_1 - (*PBR).x_0 + 1 <=  0 ) //:NEG_X
+            ||  ( (*PBR).y_1 - (*PBR).y_0 + 1 <=  0 ) //:NEG_Y
+            ){
+
+                if( (*PBR).x_1 - (*PBR).x_0 + 1 >= 32 ){
+                    L_D("[OOB_POS:x_0]:(%d)\n", (*PBR).x_0 );
+                    L_D("[OOB_POS:x_1]:(%d)\n", (*PBR).x_1 );
+                };;
+                if( (*PBR).y_1 - (*PBR).y_0 + 1 >= 32 ){
+                    L_D("[OOB_POS:y_0]:(%d)\n", (*PBR).y_0 );
+                    L_D("[OOB_POS:y_1]:(%d)\n", (*PBR).y_1 );
+                };;
+
+                if( (*PBR).x_1 - (*PBR).x_0 + 1 <   0 ){
+                    L_D("[OOB_NEG:x_0]:(%d)\n", (*PBR).x_0 );
+                    L_D("[OOB_NEG:x_1]:(%d)\n", (*PBR).x_1 );
+                };;
+                if( (*PBR).y_1 - (*PBR).y_0 + 1 <   0 ){
+                    L_D("[OOB_NEG:y_0]:(%d)\n", (*PBR).y_0 );
+                    L_D("[OOB_NEG:y_1]:(%d)\n", (*PBR).y_1 );
+                };;
+
+                ERR("[PIXEL_BOUNDING_RECT_INVALID_SIZE_2020]");
             };;
 
-            if( (*PBR).x_1 - (*PBR).x_0 + 1 <   0 ){
-                ERR("[PBR_OOB_NEG:X]");
-            };;
-            if( (*PBR).y_1 - (*PBR).y_0 + 1 <   0 ){
-                ERR("[PBR_OOB_NEG:Y]");
-            };;
-
+        #undef  M_S
+        #undef  L_D
         //:-----------------------------:is_rect_correct_size://
 
         AAC2020_TODOMAN_Vital( "[ACTUAL_SUBTEX2D_PUSH_HERE]" );
@@ -743,12 +779,25 @@ multiply_by__2    two2  +---+---+                           +
             num_dirty_sectors_pushed_to_gpu=( 
                 aac2020_tausync_Run( DRY_orr_WET )
             );;
+    
+            /** @VID_IID[ 0065 ]TIME[ 02H 56M 56S ]    **/
+            /** Don't spam console with[ skip_message ] **/
+
+            aac2020_tausync_clean_skip_message=( 0 );
 
         }else{
 
             num_dirty_sectors_pushed_to_gpu         = ( 0 );
             aac2020_tausync_num_dirty_pix_pushed    = ( 0 );
-            LOG("[ROOT_OF_TREE_CLEAN:SKIPPING_SYNC]\n", 0 );
+
+            /** @VID_IID[ 0065 ]TIME[ 02H 56M 56S ]  **/
+            /** Don't spam console with skip message **/
+
+            if( aac2020_tausync_clean_skip_message < 5 ){
+                aac2020_tausync_clean_skip_message++;
+                LOG("[ROOT_OF_TREE_CLEAN:SKIPPING_SYNC]", 0 );
+            };;
+                
 
         };;
 
@@ -779,6 +828,34 @@ multiply_by__2    two2  +---+---+                           +
 #undef  ERR                                           //: 16 ://
 #undef  LOG                                           //: 17 ://
 //:=================================================:GPU_SYNC://
+//:LOOP_TICK:================================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+#define WET aac2020_tausync_WET_RUN_FOR_PRODUCTION
+
+    U32
+    AAC2020_TAUSYNC_LoopTick( U32 u32 )
+    {
+        if( u32 ){ /** reserved for future use **/ };
+
+        /** ************************************************ **/
+        /** @VID_IID[ 0065 ]TIME[ 2H 26M 44S ]               **/
+        /** Each frame of game we want to RE-sync            **/
+        /** any uniforms stored in texture with the GPU.     **/
+        /** TAU == Texture As Uniform                        **/
+        /** Many times when I say "TAU" I am refering to     **/
+        /** the [ cpu_pix ]( cpu side bitmap ) or the        **/
+        /** gpu side texture. Or either-or talking about     **/
+        /** them collectively.                               **/
+        /** ************************************************ **/
+
+        AAC2020_TAUSYNC_Run( WET );
+
+        return( 0x00 );
+    }
+
+#undef  U32
+#undef  WET
+//:================================================:LOOP_TICK://
 //:INIT_NONE:================================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
 
