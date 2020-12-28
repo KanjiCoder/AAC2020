@@ -1,4 +1,8 @@
 
+    ## IF you are tired, here is some busy work:
+    ## TURN ON[ -Wconversion ]
+    ## And start fixing where things break. 
+
     ##  SC[ hkmf-mini] #########################################
     ## SEE[ hkmf-c11 ] for reference:  #########################
     ############################################################
@@ -12,6 +16,7 @@
             -Wpedantic                                         \
             -Wall                                              \
             -Wextra                                            \
+                                                               \
                                                                \
             -fstrict-aliasing                                  \
             -Wstrict-aliasing                                  \

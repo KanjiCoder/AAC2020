@@ -117,55 +117,66 @@ dll_GetProcAddress =NULL;
                                                     //[CWSI:2019_11_28]//
 #include <stdio.h> //:for: printf(...)              //[CWSI:2019_11_28]//
 #include <assert.h>                                 //[CWSI:2019_11_28]//
-                                                    //[CWSI:2019_11_28]//
-int                                                 //[CWSI:2019_11_28]//
-JMIM_lstrcmpiW( //[lstrcmpiW]//                     //[CWSI:2019_11_28]//
-    const unsigned short* str_1                     //[CWSI:2019_11_28]//
-,   const unsigned short* str_2                     //[CWSI:2019_11_28]//
-){                                                  //[CWSI:2019_11_28]//
-    void JMIM_lstrcmpiW_LAZYTEST();                 //[CWSI:2019_11_28]//
-         JMIM_lstrcmpiW_LAZYTEST();                 //[CWSI:2019_11_28]//
-                                                    //[CWSI:2019_11_28]//
-    #define U unsigned short /////////////////////  //[CWSI:2019_11_28]//
-    #define S   signed short /////////////////////  //[CWSI:2019_11_28]//
-                                                    //[CWSI:2019_11_28]//
-    int dex =(0-1);                                 //[CWSI:2019_11_28]//
-    U r_e_s_u_l_t ;                                 //[CWSI:2019_11_28]//
-    U chr_1       ;                                 //[CWSI:2019_11_28]//
-    U chr_2       ;            //: 97 - 65          //[CWSI:2019_11_28]//
-    U       sub_to_get_uppercase = 'a'-'A';         //[CWSI:2019_11_28]//
-    assert( sub_to_get_uppercase > 0 );             //[CWSI:2019_11_28]//
-                                                    //[CWSI:2019_11_28]//
-    #undef  U ////////////////////////////////////  //[CWSI:2019_11_28]//
-    #undef  S ////////////////////////////////////  //[CWSI:2019_11_28]//
-                                                    //[CWSI:2019_11_28]//
-    while( 1 ){                                     //[CWSI:2019_11_28]//
-        dex++;                                      //[CWSI:2019_11_28]//
-                                                    //[CWSI:2019_11_28]//
-        chr_1=str_1[ dex ];                         //[CWSI:2019_11_28]//
-        chr_2=str_2[ dex ];                         //[CWSI:2019_11_28]//
-                                                    //[CWSI:2019_11_28]//
-        //:Convert both characters to uppercase:    //[CWSI:2019_11_28]//
-        //////////////////////////////////////////  //[CWSI:2019_11_28]//
-        if( chr_1 >= 'a' && chr_1 <= 'z' ){         //[CWSI:2019_11_28]//
-            chr_1 = chr_1 - sub_to_get_uppercase;   //[CWSI:2019_11_28]//
-        };;                                         //[CWSI:2019_11_28]//
-        if( chr_2 >= 'a' && chr_2 <= 'z' ){         //[CWSI:2019_11_28]//
-            chr_2 = chr_2 - sub_to_get_uppercase;   //[CWSI:2019_11_28]//
-        };;                                         //[CWSI:2019_11_28]//
-        //////////////////////////////////////////  //[CWSI:2019_11_28]//
-                                                    //[CWSI:2019_11_28]//
-                 r_e_s_u_l_t = (chr_1 - chr_2);     //[CWSI:2019_11_28]//
-        if( 0 != r_e_s_u_l_t ){ break; };           //[CWSI:2019_11_28]//
-                                                    //[CWSI:2019_11_28]//
-        //:Null terminator found. Exit.             //[CWSI:2019_11_28]//
-        if(0==chr_1 || 0==chr_2){                   //[CWSI:2019_11_28]//
-            break;                                  //[CWSI:2019_11_28]//
-        };;                                         //[CWSI:2019_11_28]//
-    };;                                             //[CWSI:2019_11_28]//
-                                                    //[CWSI:2019_11_28]//
-    return( (int)r_e_s_u_l_t );                     //[CWSI:2019_11_28]//
-}//[;]//                                            //[CWSI:2019_11_28]//
+             
+//:CRACKED_OPEN_SEALED_CODE[ CWSI:2019_11_28 ]:==============://
+//:WIDE_STRING_COMPARISON:===================================://
+#define U16 unsigned short /** U16 == Wide Ascii **/
+
+    int                                                  
+    JMIM_lstrcmpiW( //[lstrcmpiW]//                      
+        const unsigned short* str_1                      
+    ,   const unsigned short* str_2                      
+    ){                                                   
+        void JMIM_lstrcmpiW_LAZYTEST();                  
+             JMIM_lstrcmpiW_LAZYTEST();                  
+                                                         
+        #define U unsigned short /////////////////////   
+        #define S   signed short /////////////////////   
+
+        assert( 2 == sizeof( U ) );
+                                                         
+        int dex =(0-1);                                  
+        U r_e_s_u_l_t ;                                  
+        U chr_1       ;                                  
+        U chr_2       ;            //: 97 - 65           
+        U       sub_to_get_uppercase = 'a'-'A';          
+        assert( sub_to_get_uppercase > 0 );              
+                                                         
+        #undef  U ////////////////////////////////////   
+        #undef  S ////////////////////////////////////   
+                                                         
+        while( 1 ){                                      
+            dex++;                                       
+                                                         
+            chr_1=str_1[ dex ];                          
+            chr_2=str_2[ dex ];                          
+                                                         
+            //:Convert both characters to uppercase:     
+            //////////////////////////////////////////   
+            if( chr_1 >= 'a' && chr_1 <= 'z' ){          
+                chr_1 = (U16) ( chr_1 - sub_to_get_uppercase );  
+            };;                                          
+            if( chr_2 >= 'a' && chr_2 <= 'z' ){          
+                chr_2 = (U16) ( chr_2 - sub_to_get_uppercase );  
+            };;                                          
+            //////////////////////////////////////////   
+                                                         
+                     r_e_s_u_l_t =( (U16) (chr_1 - chr_2) );    
+            if( 0 != r_e_s_u_l_t ){ break; };            
+                                                         
+            //:Null terminator found. Exit.              
+            if(0==chr_1 || 0==chr_2){                    
+                break;                                   
+            };;                                          
+        };;                                              
+                                                         
+        return( (int)r_e_s_u_l_t );                      
+    }//[;]//                       
+
+#undef  U16
+//:===================================:WIDE_STRING_COMPARISON://  
+//:==============:CRACKED_OPEN_SEALED_CODE[ CWSI:2019_11_28 ]://
+                    
                                                     //[CWSI:2019_11_28]//
 //////////////////////////////////////////////////  //[CWSI:2019_11_28]//
 static char JMIM_lstrcmpiW_TESTED = 0;              //[CWSI:2019_11_28]//
