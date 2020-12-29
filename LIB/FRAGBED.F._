@@ -499,17 +499,63 @@
 #define BED_008  AAC2020_KEYBIND.FRAGBED.bed_008
 #define BED_009  AAC2020_KEYBIND.FRAGBED.bed_009
 
-    I32 
-    AAC2020_FRAGBED_SimpleKeyHandler( 
-        signed char chr_key 
+    I32
+    aac2020_fragbed_KeyInn_Simple(
+        signed char chr_key
     )
     {
+        assert( 48 == '0' );
+        assert( 57 == '9' );
+        if( 0
+        ||  chr_key < '0'
+        ||  chr_key > '9'   
+        ){
+            /** is_valid_num_key == FALSE **/
+
+            /** ******************************************** ***
+                @VID_IID[ 0066 ]TIME[ 01H 12M 47S ] 
+
+                EXPECTS_VALID_SUB_SYSTEM_KEY_2020 :
+
+                Private Version Of Keyboard Handler Always 
+                Expects taht the key it is given is a valid
+                key to change the current sub-system
+                shader in focus.
+            *** ******************************************** **/
+
+            FUCK_YOU("[EXPECTS_VALID_SUB_SYSTEM_KEY_2020]");
+
+            /** ******************************************** **/
+        };;
+
+            /** ******************************************** ***  
+            @VID_IID[ 0066 ]TIME[ 0H 55M 59S ]                
+                                                              
+            PRIVATE version of AAC2020_FRAGBED_KeyInn_Simple  
+            This version assumes[ chr_key ]is a valid         
+            key to load a sub-system shader.                  
+                                                              
+            At this time it means an ascii value              
+            between '0' and '9'                               
+            *** ******************************************** **/ 
+
+        I32 is_valid_num_key =( 
+            ( chr_key >= '0' && chr_key <= '9' )
+        );;
+        assert( is_valid_num_key >= 1 );
+
         //:AKA[ AAC2020_ReadKeySimple ]
         /** ************************************************ ***
+
+        @VID_IID[ 0066 ]TIME[ 0H 6M 6S ]!!!!!!!!!!!!!!!!!!!!!!!!
+        UPDATE[ 2020_12_28 ]
+        DO NOT USE CALLBACKS FOR THIS. DO NOT WIRE UP 
+        AS A CALLBACK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
         Default ( ONLY ) keyboard callback for FRAGBED    
         USEAGE:                                           
             AAC2020_GINAWIN_SimpleKeyHandler_SetCallback(  
-            &( AAC2020_FRAGBED_SimpleKeyHandler ) );;   
+            &( AAC2020_FRAGBED_KeyInn_Simple ) );;  
         *** ************************************************ **/
 
         /** 404: Shader Not Found. Don't take seriously.     **/
@@ -523,9 +569,9 @@
         };;
 
         //:TODO: Swap loaded shaders here.
-        if( chr_key >= 1 ){
+        if( is_valid_num_key >= 1 ){
 
-            INFO(    "[AAC2020_FRAGBED_SimpleKeyHandler]...\n");
+            INFO(    "[AAC2020_FRAGBED_KeyInn_Simple]...\n");
             INFO_CHR("[FRAGBED:KEY]:%c\n" , chr_key );
 
             #define P_1 AAC2020_FRAGBED_loaded_001_ptr //:###://
@@ -666,28 +712,70 @@
             };;
 
         }else
-        if( chr_key <= 1 ){
+        if( is_valid_num_key <= 0 ){
 
-            INFO("[AAC2020_FRAGBED:IGNORED_KEY]\n");
+            FUCK_YOU("[AAC2020_FRAGBED:IGNORED_KEY]\n");
         };;
 
-        /**1:1 mapping between editor index and shader index**/
-        /** AAC2020_CEDITOR_dex_edi **/
-        I32 BEST_NOT_TO_DO_WITH_SIDE_EFFECTS_CEDITOR_dex_edi=(
-            shader_index_loaded );;
+        assert(   shader_index_loaded >= 0 );
+        assert(   shader_index_loaded <= 9 );
+        return(   shader_index_loaded      );
+    }
 
-        if( BEST_NOT_TO_DO_WITH_SIDE_EFFECTS_CEDITOR_dex_edi
-        != shader_index_loaded ){
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
-            /** Quelch : set but not used compiler error **/
-            aac2020_fragbed_Halt("[WTF_MY_MAN_2020]");
+    I32 
+    AAC2020_FRAGBED_KeyInn_Simple( 
+        signed char chr_key 
+    )
+    {
 
+        /** editor_index_to_activate **/
+        I32 PUTTHIS_dex_edi =( 0 - 6660666 );
+
+        assert( 48 == '0' );
+        assert( 57 == '9' );
+        I32 is_valid_num_key =( 
+            ( chr_key >= '0' && chr_key <= '9' )
+        );;
+        if( is_valid_num_key >= 1 ){
+
+            I32 shader_index_loaded=(
+                aac2020_fragbed_KeyInn_Simple( chr_key )
+            );;
+
+            /** ******************************************** **/
+            /** @VID_IID[ 0066 ]TIME[ 1H 4M 46 ]             **/
+            /** BECAUSE: 1:1 mapping between the shader      **/
+            /** indexes and the sub-system indexes.          **/
+            /** EXAMPLE: PAINT5D is subsystem #1             **/
+            /**          And uses shader slot #1             **/
+            /** ******************************************** **/
+
+            PUTTHIS_dex_edi =( shader_index_loaded  );
+
+        }else{
+
+            PUTTHIS_dex_edi =( AAC2020_CEDITOR_dex_edi );
         };;
 
-        /** Caller SHOULD use return value to set: **/
-        /** AAC2020_CEDITOR_dex_edi                **/
-        return( 
-            BEST_NOT_TO_DO_WITH_SIDE_EFFECTS_CEDITOR_dex_edi );;
+        /** ************************************************ ***
+            @VID_IID[ 0066 ]TIME[ 00H 50M 55S ]
+
+            Shader index loaded should match editor index     
+            1:1 mapping between active editor and the
+            loaded shader code.            
+            
+            Caller SHOULD use return value to set:  
+            AAC2020_CEDITOR_dex_edi    
+
+            In Calling Code That Calls FragBed Function:
+
+                AAC2020_CEDITOR_dex_edi == shader_index_loaded
+          
+        *** ************************************************ **/
+
+        return( PUTTHIS_dex_edi /* editor_index_to_activate */);
     }
 
 //: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://

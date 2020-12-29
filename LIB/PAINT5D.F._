@@ -240,3 +240,101 @@
 #undef  I_D                                           //: 05 ://
 #undef  INF                                           //: 06 ://
 //:=======================================:INITIALIZE_PAINT5D://
+//:KEYBOARD_HANDLER:(KeyInn):================================://
+#define I32 int32_t /** GCC: <stdint.h> **/
+#define DEX_EDI_paint5d ( 1 )
+#define KEY_P5D ( AAC2020_KEYBIND.PAINT5D )
+    
+    I32
+    aac2020_paint5d_KeyInn( signed char chr_key )
+    {
+        I32 res_var =( 0 );
+
+        //:MOVE:---------------------------------------------://
+
+            if( chr_key == KEY_P5D.p5d_lef ){
+
+            }else
+            if( chr_key == KEY_P5D.p5d_rig ){
+
+            }else
+            if( chr_key == KEY_P5D.p5d_upp ){
+
+            }else
+            if( chr_key == KEY_P5D.p5d_dow ){
+
+            };;
+
+        //:---------------------------------------------:MOVE://
+        //:TILE_VALUE:---------------------------------------://
+
+            if( chr_key == KEY_P5D.p5d_v_n ){ //:n:NEXT
+
+            }else
+            if( chr_key == KEY_P5D.p5d_v_b ){ //:b:BACK
+
+            };;
+
+        //:---------------------------------------:TILE_VALUE://
+        //:TILE_TOGGLE:--------------------------------------://
+
+            if( chr_key == KEY_P5D.p5d_tog ){ //:toggle
+
+            };;
+
+        //:--------------------------------------:TILE_TOGGLE://
+        //:TILE_EXPONENT:------------------------------------://
+
+            if( chr_key == KEY_P5D.p5d_e_n ){ //:n:NEXT
+
+            }else
+            if( chr_key == KEY_P5D.p5d_e_b ){ //:b:BACK
+
+            };;
+
+        //:------------------------------------:TILE_EXPONENT://
+        //:ZOOM_IN_OR_OUT:-----------------------------------://
+
+            if( chr_key == KEY_P5D.p5d_z_o ){ //: o:OUT
+
+            }else
+            if( chr_key == KEY_P5D.p5d_z_i ){ //: i:INN
+
+            };;
+
+        //:------------------------------------:ZOOM_IN_OR_OUT://
+
+        return( res_var );
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    I32
+    PAINT5D_KeyInn( signed char chr_key )
+    {
+        I32 res_var=( 0 );
+
+        /** @VID_IID[ 0066 ]TIME[ 0H 19M 48S ] ............. **/
+        /** PAINT5D is ALWAYS sub-system #1 which            **/
+        /** Is assigned to the number 1, both in code        **/
+        /** and in the key on the numpad it corresponds to   **/
+        assert( DEX_EDI_paint5d == AAC2020_CEDITOR_paint5d );;
+        if(     DEX_EDI_paint5d == AAC2020_CEDITOR_dex_edi ){
+
+            res_var = aac2020_paint5d_KeyInn( chr_key );
+
+        };;
+    
+        /** @IMPLICIT_INTERFACE[ KeyInn ] ****************** **/
+        /** @VID_IID[ 0066 ]TIME[ 0H 30M 30S ] ..............**/
+        /** Don't have a use for return code yet.    ........**/
+        /** but we should be consistent with all of  ........**/
+        /** our different keyboard handlers.         ........**/
+        /** ************************************************ **/
+        return( res_var );
+    }
+
+#undef  DEX_EDI_paint5d
+#undef  I32
+#undef  KEY_P5D
+//:================================:KEYBOARD_HANDLER:(KeyInn)://

@@ -74,7 +74,7 @@
                 printf("\n[KP]\n\n");
 
                 AAC2020_CEDITOR_nex_edi=(
-                AAC2020_FRAGBED_SimpleKeyHandler(
+                AAC2020_FRAGBED_KeyInn_Simple(
                     AAC2020_IKEYBOX_k_p
                         ));;
 
@@ -132,11 +132,7 @@
         //::#######################::RE_INIT_EDITOR_IN_FOCUS:://
 
 
-        #if( AAC2020_INCLUDE_IKEYBOX >= 1 ) //:##############://
 
-            AAC2020_IKEYBOX_dirty = 1 ;
-
-        #endif //:###########################################://
         #if( AAC2020_INCLUDE_CEDITOR >= 1 ) //:##############://
 
             /** Update Loaded Editor Index **/
@@ -145,6 +141,37 @@
             AAC2020_CEDITOR_nex_edi  );;
 
         #endif //:###########################################://
+
+        //:BATCHED_KEYBOARD_HANDLERS:========================://
+
+            //:BEFORE:MARK_CURRENT_KEY_DIRTY:================://
+
+                //:streamline_keyboard_handlers:=============://
+                //:AAC2020_NAMESPC_KeyInn( key_value ).......://
+                #define K_P AAC2020_IKEYBOX_k_p 
+                if( AAC2020_IKEYBOX_dirty <= 0 ){
+
+                    /** K_P : Key_Pressed **/
+
+                    FMACROS_PAINT5D_KeyInn( K_P );
+
+                };;
+                #undef  K_P
+                //:.......AAC2020_NAMESPC_KeyInn( key_value )://
+                //:=============:streamline_keyboard_handlers://
+
+            //:================:BEFORE:MARK_CURRENT_KEY_DIRTY://
+            //:DO__IT:MARK_CURRENT_KEY_DIRTY:================://
+
+                #if( AAC2020_INCLUDE_IKEYBOX >= 1 ) //:######://
+
+                    AAC2020_IKEYBOX_dirty = 1 ;
+
+                #endif //:###################################://
+
+            //:================:DO__IT:MARK_CURRENT_KEY_DIRTY://
+
+        //:========================:BATCHED_KEYBOARD_HANDLERS://
 
         return( 0x00 );
     }
@@ -254,15 +281,24 @@
                //-  FMACROS_BASUNIF_LoopTick( 0x00 );  - - - -//
                     FMACROS_TAUDEPO_LoopTick( 0x00 );
                     FMACROS_TAUSYNC_LoopTick( 0x00 );
-                    //:-----------:AAC2020_GraphicsUpdateTick://
-
-                    AAC2020_HandleInput( 0x00 );
-                    AAC2020_GameLoop();
+                    //:-----------:AAC2020_GraphicsUpdateTick:// 
 
                     /** AAC2020_GINAWIN_LoopTick(); **/
                         AAC2020_GINAWIN_WindowTick(
                             AAC2020_GINAWIN_SINGLE_THREADED
                         );;
+
+                    /** ************************************ ***
+                            @VID_IID[ 0066 ]TIME[ 1H 44M 46S ] 
+                            MUST HANDLE INPUT AFTER THE      
+                            WINDOW TICK IN ORDER TO AVOID    
+                            Keys lagging behind.             
+                    *** ************************************ **/
+
+                        AAC2020_HandleInput( 0x00 ); 
+                        AAC2020_GameLoop();
+
+                    /** ************************************ **/
                 
                         #if( AAC2020_GINAWIN_BUGHUNT_001 >= 1 )
                     
