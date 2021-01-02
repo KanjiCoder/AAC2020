@@ -913,29 +913,10 @@
         #define CPU_PIX AAC2020_PIXNAME_paint5d_cpu_pix
         #define BIN_011 3 /** 2 set bits in a row **/
 
-        /** ************************************************ ***
-        COPY_OF_DIAGRAM[ #DIA_P5D_MAIN# ]
-        FROM_FILE[ PAINT5D.D._          ]
-
-                ++----------------------------------------+
-                ||                                        |
-               [00] <-- Empty Space                       |
-               [01] <-- Light  LUM Monochrome Color       |
-               [10] <-- Middle LUM Monochrome Color  [ til_val ]
-               [11] <-- Dark   LUM Monochrome Color       |
-                ||                                        |
-                ++----------------------------------------+
-                ||
-     32_bits-->[00]00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-                12 34 56 78 90 12 34 56 78 90 12 34 56 78 90 12  
-                || || || || || || || || || || || || || || || ||
-     aus_dex--> 15 14 13 12 11 10 09 08 07 06 05 04 03 02 01 00  
-                |<-- R -->| |<-- G -->| |<-- B -->| |<-- A -->|
-                ||                                           ||
-                ++-------------------- 16 -------------------++
-                                    aus_dex(s)
-        *** ************************************************ **/
-
+            /** ******************************************** ***
+                SEE_DIAGRAM[ #DIA_P5D_MAIN#       ]
+                FROM___FILE[ PAINT5D.D._          ]
+            *** ******************************************** **/
 
             if( 1
             /** aus_dex >=  0 **/ 
@@ -970,7 +951,7 @@
                 aus_loc =( aus_dex - 12 );
 
             }else{
-                ERR("[OUT_OF_RANGE_I_GUESS_MY_MAN_MY_DUDE]");
+                ERR("[PAINT5D_OOB_PROBLEM_YEAR_2021:PUT]");
             };;
 
             assert( aus_loc <= 3 /** [ 0 | 1 | 2 | 3 ] **/ );
@@ -1026,12 +1007,174 @@
     ,   U08* til_val   /** [ val_cur / til_val ]          ...**/
     )
     {
+        /** ************************************************ **/
+        /** NOTE: This code is almost a cut+paste of         **/
+        /**       the "Put" code. The "old_val" variable     **/
+        /**       from the "Put" code is what we want        **/
+        /**       to return from this function via           **/
+        /**       an OUTPUT PARAMETER.                       **/
+        /** ************************************************ **/
+        //:references_are_never_null:------------------------://
 
-        #error FINISH_THIS_CODE_2021_HELLO_MY_FRIEND
+            assert( ((void*)0) != til_val );
 
-        AAC2020_TODOMAN_Vital("[FINISH:20201231:710PM:GET]");
+        //:------------------------:references_are_never_null://
+        //:bounds_check_inputs:------------------------------://
+        #if( AAC2020_PAINT5D_BOUND_CHECK_INPUTS >= 1 ) //:###://
 
-        return;
+            assert(        til_qua     <=   3 );
+            assert(        til_exp     <=   7 );
+            assert(        til_lay     <=   2 );
+            assert( (((I32)loc_t_x)+0) <= 255 );
+            assert( (((I32)loc_t_y)+0) <= 255 );
+
+            assert( aus_dex <=  15 );
+
+            if( 0 == til_exp ){
+                assert( loc_t_x <= ( 128 - 1) );
+                assert( loc_t_y <= ( 128 - 1) );
+            }else                    
+            if( 1 == til_exp ){      
+                assert( loc_t_x <= (  64 - 1) );
+                assert( loc_t_y <= (  64 - 1) );
+            }else                    
+            if( 2 == til_exp ){      
+                assert( loc_t_x <= (  32 - 1) );
+                assert( loc_t_y <= (  32 - 1) );
+            }else                    
+            if( 3 == til_exp ){      
+                assert( loc_t_x <= (  16 - 1) );
+                assert( loc_t_y <= (  16 - 1) );
+            }else                    
+            if( 4 == til_exp ){      
+                assert( loc_t_x <= (   8 - 1) );
+                assert( loc_t_y <= (   8 - 1) );
+            }else                    
+            if( 5 == til_exp ){      
+                assert( loc_t_x <= (   4 - 1) );
+                assert( loc_t_y <= (   4 - 1) );
+            }else                    
+            if( 6 == til_exp ){      
+                assert( loc_t_x <= (   2 - 1) );
+                assert( loc_t_y <= (   2 - 1) );
+            }else                       
+            if( 7 == til_exp ){         
+                assert( loc_t_x <= (   1 - 1) );
+                assert( loc_t_y <= (   1 - 1) );
+            };;
+
+        #endif  //:########AAC2020_PAINT5D_BOUND_CHECK_INPUTS://
+        //:------------------------------:bounds_check_inputs://
+        //:declare_variables:--------------------------------://
+
+            I16 glo_t_x =( 0 - 5005 /** @TRAP_VALUE@ **/ );
+            I16 glo_t_y =( 0 - 6006 /** @TRAP_VALUE@ **/ );
+            I16 glo_dex =( 0 - 7007 /** @TRAP_VALUE@ **/ );
+            I16 glo_com =( 0 - 8008 /** @TRAP_VALUE@ **/ );
+    ////    I16 arr_dex =( 0 - 9009 /** @TRAP_VALUE@ **/ );
+                               
+            U08 var_u08 =(       99 /** @TRAP_VALUE@ **/ );
+            U08 aus_loc =(       23 /** @TRAP_VALUE@ **/ );
+
+            U08 old_val =(       00 /** Prev til_val **/ );
+
+        //:--------------------------------:declare_variables://
+        //:get_xy_location_of_pixel_storing_data:------------://
+
+            aac2020_paint5d_painpix_CTO_glocpix(
+                til_qua        /// Auset Tile Sub Quad Index ///
+            ,   til_exp        /// TileSizeExponentEnum      ///
+            ,   til_lay        /// TileLayer ................///
+            ,   loc_t_x        /// Local  Tile X Coord / b_x ///
+            ,   loc_t_y        /// Local  Tile Y Coord / b_y ///
+            , &(glo_t_x)       /// Global Tile X Coord       ///
+            , &(glo_t_y)       /// Global Tile X Coord       ///
+            );;
+
+        //:------------:get_xy_location_of_pixel_storing_data://
+        //:convert_pixel_xy_to_index:------------------------://
+        #define MAP_SAN ( 512 ) /** WID == HIG == SAN **/
+
+            glo_dex = glo_t_x + ( glo_t_y  *  MAP_SAN );
+            glo_com =(glo_dex * 4 /** 4: RGBA **/ );
+
+        #undef  MAP_SAN
+        //:------------------------:convert_pixel_xy_to_index://
+        //:bit_packing_stuff:--------------------------------://
+        #define CPU_PIX AAC2020_PIXNAME_paint5d_cpu_pix
+        #define BIN_011 3 /** 2 set bits in a row **/
+
+            /** ******************************************** ***
+                SEE_DIAGRAM[ #DIA_P5D_MAIN#       ]
+                FROM___FILE[ PAINT5D.D._          ]
+            *** ******************************************** **/
+
+            if( 1
+            /** aus_dex >=  0 **/ 
+            &&  aus_dex <=  3 ){  /** ALPHA **/
+                               
+        ////    arr_dex =(         glo_com + 3 );
+                var_u08 = CPU_PIX[ glo_com + 3 ];
+                aus_loc =( aus_dex -  0 );
+                                                       
+            }else                                      
+            if( aus_dex >=  4  
+            &&  aus_dex <=  7 ){  /** BLUE  **/
+                      
+        ////    arr_dex =(         glo_com + 2 );
+                var_u08 = CPU_PIX[ glo_com + 2 ];
+                aus_loc =( aus_dex -  4 );
+                                
+            }else                                      
+            if( aus_dex >=  8 
+            &&  aus_dex <= 11 ){  /** GREEN **/
+                                          
+        ////    arr_dex =(         glo_com + 1 );
+                var_u08 = CPU_PIX[ glo_com + 1 ];  
+                aus_loc =( aus_dex -  8 );    
+                                                       
+            }else                                      
+            if( aus_dex >= 12 
+            &&  aus_dex <= 15 ){  /** RED   **/
+
+        ////    arr_dex =(         glo_com + 0 );
+                var_u08 = CPU_PIX[ glo_com + 0 ];
+                aus_loc =( aus_dex - 12 );
+
+            }else{
+                ERR("[PAINT5D_OOB_PROBLEM_YEAR_2021:GET]");
+            };;
+
+            assert( aus_loc <= 3 /** [ 0 | 1 | 2 | 3 ] **/ );
+
+            /** ******************************************** ***
+
+                @VID_IID[ 0072 ]TIME[ 4H 08M 50S ]
+                We can nuke most of the bit shifting
+                code copied from the "Put(..)" function
+                and just keep the fetch of "old_val".
+                "old_val" is the value we want to load
+                into the output parameter "til_val".
+
+            *** ******************************************** **/
+
+            old_val =( (var_u08 >> ( aus_loc*2)) & BIN_011 );
+
+        #undef  CPU_PIX
+        #undef  BIN_011
+        //:--------------------------------:bit_packing_stuff://
+        //:return_via_output_param:--------------------------://
+
+            /** ******************************************** ***
+            til_val | old_val : DECIMAL [  0 |  1 |  2 |  3 ]   
+            til_val | old_val : BINARY  [ 00 | 01 | 10 | 11 ]   
+            *** ******************************************** **/
+
+            (*til_val)=( old_val );
+
+        //:--------------------------:return_via_output_param://
+        
+        return; //:<---- Return Via Output Param
     }
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
@@ -1058,8 +1201,8 @@
             AAC2020_TAUDEPO.TAU_015  /** TAU Block Index     **/
         ,   AAC2020_TAUDEPO.PAINT5D  /** SubSystem ==PAINT5D **/
         ,   AAC2020_TAUDEPO.P5D_VP1  /** VP1: Viewport #1    **/
-        ,   I32 tra_i_x  
-        ,   I32 tra_i_y  
+        ,   tra_i_x  /** TRAnslation_Integer_amount_X        **/
+        ,   tra_i_y  /** TRAnslation_Integer_amount_Y        **/
         );;
         
         return;
@@ -1244,7 +1387,7 @@
         //:tile_value:TRANSFORM:-----------------------------://
 
             til_val =CAP( 
-                (I32)til_val + del_t_v 
+                (I32)til_val + del_t_e 
             ,   (U16) 0 //:<---[ @HARD_CODED@ ]
             ,   (U16)15 //:<---[ @HARD_CODED@ ]
             );;
@@ -1314,26 +1457,84 @@
     void
     aac2020_paint5d_ToggleTile( void )
     {
-        I32 t_x = ( 0 -   7770777 ); /** t_x : tile_x  **/
-        I32 t_y = ( 0 -   8880888 ); /** t_y : tile_y  **/
+        //:variable_declarations:----------------------------://
 
-        U32 b_x = ( 0 + 123000123 ); /** b_x : brush_x **/
-        U32 b_y = ( 0 + 123000123 ); /** b_y : brush_y **/
+            I32 t_x = ( 0 -   7770777 ); /** t_x : tile_x  **/
+            I32 t_y = ( 0 -   8880888 ); /** t_y : tile_y  **/
 
-        U32 val_bru =( 4433 ) ; /** Cur[ til_val ]In BRUsh  **/
-        U32 val_cur =( 3344 ) ; /** Cur[ til_val ]On Canvas **/
+            U32 b_x = ( 0 + 123000123 ); /** b_x : brush_x **/
+            U32 b_y = ( 0 + 123000123 ); /** b_y : brush_y **/
+
+            /** ******************************************** ***
+                @VID_IID[ 0072 ]TIME[ 04H 23M 45S ]
+
+                val_bru :
+                    Current[ til_val ]loaded into Josh's
+                    tile brush. This is what he is 
+                    currently painting with.
+
+                val_cur :
+                    Current[ til_val ]found on the canvas
+                    that Josh is painting on. More precisely
+                    a[ til_val ]encoded into a section
+                    of a BYTE of an RGBA pixel stored in
+                    a cpu side bitmap known as:
+
+                    AAC2020_PIXNAME_paint5d_cpu_pix
+            *** ******************************************** **/
+                    
+            U32 val_bru =( 4433 ) ;  
+            U32 val_cur =( 3344 ) ;  
+
+            U32 u_1 ; //: unused_number_001 ://
+            U32 u_2 ; //: unused_number_002 ://
+            U32 u_3 ; //: unused_number_003 ://
         
+        //:----------------------------:variable_declarations://
+        //:GET_STATE:OF_BRUSH:-------------------------------://
+        /** ************************************************ ***
+        Variables we need from this section:
+        1:  val_bru 
+        2:  til_exp
+        3:  til_lay
+        4:  loc_t_x
+        5:  loc_t_y
+        *** ************************************************ **/
 
-        //:get_tile_value_loaded_into_brush:-----------------://
+            //:GET_STATE:val_bru:----------------------------://
 
-            AAC2020_TAUDEPO_Get( 
-                AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
-            ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
-            ,   AAC2020_TAUDEPO.P5D_T_V //:[ TIL_VAL / val_bru ]
-            ,  &(val_bru),&(u_1),&(u_2),&(u_3)
-            );;
+                //: get_tile_value_loaded_into_brush ://
 
-        //:-----------------:get_tile_value_loaded_into_brush://    
+                AAC2020_TAUDEPO_Get( 
+                    AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+                ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+                ,   AAC2020_TAUDEPO.P5D_T_V //:[ TIL_VAL ]
+                ,  &(val_bru),&(u_1),&(u_2),&(u_3)
+                );;
+
+            //:----------------------------:GET_STATE:val_bru://
+            //:GET_STATE:til_exp:----------------------------://
+
+                #error "[GET_STATE:til_exp]"
+
+            //:----------------------------:GET_STATE:til_exp://
+            //:GET_STATE:til_lay:----------------------------://
+
+                #error "[GET_STATE:til_lay]"
+
+            //:----------------------------:GET_STATE:til_lay://
+            //:GET_STATE:loc_t_x:----------------------------://
+
+                #error "[GET_STATE:loc_t_x]"
+
+            //:----------------------------:GET_STATE:loc_t_x://
+            //:GET_STATE:loc_t_y:----------------------------://
+
+                #error "[GET_STATE:loc_t_y]"
+
+            //:----------------------------:GET_STATE:loc_t_y://
+
+        //:-------------------------------:GET_STATE:OF_BRUSH://
         //:get_current_value_on_tile_map:--------------------://
     
             /** ******************************************** **/
@@ -1372,7 +1573,20 @@
             );;
 
         //:--------------------------------:brush_coords:READ://
-         
+        //:SET_OR_UNSET_THE_TILE:----------------------------://
+
+            /** ******************************************** ***
+                If the value loaded into the brush is the
+                same value as the value currently on the
+                tilemap, we will [ UNSET / ERASE ]the tile.
+
+                If the tile values DO NOT MATCH, then
+                we will [ SET / OVERWRITE ] the tile.
+            *** ******************************************** **/
+
+            #error SET_OR_UNSET_THE_TILE
+
+        //:----------------------------:SET_OR_UNSET_THE_TILE://
 
         return;
     }
@@ -1545,12 +1759,150 @@
 #define U32    uint32_t /** GCC: <stdint.h> **/       //: 09 ://
 #define ERR     aac2020_paint5d_Halt                  //: 10 ://
 
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     U32
     aac2020_paint5d_UnitTest( U32 u32 )
     {
         if( u32 ){ /** Reserved For Future Use **/ };
 
+        /** ************************************************ ***
+            ProgControls: 
+                Progmattic functions that the end user does
+                not directly interface with.
+            
+            UserControls:
+                Functions that are directly or near
+                directly called as the result of 
+                user input such as key presses.
+    
+                For example( S ):
+                    aac2020_paint5d_ToggleTile
+                    aac2020_paint5d_MoveBrush_XY
+        *** ************************************************ **/
+
+        EXT VOD aac2020_paint5d_UnitTest_ProgControls( VOD );
+                aac2020_paint5d_UnitTest_ProgControls(     );
+
+        EXT VOD aac2020_paint5d_UnitTest_UserControls( VOD );
+                aac2020_paint5d_UnitTest_UserControls(     );
+
+    }
+    //:******************************************************://
+    //:                                                      ://
+    //:                                                      ://
+    //:         UNIT_TEST : USERCONTROLS : BELOW             ://
+    //:                                                      ://
+    //:                                                      ://
+    //:******************************************************://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        void
+        aac2020_paint5d_UnitTest_ProgControls( void )
+        {
+
+            EXT VOD 
+            aac2020_paint5d_UTC_MoveCamera_XY( VOD );
+            aac2020_paint5d_UTC_MoveCamera_XY(     );
+
+            EXT VOD 
+            aac2020_paint5d_UTC_ZoomCamera( VOD );
+            aac2020_paint5d_UTC_ZoomCamera(     );
+
+            EXT VOD 
+            aac2020_paint5d_UTC_MoveBrush_XY( VOD );
+            aac2020_paint5d_UTC_MoveBrush_XY(     );
+
+            EXT VOD 
+            aac2020_paint5d_UTC_DeltaMutate_TileValue( VOD );
+            aac2020_paint5d_UTC_DeltaMutate_TileValue(     );
+
+            EXT VOD 
+            aac2020_paint5d_UTC_DeltaMutate_TileExponent( VOD );
+            aac2020_paint5d_UTC_DeltaMutate_TileExponent(     );
+
+            EXT VOD 
+            aac2020_paint5d_UTC_DeltaMutate_TileLayer( VOD );
+            aac2020_paint5d_UTC_DeltaMutate_TileLayer(     );
+
+            EXT VOD 
+            aac2020_paint5d_UTC_ToggleTile( VOD );
+            aac2020_paint5d_UTC_ToggleTile(     );
+        }
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        void
+        aac2020_paint5d_UTC_MoveCamera_XY( void )
+        {
+
+            #error "[TODO_FINISH_TEST:MoveCamera_XY]"
+            return;
+        }
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        void
+        aac2020_paint5d_UTC_ZoomCamera( void )
+        {
+
+            #error "[TODO_FINISH_TEST:ZoomCamera]"
+            return;
+        }
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        void
+        aac2020_paint5d_UTC_MoveBrush_XY( void )
+        {
+
+            #error "[TODO_FINISH_TEST:MoveBrush_XY]"
+            return;
+        }
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        void
+        aac2020_paint5d_UTC_DeltaMutate_TileValue( void )
+        {
+
+            #error "[TODO_FINISH_TEST:DeltaMutate_TileValue]"
+            return;
+        }
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        void
+        aac2020_paint5d_UTC_DeltaMutate_TileExponent( void )
+        {
+
+            #error "[TODO_FINISH_TEST:DeltaMutate_TileExponent]"
+            return;
+        }
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        void
+        aac2020_paint5d_UTC_DeltaMutate_TileLayer( void )
+        {
+
+            #error "[TODO_FINISH_TEST:DeltaMutate_TileLayer]"
+            return;
+        }
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        void
+        aac2020_paint5d_UTC_ToggleTile( void )
+        {
+
+            #error "[TODO_FINISH_TEST:ToggleTile]"
+            return;
+        }
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    //:******************************************************://
+    //:                                                      ://
+    //:                                                      ://
+    //:         UNIT_TEST : USERCONTROLS : ABOVE             ://
+    //:                                                      ://
+    //:                                                      ://
+    //:******************************************************://
+    //:******************************************************://
+    //:                                                      ://
+    //:                                                      ://
+    //:         UNIT_TEST : PROGCONTROLS : BELOW             ://
+    //:                                                      ://
+    //:                                                      ://
+    //:******************************************************://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    aac2020_paint5d_UnitTest_ProgControls( void )
+    {
         //:helper_functions:generic:- - - - - - - - - - - - -://
 
         EXT VOD aac2020_paint5d_UTC_Min_I16( VOD );
@@ -2501,7 +2853,13 @@
 //:|||||||||||||||||||||||||||||:helper_functions::conversion://
 //:|||||||||||||||||||||||||||||:||||||||||||||||||||||||||||://
 
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    //:******************************************************://
+    //:                                                      ://
+    //:                                                      ://
+    //:         UNIT_TEST : PROGCONTROLS : ABOVE             ://
+    //:                                                      ://
+    //:                                                      ://
+    //:******************************************************://
 
 #undef  MAX_EXP                                       //: 01 ://
 #undef  EXT                                           //: 02 ://
