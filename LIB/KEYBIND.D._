@@ -94,10 +94,18 @@
             //: - - - - - - - - - - - -- - - - - - - - - - - ://
             CHR xxxxxxx  ;  //: #LAX_COMMA_HACK#
             //: - - - - - - - - - - - -- - - - - - - - - - - ://
-            CHR p5d_lef  ;  //: MOVE                        LEFT
-            CHR p5d_rig  ;  //: MOVE                       RIGHT
-            CHR p5d_upp  ;  //: MOVE                          UP
-            CHR p5d_dow  ;  //: MOVE                        DOWN
+            CHR p5d_vp1_lef  ;  //: CAMERA_CONTROL          LEFT
+            CHR p5d_vp1_rig  ;  //: CAMERA_CONTROL         RIGHT
+            CHR p5d_vp1_upp  ;  //: CAMERA_CONTROL            UP
+            CHR p5d_vp1_dow  ;  //: CAMERA_CONTROL          DOWN
+            //: - - - - - - - - - - - -- - - - - - - - - - - ://
+            CHR p5d_vp1_z_o  ;  //: CAMERA_CONTROL           OUT
+            CHR p5d_vp1_z_i  ;  //: CAMERA_CONTROL           INN
+            //: - - - - - - - - - - - -- - - - - - - - - - - ://
+            CHR p5d_bru_lef  ;  //: MOVE_BUSH               LEFT
+            CHR p5d_bru_rig  ;  //: MOVE_BUSH              RIGHT
+            CHR p5d_bru_upp  ;  //: MOVE_BUSH                 UP
+            CHR p5d_bru_dow  ;  //: MOVE_BUSH               DOWN
             //: - - - - - - - - - - - -- - - - - - - - - - - ://
             CHR p5d_v_n  ;  //: TILE_VALUE                  NEXT
             CHR p5d_v_b  ;  //: TILE_VALUE                  BACK
@@ -107,9 +115,29 @@
             CHR p5d_e_n  ;  //: TILE_EXPONENT(til_exp)      NEXT
             CHR p5d_e_b  ;  //: TILE_EXPONENT(til_exp)      BACK
             //: - - - - - - - - - - - -- - - - - - - - - - - ://
-            CHR p5d_z_o  ;  //: ZOOM_IN_OR_OUT               OUT
-            CHR p5d_z_i  ;  //: ZOOM_IN_OR_OUT               INN
+
             //: - - - - - - - - - - - -- - - - - - - - - - - ://
+            CHR p5d_l_n  ;  //: LAYER_INDEX_0_TO_2          NEXT
+            CHR p5d_l_b  ;  //: LAYER_INDEX_0_TO_2          BACK
+            //: - - - - - - - - - - - -- - - - - - - - - - - ://
+            /** Next to layer key... I am thinking somehow   **/
+            /** layer related or maybe editing some type     **/
+            /** of display or rendering mode for             **/
+            /** the paint5d editor.                          **/
+            CHR p5d_a_key_not_used_but_i_want_to ;
+            //: - - - - - - - - - - - -- - - - - - - - - - - ://
+
+
+
+
+
+
+
+
+
+
+
+
         }PAINT5D;
         struct AAC2020_KEYBIND_number_key_to_press_2{
             CHR xxxxxxx  ;  //: #LAX_COMMA_HACK#
@@ -137,17 +165,52 @@
         }
     ,   .PAINT5D={
              .xxxxxxx =( 0 )  //:#_PAINT5D_BINDING_CHOICES_#://
-            ,.p5d_lef = 'S'   //: MOVE:LEFT
-            ,.p5d_rig = 'F'   //: MOVE:RIGHT
-            ,.p5d_upp = 'E'   //: MOVE:UPP
-            ,.p5d_dow = 'D'   //: MOVE:DOWN
-            ,.p5d_v_n = 'T'   //: VALUE:NEXT ( tile type )
-            ,.p5d_v_b = 'B'   //: VALUE:BACK ( tile type )
-            ,.p5d_tog = 'G'   //: TOGGLE (set or unset tile)
-            ,.p5d_e_n = 'W'   //: TILE_EXPONENT(til_exp)NEXT
-            ,.p5d_e_b = 'X'   //: TILE_EXPONENT(til_exp)BACK
-            ,.p5d_z_o = 'R'   //: ZOOM_OUT
-            ,.p5d_z_i = 'V'   //: ZOOM_INN
+
+            /** ******************************************** ***
+                @VID_IID[ 0066 ]TIME[ 2H 51M 20S ] 
+                Made variables a bit longer so we can
+                distinguish between CAMERA(cam) variables
+                and BRUSH(bru) variables.
+            *** ******************************************** **/
+
+                /** #_VP1_IS_WHAT_USER_THINKS_OF_AS_CAMERA_# **/
+
+                ,.p5d_vp1_lef = 'J' //: CAMERA_CONTROL : LEFT  
+                ,.p5d_vp1_rig = 'L' //: CAMERA_CONTROL : RIGHT 
+                ,.p5d_vp1_upp = 'I' //: CAMERA_CONTROL : UPP   
+                ,.p5d_vp1_dow = 'K' //: CAMERA_CONTROL : DOWN  
+                                    
+                ,.p5d_vp1_z_o = 'R' //: CAMERA_CONTROL : ZOOM  
+                ,.p5d_vp1_z_i = 'V' //: CAMERA_CONTROL : ZOOM  
+
+            /** ******************************************** **/
+            /** ******************************************** ***
+                @VID_IID[ 0066 ]TIME[ 2H 39M 51S ]
+
+                THIS WILL CHANGE WHERE YOUR BRUSH IS.
+                Camera will change automatically if you move
+                your brush outside of the current viewport
+                rectangle.
+            *** ******************************************** **/
+
+                ,.p5d_bru_lef = 'S'   //: MOVE_BRUSH  : LEFT    
+                ,.p5d_bru_rig = 'F'   //: MOVE_BRUSH  : RIGHT   
+                ,.p5d_bru_upp = 'E'   //: MOVE_BRUSH  : UPP     
+                ,.p5d_bru_dow = 'D'   //: MOVE_BRUSH  : DOWN    
+
+            /** ******************************************** **/
+
+                ,.p5d_v_n = 'T'   //: VALUE:NEXT ( tile type )
+                ,.p5d_v_b = 'B'   //: VALUE:BACK ( tile type )
+                ,.p5d_tog = 'G'   //: TOGGLE (set or unset tile)
+                ,.p5d_e_n = 'W'   //: TILE_EXPONENT(til_exp)NEXT
+                ,.p5d_e_b = 'X'   //: TILE_EXPONENT(til_exp)BACK
+
+                ,.p5d_l_n = 'Q' /** lay_nex **/
+                ,.p5d_l_b = 'Z' /** lay_bak **/
+
+                ,.p5d_a_key_not_used_but_i_want_to = 'A'
+
         }
     ,   .TODO_02={
             .xxxxxxx =( 0 )

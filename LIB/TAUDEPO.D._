@@ -141,11 +141,22 @@ END: NO_DEEPER_NESTING :- - - - - - - - - - - - - - - - - - -://
 //:==========================================:DEX_SUB_000_015://
 //:DEX_VAR_000_255:==========================================://
 
-    /** #_LOCATIONS_MUST_BE_MODDABLE_BY_FOUR_# **/
+    /** #_VARS_ARE_CLUSTERS_OF_4_PIXELS_#          ......... **/
+    /** #_VAR_ENUMS_SHOULD_COUNT_UP_WITH_NO_GAPS_# ......... **/
 
-    #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vp0  ( 0 * 4 )
-    #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vp1  ( 1 * 4 )
-    #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vpc  ( 2 * 4 )
+    #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vp0  ( 0 )
+    #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vp1  ( 1 )
+    #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vpc  ( 2 )
+
+    #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_B_X  ( 3 )
+    #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_B_Y  ( 4 )
+                                             
+    #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_T_V  ( 5 )
+    #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_T_E  ( 6 )
+    #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_T_L  ( 7 )
+
+    /** YOU CANNOT EXCEED 255, WE ONLY HAVE 255 VAR CELLS!  **/
+    /** @VID_IID[ 0066 ]TIME[ 03H 27M 19S ] ................ **/
 
 //:==========================================:DEX_VAR_000_255://
 //:LIBRARY_STRUCT:===========================================://
@@ -198,9 +209,22 @@ END: NO_DEEPER_NESTING :- - - - - - - - - - - - - - - - - - -://
                 //:- - - - - - - - - - - - - - -:TAUDEPO(TAU)://
                 //:PAINT5D(P5D):- - - - - - - - - - - - - - -://
 
-                    const U08 P5D_VPC ;
-                    const U08 P5D_VP0 ;
-                    const U08 P5D_VP1 ;
+                    //:p5d_cam == p5d_vp1 == P5D_VP1
+
+                    const U08 P5D_VPC ; //:TODO:WireUp
+                    const U08 P5D_VP0 ; //:TODO:WireUp
+                    const U08 P5D_VP1 ; //:TODO:WireUp
+
+                    const U08 P5D_B_X; //:BRUSH_X
+                    const U08 P5D_B_Y; //:BRUSH_X
+
+                    /** @VID_IID[ 0071 ]TIME[ 03H 18M 32S ]  **/
+                    /** SEE_DIAGRAM[ #DIA_P5D_MAIN# ]* * * * **/
+                    /**        IN_FILE[ PAINT5D.D._ ]* * * * **/
+
+                    const U08 P5D_T_V; //:TILE_VALUE
+                    const U08 P5D_T_E; //:TILE_EXPONENT( SIZE )
+                    const U08 P5D_T_L; //:TILE_LAYER
 
                 //:- - - - - - - - - - - - - - -:PAINT5D(P5D)://
                 //:TODO_02(TD2):- - - - - - - - - - - - - - -://
@@ -254,6 +278,13 @@ END: NO_DEEPER_NESTING :- - - - - - - - - - - - - - - - - - -://
     ,       .P5D_VPC = ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vpc )
     ,       .P5D_VP0 = ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vp0 )
     ,       .P5D_VP1 = ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vp1 )
+
+    ,       .P5D_B_X = ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_B_X )
+    ,       .P5D_B_Y = ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_B_Y )
+
+    ,       .P5D_T_V = ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_T_V )
+    ,       .P5D_T_E = ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_T_E )
+    ,       .P5D_T_L = ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_T_L )
      
     };
 

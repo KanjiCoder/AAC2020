@@ -1,16 +1,334 @@
 //: PAINT5D: ( .D._ : DataFile )SEE[ DOC.TXT ]COMMENTS
 
+/** ******************************************************** ***
+#_PAINT5D_DATA_LAYOUT_VS_WHAT_ARTIST_SEES_######################
+#DIA_P5D_MAIN###################################################
 
-//: GPUDATA is going to be a TEMPORARY STRUCT for passing
-//: around the loose data of PIXNAME. I think this makes
-//: the code FLATTER and easier to follow.
-//:
-//: struct 
-//: AAC2020_GPUDATA
-//: ACC2020_PAINT5D_dat = { 0 };
+    #DIA_P5D_MAIN# : Bit Partitioning:
 
+    +-----------------------------------------+
+    | @VID_IID[ 02H 20M 00S ] .............   |
+    | Each Tile Uses 2 Bit Palletized Color   |
+    +-----------------------------------------+
+
+    ++----------------------------------------+
+    ||                                        |
+   [00] <-- Empty Space                       |
+   [01] <-- Light  LUM Monochrome Color       |
+   [10] <-- Middle LUM Monochrome Color  [ til_val ]
+   [11] <-- Dark   LUM Monochrome Color       |
+    ||                                        |
+    ++----------------------------------------+
+    ||
+   [00]00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+    12 34 56 78 90 12 34 56 78 90 12 34 56 78 90 12 <-- 32_bits
+    || || || || || || || || || || || || || || || ||
+    15 14 13 12 11 10 09 08 07 06 05 04 03 02 01 00 <-- aus_dex
+    |<-- R -->| |<-- G -->| |<-- B -->| |<-- A -->|
+    ||                                           ||
+    ++-------------------- 16 -------------------++
+                        aus_dex(s)
+
+    +-------------------------------------------------+
+    |                                                 |
+    PAINT5D Tile Exponents: @VID_IID[ 0067 ]T[ 2H 38M ]
+    |                                                 |
+    | til_exp | pix_axi |  til_pix  | siz_nam         |
+    +---------+---------+-----------+-----------------+
+    |    0    |   128   | NON_SENSE!| sand_grain      |
+    |    1    |    64   | NON_SENSE!| tiny_beads      |
+    |    2    |    32   | NON_SENSE!| gambling_dice   |
+    |    3    |    16   | NON_SENSE!| rubix_cube      |
+    |    4    |     8   | NON_SENSE!| milk_crate      |
+    |    5    |     4   | NON_SENSE!| dog_house ( wood_crate )
+    |    6    |     2   | NON_SENSE!| tool_shed       |
+    |    7    |     1   | NON_SENSE!| coi_pond        |
+    +---------+---------+-----------+-----------------+
+
+    #DIA_P5D_MAIN# : Space Partitioning
+
+    |<--------------------- 512 --------------------->|
+    |<---------256--------->| |<---------256--------->|
+    |<-- 128 -->|                                     |
+    +--=--+--=--+--=--+--=--+ +--=--+--=--+--=--+--=--+ ---+---
+    |           |           | |           |           |    |
+    | @til_lay  | @til_lay  | |           |           |    0
+    +     0     +     1     + +           +           +@til_exp
+    |     @til_qua === 0    | |     @til_qua === 1    |    0
+    |           |           | |           |           |    |
+    +--=--+--=--+--=--+--=--+ +--=--+--=--+--=--+--=--+ ---+---
+    |           |  0  |  1  | |           |     |     |@til_exp
+    | @til_lay  |     |     | |           |     |     |    1
+    +     2     +-----+--+--+ +           +-----+--+--+ ---+---
+    |           |  2  |__|__| |           |     |__|__| <- 2
+    |           |     |__|..| |           |     |__|..| 
+    +--=--+--=--+--=--+--=--+ +--=--+--=--+--=--+--=--+
+    +--=--+--=--+--=--+--=--+ +--=--+--=--+--=--+--=--+ -------
+    |           |           | |           |           |    |
+    |           |           | |           |           |    |
+    +           +           + +           +           +    |
+    |     @til_qua === 2    | |     @til_qua === 3    |    |
+    |           |           | |           |           |    3
+    +--=--+--=--+--=--+--=--+ +--=--+--=--+--=--+--=--+@til_qua
+    |           |     |     | |           |     |     |    3
+    |           |     |     | |           |     |     |    |
+    +           +-----+--+--+ +           +-----+--+--+    |
+    |           |     |__|__| |           |     |__|__|    |
+    |           |     |__|..| |           |     |__|..|    |
+    +--=--+--=--+--=--+--=--+ +--=--+--=--+--=--+--=--+ -------
+
+                            ^ ^
+                            | |
+    PIXEL_DATA_PARTITIONS --+-+ @VID_IID[ 0067 ]T[ 01H 49M 56S ]
+
+    WHAT_THE_ARTIST_SEES  --+-+ @VID_IID[ 0068 ]T[ 00H 05M 20S ]
+                            | |
+                            V V
+
+    +-----------------------+ +-----------------------+
+    |                       | |                       |
+    |                       | |                       |
+    |                       | |                       |
+    |                       | |                       |
+    |                       | |                       |
+    |   TOP_LEF: SUB_TILE   | |  TOP_RIG: SUB_TILE    |
+    |                       | |                       |
+    |                       | |                       |
+    |                       | |                       |
+    |                       | |                       |
+    |                       | |                       |
+    +----------THEY JUST SEE SOME PIXELS OR ----------+
+    +----------SOMETHING. BUT NOT THE ACTUAL----------+
+    |          DATA LAYOUT. | |                       |
+    |          @VID_IID[ 0H 02M 05S ]                 |
+    |                       | |                       |
+    |                       | |                       |
+    |                       | |                       |
+    |   BOT_LEF: SUB_TILE   | |  BOT_RIG: SUB_TILE    |
+    |                       | |                       |
+    |                       | |                       |
+    |                       | |                       |
+    |                       | |                       |
+    |                       | |                       |
+    +-----------------------+ +-----------------------+
+
+###################################################DIA_P5D_MAIN#
+######################_PAINT5D_DATA_LAYOUT_VS_WHAT_ARTIST_SEES_#
+#_DIA_SELECTED_TIL_QUA_#########################################
+
+        #_DIA_SELECTED_TIL_QUA_#
+    
+        astipix : An XY location LOCAL to this diagram.
+                 (Local to an auset sub tile )
+                 [astipix]: [A]uset__[S]ub__[TI]le__[PIX]el 
+
+        |<-------- 256 -------->|
+        |<-- 128 -->|           |
+        D--=--+--=--+--=--+--=--+     ( @diagp_x == @diagpix.x )
+        |           |           |     ( @diagp_y == @diagpix.y )
+        | D:diagpix === 0       |   
+        +           +           +      
+        |           |D:diagpix === 128 ( @diagp_x == 128 ) 
+        |           |           |     ( @diagp_y == 128 )
+        +--=--+--=--D--=--+--=--+
+        |           |     |D:diagpix === 192 === ( 128 + 64 )
+        |           |     |     |
+        +           +-----D--+--+
+        |           |     |__|__|
+        |           |     |__|..|
+        +--=--+--=--+--=--+--=--+
+        ^           ^     ^  ^
+        |           |     |  |
+        |           |     |  |
+  @diagp_x    @diagp_x   @diagp_x
+
+        @diagpix == MIN[ @diagp_x , @diagp_y ]
+
+#########################################_DIA_SELECTED_TIL_QUA_#
+#_DIA_DIAG_AND_LOCAL_###########################################   
+
+---+--- +--=--+--=--+--=--+--=--+ <--- @diagp_y
+   |    |           |           |
+   |    |           |           |
+   |    +@til_lay=0 +@til_lay=1 +
+   |    |           |           |
+   |    |           |           |
+  256   +--=--+--=--+--=--+--=--+ <--- @diagp_y
+   |    |           |     |     |
+   |    |           |     |     |
+   |    +@til_lay=2 +-----+--+--+ <--- @diagp_y
+   |    |           |     |__|__| <___ @diagp_y
+   |    |           |     |__|..|
+---+--- +--=--+--=--+--=--+--=--+
+        ^^^^^^^^^^^^^
+        |           | 
+        |           +-----------+
+        |                       |
+---+--- +-----------------------+  
+   |    |  |  |  |  |  |  |  |  |  
+   |    |--|--|--|--|--|--|--|--|  
+   |    |  |  |  |  |  |  |  |  |
+   |    |--|--|--|--|--|--|--|--|
+   |    |  |  |@til_lay=2 |  |  |
+  128   |--|--|@til_exp=0 |--|--|
+   |    |  |  |@diagpix=0 |  |  |  +-----------------------+
+   |    |--|--|--|--|--|--|--|--|  | LOCAL PIXELS:         |
+   |    |  |  |  |  |  |  |  |  |  |( Not To Scale )       |
+   |    |--|--|--|--|--|--|--|--|  |                       |
+   |    |  |  |  |  |  |  |  | <---|@loc_t_x ==( 128 - 1 ) |
+---+--- +-----------------------+  |@loc_t_y ==( 128 - 1 ) |
+                                   |                       |
+                                   +-----------------------+
+
+###########################################_DIA_DIAG_AND_LOCAL_#
+#DIA_GLO_PIX####################################################
+#DIA_GLOC_PIX###################################################
+
+    G == glocpix == glocpix.xy
+    G == glo_t_x == glocpix.x
+    G == glo_t_y == glocpix.y
+
+    |<-------- 512 -------->|  
+    |<-- 256 -->|           |  | til_qua==0| til_qua==1|
+    | 128 |     |           |  |           |           |
+    +--=--+--=--+--=--+--=--+  +--=--+--=--+--=--+--=--+
+    |           |       G   |  |           |           |
+    |  G     G  |   G       |  |        G  |           |
+    +           +       G   +  +           +           +
+    |      G    |  G        |  |           |           |
+    |           |           |  |           |           |
+    +--=--+--=--+--=--+--=--+  +--=--+--=--+--=--+--=--+
+    |           |  G        |  |           |  
+    |   G       |           |  |           |  
+    +           +        G  +  +           +  
+    |  G     G  |  G        |  |           |  
+    |           |           |  |           |  
+    +--=--+--=--+--=--+--=--+  +--=--+--=--+  
+    ^                       ^  | 128 |
+    |                       |  +--=--+--=--+--=--+--=--+ ---
+    |PIXNAME_paint5d_cpu_pix|  |     |     |     .     | 128
+    |[ 512 * 512 * 4 ]={0}; |  |     |  G  |     .     | 128
+    +-----------------------+  +-----------+...........+ ---
+                               |     |     |     .     |
+                               |     |     |     .     |
+    painpix.-------            +--=--+--=--+--=--+--=--+
+           .til_qua            |     .     |  
+           .til_exp            |     .     | til_exp ==0
+           .til_lay            +...........+
+           .loc_t_x            |     .     | (  for G  )
+           .loc_t_y            |     .     |  
+            -------            +--=--+--=--+ til_lay ==1
+
+                +-----------------------------------------+
+                |   glo_t_x >= 128   |   loc_t_x >=   0   |
+                |   glo_t_x <= 256   |   loc_t_x <= 128-1 |
+                |                    |                    |
+                |   glo_t_y >=   0   |   loc_t_y >=   0   |
+                |   glo_t_y <= 128   |   loc_t_y <= 128-1 |
+                +-----------------------------------------+
+                |   GLOBAL XY(S)     |   LOCAL XY(S)      |
+                +-----------------------------------------+
+                | SEE: aac2020_paint5d_til_exp_CTO_max_cor|
+                +-----------------------------------------+
+
+####################################################DIA_GLO_PIX#
+###################################################DIA_GLOC_PIX#
+#PAINT5D_INDEX_LIST_COMMENT#####################################
+
+    PREFIX OR SUFFIX INDEX:
+    --------------------------------------------------------
+    
+    UTC     : Unit Test Code
+
+    --------------------------------------------------------
+    IDENTIFIER INDEX : PAINT5D :  (Terms used in PAINT5D)
+    --------------------------------------------------------
+        
+    astipix : Auset Sub TIle PIXel ( Location: x-or-y )
+    diagpix : DIAGonal_PIXels      ( Location: x-or-y )
+
+    glocpix : GLObal_Coordinate_of_PIXel
+              ( glocpix.glo_t_x )  <--- @Conceptual_Members@
+              ( glocpix.glo_t_y )  <--- @Conceptual_Members@
+
+    painpix : PAINt_PIXels 
+                                                               
+        01  : til_qua  --+           ( painpix.til_qua )
+        02  : til_exp    |           ( painpix.til_exp )
+        03  : til_lay    +-- Members ( painpix.til_lay )
+        04  : loc_t_x    |           ( painpix.loc_t_x )
+        05  : loc_t_y  --+           ( painpix.loc_t_y )
+
+    til_qua : auset [TIL]e sub [QUA]drant index
+    til_exp : [TIL]e__[EXP]onent. SpanInPixels==(2^til_exp)
+    til_lay : TILe_LAYer ( Index: 0 , 1, or 2 (3 layers) )
+    loc_t_x : Local Tile X Coord  (Usually a[ b_x ]Value)
+    loc_t_y : Local Tile Y Coord  (Usually a[ b_y ]Value)
+    
+        b_x : Brush X coordinate ( LOCAL COORDS (loc_t_x ) )
+        b_y : Brush Y coordinate ( LOCAL COORDS (loc_t_y ) )
+
+    tempi_x : TEMPorary_Integer_X
+    tempi_y : TEMPorary_Integer_Y
+
+    rem_i_x : REMainder_Integer_X
+    rem_i_y : REMainder_Integer_Y
+
+    glo_t_x : Global Tile X Coord       ( glo_t_x == glocpix.x )
+    glo_t_y : Global Tile Y Coord       ( glo_t_y == glocpix.y )
+
+    i16_gtx : Signed 16 Bit Integer Version Of: glo_t_x
+    i16_gty : Signed 16 Bit Integer Version Of: glo_t_y
+
+    o_x_qua : [ Cell ~|~ Partition ] -X- Location Of[ til_qua ]
+    o_y_qua : [ Cell ~|~ Partition ] -Y- Location Of[ til_qua ]
+
+    diagp_x : DIAGonal_Pixel_coord_X ( origin of til_lay[ 3 ] )
+    diagp_y : DIAGonal_Pixel_coord_Y ( origin of til_lay[ 3 ] )
+    
+    --------------------------------------------------------
+
+#####################################PAINT5D_INDEX_LIST_COMMENT#
+*** ******************************************************** **/
+//:PAINT5D_DATA:=============================================://
+#define U08 uint8_t /** GCC: <stdint.h> **/
+
+    //: FOR PAINT5D DATA, CHECK THESE PLACES:
+
+    //: CPU_SIDE_BITMAP:::    AAC2020_PIXNAME_paint5d_cpu_pix
+
+    //: TEXTURE_LOCATIONS:    AAC2020_TAUDEPO.P5D.**********
+
+    //: .... am I missing something? .....
+
+    #define AAC2020_PAINT5D_MAX_til_qua ( 3 )
+    #define AAC2020_PAINT5D_MAX_til_exp ( 7 )
+    #define AAC2020_PAINT5D_MAX_til_lay ( 2 )  //[ 0 | 1 | 2 ]//
+    #define AAC2020_PAINT5D_MAX_loc_t_x ( VARIES_WITH_TIL_EXP )
+    #define AAC2020_PAINT5D_MAX_loc_t_y ( VARIES_WITH_TIL_EXP )
+    #define AAC2020_PAINT5D_MAX_glo_t_x ( 512 - 1 )
+    #define AAC2020_PAINT5D_MAX_glo_t_y ( 512 - 1 )
+    #define AAC2020_PAINT5D_MAX_aus_dex (15 )
+    #define AAC2020_PAINT5D_MAX_til_val ( 3 )  //|00|01|10|11|//
+
+    const U08 aac2020_paint5d_POT_diagpix[ 9 ]={
+        0                 /** POT: Pixel_Offset_Table **///:1://
+        ,   128                                 //: ###    :2://
+        ,   128 + 64                            //: ###    :3://
+        ,   128 + 64 + 32                       //: ###    :4://
+        ,   128 + 64 + 32 + 16                  //: ###    :5://
+        ,   128 + 64 + 32 + 16 +  8             //: ###    :6://
+        ,   128 + 64 + 32 + 16 +  8 + 4         //: ###    :7://
+        ,   128 + 64 + 32 + 16 +  8 + 4 + 2     //: ###    :8://
+        ,   128 + 64 + 32 + 16 +  8 + 4 + 2 + 1 //: 255    :9://
+    };
+
+#undef  U08
+//:=============================================:PAINT5D_DATA://
+//:DEBUG_VARIABLES:==========================================://
 #define I32 int32_t /** GCC: <stdint.h> **/
 
     I32 AAC2020_PAINT5D_init_call_count =( 0 );
 
 #undef  I32
+//:==========================================:DEBUG_VARIABLES://

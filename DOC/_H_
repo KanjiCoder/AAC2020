@@ -9,7 +9,251 @@
     //[   VIDEO COMMENT TIMESTAMP EXAMPLE   ]//
 *** ******************************************************** ***
 
+@BACK_AND_FORTH_CONVERSION_TEST@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
+    @BACK_AND_FORTH_CONVERSION_TEST:
+
+    @VID_IID[ 0071 ]TIME[ 03H 38M 40S ]
+
+        Is an easy way to check the validity of a conversion
+        function by piping the output of one conversion
+        function into the inverse conversion function.
+
+        Example:
+            func A_to_B( A )  //: Returns B
+        
+            func B_to_A( B )  //: Returns A
+
+            A_1 = ( 5 );
+            A_2 ; /** Not Set Yet **/
+
+            A_2=( B_to_A( A_to_B( A_1 ) ) );
+
+            if( A_1 != A_2 ){ FATAL_ERROR_FAILED_TEST(); };
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@BACK_AND_FORTH_CONVERSION_TEST@
+@NOOP@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @NOOP : Means "NO OPeration"
+
+            Typically we use this to subvert compiler 
+            warnings about having unused variables.
+
+            @VID_IID[ 0071 ]TIME[ 03H 30M 40S ]
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@NOOP@
+@DEP@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @DEP: Shorthand for @DEPENDS_ON[ some_function ]
+
+    @VID_IID[ 0071 ]TIME[ 00H 14M 18S ]
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@DEP@
+@TRAP_VALUES@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@_TRAP_VALUES_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    Plural form of @TRAP_VALUE.
+
+    @VID_IID[ 0069 ]TIME[ 0H 25M 35S ]
+    A trap value is an intentionally bogus value that we
+    hope to NOTICE when debugging our code. Usually I use
+    it to catch when I accidentially forget to initialize
+    a variable.
+    
+    It is called a "TRAP VALUE" because we are setting
+    traps for ourselves. But if things go wrong because
+    we get in our OWN TRAP, it is easier to fix than if
+    we just get WRONG RESULTS in our code with no clues
+    left for us as to what we did wrong.
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@TRAP_VALUES@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@_TRAP_VALUES_@
+
+@SAME_VAR@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @_SAME_VAR_@
+
+        Means that the two variables you are asserting for
+        equality are actually the EXACT SAME VARIABLE.
+        Quite literally. One is probably a macro and the
+        other is not and you are trying to make sure they
+        are such.
+
+    @SAME_VAR_SAME_ADDR@
+    @_SAME_VAR_SAME_ADDR_@
+
+        If they are indeed the exact same variable, then
+        they should have the exact same location in memory.
+
+        @VID_IID[ 0068 ]TIME[ 2H 59M 17S ]
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@SAME_VAR@
+@Conceptual_Members@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @VID_IID[ 0068 ]TIME[ 1H 56M 45S ]
+
+    @Conceptual_Members:
+
+        Means the variables can be seen as belonging to
+        a conceptual "struct" or "type". But there is no
+        such formal "struct" or "type" in the code.
+
+        For example:
+
+        var first_name = "John"
+        var last_name  = "Madison"
+
+        Conceptually, these could belong to a 
+        "full_name" struct. [ first_name ]and[ last_name ]
+        are "conceputal_members" of a "full_name" struct
+        that doesn't actually exist.
+
+        In other words, a conceptual member is a member
+        of an "IMPLIED" object.
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@Conceptual_Members@
+@widdling_pixel_coordinate@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @widdling_pixel_coordinate@:
+
+        Means I am taking a large coordinate value and
+        "widdling it down" over successive calculations
+        until NOTHING IS LEFT to derive various
+        LOCAL COORDINATES that the original
+        GLOBAL coordinate represents.
+    
+        In other words, we "widdle down" a global input
+        coordinate to get all of the local variables
+        that together can identify that global coordinate.
+
+        SEE[  rem_i_x -&- rem_i_y                 ]
+        FUNC[ aac2020_paint5d_glocpix_CTO_painpix ]
+        FILE[ R:\G\AAC2020\LIB\PAINT5D.F._        ]
+        @VID_IID[ 0068 ]TIME[ 1H 18M 43S          ]
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@widdling_pixel_coordinate@
+#_WHY_PAINT5D_GET_PARAM_ORDER_##################################
+
+    /** @VID_IID[ 0066 ]TIME[ 08H 14M 15S ] ***** **/
+    /** #_WHY_PAINT5D_GET_PARAM_ORDER_# **/
+    AAC2020_PAINT5D_Get(
+        til_exp   /** TileExponent (TileSizeEnum) **/
+    ,   til_lay   /** TileLayer ................. **/
+    ,   loc_t_x   /** Local Tile X Coordinate     **/
+    ,   loc_t_y   /** Local Tile Y Coordinate     **/
+    ,&( val_cur ) /** [ val_cur / til_val ]       **/
+    );;
+
+##################################_WHY_PAINT5D_GET_PARAM_ORDER_#
+@HARD_CODED@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @HARD_CODED@ :
+
+        Means that some values in the code are hard coded.
+        And we might want to find places where we hard
+        coded things, so lets make notes of it when
+        we [ can / remember ] .
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@HARD_CODED@
+#_MORE_NAMES_MORE_PROBLEMS_#####################################
+
+    @VID_IID[ 0066 ]TIME[ 05H 36M 47S ]
+    #_MORE_NAMES_MORE_PROBLEMS_#:::::::
+
+        I am refering to not fractionating your
+        global variable namespace. In other words,
+        ALL OF THE VARIABLE NAMES USED IN ALL OF YOUR CODE.
+
+        The more variables names, the harder it is to 
+        see the connections in the code.
+
+        If it stands for the EXACT SAME THING
+        then it should have the EXACT SAME NAME.
+
+#####################################_MORE_NAMES_MORE_PROBLEMS_#
+#_TILE_EXPONENT_AFFECTS_CAMERA_POSITION_########################
+#_TILE_SIZE_AFFECTS_CAMERA_POSITION_############################
+
+    @VID_IID[ 0066 ]TIME[ 03H 59M 25S ]   
+    @VID_IID[ 0066 ]TIME[ 04H 00M 50S ]
+
+    Say you are at tile location [ 5,5 ] and then
+    you decide to switch to the LARGEST TILE EXPONENT.
+       
+    This tile is SO LARGE that it takes up the entire
+    [ tile map / level map ]. Because of this, there is
+    only ONE POSSIBLE COORDINATE for this mega large tile.
+
+    It is [ 0 , 0 ].
+
+    Thus, when you switch to the largest tile exponent,
+    your brush location needs to switch from
+    [ 5,5 ] to [ 0,0 ].
+    
+############################_TILE_SIZE_AFFECTS_CAMERA_POSITION_# 
+########################_TILE_EXPONENT_AFFECTS_CAMERA_POSITION_#
+#_VAR_ENUMS_SHOULD_COUNT_UP_WITH_NO_GAPS_#######################
+
+    @VID_IID[ 0066 ]TIME[ 03H 29M 19S ]
+
+    COMMENT_EXTRACTED_FROM[ TAUDEPO.D._ ]
+
+    For simplicity, just order all of the enumerations
+    sequentially without any gaps between them. As long
+    as the numbers are between [ 0 -to- 255 ] inclusive,
+    and DO NOT OVERLAP, we are fine.
+
+    But might as well do everything sequentially to avoid
+    the potential of accidential mistakes.
+
+#######################_VAR_ENUMS_SHOULD_COUNT_UP_WITH_NO_GAPS_#
+#_VARS_ARE_CLUSTERS_OF_FOUR_PIXEL_##############################
+#_VARS_ARE_CLUSTERS_OF_4_PIXELS_################################
+
+    UPDATE[ DATE[         2020_12_28  ]
+    @VID_IID[ 0066 ]TIME[ 03H 18M 08S ] 
+
+    Though 4 pixels DO store one variable (128bits max).
+    We are geometrically laying out the pixels on a bitmap,
+    and thus the last 2 pixels are not sequential in terms
+    of memory address as you must offset by the stride of
+    the bitmap to get to the last 2 pixels.
+
+    ALSO... If we look at...
+    1. DIAGRAM IN: TAUDEPO.D._
+    2. DIAGRAM IN: TAUDIRT.D._
+
+    We can see that the @VAR for the variable cell
+    index. (SEE: #DIA_VAR_CEL# ) Is in the range
+    of 0 to 255. As denoted by the usages of the variables:
+    
+        1. VAR_255          <-- Different Levels Of Terse
+        2. DEX_VAR_255      <-- Different Levels Of Terse
+        3. DEX_VAR_000_255  <-- Different Levels Of Terse
+        5. VAR              <-- Different Levels Of Terse
+
+################################_VARS_ARE_CLUSTERS_OF_4_PIXELS_#
+##############################_VARS_ARE_CLUSTERS_OF_FOUR_PIXEL_#
+#_VP1_IS_WHAT_USER_THINKS_OF_AS_CAMERA_#########################
+
+    @VID_IID[ 0066 ]TIME[ 03H 02M 26S ]
+
+    ------------------------------------------------------------
+    Decided we should call these "p5d_vp1_***"
+    instead of "p5d_cam_***" because that gives us
+    more information about what the actual data 
+    means.
+    ------------------------------------------------------------
+
+    ,.p5d_cam_lef = 'J' //: CAMERA_CONTROL : LEFT  
+    ,.p5d_cam_rig = 'L' //: CAMERA_CONTROL : RIGHT 
+    ,.p5d_cam_upp = 'I' //: CAMERA_CONTROL : UPP   
+    ,.p5d_cam_dow = 'K' //: CAMERA_CONTROL : DOWN  
+                        
+    ,.p5d_cam_z_o = 'R' //: CAMERA_CONTROL : ZOOM  
+    ,.p5d_cam_z_i = 'V' //: CAMERA_CONTROL : ZOOM  
+
+#########################_VP1_IS_WHAT_USER_THINKS_OF_AS_CAMERA_#
 @IMPLICIT_INTERFACE@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
    @IMPLICIT_INTERFACE[ KeyInn ]:
@@ -2006,6 +2250,14 @@
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ONLY4NOW@
 #_LOCATIONS_MUST_BE_MODDABLE_BY_FOUR_###########################
 
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    ************************************************************
+    THIS IS NO LONGER TRUE!!!!
+    SEE UPDATED COMMENTARY:
+    #_VARS_ARE_CLUSTERS_OF_4_PIXELS_# 
+    ************************************************************
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
     Each variable is stored as 4 pixels on the gpu texture.
     Thus each constant identifiying the variable location
     must be evenly divisible by 4.
@@ -3351,6 +3603,7 @@
 
 #################################_TODOS_CAN_BREAK_COLUMN_LIMIT_#
 #_CTRL_F_HELP_##################################################
+#CTRL_F_HELP####################################################
 
     #_CTRL_F_HELP_#:
     
@@ -3362,6 +3615,7 @@
         1. Find String In Files VIA editor
         2. GREP via command line
 
+####################################################CTRL_F_HELP#
 ##################################################_CTRL_F_HELP_#
 #_SAM_PRECISION_BEFORE_SAM_VAR_#################################
 

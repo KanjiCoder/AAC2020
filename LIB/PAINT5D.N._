@@ -1,0 +1,101 @@
+ 
+
+//:FUNCTION_REFERENCES:======================================://
+/** ******************************************************** ***
+
+    //:MAIN_DATA_INTERFACE:(GET & PUT):----------------------://
+
+        U08
+        AAC2020_PAINT5D_Put(
+            U08  til_qua   /** Auset Tile Sub Quadrant Index **/
+        ,   U08  til_exp   /** TileExponent (TileSizeEnum)   **/
+        ,   U08  til_lay   /** TileLayer .................   **/
+        ,   U08  loc_t_x   /** Local Tile X Coord / b_x      **/
+        ,   U08  loc_t_y   /** Local Tile Y Coord / b_y      **/
+        ,   U08  aus_dex   /** AUSet_inDEX (AutoTileSetIndex)**/
+        ,   U08  til_val   /** [ val_cur / til_val ]         **/
+        );;
+        
+        void
+        AAC2020_PAINT5D_Get(
+            U08  til_qua   /** Auset Tile Sub Quadrant Index **/
+        ,   U08  til_exp   /** TileExponent (TileSizeEnum)   **/
+        ,   U08  til_lay   /** TileLayer .................   **/
+        ,   U08  loc_t_x   /** Local Tile X Coord / b_x      **/
+        ,   U08  loc_t_y   /** Local Tile Y Coord / b_y      **/
+        ,   U08  aus_dex   /** AUSet_inDEX (AutoTileSetIndex)**/
+        ,   U08* til_val   /** [ val_cur / til_val ]         **/
+        );;
+
+    //:----------------------:MAIN_DATA_INTERFACE:(GET & PUT)://
+    //:COORDINATE_CONVERSIONS:-------------------------------://
+
+        void
+        aac2020_paint5d_glocpix_CTO_painpix(
+            U08* til_qua   RES /// Auset Tile Sub Quad Index ///
+        ,   U08* til_exp   RES /// TileSizeExponentEnum      ///
+        ,   U08* til_lay   RES /// TileLayer ................///
+        ,   U08* loc_t_x   RES /// Local  Tile X Coord / b_x ///
+        ,   U08* loc_t_y   RES /// Local  Tile Y Coord / b_y ///
+        ,   I16  glo_t_x       /// Global Tile X Coord       ///
+        ,   I16  glo_t_y       /// Global Tile X Coord       ///
+        );;
+
+        void
+        aac2020_paint5d_painpix_CTO_glocpix(
+            U08  til_qua       /// Auset Tile Sub Quad Index ///
+        ,   U08  til_exp       /// TileSizeExponentEnum      ///
+        ,   U08  til_lay       /// TileLayer ................///
+        ,   U08  loc_t_x       /// Local  Tile X Coord / b_x ///
+        ,   U08  loc_t_y       /// Local  Tile Y Coord / b_y ///
+        ,   I16* glo_t_x   RES /// Global Tile X Coord       ///
+        ,   I16* glo_t_y   RES /// Global Tile X Coord       ///
+        );;
+
+        //:WHY_NOT:------------------------------------------://
+
+            //:----------------------------------------------://
+            //:@VID_IID[ 0070 ]TIME[ 00H 35M 37S ]           ://
+            //:The method below adds extra surface area to   ://
+            //:the code and hides the actual data we are     ://
+            //:working with. There is nothing wrong with     ://
+            //:a code smell of an "implied object.           ://
+            //:----------------------------------------------://
+
+            void aac2020_paint5d_glocpix_CTO_painpix(
+                struct PAINPIX* painpix
+            ,   struct GLOCPIX  glocpix
+            );;
+
+            void aac2020_paint5d_painpix_CTO_glocpix(
+                struct PAINPIX  painpix
+            ,   struct GLOCPIX* glocpix
+            );;
+
+        //:------------------------------------------:WHY_NOT://
+
+    //:-------------------------------:COORDINATE_CONVERSIONS://
+
+*** ******************************************************* ***/
+//:======================================:FUNCTION_REFERENCES://
+
+
+
+
+    TEST:
+////////// aac2020_paint5d_Min_I16
+////////// aac2020_paint5d_i32_Cap_u32
+
+////////// aac2020_paint5d_glocpix_CTO_painpix
+////////// aac2020_paint5d_painpix_CTO_glocpix
+
+        AAC2020_PAINT5D_Put
+        AAC2020_PAINT5D_Get
+
+        aac2020_paint5d_MoveCamera_XY
+        aac2020_paint5d_ZoomCamera
+        aac2020_paint5d_MoveBrush_XY
+        aac2020_paint5d_DeltaMutate_TileValue
+        aac2020_paint5d_DeltaMutate_TileExponent
+        aac2020_paint5d_DeltaMutate_TileLayer
+        aac2020_paint5d_ToggleTile
