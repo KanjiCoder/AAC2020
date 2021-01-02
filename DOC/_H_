@@ -9,6 +9,47 @@
     //[   VIDEO COMMENT TIMESTAMP EXAMPLE   ]//
 *** ******************************************************** ***
 
+@_STACK_ADDRESS_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@STACK_ADDRESS@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @STACK_ADDRESS:
+
+        An array who's values tells us what quadrant to
+        drill into at a given nesting depth. It is a way
+        to compactly store the location within a quadtree
+        or a quadtree like structure.
+
+        For Example:
+        
+    //:   0   1   2   <<-- Nesting Levels ( NLEV[ # ] )
+        [ 3 , 1 , 2 ] <<-- Quadrants      ( QUAD[ # ] )
+
+           +---------------+---------------+
+           |               |               | 
+           |               |               |
+           |   QUAD[ 0 ]   |   QUAD[ 1 ]   |
+           |   NLEV[ 0 ]   |   NLEV[ 0 ]   |
+           |               |               |
+           |               |               |
+           |               |               |
+           +---------------+-------+---+---+ <--+
+           |               |       |   |   |    |
+           |               +       +---+---+    +--[ 1 ]
+           |   QUAD[ 2 ]   |       | 2 |   |    |   
+           |   NLEV[ 0 ]   +-------+---+---+ <--+
+           |               |       |       |
+           |               |       |       |
+           |               |       |       |
+           +---------------+-------+-------+
+                           ^               ^
+                           |               |
+                           +-------+-------+
+                                   |
+                             QUAD[ 3 ] 
+                             NLEV[ 0 ]
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@STACK_ADDRESS@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@_STACK_ADDRESS_@
 @BACK_AND_FORTH_CONVERSION_TEST@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
     @BACK_AND_FORTH_CONVERSION_TEST:
