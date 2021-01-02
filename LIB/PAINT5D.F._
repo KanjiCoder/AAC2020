@@ -801,6 +801,10 @@
 //:===============================:QUARKMAP_COORD_CONVERSIONS://
 //:PAINT5D_QUARKMAP_GET_PUT:=================================://
 //:PAINT5D_QUARKMAP_PUT_GET:=================================://
+#define U08 uint8_t /** GCC: <stdint.h> **/           //: 01 ://
+#define I16 int16_t /** GCC: <stdint.h> **/           //: 02 ://
+#define I32 int32_t /** GCC: <stdint.h> **/           //: 03 ://
+#define ERR aac2020_paint5d_Halt                      //: 04 ://
 
     /** #_WHAT_IS_THE_QUARKMAP_# * * * * *  **/
     /** @VID_IID[ 0067 ]TIME[ 00H 52M 23S ] **/
@@ -818,18 +822,195 @@
     ,   U08  til_val   /** [ val_cur / til_val ]          ...**/
     )
     {
+        //:bounds_check_inputs:------------------------------://
+        #if( AAC2020_PAINT5D_BOUND_CHECK_INPUTS >= 1 ) //:###://
+
+            /** @VID_IID[ 0072 ]TIME[ 03H 07M 30S ]    ......**/
+            /** til_val commentary is the decimal and  ......**/
+            /** binary representations of it's values. ......**/
+
+            assert(        til_qua     <=   3 );
+            assert(        til_exp     <=   7 );
+            assert(        til_lay     <=   2 );
+            assert( (((I32)loc_t_x)+0) <= 255 );
+            assert( (((I32)loc_t_y)+0) <= 255 );
+
+            assert( aus_dex <=  15 );
+            assert( til_val <=   3 );/**[  0 |  1 |  2 |  3 ]**/
+                                     /**[ 00 | 01 | 10 | 11 ]**/
+
+            if( 0 == til_exp ){
+                assert( loc_t_x <= ( 128 - 1) );
+                assert( loc_t_y <= ( 128 - 1) );
+            }else                    
+            if( 1 == til_exp ){      
+                assert( loc_t_x <= (  64 - 1) );
+                assert( loc_t_y <= (  64 - 1) );
+            }else                    
+            if( 2 == til_exp ){      
+                assert( loc_t_x <= (  32 - 1) );
+                assert( loc_t_y <= (  32 - 1) );
+            }else                    
+            if( 3 == til_exp ){      
+                assert( loc_t_x <= (  16 - 1) );
+                assert( loc_t_y <= (  16 - 1) );
+            }else                    
+            if( 4 == til_exp ){      
+                assert( loc_t_x <= (   8 - 1) );
+                assert( loc_t_y <= (   8 - 1) );
+            }else                    
+            if( 5 == til_exp ){      
+                assert( loc_t_x <= (   4 - 1) );
+                assert( loc_t_y <= (   4 - 1) );
+            }else                    
+            if( 6 == til_exp ){      
+                assert( loc_t_x <= (   2 - 1) );
+                assert( loc_t_y <= (   2 - 1) );
+            }else                       
+            if( 7 == til_exp ){         
+                assert( loc_t_x <= (   1 - 1) );
+                assert( loc_t_y <= (   1 - 1) );
+            };;
+
+        #endif  //:########AAC2020_PAINT5D_BOUND_CHECK_INPUTS://
+        //:------------------------------:bounds_check_inputs://
+        //:declare_variables:--------------------------------://
+
+            I16 glo_t_x =( 0 - 5005 /** @TRAP_VALUE@ **/ );
+            I16 glo_t_y =( 0 - 6006 /** @TRAP_VALUE@ **/ );
+            I16 glo_dex =( 0 - 7007 /** @TRAP_VALUE@ **/ );
+            I16 glo_com =( 0 - 8008 /** @TRAP_VALUE@ **/ );
+            I16 arr_dex =( 0 - 9009 /** @TRAP_VALUE@ **/ );
+                               
+            U08 var_u08 =(       99 /** @TRAP_VALUE@ **/ );
+            U08 aus_loc =(       23 /** @TRAP_VALUE@ **/ );
+
+            U08 old_val =(       00 /** Prev til_val **/ );
+
+        //:--------------------------------:declare_variables://
+        //:get_xy_location_of_pixel_storing_data:------------://
+
+            aac2020_paint5d_painpix_CTO_glocpix(
+                til_qua        /// Auset Tile Sub Quad Index ///
+            ,   til_exp        /// TileSizeExponentEnum      ///
+            ,   til_lay        /// TileLayer ................///
+            ,   loc_t_x        /// Local  Tile X Coord / b_x ///
+            ,   loc_t_y        /// Local  Tile Y Coord / b_y ///
+            , &(glo_t_x)       /// Global Tile X Coord       ///
+            , &(glo_t_y)       /// Global Tile X Coord       ///
+            );;
+
+        //:------------:get_xy_location_of_pixel_storing_data://
+        //:convert_pixel_xy_to_index:------------------------://
+        #define MAP_SAN ( 512 ) /** WID == HIG == SAN **/
+
+            glo_dex = glo_t_x + ( glo_t_y  *  MAP_SAN );
+            glo_com =(glo_dex * 4 /** 4: RGBA **/ );
+
+        #undef  MAP_SAN
+        //:------------------------:convert_pixel_xy_to_index://
+        //:bit_packing_stuff:--------------------------------://
+        #define CPU_PIX AAC2020_PIXNAME_paint5d_cpu_pix
+        #define BIN_011 3 /** 2 set bits in a row **/
+
+        /** ************************************************ ***
+        COPY_OF_DIAGRAM[ #DIA_P5D_MAIN# ]
+        FROM_FILE[ PAINT5D.D._          ]
+
+                ++----------------------------------------+
+                ||                                        |
+               [00] <-- Empty Space                       |
+               [01] <-- Light  LUM Monochrome Color       |
+               [10] <-- Middle LUM Monochrome Color  [ til_val ]
+               [11] <-- Dark   LUM Monochrome Color       |
+                ||                                        |
+                ++----------------------------------------+
+                ||
+     32_bits-->[00]00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+                12 34 56 78 90 12 34 56 78 90 12 34 56 78 90 12  
+                || || || || || || || || || || || || || || || ||
+     aus_dex--> 15 14 13 12 11 10 09 08 07 06 05 04 03 02 01 00  
+                |<-- R -->| |<-- G -->| |<-- B -->| |<-- A -->|
+                ||                                           ||
+                ++-------------------- 16 -------------------++
+                                    aus_dex(s)
+        *** ************************************************ **/
 
 
-        asjflasjlfkjas;fjasklfj;osdjkl
+            if( 1
+            /** aus_dex >=  0 **/ 
+            &&  aus_dex <=  3 ){  /** ALPHA **/
+                               
+                arr_dex =(         glo_com + 3 );
+                var_u08 = CPU_PIX[ glo_com + 3 ];
+                aus_loc =( aus_dex -  0 );
+                                                       
+            }else                                      
+            if( aus_dex >=  4  
+            &&  aus_dex <=  7 ){  /** BLUE  **/
+                      
+                arr_dex =(         glo_com + 2 );
+                var_u08 = CPU_PIX[ glo_com + 2 ];
+                aus_loc =( aus_dex -  4 );
+                                
+            }else                                      
+            if( aus_dex >=  8 
+            &&  aus_dex <= 11 ){  /** GREEN **/
+                                          
+                arr_dex =(         glo_com + 1 );
+                var_u08 = CPU_PIX[ glo_com + 1 ];  
+                aus_loc =( aus_dex -  8 );    
+                                                       
+            }else                                      
+            if( aus_dex >= 12 
+            &&  aus_dex <= 15 ){  /** RED   **/
 
+                arr_dex =(         glo_com + 0 );
+                var_u08 = CPU_PIX[ glo_com + 0 ];
+                aus_loc =( aus_dex - 12 );
 
-        AAC2020_TODOMAN_Vital("[FINISH:20201231:710PM:PUT]");
+            }else{
+                ERR("[OUT_OF_RANGE_I_GUESS_MY_MAN_MY_DUDE]");
+            };;
+
+            assert( aus_loc <= 3 /** [ 0 | 1 | 2 | 3 ] **/ );
+
+            /** ******************************************** ***
+
+                @VID_IID[ 0072 ]TIME[ 3H 38M 10S ]BEG
+                @VID_IID[ 0072 ]TIME[ 3H 46M 09S ]END
+    
+                Bit packing logic to ONLY CHANGE the bits
+                where the new value needs to be stored.
+                We need to erase the bits in the proper
+                position by masking ( & ). Then merge the bits
+                together by using a bitwise or. ( | )
+
+            *** ******************************************** **/
+
+            old_val =( (var_u08 >> ( aus_loc*2)) & BIN_011 );
+    
+            CPU_PIX[ arr_dex ]=(
+
+                /**  11001111 <-- Conceptually:if:aus_loc==2**/
+                ( var_u08 &  (~(  BIN_011 << ( aus_loc*2 ) )) )
+
+                |  //:<-- Bitwise Or to merge together
+
+                /**  00110000 <-- Conceptually:if:aus_loc==2**/
+                /** Slide Delta Bits Into Position **/
+                ( til_val                 << ( aus_loc*2 )    )
+
+            );;
+
+        #undef  CPU_PIX
+        #undef  BIN_011
+        //:--------------------------------:bit_packing_stuff://
 
         /** If the tile value we set down was different than **/
         /** It was previously, maybe we should return        **/
         /** a ONE( 1 ) to signify that.                      **/
-        AAC2020_TODOMAN_Maybe("[Return 1 if the data changed]");
-        return( 0x00 );
+        return( til_val != old_val );
     }
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
@@ -846,7 +1027,7 @@
     )
     {
 
-        asfjlasjf;lasjdf;ljasfljas;dj
+        #error FINISH_THIS_CODE_2021_HELLO_MY_FRIEND
 
         AAC2020_TODOMAN_Vital("[FINISH:20201231:710PM:GET]");
 
@@ -855,7 +1036,10 @@
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
-
+#undef  U08                                           //: 01 ://
+#undef  I16                                           //: 02 ://
+#undef  I32                                           //: 03 ://
+#undef  ERR                                           //: 04 ://
 //:=================================:PAINT5D_QUARKMAP_GET_PUT://
 //:=================================:PAINT5D_QUARKMAP_PUT_GET://
 //:TAU:UNIFORM_CONTROLLER_FUNCTIONS:=========================://
