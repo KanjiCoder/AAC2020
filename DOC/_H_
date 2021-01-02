@@ -9,6 +9,49 @@
     //[   VIDEO COMMENT TIMESTAMP EXAMPLE   ]//
 *** ******************************************************** ***
 
+
+
+@CHECK_TRAP@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @CHECK_TRAP:
+        Assert a value is NOT EQUAL to a @TRAP_VALUE
+        
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@CHECK_TRAP@
+@REBASE_LOCAL@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @REBASE_LOCAL:
+
+    @VID_IID[ 00H 48M 56S ]
+
+        You start with a global variable and each time
+        you widdle it down you have a new coordinate that
+        is LOCAL to some type of sub-partition in some data.
+
+        When I mean "REBASE_LOCAL" I mean we are taking
+        another chip away at the remainder value, making
+        it smaller, and LOCAL to a smaller sub partition.
+
+        SUMMARY:
+            Get a new SMALLER local value from a previous
+            local or global accumulator value.
+
+    EVEN_MORE_EXPLANATION:-------------------------------------:
+
+        If we look at diagram [ #DIA_P5D_MAIN# ]
+        In: PAINT5D.D._ we could start with a global
+        variable called "global_x , global_y" and 
+        assign it to a "remainder_x , remainder_y" variable.
+    
+        If we chip away at it by figuring out which 256 block
+        it is in and then subtracting the block index
+        times 256, we will have @REBASE_LOCALED@ to
+        a new xy remainder value that is local to
+        the [ @til_qua ] instead of local to the
+        entire 512x512 bitmap.
+
+    :-------------------------------------:EVEN_MORE_EXPLANATION
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@REBASE_LOCAL@
 @_STACK_ADDRESS_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @STACK_ADDRESS@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 

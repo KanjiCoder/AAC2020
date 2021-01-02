@@ -257,6 +257,8 @@
         I16 i16_min = ( 0 - 4433 /** @TRAP_VALUE@ **/ );
         if( i16_001 <= i16_002 ){ i16_min = i16_001 ; };
         if( i16_002 <= i16_001 ){ i16_min = i16_002 ; };
+
+        assert( 0 - 4433 != i16_min /** @CHECK_TRAP@ **/ );
         return( i16_min );
     }
 
@@ -298,6 +300,28 @@
 #define U08 uint8_t /** GCC: <stdint.h> **/           //: 07 ://
 #define I32 int32_t /** GCC: <stdint.h> **/           //: 08 ://
 #define ERR aac2020_paint5d_Halt                      //: 09 ://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    U08
+    aac2020_paint5d_til_exp_CTO_bip_sip(
+                U08 til_exp
+    )
+    {
+        U08 bip_sip; /** m_c : Max_Coordinate ( x | y ) **/
+        if( 0 == til_exp ){ bip_sip = ( 128 + 0 ); };  //: 1 ://
+        if( 1 == til_exp ){ bip_sip = (  64 + 0 ); };  //: 2 ://
+        if( 2 == til_exp ){ bip_sip = (  32 + 0 ); };  //: 3 ://
+        if( 3 == til_exp ){ bip_sip = (  16 + 0 ); };  //: 4 ://
+        if( 4 == til_exp ){ bip_sip = (   8 + 0 ); };  //: 5 ://
+        if( 5 == til_exp ){ bip_sip = (   4 + 0 ); };  //: 6 ://
+        if( 6 == til_exp ){ bip_sip = (   2 + 0 ); };  //: 7 ://
+        if( 7 == til_exp ){ bip_sip = (   1 + 0 ); };  //: 8 ://
+        assert(  til_exp <= AAC2020_PAINT5D_MAX_til_exp );
+        assert(     7    == AAC2020_PAINT5D_MAX_til_exp );
+    
+        return( bip_sip );
+    }
+
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
     U08
@@ -452,18 +476,19 @@
 #define I16   int16_t /** GCC: <stdint.h> **/         //: 03 ://
 #define RES  restrict                                 //: 04 ://
 #define MIN  aac2020_paint5d_Min_I16                  //: 05 ://
+#define ERR  aac2020_paint5d_Halt                     //: 06 ://
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
     void
     aac2020_paint5d_glocpix_CTO_painpix(
-        U08* RES til_qua   /** Auset Tile Sub Quadrant Index **/
-    ,   U08* RES til_exp   /** TileExponent (TileSizeEnum)   **/
-    ,   U08* RES til_lay   /** TileLayer .................   **/
-    ,   U08* RES loc_t_x   /** Local  Tile X Coord / b_x     **/
-    ,   U08* RES loc_t_y   /** Local  Tile Y Coord / b_y     **/
-    ,   I16      glo_t_x   /** Global Tile X Coord           **/
-    ,   I16      glo_t_y   /** Global Tile X Coord           **/
+        U08*  RES  til_qua /** Auset Tile Sub Quadrant Index **/
+    ,   U08*  RES  til_exp /** TileExponent (TileSizeEnum)   **/
+    ,   U08*  RES  til_lay /** TileLayer .................   **/
+    ,   U08*  RES  loc_t_x /** Local  Tile X Coord / b_x     **/
+    ,   U08*  RES  loc_t_y /** Local  Tile Y Coord / b_y     **/
+    ,   I16        glo_t_x /** Global Tile X Coord           **/
+    ,   I16        glo_t_y /** Global Tile X Coord           **/
     )
     {
         /** Why output parameters at the start of signature? **/
@@ -482,12 +507,11 @@
 
             assert( AAC2020_PAINT5D_MAX_glo_t_x >= glo_t_x );
             assert( AAC2020_PAINT5D_MAX_glo_t_y >= glo_t_y );
+            assert(                0            <= glo_t_x );
+            assert(                0            <= glo_t_y );
   
         //:------------------------------:bounds_check_inputs://
         //:Get_Variables_Ready_To_Work_With:-----------------://
-
-        //  I16 tempi_x     =( 0 - 1001 );
-        //  I16 tempi_y     =( 0 - 1001 );
 
             I16 i16_til_qua =( 0 - 1001 );
             I16 i16_til_exp =( 0 - 1001 );
@@ -498,81 +522,187 @@
             I16 i16_gtx =( (I16)( glo_t_x ) );
             I16 i16_gty =( (I16)( glo_t_y ) );
 
-            I16 rem_i_x =( 0 - 2002 ); /** Remainder: X **/
-            I16 rem_i_y =( 0 - 2002 ); /** Remainder: Y **/
+            I16 rem_i_x =( 0 - 2002 ); /** Remainder: X      **/
+            I16 rem_i_y =( 0 - 2002 ); /** Remainder: Y      **/
 
-            I16 o_x_qua =( 0 - 2002 );
-            I16 o_y_qua =( 0 - 2002 );
+            I16 o_x_qua =( 0 - 2002 ); /** XY Location Of    **/
+            I16 o_y_qua =( 0 - 2002 ); /** til_qua           **/
 
-            I16 diagp_x =( 0 - 2002 ); /** diagpix.x **/
-            I16 diagp_y =( 0 - 2002 ); /** diagpix.y **/
-            I16 diagpix =( 0 - 2002 ); /** diagonal_pixels **/
+            I16 diagp_x =( 0 - 2002 ); /** diagpix.x         **/
+            I16 diagp_y =( 0 - 2002 ); /** diagpix.y         **/
+            I16 diagpix =( 0 - 2002 ); /** diagonal_pixels   **/
+
+            I16 o_x_lay =( 0 - 2002 ); /** XY Location of    **/
+            I16 o_y_lay =( 0 - 2002 ); /** til_lay           **/
+
+            I16 bip_sip =( 0 - 2002 ); /** BItmap_Partition  **/
+                                       /** Span_In_Pixels    **/
+
+            I16 max_cor =( 0 - 2002 ); /** Bounds Checking   **/
         
         //:-----------------:Get_Variables_Ready_To_Work_With://
         //:Calculate:2D_XY_LOCATIONS:------------------------://
         #define AST_CTO_DIA  aac2020_paint5d_astipix_CTO_diagpix
 
-            o_x_qua = ( i16_gtx / 256 );
-            o_y_qua = ( i16_gty / 256 );
+            //:CALC_AND_REBASE_LOCAL:til_qua:----------------://
+            //:                      o_x_qua                 ://
+            //:                      o_y_qua                 ://
 
-            rem_i_x = i16_gtx - ( o_x_qua * 256 );
-            rem_i_y = i16_gty - ( o_y_qua * 256 );
+                /** @CALC@ **/
+                o_x_qua = ( i16_gtx / 256 );
+                o_y_qua = ( i16_gty / 256 ); //:<<<<<<<<<<<<<<<<<<<<< o_x , o_y change to c_x , c_y for "cell" instead of offset.
 
-            assert( rem_i_x >= 0 );
-            assert( rem_i_y >= 0 );
+                /** @REBASE_LOCAL@ **/
+                rem_i_x = i16_gtx - ( o_x_qua * 256 );
+                rem_i_y = i16_gty - ( o_y_qua * 256 );
 
-            /** ******************************************** ***
+                assert( rem_i_x >=   0 );
+                assert( rem_i_y >=   0 );
+                assert( rem_i_x <= 255 );
+                assert( rem_i_y <= 255 );
 
-            [ rem_i_x , rem_i_y ] is now LOCAL to
-            #_DIA_SELECTED_TIL_QUA_#
-            @VID_IID[ 0068 ]TIME[ 2H 32M 10S ]
+                /** **************************************** ***
 
-            [ rem_i_x , rem_i_y ] == ( astipix )
-            At this PLACE in the code.
-            @VID_IID[ 0068 ]TIME[ 2H 40M 00S ]
+                [ rem_i_x , rem_i_y ] is now LOCAL to
+                #_DIA_SELECTED_TIL_QUA_#
+                @VID_IID[ 0068 ]TIME[ 2H 32M 10S ]
 
-            *** ******************************************** **/
+                [ rem_i_x , rem_i_y ] == ( astipix )
+                At this PLACE in the code.
+                @VID_IID[ 0068 ]TIME[ 2H 40M 00S ]
 
-            /** astipix : Auset_Sub_TIle: PIXel (loc:[X|Y])  **/
-            /** diagpix : DIAGonal_PIXels ...................**/
+                *** **************************************** **/
 
-            diagp_x = AST_CTO_DIA( rem_i_x ); //:diagpix.x
-            diagp_y = AST_CTO_DIA( rem_i_y ); //:diagpix.y
-            diagpix = MIN( diagp_x , diagp_y );
+            //:                                       o_x_qua://
+            //:                                       o_y_qua://
+            //:----------------:CALC_AND_REBASE_LOCAL:til_qua://
+            //:CALC_AND_REBASE_LOCAL:til_exp:----------------://
+            //:                  i16_til_exp                 ://
 
+                /** astipix : Auset_Sub_TIle:PIXel(loc:[X|Y])**/
+                /** diagpix : DIAGonal_PIXels ...............**/
 
-                                    i16_til_exp=((U16)(
-            aac2020_paint5d_diagpix_CTO_til_exp(
-                    (  (U08)diagpix  )        
-            )));;
-    
-            #error "[FINISH_THIS_FORMULA]"
+                diagp_x = AST_CTO_DIA( rem_i_x ); //:diagpix.x
+                diagp_y = AST_CTO_DIA( rem_i_y ); //:diagpix.y
+                diagpix = MIN( diagp_x , diagp_y );
+
+                /** @CALC@ **/
+                                        i16_til_exp=((U16)(
+                aac2020_paint5d_diagpix_CTO_til_exp(
+                        (  (U08)diagpix  )        
+                )));;
+
+                /** @REBASE_LOCAL@ **/
+                rem_i_x =( rem_i_x - diagpix );
+                rem_i_y =( rem_i_y - diagpix );
+
+            //:                                   i16_til_exp://
+            //:----------------:CALC_AND_REBASE_LOCAL:til_exp://
+            //:CALC_AND_REBASE_LOCAL:til_lay:----------------://
+
+                //:  @VID_IID[ 0072 ]TIME[ 01H 00M 15S ]     ://
+                //:  1D: [      til_lay      ]   ............://
+                //:  2D: [ o_x_lay , o_y_lay ]   ............://
+
+                bip_sip =( 
+                    aac2020_paint5d_til_exp_CTO_bip_sip(
+                                i16_til_exp             ));;
+                
+                assert( rem_i_x <= 255 );
+                assert( rem_i_y <= 255 );
+                
+                /** @CALC@ **/
+                o_x_lay =( rem_i_x / bip_sip );
+                o_y_lay =( rem_i_y / bip_sip );
+                
+                assert( o_x_lay >= 0 && o_x_lay <= 1 );
+                assert( o_y_lay >= 0 && o_y_lay <= 1 );
+                
+                if( 1
+                &&  1 == o_x_lay
+                &&  1 == o_y_lay
+                ){
+                    ERR("[DIAGONAL_QUAD_IS_FOR_NESTING]");
+                };;
+
+                /** @REBASE_LOCAL@ **/
+                rem_i_x = ( rem_i_x - ( o_x_lay * bip_sip ) );
+                rem_i_y = ( rem_i_y - ( o_y_lay * bip_sip ) );
+
+            //:----------------:CALC_AND_REBASE_LOCAL:til_lay://
+            //:CALC_AND_REBASE_LOCAL:[loc_t_x,loc_t_y]:------://
+
+                max_cor =(
+                    aac2020_paint5d_til_exp_CTO_max_cor(
+                        (  (U08)i16_til_exp  )          ));;
+                
+                assert( rem_i_x >= 0 );
+                assert( rem_i_y >= 0 );
+                assert( rem_i_x <= max_cor );
+                assert( rem_i_y <= max_cor );
+
+                i16_loc_t_x = ( rem_i_x );
+                i16_loc_t_y = ( rem_i_y );
+
+            //:------:CALC_AND_REBASE_LOCAL:[loc_t_x,loc_t_y]://
 
         #undef  AST_CTO_DIA
         //:------------------------:Calculate:2D_XY_LOCATIONS://
         //:Calculate:1D_INDEX_LOCATIONS:---------------------://
-        #define TIL_QUA_WID ( 2 ) /** 2x2 cells **/
+        #define TIL_QUA_SAN ( 2 ) /** 2x2 cells( WID == HIG )**/
+        #define TIL_LAY_SAN ( 2 ) /** 2x2 cells( WID == HIG )**/
 
+            /** ******************************************** ***
+                @VID_IID[ 0072 ]TIME[ 00H 08M 40S ] 
+                SAN == SPAN , means WID == HIG
+                Use this variable to preserve the
+                balance of tokens in our code.
+            *** ******************************************** **/
         
-            i16_til_qua = o_x_qua + ( TIL_QUA_WID * o_y_qua);
+            i16_til_qua = o_x_qua + ( TIL_QUA_SAN * o_y_qua);
+        //: i16_til_exp =( ALREADY_CALCULATED_MY_FRIEND     );
+            i16_til_lay = o_x_lay + ( TIL_LAY_SAN * o_y_lay);
+        //: i16_loc_t_x =( ALREADY_CALCULATED_MY_FRIEND     );
+        //: i16_loc_t_y =( ALREADY_CALCULATED_MY_FRIEND     );
 
-
-        #undef  TIL_QUA_WID
+        #undef  TIL_QUA_SAN  
+        #undef  TIL_LAY_SAN  
         //:---------------------:Calculate:1D_INDEX_LOCATIONS://
+        //:RETURN_VIA_OUTPUT_PARAMETERS:---------------------://
 
+            assert(             i16_til_qua >=   0 ); //: 01 ://
+            assert(             i16_til_exp >=   0 ); //: 02 ://
+            assert(             i16_til_lay >=   0 ); //: 03 ://
+            assert(             i16_loc_t_x >=   0 ); //: 04 ://
+            assert(             i16_loc_t_y >=   0 ); //: 05 ://
+
+            assert(             i16_til_qua <= 255 ); //: 01 ://
+            assert(             i16_til_exp <= 255 ); //: 02 ://
+            assert(             i16_til_lay <= 255 ); //: 03 ://
+            assert(             i16_loc_t_x <= 255 ); //: 04 ://
+            assert(             i16_loc_t_y <= 255 ); //: 05 ://
+
+            (*til_qua)=(  (U08) i16_til_qua        ); //: 01 ://
+            (*til_exp)=(  (U08) i16_til_exp        ); //: 02 ://
+            (*til_lay)=(  (U08) i16_til_lay        ); //: 03 ://
+            (*loc_t_x)=(  (U08) i16_loc_t_x        ); //: 04 ://
+            (*loc_t_y)=(  (U08) i16_loc_t_y        ); //: 05 ://
+
+        //:---------------------:RETURN_VIA_OUTPUT_PARAMETERS://
+        return;
     }
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
     void
     aac2020_paint5d_painpix_CTO_glocpix(
-        U08  til_qua       /** Auset Tile Sub Quadrant Index **/
-    ,   U08  til_exp       /** TileExponent (TileSizeEnum)   **/
-    ,   U08  til_lay       /** TileLayer .................   **/
-    ,   U08  loc_t_x       /** Local  Tile X Coord / b_x     **/
-    ,   U08  loc_t_y       /** Local  Tile Y Coord / b_y     **/
-    ,   I16* glo_t_x   RES /** Global Tile X Coord           **/
-    ,   I16* glo_t_y   RES /** Global Tile X Coord           **/
+        U08        til_qua /** Auset Tile Sub Quadrant Index **/
+    ,   U08        til_exp /** TileExponent (TileSizeEnum)   **/
+    ,   U08        til_lay /** TileLayer .................   **/
+    ,   U08        loc_t_x /** Local  Tile X Coord / b_x     **/
+    ,   U08        loc_t_y /** Local  Tile Y Coord / b_y     **/
+    ,   I16*  RES  glo_t_x /** Global Tile X Coord           **/
+    ,   I16*  RES  glo_t_y /** Global Tile X Coord           **/
     )
     {
         //:references_can_never_be_null:---------------------://
@@ -583,57 +713,80 @@
         //:---------------------:references_can_never_be_null://
         //:bounds_check_inputs:------------------------------://
 
+            assert( AAC2020_PAINT5D_MAX_til_qua ==    3    );
+            assert( AAC2020_PAINT5D_MAX_til_exp ==    7    );
+            assert( AAC2020_PAINT5D_MAX_til_lay ==    2    );
+
             assert( AAC2020_PAINT5D_MAX_til_qua >= til_qua );
             assert( AAC2020_PAINT5D_MAX_til_exp >= til_exp );
             assert( AAC2020_PAINT5D_MAX_til_lay >= til_lay );
 
-            U08 max_cor =( aac2020_paint5d_til_exp_CTO_max_cor( 
-                til_exp ));;
+            U08  /* max_cor */                max_cor =(
+                ( aac2020_paint5d_til_exp_CTO_max_cor( 
+                                  til_exp )));;
 
-            assert( max_cor >= loc_t_x );
-            assert( max_cor >= loc_t_y );
+            assert( max_cor >=        loc_t_x          );
+            assert( max_cor >=        loc_t_y          );
+            assert(    0    <= (((I16)loc_t_x)+0)      );
+            assert(    0    <= (((I16)loc_t_y)+0)      );
 
         //:------------------------------:bounds_check_inputs://
+        //:declare_all_variables:----------------------------://
 
-        I16 tempi_x =( 0 - 1001 );
-        I16 tempi_y =( 0 - 1001 );
+            I16 tempi_x =( 0 - 1001 ); /** temp_integer: x   **/
+            I16 tempi_y =( 0 - 1001 ); /** temp_integer: y   **/
 
-        I16 o_x_qua =( 0 - 2002 );
-        I16 o_y_qua =( 0 - 2002 );
+            I16 o_x_qua =( 0 - 2002 ); /** til_qua.x **/
+            I16 o_y_qua =( 0 - 2002 ); /** til_qua.y **/
 
-        I16 diagpix =( 0 - 3003 );
+            I16 diagpix =( 0 - 3003 );
 
-        I16 o_x_lay =( 0 - 4004 );
-        I16 o_y_lay =( 0 - 4004 );
+            I16 o_x_lay =( 0 - 4004 ); /** til_lay.x **/
+            I16 o_y_lay =( 0 - 4004 ); /** til_lay.y **/
 
-        I16 i16_gtx =( 0 - 5005 ); /** glo_t_x  AS  I16 **/
-        I16 i16_gty =( 0 - 5005 ); /** glo_t_y  AS  I16 **/
+            I16 i16_gtx =( 0 - 5005 ); /** glo_t_x  AS  I16 **/
+            I16 i16_gty =( 0 - 5005 ); /** glo_t_y  AS  I16 **/
 
-        /** @VID_IID[ 0067 ]TIME[ 4H 25M 20S ]       **/
-        /** I16 is         ENOUGH addressing space.  **/
-        /** U08 is __NOT__ ENOUGH addressing space.  **/
-        
-        tempi_x =  til_qua         % ( 2 /** @WID@ **/ ) ;
-        tempi_y = (til_qua-tempi_x)/ ( 2 /** @WID@ **/ ) ;
-        o_x_qua = ( tempi_x * 256 ); /** offset_x_QUA **/
-        o_y_qua = ( tempi_y * 256 ); /** offset_y_QUA **/
-        
-        /** diagpix: DIAgonal_PIXels (offset) **/
-        diagpix =(I16)( aac2020_paint5d_til_exp_CTO_diagpix( 
-        til_exp ) );;
+            /** @VID_IID[ 0067 ]TIME[ 4H 25M 20S ]       **/
+            /** I16 is         ENOUGH addressing space.  **/
+            /** U08 is __NOT__ ENOUGH addressing space.  **/
+    
+        //:----------------------------:declare_all_variables://
+        //:CALCULATE:painpix_CTO_glocpix:--------------------://
 
-        tempi_x =  til_lay         % ( 2 /** @WID@ **/ ) ;
-        tempi_y = (til_lay-tempi_x)/ ( 2 /** @WID@ **/ ) ;
-        o_x_lay = ( tempi_x * ( max_cor + 1 ) );
-        o_y_lay = ( tempi_y * ( max_cor + 1 ) );
+            tempi_x =  til_qua         % ( 2 /** @WID@ **/ ) ;
+            tempi_y = (til_qua-tempi_x)/ ( 2 /** @WID@ **/ ) ;
+            o_x_qua = ( tempi_x * 256 ); /** offset_x_QUA **/
+            o_y_qua = ( tempi_y * 256 ); /** offset_y_QUA **/
+            
+            /** diagpix: DIAgonal_PIXels (offset) **/
+            diagpix =(I16)( aac2020_paint5d_til_exp_CTO_diagpix( 
+                                            til_exp ) );;
 
+            tempi_x =  til_lay         % ( 2 /** @WID@ **/ ) ;
+            tempi_y = (til_lay-tempi_x)/ ( 2 /** @WID@ **/ ) ;
+            o_x_lay = ( tempi_x * ( max_cor + 1 ) );
+            o_y_lay = ( tempi_y * ( max_cor + 1 ) );
 
-        i16_gtx=( o_x_qua + diagpix + o_x_lay + loc_t_x );
-        i16_gty=( o_y_qua + diagpix + o_y_lay + loc_t_y );
-        assert( i16_gtx >= 0 && i16_gtx <= ( 512 - 1 ) );
-        assert( i16_gty >= 0 && i16_gty <= ( 512 - 1 ) );
-        (*glo_t_x)=(  (U16)( i16_gtx )  );
-        (*glo_t_y)=(  (U16)( i16_gty )  );
+                //:error_check_range_of_temp:----------------://
+                assert( tempi_x >= 0 && tempi_x <= 1 );
+                assert( tempi_y >= 0 && tempi_y <= 1 );
+                if( 1
+                &&  1 == tempi_x
+                &&  1 == tempi_y
+                ){
+                    ERR("[BOTH_CELL_COORDS_CANNOT_BE_ONE]");
+                };;
+                //:----------------:error_check_range_of_temp://
+
+            i16_gtx=( o_x_qua + diagpix + o_x_lay + loc_t_x );
+            i16_gty=( o_y_qua + diagpix + o_y_lay + loc_t_y );
+            assert( i16_gtx >= 0 && i16_gtx <= ( 512 - 1 ) );
+            assert( i16_gty >= 0 && i16_gty <= ( 512 - 1 ) );
+            (*glo_t_x)=(  (U16)( i16_gtx )  );
+            (*glo_t_y)=(  (U16)( i16_gty )  );
+
+        //:--------------------:CALCULATE:painpix_CTO_glocpix://
 
     }
 
@@ -644,16 +797,13 @@
 #undef  I16                                           //: 03 ://
 #undef  RES                                           //: 04 ://
 #undef  MIN                                           //: 05 ://
+#undef  ERR                                           //: 06 ://
 //:===============================:QUARKMAP_COORD_CONVERSIONS://
 //:PAINT5D_QUARKMAP_GET_PUT:=================================://
 //:PAINT5D_QUARKMAP_PUT_GET:=================================://
 
     /** #_WHAT_IS_THE_QUARKMAP_# * * * * *  **/
     /** @VID_IID[ 0067 ]TIME[ 00H 52M 23S ] **/
-
-
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
@@ -1227,6 +1377,9 @@
 
         //:- - - - - - - - - - - - -:helper_functions:generic://
         //:helper_functions::conversion:- - - - - - - - - - -://
+ 
+        EXT VOD aac2020_paint5d_UTC_til_exp_CTO_bip_sip( VOD );
+                aac2020_paint5d_UTC_til_exp_CTO_bip_sip(     );
 
         EXT VOD aac2020_paint5d_UTC_til_exp_CTO_max_cor( VOD );
                 aac2020_paint5d_UTC_til_exp_CTO_max_cor(     );
@@ -1976,6 +2129,25 @@
 //:helper_functions::conversion:|||||||||||||||||||||||||||||://
 //:||||||||||||||||||||||||||||:|||||||||||||||||||||||||||||://
 
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    void
+    aac2020_paint5d_UTC_til_exp_CTO_bip_sip( void )
+    {
+        #define FUN aac2020_paint5d_til_exp_CTO_bip_sip
+        assert( FUN(0) == 128 );
+        assert( FUN(1) ==  64 );
+        assert( FUN(2) ==  32 );
+        assert( FUN(3) ==  16 );
+        assert( FUN(4) ==   8 );
+        assert( FUN(5) ==   4 );
+        assert( FUN(6) ==   2 );
+        assert( FUN(7) ==   1 );
+        #undef  FUN
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
     void
     aac2020_paint5d_UTC_til_exp_CTO_max_cor( void )
     {
@@ -2138,6 +2310,8 @@
 
         #undef  FUN
     }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
 //:|||||||||||||||||||||||||||||:||||||||||||||||||||||||||||://
 //:|||||||||||||||||||||||||||||:helper_functions::conversion://
