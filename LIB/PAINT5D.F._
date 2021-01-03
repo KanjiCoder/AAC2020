@@ -1762,7 +1762,7 @@
     U32
     aac2020_paint5d_UnitTest( U32 u32 )
     {
-        if( u32 ){ /** Reserved For Future Use **/ };
+        if( u32 ){  /** Reserved For Future Use **/  };
 
         /** ************************************************ ***
             ProgControls: 
@@ -1778,13 +1778,63 @@
                     aac2020_paint5d_ToggleTile
                     aac2020_paint5d_MoveBrush_XY
         *** ************************************************ **/
+        //:SYSTEM_DATA:BACKUP:-------------------------------://
 
-        EXT VOD aac2020_paint5d_UnitTest_ProgControls( VOD );
-                aac2020_paint5d_UnitTest_ProgControls(     );
+            /** taudirt : AAC2020_TAUDIRT_DIR_ANY            **/
+            /** taudepo : AAC2020_PIXNAME_taudepo_cpu_pix    **/
+            /** paint5d : AAC2020_PIXNAME_paint5d_cpu_pix    **/
+                                                             
+            U08* taudirt =((void*)0); /** DIRTY   TREE       **/
+            U08* taudepo =((void*)0); /** USED    SYSTEM     **/
+            U08* paint5d =((void*)0); /** CURRENT SYSTEM     **/
+            
+            AAC2020_PIXBACK_Backup_taudirt( &(taudirt) );
+            AAC2020_PIXBACK_Backup_taudepo( &(taudepo) );
+            AAC2020_PIXBACK_Backup_paint5d( &(paint5d) );
 
-        EXT VOD aac2020_paint5d_UnitTest_UserControls( VOD );
-                aac2020_paint5d_UnitTest_UserControls(     );
+        //:-------------------------------:SYSTEM_DATA:BACKUP://
+        //:RUN_UNIT_TESTS:-----------------------------------://
 
+            EXT VOD 
+            aac2020_paint5d_UnitTest_ProgControls( VOD );
+            aac2020_paint5d_UnitTest_ProgControls(     );
+
+            EXT VOD 
+            aac2020_paint5d_UnitTest_UserControls( VOD );
+            aac2020_paint5d_UnitTest_UserControls(     );
+
+        //:-----------------------------------:RUN_UNIT_TESTS://
+        //:SYSTEM_DATA:RESTORE:------------------------------://
+            //:assert_different_pointers:--------------------://
+
+                assert( taudirt != taudepo );
+                assert( taudirt != paint5d );
+
+                assert( taudepo != taudirt );
+                assert( taudepo != paint5d );
+
+                assert( paint5d != taudirt );
+                assert( paint5d != taudepo );
+
+            //:--------------------:assert_different_pointers://
+            //:more_asserts_and_data_restore:----------------://
+
+                /** @VID_IID[ 0075 ]TIME[ 00H 58M 55S ] **/
+                assert( ((void*)0) != taudirt );
+                assert( ((void*)0) != taudepo );
+                assert( ((void*)0) != paint5d );
+
+                AAC2020_PIXBACK_Restore_taudirt( &(taudirt) );
+                AAC2020_PIXBACK_Restore_taudepo( &(taudepo) );
+                AAC2020_PIXBACK_Restore_paint5d( &(paint5d) );
+
+                /** @VID_IID[ 0075 ]TIME[ 00H 57M 05S ] **/
+                assert( ((void*)0) == taudirt );
+                assert( ((void*)0) == taudepo );
+                assert( ((void*)0) == paint5d );
+
+            //:----------------:more_asserts_and_data_restore://
+        //:------------------------------:SYSTEM_DATA:RESTORE://
     }
     //:******************************************************://
     //:                                                      ://

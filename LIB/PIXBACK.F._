@@ -105,44 +105,6 @@
 #undef  U08 
 #undef  I32 
 //:==============================:GENERIC_PIXNAME_BACKUP_CODE://
-//:SPECIFIC_BACKUP_RESTORE:taudepo:==========================://
-#define U08 uint8_t /** GCC: <stdint.h> **/
-#define ERR aac2020_pixback_Halt
-
-    void
-    AAC2020_PIXBACK_Backup_taudepo(
-        U08* *BYREF_backup //:<-- @REFERENCE_TO_A_POINTER@
-    )
-    {
-        if( ((void*)0)==  BYREF_backup  ){ ERR("[PIXBACK01]");};
-        if( ((void*)0)!=(*BYREF_backup) ){ ERR("[PIXBACK02]");};
-        AAC2020_PIXBACK_Backup(
-            &( AAC2020_PIXNAME_taudepo_cpu_pix[0] )
-        ,   BYREF_backup      //:<-- @REFERENCE_TO_A_POINTER@
-        ,   ( 512 * 512 * 4 ) //:<-- Measured_In_Bytes
-        );;
-    }
-
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-
-    void
-    AAC2020_PIXBACK_Restore_taudepo(
-        U08* *BYREF_backup //:<-- @REFERENCE_TO_A_POINTER@
-    )
-    {
-        if( ((void*)0)==  BYREF_backup  ){ ERR("[PIXBACK03]");};
-        if( ((void*)0)==(*BYREF_backup) ){ ERR("[PIXBACK04]");};
-        AAC2020_PIXBACK_Restore(
-            &( AAC2020_PIXNAME_taudepo_cpu_pix[0] )
-        ,   BYREF_backup      //:<-- @REFERENCE_TO_A_POINTER@
-        ,   ( 512 * 512 * 4 ) //:<-- Measured_In_Bytes
-        );;
-        if( ((void*)0)!=(*BYREF_backup) ){ ERR("[PIXBACK05]");};
-    }
-
-#undef  U08
-#undef  ERR
-//:==========================:SPECIFIC_BACKUP_RESTORE:taudepo://
 //:BACKUP_THINGS_THAT_ARE_NOT_PIXELS:========================://
 #define I32 int32_t /** GCC: <stdint.h> **/
 #define U08 uint8_t /** GCC: <stdint.h> **/
@@ -186,6 +148,198 @@
 #undef  I32
 #undef  U08
 //:========================:BACKUP_THINGS_THAT_ARE_NOT_PIXELS://
+//:SPECIFIC_BACKUP_RESTORE:==================================://
+#define U08 uint8_t    /** GCC: <stdint.h> **/        //: 01 ://
+#define U32 uint32_t   /** GCC: <stdint.h> **/        //: 02 ://
+#define V_P ((void*)0) /** V_P:VoidPointer **/        //: 03 ://
+#define D_V  void**    /** D_V:DoubleVoid  **/        //: 04 ://
+#define ERR aac2020_pixback_Halt                      //: 05 ://
+
+    //:SPECIFIC_BACKUP_RESTORE:taudirt:----------------------://
+
+        /** ************************************************ **/
+        /**NOTE: TAUDIRT IS NOT AN ALLOCATION OF PIXEL BYTES!**/
+        /**      But we use U08 because we don't care what   **/
+        /**      the data is. We just care how much of it    **/
+        /**      there is.                                   **/
+        /**      @VID_IID[ 0075 ]TIME[ 01H 09M 02S ]         **/
+        /** ************************************************ **/
+
+        void
+        AAC2020_PIXBACK_Backup_taudirt(
+            U08* *BYREF_backup //:<-- @REF_TO_A_POINTER@
+        )
+        {
+            //:input_check:----------------------------------://
+
+                /** @VID_IID[ 0075 ]TIME[ 00H 40M 05S ] **/
+
+                if( V_P ==  BYREF_backup  ){ 
+                    ERR("[BUTAU:REFS_CANT_BE_NULL:20210102.B]");
+                };;
+                if( V_P !=(*BYREF_backup )){
+                    ERR("[BUTAU:POINTER_IS_IN_USE:20210102.B]");
+                };;
+
+            //:----------------------------------:input_check://
+            //:GetSizeOfDataToBackup:------------------------://
+                U32 
+                SIZE_OF_taudirt_dir_any =( sizeof( struct
+                AAC2020_TAUDIRT_l_A_04x04_TAU_Pix_512 ));;
+
+                U32
+                SIZECHK_taudirt_dir_any =( sizeof( 
+                AAC2020_TAUDIRT_DIR_ANY               ));;
+
+                if( SIZE_OF_taudirt_dir_any
+                !=  SIZECHK_taudirt_dir_any
+                ){
+                    ERR("[TUADIRT_SIZE_CHECK_FAIL:BACKUP]");
+                };;
+            //:------------------------:GetSizeOfDataToBackup://
+            //:Do_Thing_With_Data:BACKUP:--------------------://
+            
+                /** BUTAU:BackUp_TAUdirt **/
+
+                if( V_P==  BYREF_backup  ){ ERR("[BUTAU:01]");};
+                if( V_P!=(*BYREF_backup) ){ ERR("[BUTAU:02]");};
+                AAC2020_PIXBACK_Backup_void(
+                    &( AAC2020_TAUDIRT_DIR_ANY )//:<--@PERM_DATA 
+                ,    (D_V)BYREF_backup //:<-- @REF_TO_A_POINTER@
+                ,    ( SIZE_OF_taudirt_dir_any ) //:<--NUM_BYTES
+                );;
+
+            //:--------------------:Do_Thing_With_Data:BACKUP://
+        }
+
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+
+        void
+        AAC2020_PIXBACK_Restore_taudirt(
+            U08* *BYREF_backup //:<-- @REF_TO_A_POINTER@
+        )
+        {
+            //:input_check:----------------------------------://
+
+                /** @VID_IID[ 0075 ]TIME[ 00H 42M 40S ] **/
+
+                if( V_P ==  BYREF_backup  ){ 
+                    ERR("[RETAU:REFS_CANT_BE_NULL:20210102.R]");
+                };;
+                if( V_P ==(*BYREF_backup )){
+                    ERR("[RETAU:BACKUPDATA_ISNULL:20210102.R]");
+                };;
+
+            //:----------------------------------:input_check://
+            //:GetSizeOfDataToBackup:------------------------://
+                U32 
+                SIZE_OF_taudirt_dir_any =( sizeof( struct
+                AAC2020_TAUDIRT_l_A_04x04_TAU_Pix_512 ));;
+
+                U32
+                SIZECHK_taudirt_dir_any =( sizeof( 
+                AAC2020_TAUDIRT_DIR_ANY               ));;
+
+                if( SIZE_OF_taudirt_dir_any
+                !=  SIZECHK_taudirt_dir_any
+                ){
+                    ERR("[TUADIRT_SIZE_CHECK_FAIL:RESTORE]");
+                };;
+            //:------------------------:GetSizeOfDataToBackup://
+            //:Do_Thing_With_Data:RESTORE:-------------------://
+
+                /** RETAU:REstore_TAUdirt **/
+
+                if( V_P==  BYREF_backup  ){ ERR("[RETAU:01]");};
+                if( V_P==(*BYREF_backup) ){ ERR("[RETAU:02]");};
+                AAC2020_PIXBACK_Restore_void(
+                    &( AAC2020_TAUDIRT_DIR_ANY )//:<--@PERM_DATA 
+                ,    (D_V)BYREF_backup //:<-- @REF_TO_A_POINTER@
+                ,    ( SIZE_OF_taudirt_dir_any ) //:<--NUM_BYTES
+                );;
+                if( V_P!=(*BYREF_backup) ){ ERR("[RETAU:03]");};
+
+            //:-------------------:Do_Thing_With_Data:RESTORE://
+        }
+
+    //:----------------------:SPECIFIC_BACKUP_RESTORE:taudirt://
+    //:SPECIFIC_BACKUP_RESTORE:taudepo:----------------------://
+
+        void
+        AAC2020_PIXBACK_Backup_taudepo(
+            U08* *BYREF_backup //:<-- @REF_TO_A_POINTER@
+        )
+        {
+            if( V_P==  BYREF_backup  ){ ERR("[PIXBACK_01]");};
+            if( V_P!=(*BYREF_backup) ){ ERR("[PIXBACK_02]");};
+            AAC2020_PIXBACK_Backup(
+                &( AAC2020_PIXNAME_taudepo_cpu_pix[0] )
+            ,   BYREF_backup      //:<-- @REF_TO_A_POINTER@
+            ,   ( 512 * 512 * 4 ) //:<-- Measured_In_Bytes
+            );;
+        }
+
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+
+        void
+        AAC2020_PIXBACK_Restore_taudepo(
+            U08* *BYREF_backup //:<-- @REF_TO_A_POINTER@
+        )
+        {
+            if( V_P==  BYREF_backup  ){ ERR("[PIXBACK_03]");};
+            if( V_P==(*BYREF_backup) ){ ERR("[PIXBACK_04]");};
+            AAC2020_PIXBACK_Restore(
+                &( AAC2020_PIXNAME_taudepo_cpu_pix[0] )
+            ,   BYREF_backup      //:<-- @REF_TO_A_POINTER@
+            ,   ( 512 * 512 * 4 ) //:<-- Measured_In_Bytes
+            );;
+            if( V_P!=(*BYREF_backup) ){ ERR("[PIXBACK_05]");};
+        }
+
+
+    //:----------------------:SPECIFIC_BACKUP_RESTORE:taudepo://
+    //:SPECIFIC_BACKUP_RESTORE:paint5d:----------------------://
+
+        void
+        AAC2020_PIXBACK_Backup_paint5d(
+            U08* *BYREF_backup //:<-- @REF_TO_A_POINTER@
+        )
+        {
+            if( V_P==  BYREF_backup  ){ ERR("[PIXBACK_01]");};
+            if( V_P!=(*BYREF_backup) ){ ERR("[PIXBACK_02]");};
+            AAC2020_PIXBACK_Backup(
+                &( AAC2020_PIXNAME_paint5d_cpu_pix[0] )
+            ,   BYREF_backup      //:<-- @REF_TO_A_POINTER@
+            ,   ( 512 * 512 * 4 ) //:<-- Measured_In_Bytes
+            );;
+        }
+
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+
+        void
+        AAC2020_PIXBACK_Restore_paint5d(
+            U08* *BYREF_backup //:<-- @REF_TO_A_POINTER@
+        )
+        {
+            if( V_P==  BYREF_backup  ){ ERR("[PIXBACK_03]");};
+            if( V_P==(*BYREF_backup) ){ ERR("[PIXBACK_04]");};
+            AAC2020_PIXBACK_Restore(
+                &( AAC2020_PIXNAME_paint5d_cpu_pix[0] )
+            ,   BYREF_backup      //:<-- @REF_TO_A_POINTER@
+            ,   ( 512 * 512 * 4 ) //:<-- Measured_In_Bytes
+            );;
+            if( V_P!=(*BYREF_backup) ){ ERR("[PIXBACK_05]");};
+        }
+
+
+    //:----------------------:SPECIFIC_BACKUP_RESTORE:paint5d://
+
+#undef  U08                                           //: 01 ://
+#undef  U32                                           //: 02 ://
+#undef  V_P                                           //: 03 ://
+#undef  D_V                                           //: 04 ://
+#undef  ERR                                           //: 05 ://
+//:==================================:SPECIFIC_BACKUP_RESTORE://
 //:UNIT_TEST:================================================://
 #define I32  int32_t /** GCC: <stdint.h> **/
 #define U32 uint32_t /** GCC: <stdint.h> **/
@@ -320,6 +474,9 @@
         //:-------------------------------:restore_and_verify://
 
         LOG( "[AAC2020_PIXBACK_UnitTest:END]",0);
+
+
+        AAC2020_TODOMAN_Vital("[UNIT_TESTS_FOR_SPECIFIC_BACKUP_FUNCTIONS]");
 
         return( 0x00 );
     }
