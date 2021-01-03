@@ -801,10 +801,11 @@
 //:===============================:QUARKMAP_COORD_CONVERSIONS://
 //:PAINT5D_QUARKMAP_GET_PUT:=================================://
 //:PAINT5D_QUARKMAP_PUT_GET:=================================://
-#define U08 uint8_t /** GCC: <stdint.h> **/           //: 01 ://
-#define I16 int16_t /** GCC: <stdint.h> **/           //: 02 ://
-#define I32 int32_t /** GCC: <stdint.h> **/           //: 03 ://
-#define ERR aac2020_paint5d_Halt                      //: 04 ://
+#define U08  uint8_t /** GCC: <stdint.h> **/          //: 01 ://
+#define I16  int16_t /** GCC: <stdint.h> **/          //: 02 ://
+#define I32  int32_t /** GCC: <stdint.h> **/          //: 03 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 04 ://
+#define ERR aac2020_paint5d_Halt                      //: 05 ://
 
     /** #_WHAT_IS_THE_QUARKMAP_# * * * * *  **/
     /** @VID_IID[ 0067 ]TIME[ 00H 52M 23S ] **/
@@ -906,6 +907,16 @@
 
             glo_dex = glo_t_x + ( glo_t_y  *  MAP_SAN );
             glo_com =(glo_dex * 4 /** 4: RGBA **/ );
+    
+            //:double_check_component_index:-----------------://
+                U32 chk_glo_com=( 
+                    AAC2020_GPUDATA_p_x_p_y_CTO_com_dex(
+                                glo_t_x 
+                              ,     glo_t_y ));;
+
+                assert(       chk_glo_com  == ((U32)glo_com) );
+                assert( ((I16)chk_glo_com) == (     glo_com) );
+            //:-----------------:double_check_component_index://
 
         #undef  MAP_SAN
         //:------------------------:convert_pixel_xy_to_index://
@@ -1098,6 +1109,16 @@
             glo_dex = glo_t_x + ( glo_t_y  *  MAP_SAN );
             glo_com =(glo_dex * 4 /** 4: RGBA **/ );
 
+            //:double_check_component_index:-----------------://
+                U32 chk_glo_com=( 
+                    AAC2020_GPUDATA_p_x_p_y_CTO_com_dex(
+                                glo_t_x 
+                              ,     glo_t_y ));;
+
+                assert(       chk_glo_com  == ((U32)glo_com) );
+                assert( ((I16)chk_glo_com) == (     glo_com) );
+            //:-----------------:double_check_component_index://
+
         #undef  MAP_SAN
         //:------------------------:convert_pixel_xy_to_index://
         //:bit_packing_stuff:--------------------------------://
@@ -1182,14 +1203,17 @@
 #undef  U08                                           //: 01 ://
 #undef  I16                                           //: 02 ://
 #undef  I32                                           //: 03 ://
-#undef  ERR                                           //: 04 ://
+#undef  U32                                           //: 04 ://
+#undef  ERR                                           //: 05 ://
 //:=================================:PAINT5D_QUARKMAP_GET_PUT://
 //:=================================:PAINT5D_QUARKMAP_PUT_GET://
 //:TAU:UNIFORM_CONTROLLER_FUNCTIONS:=========================://
-#define CAP aac2020_paint5d_i32_Cap_u32 /** Cap as in CLAMP **/
-#define I32  int32_t /** GCC: <stdint.h> **/
-#define U32 uint32_t /** GCC: <stdint.h> **/
-#define U16 uint16_t /** GCC: <stdint.h> **/
+#define CAP aac2020_paint5d_i32_Cap_u32               //: 01 ://
+#define I32  int32_t /** GCC: <stdint.h> **/          //: 02 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 03 ://
+#define U16 uint16_t /** GCC: <stdint.h> **/          //: 04 ://
+#define U08  uint8_t /** GCC: <stdint.h> **/          //: 05 ://
+#define ERR aac2020_paint5d_Halt                      //: 06 ://
 
     void
     aac2020_paint5d_MoveCamera_XY(
@@ -1459,8 +1483,8 @@
     {
         //:variable_declarations:----------------------------://
 
-            I32 t_x = ( 0 -   7770777 ); /** t_x : tile_x  **/
-            I32 t_y = ( 0 -   8880888 ); /** t_y : tile_y  **/
+            /// t_x =  ENDED_UP_USING[ loc_t_x ]INSTEAD ////////
+            /// t_y =  ENDED_UP_USING[ loc_t_y ]INSTEAD ////////
 
             U32 b_x = ( 0 + 123000123 ); /** b_x : brush_x **/
             U32 b_y = ( 0 + 123000123 ); /** b_y : brush_y **/
@@ -1482,57 +1506,120 @@
 
                     AAC2020_PIXNAME_paint5d_cpu_pix
             *** ******************************************** **/
-                    
-            U32 val_bru =( 4433 ) ;  
-            U32 val_cur =( 3344 ) ;  
+
+            U32 til_qua =( 1234 ) ;  /**Tile_Quadrant_000_002**/
+            U32 til_exp =( 2345 ) ;  /**EXPONENT ( P5D_T_E ) **/
+            U32 til_lay =( 3456 ) ;  /**   LAYER ( P5D_T_L ) **/
+            U32 loc_t_x =( 4567 ) ;  /**LOCAL__X ( P5D_B_X ) **/
+            U32 loc_t_y =( 5678 ) ;  /**LOCAL__Y ( P5D_B_Y ) **/
+            U32 aus_dex =( 6789 ) ;  /**Auset_Index_000_015  **/
+        //: U32 til_val =( ---- ) ;  /** THIS IS[ val_bru ]  **/
+
+            U32 val_bru =( 4433 ) ;  /** LOADED INTO BRUSH   **/    
+            U32 val_cur =( 3344 ) ;  /** ON THE TILEMAP      **/
+            U32 val_put =( 1212 ) ;  /** Actual Value To Put **/
+
+            U08 til_val =(  111 ) ;  /** val_cur BUT 8 bits  **/
+            assert( 1 == sizeof( til_val ) ); /** 1 BYTE **/
 
             U32 u_1 ; //: unused_number_001 ://
             U32 u_2 ; //: unused_number_002 ://
             U32 u_3 ; //: unused_number_003 ://
-        
+  
         //:----------------------------:variable_declarations://
         //:GET_STATE:OF_BRUSH:-------------------------------://
         /** ************************************************ ***
         Variables we need from this section:
-        1:  val_bru 
-        2:  til_exp
-        3:  til_lay
-        4:  loc_t_x
-        5:  loc_t_y
+        1:  til_qua <---- P5D_T_Q
+        2:  til_exp <---- P5D_T_E
+        3:  til_lay <---- P5D_T_L
+        4:  loc_t_x <---- P5D_B_X ( brush.xy === local.xy )
+        5:  loc_t_y <---- P5D_B_Y ( brush.xy === local.xy )
+        6:  aus_dex <---- P5D_A_D
+        7:  val_bru <---- P5D_T_V ( til_val  === val_bru  )
         *** ************************************************ **/
-
-            //:GET_STATE:val_bru:----------------------------://
+            //:GET_STATE:til_qua:----------------------------://
 
                 //: get_tile_value_loaded_into_brush ://
 
                 AAC2020_TAUDEPO_Get( 
                     AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
                 ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
-                ,   AAC2020_TAUDEPO.P5D_T_V //:[ TIL_VAL ]
-                ,  &(val_bru),&(u_1),&(u_2),&(u_3)
+                ,   AAC2020_TAUDEPO.P5D_T_Q //:DEX_VAR : til_qua
+                ,  &(til_qua),&(u_1),&(u_2),&(u_3)
                 );;
 
-            //:----------------------------:GET_STATE:val_bru://
+            //:----------------------------:GET_STATE:til_qua://
             //:GET_STATE:til_exp:----------------------------://
 
-                #error "[GET_STATE:til_exp]"
-
+                /** VOID **/
+                AAC2020_TAUDEPO_Get( 
+                    AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+                ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+                ,   AAC2020_TAUDEPO.P5D_T_E //:DEX_VAR : til_exp
+                ,  &(til_exp),&(u_1),&(u_2),&(u_3)
+                );;
+                
             //:----------------------------:GET_STATE:til_exp://
             //:GET_STATE:til_lay:----------------------------://
 
-                #error "[GET_STATE:til_lay]"
-
+                /** VOID **/
+                AAC2020_TAUDEPO_Get( 
+                    AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+                ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+                ,   AAC2020_TAUDEPO.P5D_T_L //:DEX_VAR : til_lay
+                ,  &(til_lay),&(u_1),&(u_2),&(u_3)
+                );;
+                
             //:----------------------------:GET_STATE:til_lay://
             //:GET_STATE:loc_t_x:----------------------------://
 
-                #error "[GET_STATE:loc_t_x]"
+                /** VOID **/
+                AAC2020_TAUDEPO_Get( 
+                    AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+                ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+                ,   AAC2020_TAUDEPO.P5D_B_X //:DEX_VAR : brush_x
+                ,  &(loc_t_x),&(u_1),&(u_2),&(u_3)
+                );;
 
             //:----------------------------:GET_STATE:loc_t_x://
             //:GET_STATE:loc_t_y:----------------------------://
 
-                #error "[GET_STATE:loc_t_y]"
+                /** VOID **/
+                AAC2020_TAUDEPO_Get( 
+                    AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+                ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+                ,   AAC2020_TAUDEPO.P5D_B_Y //:DEX_VAR : brush_y
+                ,  &(loc_t_y),&(u_1),&(u_2),&(u_3)
+                );;
 
             //:----------------------------:GET_STATE:loc_t_y://
+            //:GET_STATE:aus_dex:----------------------------://
+
+                /** VOID **/
+                AAC2020_TAUDEPO_Get( 
+                    AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+                ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+                ,   AAC2020_TAUDEPO.P5D_A_D //:DEX_VAR : aus_dex
+                ,  &(aus_dex),&(u_1),&(u_2),&(u_3)
+                );;
+
+            //:----------------------------:GET_STATE:aus_dex://
+            //:GET_STATE:val_bru:----------------------------://
+            //:GET_STATE:til_val:----------------------------://
+
+                //: get_tile_value_loaded_into_brush ://
+                //[  til_val ==== val_bru ]//
+
+                AAC2020_TAUDEPO_Get( 
+                    AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+                ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+                ,   AAC2020_TAUDEPO.P5D_T_V //:DEX_VAR : til_val
+                ,  &(val_bru),&(u_1),&(u_2),&(u_3)
+                );;
+
+            //:----------------------------:GET_STATE:til_val://
+            //:----------------------------:GET_STATE:val_bru://
 
         //:-------------------------------:GET_STATE:OF_BRUSH://
         //:get_current_value_on_tile_map:--------------------://
@@ -1548,15 +1635,35 @@
             /** @VID_IID[ 0066 ]TIME[ 08H 14M 15S ] ******* **/
             /** #_WHY_PAINT5D_GET_PARAM_ORDER_# **/
             AAC2020_PAINT5D_Get(
-                til_exp   /** TileExponent (TileSizeEnum) **/
-            ,   til_lay   /** TileLayer ................. **/
-            ,   loc_t_x   /** Local Tile X Coord / b_x    **/
-            ,   loc_t_y   /** Local Tile Y Coord / b_y    **/
-            ,&( val_cur ) /** [ val_cur / til_val ]       **/
+                til_qua   /** 01 : SEE[ #DIA_P5D_MAIN# ]     **/
+            ,   til_exp   /** 02 :  IN[ PAINT5D.D._    ]     **/
+            ,   til_lay   /** 03 :                           **/
+            ,   loc_t_x   /** 04 : For diagrams explaining   **/
+            ,   loc_t_y   /** 05 : these parameters.         **/
+            ,   aus_dex   /** 06 : @VID_IID[ 0075 ]          **/
+            ,&( til_val ) /** 07 : @TIME[ 2H 46M 20S ]       **/
             );;
+                
+            /** ******************************************** ***
+                @VID_IID[ 0075 ]TIME[ 2H 50M 30S ]       
+                Necessary because of the different bit   
+                widths required by different functions.  
+            *** ******************************************** **/
+
+            val_cur = til_val ;
+
+            /** ******************************************** **/
 
         //:--------------------:get_current_value_on_tile_map://
         //:brush_coords:READ:--------------------------------://
+
+            /** ******************************************** **/
+            /** @VID_IID[ 0075 ]TIME[ 01H 41M 32S ]          **/
+            /** This is a bit redundant. Looks like we had   **/
+            /** some confusion on our variable names.        **/
+            /** Lets just use [ b_x , b_y ] as a redundancy  **/
+            /** to check our work I guess.                   **/
+            /** ******************************************** **/
 
             AAC2020_TAUDEPO_Get( 
                 AAC2020_TAUDEPO.TAU_015    //:DEX_TAU
@@ -1572,6 +1679,9 @@
             ,  &(b_y),&(u_1),&(u_2),&(u_3) //:<-- OUTPUT:PARAMS
             );;
 
+            assert( loc_t_x == b_x ); //:@_IDENTICAL_VALUES_@://
+            assert( loc_t_y == b_y ); //:@_IDENTICAL_VALUES_@://
+
         //:--------------------------------:brush_coords:READ://
         //:SET_OR_UNSET_THE_TILE:----------------------------://
 
@@ -1584,17 +1694,64 @@
                 we will [ SET / OVERWRITE ] the tile.
             *** ******************************************** **/
 
-            #error SET_OR_UNSET_THE_TILE
+            if( val_bru != val_cur ){  /** [ OVERWRITE ] **/
+
+                val_put = val_bru; 
+                assert( val_put <= 3 ); //:[  0 |  1 |  2 |  3 ]
+                                        //:[ 00 | 01 | 10 | 11 ]
+
+            }else
+            if( val_bru == val_cur ){  /** [ERASE/UNSET] **/
+
+                /** **************************************** **/
+                /**                                          **/
+                /** @VID_IID[ 0075 ]TIME[ 1H 54M 00S ]       **/
+                /**                                          **/
+                /** By convention, the zero tile will        **/
+                /** mean empty space. However the code       **/
+                /** should NOT be like gamemaker. We should  **/
+                /** NOT treat tile zero any differently      **/
+                /** when running code on it. Thus if we      **/
+                /** really wanted to, we could put a         **/
+                /** pattern in tile value zero. For          **/
+                /** example, the void of space. Like a       **/
+                /** "star space" tile or something.          **/
+                /**                                          **/
+                /** Example Void Of Space Tile:              **/
+                /** youtube.com/watch?v=tl40xidKF-4&t=1m25s  **/
+                /** **************************************** **/
+
+                val_put = ( 0 ); 
+                assert( val_put <= 3 ); //:[  0 |  1 |  2 |  3 ]
+                                        //:[ 00 | 01 | 10 | 11 ]
+
+            }else{
+                ERR("[EDCL:2021_01_02:PAINT5D]");
+            };;
+
+            assert( val_put <= 3 ); //:[  0 |  1 |  2 |  3 ]
+                                    //:[ 00 | 01 | 10 | 11 ]
+
+            AAC2020_PAINT5D_Put(
+                  til_qua   /** 01 : SEE[ #DIA_P5D_MAIN# ]   **/
+            ,     til_exp   /** 02 :  IN[ PAINT5D.D._    ]   **/
+            ,     til_lay   /** 03 :                         **/
+            ,     loc_t_x   /** 04 : For diagrams explaining **/
+            ,     loc_t_y   /** 05 : these parameters.       **/
+            ,     aus_dex   /** 06 : @VID_IID[ 0075 ]        **/
+            ,(U08)val_put   /** 07 : @TIME[ 2H 44M 48S ]     **/
+            );;
 
         //:----------------------------:SET_OR_UNSET_THE_TILE://
-
         return;
     }
 
-#undef  CAP
-#undef  I32
-#undef  U32
-#undef  U16
+#undef  CAP                                           //: 01 ://
+#undef  I32                                           //: 02 ://
+#undef  U32                                           //: 03 ://
+#undef  U16                                           //: 04 ://
+#undef  U08                                           //: 05 ://
+#undef  ERR                                           //: 06 ://
 //:=========================:TAU:UNIFORM_CONTROLLER_FUNCTIONS://
 //:KEYBOARD_HANDLER:(KeyInn):================================://
 #define I32 int32_t /** GCC: <stdint.h> **/

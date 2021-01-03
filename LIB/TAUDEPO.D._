@@ -144,16 +144,37 @@ END: NO_DEEPER_NESTING :- - - - - - - - - - - - - - - - - - -://
     /** #_VARS_ARE_CLUSTERS_OF_4_PIXELS_#          ......... **/
     /** #_VAR_ENUMS_SHOULD_COUNT_UP_WITH_NO_GAPS_# ......... **/
 
-    #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vp0  ( 0 )
-    #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vp1  ( 1 )
-    #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vpc  ( 2 )
+    //:VIEWPORT_RECTANGLES:----------------------------------://
+        /** ************************************************ ***
+            @VID_IID[ 0075 ]TIME[ 2H 29M 8S ]
+            "vp#" == "viewport#"
 
-    #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_B_X  ( 3 )
-    #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_B_Y  ( 4 )
-                                             
-    #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_T_V  ( 5 )
-    #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_T_E  ( 6 )
-    #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_T_L  ( 7 )
+            1. vp0: VP #(0): (Destination/Screen Viewport)
+            2. vp1:  VP #(1): (Offscreen/Source/TileMapData_BM)
+            3. vpc: Viewport_Canvas (Or: Window/OpenGL)
+
+        *** ************************************************ **/
+        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vp0  ( 0 )
+        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vp1  ( 1 )
+        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vpc  ( 2 )
+        /** ************************************************ **/
+    //:----------------------------------:VIEWPORT_RECTANGLES://
+    //:ORDER_OF:AAC2020_PAINT5D_Put:-------------------------://
+        /** ************************************************ ***
+            ORDER HERE MATCHES PARAM ORDER OF FUNCTION: 
+            AAC2020_PAINT5D_Put                         
+            @VID_IID[ 0075 ]TIME[ 02H 26M 23S ]         
+        *** ************************************************ **/
+        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_T_Q  ( 3 )
+        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_T_E  ( 4 )
+        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_T_L  ( 5 )
+        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_B_X  ( 6 )
+        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_B_Y  ( 7 )
+        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_A_D  ( 8 )
+        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_T_V  ( 9 )
+        /** ************************************************ **/
+    //:-------------------------:ORDER_OF:AAC2020_PAINT5D_Put://
+
 
     /** YOU CANNOT EXCEED 255, WE ONLY HAVE 255 VAR CELLS!  **/
     /** @VID_IID[ 0066 ]TIME[ 03H 27M 19S ] ................ **/
@@ -215,17 +236,18 @@ END: NO_DEEPER_NESTING :- - - - - - - - - - - - - - - - - - -://
                     const U08 P5D_VP0 ; //:TODO:WireUp
                     const U08 P5D_VP1 ; //:TODO:WireUp
 
-                    const U08 P5D_B_X; //:BRUSH_X
-                    const U08 P5D_B_Y; //:BRUSH_X
-
                     /** @VID_IID[ 0071 ]TIME[ 03H 18M 32S ]  **/
                     /** SEE_DIAGRAM[ #DIA_P5D_MAIN# ]* * * * **/
                     /**        IN_FILE[ PAINT5D.D._ ]* * * * **/
 
-                    const U08 P5D_T_V; //:TILE_VALUE
-                    const U08 P5D_T_E; //:TILE_EXPONENT( SIZE )
-                    const U08 P5D_T_L; //:TILE_LAYER
-
+        /* 01 */    const U08 P5D_T_Q; //:TILE_QUADRANT
+        /* 02 */    const U08 P5D_T_E; //:TILE_EXPONENT( SIZE )
+        /* 03 */    const U08 P5D_T_L; //:TILE_LAYER
+        /* 04 */    const U08 P5D_B_X; //:BRUSH_X   ( loc_t_x )
+        /* 05 */    const U08 P5D_B_Y; //:BRUSH_X   ( loc_t_x )
+        /* 06 */    const U08 P5D_A_D; //:AUSET_INDEX(aus_dex )
+        /* 07 */    const U08 P5D_T_V; //:TILE_VALUE (val_bru )
+                       
                 //:- - - - - - - - - - - - - - -:PAINT5D(P5D)://
                 //:TODO_02(TD2):- - - - - - - - - - - - - - -://
 
@@ -279,12 +301,35 @@ END: NO_DEEPER_NESTING :- - - - - - - - - - - - - - - - - - -://
     ,       .P5D_VP0 = ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vp0 )
     ,       .P5D_VP1 = ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vp1 )
 
-    ,       .P5D_B_X = ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_B_X )
-    ,       .P5D_B_Y = ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_B_Y )
+            /** ******************************************** ***
 
-    ,       .P5D_T_V = ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_T_V )
+            @VID_IID[ 0075 ]TIME[ 2H 20M 40S ]
+
+            Everything should be in the EXACT order it   
+            Appears in the parameter list for:
+            AAC2020_PAINT5D_Put(... )
+
+            U08
+            AAC2020_PAINT5D_Put(
+                U08  til_qua  <---- P5D_T_Q
+            ,   U08  til_exp  <---- P5D_T_E
+            ,   U08  til_lay  <---- P5D_T_L
+            ,   U08  loc_t_x  <---- P5D_B_X ( brush == local )
+            ,   U08  loc_t_y  <---- P5D_B_Y ( brush == local )
+            ,   U08  aus_dex  <---- P5D_A_D
+            ,   U08  til_val  <---- P5D_T_V
+            );;
+            *** ******************************************** **/
+
+    ,       .P5D_T_Q = ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_T_Q )
     ,       .P5D_T_E = ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_T_E )
     ,       .P5D_T_L = ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_T_L )
+    ,       .P5D_B_X = ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_B_X )
+    ,       .P5D_B_Y = ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_B_Y )
+    ,       .P5D_A_D = ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_A_D )
+    ,       .P5D_T_V = ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_T_V )
+
+
      
     };
 
