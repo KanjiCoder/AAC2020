@@ -25,14 +25,14 @@
 //:=================================:OKAY_STATUS_INFO_MESSAGE://
 //:INFO_STATUS_INFO_MESSAGE:=================================://
 #define I32 int32_t /** GCC: <stdint.h> **/
-
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     void
     aac2020_paint5d_Info( const char* msg_inf )
     {   if( AAC2020_SILENCE.PAINT5D <= 0 ){
         printf("[aac2020_paint5d_Info]:%s\n", msg_inf );
         fflush(stdout);    
     };;}
-
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     void
     aac2020_paint5d_Info_dec( 
         const char* str_fmt
@@ -44,7 +44,21 @@
         printf( str_fmt , val_dec );
         fflush( stdout            );    
     };;}
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    aac2020_paint5d_Info_any(
+        const char* str_fmt
+    ,   void*       dat_any   
+    )
+    { if( AAC2020_SILENCE.PAINT5D <= 0 ){
 
+        /** Same Line As Next Printf **/
+        printf("[paint5d_log]....(   " ); fflush( stdout );
+        printf( str_fmt , dat_any      ); fflush( stdout );
+        printf(               "   )\n" ); fflush( stdout );
+
+    };; }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 #undef  I32
 //:=================================:INFO_STATUS_INFO_MESSAGE://
 //:INITIALIZE_PAINT5D:=======================================://
@@ -228,6 +242,18 @@
             AAC2020_CEDITOR_dex_ing=( 0xFFFFFFFF );
 
         //:-----------------:#_INI_SPAM_AND_RECURSION_GAURD_#://
+
+        //:Run_Unit_Test_If_Never_Ran_Before:----------------://
+
+            if( aac2020_paint5d_unit_test_ran_or_running <= 0 ){
+                aac2020_paint5d_unit_test_ran_or_running =( 1 );
+
+                extern U32 AAC2020_PAINT5D_UnitTest( U32  );
+                           AAC2020_PAINT5D_UnitTest( 0x00 );
+
+            };;
+
+        //:----------------:Run_Unit_Test_If_Never_Ran_Before://
 
         return( 0x00 );
 
@@ -420,6 +446,7 @@
         *** ************************************************ **/
         ERR("[CANNOT_MAKE_SUCH_FUNCTION:diagpix_CTO_astipix]");
 
+        return( 0x00 );
     }
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
@@ -821,6 +848,8 @@
     ,   U08  loc_t_y   /** Local Tile Y Coord / b_y       ...**/
     ,   U08  aus_dex   /** AUSet_inDEX (AutoTileSetIndex) ...**/
     ,   U08  til_val   /** [ val_cur / til_val ]          ...**/
+        //[ SAME_PARAM_ORDER_AS[ PAINT5D_Put_BrushState ]    ]//
+        //[ @VID_IID[ 0076 ]TIME[ 6H 00M 00S ]               ]//
     )
     {
         //:bounds_check_inputs:------------------------------://
@@ -1207,6 +1236,338 @@
 #undef  ERR                                           //: 05 ://
 //:=================================:PAINT5D_QUARKMAP_GET_PUT://
 //:=================================:PAINT5D_QUARKMAP_PUT_GET://
+//:CREATED_TO_HELP_UNIT_TEST_USER_CONTROLS:==================://
+//:ORIGINALLY_NOT_WIRED_INTO_KEYBOARD:=======================://
+#define I32  int32_t /** GCC: <stdint.h> **/          //: 01 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 02 ://
+#define U08  uint8_t /** GCC: <stdint.h> **/          //: 03 ://
+#define ERR  aac2020_paint5d_Halt                     //: 04 ://
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void /** @PRIVATE@ NOT TO BE BOUND TO KEYBOARD **/
+    aac2020_paint5d_Get_BrushState( void )
+    {   
+        //: @VID_IID[ 0077 ]TIME[ 01H 20M 14S ]
+        //:IDN_A_HF_FM_HF
+        //:I_DONT_NEED_A_HELPER_FUNCTION_FOR_MY_HELPER_FUNCTION
+        ERR("[IDN_A_HF_FM_HF:YEAR:2021]");
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void /** @PRIVATE@ NOT TO BE BOUND TO KEYBOARD **/
+    aac2020_paint5d_Put_BrushState(
+
+        /** @VID_IID[ 0076 ]TIME[ 5H 45M 00S ] ************* **/
+        /** Inputs are I32 instead of their range of         **/
+        /** U08 because they will have to be upcasted to     **/
+        /** U32 anyways, so why not use I32 so we can        **/
+        /** have better range checking debugs?               **/
+        /** ************************************************ **/
+        I32 t_q //: 01 : til_qua  : Tile Quadrant
+    ,   I32 t_e //: 02 : til_exp  : Tile Exponent  
+    ,   I32 t_l //: 03 : til_lay  : Tile Layer  
+    ,   I32 l_x //: 04 : loc_t_x  : Local Tile Location X  
+    ,   I32 l_y //: 05 : loc_t_y  : Local Tile Location Y  
+    ,   I32 a_d //: 06 : aus_dex  : AUSet_inDEX  
+    ,   I32 t_v //: 07 : til_val  : Tile Value  
+                //[      til_val is the LAST parameter       ]//
+                //[      because this is the parameter order ]//
+                //[      of the function AAC2020_PAINT5D_Put ]//
+                //[      @VID_IID[ 0076 ]TIME[ 05H 57M 55S ] ]//
+    )
+    {
+        /** @VID_IID[ 0077 ]TIME[ 5H 42M 00S ] ************* **/
+        /** Set Unused Values 1,2,3 to ALL ONE BITS  ....... **/
+        /** So that they ensure a memory stomp if    ....... **/
+        /** our code makes a mistake as to where     ....... **/
+        /** to put the bits.                         ....... **/
+        /**        0xRrGgBbAb                        ....... **/
+        U32 u_1 =( 0xFFFFFFFF ); /** UNUSED_VARIABLE #1 **/
+        U32 u_2 =( 0xFFFFFFFF ); /** UNUSED_VARIABLE #2 **/
+        U32 u_3 =( 0xFFFFFFFF ); /** UNUSED_VARIABLE #3 **/
+        /** ************************************************ **/
+
+        //:7_brush_vars_bounds_check:INPUTS:-----------------://
+        #define MAX_t_q AAC2020_PAINT5D_MAX_til_qua   //: 01 ://
+        #define MAX_t_e AAC2020_PAINT5D_MAX_til_exp   //: 02 ://
+        #define MAX_t_l AAC2020_PAINT5D_MAX_til_lay   //: 03 ://
+        /////// MAX_l_x AAC2020_PAINT5D_MAX_loc_t_x   //: 04 ://
+        /////// MAX_l_y AAC2020_PAINT5D_MAX_loc_t_y   //: 05 ://
+        #define MAX_a_d AAC2020_PAINT5D_MAX_aus_dex   //: 06 ://
+        #define MAX_t_v AAC2020_PAINT5D_MAX_til_val   //: 07 ://
+
+            I32 max_l_x =( 0 - 1230123 );
+            I32 max_l_y =( 0 - 1230123 );
+            if( 0 == t_e ){ max_l_x = 127 ; max_l_y = 127 ; };
+            if( 1 == t_e ){ max_l_x =  63 ; max_l_y =  63 ; };
+            if( 2 == t_e ){ max_l_x =  31 ; max_l_y =  31 ; };
+            if( 3 == t_e ){ max_l_x =  15 ; max_l_y =  15 ; };
+            if( 4 == t_e ){ max_l_x =   7 ; max_l_y =   7 ; };
+            if( 5 == t_e ){ max_l_x =   3 ; max_l_y =   3 ; };
+            if( 6 == t_e ){ max_l_x =   1 ; max_l_y =   1 ; };
+            if( 7 == t_e ){ max_l_x =   0 ; max_l_y =   0 ; };
+
+            assert( t_q >= 0 && t_q <= MAX_t_q );     //: 01 ://
+            assert( t_e >= 0 && t_e <= MAX_t_e );     //: 02 ://
+            assert( t_l >= 0 && t_l <= MAX_t_l );     //: 03 ://
+            assert( l_x >= 0 && l_x <= max_l_x );     //: 04 ://
+            assert( l_y >= 0 && l_y <= max_l_y );     //: 05 ://
+            assert( a_d >= 0 && a_d <= MAX_a_d );     //: 06 ://
+            assert( t_v >= 0 && t_v <= MAX_t_v );     //: 07 ://
+                                                             
+        #undef  MAX_t_q                               //: 01 ://
+        #undef  MAX_t_e                               //: 02 ://
+        //////  MAX_t_l                               //: 03 ://
+        //////  MAX_l_x                               //: 04 ://
+        #undef  MAX_l_y                               //: 05 ://
+        #undef  MAX_a_d                               //: 06 ://
+        #undef  MAX_t_v                               //: 07 ://
+        //:-----------------:7_brush_vars_bounds_check:INPUTS://
+        //:7_brush_vars_int_overflow_chk:INPUTS:-------------://
+
+            /** Make sure a DOWNCAST and then UPCAST         **/
+            /** truncates the U32 to only 8 set bits max.    **/
+
+            assert(    (U32)(U08)0xFFFFFFFF <= 0xFF  );
+
+            assert(  ( (I32)(U08)t_q ) == t_q );      //: 01 ://
+            assert(  ( (I32)(U08)t_e ) == t_e );      //: 02 ://
+            assert(  ( (I32)(U08)t_l ) == t_l );      //: 03 ://
+            assert(  ( (I32)(U08)l_x ) == l_x );      //: 04 ://
+            assert(  ( (I32)(U08)l_y ) == l_y );      //: 05 ://
+            assert(  ( (I32)(U08)a_d ) == a_d );      //: 06 ://
+            assert(  ( (I32)(U08)t_v ) == t_v );      //: 07 ://
+
+        //:-------------:7_brush_vars_int_overflow_chk:INPUTS://
+        //:Put:All_Brush_State:------------------------------://
+
+            AAC2020_TAUDEPO_Put( 
+                AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+            ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+            ,   AAC2020_TAUDEPO.P5D_T_Q //:DEX_VAR
+            ,   (U32)t_q, u_1,u_2,u_3
+            );;
+
+            AAC2020_TAUDEPO_Put( 
+                AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+            ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+            ,   AAC2020_TAUDEPO.P5D_T_E //:DEX_VAR
+            ,   (U32)t_e, u_1,u_2,u_3
+            );;
+
+            AAC2020_TAUDEPO_Put( 
+                AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+            ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+            ,   AAC2020_TAUDEPO.P5D_T_L //:DEX_VAR
+            ,   (U32)t_l, u_1,u_2,u_3
+            );;
+
+            AAC2020_TAUDEPO_Put( 
+                AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+            ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+            ,   AAC2020_TAUDEPO.P5D_B_X //:P5D_L_X == P5D_B_X
+            ,   (U32)l_x, u_1,u_2,u_3   //:    L_X ====== B_X
+            );;                         //:#PATTERN_BREAKER# ://
+
+            AAC2020_TAUDEPO_Put( 
+                AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+            ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+            ,   AAC2020_TAUDEPO.P5D_B_Y //:P5D_L_Y == P5D_B_Y
+            ,   (U32)l_y, u_1,u_2,u_3   //:    L_Y ====== B_Y
+            );;                         //:#PATTERN_BREAKER# ://
+
+            AAC2020_TAUDEPO_Put( 
+                AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+            ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+            ,   AAC2020_TAUDEPO.P5D_A_D //:DEX_VAR
+            ,   (U32)a_d, u_1,u_2,u_3
+            );;
+
+            AAC2020_TAUDEPO_Put( 
+                AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+            ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+            ,   AAC2020_TAUDEPO.P5D_T_V //:DEX_VAR
+            ,   (U32)t_v, u_1,u_2,u_3
+            );;
+
+        //:------------------------------:Put:All_Brush_State://
+
+        return;
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    aac2020_paint5d_Put_UsingBrush( void )
+    {
+        //:Declare_Brush_State_Variables:--------------------://
+
+            /** U32 values used with: "AAC2020_TAUDEPO_Get"  **/
+
+            U32 t_q = ( /** til_qua **/ 1001001 /** @TRAP@ **/);
+            U32 t_e = ( /** til_exp **/ 2002002 /** @TRAP@ **/);
+            U32 t_l = ( /** til_lay **/ 3003003 /** @TRAP@ **/);
+            U32 l_x = ( /** loc_t_x **/ 4004004 /** @TRAP@ **/);
+            U32 l_y = ( /** loc_t_y **/ 5005005 /** @TRAP@ **/);
+            U32 a_d = ( /** aus_dex **/ 6006006 /** @TRAP@ **/);
+            U32 t_v = ( /** til_val **/ 7007007 /** @TRAP@ **/);
+
+            /** U08 values used with: "AAC2020_PAINT5D_Put"  **/
+
+            U08 til_qua = ( /** t_q **/ 101 /** @TRAP@ **/);
+            U08 til_exp = ( /** t_e **/ 102 /** @TRAP@ **/);
+            U08 til_lay = ( /** t_l **/ 103 /** @TRAP@ **/);
+            U08 loc_t_x = ( /** l_x **/ 104 /** @TRAP@ **/);
+            U08 loc_t_y = ( /** l_y **/ 105 /** @TRAP@ **/);
+            U08 aus_dex = ( /** a_d **/ 106 /** @TRAP@ **/);
+            U08 til_val = ( /** t_v **/ 107 /** @TRAP@ **/);
+
+            /** @VID_IID[ 0077 ]TIME[ 2H 19M 50S ] **/
+            /** KEEP_U_1_U_2_U_3_INITED_TO_ZERO    **/
+            U32 u_1 =( 0 ); //:Unused #1
+            U32 u_2 =( 0 ); //:Unused #2
+            U32 u_3 =( 0 ); //:Unused #3
+
+        //:--------------------:Declare_Brush_State_Variables://
+        //:Get:All_Brush_State:------------------------------://
+
+            AAC2020_TAUDEPO_Get(        //:  001  ://
+                AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+            ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+            ,   AAC2020_TAUDEPO.P5D_T_Q //:DEX_VAR
+            ,   &(t_q),&(u_1),&(u_2),&(u_3)
+            );;
+
+            AAC2020_TAUDEPO_Get(        //:  002  :// 
+                AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+            ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+            ,   AAC2020_TAUDEPO.P5D_T_E //:DEX_VAR
+            ,   &(t_e),&(u_1),&(u_2),&(u_3)
+            );;
+
+            AAC2020_TAUDEPO_Get(        //:  003  :// 
+                AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+            ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+            ,   AAC2020_TAUDEPO.P5D_T_L //:DEX_VAR
+            ,   &(t_l),&(u_1),&(u_2),&(u_3)
+            );;
+
+            AAC2020_TAUDEPO_Get(        //:  004  :// 
+                AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+            ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+            ,   AAC2020_TAUDEPO.P5D_B_X //:P5D_L_X == P5D_B_X
+            ,   &(l_x),&(u_1),&(u_2),&(u_3) //:L_X ====== B_X
+            );;                             //:#PAT_BREAKER# ://
+
+            AAC2020_TAUDEPO_Get(        //:  005  :// 
+                AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+            ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+            ,   AAC2020_TAUDEPO.P5D_B_Y //:P5D_L_Y == P5D_B_Y
+            ,   &(l_y),&(u_1),&(u_2),&(u_3) //:L_Y ====== B_Y
+            );;                             //:#PAT_BREAKER# ://
+
+            AAC2020_TAUDEPO_Get(        //:  006  :// 
+                AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+            ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+            ,   AAC2020_TAUDEPO.P5D_A_D //:DEX_VAR
+            ,   &(a_d),&(u_1),&(u_2),&(u_3)
+            );;
+
+            AAC2020_TAUDEPO_Get(        //:  007  :// 
+                AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+            ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+            ,   AAC2020_TAUDEPO.P5D_T_V //:DEX_VAR
+            ,   &(t_v),&(u_1),&(u_2),&(u_3)
+            );;
+
+        //:------------------------------:Get:All_Brush_State://
+        //:7_brush_vars_bounds_check:OUTPUTS:----------------://
+        #define MAX_t_q AAC2020_PAINT5D_MAX_til_qua   //: 01 ://
+        #define MAX_t_e AAC2020_PAINT5D_MAX_til_exp   //: 02 ://
+        #define MAX_t_l AAC2020_PAINT5D_MAX_til_lay   //: 03 ://
+        /////// MAX_l_x AAC2020_PAINT5D_MAX_loc_t_x   //: 04 ://
+        /////// MAX_l_y AAC2020_PAINT5D_MAX_loc_t_y   //: 05 ://
+        #define MAX_a_d AAC2020_PAINT5D_MAX_aus_dex   //: 06 ://
+        #define MAX_t_v AAC2020_PAINT5D_MAX_til_val   //: 07 ://
+        
+        #define A assert
+
+            U32 max_l_x =( 0 );
+            U32 max_l_y =( 0 );
+            if( 0 == t_e ){ max_l_x = 127 ; max_l_y = 127 ; };
+            if( 1 == t_e ){ max_l_x =  63 ; max_l_y =  63 ; };
+            if( 2 == t_e ){ max_l_x =  31 ; max_l_y =  31 ; };
+            if( 3 == t_e ){ max_l_x =  15 ; max_l_y =  15 ; };
+            if( 4 == t_e ){ max_l_x =   7 ; max_l_y =   7 ; };
+            if( 5 == t_e ){ max_l_x =   3 ; max_l_y =   3 ; };
+            if( 6 == t_e ){ max_l_x =   1 ; max_l_y =   1 ; };
+            if( 7 == t_e ){ max_l_x =   0 ; max_l_y =   0 ; };
+
+            /** Range_Check_Extracted_Variables **/
+
+            A( ((I32)t_q)+0 >= 0 && t_q <= MAX_t_q ); //: 01 ://
+            A( ((I32)t_e)+0 >= 0 && t_e <= MAX_t_e ); //: 02 ://
+            A( ((I32)t_l)+0 >= 0 && t_l <= MAX_t_l ); //: 03 ://
+            A( ((I32)l_x)+0 >= 0 && l_x <= max_l_x ); //: 04 ://
+            A( ((I32)l_y)+0 >= 0 && l_y <= max_l_y ); //: 05 ://
+            A( ((I32)a_d)+0 >= 0 && a_d <= MAX_a_d ); //: 06 ://
+            A( ((I32)t_v)+0 >= 0 && t_v <= MAX_t_v ); //: 07 ://
+                        
+        #undef  A
+
+        #undef  MAX_t_q                               //: 01 ://
+        #undef  MAX_t_e                               //: 02 ://
+        #undef  MAX_t_l                               //: 03 ://
+        //////  MAX_l_x                               //: 04 ://
+        //////  MAX_l_y                               //: 05 ://
+        #undef  MAX_a_d                               //: 06 ://
+        #undef  MAX_t_v                               //: 07 ://
+        //:----------------:7_brush_vars_bounds_check:OUTPUTS://
+        //:7_brush_vars_int_overflow_chk:OUTPUTS-------------://
+
+            /** overflow_check___AND___assignment **/
+
+            til_qua = (         (U08)  t_q   );       //: 01 ://
+            til_exp = (         (U08)  t_e   );       //: 02 ://
+            til_lay = (         (U08)  t_l   );       //: 03 ://
+            loc_t_x = (         (U08)  l_x   );       //: 04 ://
+            loc_t_y = (         (U08)  l_y   );       //: 05 ://
+            aus_dex = (         (U08)  a_d   );       //: 06 ://
+            til_val = (         (U08)  t_v   );       //: 07 ://
+
+            assert( til_qua == ( (U32) t_q ) );       //: 01 ://
+            assert( til_exp == ( (U32) t_e ) );       //: 02 ://
+            assert( til_lay == ( (U32) t_l ) );       //: 03 ://
+            assert( loc_t_x == ( (U32) l_x ) );       //: 04 ://
+            assert( loc_t_y == ( (U32) l_y ) );       //: 05 ://
+            assert( aus_dex == ( (U32) a_d ) );       //: 06 ://
+            assert( til_val == ( (U32) t_v ) );       //: 07 ://
+     
+        //:------------:7_brush_vars_int_overflow_chk:OUTPUTS://
+        //:Call_Core_Command:::PUT:--------------------------://
+        //:MAIN_DATA_INTERFACE:PUT:--------------------------://
+
+            AAC2020_PAINT5D_Put(
+    /*1*/       til_qua    /** Auset Tile Sub Quadrant Index **/
+    /*2*/   ,   til_exp    /** TileExponent (TileSizeEnum)   **/
+    /*3*/   ,   til_lay    /** TileLayer .................   **/
+    /*4*/   ,   loc_t_x    /** Local Tile X Coord / b_x      **/
+    /*5*/   ,   loc_t_y    /** Local Tile Y Coord / b_y      **/
+    /*6*/   ,   aus_dex    /** AUSet_inDEX (AutoTileSetIndex)**/
+    /*7*/   ,   til_val    /** [ val_cur / til_val ]         **/
+            );;
+
+        //:--------------------------:MAIN_DATA_INTERFACE:PUT://
+        //:--------------------------:Call_Core_Command:::PUT://
+
+        return;
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+#undef  I32                                           //: 01 ://
+#undef  U32                                           //: 02 ://
+#undef  U08                                           //: 03 ://
+#undef  ERR                                           //: 04 ://
+//:==================:CREATED_TO_HELP_UNIT_TEST_USER_CONTROLS://
+//:=======================:ORIGINALLY_NOT_WIRED_INTO_KEYBOARD://
+//:FUNCTIONS_WIRED_INTO_KEYBOARD:============================://
 //:TAU:UNIFORM_CONTROLLER_FUNCTIONS:=========================://
 #define CAP aac2020_paint5d_i32_Cap_u32               //: 01 ://
 #define I32  int32_t /** GCC: <stdint.h> **/          //: 02 ://
@@ -1753,6 +2114,7 @@
 #undef  U08                                           //: 05 ://
 #undef  ERR                                           //: 06 ://
 //:=========================:TAU:UNIFORM_CONTROLLER_FUNCTIONS://
+//:============================:FUNCTIONS_WIRED_INTO_KEYBOARD://
 //:KEYBOARD_HANDLER:(KeyInn):================================://
 #define I32 int32_t /** GCC: <stdint.h> **/
 #define DEX_EDI_paint5d ( 1 )
@@ -1904,7 +2266,8 @@
 #undef  I32
 #undef  KEY_P5D
 //:================================:KEYBOARD_HANDLER:(KeyInn)://
-//:UNIT_TEST:================================================://
+//:SECTION_UNIT_TEST:========================================://
+//:UNIT_TEST_SECTION:========================================://
 #define MAX_EXP AAC2020_PAINT5D_MAX_til_exp           //: 01 ://
 #define EXT      extern                               //: 02 ://
 #define VOD        void                               //: 03 ://
@@ -1915,6 +2278,20 @@
 #define I32     int32_t /** GCC: <stdint.h> **/       //: 08 ://
 #define U32    uint32_t /** GCC: <stdint.h> **/       //: 09 ://
 #define ERR     aac2020_paint5d_Halt                  //: 10 ://
+#define LOG     aac2020_paint5d_Info_any              //: 11 ://
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    U32
+    AAC2020_PAINT5D_UnitTest( U32 u32 )
+    {
+        extern U32 aac2020_paint5d_UnitTest( U32 );
+                   aac2020_paint5d_UnitTest( u32 );
+
+        return( 0x00 );
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
     U32
     aac2020_paint5d_UnitTest( U32 u32 )
@@ -1925,6 +2302,15 @@
             ProgControls: 
                 Progmattic functions that the end user does
                 not directly interface with.
+
+            TestControls: @VID_IID[ 0076 ]T[ 4H 56M 15S ]
+                These are controls that may fit into
+                the "ProgControls" or the "UserControls"
+                category. But the MAIN THING about them
+                is that they have been created in order
+                to effectively test our "UserControls"
+                section. Thus must be called AFTER
+                "ProgControls" and BEFORE "UserControls"
             
             UserControls:
                 Functions that are directly or near
@@ -1949,12 +2335,20 @@
             AAC2020_PIXBACK_Backup_taudepo( &(taudepo) );
             AAC2020_PIXBACK_Backup_paint5d( &(paint5d) );
 
+            AAC2020_TODOMAN_Vital(
+                "[FIX:taudirt_backup_is_invalid_back_reference]"
+            );;
+
         //:-------------------------------:SYSTEM_DATA:BACKUP://
         //:RUN_UNIT_TESTS:-----------------------------------://
 
             EXT VOD 
             aac2020_paint5d_UnitTest_ProgControls( VOD );
             aac2020_paint5d_UnitTest_ProgControls(     );
+
+            EXT VOD 
+            aac2020_paint5d_UnitTest_TestControls( VOD );
+            aac2020_paint5d_UnitTest_TestControls(     );
 
             EXT VOD 
             aac2020_paint5d_UnitTest_UserControls( VOD );
@@ -1992,18 +2386,543 @@
 
             //:----------------:more_asserts_and_data_restore://
         //:------------------------------:SYSTEM_DATA:RESTORE://
+
+        return( 0x00 );
     }
     //:******************************************************://
     //:                                                      ://
     //:                                                      ://
-    //:         UNIT_TEST : USERCONTROLS : BELOW             ://
+    //:    UNIT_TEST_BIG_BLOCK : TESTCONTROLS : BELOW        ://
+    //:                                                      ://
+    //:                                                      ://
+    //:******************************************************://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void aac2020_paint5d_UnitTest_TestControls( void )
+    {
+        /** @VID_IID[ 0076 ]TIME[ 5H 00M 00S ]               **/
+        /** Even if these eventually get wired into          **/
+        /** our user controls, they will FOREVER stay        **/
+        /** in the "TestControls" category, because that     **/
+        /** is what they were initially created for and      **/
+        /** also I am lazy and don't see much utility        **/
+        /** to refactoring my unit test code for             **/
+        /** a NON CODE BREAKING CHANGES                      **/
+
+        EXT VOD aac2020_paint5d_UTC_Put_BrushState(    void   );
+                aac2020_paint5d_UTC_Put_BrushState(/** void**/);
+
+        EXT VOD aac2020_paint5d_UTC_Put_UsingBrush(    void   );
+                aac2020_paint5d_UTC_Put_UsingBrush(/** void**/);
+
+    }
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        void
+        aac2020_paint5d_UTC_Put_BrushState( void )
+        {
+        #define ROW_S ( 24 + 1 ) //:Number_Of_Tests
+        #define COL_S (      7 ) //:Num_Elements_In_One_Test
+
+            //:declare:unused_vars:--------------------------://
+
+
+                U32 u1 ; /** Unused #1 **/
+                U32 u2 ; /** Unused #2 **/
+                U32 u3 ; /** Unused #3 **/
+
+            //:--------------------------:declare:unused_vars://
+            //:declare:iterator_vars:------------------------://
+            //:( iterator_vars as in loop_variables )::::::::://
+
+                I32 t_i ; //:Test_Index
+                I32 m_i ; //:Max__Index (Max_Test_Index)
+                I32 bas ; //:Base_Offset_To_Current_Test_Vals
+
+            //:::::::::( iterator_vars as in loop_variables )://
+            //:------------------------:declare:iterator_vars://
+            //:declare:test_table_members:-------------------://
+
+                U08     t_q ; //: 01 : til_qua ://
+                U08     t_e ; //: 02 : til_exp ://
+                U08     t_l ; //: 03 : til_lay ://
+                U08     l_x ; //: 04 : loc_t_x ://
+                U08     l_y ; //: 05 : loc_t_y ://
+                U08     a_d ; //: 06 : aus_dex ://
+                U08     t_v ; //: 07 : til_val ://
+
+            //:-------------------:declare:test_table_members://
+            //:declare:actual_gotten_values:-----------------://
+
+                U32 GOT_t_q ; //: 01 : til_qua ://
+                U32 GOT_t_e ; //: 02 : til_exp ://
+                U32 GOT_t_l ; //: 03 : til_lay ://
+                U32 GOT_l_x ; //: 04 : loc_t_x ://
+                U32 GOT_l_y ; //: 05 : loc_t_y ://
+                U32 GOT_a_d ; //: 06 : aus_dex ://
+                U32 GOT_t_v ; //: 07 : til_val ://
+
+            //:-----------------:declare:actual_gotten_values://
+
+            U08 tab_utc[ ROW_S * COL_S ]={
+        //:   001   002   003   004   005   006   007
+        //:   t_q | t_e | t_l | l_x | l_y | a_d | t_v
+        /**/ 0x0 , 0x0 , 0x0 , 0x0 , 0x0 , 0x0 , 0x0 //: 00 ://
+  
+            /** Using maximum values for all fields,  ...... **/
+            /** Even the Local XY coord (l_x, l_y)    ...... **/
+            ,   3 ,   7 ,   2 ,   0 ,   0 ,  15 ,   3 //: 01 ://
+            ,   3 ,   6 ,   2 ,   1 ,   1 ,  15 ,   3 //: 02 ://
+            ,   3 ,   5 ,   2 ,   3 ,   3 ,  15 ,   3 //: 03 ://
+            ,   3 ,   4 ,   2 ,   7 ,   7 ,  15 ,   3 //: 04 ://
+            ,   3 ,   3 ,   2 ,  15 ,  15 ,  15 ,   3 //: 05 ://
+            ,   3 ,   2 ,   2 ,  31 ,  31 ,  15 ,   3 //: 06 ://
+            ,   3 ,   1 ,   2 ,  63 ,  63 ,  15 ,   3 //: 07 ://
+            ,   3 ,   0 ,   2 , 127 , 127 ,  15 ,   3 //: 08 ://
+        //:   t_q | t_e | t_l | l_x | l_y | a_d | t_v
+        //:   001   002   003   004   005   006   007
+            /** Previous Test But all local-X(s) (l_x)    ...**/
+            /** Are zero to detect transposition errors.  ...**/
+            ,   3 ,   7 ,   2 , 0x0 ,   0 ,  15 ,   3 //: 09 ://
+            ,   3 ,   6 ,   2 , 0x0 ,   1 ,  15 ,   3 //: 10 ://
+            ,   3 ,   5 ,   2 , 0x0 ,   3 ,  15 ,   3 //: 11 ://
+            ,   3 ,   4 ,   2 , 0x0 ,   7 ,  15 ,   3 //: 12 ://
+            ,   3 ,   3 ,   2 , 0x0 ,  15 ,  15 ,   3 //: 13 ://
+            ,   3 ,   2 ,   2 , 0x0 ,  31 ,  15 ,   3 //: 14 ://
+            ,   3 ,   1 ,   2 , 0x0 ,  63 ,  15 ,   3 //: 15 ://
+            ,   3 ,   0 ,   2 , 0x0 , 127 ,  15 ,   3 //: 16 ://
+        //:   t_q | t_e | t_l | l_x | l_y | a_d | t_v
+        //:   001   002   003   004   005   006   007
+            /** Previous Test But all local-Y(s) (l_y)    ...**/
+            /** Are zero to detect transposition errors.  ...**/
+            ,   3 ,   7 ,   2 ,   0 , 0x0 ,  15 ,   3 //: 17 ://
+            ,   3 ,   6 ,   2 ,   1 , 0x0 ,  15 ,   3 //: 18 ://
+            ,   3 ,   5 ,   2 ,   3 , 0x0 ,  15 ,   3 //: 19 ://
+            ,   3 ,   4 ,   2 ,   7 , 0x0 ,  15 ,   3 //: 20 ://
+            ,   3 ,   3 ,   2 ,  15 , 0x0 ,  15 ,   3 //: 21 ://
+            ,   3 ,   2 ,   2 ,  31 , 0x0 ,  15 ,   3 //: 22 ://
+            ,   3 ,   1 ,   2 ,  63 , 0x0 ,  15 ,   3 //: 23 ://
+            ,   3 ,   0 ,   2 , 127 , 0x0 ,  15 ,   3 //: 24 ://
+        //:   t_q | t_e | t_l | l_x | l_y | a_d | t_v
+        //:   001   002   003   004   005   006   007
+            };;
+
+            m_i =( ROW_S - 1 ); //:m_i: Max_test_Index
+            for( t_i = 0 ; t_i <= m_i ; t_i ++ ){
+
+                //:get_base_address_of_test_row:-------------://
+
+                    bas = ( t_i * COL_S );
+
+                //:-------------:get_base_address_of_test_row://
+                //:extract:test_table_members:---------------://
+
+                    t_q = tab_utc[ bas + 0 ];
+                    t_e = tab_utc[ bas + 1 ];
+                    t_l = tab_utc[ bas + 2 ];
+                    l_x = tab_utc[ bas + 3 ];
+                    l_y = tab_utc[ bas + 4 ];
+                    a_d = tab_utc[ bas + 5 ];
+                    t_v = tab_utc[ bas + 6 ];
+
+                //:---------------:extract:test_table_members://
+                //:__use__:test_table_members:---------------://
+                //:__put__:test_table_members:---------------://
+
+                    aac2020_paint5d_Put_BrushState(
+                        (I32) t_q     //: I32 : til_qua : 01 ://
+                    ,   (I32) t_e     //: I32 : til_exp : 02 ://
+                    ,   (I32) t_l     //: I32 : til_lay : 03 ://
+                    ,   (I32) l_x     //: I32 : loc_t_x : 04 ://
+                    ,   (I32) l_y     //: I32 : loc_t_y : 05 ://
+                    ,   (I32) a_d     //: I32 : aus_dex : 06 ://
+                    ,   (I32) t_v     //: I32 : til_val : 07 ://
+                    );;
+
+                //:---------------:__put__:test_table_members://
+                //:---------------:__use__:test_table_members://
+                //:__get__:test_table_members:---------------://
+                /** **************************************** ***
+                    @VID_IID[ 0077 ]TIME[ 1H 12M 25S ]
+
+                    We are NOT going to create a 
+                    aac2020_paint5d_Get_BrushState(...)
+                    function to help test this code...
+
+                    Because aac2020_paint5d_Put_BrushState
+                    itself was created as a HELPER function
+                    to help run UNIT TEST code.
+                    
+                    This has already spiraled enough
+                    out of control. I don't want a 
+                    Helper function for my helper function
+                    that helps test my unit test code
+                    for my actual function.
+            
+                    --------------------------------------------
+                    Is this out of control
+                    deductive reasonsing?
+
+                    Or is it... "inductive reasoning?"
+
+                    Or is it just "backwards reasoning"
+                    because it is a linear chain?
+                    --------------------------------------------
+                *** **************************************** **/
+                    //:--------------------------------------://
+                    //:INLINED:aac2020_paint5d_Get_BrushState://
+                    //:--------------------------------------://
+                    #define TAU AAC2020_TAUDEPO.TAU_015 // 01 //
+                    #define P5D AAC2020_TAUDEPO.PAINT5D // 02 //
+                    #define T_D AAC2020_TAUDEPO         // 03 //
+
+                        /** ******************************** ***
+                        @VID_IID[ 0077 ]TIME[ 1H 37M 25S ]
+                        #_WHY_IS_P5D_GET_BS_INLINED_HERE_#
+                        *** ******************************** **/
+
+                        AAC2020_TAUDEPO_Get(     ///        001
+                            TAU,P5D,T_D.P5D_T_Q  //:DEX,SUB,VAR
+                        ,  &(GOT_t_q),&(u1),&(u2),&(u3) /// T_Q
+                        );;
+
+                        AAC2020_TAUDEPO_Get(     ///        002        
+                            TAU,P5D,T_D.P5D_T_E  //:DEX,SUB,VAR
+                        ,  &(GOT_t_e),&(u1),&(u2),&(u3) /// T_E
+                        );;
+
+                        AAC2020_TAUDEPO_Get(     ///        003         
+                            TAU,P5D,T_D.P5D_T_L  //:DEX,SUB,VAR
+                        ,  &(GOT_t_l),&(u1),&(u2),&(u3) /// T_L
+                        );;
+
+                        AAC2020_TAUDEPO_Get(     ///        004         
+                            TAU,P5D,T_D.P5D_B_X  //:DEX,SUB,VAR
+                        ,  &(GOT_l_x),&(u1),&(u2),&(u3) /// B_X
+                        );; //:  l_x == b_x #PATTERN_BREAKER#://
+
+                        AAC2020_TAUDEPO_Get(     ///        005         
+                            TAU,P5D,T_D.P5D_B_Y  //:DEX,SUB,VAR
+                        ,  &(GOT_l_y),&(u1),&(u2),&(u3) /// B_Y
+                        );; //:  l_y == b_y #PATTERN_BREAKER#://
+
+                        AAC2020_TAUDEPO_Get(     ///        006         
+                            TAU,P5D,T_D.P5D_A_D  //:DEX,SUB,VAR
+                        ,  &(GOT_a_d),&(u1),&(u2),&(u3) /// A_D
+                        );;
+
+                        AAC2020_TAUDEPO_Get(     ///        007        
+                            TAU,P5D,T_D.P5D_T_V  //:DEX,SUB,VAR
+                        ,  &(GOT_t_v),&(u1),&(u2),&(u3) /// T_V
+                        );;
+
+                    #undef  TAU                       //: 01 ://
+                    #undef  P5D                       //: 02 ://
+                    #undef  T_D                       //: 03 ://
+                    //:--------------------------------------://
+                    //:aac2020_paint5d_Get_BrushState:INLINED://
+                    //:--------------------------------------://
+
+                //:---------------:__get__:test_table_members://
+                //:__chk__:test_table_members:---------------://
+
+                    if( 0
+                    ||  ( (U08)GOT_t_q ) != t_q
+                    ||  ( (U08)GOT_t_e ) != t_e
+                    ||  ( (U08)GOT_t_l ) != t_l
+                    ||  ( (U08)GOT_l_x ) != l_x
+                    ||  ( (U08)GOT_l_y ) != l_y
+                    ||  ( (U08)GOT_a_d ) != a_d
+                    ||  ( (U08)GOT_t_v ) != t_v
+                    ){
+
+                        /**   UTF:Unit_Test_Fail  **/
+                        ERR("[UTF_2021_01_06_358AM]");
+
+                    };;
+
+                //:test_table_members:---------------:__chk__://
+
+            };; //:NEXT[ t_i ]
+
+        #undef  ROW_S  
+        #undef  COL_S  
+        }
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        void
+        aac2020_paint5d_UTC_Put_UsingBrush( void )
+        {
+        #define ROW_S ( 24 + 1 ) //:Number_Of_Tests
+        #define COL_S (      7 ) //:Num_Elements_In_One_Test
+
+            //:declare:unused_vars:--------------------------://
+
+
+                U32 u1 ; /** Unused #1 **/
+                U32 u2 ; /** Unused #2 **/
+                U32 u3 ; /** Unused #3 **/
+
+            //:--------------------------:declare:unused_vars://
+            //:declare:iterator_vars:------------------------://
+            //:( iterator_vars as in loop_variables )::::::::://
+
+                I32 t_i ; //:Test_Index
+                I32 m_i ; //:Max__Index (Max_Test_Index)
+                I32 bas ; //:Base_Offset_To_Current_Test_Vals
+
+            //:::::::::( iterator_vars as in loop_variables )://
+            //:------------------------:declare:iterator_vars://
+            //:declare:test_table_members:-------------------://
+
+                U08     t_q ; //: 01 : til_qua ://
+                U08     t_e ; //: 02 : til_exp ://
+                U08     t_l ; //: 03 : til_lay ://
+                U08     l_x ; //: 04 : loc_t_x ://
+                U08     l_y ; //: 05 : loc_t_y ://
+                U08     a_d ; //: 06 : aus_dex ://
+                U08     t_v ; //: 07 : til_val ://
+
+            //:-------------------:declare:test_table_members://
+            //:declare:actual_gotten_values:-----------------://
+
+                U32 GOT_t_q ; //: 01 : til_qua ://
+                U32 GOT_t_e ; //: 02 : til_exp ://
+                U32 GOT_t_l ; //: 03 : til_lay ://
+                U32 GOT_l_x ; //: 04 : loc_t_x ://
+                U32 GOT_l_y ; //: 05 : loc_t_y ://
+                U32 GOT_a_d ; //: 06 : aus_dex ://
+                U32 GOT_t_v ; //: 07 : til_val ://
+
+            //:-----------------:declare:actual_gotten_values://
+            //:declare:vars_for:AAC2020_PAINT5D_Get:---------://
+
+
+                U08 til_qua =( 204 );  //: 01 : t_q ://
+                U08 til_exp =( 204 );  //: 02 : t_e ://
+                U08 til_lay =( 204 );  //: 03 : t_l ://
+                U08 loc_t_x =( 204 );  //: 04 : l_x ://
+                U08 loc_t_y =( 204 );  //: 05 : l_y ://
+                U08 aus_dex =( 204 );  //: 06 : a_d ://
+                U08 til_val =( 204 );  //: 07 : t_v ://
+
+            //:---------:declare:vars_for:AAC2020_PAINT5D_Get://
+
+            U08 tab_utc[ ROW_S * COL_S ]={
+        //:   001   002   003   004   005   006   007
+        //:   t_q | t_e | t_l | l_x | l_y | a_d | t_v
+        /**/  0x0 , 0x0 , 0x0 , 0x0 , 0x0 , 0x0 , 0x0 //: 00 ://
+  
+            /** Using maximum values for all fields,  ...... **/
+            /** Even the Local XY coord (l_x, l_y)    ...... **/
+            ,   3 ,   7 ,   2 ,   0 ,   0 ,  15 ,   3 //: 01 ://
+            ,   3 ,   6 ,   2 ,   1 ,   1 ,  15 ,   3 //: 02 ://
+            ,   3 ,   5 ,   2 ,   3 ,   3 ,  15 ,   3 //: 03 ://
+            ,   3 ,   4 ,   2 ,   7 ,   7 ,  15 ,   3 //: 04 ://
+            ,   3 ,   3 ,   2 ,  15 ,  15 ,  15 ,   3 //: 05 ://
+            ,   3 ,   2 ,   2 ,  31 ,  31 ,  15 ,   3 //: 06 ://
+            ,   3 ,   1 ,   2 ,  63 ,  63 ,  15 ,   3 //: 07 ://
+            ,   3 ,   0 ,   2 , 127 , 127 ,  15 ,   3 //: 08 ://
+        //:   t_q | t_e | t_l | l_x | l_y | a_d | t_v
+        //:   001   002   003   004   005   006   007
+            /** Previous Test But all local-X(s) (l_x)    ...**/
+            /** Are zero to detect transposition errors.  ...**/
+            ,   3 ,   7 ,   2 , 0x0 ,   0 ,  15 ,   3 //: 09 ://
+            ,   3 ,   6 ,   2 , 0x0 ,   1 ,  15 ,   3 //: 10 ://
+            ,   3 ,   5 ,   2 , 0x0 ,   3 ,  15 ,   3 //: 11 ://
+            ,   3 ,   4 ,   2 , 0x0 ,   7 ,  15 ,   3 //: 12 ://
+            ,   3 ,   3 ,   2 , 0x0 ,  15 ,  15 ,   3 //: 13 ://
+            ,   3 ,   2 ,   2 , 0x0 ,  31 ,  15 ,   3 //: 14 ://
+            ,   3 ,   1 ,   2 , 0x0 ,  63 ,  15 ,   3 //: 15 ://
+            ,   3 ,   0 ,   2 , 0x0 , 127 ,  15 ,   3 //: 16 ://
+        //:   t_q | t_e | t_l | l_x | l_y | a_d | t_v
+        //:   001   002   003   004   005   006   007
+            /** Previous Test But all local-Y(s) (l_y)    ...**/
+            /** Are zero to detect transposition errors.  ...**/
+            ,   3 ,   7 ,   2 ,   0 , 0x0 ,  15 ,   3 //: 17 ://
+            ,   3 ,   6 ,   2 ,   1 , 0x0 ,  15 ,   3 //: 18 ://
+            ,   3 ,   5 ,   2 ,   3 , 0x0 ,  15 ,   3 //: 19 ://
+            ,   3 ,   4 ,   2 ,   7 , 0x0 ,  15 ,   3 //: 20 ://
+            ,   3 ,   3 ,   2 ,  15 , 0x0 ,  15 ,   3 //: 21 ://
+            ,   3 ,   2 ,   2 ,  31 , 0x0 ,  15 ,   3 //: 22 ://
+            ,   3 ,   1 ,   2 ,  63 , 0x0 ,  15 ,   3 //: 23 ://
+            ,   3 ,   0 ,   2 , 127 , 0x0 ,  15 ,   3 //: 24 ://
+        //:   t_q | t_e | t_l | l_x | l_y | a_d | t_v
+        //:   001   002   003   004   005   006   007
+            };;
+
+            m_i = ( ROW_S - 1 ); //:Max_test_Index
+            for( t_i = 0 ; t_i <= m_i ; t_i ++ ){
+
+                //:get_base_address_of_test_row:-------------://
+
+                    bas = ( t_i * COL_S );
+
+                //:-------------:get_base_address_of_test_row://
+                //:extract:test_table_members:---------------://
+
+                    t_q = tab_utc[ bas + 0 ];
+                    t_e = tab_utc[ bas + 1 ];
+                    t_l = tab_utc[ bas + 2 ];
+                    l_x = tab_utc[ bas + 3 ];
+                    l_y = tab_utc[ bas + 4 ];
+                    a_d = tab_utc[ bas + 5 ];
+                    t_v = tab_utc[ bas + 6 ];
+
+                //:---------------:extract:test_table_members://
+                //:__use__:test_table_members:---------------://
+                //:__put__:test_table_members:---------------://
+
+                    aac2020_paint5d_Put_BrushState(
+                        (I32) t_q     //: I32 : til_qua : 01 ://
+                    ,   (I32) t_e     //: I32 : til_exp : 02 ://
+                    ,   (I32) t_l     //: I32 : til_lay : 03 ://
+                    ,   (I32) l_x     //: I32 : loc_t_x : 04 ://
+                    ,   (I32) l_y     //: I32 : loc_t_y : 05 ://
+                    ,   (I32) a_d     //: I32 : aus_dex : 06 ://
+                    ,   (I32) t_v     //: I32 : til_val : 07 ://
+                    );;
+
+                //:---------------:__put__:test_table_members://
+                //:---------------:__use__:test_table_members://
+                //:__get__:test_table_members:---------------://
+                /** **************************************** ***
+                    @VID_IID[ 0077 ]TIME[ 1H 12M 25S ]
+                    COPIDED_FROM: 
+                    aac2020_paint5d_UTC_Put_BrushState
+                *** **************************************** **/
+                    //:--------------------------------------://
+                    //:INLINED:aac2020_paint5d_Get_BrushState://
+                    //:--------------------------------------://
+                    #define TAU AAC2020_TAUDEPO.TAU_015 // 01 //
+                    #define P5D AAC2020_TAUDEPO.PAINT5D // 02 //
+                    #define T_D AAC2020_TAUDEPO         // 03 //
+
+                        /** ******************************** ***
+                        @VID_IID[ 0077 ]TIME[ 1H 37M 25S ]
+                        #_WHY_IS_P5D_GET_BS_INLINED_HERE_#
+                        *** ******************************** **/
+
+                        AAC2020_TAUDEPO_Get(     ///        001
+                            TAU,P5D,T_D.P5D_T_Q  //:DEX,SUB,VAR
+                        ,  &(GOT_t_q),&(u1),&(u2),&(u3) /// T_Q
+                        );;
+
+                        AAC2020_TAUDEPO_Get(     ///        002        
+                            TAU,P5D,T_D.P5D_T_E  //:DEX,SUB,VAR
+                        ,  &(GOT_t_e),&(u1),&(u2),&(u3) /// T_E
+                        );;
+
+                        AAC2020_TAUDEPO_Get(     ///        003         
+                            TAU,P5D,T_D.P5D_T_L  //:DEX,SUB,VAR
+                        ,  &(GOT_t_l),&(u1),&(u2),&(u3) /// T_L
+                        );;
+
+                        AAC2020_TAUDEPO_Get(     ///        004         
+                            TAU,P5D,T_D.P5D_B_X  //:DEX,SUB,VAR
+                        ,  &(GOT_l_x),&(u1),&(u2),&(u3) /// B_X
+                        );; //:  l_x == b_x #PATTERN_BREAKER#://
+
+                        AAC2020_TAUDEPO_Get(     ///        005         
+                            TAU,P5D,T_D.P5D_B_Y  //:DEX,SUB,VAR
+                        ,  &(GOT_l_y),&(u1),&(u2),&(u3) /// B_Y
+                        );; //:  l_y == b_y #PATTERN_BREAKER#://
+
+                        AAC2020_TAUDEPO_Get(     ///        006         
+                            TAU,P5D,T_D.P5D_A_D  //:DEX,SUB,VAR
+                        ,  &(GOT_a_d),&(u1),&(u2),&(u3) /// A_D
+                        );;
+
+                        AAC2020_TAUDEPO_Get(     ///        007        
+                            TAU,P5D,T_D.P5D_T_V  //:DEX,SUB,VAR
+                        ,  &(GOT_t_v),&(u1),&(u2),&(u3) /// T_V
+                        );;
+
+                    #undef  TAU                       //: 01 ://
+                    #undef  P5D                       //: 02 ://
+                    #undef  T_D                       //: 03 ://
+                    //:--------------------------------------://
+                    //:aac2020_paint5d_Get_BrushState:INLINED://
+                    //:--------------------------------------://
+
+                //:---------------:__get__:test_table_members://
+                //:__chk__:test_table_members:---------------://
+
+                    if( 0
+                    ||  ( (U08)GOT_t_q ) != t_q
+                    ||  ( (U08)GOT_t_e ) != t_e
+                    ||  ( (U08)GOT_t_l ) != t_l
+                    ||  ( (U08)GOT_l_x ) != l_x
+                    ||  ( (U08)GOT_l_y ) != l_y
+                    ||  ( (U08)GOT_a_d ) != a_d
+                    ||  ( (U08)GOT_t_v ) != t_v
+                    ){
+
+                        /**   UTF:Unit_Test_Fail  **/
+                        ERR("[UTF_2021_01_06_410AM]");
+
+                    };;
+
+                //:test_table_members:---------------:__chk__://
+                //:ACTUALLY_PUT_USING_THE_BRUSH_STATE:-------://
+
+                    aac2020_paint5d_Put_UsingBrush( );
+
+                //:-------:ACTUALLY_PUT_USING_THE_BRUSH_STATE://
+                //:FETCH_TILE_VALUE_PUT:---------------------://
+
+                    /** get a value encoded in the **/
+                    /** [bitmap/texture] data      **/
+
+                        AAC2020_PAINT5D_Get(
+                            til_qua   /** t_q : 01 : **/
+                        ,   til_exp   /** t_e : 02 : **/
+                        ,   til_lay   /** t_l : 03 : **/
+                        ,   loc_t_x   /** l_x : 04 : **/
+                        ,   loc_t_y   /** l_y : 05 : **/
+                        ,   aus_dex   /** a_d : 06 : **/
+                        , &(til_val)  /** t_v : 07 : **/
+                        );;
+
+                    /** check that proper value was    **/
+                    /** encoded in the [bitmap/texture **/
+
+                        if( 0
+                        || til_qua != t_q /** : 01 : **/
+                        || til_exp != t_e /** : 02 : **/
+                        || til_lay != t_l /** : 03 : **/
+                        || loc_t_x != l_x /** : 04 : **/
+                        || loc_t_y != l_y /** : 05 : **/
+                        || aus_dex != a_d /** : 06 : **/
+                        || til_val != t_v /** : 07 : **/
+                        ){
+                            ERR("[DO_DRAGONS_LIKE_GOLD_2021]");
+                        };;
+      
+                //:---------------------:FETCH_TILE_VALUE_PUT://
+
+            };; //:NEXT[ t_i ]
+
+        #undef  ROW_S  
+        #undef  COL_S  
+        }
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    //:******************************************************://
+    //:                                                      ://
+    //:                                                      ://
+    //:    UNIT_TEST_BIG_BLOCK : TESTCONTROLS : ABOVE        ://
+    //:                                                      ://
+    //:                                                      ://
+    //:******************************************************://
+    //:******************************************************://
+    //:                                                      ://
+    //:                                                      ://
+    //:    UNIT_TEST_BIG_BLOCK : USERCONTROLS : BELOW        ://
     //:                                                      ://
     //:                                                      ://
     //:******************************************************://
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
         //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
         void
-        aac2020_paint5d_UnitTest_ProgControls( void )
+        aac2020_paint5d_UnitTest_UserControls( void )
         {
 
             EXT VOD 
@@ -2038,71 +2957,1299 @@
         void
         aac2020_paint5d_UTC_MoveCamera_XY( void )
         {
+        #define NUMBER_OF_TESTS ( 3 )
+        #define NUMBER_OF_TEST_ELEMENTS ( 10 )
+            //:variable_declare:-----------------------------://
 
-            #error "[TODO_FINISH_TEST:MoveCamera_XY]"
+                //:inputs_and_stuff:-------------------------://
+
+                I32     failed_unit_test=( 0 );
+
+                I32     t_i ; /** t_i: Test Index            **/
+                I32     mti ; /** mti: Maximum_Test_Index    **/
+                I32     bas ; /** bas: BASe offset: test data**/
+                            ;
+                U32 inn_x_0 ; /** INPUTS: Camera Rectangle **/
+                U32 inn_x_1 ;
+                U32 inn_y_0 ;
+                U32 inn_y_1 ;
+                            ;
+                U32 tra_i_x ; /** INPUTS: Camera Translation **/
+                U32 tra_i_y ;
+    
+                //:-------------------------:inputs_and_stuff://
+                //:weird_names_because:----------------------://
+                /** **************************************** ***
+                    @VID_IID[ 0076 ]TIME[ 1H 58M 30S ]
+
+                    weird_names_because: 
+                    We kept confusing
+
+                         "Input And Output"
+                    With "Expected And Actual"
+
+                    And tangling our mental understanding
+                    between the pairs of words.
+                ** ***************************************** **/
+
+                U32 O_A_x_0 ; /** OUTPUTS: Camera Rectangle  **/
+                U32 O_A_x_1 ; /** O_A: OUTPUT & ACTUAL values**/      
+                U32 O_A_y_0 ;
+                U32 O_A_y_1 ;
+                            ;
+                U32 exp_x_0 ; /** EXPECTED : Camera Rectangle**/
+                U32 exp_x_1 ; /**                            **/
+                U32 exp_y_0 ;
+                U32 exp_y_1 ;
+
+                //:----------------------:weird_names_because://
+                         
+            //:-----------------------------:variable_declare://
+            //:variable_init:--------------------------------://
+
+                    mti =( NUMBER_OF_TESTS - 1 );
+
+            //:--------------------------------:variable_init://
+
+
+            /** @VID_IID[ 0076 ]TIME[ 0H 59M 30S ]           **/
+            /** This camera is not going to be a tilecam     **/
+            /** Like in the prototype R:\G\A2_JC             **/
+
+            /** PAB == "position and bounds" **/
+
+            /** @VID_IID[ 0076 ]TIME[ 0H 56M 0S ] . . . . . .**/
+            /** First 3 Tests are dead simple.    . . . . . .**/
+            U32 tab_utc[ 
+                NUMBER_OF_TESTS 
+                    * 
+                NUMBER_OF_TEST_ELEMENTS 
+            ]={
+        //: inn_ inn_ inn_ inn_   tra_ tra_  exp_ exp_ exp_ exp_
+        //: STARTING_CAMERA_PAB   TRANSLATE  ENDING_CAMERA_PAB
+            0x00,0x00,0x00,0x00 , 0x00,0x00, 0x00,0x00,0x00,0x00
+        ,   0x00,0x00,0x00,0x00 ,    1,0x00,    1,   1,0x00,0x00
+        ,   0x00,0x00,0x00,0x00 , 0x00,   1, 0x00,0x00,   1,   1
+        //: STARTING_CAMERA_PAB   TRANSLATE  ENDING_CAMERA_PAB
+        //: inn_ inn_ inn_ inn_   tra_ tra_  exp_ exp_ exp_ exp_
+
+            };;
+
+            for( t_i = 0 ; t_i <= mti ; t_i ++ ){
+
+                bas =( t_i * NUMBER_OF_TEST_ELEMENTS );
+
+                inn_x_0 = tab_utc[ bas + 0 ]; /** SEEDING    **/
+                inn_x_1 = tab_utc[ bas + 1 ]; /** INITIAL    **/
+                inn_y_0 = tab_utc[ bas + 2 ]; /** CAMERA     **/
+                inn_y_1 = tab_utc[ bas + 3 ];
+
+                tra_i_x = tab_utc[ bas + 4 ]; /**Translation **/
+                tra_i_y = tab_utc[ bas + 5 ]; /**Integer:X&Y **/
+ 
+                exp_x_0 = tab_utc[ bas + 6 ]; /** EXPECTED   **/
+                exp_x_1 = tab_utc[ bas + 7 ]; /** OUTPUTS    **/
+                exp_y_0 = tab_utc[ bas + 8 ];
+                exp_y_1 = tab_utc[ bas + 9 ];
+                
+                //:set_initial_camera_bounds:----------------://
+        
+                    /** ************************************ ***
+
+                    @VID_IID[ 0076 ]TIME[ 1H 10M 16S ]
+
+                    [ VP1 / P5D_VP1 ]:Viewport_One(1): 
+                                      Offscreen/Source 
+                                      TileMapDataBitmap Viewport 
+
+                    VP1 basically means: "Camera Viewport"
+                    This is the camera variables controlled
+                    by JOSH when he is editing tiles in
+                    Paint5D editor.
+
+                    *** ************************************ **/
+
+                    AAC2020_TAUDEPO_Put( 
+                        AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+                    ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+                    ,   AAC2020_TAUDEPO.P5D_VP1 //:DEX_VAR
+                    , ( inn_x_0 ), ( inn_x_1 )  //:<-- x bounds
+                    , ( inn_y_0 ), ( inn_y_1 )  //:<-- y bounds
+                    );;
+
+                //:----------------:set_initial_camera_bounds://
+                //:apply_camera_translation:-----------------://
+
+                    aac2020_paint5d_MoveCamera_XY(
+                        tra_i_x  //: Trans:DATAPIXELS: X
+                    ,   tra_i_y  //: Trans:DATAPIXELS: Y
+                    );; 
+
+                //:-----------------:apply_camera_translation://
+                //:get_ACTUAL_camera_rectangle:--------------://
+
+                    AAC2020_TAUDEPO_Get( 
+                        AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+                    ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+                    ,   AAC2020_TAUDEPO.P5D_VP1 //:DEX_VAR
+                    ,&( O_A_x_0 ),&( O_A_x_1 )  //:<-- x bounds
+                    ,&( O_A_y_0 ),&( O_A_y_1 )  //:<-- y bounds
+                    );;
+
+                //:--------------:get_ACTUAL_camera_rectangle://
+                //:check_against_expected_outputs:-----------://
+                #define MIN_X_0 AAC2020_PAINT5D_MIN_cam_x_0 //01
+                #define MIN_X_1 AAC2020_PAINT5D_MIN_cam_x_1 //02
+                #define MIN_Y_0 AAC2020_PAINT5D_MIN_cam_y_0 //03
+                #define MIN_Y_1 AAC2020_PAINT5D_MIN_cam_y_1 //04
+                                                            ////
+                #define MAX_X_0 AAC2020_PAINT5D_MAX_cam_x_0 //05
+                #define MAX_X_1 AAC2020_PAINT5D_MAX_cam_x_1 //06
+                #define MAX_Y_0 AAC2020_PAINT5D_MAX_cam_y_0 //07
+                #define MAX_Y_1 AAC2020_PAINT5D_MAX_cam_y_1 //08
+
+                    if( O_A_x_0  
+                    !=  exp_x_0
+                    ){ failed_unit_test =( 1 ); };
+
+                    if( O_A_x_1  
+                    !=  exp_x_1
+                    ){ failed_unit_test =( 1 ); };
+
+                    if( O_A_y_0  
+                    !=  exp_y_0
+                    ){ failed_unit_test =( 1 ); };
+
+                    if( O_A_y_1  
+                    !=  exp_y_1
+                    ){ failed_unit_test =( 1 ); };
+
+                    assert( O_A_x_0 <= O_A_x_1 );
+                    assert( O_A_y_0 <= O_A_y_1 );
+                    if( 0
+                    ||  (((I32)  O_A_x_0  )+0) < MIN_X_0 
+                    ||  (((I32)  O_A_y_0  )+0) < MIN_Y_0 
+                                
+                    ||  (((I32)  O_A_x_1  )+0) > MAX_X_1 
+                    ||  (((I32)  O_A_y_1  )+0) > MAX_Y_1 
+                    ){
+
+                        failed_unit_test=( 1 );
+
+                        /** ******************************** **/
+                        /** @VID_IID[ 02H 13M 20S ]          **/
+                        /** We originally decided rectangle  **/
+                        /** manipulation was bounded into a  **/
+                        /** 512x512 region. However for      **/
+                        /** PAINT5D system the camera        **/
+                        /** rectangle has a tighter          **/
+                        /** 256x256 bounds.                  **/
+                        /** SEE[ #_P5D_BOUNDING_#  ]         **/
+                        /** ******************************** **/
+                        LOG("[VP1_Cam_Bounds_Are_Tighter]",0);
+
+                    };;
+    
+                    if( 0 != failed_unit_test ){
+
+                        /** Print Off Test Index **/
+                        printf("[t_i]:%d\n", t_i );
+
+                        printf("[x_0:A|E]:(%d):(%d)\n"
+                        , O_A_x_0 , exp_x_0 );;
+
+                        printf("[x_1:A|E]:(%d):(%d)\n"
+                        , O_A_x_1 , exp_x_1 );;
+
+                        printf("[y_0:A|E]:(%d):(%d)\n"
+                        , O_A_y_0 , exp_y_0 );;
+
+                        printf("[y_1:A|E]:(%d):(%d)\n"
+                        , O_A_y_1 , exp_y_1 );;
+
+                        ERR("[YOU_DONE_FAILED]");
+
+                    };;
+
+                #undef  MIN_X_0                       //: 01 ://
+                #undef  MIN_X_1                       //: 02 ://
+                #undef  MIN_Y_0                       //: 03 ://
+                #undef  MIN_Y_1                       //: 04 ://
+                                                      //: -- ://
+                #undef  MAX_X_0                       //: 05 ://
+                #undef  MAX_X_1                       //: 06 ://
+                #undef  MAX_Y_0                       //: 07 ://
+                #undef  MAX_Y_1                       //: 08 ://
+                //:-----------:check_against_expected_outputs://
+            };; //:NEXT[ t_i (test_index ) ]
+
+            AAC2020_TODOMAN_Vital( "[TODO_FINISH_TEST:MoveCamera_XY]" );
             return;
+
+        #undef NUMBER_OF_TESTS         //: . . . . . . . . . ://
+        #undef NUMBER_OF_TEST_ELEMENTS //: . . . . . . . . . ://
         }
         //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
         void
         aac2020_paint5d_UTC_ZoomCamera( void )
         {
+        #define NUMBER_OF_TESTS (         3 ) /**  THREE(3)  **/
+        #define NUMBER_OF_TEST_ELEMENTS ( 9 ) /**   NINE(9)  **/
+            //:variable_declare:-----------------------------://
 
-            #error "[TODO_FINISH_TEST:ZoomCamera]"
+                //:inputs_and_stuff:-------------------------://
+
+                    I32     failed_unit_test=( 0 );
+
+                    I32     t_i ; /** t_i: Test Index        **/
+                    I32     mti ; /** mti: Max_Test_Index    **/
+                    I32     bas ; /** bas: BASe offset: data **/
+                                ;
+                    U32 inn_x_0 ; /** INPUTS: Camera Rect    **/
+                    U32 inn_x_1 ;
+                    U32 inn_y_0 ;
+                    U32 inn_y_1 ;
+                                ;
+                    U32 zom_i32 ; /** INPUTS: Camera Zoom **/
+    
+                //:-------------------------:inputs_and_stuff://
+                //:weird_names_because:----------------------://
+                    /** ************************************ ***
+                        @VID_IID[ 0076 ]TIME[ 2H 39M 10S ]
+
+                        weird_names_because: 
+                        We kept confusing
+
+                             "Input And Output"
+                        With "Expected And Actual"
+
+                        And tangling our mental understanding
+                        between the pairs of words.
+                    ** ************************************* **/
+
+                    U32 O_A_x_0 ; /** OUT: Camera Rectangle  **/
+                    U32 O_A_x_1 ; /** O_A: OUTPUT & ACTUAL   **/      
+                    U32 O_A_y_0 ;
+                    U32 O_A_y_1 ;
+                                ;
+                    U32 exp_x_0 ; /** EXPECTED : Camera Rect **/
+                    U32 exp_x_1 ; /**                        **/
+                    U32 exp_y_0 ;
+                    U32 exp_y_1 ;
+                //:----------------------:weird_names_because://
+                         
+            //:-----------------------------:variable_declare://
+            //:variable_init:--------------------------------://
+
+                    mti =( NUMBER_OF_TESTS - 1 );
+
+            //:--------------------------------:variable_init://
+
+            /** This camera is not going to be a tilecam     **/
+            /** Like in the prototype R:\G\A2_JC             **/
+            /** PAB == "position and bounds" **/
+            /** First 3 Tests are dead simple.    . . . . . .**/
+            I32 tab_utc[  //:<-- MUST BE SIGNED HERE
+                NUMBER_OF_TESTS 
+                    * 
+                NUMBER_OF_TEST_ELEMENTS 
+            ]={
+        //: inn_ inn_ inn_ inn_   zom_i32    exp_ exp_ exp_ exp_
+        //: STARTING_CAMERA_PAB   TRANSLATE  ENDING_CAMERA_PAB
+            0x00,0x00,0x00,0x00 ,   0x00   , 0x00,0x00,0x00,0x00
+        ,   0x00,0x00,0x00,0x00 ,0+    1   , 0x00,0x00,   1,   1
+        ,   0x00,0x00,0x00,0x00 ,0-    1   , 0x00,0x00,0x00,0x00
+        //: STARTING_CAMERA_PAB   TRANSLATE  ENDING_CAMERA_PAB
+        //: inn_ inn_ inn_ inn_   tra_ tra_  exp_ exp_ exp_ exp_
+
+            };;
+
+            for( t_i = 0 ; t_i <= mti ; t_i ++ ){
+
+                bas =( t_i * NUMBER_OF_TEST_ELEMENTS );
+
+                inn_x_0 = tab_utc[ bas + 0 ]; /** SEEDING    **/
+                inn_x_1 = tab_utc[ bas + 1 ]; /** INITIAL    **/
+                inn_y_0 = tab_utc[ bas + 2 ]; /** CAMERA     **/
+                inn_y_1 = tab_utc[ bas + 3 ];
+
+                zom_i32 = tab_utc[ bas + 4 ]; /**Zoom_Amount **/
+ 
+                exp_x_0 = tab_utc[ bas + 5 ]; /** EXPECTED   **/
+                exp_x_1 = tab_utc[ bas + 6 ]; /** OUTPUTS    **/
+                exp_y_0 = tab_utc[ bas + 7 ];
+                exp_y_1 = tab_utc[ bas + 8 ];
+                
+                //:set_initial_camera_bounds:----------------://
+        
+                    /** ************************************ ***
+
+                    @VID_IID[ 0076 ]TIME[ 2H 40M 00S ]
+
+                    [ VP1 / P5D_VP1 ]:Viewport_One(1): 
+                                      Offscreen/Source 
+                                      TileMapDataBitmap Viewport 
+
+                    VP1 basically means: "Camera Viewport"
+                    This is the camera variables controlled
+                    by JOSH when he is editing tiles in
+                    Paint5D editor.
+
+                    *** ************************************ **/
+
+                    AAC2020_TAUDEPO_Put( 
+                        AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+                    ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+                    ,   AAC2020_TAUDEPO.P5D_VP1 //:DEX_VAR
+                    , ( inn_x_0 ), ( inn_x_1 )  //:<-- x bounds
+                    , ( inn_y_0 ), ( inn_y_1 )  //:<-- y bounds
+                    );;
+
+                //:----------------:set_initial_camera_bounds://
+                //:apply_camera_translation:-----------------://
+
+                    aac2020_paint5d_ZoomCamera(
+                        zom_i32  //: Trans:DATAPIXELS: X
+                    );; 
+
+                //:-----------------:apply_camera_translation://
+                //:get_ACTUAL_camera_rectangle:--------------://
+
+                    AAC2020_TAUDEPO_Get( 
+                        AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+                    ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+                    ,   AAC2020_TAUDEPO.P5D_VP1 //:DEX_VAR
+                    ,&( O_A_x_0 ),&( O_A_x_1 )  //:<-- x bounds
+                    ,&( O_A_y_0 ),&( O_A_y_1 )  //:<-- y bounds
+                    );;
+
+                //:--------------:get_ACTUAL_camera_rectangle://
+                //:check_against_expected_outputs:-----------://
+                #define MIN_X_0 AAC2020_PAINT5D_MIN_cam_x_0 //01
+                #define MIN_X_1 AAC2020_PAINT5D_MIN_cam_x_1 //02
+                #define MIN_Y_0 AAC2020_PAINT5D_MIN_cam_y_0 //03
+                #define MIN_Y_1 AAC2020_PAINT5D_MIN_cam_y_1 //04
+                                                            ////
+                #define MAX_X_0 AAC2020_PAINT5D_MAX_cam_x_0 //05
+                #define MAX_X_1 AAC2020_PAINT5D_MAX_cam_x_1 //06
+                #define MAX_Y_0 AAC2020_PAINT5D_MAX_cam_y_0 //07
+                #define MAX_Y_1 AAC2020_PAINT5D_MAX_cam_y_1 //08
+
+                    if( O_A_x_0  
+                    !=  exp_x_0
+                    ){ failed_unit_test =( 1 ); };
+
+                    if( O_A_x_1  
+                    !=  exp_x_1
+                    ){ failed_unit_test =( 1 ); };
+
+                    if( O_A_y_0  
+                    !=  exp_y_0
+                    ){ failed_unit_test =( 1 ); };
+
+                    if( O_A_y_1  
+                    !=  exp_y_1
+                    ){ failed_unit_test =( 1 ); };
+
+                    assert( O_A_x_0 <= O_A_x_1 );
+                    assert( O_A_y_0 <= O_A_y_1 );
+                    if( 0
+                    ||  (((I32)  O_A_x_0  )+0) < MIN_X_0 
+                    ||  (((I32)  O_A_y_0  )+0) < MIN_Y_0 
+                                
+                    ||  (((I32)  O_A_x_1  )+0) > MAX_X_1 
+                    ||  (((I32)  O_A_y_1  )+0) > MAX_Y_1 
+                    ){
+                        /** BAT: Bounds_Are_Tighter **/
+                        failed_unit_test=( 1 );
+                        LOG("[VP1_Cam_:BAT:ZOOM]",0);
+                    };;
+    
+                    if( 0 != failed_unit_test ){
+
+                        /** Print Off Test Index **/
+                        printf("[t_i]:%d\n", t_i );
+
+                        printf("[x_0:A|E]:(%d):(%d)\n"
+                        , O_A_x_0 , exp_x_0 );;
+
+                        printf("[x_1:A|E]:(%d):(%d)\n"
+                        , O_A_x_1 , exp_x_1 );;
+
+                        printf("[y_0:A|E]:(%d):(%d)\n"
+                        , O_A_y_0 , exp_y_0 );;
+
+                        printf("[y_1:A|E]:(%d):(%d)\n"
+                        , O_A_y_1 , exp_y_1 );;
+
+                        ERR("[PAINT5D_ZOOM_TEST_FAILED]");
+                    };;
+                #undef  MIN_X_0                       //: 01 ://
+                #undef  MIN_X_1                       //: 02 ://
+                #undef  MIN_Y_0                       //: 03 ://
+                #undef  MIN_Y_1                       //: 04 ://
+                                                      //: -- ://
+                #undef  MAX_X_0                       //: 05 ://
+                #undef  MAX_X_1                       //: 06 ://
+                #undef  MAX_Y_0                       //: 07 ://
+                #undef  MAX_Y_1                       //: 08 ://
+                //:-----------:check_against_expected_outputs://
+            };; //:NEXT[ t_i (test_index ) ]
+
+            AAC2020_TODOMAN_Vital( "[TODO_FINISH_TEST:ZOOMCAMERA]" );
             return;
+        #undef NUMBER_OF_TESTS         //: . . . . . . . . . ://
+        #undef NUMBER_OF_TEST_ELEMENTS //: . . . . . . . . . ://
         }
         //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
         void
         aac2020_paint5d_UTC_MoveBrush_XY( void )
         {
+        #define NUMBER_OF_TESTS (         3 ) /**  THREE(3)  **/
+        #define NUMBER_OF_TEST_ELEMENTS ( 6 ) /**    SIX(6)  **/
+            //:variable_declare:-----------------------------://
 
-            #error "[TODO_FINISH_TEST:MoveBrush_XY]"
+                //:inputs_and_stuff:-------------------------://
+
+                I32     failed_unit_test=( 0 );
+
+                U32     nouse_1         =( 666070666 );
+                U32     nouse_2         =( 666070666 );
+                U32     nouse_3         =( 666070666 );
+
+                I32     t_i ; /** t_i: Test Index            **/
+                I32     mti ; /** mti: Maximum_Test_Index    **/
+                I32     bas ; /** bas: BASe offset: test data**/
+                            ;
+                U32 bru_i_x ; /** INPUTS: Brush X/Y **/
+                U32 bru_i_y ;
+
+                I32 off_i_x ; /** INPUTS: Brush OFFSET X/Y **/
+                I32 off_i_y ;  
+    
+                //:-------------------------:inputs_and_stuff://
+                //:weird_names_because:----------------------://
+                /** #_WEIRD_UNIT_TEST_VAR_NAMES_O_A_# **/
+
+                U32 O_A_b_x ; /** OUTPUTS: Brush[x,y]        **/
+                U32 O_A_b_y ; /** O_A: OUTPUT & ACTUAL values**/      
+                            ;
+                U32 exp_b_x ; /** EXPECTED : Brush[x,y] .... **/
+                U32 exp_b_y ; /**                       .... **/
+
+                //:----------------------:weird_names_because://
+                         
+            //:-----------------------------:variable_declare://
+            //:variable_init:--------------------------------://
+
+                    mti =( NUMBER_OF_TESTS - 1 );
+
+            //:--------------------------------:variable_init://
+
+            /** This camera is not going to be a tilecam     **/
+            /** Like in the prototype R:\G\A2_JC             **/
+            /** PAB == "position and bounds" **/
+            /** First 3 Tests are dead simple.    . . . . . .**/
+            I32 tab_utc[  //:<-- MUST BE SIGNED HERE
+                NUMBER_OF_TESTS 
+                    * 
+                NUMBER_OF_TEST_ELEMENTS 
+            ]={
+                //: _i_x _i_y     _i_x _i_y     _b_x _b_y
+                //: BRUSH_X_Y     TRANS_X_Y     NEW___X_Y
+                    0x00,0x00  ,  0x00,0x00  ,  0x00,0x00 
+                ,   0x00,0x00  ,     1,0x00  ,     1,0x00 
+                ,   0x00,0x00  ,  0x00,   1  ,  0x00,   1 
+                //: BRUSH_X_Y     TRANS_X_Y     NEW___X_Y
+            };;
+
+            for( t_i = 0 ; t_i <= mti ; t_i ++ ){
+
+                bas =( t_i * NUMBER_OF_TEST_ELEMENTS );
+
+                bru_i_x = tab_utc[ bas + 0 ]; /** SEEDING    **/
+                bru_i_y = tab_utc[ bas + 1 ]; /** INIT_BRUSH **/
+                //:                    #                     ://
+                off_i_x = tab_utc[ bas + 2 ]; /**Translate   **/
+                off_i_y = tab_utc[ bas + 3 ]; /** X & Y      **/
+                //:                    #                     ://
+                exp_b_x = tab_utc[ bas + 4 ]; /** EXPECTED   **/
+                exp_b_y = tab_utc[ bas + 5 ]; /** OUTPUTS    **/
+                
+                //:set_initial_camera_bounds:----------------://
+        
+                    /** ************************************ ***
+
+                        #_WHAT_DOES_VP1_MEAN_IN_PAINT5D_#
+                        #_WHAT_DOES_B_X_B_Y_MEAN_IN_PAINT5D_#
+
+                    *** ************************************ **/
+
+                    AAC2020_TAUDEPO_Put( 
+                        AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+                    ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+                    ,   AAC2020_TAUDEPO.P5D_B_X //:DEX_VAR
+                    , ( bru_i_x ), ( nouse_1 )  //:BRUSH:X 
+                    , ( nouse_2 ), ( nouse_3 )  //:UNUSED_DATA
+                    );;
+
+                    AAC2020_TAUDEPO_Put( 
+                        AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+                    ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+                    ,   AAC2020_TAUDEPO.P5D_B_Y //:DEX_VAR
+                    , ( bru_i_y ), ( nouse_1 )  //:BRUSH:X
+                    , ( nouse_2 ), ( nouse_3 )  //:UNUSED_DATA
+                    );;
+
+                //:----------------:set_initial_camera_bounds://
+                //:apply_camera_translation:-----------------://
+
+                    aac2020_paint5d_MoveBrush_XY(
+                        off_i_x //: o_x : brush_OFFSET_integer_X
+                    ,   off_i_y //: o_y : brush_OFFSET_integer_Y
+                    );; 
+
+                //:-----------------:apply_camera_translation://
+                //:get_ACTUAL_camera_rectangle:--------------://
+
+                    AAC2020_TAUDEPO_Get( 
+                        AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+                    ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+                    ,   AAC2020_TAUDEPO.P5D_B_X //:DEX_VAR
+                    ,&( O_A_b_x ),&( nouse_1 )  //:BRUSH:X 
+                    ,&( nouse_2 ),&( nouse_3 )  //:UNUSED_DATA
+                    );;
+
+                    AAC2020_TAUDEPO_Get( 
+                        AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+                    ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+                    ,   AAC2020_TAUDEPO.P5D_B_Y //:DEX_VAR
+                    ,&( O_A_b_y ),&( nouse_1 )  //:BRUSH:X
+                    ,&( nouse_2 ),&( nouse_3 )  //:UNUSED_DATA
+                    );;
+
+
+                //:--------------:get_ACTUAL_camera_rectangle://
+                //:check_against_expected_outputs:-----------://
+                #define MIN_X_0 AAC2020_PAINT5D_MIN_cam_x_0 //01
+                #define MIN_X_1 AAC2020_PAINT5D_MIN_cam_x_1 //02
+                #define MIN_Y_0 AAC2020_PAINT5D_MIN_cam_y_0 //03
+                #define MIN_Y_1 AAC2020_PAINT5D_MIN_cam_y_1 //04
+                                                            ////
+                #define MAX_X_0 AAC2020_PAINT5D_MAX_cam_x_0 //05
+                #define MAX_X_1 AAC2020_PAINT5D_MAX_cam_x_1 //06
+                #define MAX_Y_0 AAC2020_PAINT5D_MAX_cam_y_0 //07
+                #define MAX_Y_1 AAC2020_PAINT5D_MAX_cam_y_1 //08
+
+                    if( O_A_b_x  
+                    !=  exp_b_x
+                    ){ failed_unit_test =( 1 ); };
+
+                    if( O_A_b_y  
+                    !=  exp_b_y
+                    ){ failed_unit_test =( 1 ); };
+
+                    /** ************************************ **/
+                    /** FAIL BECAUSE OUT OF PAINT5D BOUNDS   **/
+                    /** Which are tighter than the bounds    **/
+                    /** for generic inclusive rectangle type **/
+                    /** ************************************ **/
+                    if( 0
+                    ||  (((I32)  exp_b_x  )+0) < MIN_X_0 
+                    ||  (((I32)  exp_b_y  )+0) < MIN_Y_0 
+                                
+                    ||  (((I32)  exp_b_x  )+0) > MAX_X_1 
+                    ||  (((I32)  exp_b_y  )+0) > MAX_Y_1 
+                    ){
+                        /** BAT: Bounds_Are_Tighter **/
+                        failed_unit_test=( 1 );
+                        LOG("[VP1_Cam_:BAT:BRUSH_TRANS]",0);
+                    };;
+    
+                    /** ************************************ **/
+                    /** Fail because does not match the .....**/
+                    /** Values in our test table.       .....**/
+                    /** ************************************ **/
+                    if( 0 != failed_unit_test ){
+
+                        /** Print Off Test Index **/
+                        printf("[t_i]:%d\n", t_i );
+
+                        printf("[b_x:A|E]:(%d):(%d)\n"
+                        , O_A_b_x , exp_b_x );;
+
+                        printf("[b_y:A|E]:(%d):(%d)\n"
+                        , O_A_b_y , exp_b_y );;
+
+                        ERR("[PAINT5D_BRUSH_TRANS_FAIL]");
+                    };;
+                #undef  MIN_X_0                       //: 01 ://
+                #undef  MIN_X_1                       //: 02 ://
+                #undef  MIN_Y_0                       //: 03 ://
+                #undef  MIN_Y_1                       //: 04 ://
+                                                      //: -- ://
+                #undef  MAX_X_0                       //: 05 ://
+                #undef  MAX_X_1                       //: 06 ://
+                #undef  MAX_Y_0                       //: 07 ://
+                #undef  MAX_Y_1                       //: 08 ://
+                //:-----------:check_against_expected_outputs://
+            };; //:NEXT[ t_i (test_index ) ]
+
+            AAC2020_TODOMAN_Vital(
+                "[TODO_MORE_TEST_CASES:MoveBrush_XY]"
+            );;
+
             return;
+        #undef NUMBER_OF_TESTS         //: . . . . . . . . . ://
+        #undef NUMBER_OF_TEST_ELEMENTS //: . . . . . . . . . ://
         }
         //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
         void
         aac2020_paint5d_UTC_DeltaMutate_TileValue( void )
         {
+        #define NUMBER_OF_TESTS (         3 ) /**  THREE(3)  **/
+        #define NUMBER_OF_TEST_ELEMENTS ( 3 ) /**  THREE(3)  **/
+            //:variable_declare:-----------------------------://
 
-            #error "[TODO_FINISH_TEST:DeltaMutate_TileValue]"
+                //:inputs_and_stuff:-------------------------://
+
+                    I32     failed_unit_test=( 0 );
+                    
+                    U32     nouse_1         =( 666070666 );
+                    U32     nouse_2         =( 666070666 );
+                    U32     nouse_3         =( 666070666 );
+                    
+                    I32     t_i ; /** t_i: Test Index        **/
+                    I32     mti ; /** mti: Max_Test_Index    **/
+                    I32     bas ; /** bas: BASe offset: Data **/
+                                ;
+                    U08 inn_val ; /** INPUTS: Tile VAL       **/
+                    I32 off_val ; /** INPUTS: VAL OFFSET X/Y **/
+
+                //:-------------------------:inputs_and_stuff://
+                //:expected_value(s):------------------------://
+
+                    U32 exp_val ; /** EXPECTED : TILE VALUE  **/
+
+                //:------------------------:expected_value(s)://
+                //:actual_values(s):-------------------------://
+
+                    U32 act_val ; /** ACTUAL   : TILE VALUE  **/
+
+                //:----------------------------:actual_values://
+
+            //:-----------------------------:variable_declare://
+            //:variable_init:--------------------------------://
+
+                    mti =( NUMBER_OF_TESTS - 1 );
+
+            //:--------------------------------:variable_init://
+
+            /** This camera is not going to be a tilecam     **/
+            /** Like in the prototype R:\G\A2_JC             **/
+            /** PAB == "position and bounds" **/
+            /** First 3 Tests are dead simple.    . . . . . .**/
+            I32 tab_utc[  //:<-- MUST BE SIGNED HERE
+                NUMBER_OF_TESTS 
+                    * 
+                NUMBER_OF_TEST_ELEMENTS 
+            ]={ 
+                //: inn_val  |  off_val  |  exp_val
+                       0x00  ,     0x00  ,     0x00 
+                ,      0x00  ,        1  ,        1 
+                ,      0x00  ,       -1  ,     0x00 //:StilZero
+                //: inn_val  |  off_val  |  exp_val
+            };;
+
+            for( t_i = 0 ; t_i <= mti ; t_i ++ ){
+
+                bas =( t_i * NUMBER_OF_TEST_ELEMENTS );
+
+                inn_val = tab_utc[ bas + 0 ]; /** SEEDING    **/
+                //:                    #                     ://
+                off_val = tab_utc[ bas + 1 ]; /**Offset Value**/
+                //:                    #                     ://
+                exp_val = tab_utc[ bas + 2 ]; /** EXPECTED   **/
+
+                //:set_initial_camera_bounds:----------------://
+        
+                    AAC2020_TAUDEPO_Put( 
+                        AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+                    ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+                    ,   AAC2020_TAUDEPO.P5D_T_V //:DEX_VAR
+                    , ( inn_val ), ( nouse_1 )  //:TILE_VALUE
+                    , ( nouse_2 ), ( nouse_3 )  //:UNUSED_DATA
+                    );;
+
+                //:----------------:set_initial_camera_bounds://
+                //:apply_camera_translation:-----------------://
+
+                    aac2020_paint5d_DeltaMutate_TileValue(
+                        off_val //: del_t_v ( Delta Tile Value )
+                    );;  
+
+                //:-----------------:apply_camera_translation://
+                //:get_ACTUAL_camera_rectangle:--------------://
+
+                    AAC2020_TAUDEPO_Get( 
+                        AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+                    ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+                    ,   AAC2020_TAUDEPO.P5D_T_V //:DEX_VAR
+                    ,&( act_val ),&( nouse_1 )  //:TILE_VALUE
+                    ,&( nouse_2 ),&( nouse_3 )  //:UNUSED_DATA
+                    );;
+
+                //:--------------:get_ACTUAL_camera_rectangle://
+                //:check_against_expected_outputs:-----------://
+                #define MIN_VAL (            0            ) //01
+                #define MAX_VAL AAC2020_PAINT5D_MAX_til_val //02
+ 
+                    if( act_val  
+                    !=  exp_val
+                    ){ failed_unit_test =( 1 ); };
+
+                    /** INVALID RANGE FOR OUTPUT TILE VALUE **/
+                    assert( MIN_VAL < MAX_VAL );
+                    if( 0
+                    ||  (((I32)  exp_val  )+0) < MIN_VAL           
+                    ||  (((I32)  exp_val  )+0) > MAX_VAL 
+                    ){
+                        failed_unit_test=( 1 );
+                        LOG("[TILE_VALUE_OUT_OF_BOUNDS]",0);
+                    };;
+    
+                    /** ************************************ **/
+                    /** Fail because does not match the .....**/
+                    /** Values in our test table.       .....**/
+                    /** ************************************ **/
+                    if( 0 != failed_unit_test ){
+
+                        /** Print Off Test Index **/
+                        printf("[t_i]:%d\n", t_i );
+
+                        printf("[act_val:exp_val]:(%d):(%d)\n"
+                        , act_val , exp_val );;
+
+                        ERR("[BRUSH_TILE_VALUE_TEST_FAIL]");
+                    };;
+                #undef  MIN_VAL                       //: 01 ://
+                #undef  MAX_VAL                       //: 02 ://
+                //:-----------:check_against_expected_outputs://
+            };; //:NEXT[ t_i (test_index ) ]
+            
+            AAC2020_TODOMAN_Vital(
+                "[TODO_FINISH_TEST:DeltaMutate_TileValue]"
+            );;
+
             return;
+
+        #undef NUMBER_OF_TESTS         //: . . . . . . . . . ://
+        #undef NUMBER_OF_TEST_ELEMENTS //: . . . . . . . . . ://
         }
         //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
         void
         aac2020_paint5d_UTC_DeltaMutate_TileExponent( void )
         {
+        #define NUMBER_OF_TESTS (         3 ) /**  THREE(3)  **/
+        #define NUMBER_OF_TEST_ELEMENTS ( 3 ) /**  THREE(3)  **/
+            //:variable_declare:-----------------------------://
 
-            #error "[TODO_FINISH_TEST:DeltaMutate_TileExponent]"
+                //:inputs_and_stuff:-------------------------://
+
+                    I32     failed_unit_test=( 0 );
+                    
+                    U32     nouse_1         =( 666070666 );
+                    U32     nouse_2         =( 666070666 );
+                    U32     nouse_3         =( 666070666 );
+                    
+                    I32     t_i ; /** t_i: Test Index        **/
+                    I32     mti ; /** mti: Max_Test_Index    **/
+                    I32     bas ; /** bas: BASe offset: Data **/
+                                ;
+                    U08 inn_T_E ; /** INPUTS: Tile VAL       **/
+                    I32 off_T_E ; /** INPUTS: VAL OFFSET X/Y **/
+
+                //:-------------------------:inputs_and_stuff://
+                //:expected_value(s):------------------------://
+
+                    U32 exp_T_E ; /** EXPECTED :TILE EXPONENT**/
+
+                //:------------------------:expected_value(s)://
+                //:actual_values(s):-------------------------://
+
+                    U32 act_T_E ; /** ACTUAL   :TILE EXPONENT**/
+
+                //:----------------------------:actual_values://
+
+            //:-----------------------------:variable_declare://
+            //:variable_init:--------------------------------://
+
+                    mti =( NUMBER_OF_TESTS - 1 );
+
+            //:--------------------------------:variable_init://
+
+            /** This camera is not going to be a tilecam     **/
+            /** Like in the prototype R:\G\A2_JC             **/
+            /** PAB == "position and bounds" **/
+            /** First 3 Tests are dead simple.    . . . . . .**/
+            I32 tab_utc[  //:<-- MUST BE SIGNED HERE
+                NUMBER_OF_TESTS 
+                    * 
+                NUMBER_OF_TEST_ELEMENTS 
+            ]={ 
+                //: inn_T_E  |  off_T_E  |  exp_T_E
+                       0x00  ,     0x00  ,     0x00 
+                ,      0x00  ,        1  ,        1 
+                ,      0x00  ,       -1  ,     0x00 //:StilZero
+                //: inn_T_E  |  off_T_E  |  exp_T_E
+            };;
+
+            for( t_i = 0 ; t_i <= mti ; t_i ++ ){
+
+                bas =( t_i * NUMBER_OF_TEST_ELEMENTS );
+
+                inn_T_E = tab_utc[ bas + 0 ]; /** SEEDING    **/
+                //:                    #                     ://
+                off_T_E = tab_utc[ bas + 1 ]; /**Offset Value**/
+                //:                    #                     ://
+                exp_T_E = tab_utc[ bas + 2 ]; /** EXPECTED   **/
+
+                //:set_initial_camera_bounds:----------------://
+        
+                    AAC2020_TAUDEPO_Put( 
+                        AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+                    ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+                    ,   AAC2020_TAUDEPO.P5D_T_E //:DEX_VAR
+                    , ( inn_T_E ), ( nouse_1 )  //:TILE_EXPONENT
+                    , ( nouse_2 ), ( nouse_3 )  //:UNUSED_DATA
+                    );;
+
+                //:----------------:set_initial_camera_bounds://
+                //:apply_camera_translation:-----------------://
+
+                    aac2020_paint5d_DeltaMutate_TileExponent(
+                        off_T_E //: del_t_e :............
+                    );;         //: ( Delta Tile EXPONENT )
+
+                //:-----------------:apply_camera_translation://
+                //:get_ACTUAL_camera_rectangle:--------------://
+
+                    AAC2020_TAUDEPO_Get( 
+                        AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+                    ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+                    ,   AAC2020_TAUDEPO.P5D_T_E //:DEX_VAR
+                    ,&( act_T_E ),&( nouse_1 )  //:TILE_EXPONENT
+                    ,&( nouse_2 ),&( nouse_3 )  //:UNUSED_DATA
+                    );;
+
+                //:--------------:get_ACTUAL_camera_rectangle://
+                //:check_against_expected_outputs:-----------://
+                #define MIN_T_E (            0            ) //01
+                #define MAX_T_E AAC2020_PAINT5D_MAX_til_exp //02
+ 
+                    if( act_T_E  
+                    !=  exp_T_E
+                    ){ failed_unit_test =( 1 ); };
+
+                    /** INVALID RANGE FOR OUTPUT TILE VALUE **/
+                    assert( MIN_T_E < MAX_T_E );
+                    if( 0
+                    ||  (((I32)  exp_T_E  )+0) < MIN_T_E           
+                    ||  (((I32)  exp_T_E  )+0) > MAX_T_E 
+                    ){
+                        failed_unit_test=( 1 );
+                        LOG("[TILE_EXPONENT_OUT_OF_BOUNDS]",0);
+                    };;
+    
+                    /** ************************************ **/
+                    /** Fail because does not match the .....**/
+                    /** Values in our test table.       .....**/
+                    /** ************************************ **/
+                    if( 0 != failed_unit_test ){
+
+                        /** Print Off Test Index **/
+                        printf("[t_i]:%d\n", t_i );
+
+                        printf("[act_T_E:exp_T_E]:(%d):(%d)\n"
+                        , act_T_E , exp_T_E );;
+
+                        ERR("[BRUSH_TILE_EXPONENT_TEST_FAIL]");
+                    };;
+                #undef  MIN_T_E                       //: 01 ://
+                #undef  MAX_T_E                       //: 02 ://
+                //:-----------:check_against_expected_outputs://
+            };; //:NEXT[ t_i (test_index ) ]
+            
+            AAC2020_TODOMAN_Vital(
+                "[TODO_FINISH_TEST:DeltaMutate_TileExponent]"
+            );;
             return;
+
+        #undef NUMBER_OF_TESTS         //: . . . . . . . . . ://
+        #undef NUMBER_OF_TEST_ELEMENTS //: . . . . . . . . . ://
         }
         //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
         void
         aac2020_paint5d_UTC_DeltaMutate_TileLayer( void )
         {
+        #define NUMBER_OF_TESTS (         3 ) /**  THREE(3)  **/
+        #define NUMBER_OF_TEST_ELEMENTS ( 3 ) /**  THREE(3)  **/
+            //:variable_declare:-----------------------------://
 
-            #error "[TODO_FINISH_TEST:DeltaMutate_TileLayer]"
+                //:inputs_and_stuff:-------------------------://
+
+                    I32     failed_unit_test=( 0 );
+                    
+                    U32     nouse_1         =( 666070666 );
+                    U32     nouse_2         =( 666070666 );
+                    U32     nouse_3         =( 666070666 );
+                    
+                    I32     t_i ; /** t_i: Test Index        **/
+                    I32     mti ; /** mti: Max_Test_Index    **/
+                    I32     bas ; /** bas: BASe offset: Data **/
+                                ;
+                    U08 inn_T_L ; /** INPUTS: Tile LAYER     **/
+                    I32 off_T_L ; /** INPUTS: LAY OFFSET X/Y **/
+
+                //:-------------------------:inputs_and_stuff://
+                //:expected_value(s):------------------------://
+
+                    U32 exp_T_L ; /** EXPECTED :TILE LAYER   **/
+
+                //:------------------------:expected_value(s)://
+                //:actual_values(s):-------------------------://
+
+                    U32 act_T_L ; /** ACTUAL   :TILE LAYER   **/
+
+                //:----------------------------:actual_values://
+
+            //:-----------------------------:variable_declare://
+            //:variable_init:--------------------------------://
+
+                    mti =( NUMBER_OF_TESTS - 1 );
+
+            //:--------------------------------:variable_init://
+
+            /** This camera is not going to be a tilecam     **/
+            /** Like in the prototype R:\G\A2_JC             **/
+            /** PAB == "position and bounds" **/
+            /** First 3 Tests are dead simple.    . . . . . .**/
+            I32 tab_utc[  //:<-- MUST BE SIGNED HERE
+                NUMBER_OF_TESTS 
+                    * 
+                NUMBER_OF_TEST_ELEMENTS 
+            ]={ 
+                //: inn_T_L  |  off_T_L  |  exp_T_L
+                       0x00  ,     0x00  ,     0x00 
+                ,      0x00  ,        1  ,        1 
+                ,      0x00  ,       -1  ,     0x00 //:StilZero
+                //: inn_T_L  |  off_T_L  |  exp_T_L
+            };;
+
+            for( t_i = 0 ; t_i <= mti ; t_i ++ ){
+
+                bas =( t_i * NUMBER_OF_TEST_ELEMENTS );
+
+                inn_T_L = tab_utc[ bas + 0 ]; /** SEEDING    **/
+                //:                    #                     ://
+                off_T_L = tab_utc[ bas + 1 ]; /**Offset Value**/
+                //:                    #                     ://
+                exp_T_L = tab_utc[ bas + 2 ]; /** EXPECTED   **/
+
+                //:set_initial_camera_bounds:----------------://
+        
+                    AAC2020_TAUDEPO_Put( 
+                        AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+                    ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+                    ,   AAC2020_TAUDEPO.P5D_T_L //:DEX_VAR
+                    , ( inn_T_L ), ( nouse_1 )  //:TILE_EXPONENT
+                    , ( nouse_2 ), ( nouse_3 )  //:UNUSED_DATA
+                    );;
+
+                //:----------------:set_initial_camera_bounds://
+                //:apply_camera_translation:-----------------://
+
+                    aac2020_paint5d_DeltaMutate_TileExponent(
+                        off_T_L //: del_t_l :............
+                    );;         //: ( Delta Tile LAYER )
+
+                //:-----------------:apply_camera_translation://
+                //:get_ACTUAL_camera_rectangle:--------------://
+
+                    AAC2020_TAUDEPO_Get( 
+                        AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+                    ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+                    ,   AAC2020_TAUDEPO.P5D_T_L //:DEX_VAR
+                    ,&( act_T_L ),&( nouse_1 )  //:TILE_EXPONENT
+                    ,&( nouse_2 ),&( nouse_3 )  //:UNUSED_DATA
+                    );;
+
+                //:--------------:get_ACTUAL_camera_rectangle://
+                //:check_against_expected_outputs:-----------://
+                #define MIN_T_L (            0            ) //01
+                #define MAX_T_L AAC2020_PAINT5D_MAX_til_lay //02
+ 
+                    if( act_T_L  
+                    !=  exp_T_L
+                    ){ failed_unit_test =( 1 ); };
+
+                    /** INVALID RANGE FOR OUTPUT TILE LAYER **/
+                    assert( MIN_T_L < MAX_T_L );
+                    if( 0
+                    ||  (((I32)  exp_T_L  )+0) < MIN_T_L           
+                    ||  (((I32)  exp_T_L  )+0) > MAX_T_L 
+                    ){
+                        failed_unit_test=( 1 );
+                        LOG("[TILE_LAYER_IS_OUT_OF_BOUNDS]",0);
+                    };;
+    
+                    /** ************************************ **/
+                    /** Fail because does not match the .....**/
+                    /** Values in our test table.       .....**/
+                    /** ************************************ **/
+                    if( 0 != failed_unit_test ){
+
+                        /** Print Off Test Index **/
+                        printf("[t_i]:%d\n", t_i );
+
+                        printf("[act_T_L:exp_T_L]:(%d):(%d)\n"
+                        , act_T_L , exp_T_L );;
+
+                        ERR("[BRUSH_TILE_LAYER_TEST_FAIL]");
+                    };;
+                #undef  MIN_T_L                       //: 01 ://
+                #undef  MAX_T_L                       //: 02 ://
+                //:-----------:check_against_expected_outputs://
+            };; //:NEXT[ t_i (test_index ) ]
+
+            AAC2020_TODOMAN_Vital(
+                "[TODO_FINISH_TEST:DeltaMutate_TileLayer]"
+            );;
+
             return;
+
+        #undef NUMBER_OF_TESTS         //: . . . . . . . . . ://
+        #undef NUMBER_OF_TEST_ELEMENTS //: . . . . . . . . . ://
         }
         //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
         void
         aac2020_paint5d_UTC_ToggleTile( void )
         {
+        #define NUMBER_OF_TESTS (         3 ) /**  THREE(3)  **/
+        #define NUMBER_OF_TEST_ELEMENTS ( 9 ) /**   NINE(9)  **/
+            //:variable_declare:-----------------------------://
 
-            #error "[TODO_FINISH_TEST:ToggleTile]"
+                //:misc_test_runner_vars:--------------------://
+
+                    I32     failed_unit_test=( 0 );
+ 
+                    I32     t_i ; /** t_i: Test Index        **/
+                    I32     mti ; /** mti: Max_Test_Index    **/
+                    I32     bas ; /** bas: BASe offset: Data **/
+
+                //:--------------------:misc_test_runner_vars://
+                //:initial_value(s):-------------------------://
+
+                    U08  t_q ; //: til_qua (TILE QUADRANT     )
+                    U08  t_e ; //: til_exp (TILE EXPONENT     )   
+                    U08  t_l ; //: til_lay (TILE LAYER        )
+                    U08  l_x ; //: loc_t_x (LOCAL TILE X      ) 
+                    U08  l_y ; //: loc_t_y (LOCAL TILE Y      ) 
+                    U08  a_d ; //: aus_dex (AUSET INDEX       )
+                    U08  t_v ; //: til_val (INITIAL tile value)   
+
+                //:-------------------------:initial_value(s)://    
+                //:mutator_value(s):-------------------------://
+
+                    U08  b_v ; //:MUST_LOAD_INTO_BRUSH!
+
+                //:-------------------------:mutator_value(s)://
+                //:expected_value(s):------------------------://
+
+                    U08  exp ; /** EXPECTED :TILE VALUE   **/
+
+                //:------------------------:expected_value(s)://
+                //:actual_values(s):-------------------------://
+
+                    U08  act ; /** ACTUAL   :TILE VALUE   **/
+
+                //:----------------------------:actual_values://
+
+            //:-----------------------------:variable_declare://
+            //:variable_init:--------------------------------://
+
+                    mti =( NUMBER_OF_TESTS - 1 );
+
+            //:--------------------------------:variable_init://
+
+            /** This camera is not going to be a tilecam     **/
+            /** Like in the prototype R:\G\A2_JC             **/
+            /** PAB == "position and bounds" **/
+            /** First 3 Tests are dead simple.    . . . . . .**/
+            I32 tab_utc[  //:<-- MUST BE SIGNED HERE
+                NUMBER_OF_TESTS 
+                    * 
+                NUMBER_OF_TEST_ELEMENTS 
+            ]={                                
+                //: t_v : INITIAL                tile_value
+                //: exp : EXPECTED after command tile_value
+                //: act : ACTUAL     (output)    tile_value
+                //:     ( act should not be in this table )
+                //: b_v : BRUSH VALUE 
+                //:     ( value loaded into brush )
+                                               
+        //: t_q | t_e | t_l | l_x | l_y | a_d | t_v | b_v | exp
+            0x0 , 0x0 , 0x0 , 0x0 , 0x0 , 0x0 , 0x0 , 0x0 , 0x0
+        ,   0x0 , 0x0 , 0x0 , 0x0 , 0x0 , 0x0 ,   1 ,   1 ,   0
+        ,   0x0 , 0x0 , 0x0 , 0x0 , 0x0 , 0x0 ,   1 ,   0 ,   0
+            };;   //:THREE_ARE_TILE_VALUES: >>> ___ , ___ , ___
+        //: 001   002   003   004   005   006   007   008   009
+
+            for( t_i = 0 ; t_i <= mti ; t_i ++ ){
+
+                bas =( t_i * NUMBER_OF_TEST_ELEMENTS );
+
+                //:unpack_test_row_data:---------------------://
+
+                    /** INITIAL_VALUE(S) **/
+                    t_q = (U08) ( tab_utc[ bas + 0 ] );
+                    t_e = (U08) ( tab_utc[ bas + 1 ] );              
+                    t_l = (U08) ( tab_utc[ bas + 2 ] );
+                    l_x = (U08) ( tab_utc[ bas + 3 ] );
+                    l_y = (U08) ( tab_utc[ bas + 4 ] );
+                    a_d = (U08) ( tab_utc[ bas + 5 ] );
+                    t_v = (U08) ( tab_utc[ bas + 6 ] );
+
+                    /** mutator_value(s)  **/
+                    b_v = (U08) ( tab_utc[ bas + 7 ] );  
+
+                    /** expected_value(s) **/
+                    exp = (U08) ( tab_utc[ bas + 8 ] ); 
+              
+                //:---------------------:unpack_test_row_data://
+                //:OVERWRITE_til_val_WITH_BRUSH:-------------://
+        
+                    /** Seed Tile Data Location With The **/
+                    /** Initial Value .................. **/
+
+                        /** Load brush with all of it's state**/
+                        aac2020_paint5d_Put_BrushState(
+                            t_q //: til_qua  
+                        ,   t_e //: til_exp  (exp:exponent)
+                        ,   t_l //: til_lay  
+                        ,   l_x //: loc_t_x  
+                        ,   l_y //: loc_t_y  
+                        ,   a_d //: aus_dex  
+                        ,   t_v //: INITAL / OVERWRITE VALUE
+                        );;
+
+                        /** Like ToggleTile , but is an      **/
+                        /** override rather than a toggle.   **/                 
+                        aac2020_paint5d_Put_UsingBrush( );
+
+                //:-------------:OVERWRITE_til_val_WITH_BRUSH://
+                //:apply_tile_toggle_action:-----------------://
+
+                    /** Set the brush value you want to      **/
+                    /** test the ToggleTile( ) command with  **/
+                         
+                        aac2020_paint5d_Put_BrushState(
+                            t_q //: til_qua  
+                        ,   t_e //: til_exp  (exp:exponent) 
+                        ,   t_l //: til_lay  
+                        ,   l_x //: loc_t_x  
+                        ,   l_y //: loc_t_y  
+                        ,   a_d //: aus_dex  
+                        ,   b_v //: <-- t_v __SWAPPED_TO__ b_v
+                        );;
+
+                    /** Uses what is loaded into the tilemap **/
+                    /** to determine the results.            **/
+
+                        aac2020_paint5d_ToggleTile( );
+
+                //:-----------------:apply_tile_toggle_action://
+                //:get_ACTUAL_value_set_into_bitmap:---------://
+
+                    /** @VID_IID[ 2H 55M 40S ] ************* **/
+                    /** More abstractly explained:           **/
+                    /** Get the tile value at this location  **/
+                    /** within the paint5d tilemap data.     **/
+                    /** ************************************ **/
+
+                    AAC2020_PAINT5D_Get(
+                            t_q   /** 01 :         til_qua   **/  
+                    ,       t_e   /** 02 :         til_exp   **/  
+                    ,       t_l   /** 03 :         til_lay   **/  
+                    ,       l_x   /** 04 :         loc_t_x   **/  
+                    ,       l_y   /** 05 :         loc_t_y   **/  
+                    ,       a_d   /** 06 :         aus_dex   **/  
+                    ,  &(   act ) /** 07 : GET ACT til_val   **/
+                    );;
+
+                //:---------:get_ACTUAL_value_set_into_bitmap://
+                //:check_against_expected_outputs:-----------://
+                #define MIN_T_V (            0            ) //01
+                #define MAX_T_V AAC2020_PAINT5D_MAX_til_val //02
+ 
+                    if( act 
+                    !=  exp 
+                    ){ failed_unit_test =( 1 ); };
+
+                    /** INVALID RANGE FOR OUTPUT TILE LAYER **/
+                    assert( MIN_T_V < MAX_T_V );
+                    if( 0
+                    ||  (((I32)  exp   )+0) < MIN_T_V           
+                    ||  (((I32)  exp   )+0) > MAX_T_V 
+
+                    ||  (((I32)  act   )+0) < MIN_T_V           
+                    ||  (((I32)  act   )+0) > MAX_T_V 
+                    ){
+                        failed_unit_test=( 1 );
+                        LOG("[T_V:OOB:2021:746PM]",0);
+                    };;
+    
+                    /** ************************************ **/
+                    /** Fail because does not match the .....**/
+                    /** Values in our test table.       .....**/
+                    /** ************************************ **/
+                    if( 0 != failed_unit_test ){
+
+                        /** Print Test Index **/
+                        printf("[t_i]:%d\n", t_i );
+
+                        printf("[act:exp]:(%d):(%d)\n"
+                        , act , exp );;
+
+                        ERR("[TILE_TOGGLE_TEST_FAIL:2021]");
+                    };;
+                #undef  MIN_T_V                       //: 01 ://
+                #undef  MAX_T_V                       //: 02 ://
+                //:-----------:check_against_expected_outputs://
+            };; //:NEXT[ t_i (test_index ) ]
+                    
+            AAC2020_TODOMAN_Vital(
+                "[ADD_MORE_TEST_CASES:ToggleTile]"
+            );;
+
             return;
+
+        #undef NUMBER_OF_TESTS         //: . . . . . . . . . ://
+        #undef NUMBER_OF_TEST_ELEMENTS //: . . . . . . . . . ://
         }
         //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     //:******************************************************://
     //:                                                      ://
     //:                                                      ://
-    //:         UNIT_TEST : USERCONTROLS : ABOVE             ://
+    //:    UNIT_TEST_BIG_BLOCK : USERCONTROLS : ABOVE        ://
     //:                                                      ://
     //:                                                      ://
     //:******************************************************://
     //:******************************************************://
     //:                                                      ://
     //:                                                      ://
-    //:         UNIT_TEST : PROGCONTROLS : BELOW             ://
+    //:    UNIT_TEST_BIG_BLOCK : PROGCONTROLS : BELOW        ://
     //:                                                      ://
     //:                                                      ://
     //:******************************************************://
@@ -2170,7 +4317,7 @@
             /** ******************************************** **/
 
         //:- - - - - - - - - - - - - - -::main_get_put_tests:://
-        return( 0x00 );
+        return;
     }
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
@@ -2182,9 +4329,6 @@
 
         void aac2020_paint5d_UTC_Put( void )
         {
-
-            #error MUST_BACKUP_DATA_FOR_TESTS
-            #error MUST_USE: PIXBACK backup and restore
 
             /** @VID_IID[ 0070 ]TIME[ 1H 9M 50S ] .......... **/
             /** Variables for iterating through test cases . **/
@@ -2264,13 +4408,15 @@
 
                 /** Integer Overflow Dectection.             **/
                 /** @VID_IID[ 0071 ]TIME[ 1H 46M 08S ]       **/
+                #define      TIL_VAL put_til_val
                 assert(((I16)til_qua)==tab_utc[ bas + 0 ] );
                 assert(((I16)til_exp)==tab_utc[ bas + 1 ] );
                 assert(((I16)til_lay)==tab_utc[ bas + 2 ] );
                 assert(((I16)loc_t_x)==tab_utc[ bas + 3 ] );
                 assert(((I16)loc_t_y)==tab_utc[ bas + 4 ] );
                 assert(((I16)aus_dex)==tab_utc[ bas + 5 ] );
-                assert(((I16)til_val)==tab_utc[ bas + 6 ] );
+                assert(((I16)TIL_VAL)==tab_utc[ bas + 6 ] );
+                #undef       TIL_VAL
 
                 //:all_puts_before_all_gets:-----------------://
                 //:                                          ://
@@ -2313,11 +4459,14 @@
  
                 //:-----------------:all_puts_before_all_gets://
 
+            };;};; //:NEXT[ p_g , t_i ]
     
             /** Add more tests cases to this function. **/
-            AAC2020_TODOMAN_Vital( "[TESTS_2020_12_31_720PM]" );
+            AAC2020_TODOMAN_Vital( 
+                "[MORE_TESTS:aac2020_paint5d_UTC_Put]"
+            );;
 
-        };;};;
+        }  //:[ END: paint5d_UTC_Put ]://
 
         //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
 
@@ -2453,7 +4602,6 @@
     
             //:----------------------------:meddling_test:002://
 
-
             AAC2020_TODOMAN_Vital("[FINISH_THIS_CODE!!!!!!!]");
         }
 
@@ -2465,8 +4613,14 @@
             /** 1: AAC2020_PAINT5D_Put( ... )                **/
             /** 2: AAC2020_PAINT5D_Get( ... )                **/
 
-            ajflsjfljasfjslfjs
-            TEST ALL THE VALUES ON THE 512x512 bitmap!
+            /** ******************************************** ***
+                About THIS[ paint5d_UTC_Put_Get ]FUNCTION:
+
+                Tests every single possible value there
+                is by iterating over the entire 512x512
+                bitmap in a double nested [ p_x , p_y ]
+                loop. 
+            *** ******************************************** **/
 
             I16 p_x; /** pixel x location **/
             I16 p_y; /** pixel y location **/
@@ -2488,6 +4642,10 @@
             I16 glo_t_x_002; //: @VID_IID[ 0071 ]            ://
             I16 glo_t_y_002; //: TIME[ 01H 18M 07 ]          ://
                              //:_____________________________://
+
+            /** Before Testing "GET" and "PUT" functions     **/
+            /** we will test the uderlying conversion        **/
+            /** functions first.                             **/
 
             for( p_x = 0 ; p_x <= ( 512 - 1 ) ; p_x ++ ){
             for( p_y = 0 ; p_y <= ( 512 - 1 ) ; p_y ++ ){
@@ -2523,6 +4681,236 @@
                 };;
 
             };;};;
+
+            //:Put_Everything_Then_Get_Everything:-----------://
+
+                U08 p_g     =( 0 ); //:Put(0) or Get(1)
+                U08 aus     =( 0 ); //:Auset_Index_0_to_15
+                U32 val_gen =( 0 );
+                U08 got_val =( 0 ); //:GOTEN_VALUE
+                U08 val     =( 0 ); //:Tile_value_0_1_2_or_3
+
+                for( p_g = 0 ; p_g <= (    1    ) ; p_g ++ ){
+                 val_gen =( 0 );
+                for( aus = 0 ; aus <= (  16 - 1 ) ; aus ++ ){
+
+                for( p_x = 0 ; p_x <= ( 512 - 1 ) ; p_x ++ ){
+                for( p_y = 0 ; p_y <= ( 512 - 1 ) ; p_y ++ ){
+
+                    val_gen = ( val_gen + 7 );
+                    val     = (U08)( val_gen % 4 );
+                    assert( val <= 3 /** Max Tile Val :3 **/ );
+
+                    aac2020_paint5d_glocpix_CTO_painpix(
+                       &( til_qua )    /// Auset Sub Quad    ///
+                    ,  &( til_exp )    /// Size_Exponent     ///
+                    ,  &( til_lay )    /// TileLayer ........///
+                    ,  &( loc_t_x )    /// Local  Tile X     ///
+                    ,  &( loc_t_y )    /// Local  Tile Y     ///
+                    ,   (     p_x )    /// Global Tile X     ///
+                    ,   (     p_y )    /// Global Tile X     ///
+                    );;
+
+                    if( 0 == p_g ){
+                        
+                        AAC2020_PAINT5D_Put(
+                            til_qua    
+                        ,   til_exp    
+                        ,   til_lay    
+                        ,   loc_t_x    
+                        ,   loc_t_y    
+                        ,       aus  //: aus_dex ://  
+                        ,       val  //: til_val / put_val ://
+                        );;          
+                    }else
+                    if( 1 == p_g ){
+
+                        AAC2020_PAINT5D_Get(
+                            til_qua    
+                        ,   til_exp    
+                        ,   til_lay    
+                        ,   loc_t_x    
+                        ,   loc_t_y    
+                        ,       aus  //: aus_dex ://  
+                        , &(got_val )//: til_val ://
+                        );;
+                    }else{
+                        ERR("[PG_OUT_OF_BOUNDS:2021]");
+                    };;
+
+                    if( got_val != val ){
+                        ERR("[TEST_DEF_FAIL_2021]");
+                    };;
+
+                };;};; //: [ p_x , p_y ] ::::::::::::::::::: ://
+
+                };;};; //: [ p_g , aus ] ::::::::::::::::::: ://
+
+            //:-----------:Put_Everything_Then_Get_Everything://
+            //:ALL_ONES_AND_ALL_ZEROS_TEST_VARS:-------------://
+
+                /** **************************************** ***
+
+                    @VID_IID[ 0077 ]TIME[ 05H 21M 12S ]
+
+                    The last two loops are pidgeon hole
+                    smoke tests. 
+
+                    [00] #_P5D_BINARY_TEST_00_#
+
+                        IF: We set the binary tile value as
+                        "[00]" on every tile...
+
+                        THEN: We expect the underlying memory 
+                        to be ALL ZEROS except for last 4 bytes.
+
+                    [11] #_P5D_BINARY_TEST_11_#
+
+                        IF: We set the binary tile value as
+                        "[11]" on every tile...
+
+                        THEN: We expect the underlying memory 
+                        to be ALL ONES except for last 4 bytes.
+
+                    WHY EVERYTHING BUT LAST 4 BYTES ?
+
+                        The last pixel cannot encode 3 layers
+                        and thus is not used in the data
+                        structure to encode tile values.
+
+                        The last pixel of the
+                        [quarkmap / mipmap ] structure
+                        is used as a special settings
+                        preset number pixel
+                
+                *** **************************************** **/
+
+                I32  b_i; //:Byte_Index
+                I32  mpi; //:Max_PIXEL_Index
+                I32  mbi; //:Max_Byte_Index
+
+                U08  p_c ; /** Pixel_Component_Byte **/
+
+            //:-------------:ALL_ONES_AND_ALL_ZEROS_TEST_VARS://
+            //:Loop_Through_Set_All:1s:----------------------://
+            /** Everything but bottom right pixel should     **/
+            /** end up a 1 bit.                              **/
+
+                /** #_P5D_BINARY_TEST_11_# **/
+
+                for( aus = 0 ; aus <= (  16 - 1 ) ; aus ++ ){
+                for( p_x = 0 ; p_x <= ( 512 - 1 ) ; p_x ++ ){
+                for( p_y = 0 ; p_y <= ( 512 - 1 ) ; p_y ++ ){
+
+                    aac2020_paint5d_glocpix_CTO_painpix(
+                       &( til_qua )    /// Auset Sub Quad    ///
+                    ,  &( til_exp )    /// Size_Exponent     ///
+                    ,  &( til_lay )    /// TileLayer ........///
+                    ,  &( loc_t_x )    /// Local  Tile X     ///
+                    ,  &( loc_t_y )    /// Local  Tile Y     ///
+                    ,   (     p_x )    /// Global Tile X     ///
+                    ,   (     p_y )    /// Global Tile X     ///
+                    );;
+
+                    AAC2020_PAINT5D_Put(
+                        til_qua    
+                    ,   til_exp    
+                    ,   til_lay    
+                    ,   loc_t_x    
+                    ,   loc_t_y    
+                    ,       aus  //: aus_dex      ://  
+                    ,         3  //: BINARY[ 11 ] ://
+                    );;   //: 3  ://
+                    //: DELTA[ Loop_Through_Set_All ]
+                    //: DELTA_3
+
+                };;};;};;
+
+                mpi=( 512 - 1 - 1 ); //:SKIP_BOTTOM_RIGHT
+                //:YES: Minus_One_TWICE
+
+                mbi=( ( mpi * 4 /**4==RGBA**/ )
+                    + 0 //:RED   BYTE( NO_OFFSET )
+                    + 1 //:GREEN BYTE_OF_mpi_pixel
+                    + 1 //:BLUE  BYTE_OF_mpi_pixel
+                    + 1 //:ALPHA BYTE_OF_mpi_pixel
+                );;
+                        
+                for( b_i = 0 ; b_i <= mbi ; mbi ++ ){
+            
+                    /** Make sure byte index does NOT cause  **/
+                    /** a SEGFAULT by going out of bounds.   **/
+                    assert( ( b_i / 4 ) <= (( 512*512 ) - 1 ) );
+
+                    p_c =AAC2020_PIXNAME_paint5d_cpu_pix[ b_i ];
+                     
+                    //:DELTA[ Loop_Through_Set_All ]
+                    //: 0xFF_IS_DELTA_OF[ Loop_Through_Set_All ]
+                    if( 0xFF != p_c ){
+                        ERR("[PIDGEON_HAS_A_PROBLEM:ONE]");
+                    };;
+                };;
+
+            //:----------------------:Loop_Through_Set_All:1s://
+            //:Loop_Through_Set_All:0s:----------------------://
+            /** Everything but bottom right pixel should     **/
+            /** end up a 0 bit.                              **/
+
+                /** #_P5D_BINARY_TEST_00_# **/
+
+                for( aus = 0 ; aus <= (  16 - 1 ) ; aus ++ ){
+                for( p_x = 0 ; p_x <= ( 512 - 1 ) ; p_x ++ ){
+                for( p_y = 0 ; p_y <= ( 512 - 1 ) ; p_y ++ ){
+
+                    aac2020_paint5d_glocpix_CTO_painpix(
+                       &( til_qua )    /// Auset Sub Quad    ///
+                    ,  &( til_exp )    /// Size_Exponent     ///
+                    ,  &( til_lay )    /// TileLayer ........///
+                    ,  &( loc_t_x )    /// Local  Tile X     ///
+                    ,  &( loc_t_y )    /// Local  Tile Y     ///
+                    ,   (     p_x )    /// Global Tile X     ///
+                    ,   (     p_y )    /// Global Tile X     ///
+                    );;
+
+                    AAC2020_PAINT5D_Put(
+                        til_qua    
+                    ,   til_exp    
+                    ,   til_lay    
+                    ,   loc_t_x    
+                    ,   loc_t_y    
+                    ,       aus  //: aus_dex      ://  
+                    ,         0  //: BINARY[ 00 ] ://
+                    );;  //:  0   ://
+                    //: DELTA[ Loop_Through_Set_All ]
+
+                };;};;};;
+
+                mpi=( 512 - 1 - 1 ); //:SKIP_BOTTOM_RIGHT
+                //:YES: Minus_One_TWICE
+
+                mbi=( ( mpi * 4 /**4==RGBA**/ )
+                    + 0 //:RED   BYTE( NO_OFFSET )
+                    + 1 //:GREEN BYTE_OF_mpi_pixel
+                    + 1 //:BLUE  BYTE_OF_mpi_pixel
+                    + 1 //:ALPHA BYTE_OF_mpi_pixel
+                );;
+                        
+                for( b_i = 0 ; b_i <= mbi ; mbi ++ ){
+            
+                    /** Make sure byte index does NOT cause  **/
+                    /** a SEGFAULT by going out of bounds.   **/
+                    assert( ( b_i / 4 ) <= (( 512*512 ) - 1 ) );
+
+                    p_c =AAC2020_PIXNAME_paint5d_cpu_pix[ b_i ];
+                     
+                    //:DELTA[ Loop_Through_Set_All ]
+                    //: 0x00_IS_DELTA_OF[ Loop_Through_Set_All ]
+                    if( 0x00 != p_c ){
+                        ERR("[PIDGEON_HAS_A_PROBLEM:ZER]");
+                    };;
+                };;
+
+            //:----------------------:Loop_Through_Set_All:0s://
         }
 
         //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
@@ -2808,9 +5196,9 @@
     {
         #define FUN aac2020_paint5d_Min_I16
 
-        assert( FUN(   3  ,   7  ) ==      3 );
-        assert( FUN(0x00FF,0xFFFF) == 0x00FF );
-        assert( FUN(0x0001,0xFFFF) == 0x0001 );
+        assert( FUN(    3  ,    7  ) ==      3 );
+        assert( FUN( 0x00FF,0x7FFF ) == 0x00FF );
+        assert( FUN( 0x0001,0x7FFF ) == 0x0001 );
 
         #undef  FUN
     }
@@ -2821,9 +5209,9 @@
     aac2020_paint5d_UTC_i32_Cap_u32( void )
     {
 
-        I32 bru_x_y = 0x0F000 ; /** brush [X|Y] location     **/
-        U16 cap_min = 0x0000F ; /** Minimum Boundary         **/
-        U16 cap_max = 0xF0000 ; /** Maximum Boundary         **/
+        I32 bru_x_y = 0x0F00 ; /** brush [X|Y] location     **/
+        U16 cap_min = 0x000F ; /** Minimum Boundary         **/
+        U16 cap_max = 0xF000 ; /** Maximum Boundary         **/
         U32 u32_x_y           ; /** U32 output of function   **/
 
         #define FUN aac2020_paint5d_i32_Cap_u32
@@ -2833,7 +5221,7 @@
 
             u32_x_y = FUN( bru_x_y , cap_min , cap_max );
 
-            assert( u32_x_y == 0x0F000 );
+            assert( u32_x_y == 0x0F00 );
 
             /** Tests where input doesn't change **/
             assert( FUN(   0 ,   0 ,   0 ) ==   0 );
@@ -3063,7 +5451,7 @@
     //:******************************************************://
     //:                                                      ://
     //:                                                      ://
-    //:         UNIT_TEST : PROGCONTROLS : ABOVE             ://
+    //:    UNIT_TEST_BIG_BLOCK : PROGCONTROLS : ABOVE        ://
     //:                                                      ://
     //:                                                      ://
     //:******************************************************://
@@ -3078,4 +5466,6 @@
 #undef  I32                                           //: 08 ://
 #undef  U32                                           //: 09 ://
 #undef  ERR                                           //: 10 ://
-//:================================================:UNIT_TEST://
+#undef  LOG                                           //: 11 ://
+//:========================================:UNIT_TEST_SECTION://
+//:========================================:SECTION_UNIT_TEST://

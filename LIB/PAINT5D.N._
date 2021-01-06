@@ -75,6 +75,88 @@
         //:------------------------------------------:WHY_NOT://
 
     //:-------------------------------:COORDINATE_CONVERSIONS://
+    //:BOUND_TO_KEYBOARD:------------------------------------://
+
+        /** @VID_IID[ 0076 ]TIME[ 01H 20M 20S ] **/
+        /** #_WHAT_ARE_DATAPIXELS_# ? **/
+        /** @VID_IID[ 0076 ]TIME[ 01H 26M 15S ] **/
+        /** #_WHERE_IS_THE_CAMERA_MOVING_OVER_# **/
+
+        /** VOID **/
+        aac2020_paint5d_MoveCamera_XY(
+            I32 tra_i_x  //: I32 tra_i_x : Trans:DATAPIXELS: X
+        ,   I32 tra_i_y  //: I32 tra_i_x : Trans:DATAPIXELS: Y
+        );;              
+
+        /** VOID **/
+        aac2020_paint5d_ZoomCamera(
+            I32 zom_i32 //: I32 zom_i32 : POS: Zooms/PULLS In:
+        );;             //: NEG: Zoom-OUT / Pushes Rect Bounds
+
+        /** VOID **/
+        aac2020_paint5d_MoveBrush_XY(
+            o_x //: I32 o_x : offset:X
+        ,   o_y //: I32 o_y : offset:Y
+        );;
+
+        /** VOID **/
+        aac2020_paint5d_DeltaMutate_TileValue( 
+            I32 del_t_v //: I32 del_t_v : Delta Tile Value
+        );;
+
+        /** VOID **/
+        aac2020_paint5d_DeltaMutate_TileExponent( 
+            I32 del_t_e //: I32 del_t_e : Delta Tile Exponent
+        );;
+
+        /** VOID **/
+        aac2020_paint5d_DeltaMutate_TileLayer( 
+            I32 del_t_l //: I32 del_t_l : Delta Tile Layer
+        );;
+
+        //:section_pattern_breaker:--------------------------://
+
+            /** ******************************************** ***
+
+                @VID_IID[ 0076 ]TIME[ 04H 42M 35S ]
+
+                aac2020_paint5d_ToggleTile is wired into the
+                keyboad. But for unit testing we need to
+                use: AAC2020_PAINT5D_Put_BrushState
+                which loads the brush state, and 
+                use: AAC2020_PAINT5D_Put_UsingBrush
+                which is like "ToggleTile" but always 
+                overwrites.
+
+            *** ******************************************** **/
+
+                //:NOT_BOUND_TO_KEYBOARD_INPUT:--------------://
+                //:needed_to_test:ToggleTile:----------------://
+
+                    /** VOID  &  @PRIVATE@ **/
+                    aac2020_paint5d_Put_BrushState(
+                        t_q //: I32 : til_qua : 01 ://
+                    ,   t_e //: I32 : til_exp : 02 ://
+                    ,   t_l //: I32 : til_lay : 03 ://
+                    ,   l_x //: I32 : loc_t_x : 04 ://
+                    ,   l_y //: I32 : loc_t_y : 05 ://
+                    ,   a_d //: I32 : aus_dex : 06 ://
+                    ,   t_v //: I32 : til_val : 07 ://
+                    );;
+                
+                    /** VOID  &  @PRIVATE@ **/
+                    aac2020_paint5d_Put_UsingBrush(  );
+                     
+    
+                //:----------------:needed_to_test:ToggleTile://
+                //:--------------:NOT_BOUND_TO_KEYBOARD_INPUT://
+
+            /** VOID **/
+            aac2020_paint5d_ToggleTile( void );
+
+        //:--------------------------:section_pattern_breaker://
+ 
+    //:------------------------------------:BOUND_TO_KEYBOARD://
 
 *** ******************************************************* ***/
 //:======================================:FUNCTION_REFERENCES://

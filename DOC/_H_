@@ -9,6 +9,173 @@
     //[   VIDEO COMMENT TIMESTAMP EXAMPLE   ]//
 *** ******************************************************** ***
 
+#PAT_BREAKER####################################################
+
+    Shorthand for #PATTERN_BREAKER#
+
+####################################################PAT_BREAKER#
+#_WHY_IS_P5D_GET_BS_INLINED_HERE_###############################
+
+    @VID_IID[ 0077 ]TIME[ 1H 40M 5S ]
+
+    AAC2020_PAINT5D_Get_BrushState 's
+    code body only exists as a section of inlined
+    source code within the unit test:
+
+        aac2020_paint5d_UTC_Put_BrushState
+
+    BECAUSE: aac2020_paint5d_UTC_Put_BrushState
+             itself is a helper function to help run
+             a unit test.
+
+    I don't want a helper function for my helper fuction
+    that I then have to write a unit test for.
+
+    The backwards reasoning chain needs to be
+    nipped in the bud NOW before it gets out of control.
+
+    I don't want UNIT TEST CODE FOR MY UNIT TEST CODE.
+
+###############################_WHY_IS_P5D_GET_BS_INLINED_HERE_#
+#_WHAT_DOES_B_X_B_Y_MEAN_IN_PAINT5D_############################
+
+    B_X and B_Y mean: Brush-x coordinate 
+                      Brusy-y coordinate
+
+    The actual data for these variables is stored here:
+
+        AAC2020_TAUDEPO_SUB_PAINT5D_VAR_B_X
+        AAC2020_TAUDEPO_SUB_PAINT5D_VAR_B_Y
+
+        SEE FILE[ TAUDEPO.D._ ]
+
+    This is where Josh's mouse cursor is over.
+
+############################_WHAT_DOES_B_X_B_Y_MEAN_IN_PAINT5D_#
+#_WHAT_DOES_VP1_MEAN_IN_PAINT5D_################################
+
+    @VID_IID[ 0076 ]TIME[ 2H 40M 00S ]
+    
+    [ VP1 / P5D_VP1 ]:Viewport_One(1): 
+                    Offscreen/Source 
+                    TileMapDataBitmap Viewport 
+    
+    VP1 basically means: "Camera Viewport"
+    This is the camera variables controlled
+    by JOSH when he is editing tiles in
+    Paint5D editor.
+
+################################_WHAT_DOES_VP1_MEAN_IN_PAINT5D_#
+#_WEIRD_UNIT_TEST_VAR_NAMES_O_A_################################
+
+    @VID_IID[ 0076 ]TIME[ 2H 39M 10S ]
+    
+    weird_names_because: 
+    We kept confusing
+    
+        "Input And Output"
+    With "Expected And Actual"
+    
+    And tangling our mental understanding
+    between the pairs of words.
+
+################################_WEIRD_UNIT_TEST_VAR_NAMES_O_A_#
+#_WHY_ARE_CAMERA_BOUNDS_127_BY_127_HERE_########################
+
+    127 was a mistake.
+    See corrected commentary:
+
+    HASHTAG_COMMENT[ #_WHY_ARE_CAMERA_BOUNDS_255_BY_255_HERE_# ]
+    
+    WRITTEN_ON[ DATE[ 2021_01_05 ] ]
+
+########################_WHY_ARE_CAMERA_BOUNDS_127_BY_127_HERE_#
+#_WHERE_IS_THE_CAMERA_MOVING_OVER_##############################
+#_WHY_ARE_CAMERA_BOUNDS_255_BY_255_HERE_########################
+#_P5D_BOUNDING_#################################################
+
+    @VID_IID[ 01H 31M 22S ]
+
+    PART_OF_DIAGRAM[ #DIA_P5D_MAIN#        ]
+    SEEN_IN_FILE[  AAC2020\LIB\PAINT5D.D._ ]
+    |<-- 128 -->|           
+    +--=--+--=--+--=--+--=--+  DIAGRAM_TO_LEFT_COULD_BE:
+    |           |           |  1. TOP_LEF: SUB_TILE 
+    | @til_lay  | @til_lay  |  2. TOP_RIG: SUB_TILE
+    +     0     +     1     +  3. BOT_LEF: SUB_TILE
+    |     @til_qua === 0    |  4. BOT_RIG: SUB_TILE
+    |           |           |  @VID_IID[ 0076 ]TIME[1H 33M 40S]
+    +--=--+--=--+--=--+--=--+
+    |           |  0  |  1  |
+    | @til_lay  |     |     |
+    +     2     +-----+--+--+
+    |           |  2  |__|__|
+    |           |     |__|..|
+    +--=--+--=--+--=--+--=--+   @VID_IID[ 01H 47M 10S ]
+    |           |               Correction: Bounds are
+    |           +-----------+   actually ( 128 + 128 - 1 )
+    |                       |   (__NOT__ 128-1 )
+    |<-------- 128 -------->|
+    |<===================== | ===== 256 =============>|
+    |                       |                         |
+    +-----------|-----------+ +-----------|-----------+
+    |                       | |                       |
+    |                       | |                       |
+    -                       - -                       -
+    |                       | |                       |
+    |                       | |                       |
+    +  @_TOP_LEF_subtile_@  + +  @_TOP_LEF_subtile_@  +
+    |                       | |                       |
+    |                       | |                       |
+    -                       - -                       -
+    |                       | |                       |
+    |                       | |                       |
+    +-----------|-----------+ +-----------|-----------+
+    +-----------|-----------+ +-----------|-----------+
+    |                       | |                       |
+    |                       | |                       |
+    -                       - -                       -
+    |                       | |                       |
+    |                       | |                       |
+    +  @_TOP_LEF_subtile_@  + +  @_TOP_LEF_subtile_@  +
+    |                       | |                       |
+    |                       | |                       |
+    -                       - -                       -
+    |                       | |                       |
+    |                       | |                       |
+    +-----------|-----------+ +-----------|-----------+
+    |                                                 |
+    |<------------- CLIENT_AREA_WIDTH   ------------->|
+    |<-------------         OR          ------------->|
+    |<------------- VP1 Width In Pixels ------------->|
+
+    The SMALLEST TILE is a collection of 128x128 tiles.
+    Thus the camera when zoomed out to the maximum outward
+    zoom should be 128x128 units in size.
+    (These units are in DATAPIXELS. )
+    (SEE: #_WHAT_ARE_DATAPIXELS_#   )
+
+#################################################_P5D_BOUNDING_#
+########################_WHY_ARE_CAMERA_BOUNDS_255_BY_255_HERE_#
+##############################_WHERE_IS_THE_CAMERA_MOVING_OVER_#
+#_WHAT_ARE_DATAPIXELS_##########################################
+
+    #WHAT_ARE_DATAPIXELS#
+
+        @VID_IID[ 0076 ]TIME[ 1H 23M 45S ]
+
+        Datapixels are pixels on a texture or bitmap data
+        array that encode some other type of information.
+
+        Though the data is packed into a pixel. The pixel
+        bits actually dont mean "RGBA". They could for example
+        mean... "mouse-x and mouse-y"
+        
+        Or they could mean:
+
+        "The value of a tile" <-- very often used.
+
+##########################################_WHAT_ARE_DATAPIXELS_#
 @_IDENTICAL_VALUES_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
     @IDENTICAL_VALUES:
@@ -180,9 +347,14 @@
     we just get WRONG RESULTS in our code with no clues
     left for us as to what we did wrong.
 
+    @VID_IID[ 0077 ]TIME[ 00H 13M 35S ]
+    @TRAP_VAL@ : Shorthands Of "@TRAP_VALUE" to save space.
+    @TRP_VAL@  : Shorthands Of "@TRAP_VALUE" to save space.
+    @TRA_VAL@  : Shorthands Of "@TRAP_VALUE" to save space.
+    @TRAP@     : Shorthands Of "@TRAP_VALUE" to save space.
+
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@TRAP_VALUES@
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@_TRAP_VALUES_@
-
 @SAME_VAR@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
     @_SAME_VAR_@
