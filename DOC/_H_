@@ -9,6 +9,129 @@
     //[   VIDEO COMMENT TIMESTAMP EXAMPLE   ]//
 *** ******************************************************** ***
 
+#_SKIP_CONFIG_PIXELS_P5D_PUTGET_################################
+
+    @VID_IID[ 00H 50M 30S ]Summary 1st draft finished.
+
+    The idea of our PUT_GET test in PAINT5D is to do
+    a back and forth conversion of EVERY SINGLE PIXEL
+    by scanning over the entire bitmap and starting the
+    back and forth conversion process from the XY location
+    of the current pixel of the bitmap.
+
+    This is a dea simple way to ensure 100% coverage.
+
+    We can ensure our conversion test ALWAYS works because
+    we tested it with every possible value.
+
+################################_SKIP_CONFIG_PIXELS_P5D_PUTGET_#
+#skipped_configuration_pixels###################################
+
+    ************************************************************
+    @VID_IID[ 0079 ]TIME[ 00H 36M 05S ] 
+    #skipped_configuration_pixels#      
+    ************************************************************
+    ************************************************************
+    @VID_IID[ 0079 ]TIME[ 00H 42M 32S ]
+    Done writing first draft of this rant.
+    ************************************************************
+
+    Look at diagram: #DIA_P5D_MAIN#
+    In File:          PAINT5D.D._
+
+    The bottom-right most pixel of each
+    [mipmap/quarkmap] like structure
+    is a single pixel and CANNOT hold
+    the 3 layers required.
+
+    So, rather than just NOT USE this pixel, we will encode
+    a preset value into that single pixel.
+
+    We only have one pixel, so we need to make the most
+    out of it. The best way is to use the FULL uint32
+    pixel value to encode a preset that is then hardcoded
+    into the paint5D system. 
+
+    My artist ( Josh (year 2021) ) can then tell me what
+    kind of preset pallets they want to experiment with.
+
+    The maximum value of 2 to the power of 32 is
+    pretty big.... 4 billion and change.
+
+    That is plenty of room to hard code all the presets 
+    I'll ever want. One such preset number should probably
+    be an indirection saying "There is a settings file 
+    being used rather than a hard coded preset."
+
+    Maintaining hard coded presets is the downside to this
+    system. But it is simple and leverages the data in that
+    single pixel to it's maximum possible extent.
+
+###################################skipped_configuration_pixels#
+#_CTF_VS_CTS_###################################################
+
+        CTS: Current_Test_Section       
+        CTF: Current_Test_Function     
+
+        USED IN:
+            paint5d:
+            aac2020_paint5d_CTF
+            aac2020_paint5d_CTS
+
+###################################################_CTF_VS_CTS_#
+#_DO_NOT_SUPPORT_TILE_EXPONENT_8_IN_PAINT5D_####################
+
+    Removed Code From: aac2020_paint5d_painpix_CTO_glocpix
+
+            if( 8 == til_exp ){
+
+                /** @VID_IID[ 0078 ]TIME[ 2H 6M 55S ] ****** **/
+                /** Not sure why I was thinking to do this * **/
+                /** but it is full of edge cases and the math**/
+                /** breaks down. Halt if you get til_exp==8  **/
+                /** and remove it's use from test code.      **/
+                /** This means when iterating over all pixels**/
+                /** we need to SKIP the bottom-left-most     **/
+                /** pixel in our [p_x,p_y] global loop.      **/
+                ERR("[DONT_SUPPORT_TIL_EXP_8!!!!!]");
+
+                /** @VID_IID[ 0078 ]TIME[ 02H 02M 59S ] **** **/
+                /** I have no clue if my math will work out  **/
+                /** to get correct answer with til_exp == 8  **/
+                /** but the answer should always be          **/
+                /** [ 511 , 511 ] because it should get      **/
+                /** the bottom right most pixel used         **/
+                /** for configuration data. 8 is not         **/
+                /** technically a valid exponent...          **/
+                /** So not sure why I am trying to shim      **/
+                /** in support for it.                       **/
+                /** **************************************** **/
+                if( 0
+                ||  (   ((U16)( i16_gtx )) != ( 512 - 1 )   )
+                ||  (   ((U16)( i16_gty )) != ( 512 - 1 )   )
+                ){
+                    printf("[i16_gtx]:%d\n" , i16_gtx );
+                    printf("[i16_gty]:%d\n" , i16_gty );
+                    ERR("[til_exp_8_has_only_one_location]");
+                };;
+
+            };;
+#_DO_NOT_SUPPORT_TILE_EXPONENT_8_IN_PAINT5D_####################
+#AAC2020_CRASH_ON_NIAVE_CODE####################################
+
+    AAC2020_CRASH_ON_NIAVE_CODE :
+
+        Meant to mark code where I wrote the function in
+        a Niave way that is not performant.
+        In other words, unecessarily slow code.
+
+        Come back to these pieces of code later when
+        optimizing and see if you can fix them and make
+        them faster.
+
+        @VID_IID[ 0078 ]TIME[ 00H 59M 15S ]
+
+####################################AAC2020_CRASH_ON_NIAVE_CODE#
 #PAT_BREAKER####################################################
 
     Shorthand for #PATTERN_BREAKER#

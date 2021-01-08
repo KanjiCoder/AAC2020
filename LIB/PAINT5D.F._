@@ -333,6 +333,25 @@
                 U08 til_exp
     )
     {
+        /** [bip_sip]:BItmap_Partition____Span_In_Pixels **/
+
+        if( til_exp >= 8 ){
+
+        //    printf("[til_exp]:%d\n" , til_exp );
+        //
+        //    /** By trying to support the edge-case **/
+        //    /** of tile exponent 8 , we have found **/
+        //    /** ourselves in a bad place. Remove   **/
+        //    /** Uses of [ til_exp == 8 ] ********* **/
+        //    ERR("[8_IS_INVALID_DO_NOT_SUPPORT]");
+        };;
+
+        #if( AAC2020_CRASH_ON_NIAVE_CODE >= 1 ) //:##########://
+
+            #error "[CODE_BELOW_COULD_USE_A_JUMP_TABLE]"
+
+        #endif //:###########################################://
+
         U08 bip_sip; /** m_c : Max_Coordinate ( x | y ) **/
         if( 0 == til_exp ){ bip_sip = ( 128 + 0 ); };  //: 1 ://
         if( 1 == til_exp ){ bip_sip = (  64 + 0 ); };  //: 2 ://
@@ -342,8 +361,15 @@
         if( 5 == til_exp ){ bip_sip = (   4 + 0 ); };  //: 6 ://
         if( 6 == til_exp ){ bip_sip = (   2 + 0 ); };  //: 7 ://
         if( 7 == til_exp ){ bip_sip = (   1 + 0 ); };  //: 8 ://
-        assert(  til_exp <= AAC2020_PAINT5D_MAX_til_exp );
-        assert(     7    == AAC2020_PAINT5D_MAX_til_exp );
+        if( 8 == til_exp ){ bip_sip = (     1   ); };  //: 9 ://
+
+        /** @VID_IID[ 0078 ]TIME[ 1H 52M 55S ] ************* **/
+        /** This could be a bad idea, but we will allow 8    **/
+        /** to be used in some calculations. Hopefully it    **/
+        /** does not waterfall out of control in a chain     **/
+        /** reaction of edge cases that I will soon regret.  **/
+        assert(  til_exp <= AAC2020_PAINT5D_MAX_til_exp + 1);
+        assert(   7 + 1  == AAC2020_PAINT5D_MAX_til_exp + 1);
     
         return( bip_sip );
     }
@@ -367,8 +393,10 @@
         if( 5 == til_exp ){ max_cor = (   4 - 1 ); };  //: 6 ://
         if( 6 == til_exp ){ max_cor = (   2 - 1 ); };  //: 7 ://
         if( 7 == til_exp ){ max_cor = (   1 - 1 ); };  //: 8 ://
-        assert(  til_exp <= AAC2020_PAINT5D_MAX_til_exp );
-        assert(     7    == AAC2020_PAINT5D_MAX_til_exp );
+
+        if( 8 == til_exp ){ max_cor = (     0   ); };  //: 9 ://
+        assert(  til_exp <= AAC2020_PAINT5D_MAX_til_exp + 1);
+        assert(   7 + 1  == AAC2020_PAINT5D_MAX_til_exp + 1);
     
         return( max_cor );
     }
@@ -380,6 +408,20 @@
             U08     til_exp
     )
     {
+        if( til_exp <= 7 ){
+            /** Okay. Do nothing. Valid Range. **/
+        }else
+        if( 8 == til_exp ){
+            /** @VID_IID[ 0078 ]TIME[ 00H 24M 22S ] ******** **/
+            /** Okay. This tile exponent is outside of our   **/
+            /** valid range, but for some reason supporting  **/
+            /** it in our lookup table. Returns coordinate   **/
+            /** of the bottom-right-most pixel in quarkmap.  **/
+            /** ******************************************** **/
+        }else{
+            ERR("[OOB:til_exp:til_exp_CTO_diagpix]");
+        };;
+
         U08     diagpix =aac2020_paint5d_POT_diagpix[ til_exp ];
         return( diagpix );
     }
@@ -391,35 +433,68 @@
             U08     diagpix
     )
     {
-        /** In case type signature changes **/
-        assert(  (((I32)diagpix)+0) < 255  );
 
-        /**   T_E  **/
-        U08 til_exp =( 222 /** Invalid Trap Value **/ );
-        /**   T_E  **/
+        I32       dex = 0;
+        I32 found_dex =( 0 - 1 );
 
-        switch( diagpix ){  
-        //:pyramid_not_of_doom:------------------------------://
-        CAS 0: T_E = ( 0                              );BRK;
-        CAS 1: T_E = ( 0 +128                         );BRK;
-        CAS 2: T_E = ( 0 +128 +64                     );BRK;
-        CAS 3: T_E = ( 0 +128 +64 +32                 );BRK;
-        CAS 4: T_E = ( 0 +128 +64 +32 +16             );BRK;
-        CAS 5: T_E = ( 0 +128 +64 +32 +16 +8          );BRK;
-        CAS 6: T_E = ( 0 +128 +64 +32 +16 +8 +4       );BRK;
-        CAS 7: T_E = ( 0 +128 +64 +32 +16 +8 +4 +2    );BRK;
-        CAS 8: T_E = ( 0 +128 +64 +32 +16 +8 +4 +2 +1 );BRK;
-        //:------------------------------:pyramid_not_of_doom://
-        DEF: ERR("[INVALID_DIAGPIX_INPUT_CANNOT_CONVERT]");
-        };; assert( til_exp <= 7 && (((I32)til_exp)+0) >= 0 );
-        S_A( AAC2020_PAINT5D_MAX_til_exp == 7 , "[ERR_MSG]" );
+        for( dex = 0 ; dex <= 8 ; dex++ ){
 
-        /** 8 is only 1 pixel, and thus not useful. **/
-        /** @VID_IID[ 0068 ]TIME[ 3H 13M 15S ]      **/
+            if( diagpix == aac2020_paint5d_POT_diagpix[ dex ] ){
+                found_dex =( dex );
+            };;
+        };;
 
-        assert( (&T_E)==(&til_exp)/**@SAME_VAR_SAME_ADDR@**/ );
-        assert(   T_E ==  til_exp /**@SAME_VAR@**/           );
-        return(   T_E /** til_exp **/                        );
+        /** Pretty sure function needs the EXACT diagonal **/
+        /** value. No snapping to nearest is performed.   **/
+        if( found_dex < 0 ){
+            ERR("[BAD_DIAGPIX_INPUT_MAYBE?]");
+        };;
+
+        /** @VID_IID[ 00H 32M 13S ] ************************ **/
+        /** For example, if found_dex is 1 , then got   .... **/
+        /** 128 for the diagpix. 128 is the origin for  .... **/
+        /** the til_exp value AFTER 0, thus til_exp 1.  .... **/
+        assert( found_dex >= 0 );     /** ****************** **/
+        assert( found_dex <= 8 );     /** ****************** **/
+        return( (U08)found_dex     ); /** ****************** **/
+
+//:WTF!? This is the wrong formula. It is the inverse.
+//:Delete this sometime. Preferably after PAINT5D is working
+////////////////////////////////////////////////////////////////
+////    /** In case type signature changes **/
+////    assert(  (((I32)diagpix)+0) < 255  );
+////
+////    /**   T_E  **/
+////    U08 til_exp =( 222 /** Invalid Trap Value **/ );
+////    /**   T_E  **/
+////
+////    switch( diagpix ){  
+////    //:pyramid_not_of_doom:------------------------------://
+////    CAS 0: T_E = ( 0                              );BRK;
+////    CAS 1: T_E = ( 0 +128                         );BRK;
+////    CAS 2: T_E = ( 0 +128 +64                     );BRK;
+////    CAS 3: T_E = ( 0 +128 +64 +32                 );BRK;
+////    CAS 4: T_E = ( 0 +128 +64 +32 +16             );BRK;
+////    CAS 5: T_E = ( 0 +128 +64 +32 +16 +8          );BRK;
+////    CAS 6: T_E = ( 0 +128 +64 +32 +16 +8 +4       );BRK;
+////    CAS 7: T_E = ( 0 +128 +64 +32 +16 +8 +4 +2    );BRK;
+////    CAS 8: T_E = ( 0 +128 +64 +32 +16 +8 +4 +2 +1 );BRK;
+////    //:------------------------------:pyramid_not_of_doom://
+////    DEF: 
+////        
+////        printf("[DP_TO_TE:diagpix]:%d\n" ,  diagpix );
+////        ERR("[INVALID_DIAGPIX_INPUT_CANNOT_CONVERT]");
+////
+////    };; assert( til_exp <= 7 && (((I32)til_exp)+0) >= 0 );
+////    S_A( AAC2020_PAINT5D_MAX_til_exp == 7 , "[ERR_MSG]" );
+////
+////    /** 8 is only 1 pixel, and thus not useful. **/
+////    /** @VID_IID[ 0068 ]TIME[ 3H 13M 15S ]      **/
+////
+////    assert( (&T_E)==(&til_exp)/**@SAME_VAR_SAME_ADDR@**/ );
+////    assert(   T_E ==  til_exp /**@SAME_VAR@**/           );
+////    return(   T_E /** til_exp **/                        );
+////////////////////////////////////////////////////////////////
     }
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
@@ -456,6 +531,8 @@
             U08     astipix
     )
     {
+        U08 diagpix=( 0 );
+
         /** ************************************************ **/
         /** @VID_IID[ 0071 ]TIME[ 03H 47M 50S ]              **/
         /** SEE:FILE[ PAINT5D.D._]SECTION[ PAINT5D_DATA ]    **/
@@ -464,23 +541,60 @@
         /**                                                  **/
         /** astipix : Auset_Sub_TIle: PIXel (location:[X|Y]) **/
         /** diagpix : DIAGonal_PIXels .......................**/
+        /**                                                  **/
+        /** @VID_IID[ 0078 ]TIME[ 00H 49M 03S ]              **/
+        /** In retrospect.. You don't know what the hell     **/
+        /** you are doing. "lil" (last index less than )     **/
+        /** should probably be "fil" (first index less than).**/
         /** ************************************************ **/
 
-        U08 lil=( 0 ); //: lil == "Largest_Index_Lessthan"
+        U08 fil  =( 0 ); //: fil == "First_Index_Lessthan"
+        U08 found=( 0 ); //: has fil been found yet?
+
+                         
+        #if( AAC2020_CRASH_ON_NIAVE_CODE >= 1 ) //:##########://
+
+            #error REWRITE_THIS_WITHOUT_GUESS_AND_CHECK
+
+        #endif //:###########################################://
 
         for( I32 i = 0 ; i <= 9 ; i++ ){
+            if( 0 == found ){
             if( astipix < aac2020_paint5d_POT_diagpix[ i ] ){ 
+                fil   =   i    ; 
+                found =( 0xFF );
+            };;};;
+        };;
+           
+        if( fil >= 1 ){
+            /** OKAY! ---------------------- **/
+            /** First Comparison Should      **/
+            /** never be true, so we should  **/
+            /** always have an "fil" of      **/
+            /** at least one( 1 )            **/
+            /** ---------------------------- **/    
 
-                lil = i; 
+            diagpix=( aac2020_paint5d_POT_diagpix[ fil - 1 ] );
+        }else{
+
+            if( 255 == astipix ){
+
+                /** @UGLY_HACK@ ******************* **/
+                /** Edge case. Exponent 8 Locates   **/
+                /** The config pixel at bottom left **/
+                /** ONLY ONE POSSIBLE LOCATION FOR  **/
+                /** THIS SINGLE PIXEL... 255        **/
+                diagpix = 255; /** **************** **/
+
+            }else{
+
+                printf("[astipix]:%d\n",astipix);
+                printf("[::found]:%d\n",  found);
+                printf("[::::fil]:%d\n",    fil);
+                ERR("[ASSERT_FAIL:fil>=1]");
+
             };;
         };;
-
-        assert( lil >= 1 ); /** First Comparison Should      **/
-                          /** never be true, so we should    **/
-                          /** always have an "lil" of        **/
-                          /** at least one( 1 )              **/
-
-        U08 diagpix=( aac2020_paint5d_POT_diagpix[ lil - 1 ] );
 
         return( diagpix );
     }
@@ -739,24 +853,36 @@
 
         //:---------------------:references_can_never_be_null://
         //:bounds_check_inputs:------------------------------://
+        #define ASS assert 
 
-            assert( AAC2020_PAINT5D_MAX_til_qua ==    3    );
-            assert( AAC2020_PAINT5D_MAX_til_exp ==    7    );
-            assert( AAC2020_PAINT5D_MAX_til_lay ==    2    );
+            if( 8 == til_exp ){
 
-            assert( AAC2020_PAINT5D_MAX_til_qua >= til_qua );
-            assert( AAC2020_PAINT5D_MAX_til_exp >= til_exp );
-            assert( AAC2020_PAINT5D_MAX_til_lay >= til_lay );
+                //:TODO: Enumeration to tell us what unit
+                //:      test is currently being ran.
+                printf("[UTS]:%s\n", aac2020_paint5d_CTS );
+                printf("[UTF]:%s\n", aac2020_paint5d_CTF );
+                printf("[BAD:T_E:painpix_CTO_glocpix]\n");
+                ERR("[NOW_CRASHING_2021]");
+            };;
+
+            ASS( AAC2020_PAINT5D_MAX_til_qua ==    3    );
+            ASS( AAC2020_PAINT5D_MAX_til_exp ==    7    );
+            ASS( AAC2020_PAINT5D_MAX_til_lay ==    2    );
+
+            ASS( AAC2020_PAINT5D_MAX_til_qua     >= til_qua );
+            ASS( AAC2020_PAINT5D_MAX_til_exp     >= til_exp );
+            ASS( AAC2020_PAINT5D_MAX_til_lay     >= til_lay );
 
             U08  /* max_cor */                max_cor =(
                 ( aac2020_paint5d_til_exp_CTO_max_cor( 
                                   til_exp )));;
 
-            assert( max_cor >=        loc_t_x          );
-            assert( max_cor >=        loc_t_y          );
-            assert(    0    <= (((I16)loc_t_x)+0)      );
-            assert(    0    <= (((I16)loc_t_y)+0)      );
+            ASS( max_cor >=        loc_t_x          );
+            ASS( max_cor >=        loc_t_y          );
+            ASS(    0    <= (((I16)loc_t_x)+0)      );
+            ASS(    0    <= (((I16)loc_t_y)+0)      );
 
+        #undef  ASS   
         //:------------------------------:bounds_check_inputs://
         //:declare_all_variables:----------------------------://
 
@@ -826,6 +952,41 @@
 #undef  MIN                                           //: 05 ://
 #undef  ERR                                           //: 06 ://
 //:===============================:QUARKMAP_COORD_CONVERSIONS://
+//:PIXEL_BIT_PACKING:========================================://
+//:@VID_IID[ 0080 ]TIME[ 01:02:20 ]==========================://
+#define U08 uint8_t /** GCC: <stdint.h> **/
+#define ERR aac2020_paint5d_Halt
+
+    void
+ //:aac2020_paint5d_Put_BitPack
+    aac2020_paint5d_BitPack_Put(
+        U08* cpu_pix //: AAC2020_PIXNAME_paint5d_cpu_pix     ://
+    ,   U08  glo_com //: Component Index. Divisible By 4.    ://
+    ,   U08  aus_dex //: Auset Index: 0-to-15 inclusive.     ://
+    ,   U08  til_val //: <-- Value To Put                    ://
+    )
+    {
+
+        #error "[EXTRACT_BIT_PACKING_LOGIC_AND_WRITE_TESTS]" 
+    }
+    
+    void
+ //:aac2020_paint5d_Get_BitPack
+    aac2020_paint5d_BitPack_Get(
+        U08* cpu_pix //: AAC2020_PIXNAME_paint5d_cpu_pix     ://
+    ,   U08  glo_com //: Component Index. Divisible By 4.    ://
+    ,   U08  aus_dex //: Auset Index: 0-to-15 inclusive.     ://
+    ,   U08* til_val //: <-- Value To Get                    ://
+    )
+    {
+        #error "[EXTRACT_BIT_PACKING_LOGIC_AND_WRITE_TESTS]" 
+
+    }
+
+#undef  U08 
+#undef  ERR 
+//:=========================:@VID_IID[ 0080 ]TIME[ 01:02:20 ]://
+//:========================================:PIXEL_BIT_PACKING://
 //:PAINT5D_QUARKMAP_GET_PUT:=================================://
 //:PAINT5D_QUARKMAP_PUT_GET:=================================://
 #define U08  uint8_t /** GCC: <stdint.h> **/          //: 01 ://
@@ -838,6 +999,12 @@
     /** @VID_IID[ 0067 ]TIME[ 00H 52M 23S ] **/
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    #if( AAC2020_CRASH_ON_VITAL_TODO >= 1 ) //:##############://
+
+        #error TEST THE BIT PACKING LOGIC IN ISOLATION
+
+    #endif //:###############################################://
 
     U08
     AAC2020_PAINT5D_Put(
@@ -908,9 +1075,15 @@
 
             I16 glo_t_x =( 0 - 5005 /** @TRAP_VALUE@ **/ );
             I16 glo_t_y =( 0 - 6006 /** @TRAP_VALUE@ **/ );
-            I16 glo_dex =( 0 - 7007 /** @TRAP_VALUE@ **/ );
-            I16 glo_com =( 0 - 8008 /** @TRAP_VALUE@ **/ );
-            I16 arr_dex =( 0 - 9009 /** @TRAP_VALUE@ **/ );
+
+                /** @VID_IID[ 0078 ]TIME[ 1H 34M 50S ]  **** **/
+                /** 16 bits:enough for [ glo_t_x , glo_t_y ] **/
+                /** NOT ENOUGH FOR GLOBAL INDEXES.           **/
+                /** **************************************** **/
+
+            I32 glo_dex =( 0 - 7007 /** @TRAP_VALUE@ **/ );
+            I32 glo_com =( 0 - 8008 /** @TRAP_VALUE@ **/ );
+            I32 arr_dex =( 0 - 9009 /** @TRAP_VALUE@ **/ );
                                
             U08 var_u08 =(       99 /** @TRAP_VALUE@ **/ );
             U08 aus_loc =(       23 /** @TRAP_VALUE@ **/ );
@@ -934,6 +1107,12 @@
         //:convert_pixel_xy_to_index:------------------------://
         #define MAP_SAN ( 512 ) /** WID == HIG == SAN **/
 
+            //: CANNOT USE 0xFFFF to store glo_com.
+            //: Not enought bits. Not even enough
+            //: bits for glo_dex.
+            assert( 512 * 512 * 4 > 0xFFFF ); //:max: glo_com
+            assert( 512 * 512 * 1 > 0xFFFF ); //:max: glo_dex
+
             glo_dex = glo_t_x + ( glo_t_y  *  MAP_SAN );
             glo_com =(glo_dex * 4 /** 4: RGBA **/ );
     
@@ -943,8 +1122,25 @@
                                 glo_t_x 
                               ,     glo_t_y ));;
 
-                assert(       chk_glo_com  == ((U32)glo_com) );
-                assert( ((I16)chk_glo_com) == (     glo_com) );
+                U08 a_1; /** Assert #1 **/
+                U08 a_2; /** Assert #2 **/
+                a_1 =(       chk_glo_com  == ((U32)glo_com) );
+                a_2 =( ((I32)chk_glo_com) == (     glo_com) );
+                if( (!a_1) || (!a_2) ){
+                    printf("[a_1]:%d\n", a_1 );
+                    printf("[a_2]:%d\n", a_2 );
+
+                    printf("[chk_glo_com]:%d\n" , chk_glo_com);
+                    printf("[    glo_com]:%d\n" ,     glo_com);
+
+                    U32 i32_chk =  ((I32)chk_glo_com) ;
+                    U32 u32_glo =  ((U32)    glo_com) ;
+
+                    printf("[i32_chk]:%d\n" , i32_chk);
+                    printf("[u32_glo]:%d\n" , u32_glo);
+
+                    ERR("[EVERYONE_PANIC_AND_HIT_THE_FLOOR]");
+                };;
             //:-----------------:double_check_component_index://
 
         #undef  MAP_SAN
@@ -1109,9 +1305,11 @@
 
             I16 glo_t_x =( 0 - 5005 /** @TRAP_VALUE@ **/ );
             I16 glo_t_y =( 0 - 6006 /** @TRAP_VALUE@ **/ );
-            I16 glo_dex =( 0 - 7007 /** @TRAP_VALUE@ **/ );
-            I16 glo_com =( 0 - 8008 /** @TRAP_VALUE@ **/ );
-    ////    I16 arr_dex =( 0 - 9009 /** @TRAP_VALUE@ **/ );
+
+            /** 16 bits is not enough room !!!!!!!!! **/
+            I32 glo_dex =( 0 - 7007 /** @TRAP_VALUE@ **/ );
+            I32 glo_com =( 0 - 8008 /** @TRAP_VALUE@ **/ );
+    ////    I32 arr_dex =( 0 - 9009 /** @TRAP_VALUE@ **/ );
                                
             U08 var_u08 =(       99 /** @TRAP_VALUE@ **/ );
             U08 aus_loc =(       23 /** @TRAP_VALUE@ **/ );
@@ -1145,7 +1343,7 @@
                               ,     glo_t_y ));;
 
                 assert(       chk_glo_com  == ((U32)glo_com) );
-                assert( ((I16)chk_glo_com) == (     glo_com) );
+                assert( ((I32)chk_glo_com) == (     glo_com) );
             //:-----------------:double_check_component_index://
 
         #undef  MAP_SAN
@@ -2342,14 +2540,17 @@
         //:-------------------------------:SYSTEM_DATA:BACKUP://
         //:RUN_UNIT_TESTS:-----------------------------------://
 
+            aac2020_paint5d_CTS="[____ProgControls____]";
             EXT VOD 
             aac2020_paint5d_UnitTest_ProgControls( VOD );
             aac2020_paint5d_UnitTest_ProgControls(     );
 
+            aac2020_paint5d_CTS="[____TestControls____]";
             EXT VOD 
             aac2020_paint5d_UnitTest_TestControls( VOD );
             aac2020_paint5d_UnitTest_TestControls(     );
 
+            aac2020_paint5d_CTS="[____UserControls____]";
             EXT VOD 
             aac2020_paint5d_UnitTest_UserControls( VOD );
             aac2020_paint5d_UnitTest_UserControls(     );
@@ -2408,9 +2609,11 @@
         /** to refactoring my unit test code for             **/
         /** a NON CODE BREAKING CHANGES                      **/
 
+        aac2020_paint5d_CTF=(     "[Put_BrushState]"          );
         EXT VOD aac2020_paint5d_UTC_Put_BrushState(    void   );
                 aac2020_paint5d_UTC_Put_BrushState(/** void**/);
 
+        aac2020_paint5d_CTF=(     "[Put_UsingBrush]"          );
         EXT VOD aac2020_paint5d_UTC_Put_UsingBrush(    void   );
                 aac2020_paint5d_UTC_Put_UsingBrush(/** void**/);
 
@@ -2924,34 +3127,44 @@
         void
         aac2020_paint5d_UnitTest_UserControls( void )
         {
+        #define CTF aac2020_paint5d_CTF
 
+            CTF=("[aac2020_paint5d_UTC_MoveCamera_XY]");
             EXT VOD 
             aac2020_paint5d_UTC_MoveCamera_XY( VOD );
             aac2020_paint5d_UTC_MoveCamera_XY(     );
 
+            CTF=("[aac2020_paint5d_UTC_ZoomCamera]");
             EXT VOD 
             aac2020_paint5d_UTC_ZoomCamera( VOD );
             aac2020_paint5d_UTC_ZoomCamera(     );
 
+            CTF=("[aac2020_paint5d_UTC_MoveBrush_XY]");
             EXT VOD 
             aac2020_paint5d_UTC_MoveBrush_XY( VOD );
             aac2020_paint5d_UTC_MoveBrush_XY(     );
 
+            CTF=("[aac2020_paint5d_UTC_DeltaMutate_TileValue]");
             EXT VOD 
             aac2020_paint5d_UTC_DeltaMutate_TileValue( VOD );
             aac2020_paint5d_UTC_DeltaMutate_TileValue(     );
 
+            CTF=("[aac2020_paint5d_UTC_DeltaMutate_TileExponent]");
             EXT VOD 
             aac2020_paint5d_UTC_DeltaMutate_TileExponent( VOD );
             aac2020_paint5d_UTC_DeltaMutate_TileExponent(     );
 
+            CTF=("[aac2020_paint5d_UTC_DeltaMutate_TileLayer]");
             EXT VOD 
             aac2020_paint5d_UTC_DeltaMutate_TileLayer( VOD );
             aac2020_paint5d_UTC_DeltaMutate_TileLayer(     );
 
+            CTF=("[aac2020_paint5d_UTC_ToggleTile]");
             EXT VOD 
             aac2020_paint5d_UTC_ToggleTile( VOD );
             aac2020_paint5d_UTC_ToggleTile(     );
+    
+        #undef CTF
         }
         //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
         void
@@ -4258,48 +4471,66 @@
     aac2020_paint5d_UnitTest_ProgControls( void )
     {
         //:helper_functions:generic:- - - - - - - - - - - - -://
-
+        aac2020_paint5d_CTF=(     "[Min_I16]"    );
         EXT VOD aac2020_paint5d_UTC_Min_I16( VOD );
                 aac2020_paint5d_UTC_Min_I16(     );
 
+        aac2020_paint5d_CTF=(     "[i32_Cap_u32]"    );
         EXT VOD aac2020_paint5d_UTC_i32_Cap_u32( VOD );
                 aac2020_paint5d_UTC_i32_Cap_u32(     );
 
         //:- - - - - - - - - - - - -:helper_functions:generic://
         //:helper_functions::conversion:- - - - - - - - - - -://
  
+        aac2020_paint5d_CTF=(     "[til_exp_CTO_bip_sip]"    );
         EXT VOD aac2020_paint5d_UTC_til_exp_CTO_bip_sip( VOD );
                 aac2020_paint5d_UTC_til_exp_CTO_bip_sip(     );
 
+        aac2020_paint5d_CTF=(     "[til_exp_CTO_max_cor]"    );
         EXT VOD aac2020_paint5d_UTC_til_exp_CTO_max_cor( VOD );
                 aac2020_paint5d_UTC_til_exp_CTO_max_cor(     );
 
+        aac2020_paint5d_CTF=(     "[til_exp_CTO_diagpix]"    );
         EXT VOD aac2020_paint5d_UTC_til_exp_CTO_diagpix( VOD );
                 aac2020_paint5d_UTC_til_exp_CTO_diagpix(     );
 
+        aac2020_paint5d_CTF=(     "[diagpix_CTO_til_exp]"    );
         EXT VOD aac2020_paint5d_UTC_diagpix_CTO_til_exp( VOD );
                 aac2020_paint5d_UTC_diagpix_CTO_til_exp(     );
 
         /**@DNE aac2020_paint5d_UTC_diagpix_CTO_astipix @DNE **/
 
+        aac2020_paint5d_CTF=(     "[astipix_CTO_diagpix]"    );
         EXT VOD aac2020_paint5d_UTC_astipix_CTO_diagpix( VOD );
                 aac2020_paint5d_UTC_astipix_CTO_diagpix(     );
 
         //:- - - - - - - - - - -:helper_functions::conversion://
         //:paired_unit_tests::- - - - - - - - - - - - - - - -://
 
+        aac2020_paint5d_CTF=(     "[glocpix_CTO_painpix]"    );
         EXT VOD aac2020_paint5d_UTC_glocpix_CTO_painpix( VOD );
                 aac2020_paint5d_UTC_glocpix_CTO_painpix(     );
 
+        aac2020_paint5d_CTF=(     "[painpix_CTO_glocpix]"    );
         EXT VOD aac2020_paint5d_UTC_painpix_CTO_glocpix( VOD );
                 aac2020_paint5d_UTC_painpix_CTO_glocpix(     );
+
+        /** @VID_IID[ 0080 ]TIME[ 00:33:30 ] *************** **/
+        /** Test every single possible conversion value by   **/
+        /** doing a [p_x , p_y ] loop over 512x512 pixels.   **/
+
+        aac2020_paint5d_CTF=(     "[pix_CTO_pix_PUT_GET]"    );
+        EXT VOD aac2020_paint5d_UTC_pix_CTO_pix_PUT_GET( VOD );
+                aac2020_paint5d_UTC_pix_CTO_pix_PUT_GET(     );
 
         //:- - - - - - - - - - - - - - - -:paired_unit_tests:://
         //:main_get_put_tests::- - - - - - - - - - - - - - -:://
 
+            aac2020_paint5d_CTF=(     "[Put]"    );
             EXT VOD aac2020_paint5d_UTC_Put( VOD );
                     aac2020_paint5d_UTC_Put(     );
 
+            aac2020_paint5d_CTF=(     "[Get]"    );
             EXT VOD aac2020_paint5d_UTC_Get( VOD );
                     aac2020_paint5d_UTC_Get(     );
 
@@ -4311,6 +4542,7 @@
                 @VID_IID[ 0071 ]TIME[ 00H 12M 52S ]  
             *** ******************************************** **/
 
+            aac2020_paint5d_CTF=(     "[Put_Get]"    );
             EXT VOD aac2020_paint5d_UTC_Put_Get( VOD );
                     aac2020_paint5d_UTC_Put_Get(     );
 
@@ -4319,8 +4551,80 @@
         //:- - - - - - - - - - - - - - -::main_get_put_tests:://
         return;
     }
-
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    //:ADDED_FUNCTION_ON_DATE_2021_01_07:--------------------://
+
+        void
+        aac2020_paint5d_UTC_pix_CTO_pix_PUT_GET( void )
+        {
+            /** This function was added on:     **/
+            /** DATE[  2021_01_07 ]             **/
+            /** VID_IID[ 0080 ]TIME[ 00:36:20 ] **/
+
+            I32 p_x;
+            I32 p_y;
+
+            U08 til_qua ;
+            U08 til_exp ;
+            U08 til_lay ;
+            U08 loc_t_x ;
+            U08 loc_t_y ;
+            I16 glo_t_x ;
+            I16 glo_t_y ;
+    
+            for( p_x = 0 ; p_x <= ( 512 - 1 ); p_x ++ ){
+            for( p_y = 0 ; p_y <= ( 512 - 1 ); p_y ++ ){
+
+                /** Skip over the configuration pixels.      **/
+                /** @VID_IID[ 00:39:20 ]                     **/
+                if((256-1)==p_x && ( 256-1)==p_y ){ continue; };
+                if((512-1)==p_x && ( 256-1)==p_y ){ continue; };
+                if((256-1)==p_x && ( 512-1)==p_y ){ continue; };
+                if((512-1)==p_x && ( 512-1)==p_y ){ continue; };
+
+                glo_t_x =( p_x );
+                glo_t_y =( p_y );
+
+                aac2020_paint5d_glocpix_CTO_painpix(
+                  &(til_qua)  //: Auset Tile Sub Quad Index  ://
+                , &(til_exp)  //: TileSizeExponentEnum       ://
+                , &(til_lay)  //: TileLayer ...............  ://
+                , &(loc_t_x)  //: Local  Tile X Coord / b_x  ://
+                , &(loc_t_y)  //: Local  Tile Y Coord / b_y  ://
+                ,   glo_t_x   //: Global Tile X Coord        ://
+                ,   glo_t_y   //: Global Tile X Coord        ://
+                );;
+
+                /** Make absolutely sure that           .....**/
+                /** aac2020_paint5d_painpix_CTO_glocpix .....**/
+                /** is actually setting these values.   .....**/
+                glo_t_x=( 0 - 333 );
+                glo_t_y=( 0 - 222 );
+
+                aac2020_paint5d_painpix_CTO_glocpix(
+                    til_qua   //: Auset Tile Sub Quad Index  ://
+                ,   til_exp   //: TileSizeExponentEnum       ://
+                ,   til_lay   //: TileLayer ...............  ://
+                ,   loc_t_x   //: Local  Tile X Coord / b_x  ://
+                ,   loc_t_y   //: Local  Tile Y Coord / b_y  ://
+                , &(glo_t_x)  //: Global Tile X Coord        ://
+                , &(glo_t_y)  //: Global Tile X Coord        ://
+                );;
+
+                if( 0
+                || ( glo_t_x != p_x )
+                || ( glo_t_y != p_y )
+                ){
+                    ERR("[YOU_DONE_FAILED_2021_SUPER]");
+                };;
+
+            };;};;
+
+            LOG("[99%_SURE_WORKS:painpix_CTO_glocpix]", 0);
+            LOG("[99%_SURE_WORKS:glocpix_CTO_painpix]", 0);
+        }
+
+    //:--------------------:ADDED_FUNCTION_ON_DATE_2021_01_07://
     //:MAIN_GET_PUT_TESTS:-----------------------------------://
     #define NUM_TEST_CASES_put (  8  )                  //:01://
     #define NUM_TEST_COLMS_put (  7  ) /**COLUMNS**/    //:02://
@@ -4629,6 +4933,10 @@
                 [p_x ,p_y ] == [ glo_t_x , glo_t_y ]
                 Located On: AAC2020_PIXNAME_paint5d_cpu_pix
             *** ******************************************** **/
+
+            //:@VID_IID[ 0079 ]TIME[ 00H 36M 05S ] ://
+            //:#skipped_configuration_pixels#      ://
+            U08 skipped_configuration_pixels = ( 0 );
             
             U08 til_qua    ; //:-----------------------------://
             U08 til_exp    ; //:                             ://
@@ -4652,6 +4960,25 @@
 
                 glo_t_x_001 = p_x; /** Load Function Inputs **/
                 glo_t_y_001 = p_y; /** Load Function Inputs **/
+
+                //:#_SKIP_CONFIG_PIXELS_P5D_PUTGET_#:--------://
+                if( 255 == p_x && 255 == p_y ){ //:T_L:u32_cfg
+                    skipped_configuration_pixels++;
+                    continue;
+                }else
+                if( 511 == p_x && 255 == p_y ){ //:T_R:u32_cfg
+                    skipped_configuration_pixels++;
+                    continue;
+                }else
+                if( 255 == p_x && 511 == p_y ){ //:B_L:u32_cfg
+                    skipped_configuration_pixels++;
+                    continue;
+                }else
+                if( 511 == p_x && 511 == p_y ){ //:B_R:u32_cfg
+                    skipped_configuration_pixels++;
+                    continue;
+                };;
+                //:----------:_SKIP_CONFIG_PIXELS_P5D_PUTGET_://
 
                 aac2020_paint5d_glocpix_CTO_painpix(
                    &( til_qua     )    /// Auset Sub Quad    ///
@@ -4681,25 +5008,297 @@
                 };;
 
             };;};;
+            if( 4 != skipped_configuration_pixels ){
+                ERR("[BAD_SKIP_AMOUNT_2021:A]");
+            };;
 
-            //:Put_Everything_Then_Get_Everything:-----------://
+            //:Declare_Vars:Put_Get_Tests:-------------------://
 
-                U08 p_g     =( 0 ); //:Put(0) or Get(1)
-                U08 aus     =( 0 ); //:Auset_Index_0_to_15
-                U32 val_gen =( 0 );
-                U08 got_val =( 0 ); //:GOTEN_VALUE
-                U08 val     =( 0 ); //:Tile_value_0_1_2_or_3
+                U08 ptg_put_val; //:PutThenGet_PUT_VALue
+                U08 ptg_got_val; //:PutThenGet_GOT_VALue
 
-                for( p_g = 0 ; p_g <= (    1    ) ; p_g ++ ){
-                 val_gen =( 0 );
+                U32 val_gen; //:Used to generate val_til
+                U08 val_til;
+                U08     aus; //:Auset_Index_0_to_15
+                U08     p_g; //:Put(0) or Get(1)
+
+            //:-------------------:Declare_Vars:Put_Get_Tests://
+            //:Put_Then_Get_Test_Interlaced:001:-------------://
+            /** ********************************************* **
+
+                @VID_IID[ 0079 ]TIME[ 02H 36M 30S ]
+
+                If this section passes [ Put_Then_Get_Tests ]
+                But the next section FAILS
+                [ Put_Everything_Then_Get_Everything ]
+                That is definitely indicative of some
+                type of memory-stomping situation.
+
+                Memory Stomps:
+                    1. Storing data in same pixel.
+                    2. Storing data in same bits of pixel.
+
+                    If the coordinates are not wrong (#1), it
+                    could be the BITPACKING and BITUNPACKING
+                    (#2) that is wrong.
+            
+                Investigate BITPACKING if you need to.
+
+            *** ******************************************** **/
+             
                 for( aus = 0 ; aus <= (  16 - 1 ) ; aus ++ ){
+
+                    skipped_configuration_pixels=( 0 );
+                    val_gen =( 0 );
 
                 for( p_x = 0 ; p_x <= ( 512 - 1 ) ; p_x ++ ){
                 for( p_y = 0 ; p_y <= ( 512 - 1 ) ; p_y ++ ){
 
                     val_gen = ( val_gen + 7 );
-                    val     = (U08)( val_gen % 4 );
-                    assert( val <= 3 /** Max Tile Val :3 **/ );
+                    val_til = (U08)( val_gen % 4 );
+                    assert( val_til <= 3 /* Max val_til :3 */);;
+
+                    //:#_SKIP_CONFIG_PIXELS_P5D_PUTGET_#:----://
+                    if( 0
+                    ||  ( 255 == p_x && 255 == p_y ) //:TOP_LEF
+                    ||  ( 511 == p_x && 255 == p_y ) //:TOP_RIG
+                    ||  ( 255 == p_x && 511 == p_y ) //:BOT_LEF
+                    ||  ( 511 == p_x && 511 == p_y ) //:BOT_RIG
+                    ){
+                        skipped_configuration_pixels++;
+                        continue;
+                    };;
+                    //:-----#_SKIP_CONFIG_PIXELS_P5D_PUTGET_#://
+
+                    aac2020_paint5d_glocpix_CTO_painpix(
+                       &( til_qua )    /// Auset Sub Quad    ///
+                    ,  &( til_exp )    /// Size_Exponent     ///
+                    ,  &( til_lay )    /// TileLayer ........///
+                    ,  &( loc_t_x )    /// Local  Tile X     ///
+                    ,  &( loc_t_y )    /// Local  Tile Y     ///
+                    ,   (     p_x )    /// Global Tile X     ///
+                    ,   (     p_y )    /// Global Tile X     ///
+                    );;
+
+                    ptg_put_val =( val_til );
+
+                    AAC2020_PAINT5D_Put(
+                            til_qua    
+                    ,       til_exp    
+                    ,       til_lay    
+                    ,       loc_t_x    
+                    ,       loc_t_y    
+                    ,           aus  //: aus_dex ://  
+                    ,   ptg_put_val  //: til_val / put_val ://
+                    );;   
+
+                    AAC2020_PAINT5D_Get(
+                            til_qua    
+                    ,       til_exp    
+                    ,       til_lay    
+                    ,       loc_t_x    
+                    ,       loc_t_y    
+                    ,           aus  //: aus_dex ://  
+                    , &(ptg_got_val) //: til_val / put_val ://
+                    );;    
+
+                    if( ptg_put_val != ptg_got_val ){
+
+                        ERR("[You_Done_Got_Some_Problems]");
+            
+                    };;
+
+                };;};;
+
+                    if( 4 != skipped_configuration_pixels ){
+                        ERR("[WeHaveAproblem:2021_01_07]");
+                    };;
+
+                };; //:NEXT[ aus ](AUto_tile_Set)
+
+            //:-------------:Put_Then_Get_Test_Interlaced:001://
+            //:Put_Then_Get_Test_Interlaced:002:-------------://
+            /** ********************************************* **
+
+                @VID_IID[ 0080 ]TIME[ 00H 04M 53S ]
+                
+                The previous test passed. I am guessing
+                the problem I am currently looking for is
+                because of bitpacking. If the inner most
+                loop loops through all possible "aus" values
+                I bet we will have a problem on the 2nd
+                aus interation.
+
+            *** ******************************************** **/   
+                for( p_x = 0 ; p_x <= ( 512 - 1 ) ; p_x ++ ){
+                for( p_y = 0 ; p_y <= ( 512 - 1 ) ; p_y ++ ){
+
+                /** @VID_IID[ 0080 ]TIME[ 00:16:57 ]         **/
+                /** PUT all values packed into same uint32   **/
+                /** THEN try to get all values packed into   **/
+                /** the uint32. Thus "p_g" must be outer     **/
+                /** loop and "aus" the inner loop.           **/
+                for( p_g = 0 ; p_g <= (     1   ) ; p_g ++ ){
+                for( aus = 0 ; aus <= (  16 - 1 ) ; aus ++ ){
+
+                    if( 0 == aus ){ val_til = ( 0 ); }else
+                    if( 1 == aus ){ val_til = ( 1 ); }else
+                    if( 2 == aus ){ val_til = ( 2 ); }else
+                    if( 3 == aus ){ val_til = ( 3 ); }else
+                    if( 4 == aus ){ val_til = ( 0 ); }else
+                    if( 5 == aus ){ val_til = ( 1 ); }else
+                    if( 6 == aus ){ val_til = ( 2 ); }else
+                    if( 7 == aus ){ val_til = ( 3 ); }else
+                    if( 8 == aus ){ val_til = ( 0 ); }else
+                    if( 9 == aus ){ val_til = ( 1 ); }else
+                    if(10 == aus ){ val_til = ( 2 ); }else
+                    if(11 == aus ){ val_til = ( 3 ); }else
+                    if(12 == aus ){ val_til = ( 2 ); }else
+                    if(13 == aus ){ val_til = ( 1 ); }else
+                    if(14 == aus ){ val_til = ( 0 ); }else
+                    if(15 == aus ){ val_til = ( 0 ); }else
+                    { ERR("[INVALID_AUS_VALUE_FOR_TEST]"); };
+                    assert( val_til <= 3 );
+
+                    //:#_SKIP_CONFIG_PIXELS_P5D_PUTGET_#:----://
+                    if( 0
+                    ||  ( 255 == p_x && 255 == p_y ) //:TOP_LEF
+                    ||  ( 511 == p_x && 255 == p_y ) //:TOP_RIG
+                    ||  ( 255 == p_x && 511 == p_y ) //:BOT_LEF
+                    ||  ( 511 == p_x && 511 == p_y ) //:BOT_RIG
+                    ){
+                        skipped_configuration_pixels++;
+                        continue;
+                    };;
+                    //:-----#_SKIP_CONFIG_PIXELS_P5D_PUTGET_#://
+
+                    aac2020_paint5d_glocpix_CTO_painpix(
+                       &( til_qua )    /// Auset Sub Quad    ///
+                    ,  &( til_exp )    /// Size_Exponent     ///
+                    ,  &( til_lay )    /// TileLayer ........///
+                    ,  &( loc_t_x )    /// Local  Tile X     ///
+                    ,  &( loc_t_y )    /// Local  Tile Y     ///
+                    ,   (     p_x )    /// Global Tile X     ///
+                    ,   (     p_y )    /// Global Tile X     ///
+                    );;
+
+                    ptg_put_val =( val_til );
+
+                    if( 0 == p_g ){
+
+                        AAC2020_PAINT5D_Put(
+                                til_qua    
+                        ,       til_exp    
+                        ,       til_lay    
+                        ,       loc_t_x    
+                        ,       loc_t_y    
+                        ,           aus  
+                        ,   ptg_put_val  
+                        );;   
+
+                        AAC2020_PAINT5D_Get(
+                                til_qua    
+                        ,       til_exp    
+                        ,       til_lay    
+                        ,       loc_t_x    
+                        ,       loc_t_y    
+                        ,           aus   
+                        , &(ptg_got_val)  
+                        );;    
+
+                        if( ptg_put_val != ptg_got_val ){
+
+                            ERR("[OH_MY_FUCKING_GOD_123]");
+            
+                        };;
+
+                    }else
+                    if( 1 == p_g ){
+
+                        AAC2020_PAINT5D_Get(
+                                til_qua    
+                        ,       til_exp    
+                        ,       til_lay    
+                        ,       loc_t_x    
+                        ,       loc_t_y    
+                        ,           aus   
+                        , &(ptg_got_val)  
+                        );;    
+
+                        if( ptg_put_val != ptg_got_val ){
+
+                            /** If this error gets triggered **/
+                            /** Then I am 90% certain the    **/
+                            /** problem is in how bits are   **/
+                            /** being packed.                **/
+
+                            ERR("[OH_MY_FUCKING_GOD_123]");
+            
+                        };;
+                    }else{
+                        ERR("[Neither_Put_Nore_Get]");
+                    };;
+
+                };;};; //:NEXT[ aus , p_g ]
+                };;};; //:NEXT[ p_x , p_y ]
+
+            //:-------------:Put_Then_Get_Test_Interlaced:002://
+            //:Put_Everything_Then_Get_Everything:-----------://
+
+            //: U08 p_g     =( 0 ); //:Put(0) or Get(1)
+            //: U08 aus     =( 0 ); //:Auset_Index_0_to_15
+            //: U32 val_gen =( 0 );
+            //: U08 org_val =( 0 ); //:OriginalValue
+                U08 got_val =( 0 ); //:GOTEN_VALUE
+                U08 val     =( 0 ); //:Tile_value_0_1_2_or_3
+
+                for( p_g = 0 ; p_g <= (    1    ) ; p_g ++ ){
+                
+                    if( 1 == p_g ){
+                    if( 4 != skipped_configuration_pixels ){
+                        ERR("[BAD_SKIP:P_G:...]");
+                    };;};;
+
+                    skipped_configuration_pixels =( 0 );
+                    val_gen =( 0 );
+
+                for( aus = 0 ; aus <= (  16 - 1 ) ; aus ++ ){
+
+                for( p_x = 0 ; p_x <= ( 512 - 1 ) ; p_x ++ ){
+                for( p_y = 0 ; p_y <= ( 512 - 1 ) ; p_y ++ ){
+
+                //: val_gen = ( val_gen + 7 );
+                //: val     = (U08)( val_gen % 4 );
+                //: assert( val <= 3 /** Max Tile Val :3 **/ );
+
+                    if(  0 == aus ){ val = 0; };  
+                    if(  1 == aus ){ val = 1; };  
+                    if(  2 == aus ){ val = 2; };  
+                    if(  3 == aus ){ val = 3; };  
+                    if(  4 == aus ){ val = 0; };  
+                    if(  5 == aus ){ val = 0; };  
+                    if(  6 == aus ){ val = 1; };  
+                    if(  7 == aus ){ val = 2; };  
+                    if(  8 == aus ){ val = 3; };  
+                    if(  9 == aus ){ val = 0; };  
+                    if( 10 == aus ){ val = 1; };  
+                    if( 11 == aus ){ val = 2; };  
+                    if( 12 == aus ){ val = 3; };  
+                    if( 13 == aus ){ val = 3; };  
+                    if( 14 == aus ){ val = 3; };  
+                    if( 15 == aus ){ val = 3; };  
+
+                //:#_SKIP_CONFIG_PIXELS_P5D_PUTGET_#:--------://
+                if( 0
+                ||  ( 255 == p_x && 255 == p_y ) //:TOP_LEF
+                ||  ( 511 == p_x && 255 == p_y ) //:TOP_RIG
+                ||  ( 255 == p_x && 511 == p_y ) //:BOT_LEF
+                ||  ( 511 == p_x && 511 == p_y ) //:BOT_RIG
+                ){
+                    skipped_configuration_pixels++;
+                    continue;
+                };;
+                //:----------:_SKIP_CONFIG_PIXELS_P5D_PUTGET_://
 
                     aac2020_paint5d_glocpix_CTO_painpix(
                        &( til_qua )    /// Auset Sub Quad    ///
@@ -4712,7 +5311,7 @@
                     );;
 
                     if( 0 == p_g ){
-                        
+ 
                         AAC2020_PAINT5D_Put(
                             til_qua    
                         ,   til_exp    
@@ -4739,12 +5338,24 @@
                     };;
 
                     if( got_val != val ){
-                        ERR("[TEST_DEF_FAIL_2021]");
+
+                        printf("\n\n\n");
+                        printf("[....p_x]%d:\n"  ,     p_x );
+                        printf("[....p_y]%d:\n"  ,     p_y );
+                        printf("[....aus]%d:\n"  ,     aus );
+                        printf("[got_val]%d:\n"  , got_val );
+                        printf("[....val]%d:\n"  ,     val );
+
+                        ERR("[TEST_DEF_FAIL_2021_HELLO_KITTY]");
                     };;
 
                 };;};; //: [ p_x , p_y ] ::::::::::::::::::: ://
 
                 };;};; //: [ p_g , aus ] ::::::::::::::::::: ://
+
+                if( 4 != skipped_configuration_pixels ){
+                    ERR("[BAD_SKIP:u32_cfg]");
+                };;
 
             //:-----------:Put_Everything_Then_Get_Everything://
             //:ALL_ONES_AND_ALL_ZEROS_TEST_VARS:-------------://
@@ -5274,7 +5885,8 @@
         assert( FUN(5) ==   4 );
         assert( FUN(6) ==   2 );
         assert( FUN(7) ==   1 );
-        #undef  FUN
+        assert( FUN(8) ==   1 ); //:EDGE_CASE_SINGLE_PIXEL://
+        #undef  FUN              //:BOTTOM_RIGHT_CORNER:::://
     }
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
@@ -5313,7 +5925,7 @@
         /** ************************************************ **/
 
         /** tab_utc[  row(s)  col(s) **/
-        I32 num_tes=( (9*2)  * 2       );;
+        I32 num_tes=( (9*2)          );;
         I16 tab_utc[  (9*2)  * 2     ]={           //:C_S DEX://
             0 ,   0                                //: 1   0 ://
         ,   1 , 128                                //: 2   1 ://
@@ -5356,6 +5968,11 @@
             act_diagpix = FUN( act_til_exp );
 
             if( exp_diagpix != act_diagpix ){
+
+                printf("[u_test::dex]:%d\n" , dex         );
+                printf("[exp_diagpix]:%d\n" , exp_diagpix );
+                printf("[act_diagpix]:%d\n" , act_diagpix );
+
                 ERR("[FAIL_ACTDIAGNOTEQUALEXPDIAG]");
             };;
         };;
@@ -5381,6 +5998,11 @@
             aac2020_paint5d_diagpix_CTO_til_exp( diagpix ));;
 
             if( til_exp != til_exp_chk ){
+
+                printf("[::::til_exp]:%d\n" ,     til_exp );
+                printf("[::::diagpix]:%d\n" ,     diagpix );
+                printf("[til_exp_chk]:%d\n" , til_exp_chk );
+
                 ERR("[diagpix_CTO_til_exp:UNIT_TEST_FAIL]");
             };;
         };;
@@ -5392,26 +6014,64 @@
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
+    void 
+    aac2020_paint5d_UTC_astipix_CTO_diagpix_CHK(
+        U08 dia_act //:diagpix_actual
+    ,   U08 dia_exp //:diagpix_expected
+    )
+    {
+        /** THIS_FUNCTION: ......................... **/
+        /** Helper function check test table results **/
+        /** @VID_IID[ 0078 ]TIME[ 00H 41M 24S ] .... **/
+
+        if( dia_act != dia_exp ){
+            printf("[dia_act]:%d\n" , dia_act );
+            printf("[dia_exp]:%d\n" , dia_exp );
+            ERR("[OH_NO_MY_FRIEND_UTTER_FAILURE]");
+        };;
+        
+    }
+    void 
+    aac2020_paint5d_UTC_astipix_CTO_diagpix_C_2(
+        U08         dia_act //:diagpix_actual
+    ,   U08         dia_exp //:diagpix_expected
+    ,   const char* tracebk //:traceback message
+    )
+    {
+       /** Same as:                                     **/
+       /** aac2020_paint5d_UTC_astipix_CTO_diagpix_CHK  **/
+       /** But pass 3rd param traceback string.         **/
+
+        if( dia_act != dia_exp ){
+            printf("[dia_act]:%d\n" , dia_act );
+            printf("[dia_exp]:%d\n" , dia_exp );
+            printf("[tracebk]:%s\n" , tracebk );
+            ERR("[OH_NO_MY_FRIEND_UTTER_FAILURE]");
+        };;
+        
+    }
     void
     aac2020_paint5d_UTC_astipix_CTO_diagpix( void )
     {
         #define FUN aac2020_paint5d_astipix_CTO_diagpix
+        #define CHK aac2020_paint5d_UTC_astipix_CTO_diagpix_CHK
+        #define C_2 aac2020_paint5d_UTC_astipix_CTO_diagpix_C_2
 
-            assert( FUN( 127              ) ==   0            );
-            assert( FUN( 128              ) == 128            );
-            assert( FUN( 128+64-1         ) == 128            );
-            assert( FUN( 128+64+0         ) == 192            );
-            assert( FUN( 128+64+0         ) == 128+64         );
-            assert( FUN( 128+64+1         ) == 128+64         );
+               CHK( FUN( 127              ) ,    0            );
+               CHK( FUN( 128              ) ,  128            );
+               CHK( FUN( 128+64-1         ) ,  128            );
+               CHK( FUN( 128+64+0         ) ,  192            );
+               CHK( FUN( 128+64+0         ) ,  128+64         );
+               CHK( FUN( 128+64+1         ) ,  128+64         );
             assert(      128+64+0           == 192            );
-            assert( FUN( 128+64+32-1      ) == 192            );
-            assert( FUN( 128+64+32+0      ) == 128+64+32      );
-            assert( FUN( 128+64+32+1      ) == 128+64+32      );
-            assert( FUN( 128+64+32+16-1   ) == 128+64+32      );
-            assert( FUN( 128+64+32+16+0   ) == 128+64+32+16   );
-            assert( FUN( 128+64+32+16+1   ) == 128+64+32+16   );
-            assert( FUN( 128+64+32+16+8-1 ) == 128+64+32+16   );
-            assert( FUN( 128+64+32+16+8+0 ) == 128+64+32+16+8 );
+               CHK( FUN( 128+64+32-1      ) ,  192            );
+               CHK( FUN( 128+64+32+0      ) ,  128+64+32      );
+               CHK( FUN( 128+64+32+1      ) ,  128+64+32      );
+               CHK( FUN( 128+64+32+16-1   ) ,  128+64+32      );
+               CHK( FUN( 128+64+32+16+0   ) ,  128+64+32+16   );
+               CHK( FUN( 128+64+32+16+1   ) ,  128+64+32+16   );
+               CHK( FUN( 128+64+32+16+8-1 ) ,  128+64+32+16   );
+               CHK( FUN( 128+64+32+16+8+0 ) ,  128+64+32+16+8 );
 
             /** ******************************************** **/
             /** Previous test, but collapsing numbers so we  **/
@@ -5422,12 +6082,12 @@
 
             /** ******************************************** **/
 
-            assert( FUN( 248              ) == 248            );
-            assert( FUN( 248+4-1          ) == 248            );
-            assert( FUN( 248+4+0          ) == 248+4          );
-            assert( FUN( 248+4+1          ) == 248+4          );
-            assert( FUN( 248+4+2          ) == 248+4+2        );
-            assert( FUN( 248+4+2+1        ) == 248+4+2+1      );
+            C_2( FUN( 248       ) , 248       , "[X_X]"   );
+            C_2( FUN( 248+4-1   ) , 248       , "[0_0]"   );
+            C_2( FUN( 248+4+0   ) , 248+4     , "[._.]"   );
+            C_2( FUN( 248+4+1   ) , 248+4     , "[T_T]"   );
+            C_2( FUN( 248+4+2   ) , 248+4+2   , "[0_X]"   );
+            C_2( FUN( 248+4+2+1 ) , 248+4+2+1 , "[*_*]"   );
 
             //:Use some explicit edge case values:           ://
             //:If 255 fails because it is out of bounds, then://
@@ -5440,6 +6100,8 @@
             assert( FUN(253) == 252 );
 
         #undef  FUN
+        #undef  CHK
+        #undef  C_2
     }
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
