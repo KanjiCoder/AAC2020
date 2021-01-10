@@ -75,6 +75,25 @@
         //:------------------------------------------:WHY_NOT://
 
     //:-------------------------------:COORDINATE_CONVERSIONS://
+    //:BIT_PACKING:------------------------------------------://
+
+            U08 //:<-- old_val
+            aac2020_paint5d_BitPack_Put(
+                cpu_pix //: U08* :  PIXNAME_paint5d_cpu_pix  ://
+            ,   glo_com //: U08  :  Component Index. @DIV_B4@://
+            ,   aus_dex //: U08  :  Auset Index: [0 - 15]    ://
+            ,   til_val //: U08  :  <-- Value To Put         ://    
+            );;
+
+            void
+            aac2020_paint5d_BitPack_Get(
+                cpu_pix //: U08* :  PIXNAME_paint5d_cpu_pix  ://
+            ,   glo_com //: U08  :  Component Index. @DIV_B4@://
+            ,   aus_dex //: U08  :  Auset Index: [0 - 15]    ://
+            ,   til_val //: U08* :  <-- GET OUTPUT PARAMETER ://
+            );;
+
+    //:------------------------------------------:BIT_PACKING://
     //:BOUND_TO_KEYBOARD:------------------------------------://
 
         /** @VID_IID[ 0076 ]TIME[ 01H 20M 20S ] **/

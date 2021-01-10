@@ -247,10 +247,12 @@
 
             if( aac2020_paint5d_unit_test_ran_or_running <= 0 ){
                 aac2020_paint5d_unit_test_ran_or_running =( 1 );
+                aac2020_paint5d_unit_test_is_running_now =( 1 );
 
                 extern U32 AAC2020_PAINT5D_UnitTest( U32  );
                            AAC2020_PAINT5D_UnitTest( 0x00 );
 
+                aac2020_paint5d_unit_test_is_running_now =( 0 );
             };;
 
         //:----------------:Run_Unit_Test_If_Never_Ran_Before://
@@ -954,11 +956,12 @@
 //:===============================:QUARKMAP_COORD_CONVERSIONS://
 //:PIXEL_BIT_PACKING:========================================://
 //:@VID_IID[ 0080 ]TIME[ 01:02:20 ]==========================://
-#define U08 uint8_t /** GCC: <stdint.h> **/
-#define ERR aac2020_paint5d_Halt
+#define U08 uint8_t /** GCC: <stdint.h> **/           //: 01 ://
+#define I32 int32_t /** GCC: <stdint.h> **/           //: 02 ://
+#define ERR aac2020_paint5d_Halt                      //: 03 ://
 
-    void
- //:aac2020_paint5d_Put_BitPack
+    U08
+ //:aac2020_paint5d_Put_BitPack <--- @CTRL_F_HELP@
     aac2020_paint5d_BitPack_Put(
         U08* cpu_pix //: AAC2020_PIXNAME_paint5d_cpu_pix     ://
     ,   U08  glo_com //: Component Index. Divisible By 4.    ://
@@ -966,12 +969,131 @@
     ,   U08  til_val //: <-- Value To Put                    ://
     )
     {
+        //:input_checks:-------------------------------------://
+            if( ((U08*)0) == cpu_pix ){
+                ERR("[NULL_CPU_PIX_2021_820PM]");
+            };;
 
-        #error "[EXTRACT_BIT_PACKING_LOGIC_AND_WRITE_TESTS]" 
+            /** Assertion is only valid if we are NOT unit   **/
+            /** testing. @VID_IID[ 0081 ]TIME[ 00:27:46 ]    **/
+            if( aac2020_paint5d_unit_test_is_running_now <= 0 ){
+
+                if( cpu_pix != AAC2020_PIXNAME_paint5d_cpu_pix){
+                    /**  NE: Not Equal **/
+                    ERR("[CPU_PIX_NE_PAINT5D____BITPACK_PUT]");
+                };;
+            };;
+
+            if( ( 0 != glo_com % 4 ) ){
+                /** @VID_IID[ 0081 ]TIME[ 00:47:40 ]         **/
+                /** Component index should be divisible by 4 **/
+
+                printf("[glo_com]:%d\n" , glo_com );
+
+                ERR("[GLO_COM____NOT_DIV_BY_4____BITPACK_PUT]");
+            };;
+
+        //:-------------------------------------:input_checks://
+        //:variable_declaration(s):--------------------------://
+
+            U08 old_val ; //: <-- previous bit value stored.
+            I32 arr_dex ;
+            U08 var_u08 ;
+            I32 aus_loc ; //: AUSet_LOCal (Bitpacking_Index)
+                          //: LOC != LOCATION
+                          //: LOC == LOCAL
+            /** set trap values **/
+            old_val = ( 0 + 202 );
+            arr_dex = ( 0 - 333 );
+            var_u08 = ( 0 + 202 );
+            aus_loc = ( 0 - 333 );
+
+        //:--------------------------:variable_declaration(s)://
+        //:bit_packing_stuff:--------------------------------://
+        #define BIN_011 3 /** 2 set bits in a row **/
+
+            /** ******************************************** ***
+                SEE_DIAGRAM[ #DIA_P5D_MAIN#       ]
+                FROM___FILE[ PAINT5D.D._          ]
+            *** ******************************************** **/
+
+            if( 1
+            /** aus_dex >=  0 **/ 
+            &&  aus_dex <=  3 ){  /** ALPHA **/
+                               
+                arr_dex =(         glo_com + 3 );
+                var_u08 = cpu_pix[ glo_com + 3 ];
+                aus_loc =( aus_dex -  0 );
+                                                       
+            }else                                      
+            if( aus_dex >=  4  
+            &&  aus_dex <=  7 ){  /** BLUE  **/
+                      
+                arr_dex =(         glo_com + 2 );
+                var_u08 = cpu_pix[ glo_com + 2 ];
+                aus_loc =( aus_dex -  4 );
+                                
+            }else                                      
+            if( aus_dex >=  8 
+            &&  aus_dex <= 11 ){  /** GREEN **/
+                                          
+                arr_dex =(         glo_com + 1 );
+                var_u08 = cpu_pix[ glo_com + 1 ];  
+                aus_loc =( aus_dex -  8 );    
+                                                       
+            }else                                      
+            if( aus_dex >= 12 
+            &&  aus_dex <= 15 ){  /** RED   **/
+
+                arr_dex =(         glo_com + 0 );
+                var_u08 = cpu_pix[ glo_com + 0 ];
+                aus_loc =( aus_dex - 12 );
+
+            }else{
+                ERR("[PAINT5D_OOB_PROBLEM_YEAR_2021:PUT]");
+            };;
+
+            assert( aus_loc <= 3 /** [ 0 | 1 | 2 | 3 ] **/ );
+
+            /** ******************************************** ***
+
+                @VID_IID[ 0072 ]TIME[ 3H 38M 10S ]BEG
+                @VID_IID[ 0072 ]TIME[ 3H 46M 09S ]END
+    
+                Bit packing logic to ONLY CHANGE the bits
+                where the new value needs to be stored.
+                We need to erase the bits in the proper
+                position by masking ( & ). Then merge the bits
+                together by using a bitwise or. ( | )
+
+            *** ******************************************** **/
+
+            old_val =( (var_u08 >> ( aus_loc*2)) & BIN_011 );
+    
+            cpu_pix[ arr_dex ]=(
+
+                /**  11001111 <-- Conceptually:if:aus_loc==2**/
+                ( var_u08 &  (~(  BIN_011 << ( aus_loc*2 ) )) )
+
+                |  //:<-- Bitwise Or to merge together
+
+                /**  00110000 <-- Conceptually:if:aus_loc==2**/
+                /** Slide Delta Bits Into Position **/
+                ( til_val                 << ( aus_loc*2 )    )
+
+            );;
+
+        #undef  BIN_011
+        //:--------------------------------:bit_packing_stuff://
+
+        /** return the value that was overwritten by         **/
+        /** til_val. This is necessary for the toggleTile    **/
+        /** functionality. @VID_IID[ 0081 ]TIME[ 01:04:33 ]  **/
+        return( old_val );
     }
     
     void
- //:aac2020_paint5d_Get_BitPack
+ //:aac2020_paint5d_Get_BitPack <--- @CTRL_F_HELP@
     aac2020_paint5d_BitPack_Get(
         U08* cpu_pix //: AAC2020_PIXNAME_paint5d_cpu_pix     ://
     ,   U08  glo_com //: Component Index. Divisible By 4.    ://
@@ -979,12 +1101,126 @@
     ,   U08* til_val //: <-- Value To Get                    ://
     )
     {
-        #error "[EXTRACT_BIT_PACKING_LOGIC_AND_WRITE_TESTS]" 
+        //:input_checks:-------------------------------------://
+       
+            //:input_checks:refs_cannot_be_null:-------------://
 
+                if( ((U08*)0) == til_val ){
+                    ERR("[NULL_REF:til_val:2021]");
+                };;
+
+            //:-------------:input_checks:refs_cannot_be_null://
+
+            if( ((U08*)0) == cpu_pix ){
+                ERR("[NULL_CPU_PIX_2021_TEN-FOURTEEN_PM]");
+            };;
+
+            /** Assertion is only valid if we are NOT unit   **/
+            /** testing. @VID_IID[ 0081 ]TIME[ 00:27:46 ]    **/
+            if( aac2020_paint5d_unit_test_is_running_now <= 0 ){
+
+                if( cpu_pix != AAC2020_PIXNAME_paint5d_cpu_pix){
+                    /** NE: Not Equal **/
+                    ERR("[CPU_PIX_NE_PAINT5D_BITPACK_GET]");
+                };;
+            };;
+
+            if( ( 0 != glo_com % 4 ) ){
+                /** @VID_IID[ 0081 ]TIME[ 00:47:40 ]         **/
+                /** Component index should be divisible by 4 **/
+                ERR("[GLO_COM____NOT_DIV_BY_4____BITPACK_GET]");
+            };;
+
+        //:-------------------------------------:input_checks://
+        //:variable_declaration(s):--------------------------://
+
+            U08 old_val ; //: <-- previous bit value stored.
+        /// I32 arr_dex ;
+            U08 var_u08 ;
+            I32 aus_loc ; //: AUSet_LOCal (Bitpacking_Index)
+                          //: LOC != LOCATION
+                          //: LOC == LOCAL
+            /** set trap values **/
+            old_val = ( 0 + 202 );
+        /// arr_dex = ( 0 - 333 );
+            var_u08 = ( 0 + 202 );
+            aus_loc = ( 0 - 333 );
+
+        //:--------------------------:variable_declaration(s)://
+        //:bit_packing_stuff:--------------------------------://
+        #define CPU_PIX AAC2020_PIXNAME_paint5d_cpu_pix
+        #define BIN_011 3 /** 2 set bits in a row **/
+
+            /** ******************************************** ***
+                SEE_DIAGRAM[ #DIA_P5D_MAIN#       ]
+                FROM___FILE[ PAINT5D.D._          ]
+            *** ******************************************** **/
+
+            if( 1
+            /** aus_dex >=  0 **/ 
+            &&  aus_dex <=  3 ){  /** ALPHA **/
+                               
+        ////    arr_dex =(         glo_com + 3 );
+                var_u08 = CPU_PIX[ glo_com + 3 ];
+                aus_loc =( aus_dex -  0 );
+                                                       
+            }else                                      
+            if( aus_dex >=  4  
+            &&  aus_dex <=  7 ){  /** BLUE  **/
+                      
+        ////    arr_dex =(         glo_com + 2 );
+                var_u08 = CPU_PIX[ glo_com + 2 ];
+                aus_loc =( aus_dex -  4 );
+                                
+            }else                                      
+            if( aus_dex >=  8 
+            &&  aus_dex <= 11 ){  /** GREEN **/
+                                          
+        ////    arr_dex =(         glo_com + 1 );
+                var_u08 = CPU_PIX[ glo_com + 1 ];  
+                aus_loc =( aus_dex -  8 );    
+                                                       
+            }else                                      
+            if( aus_dex >= 12 
+            &&  aus_dex <= 15 ){  /** RED   **/
+
+        ////    arr_dex =(         glo_com + 0 );
+                var_u08 = CPU_PIX[ glo_com + 0 ];
+                aus_loc =( aus_dex - 12 );
+
+            }else{
+                ERR("[PAINT5D_OOB_PROBLEM_YEAR_2021:GET]");
+            };;
+
+            assert( aus_loc <= 3 /** [ 0 | 1 | 2 | 3 ] **/ );
+
+            /** ******************************************** ***
+
+                @VID_IID[ 0072 ]TIME[ 4H 08M 50S ]
+                We can nuke most of the bit shifting
+                code copied from the "Put(..)" function
+                and just keep the fetch of "old_val".
+                "old_val" is the value we want to load
+                into the output parameter "til_val".
+
+            *** ******************************************** **/
+
+            old_val =( (var_u08 >> ( aus_loc*2)) & BIN_011 );
+
+        #undef  CPU_PIX
+        #undef  BIN_011
+        //:--------------------------------:bit_packing_stuff://
+        //:return_old_val:-----------------------------------://
+
+            (*til_val)=( old_val );
+
+        //:-----------------------------------:return_old_val://
+        return;
     }
 
-#undef  U08 
-#undef  ERR 
+#undef  U08                                           //: 01 ://
+#undef  I32                                           //: 02 ://
+#undef  ERR                                           //: 03 ://
 //:=========================:@VID_IID[ 0080 ]TIME[ 01:02:20 ]://
 //:========================================:PIXEL_BIT_PACKING://
 //:PAINT5D_QUARKMAP_GET_PUT:=================================://
@@ -1083,12 +1319,13 @@
 
             I32 glo_dex =( 0 - 7007 /** @TRAP_VALUE@ **/ );
             I32 glo_com =( 0 - 8008 /** @TRAP_VALUE@ **/ );
-            I32 arr_dex =( 0 - 9009 /** @TRAP_VALUE@ **/ );
+    ////    I32 arr_dex =( 0 - 9009 /** @TRAP_VALUE@ **/ );
                                
-            U08 var_u08 =(       99 /** @TRAP_VALUE@ **/ );
-            U08 aus_loc =(       23 /** @TRAP_VALUE@ **/ );
+    ////    U08 var_u08 =(       99 /** @TRAP_VALUE@ **/ );
+    ////    U08 aus_loc =(       23 /** @TRAP_VALUE@ **/ );
 
-            U08 old_val =(       00 /** Prev til_val **/ );
+            U08 old_val =(      111  /** Prev til_val **/ );
+                                     /** @TRAP_VALUE@ **/
 
         //:--------------------------------:declare_variables://
         //:get_xy_location_of_pixel_storing_data:------------://
@@ -1150,75 +1387,19 @@
         #define BIN_011 3 /** 2 set bits in a row **/
 
             /** ******************************************** ***
-                SEE_DIAGRAM[ #DIA_P5D_MAIN#       ]
-                FROM___FILE[ PAINT5D.D._          ]
+                SEE_DIAGRAM___TAG[ #DIA_P5D_MAIN# ]
+                SEE_DIAGRAM_LABEL[ @P5D_AUS_BITS@ ]
+                FROM_________FILE[ PAINT5D.D._    ]
             *** ******************************************** **/
 
-            if( 1
-            /** aus_dex >=  0 **/ 
-            &&  aus_dex <=  3 ){  /** ALPHA **/
-                               
-                arr_dex =(         glo_com + 3 );
-                var_u08 = CPU_PIX[ glo_com + 3 ];
-                aus_loc =( aus_dex -  0 );
-                                                       
-            }else                                      
-            if( aus_dex >=  4  
-            &&  aus_dex <=  7 ){  /** BLUE  **/
-                      
-                arr_dex =(         glo_com + 2 );
-                var_u08 = CPU_PIX[ glo_com + 2 ];
-                aus_loc =( aus_dex -  4 );
-                                
-            }else                                      
-            if( aus_dex >=  8 
-            &&  aus_dex <= 11 ){  /** GREEN **/
-                                          
-                arr_dex =(         glo_com + 1 );
-                var_u08 = CPU_PIX[ glo_com + 1 ];  
-                aus_loc =( aus_dex -  8 );    
-                                                       
-            }else                                      
-            if( aus_dex >= 12 
-            &&  aus_dex <= 15 ){  /** RED   **/
-
-                arr_dex =(         glo_com + 0 );
-                var_u08 = CPU_PIX[ glo_com + 0 ];
-                aus_loc =( aus_dex - 12 );
-
-            }else{
-                ERR("[PAINT5D_OOB_PROBLEM_YEAR_2021:PUT]");
-            };;
-
-            assert( aus_loc <= 3 /** [ 0 | 1 | 2 | 3 ] **/ );
-
-            /** ******************************************** ***
-
-                @VID_IID[ 0072 ]TIME[ 3H 38M 10S ]BEG
-                @VID_IID[ 0072 ]TIME[ 3H 46M 09S ]END
-    
-                Bit packing logic to ONLY CHANGE the bits
-                where the new value needs to be stored.
-                We need to erase the bits in the proper
-                position by masking ( & ). Then merge the bits
-                together by using a bitwise or. ( | )
-
-            *** ******************************************** **/
-
-            old_val =( (var_u08 >> ( aus_loc*2)) & BIN_011 );
-    
-            CPU_PIX[ arr_dex ]=(
-
-                /**  11001111 <-- Conceptually:if:aus_loc==2**/
-                ( var_u08 &  (~(  BIN_011 << ( aus_loc*2 ) )) )
-
-                |  //:<-- Bitwise Or to merge together
-
-                /**  00110000 <-- Conceptually:if:aus_loc==2**/
-                /** Slide Delta Bits Into Position **/
-                ( til_val                 << ( aus_loc*2 )    )
-
-            );;
+            old_val=( 
+            aac2020_paint5d_BitPack_Put(
+                CPU_PIX //: U08* :  PIXNAME_paint5d_cpu_pix  ://
+            ,   glo_com //: U08  :  Component Index. @DIV_B4@://
+            ,   aus_dex //: U08  :  Auset Index: [0 - 15]    ://
+            ,   til_val //: U08  :  <-- Value To Put         ://    
+            ));;
+      
 
         #undef  CPU_PIX
         #undef  BIN_011
@@ -1311,10 +1492,10 @@
             I32 glo_com =( 0 - 8008 /** @TRAP_VALUE@ **/ );
     ////    I32 arr_dex =( 0 - 9009 /** @TRAP_VALUE@ **/ );
                                
-            U08 var_u08 =(       99 /** @TRAP_VALUE@ **/ );
-            U08 aus_loc =(       23 /** @TRAP_VALUE@ **/ );
+    ////    U08 var_u08 =(       99 /** @TRAP_VALUE@ **/ );
+    ////    U08 aus_loc =(       23 /** @TRAP_VALUE@ **/ );
 
-            U08 old_val =(       00 /** Prev til_val **/ );
+    ////    U08 old_val =(       00 /** Prev til_val **/ );
 
         //:--------------------------------:declare_variables://
         //:get_xy_location_of_pixel_storing_data:------------://
@@ -1357,56 +1538,12 @@
                 FROM___FILE[ PAINT5D.D._          ]
             *** ******************************************** **/
 
-            if( 1
-            /** aus_dex >=  0 **/ 
-            &&  aus_dex <=  3 ){  /** ALPHA **/
-                               
-        ////    arr_dex =(         glo_com + 3 );
-                var_u08 = CPU_PIX[ glo_com + 3 ];
-                aus_loc =( aus_dex -  0 );
-                                                       
-            }else                                      
-            if( aus_dex >=  4  
-            &&  aus_dex <=  7 ){  /** BLUE  **/
-                      
-        ////    arr_dex =(         glo_com + 2 );
-                var_u08 = CPU_PIX[ glo_com + 2 ];
-                aus_loc =( aus_dex -  4 );
-                                
-            }else                                      
-            if( aus_dex >=  8 
-            &&  aus_dex <= 11 ){  /** GREEN **/
-                                          
-        ////    arr_dex =(         glo_com + 1 );
-                var_u08 = CPU_PIX[ glo_com + 1 ];  
-                aus_loc =( aus_dex -  8 );    
-                                                       
-            }else                                      
-            if( aus_dex >= 12 
-            &&  aus_dex <= 15 ){  /** RED   **/
-
-        ////    arr_dex =(         glo_com + 0 );
-                var_u08 = CPU_PIX[ glo_com + 0 ];
-                aus_loc =( aus_dex - 12 );
-
-            }else{
-                ERR("[PAINT5D_OOB_PROBLEM_YEAR_2021:GET]");
-            };;
-
-            assert( aus_loc <= 3 /** [ 0 | 1 | 2 | 3 ] **/ );
-
-            /** ******************************************** ***
-
-                @VID_IID[ 0072 ]TIME[ 4H 08M 50S ]
-                We can nuke most of the bit shifting
-                code copied from the "Put(..)" function
-                and just keep the fetch of "old_val".
-                "old_val" is the value we want to load
-                into the output parameter "til_val".
-
-            *** ******************************************** **/
-
-            old_val =( (var_u08 >> ( aus_loc*2)) & BIN_011 );
+           aac2020_paint5d_BitPack_Get(
+                CPU_PIX //: U08* :  PIXNAME_paint5d_cpu_pix  ://
+            ,   glo_com //: U08  :  Component Index. @DIV_B4@://
+            ,   aus_dex //: U08  :  Auset Index: [0 - 15]    ://
+            ,&(*til_val)//: U08* :  <-- GET OUTPUT PARAMETER ://
+            );;
 
         #undef  CPU_PIX
         #undef  BIN_011
@@ -1418,8 +1555,9 @@
             til_val | old_val : BINARY  [ 00 | 01 | 10 | 11 ]   
             *** ******************************************** **/
 
-            (*til_val)=( old_val );
-
+            //: (*til_val)=( old_val );                      ://
+            //: Now set using: aac2020_paint5d_BitPack_Get   ://
+ 
         //:--------------------------:return_via_output_param://
         
         return; //:<---- Return Via Output Param
@@ -2483,9 +2621,13 @@
     U32
     AAC2020_PAINT5D_UnitTest( U32 u32 )
     {
+        aac2020_paint5d_unit_test_ran_or_running =( 1 );
+        aac2020_paint5d_unit_test_is_running_now =( 1 );
+
         extern U32 aac2020_paint5d_UnitTest( U32 );
                    aac2020_paint5d_UnitTest( u32 );
 
+        aac2020_paint5d_unit_test_is_running_now =( 0 );
         return( 0x00 );
     }
 
@@ -4524,6 +4666,28 @@
                 aac2020_paint5d_UTC_pix_CTO_pix_PUT_GET(     );
 
         //:- - - - - - - - - - - - - - - -:paired_unit_tests:://
+        //:main_get_put_tests::DEPENDS_ON::- - - - - - - - -:://
+        /** ************************************************ ***
+        @VID_IID[ 0081 ]TIME[ 00:09:58 ]
+        Test the bit shifting logic used by 
+        AAC2020_PAINT5D_Put & AAC2020_PAINT5D_Get
+        because we think the reason tests
+        "aac2020_paint5d_UTC_Put" and "aac2020_paint5d_UTC_Get"
+        are failing is because the bit shifting logic is wrong.
+        We have extracted the bit [ shifting / packing ] logic
+        into their own functions to help verify that
+        logic is correct.
+        *** ************************************************ **/
+
+            aac2020_paint5d_CTF=(     "[BitPack_Put]"    );
+            EXT VOD aac2020_paint5d_UTC_BitPack_Put( VOD );
+                    aac2020_paint5d_UTC_BitPack_Put(     );
+
+            aac2020_paint5d_CTF=(     "[BitPack_Get]"    );
+            EXT VOD aac2020_paint5d_UTC_BitPack_Get( VOD );
+                    aac2020_paint5d_UTC_BitPack_Get(     );
+
+        //:- - - - - - - - -::main_get_put_tests::DEPENDS_ON:://
         //:main_get_put_tests::- - - - - - - - - - - - - - -:://
 
             aac2020_paint5d_CTF=(     "[Put]"    );
@@ -4552,7 +4716,329 @@
         return;
     }
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    //:ADDED_FUNC_PAIR_ON_2021_01_09:------------------------://
+    #define VERY_SPECIFIC_DEFINES_HERE_ONLY
+
+        void
+        aac2020_paint5d_UTC_BitPack_Put( void )
+        {
+        #define NUM_ELM_001 ( 3 ) /** 3 elements per test    **/
+        #define NUM_TES_001 (32 ) /** Total number of tests  **/
+        //:                                                  ://
+        #define NUM_ELM_002 (16 )  /** Test Table # 2 .......**/
+        #define NUM_TES_002 (12 )  /** Sizes.         .......**/
+
+            LOG("[BEG:aac2020_paint5d_UTC_BitPack_Put:BEG]",0);
+
+            I32     bas; //:base offset for current test
+            I32     t_i; //:test index
+            I32     m_i; //:max test index
+            U08 cpu_pix[ 4 * 4 ]={ 0 };
+
+            U08 glo_com;
+            U08 aus_dex;
+            U08 til_val;
+
+            U32 u32_var; //:<-- 1 pixels worth of data.
+            U08 u08_var;
+
+            //:Do all tests in pairs. Set and then erase.
+            //:Thus expecting the final array to always be
+            //:nothing but zeros. Actually... Don't hard
+            //:Code this. Make it a feature of the test....
+            U08 tab_utc[ NUM_ELM_001 * NUM_TES_001 ]={
+
+            //: glo_com | aus_dex | til_val //:SUM        DEX://
+                   0    ,    0    ,    0    //: 01        00 ://
+            ,      0    ,    0    ,    1    //: 02        01 ://
+            ,      0    ,    0    ,    2    //: 03        02 ://
+            ,      0    ,    0    ,    3    //: 04        03 ://
+                                            //: --        -- ://
+            ,      0    ,   15    ,    0    //: 05        04 ://
+            ,      0    ,   15    ,    1    //: 06        05 ://
+            ,      0    ,   15    ,    2    //: 07        06 ://
+            ,      0    ,   15    ,    3    //: 08        07 ://
+                                            //: --        -- ://
+            ,      4    ,    0    ,    0    //: 09        08 ://
+            ,      4    ,    0    ,    1    //: 10        09 ://
+            ,      4    ,    0    ,    2    //: 11        10 ://
+            ,      4    ,    0    ,    3    //: 12        11 ://
+                                            //: --        -- ://
+            ,      4    ,   15    ,    0    //: 13        12 ://
+            ,      4    ,   15    ,    1    //: 14        13 ://
+            ,      4    ,   15    ,    2    //: 15        14 ://
+            ,      4    ,   15    ,    3    //: 16        15 ://
+                                            //: --        -- ://
+            ,      8    ,    0    ,    0    //: 17        16 ://
+            ,      8    ,    0    ,    1    //: 18        17 ://
+            ,      8    ,    0    ,    2    //: 19        18 ://
+            ,      8    ,    0    ,    3    //: 20        19 ://
+                                            //: --        -- ://
+            ,      8    ,   15    ,    0    //: 21        20 ://
+            ,      8    ,   15    ,    1    //: 22        21 ://
+            ,      8    ,   15    ,    2    //: 23        22 ://
+            ,      8    ,   15    ,    3    //: 24        23 ://
+                                            //: --        -- ://
+            ,     12    ,    0    ,    0    //: 25        24 ://
+            ,     12    ,    0    ,    1    //: 26        25 ://
+            ,     12    ,    0    ,    2    //: 27        26 ://
+            ,     12    ,    0    ,    3    //: 28        27 ://
+                                            //: --        -- ://
+            ,     12    ,   15    ,    0    //: 29        28 ://
+            ,     12    ,   15    ,    1    //: 30        29 ://
+            ,     12    ,   15    ,    2    //: 31        30 ://
+            ,     12    ,   15    ,    3    //: 32        31 ://
+            //: glo_com | aus_dex | til_val //:SUM        DEX://
+            };;
+
+            m_i=( NUM_TES_001 - 1 );
+            for( t_i = 0 ; t_i <= m_i ; t_i ++ ){
+
+                bas = ( t_i * NUM_ELM_001  ); //:t_i * STRIDE://
+                glo_com = tab_utc[ bas + 0 ];
+                aus_dex = tab_utc[ bas + 1 ];
+                til_val = tab_utc[ bas + 2 ];
+
+                aac2020_paint5d_BitPack_Put(
+                    cpu_pix //: PIXEL_BYTE_ARRAY       ..... ://
+                ,   glo_com //: GLOBAL_COMPONENT_INDEX ..... ://
+                ,   aus_dex //: AUSET_INDEX_00_TO_15   ..... ://
+                ,   til_val //: TILE__VALUE_00_TO_03   ..... ://
+                );;
+
+                //:manual_check:-----------------------------://
+
+                    u32_var = ( 0x00 ); //:Clear_The_Pixel
+                    
+                    /** @VID_IID[ 0082 ]TIME[ 01:21:40 ]     **/
+                    /** Use "glo_com" to extract the current **/
+                    /** pixel we are looking at.             **/
+                    /** This is NOT the way we want to do it **/
+                    /** in production, because we are looking**/
+                    /** at 4 bytes when we only need ONE of  **/
+                    /** them. However, the math is more      **/
+                    /** straightforward this way and better  **/
+                    /** for unit testing.                    **/
+                    u32_var=(
+                    0x00
+                    |   ( cpu_pix[ glo_com + 0 ] << 24 ) //:R://
+                    |   ( cpu_pix[ glo_com + 1 ] << 16 ) //:G://
+                    |   ( cpu_pix[ glo_com + 2 ] <<  8 ) //:B://
+                    |   ( cpu_pix[ glo_com + 3 ] <<  0 ) //:A://
+                    );;     
+
+                    //:@VID_IID[ 0082 ]TIME[ 2H 34M 48S ]
+                    //:count bits. Should not be more than 2.
+                    U32 b_c=( 0 ); /** Bit Count **/
+                    for( I32 i = 0; i <= (32-1) ; i++ ){
+                        b_c=( b_c + ((u32_var>>i)&1) );
+                    };;
+                    if( b_c > 2 ){ /** Only 2 bit values! **/
+                        ERR("[TOO_MANY_SET_BITS_BAD_BIT_PACK]");
+                    };;
+
+                    u08_var=(
+                        (U08)(
+                            ( u32_var >> ( aus_dex * 2 ) )
+                            & //:<-- only ONE "&" symbol.
+                            3 //:<-- Binary[ 11 ]MASK
+                        )
+                    );;
+            
+                    /**  actual != expected **/
+                    if( u08_var != til_val    ){
+                
+                        U32 pix;
+                        I32 n_z=( 0 ); //:non_zero_found?
+                        I32 nzi=(0-1); //:index of last[ n_z ]
+                        for( I32 i = 0 ; i <= ((4*4)-1) ; i++ ){
+
+                            if( 0x00 != cpu_pix[ i ] ){
+                                pix=(   cpu_pix[ i ] );
+                                n_z++;
+                                nzi=( i );
+                                printf("[cur:nzi]:%d\n"   ,nzi);
+                                printf("[hex:pix]:%02x\n" ,pix);
+                            };;
+                        };;
+
+                        printf("[....t_i]:%d\n",     t_i );
+                        printf("[u32_var]:%d\n", u32_var );
+                        printf("[u08_var]:%d\n", u08_var );
+                        printf("[til_val]:%d\n", til_val );
+                        printf("[....n_z]:%d\n",     n_z );
+            
+                        printf("cpu_pix[ glo_com + 0 ]==>%d\n",
+                                cpu_pix[ glo_com + 0 ] );;
+                        printf("cpu_pix[ glo_com + 1 ]==>%d\n",
+                                cpu_pix[ glo_com + 1 ] );;
+                        printf("cpu_pix[ glo_com + 2 ]==>%d\n",
+                                cpu_pix[ glo_com + 2 ] );;
+                        printf("cpu_pix[ glo_com + 3 ]==>%d\n",
+                                cpu_pix[ glo_com + 3 ] );;
+
+                            /** MAKE SURE YOUR SHIFT AMOUNT  **/
+                            /** IS ON THE RIGHT IN YOUR      **/
+                            /** BITPACKING CODE.             **/
+                            /**tmu:test_my_understanding**/
+                            U32 tmu=( 
+                            0x00
+                            |   (24 << 0 ) //:R://
+                            |   (16 << 0 ) //:G://
+                            |   ( 8 << 0 ) //:B://
+                            |   ( 0 << 1 ) //:A://
+                            );;   
+                            if( 24 != tmu ){
+                                printf("[tmu]:%d\n", tmu);
+                                ERR("[DONT_KNOW_JACK_2021]");
+                            };;
+
+                        ERR(
+                            "[PUT_HAS_FAILED_2021_01_09_BLUE]"
+                        );;
+                    };;
+
+                //:-----------------------------:manual_check://
+
+                /** Putting zero should revert the entire    **/
+                /** test array to all zeros.                 **/
+
+                aac2020_paint5d_BitPack_Put(
+                    cpu_pix //: PIXEL_BYTE_ARRAY       ..... ://
+                ,   glo_com //: GLOBAL_COMPONENT_INDEX ..... ://
+                ,   aus_dex //: AUSET_INDEX_00_TO_15   ..... ://
+                ,      0    //: TILE__VALUE_00_TO_03   ..... ://
+                );;
+
+                /** b_i : byte index **/
+                for( I32 b_i = 0 ; b_i <= ((4*4)-1) ; b_i ++ ){
+
+                    if( 0x00 != cpu_pix[ b_i ] ){
+                        ERR("[PROBLEM_2021_01_09_PUT_TEST]");
+                    };;
+                };;
+
+            };;
+
+            /** ******************************************** **/
+            /** Another Set Of Tests...                      **/
+            /** PUT evertything then manually GET everything.**/
+            /** So it is like a "Put_Get" test however we    **/
+            /** do NOT use the "Getter" function but rather  **/
+            /** use manual logic to GET the values.          **/
+            /** This is because we want to test the          **/
+            /** "get" and "put" functionality in isolation   **/
+            /** before we do a real "Put_Get"                **/
+            /** integration test.                            **/
+            /** @VID_IID[ 0082 ]TIME[ 1H 48M 46S ]           **/
+            /** Explaning test table #2 below.               **/
+            /** ******************************************** **/
+
+            assert( 16 == NUM_ELM_002 );
+            assert( 12 == NUM_TES_002 );
+            U08 tab_002[ NUM_ELM_002 * NUM_TES_002 ]={
+            //: 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15
+    /* 01 */     3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
+    /* 02 */,    2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 
+    /* 03 */,    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1  
+    /* 04 */,    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0  
+
+    /* 05 */,    0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3
+    /* 06 */,    3, 2, 1, 0, 3, 2, 1, 0, 3, 2, 1, 0, 3, 2, 1, 0
+
+    /* 07 */,    0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3
+    /* 08 */,    3, 3, 3, 3, 2, 2, 2, 2, 1, 1, 1, 1, 0, 0, 0, 0
+
+    /* 09 */,    3, 3, 3, 3, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0, 0, 0
+    /* 10 */,    0, 0, 0, 0, 3, 3, 3, 3, 0, 0, 0, 0, 3, 3, 3, 3 
+
+                /** Random number test. Keep this one last   **/
+                /** because I really don't want to deal with **/
+                /** this test case failing as the lack of    **/
+                /** a regular pattern makes the data harder  **/
+                /** to mentally reason about.                **/
+                /** @VID_IID[ 0082 ]TIME[ 01:35:42 ]         **/
+    /* 11 */,    1, 3, 2, 0, 3, 2, 1, 2, 3, 0, 1, 2, 0, 3, 1, 2 
+    /* 12 */,    0, 3, 1, 2, 0, 3, 0, 1, 2, 3, 1, 2, 0, 3, 1, 0 
+            };;
+
+            assert( 16 == NUM_ELM_002     );
+            assert( 12 == NUM_TES_002     );
+            m_i=(         NUM_TES_002 - 1 );
+            for( t_i = 0 ; t_i <= m_i ; t_i ++ ){
+
+                bas =( t_i * NUM_ELM_002 );
+            
+                /** PUT ALL VALUES FOR CURRENT TEST **/
+
+                for( aus_dex = 0;aus_dex <=(16-1); aus_dex++ ){
+
+                    glo_com = 0;
+                    til_val = tab_002[ bas + aus_dex ];
+
+                    aac2020_paint5d_BitPack_Put(
+                          cpu_pix  
+                    ,     glo_com 
+                    ,     aus_dex  
+                    ,     til_val 
+                    );;
+                };;
+
+                /** GET ALL VALUES FOR CURRENT TEST **/
+
+                for( aus_dex = 0;aus_dex <=(16-1); aus_dex++ ){
+
+                    /** expected tile value */
+                    til_val = tab_002[ bas + aus_dex ];
+
+                    u32_var=(
+                    0x00
+                    |   (cpu_pix[ glo_com + 0 ] << 24 ) //:R://
+                    |   (cpu_pix[ glo_com + 1 ] << 16 ) //:G://
+                    |   (cpu_pix[ glo_com + 2 ] <<  8 ) //:B://
+                    |   (cpu_pix[ glo_com + 3 ] <<  0 ) //:A://
+                    );;                                  
+
+                    u08_var=( /** <-- ACTUAL tile value **/
+                        (U08)(
+                            ( u32_var >> ( aus_dex * 2 ) )
+                            & //:<-- only ONE "&" symbol.
+                            3 //:<-- Binary[ 11 ]MASK
+                        )
+                    );;
+
+                    if( til_val != u08_var ){
+                        /** E_V_A : Expected_Vs_Actual **/
+                        ERR( "[E_V_A:til_val:vs:u08_var]" );;
+                    };;
+
+                };;
+
+            };;
+
+            LOG("[END:aac2020_paint5d_UTC_BitPack_Put:END]",0);
+
+        #undef NUM_ELM_001                            //: 01 ://
+        #undef NUM_TES_001                            //: 02 ://
+        //:                                           //: -- ://
+        #undef NUM_ELM_002                            //: 03 ://
+        #undef NUM_TES_002                            //: 04 ://
+        }
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        void
+        aac2020_paint5d_UTC_BitPack_Get( void )
+        {
+
+
+            ERR("[TODO_002_BLUE_BARRELS_FULL_OF_GRAPES]");
+            
+
+        }
+
+    #undef  VERY_SPECIFIC_DEFINES_HERE_ONLY
+    //:------------------------:ADDED_FUNC_PAIR_ON_2021_01_09://
     //:ADDED_FUNCTION_ON_DATE_2021_01_07:--------------------://
+    #define VERY_SPECIFIC_DEFINES_HERE_ONLY
 
         void
         aac2020_paint5d_UTC_pix_CTO_pix_PUT_GET( void )
@@ -4624,6 +5110,7 @@
             LOG("[99%_SURE_WORKS:glocpix_CTO_painpix]", 0);
         }
 
+    #undef  VERY_SPECIFIC_DEFINES_HERE_ONLY
     //:--------------------:ADDED_FUNCTION_ON_DATE_2021_01_07://
     //:MAIN_GET_PUT_TESTS:-----------------------------------://
     #define NUM_TEST_CASES_put (  8  )                  //:01://

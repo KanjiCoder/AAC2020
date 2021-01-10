@@ -12,7 +12,7 @@
     +-----------------------------------------+
 
     ++----------------------------------------+
-    ||                                        |
+    ||                                        | @P5D_AUS_BITS@
    [00] <-- Empty Space                       |
    [01] <-- Light  LUM Monochrome Color       |
    [10] <-- Middle LUM Monochrome Color  [ til_val ]
@@ -391,7 +391,17 @@
 
     #define AAC2020_PAINT5D_BOUND_CHECK_INPUTS ( 1 )
 
-    U08 aac2020_paint5d_unit_test_ran_or_running = ( 0 );
+        //:unit_test_flags:----------------------------------://
+        /** @VID_IID[ 0081 ]TIME[ 00:33:33 ]                 **/
+        /** These flags may both WRAP the unit test calls AND**/
+        /** be INSIDE the body of the unit test code.        **/
+        /** The redundancy is NOT NEEDED and is only there   **/
+        /** to make the code more readable.                  **/
+        
+        U08 aac2020_paint5d_unit_test_ran_or_running = ( 0 );
+        U08 aac2020_paint5d_unit_test_is_running_now = ( 0 );
+
+        //:----------------------------------:unit_test_flags://
 
     //: #_CTF_VS_CTS_# ://
     char* aac2020_paint5d_CTF ="[NONE_SET]"; //: FUNCTION
