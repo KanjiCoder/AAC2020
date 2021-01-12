@@ -49,10 +49,12 @@
 //:================================================:INIT_NONE://
 //:INCLUSIVE_RECTANGLE:aac2020_tautype_rec_inc:==============://
 //:inclusive_rectangle:AAC2020_TAUTYPE_REC_INC:==============://
+//:INCLUSIVE_RECTANGLE_AAC2020_TAUTYPE_REC_INC:==============://
 #define I32  int32_t /** GCC: <stdint.h> **/          //: 01 ://
 #define U32 uint32_t /** GCC: <stdint.h> **/          //: 02 ://
 #define U08 uint8_t  /** GCC: <stdint.h> **/          //: 03 ://
 #define ERR aac2020_tautype_Halt                      //: 04 ://
+#define R_B rec_bou                                   //: 05 ://
 
     /** **************************************************** ***
     @VID_IID[ 0060 ]TIME[ 1H 57M 30S ]
@@ -66,12 +68,28 @@
 
     void
     aac2020_tautype_rec_inc_EnforceBounds(
-        I32* INPUT_OUTPUT_PARAM_x_0_i32 //: @BYREF@
-    ,   I32* INPUT_OUTPUT_PARAM_x_1_i32 //: @BYREF@
-    ,   I32* INPUT_OUTPUT_PARAM_y_0_i32 //: @BYREF@
-    ,   I32* INPUT_OUTPUT_PARAM_y_1_i32 //: @BYREF@
-    )
+        I32* restrict INPUT_OUTPUT_PARAM_x_0_i32 //: @BYREF@
+    ,   I32* restrict INPUT_OUTPUT_PARAM_x_1_i32 //: @BYREF@
+    ,   I32* restrict INPUT_OUTPUT_PARAM_y_0_i32 //: @BYREF@
+    ,   I32* restrict INPUT_OUTPUT_PARAM_y_1_i32 //: @BYREF@
+    ,   I32  rec_bou //:<-- rectangle bounds defined by the
+    )                //:    span of the area. (span==wid_hig)
     {
+        //:check_inputs:-------------------------------------://
+        #define V_P ((I32*)0) //:<-- @TYPED_NULL@
+
+            /** @REFS_CANNOT_BE_NULL@ **/
+            assert( V_P != INPUT_OUTPUT_PARAM_x_0_i32 );
+            assert( V_P != INPUT_OUTPUT_PARAM_x_1_i32 );
+            assert( V_P != INPUT_OUTPUT_PARAM_y_0_i32 );
+            assert( V_P != INPUT_OUTPUT_PARAM_y_1_i32 );
+
+            /** size of boundary rectangle cannot be **/
+            /** negative or zero.                    **/
+            assert( rec_bou >= 1 ); //:At least 1x1 rectangle
+
+        #undef  V_P
+        //:-------------------------------------:check_inputs://
         //:extract_or_restore_values:------------------------://
 
             I32 x_0_i32 = (*INPUT_OUTPUT_PARAM_x_0_i32);
@@ -103,18 +121,18 @@
                     //:-----------------:back_off:lower_bound://
                     //:back_off:upper_bound:-----------------://
 
-                        if( x_1_i32 > ( 512 - 1 ) ){
+                        if( x_1_i32 > ( R_B-1 ) ){
 
                             //: @_MINUS_FIVE_ELEVEN_@
-                            I32 delta_x = ( x_1_i32 - 511 );
+                            I32 delta_x = ( x_1_i32 - (R_B-1) );
                             
                             x_0_i32 -= ( delta_x );
                             x_1_i32 -= ( delta_x );
                         };;
-                        if( y_1_i32 > ( 512 - 1 ) ){
+                        if( y_1_i32 > ( R_B-1 ) ){
 
                             //: @_MINUS_FIVE_ELEVEN_@
-                            I32 delta_y = ( y_1_i32 - 511 );
+                            I32 delta_y = ( y_1_i32 - (R_B-1) );
                             
                             y_0_i32 -= ( delta_y );
                             y_1_i32 -= ( delta_y );
@@ -138,11 +156,13 @@
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
  
     void
-    AAC2020_TAUTYPE_rec_inc_ZoomPull(
+    aac2020_tautype_rec_inc_ZoomPull( //:<--PRIVATE FUNCTION
         U08 tau_015  //: INDEX:tau: EX: AAC2020_TAUDEPO.TAU_015  
     ,   U08 sub_015  //: INDEX:sub: EX: AAC2020_TAUDEPO.PAINT5D  
     ,   U08 var_255  //: INDEX:var: EX: AAC2020_TAUDEPO.P5D_VP1  
     ,   I32 zom_i32  //: Amount To Zoom In And Out In Pixels
+    ,   I32 rec_bou  //: <-- rectangle bounds.
+                     //: @VID_IID[ 0083 ]TIME[ 07:32:30 ]
     )
     {
         AAC2020_TODOMAN_Vital( "[TODO:Camera_Initial_Size]");
@@ -173,8 +193,8 @@
             I32 wid =( x_1_i32 - x_0_i32 + 1 );
             I32 hig =( y_1_i32 - y_0_i32 + 1 );
             if( wid != hig ){ ERR("[CAM_NOT_SQUA:ZOOMPULL]"); };
-            if( wid  > 512 ){ ERR("[WID_OVER_512:ZOOMPULL]"); };
-            if( hig  > 512 ){ ERR("[HIG_OVER_512:ZOOMPULL]"); };
+            if( wid  > R_B ){ ERR("[WID_OVER_R_B:ZOOMPULL]"); };
+            if( hig  > R_B ){ ERR("[HIG_OVER_R_B:ZOOMPULL]"); };
 
         //:----------------------:check_size_before_transform://
         //:gaurd_from_zooming_in_or_out_too_much:------------://
@@ -193,11 +213,14 @@
                 y_0_i32 = ( y_0_i32 + zom_i32 );
                 y_1_i32 = ( y_1_i32 - zom_i32 );
 
+                assert(   R_B  ==   rec_bou  );//:@SAME_VAR@://
+                assert( &(R_B) == &(rec_bou) );//:@SAME_VAR@://
                 aac2020_tautype_rec_inc_EnforceBounds(
                     &( x_0_i32 )
                 ,   &( x_1_i32 )
                 ,   &( y_0_i32 )
                 ,   &( y_1_i32 )
+                ,   R_B
                 );;
             };;
 
@@ -248,10 +271,11 @@
 
                 //:------------------------------------------://
                 //: FIX IN THIS ORDER:                       ://
-                //: 1. Shrink back to at least 512 x 512     ://
+                //: 1. Shrink back to at least R_B x R_B     ://
                 //: 2. Translate back into boundaries of     ://
                 //:    the [ worldspace / dataspace ]        ://
                 //: @VID_IID[ 0063 ]TIME[ 04H 44M 21S ]      ://
+                //: @VID_IID[ 0083 ]TIME[ 08:17:02    ]      ://
                 //:------------------------------------------://
 
                 //:fix_number:001:- - - - - - - - - - - - - -://
@@ -265,13 +289,20 @@
                 U08 wid_fix=( 0 ); //: @IID[ 0065 ]T[ 00:33:10 ]
                 U08 hig_fix=( 0 ); //: @IID[ 0065 ]T[ 00:33:10 ]
 
-                    if( wid > 512 ){ //:#_OVERGROW_PULL_FIX_#://
+                    if( wid > R_B ){ //:#_OVERGROW_PULL_FIX_#://
                         wid_fix=( 1 );
                         /**@VID_IID[ 0065 ]TIME[ 0H 13M 44S ]**/
     
-                        I u =( (x_1_i32 - x_0_i32 - 511)/2 );
+                        I u =( 
+                            (x_1_i32 - x_0_i32 - (R_B-1) )/2 
+                        );;
+
                         F c =( 
-                         ((F)(x_1_i32 - x_0_i32 - 511)) / 2.0 );
+                        ( (F)( x_1_i32 - x_0_i32 - (R_B-1) ) ) 
+                            / 2.0
+                        );;
+
+
                         assert( ((I)u) == ((I)c) ); //:@DELTA_1@
                         if(     ((F)u) != ((F)c) ){
                             //:#_PULL_MORE_IF_U_IS_FRACTION_#://
@@ -281,13 +312,18 @@
                         x_0_i32 = x_0_i32 + u ; //: 0 --> <-- 1
                         x_1_i32 = x_1_i32 - u ; //: 0 --> <-- 1
                     };;
-                    if( hig > 512 ){ //:#_OVERGROW_PULL_FIX_#://
+                    if( hig > R_B ){ //:#_OVERGROW_PULL_FIX_#://
                         hig_fix=( 1 );
                         /**@VID_IID[ 0065 ]TIME[ 0H 34M 31S ]**/
 
-                        I u =( (y_1_i32 - y_0_i32 - 511)/2 );
+                        I u =( 
+                            (y_1_i32 - y_0_i32 - (R_B-1) )
+                            /2 
+                        );;
                         F c =( 
-                         ((F)(y_1_i32 - y_0_i32 - 511)) / 2.0 );
+                        ( (F)(y_1_i32 - y_0_i32 - (R_B-1) ) ) 
+                            / 2.0 
+                        );
                         assert( ((I)u) == ((I)c) ); //:@DELTA_1@
                         if(     ((F)u) != ((F)c) ){
                             //:#_PULL_MORE_IF_U_IS_FRACTION_#://
@@ -311,16 +347,16 @@
                         //: wid_fix  :- - - - - - - - - - - -://
                         if( wid_fix >= 1 ){
 
-                        if( (512 + 0) == wid && 0 == wid_odd ){
+                        if( (R_B + 0) == wid && 0 == wid_odd ){
                             /** Okay: Even Rectangle Shrunk **/
                         }else
-                        if( (512 - 1) == wid && 1 == wid_odd ){
+                        if( (R_B - 1) == wid && 1 == wid_odd ){
                             /** Okay: Odd  Rectangle Shrunk **/
                         }else{
                             ERR("[BADSHRINK_2020:X_AXIS]");
                         };;
 
-                            if( wid < ( 512 - 1 ) ){
+                            if( wid < ( R_B - 1 ) ){
                                 ERR("[TOO_MUCH_SHRINK:X_AXIS]");
                             };;
 
@@ -329,16 +365,16 @@
                         //: hig_fix  :- - - - - - - - - - - -://
                         if( hig_fix >= 1 ){
 
-                        if( (512 + 0) == hig && 0 == hig_odd ){
+                        if( (R_B + 0) == hig && 0 == hig_odd ){
                             /** Okay: Even Rectangle Shrunk **/
                         }else
-                        if( (512 - 1) == hig && 1 == hig_odd ){
+                        if( (R_B - 1) == hig && 1 == hig_odd ){
                             /** Okay: Odd  Rectangle Shrunk **/
                         }else{
                             ERR("[BADSHRINK_2020:Y_AXIS]");
                         };;
 
-                            if( wid < ( 512 - 1 ) ){
+                            if( wid < ( R_B - 1 ) ){
                                 ERR("[TOO_MUCH_SHRINK:Y_AXIS]");
                             };;
 
@@ -355,19 +391,23 @@
                     assert( x_0_i32 <= x_1_i32 );
                     assert( y_0_i32 <= y_1_i32 );
 
+                    assert(   R_B  ==   rec_bou  ); //:@SAMEV://
+                    assert( &(R_B) == &(rec_bou) ); //:@SAMEV://
+
                     aac2020_tautype_rec_inc_EnforceBounds(
                         &( x_0_i32 ) //: @BYREF@
                     ,   &( x_1_i32 ) //: @BYREF@
                     ,   &( y_0_i32 ) //: @BYREF@
                     ,   &( y_1_i32 ) //: @BYREF@
+                    ,   R_B
                     );;   
 
                     assert( x_0_i32 <= x_1_i32     );
                     assert( y_0_i32 <= y_1_i32     );
                     assert( x_0_i32 >=         0   );
                     assert( y_0_i32 >=         0   );
-                    assert( x_1_i32 <= ( 512 - 1 ) );
-                    assert( y_1_i32 <= ( 512 - 1 ) );
+                    assert( x_1_i32 <= ( R_B - 1 ) );
+                    assert( y_1_i32 <= ( R_B - 1 ) );
 
                 //:- - - - - - - - - - - - - -:fix_number:002://
 
@@ -377,10 +417,10 @@
         //:------------:gaurd_from_zooming_in_or_out_too_much://
         //:Get_Or_Put_Bitmap_Variables:----------------------://
 
-            assert( x_0_i32 >= 0 && x_0_i32 <= ( 512 - 1 ) );
-            assert( x_1_i32 >= 0 && x_1_i32 <= ( 512 - 1 ) );
-            assert( y_0_i32 >= 0 && y_0_i32 <= ( 512 - 1 ) );
-            assert( y_1_i32 >= 0 && y_1_i32 <= ( 512 - 1 ) );
+            assert( x_0_i32 >= 0 && x_0_i32 <= ( R_B - 1 ) );
+            assert( x_1_i32 >= 0 && x_1_i32 <= ( R_B - 1 ) );
+            assert( y_0_i32 >= 0 && y_0_i32 <= ( R_B - 1 ) );
+            assert( y_1_i32 >= 0 && y_1_i32 <= ( R_B - 1 ) );
 
             x_0 = (U32) x_0_i32 ;
             x_1 = (U32) x_1_i32 ;
@@ -418,26 +458,78 @@
         #undef T_I //:---------------------------------------://
         #endif //:###########################################://
     }
+    //:ZoomPull_Overloads:- - - - - - - - - - - - - - - - - -://
+
+        void
+        AAC2020_TAUTYPE_rec_inc_ZoomPull_256(  
+            U08 tau_015  /** Formal parameter explanation:   **/
+        ,   U08 sub_015  /** SEE[ TAUDEPO.D._ ]DIAGRAMS      **/
+        ,   U08 var_255  /** SEE[ tautype_rec_inc_zoompull ] **/
+        ,   I32 zom_i32  /** @VID_IID[ 0083 ]TIME[ 07:40:42 ]**/
+        )
+        {
+            aac2020_tautype_rec_inc_ZoomPull(  
+                tau_015   
+            ,   sub_015   
+            ,   var_255   
+            ,   zom_i32   
+            ,       256  //:<-- 256x256 bounding region      
+            );;          //:    always starts at [0,0]
+        }
+
+        void
+        AAC2020_TAUTYPE_rec_inc_ZoomPull_512(  
+            U08 tau_015  /** Formal parameter explanation:   **/
+        ,   U08 sub_015  /** SEE[ TAUDEPO.D._ ]DIAGRAMS      **/
+        ,   U08 var_255  /** SEE[ tautype_rec_inc_zoompull ] **/
+        ,   I32 zom_i32  /** @VID_IID[ 0083 ]TIME[ 07:40:42 ]**/           
+        )
+        {
+            aac2020_tautype_rec_inc_ZoomPull(  
+                tau_015   
+            ,   sub_015   
+            ,   var_255   
+            ,   zom_i32   
+            ,       512  //:<-- 512x512 bounding region      
+            );;          //:    always starts at [0,0]
+        }
+
+    //:- - - - - - - - - - - - - - - - - -:ZoomPull_Overloads://
     
-    void  AAC2020_TAUTYPE_rec_in_ZoomPush( ){
+    void  aac2020_tautype_rec_in_ZoomPush( ){
 
-        /** @VID_IID[ 0065 ]TIME[ 2H 0M 5S ]        **/
-        /** To push use pull with a negative number **/
-        ERR("[DO_NOT_USE_THIS_USE:ZoomPull]");
+        /** @VID_IID[ 0065 ]TIME[ 2H 0M 5S ]                 **/
+        /** @VID_IID[ 0083 ]TIME[ 07:34: 35]REVISITED        **/
+        /** To push use pull with a negative number          **/
+        ERR("[DO_NOT_USE_THIS_USE:ZoomPush]");
 
+    }
+    void  AAC2020_TAUTYPE_rec_in_ZoomPush_256( ){
+        ERR("[DO_NOT_USE_THIS_USE:ZoomPush_256]");
+    }
+    void  AAC2020_TAUTYPE_rec_in_ZoomPush_512( ){
+        ERR("[DO_NOT_USE_THIS_USE:ZoomPush_512]");
     }
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
     void
-    AAC2020_TAUTYPE_rec_inc_Tran(
+    aac2020_tautype_rec_inc_Tran( //:<--PRIVATE FUNCTION
         U08 tau_015  //: INDEX:tau: EX: AAC2020_TAUDEPO.TAU_015  
     ,   U08 sub_015  //: INDEX:sub: EX: AAC2020_TAUDEPO.PAINT5D  
     ,   U08 var_255  //: INDEX:var: EX: AAC2020_TAUDEPO.P5D_VP1     
     ,   I32 tra_i_x  //: Amount to translate in pixels: X-axis
     ,   I32 tra_i_y  //: Amount to translate in pixels: Y-axis
+    ,   I32 rec_bou  //: <--Rectangle_Bounds                 ://
+                     //: @VID_IID[ 0083 ]TIME[ 07:23:10 ]    ://
     )
     {
+        /** @CTRL_F_HELP@: ( @VID_IID[ 0083 ]TIME[ 07:44:10 ]**/
+        /** YOU_LOOKED_FOR[ AAC2020_TAUTYPE_rec_inc_Trans ]  **/
+        /** YOU_LOOKED_FOR[ aac2020_tautype_rec_inc_Trans ]  **/
+        /** YOU_____WANTED[ aac2020_tautype_rec_inc_Tran  ]  **/
+        /** NAME_IS_SINGULAR_NOT_PLURAL .....................**/
+
         U32 x_0 =( 0xFFFFFFFF /** TRAP_VALUE **/ );
         U32 x_1 =( 0xFFFFFFFF /** TRAP_VALUE **/ );
         U32 y_0 =( 0xFFFFFFFF /** TRAP_VALUE **/ );
@@ -465,27 +557,37 @@
         I32 wid =( x_1_i32 - x_0_i32 + 1 );
         I32 hig =( y_1_i32 - y_0_i32 + 1 );
         if( wid != hig ){ ERR("[CAM_NOT_SQUARE:TRAN]"); };
-        if( wid  > 512 ){ ERR("[WID_OVER_512:::TRAN]"); };
-        if( hig  > 512 ){ ERR("[HIG_OVER_512:::TRAN]"); };
+        if( wid  > R_B ){ ERR("[WID_OVER_R_B:::TRAN]"); };
+        if( hig  > R_B ){ ERR("[HIG_OVER_R_B:::TRAN]"); };
 
         x_0_i32 = ( x_0_i32 + tra_i_x );
         x_1_i32 = ( x_1_i32 + tra_i_x );
         y_0_i32 = ( y_0_i32 + tra_i_y );
         y_1_i32 = ( y_1_i32 + tra_i_y );
 
+        assert(   R_B  ==   rec_bou  ); //:@SAME_VARIABLE@://
+        assert (&(R_B) == &(rec_bou) ); //:@SAME_VARIABLE@://
         aac2020_tautype_rec_inc_EnforceBounds(
             &( x_0_i32 )
         ,   &( x_1_i32 )
         ,   &( y_0_i32 )
         ,   &( y_1_i32 )
+        ,   R_B //:<--Bounding Area To Enforce, Via SPAN
         );;
 
         //:Get_Or_Put_Bitmap_Variables:----------------------://
+        
+            /** ******************************************** **/
+            /** @VID_IID[0083]TIME[ 07:51:58 ]               **/
+            /** @VID_IID[0083]TIME[ 07:55:10 ]RANT_OVER      **/
+            /** Refactor: 512 --> R_B .........              **/
+            /** And "YAGNI" rant.                            **/
+            /** ******************************************** **/
 
-            assert( x_0_i32 >= 0 && x_0_i32 <= ( 512 - 1 ) );
-            assert( x_1_i32 >= 0 && x_1_i32 <= ( 512 - 1 ) );
-            assert( y_0_i32 >= 0 && y_0_i32 <= ( 512 - 1 ) );
-            assert( y_1_i32 >= 0 && y_1_i32 <= ( 512 - 1 ) );
+            assert( x_0_i32 >= 0 && x_0_i32 <= ( R_B - 1 ) );
+            assert( x_1_i32 >= 0 && x_1_i32 <= ( R_B - 1 ) );
+            assert( y_0_i32 >= 0 && y_0_i32 <= ( R_B - 1 ) );
+            assert( y_1_i32 >= 0 && y_1_i32 <= ( R_B - 1 ) );
 
             x_0 = (U32) x_0_i32 ;
             x_1 = (U32) x_1_i32 ;
@@ -506,10 +608,51 @@
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
+        //:Translate__Overloads:- - - - - - - - - - - - - - -://
+        void
+        AAC2020_TAUTYPE_rec_inc_Tran_256(  
+            U08 tau_015  /** for parameter names see:        **/
+        ,   U08 sub_015  /** AAC2020_TAUTYPE_rec_inc_Tran    **/
+        ,   U08 var_255  /** DIAGRAM_IN[ TAUDEPO.D._ ]       **/
+        ,   I32 tra_i_x  /** @VID_IID[ 0083 ]TIME[ 07:27:30 ]**/
+        ,   I32 tra_i_y  
+        ){
+            aac2020_tautype_rec_inc_Tran(
+                tau_015   
+            ,   sub_015   
+            ,   var_255   
+            ,   tra_i_x   
+            ,   tra_i_y   
+            ,   256 //:<-- bounded inside a 256x256 area
+            );;
+        }
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        void
+        AAC2020_TAUTYPE_rec_inc_Tran_512(  
+            U08 tau_015  /** for parameter names see:        **/
+        ,   U08 sub_015  /** AAC2020_TAUTYPE_rec_inc_Tran    **/
+        ,   U08 var_255  /** DIAGRAM_IN[ TAUDEPO.D._ ]       **/
+        ,   I32 tra_i_x  /** @VID_IID[ 0083 ]TIME[ 07:29:00 ]**/
+        ,   I32 tra_i_y  
+        ){
+            aac2020_tautype_rec_inc_Tran(
+                tau_015   
+            ,   sub_015   
+            ,   var_255   
+            ,   tra_i_x   
+            ,   tra_i_y   
+            ,   512 //:<-- bounded inside a 512x512 area
+            );;
+        }
+        //:- - - - - - - - - - - - - - -:Translate__Overloads://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
 #undef  I32                                           //: 01 ://
 #undef  U32                                           //: 02 ://
 #undef  U08                                           //: 03 ://
 #undef  ERR                                           //: 04 ://
+#undef  R_B                                           //: 05 ://
+//:==============:INCLUSIVE_RECTANGLE_AAC2020_TAUTYPE_REC_INC://
 //:==============:AAC2020_TAUTYPE_REC_INC:inclusive_rectangle://
 //:==============:aac2020_tautype_rec_inc:INCLUSIVE_RECTANGLE://
 //:UNIT_TEST:================================================://
@@ -528,23 +671,27 @@
     void
     aac2020_tautype_UnitTest( void )
     {
+    #define E_V extern void
+
         LOG("[aac2020_tautype_UnitTest:BEG]",((void*)0) );
 
         /** UTC: Unit_Test_Code  ..........................  **/
         /** @VID_IID[ 0063]TIME [ 3H 13M 21S ] ............  **/
-        extern void aac2020_tautype_UTC_rec_inc_Tran(  void  );
-                    aac2020_tautype_UTC_rec_inc_Tran(/*VOID*/);
+        E_V aac2020_tautype_UTC_rec_inc_Tran_512(  void  );
+            aac2020_tautype_UTC_rec_inc_Tran_512(/*VOID*/);
 
-        extern void aac2020_tautype_UTC_rec_inc_Zoom(  void  );
-                    aac2020_tautype_UTC_rec_inc_Zoom(/*VOID*/);
+        E_V aac2020_tautype_UTC_rec_inc_Zoom_512(  void  );
+            aac2020_tautype_UTC_rec_inc_Zoom_512(/*VOID*/);
 
         LOG("[aac2020_tautype_UnitTest:END]",((void*)0) );
+        
+    #undef E_V
     }
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
     void
-    aac2020_tautype_UTC_rec_inc_Zoom( void )
+    aac2020_tautype_UTC_rec_inc_Zoom_512( void )
     {
         LOG("[aac2020_tautype_UTC_rec_inc_Zoom:BEG]",0);
 
@@ -683,7 +830,7 @@
             //:----------------:set_init_rectangle_and_verify://
             //:translate_and_check:--------------------------://
 
-                AAC2020_TAUTYPE_rec_inc_ZoomPull(
+                AAC2020_TAUTYPE_rec_inc_ZoomPull_512(
                    AAC2020_TAUDEPO.TAU_015   //:DEX_TAU
                 ,  AAC2020_TAUDEPO.PAINT5D   //:DEX_SUB
                 ,  AAC2020_TAUDEPO.P5D_VP1   //:DEX_VAR
@@ -737,7 +884,7 @@
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
     void
-    aac2020_tautype_UTC_rec_inc_Tran( void )
+    aac2020_tautype_UTC_rec_inc_Tran_512( void )
     {
         /** THIS_FUNCTION: Translation of viewport tests **/
 
@@ -871,7 +1018,7 @@
             //:-------------------:calculate_expected_outputs://
             //:translate_and_check:--------------------------://
 
-                AAC2020_TAUTYPE_rec_inc_Tran(
+                AAC2020_TAUTYPE_rec_inc_Tran_512(
                    AAC2020_TAUDEPO.TAU_015   //:DEX_TAU
                 ,  AAC2020_TAUDEPO.PAINT5D   //:DEX_SUB
                 ,  AAC2020_TAUDEPO.P5D_VP1   //:DEX_VAR
