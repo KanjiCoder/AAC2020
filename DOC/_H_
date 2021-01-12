@@ -9,14 +9,84 @@
     //[   VIDEO COMMENT TIMESTAMP EXAMPLE   ]//
 *** ******************************************************** ***
 
+#_DEFAULT_NUMBER_OF_LINES_IN_TERMINAL_##########################
+#_DEFAULT_TERMINAL_HEIGHT_######################################
 
+    2 lines is not enough.
+    4 lines isn't much. But it's just enough to work I think.
 
+    4 lines is 64 pixels high.
+        ( 4 lines, each glyph for text is 16x16 )
+        ( 16 * 4 == 64 )
 
+    @VID_IID[ 0084 ]TIME[ 03:12:10 ]
 
+######################################_DEFAULT_TERMINAL_HEIGHT_#
+##########################_DEFAULT_NUMBER_OF_LINES_IN_TERMINAL_#
+#_TERMINAL_GLYPH_FONT_SIZE_#####################################
 
+    #TERMINAL_GLYPH_SIZE:
+    #TERMINAL_FONT_SIZE:
+    #TERMINAL_GLYPH_FONT_SIZE:
 
+        16x16 pixels. 
+    
+        8x8 is too small to put 1 pixel thick
+        boxes around capital letters.
+        16x16 is large enough. It is the next power of 2 up.
 
+        @VID_IID[ 0084 ]TIME[ 03:09:10 ]
 
+#####################################_TERMINAL_GLYPH_FONT_SIZE_#
+#_GET_SIZE_OF_VIEWPORT_#########################################
+
+    GET_SIZE_OF_VIEWPORT:
+
+    @VID_IID[ 0084 ]TIME[ 02:56:30 ]
+    
+    The GL viewport should always be
+    Snapped to these values:
+    P5D_VPC (viewport canvas) may be a subsection of
+    this rectangle. VPC is just where we put the
+    main rendering of the P5D system. But other areas
+    of opengl viewport might want to render a console
+    instead of the tileset being rendered.
+
+    AAC2020_GINAWIN_GetClient_WID()
+    AAC2020_GINAWIN_GetClient_HIG()
+
+#########################################_GET_SIZE_OF_VIEWPORT_#
+#_WHY_IS_0_THE_BACK_MOST_LAYER_#################################
+
+    WHY_IS_0_THE_BACK_MOST_LAYER:
+
+        0 is the backmost layer because if we ever add
+        more layers those layers stack on top of whatever
+        we already had. So we don't want the meaning of
+        "layer 0" to ever change if that ever happens.
+
+        EXAMPLE:
+
+        Some systems may have different max layer values,
+        and thus to keep layer 0 having a consistent meaning,
+        it must be the BACKMOST layer and 
+        ___NOT___ frontmost layer.
+
+        @VID_IID[ 0084 ]TIME[ 02:46:30 ]
+
+#################################_WHY_IS_0_THE_BACK_MOST_LAYER_#
+@IOU@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    
+    @IOU : Initialize_Or_Update
+
+           For functions that are both used in initializer
+           code as well as for just updating or setting
+           some values OUTSIDE of initialization as well.
+
+           SEE[ PAINT5D.F._ ]
+           @VID_IID[ 0084 ]TIME[ 02:33:20 ]
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@IOU@
 #IDEA_RANDOM_UNIT_TESTS_BUT_NEVER_OFF###########################
 
     Unit tests never turn off, but can be set to randomly

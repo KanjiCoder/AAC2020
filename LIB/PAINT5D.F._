@@ -61,231 +61,6 @@
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 #undef  I32
 //:=================================:INFO_STATUS_INFO_MESSAGE://
-//:INITIALIZE_PAINT5D:=======================================://
-#define U32  uint32_t /** GCC: <stdint.h> **/         //: 01 ://
-#define I32   int32_t /** GCC: <stdint.h> **/         //: 02 ://
-#define I16   int16_t /** GCC: <stdint.h> **/         //: 03 ://
-#define ERR   aac2020_paint5d_Halt                    //: 04 ://
-#define O_K   aac2020_paint5d_Okay                    //: 05 ://
-#define I_D   aac2020_paint5d_Info_dec                //: 06 ://
-#define INF   aac2020_paint5d_Info                    //: 07 ://
-
-    U32
-    AAC2020_PAINT5D_Init( U32 u32 )
-    {
-        if( u32 ){ /** Reserved for future use **/ };
-
-        //:#_INI_SPAM_AND_RECURSION_GAURD_#:-----------------://
-
-        /** Hackishly debug what is going on. **/
-        AAC2020_PAINT5D_init_call_count++;
-        I_D("[AAC2020_PAINT5D_init_call_count]:%d\n"
-                ,AAC2020_PAINT5D_init_call_count       );;
-
-        if( AAC2020_CEDITOR_dex_ing == 
-            AAC2020_CEDITOR_paint5d
-        ){  
-            /** If not recursion, it might be being called   **/
-            /** rapidly from another thread. Re-entering     **/
-            /** before it is exiting. But that seems         **/
-            /** unlikely. I think that would require         **/
-            /** more than one thread to call this function.  **/
-
-            ERR("[LIKELY_UNINTENTIONAL_RECURSION]"); 
-        };;
-
-            /** #_EDITOR_INIT_SPAM_GAURD_# **/
-            if( AAC2020_CEDITOR_nex_edi 
-            ==  AAC2020_CEDITOR_dex_edi
-            ){
-                O_K("[PAINT5D:Init_Already_Up_To_Date]");
-            };;
-
-        /** We are now initilaizing paint5d **/
-        AAC2020_CEDITOR_dex_ing=( 
-        AAC2020_CEDITOR_paint5d  );;
-
-        //:-----------------:#_INI_SPAM_AND_RECURSION_GAURD_#://
-
-        /** Early Exit Will Trigger Recursion Guard Error **/
-        O_K( "[OH_FUCK...Code_Below_Was_Never_Ran_Before]" );;
-
-        //:ALL_MEMBERS_OF_PAINT5D:---------------------------://
-
-            //:#_PAINT5D_DATA_IS_A_TEMPORARY_CONTAINER_NOW_#://
-
-        //:---------------------------:ALL_MEMBERS_OF_PAINT5D://
-        //:ALLOCATES_OPEN_GL_TEXTURE:------------------------://
-    
-            //+ #GPUDATA_IS_NOW_A_TEMPORARY_CONTAINER# + + + +//
-            //- AAC2020_GPUDATA_InitInstance(  - - - - - - - -//
-            //-     ACC2020_PAINT5D_dat      );; - - - - - - -//
-
-        //:------------------------:ALLOCATES_OPEN_GL_TEXTURE://
-        //:LOAD_INITIAL_TEXTURE_DATA:------------------------://
-        #define DAT gpudata_paint5d
-        #define F_S( name ) AAC2020_PIXNAME_##name
-
-            /** #_TODOS_CAN_BREAK_COLUMN_LIMIT_# **/
-            /** For now just load a test pattern to confirm we    * * * * * **/
-            /** have data. But once that is done, we will want to * * * * * **/
-            /** load from a save file on disk on startup.         * * * * * **/
-            AAC2020_VITAL_TODO("[Eventually_This_Should_Load_Save_File_Data]");
-
-
-
-            struct AAC2020_GPUDATA gpudata_paint5d ={ 0 };
-
-
-
-            if( strcmp( &(F_S( paint5d )[0]) ,"paint5d" )!= 0 ){
-                aac2020_paint5d_Halt("[BAD_NAME_2020]");
-            };;
-
-
-            
-            //: FILE_SCOPE(  F_S  ) --> TEMP_STRUCT(  DAT  );
-            DAT.tex_lot =    F_S( paint5d_tex_lot          );
-            DAT.tex_han =    F_S( paint5d_tex_han          ); 
-            DAT.sam_loc =    F_S( paint5d_tex_sam.sam_loc  );
-            DAT.sam_val =    F_S( paint5d_tex_sam.sam_val  );
-            DAT.sam_has =    F_S( paint5d_tex_sam_HAS      );
-            DAT.pix_wid =  ( 512                           );
-            DAT.pix_hig =  ( 512                           );
-            DAT.pix_nam = &( F_S( paint5d )[0]             );
-
-            DAT.cpu_pix =&( 
-                AAC2020_PIXNAME_paint5d_cpu_pix[0] 
-            );;
-
-
-
-            AAC2020_PIXLOAD_TestPattern(   &( DAT ) );
-            AAC2020_PIXLOAD_UploadTexture( &( DAT ) );
-            
-
-            //:get_paint5d_sampler_location:-----------------://
-            #define HAS_CHK AAC2020_PIXLOAD_HasSampler
-            #define INF_DEC aac2020_paint5d_Info_dec
-
-                //:#_GPUDATA_INPUT_OBJECT_IS_OUTPUT_OBJECT_#://
-                AAC2020_PIXLOAD_sam_has    ( &( DAT ) );
-                AAC2020_PIXLOAD_sam_loc    ( &( DAT ) );
-                AAC2020_PIXLOAD_sam_val_PUT( &( DAT ) );
-
-                if( DAT.sam_has >= 1 && DAT.sam_loc <=(0 - 1) ){
-                    ERR("[FULL_OF_LIES:@VDAWEA@:001]");
-                }else 
-                if( DAT.sam_has <= 0 && DAT.sam_loc >=(  0  ) ){
-                    ERR("[FULL_OF_LIES:@VDAWEA@:002]");
-                };;
-
-                /** Keep the error prone way of doing this   **/
-                /** As a redundancy to check for agreement.  **/
-
-                I32 has = HAS_CHK( "paint5d" );
-                if( DAT.sam_has != has ){ ERR("[WTF:0433AM]");};
-
-                INF_DEC( "[DAT.sam_loc]:%d\n" , DAT.sam_loc );
-                INF_DEC( "[DAT.sam_val]:%d\n" , DAT.sam_val );
-
-            #undef  HAS_CHK
-            #undef  INF_DEC
-            //:-----------------:get_paint5d_sampler_location://
-
-            if( has >= 1 ){
-
-                /** Update Texture Sampler Uniform On GPU **/
-
-                aac2020_pixload_PushSampler(  &( DAT ) );
-
-                /** Persist Changes: **/
-
-                //: TEMP_STRUCT(  DAT  ) --> FILE_SCOPE(  F_S  )
-                F_S( paint5d_tex_lot         ) = DAT.tex_lot ;
-                F_S( paint5d_tex_han         ) = DAT.tex_han ;
-                F_S( paint5d_tex_sam.sam_loc ) = DAT.sam_loc ;
-                F_S( paint5d_tex_sam.sam_val ) = DAT.sam_val ;
-                F_S( paint5d_tex_sam_HAS     ) = DAT.sam_has ;
-                //:                    ( 512 ) = DAT.pix_wid ://
-                //:                    ( 512 ) = DAT.pix_hig ://
-                //:                 "paint5d" ~=~DAT.pix_nam ://
-    
-                aac2020_paint5d_Okay("[HAS_TEXTURE_SAMPLER]");
-            }else{
-
-                /** Whether this is a good or bad message **/
-                /** depends on you looking at code and    **/
-                /** deciding.                             **/
-                INF("[NO_TEXTURE_SAMPLER:PAINT5D]");
-    
-            };;
-           
-        #undef DAT
-        #undef F_S
-        //:------------------------:LOAD_INITIAL_TEXTURE_DATA://
-        //:ERROR_CHECK:--------------------------------------://
-
-            //:#_PAINT5D_DATA_ERROR_CHECK_NOW_POINTLESS_#://
-            
-        //:--------------------------------------:ERROR_CHECK://
-        //:#_INI_SPAM_AND_RECURSION_GAURD_#:-----------------://
-
-            /** DONE initializing. **/
-
-            AAC2020_CEDITOR_dex_ini=( 
-            AAC2020_CEDITOR_paint5d  );;
-
-            /** No editor initializ-ING now. **/
-            AAC2020_CEDITOR_dex_ing=( 0xFFFFFFFF );
-
-        //:-----------------:#_INI_SPAM_AND_RECURSION_GAURD_#://
-        //:Run_Unit_Test_If_Never_Ran_Before:----------------://
-        #define KIL AAC2020_PAINT5D_unreliable_utc_kill_switch
-        #define E_U extern U32
-
-            if( aac2020_paint5d_unit_test_ran_or_running <= 0 ){
-                aac2020_paint5d_unit_test_ran_or_running =( 1 );
-                aac2020_paint5d_unit_test_is_running_now =( 1 );
-
-                if( KIL >= 1 ){
-
-                    srand(time(NULL)); 
-                    I16 rnd_i16 = rand(); //: 0 to 0x7fff
-                    if( rnd_i16 < ( 0x7fff / 20 ) ){
-
-                        /** 0x7fff / 20 : Means: 1 in 20 **/
-
-                        E_U AAC2020_PAINT5D_UnitTest( U32  );
-                            AAC2020_PAINT5D_UnitTest( 0x00 );
-                    };;
-                }else{
-                    if( 1 == 1 ){
-
-                        E_U AAC2020_PAINT5D_UnitTest( U32  );
-                            AAC2020_PAINT5D_UnitTest( 0x00 );
-                    };;
-                };;
-
-                aac2020_paint5d_unit_test_is_running_now =( 0 );
-            };;
-
-        #undef KIL
-        #undef E_U
-        //:----------------:Run_Unit_Test_If_Never_Ran_Before://
-
-        return( 0x00 );
-
-    }
-
-#undef  U32                                           //: 01 ://
-#undef  I32                                           //: 02 ://
-#undef  I16                                           //: 03 ://
-#undef  ERR                                           //: 04 ://
-#undef  O_K                                           //: 05 ://
-#undef  I_D                                           //: 06 ://
-#undef  INF                                           //: 07 ://
-//:=======================================:INITIALIZE_PAINT5D://
 //:HELPER_FUNCTIONS:GENERIC:=================================://
 #define I32  int32_t /** GCC: <stdint.h> **/
 #define U32 uint32_t /** GCC: <stdint.h> **/
@@ -2763,6 +2538,509 @@
 
 #undef  U08
 //:===================================:SUB_SYSTEM_BACKUP_CODE://
+//:VIEWPORT_HELPER_FUNCTION:=================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 01 ://
+#define I32  int32_t /** GCC: <stdint.h> **/          //: 02 ://
+#define ERR aac2020_paint5d_Halt                      //: 03 ://
+
+    void
+    AAC2020_PAINT5D_PUT_rec_inc_ALL(
+    #define U U32 /** U is for unsigned **/
+    #define I I32 /** I is for integer  **/
+    #define T I32 /** T is for type     **/
+
+     T vpc_x_0 , T vpc_x_1 , T vpc_y_0 , T vpc_y_1 //:P5D_VPC://
+    ,T vp0_x_0 , T vp0_x_1 , T vp0_y_0 , T vp0_y_1 //:P5D_VP0://
+    ,T vp1_x_0 , T vp1_x_1 , T vp1_y_0 , T vp1_y_1 //:P5D_VP1://
+
+    #undef  U
+    #undef  I
+    #undef  T
+    )
+    {
+        //:bound_check_inputs:-------------------------------://
+        #define U 0x7FFFFFFF /**Upper Bound For Signed 32bit **/
+
+            /** PRIA: Put_Rec_In_All **/
+
+            /** lower bounds check **/
+            if( vpc_x_0 < 0 ){ ERR("[PRIA:vpc_x_0:OOB_NEG]");};
+            if( vpc_y_0 < 0 ){ ERR("[PRIA:vpc_y_0:OOB_NEG]");};
+            if( vp0_x_0 < 0 ){ ERR("[PRIA:vp0_x_0:OOB_NEG]");};
+            if( vp0_y_0 < 0 ){ ERR("[PRIA:vp0_y_0:OOB_NEG]");};
+            if( vp1_x_0 < 0 ){ ERR("[PRIA:vp1_x_0:OOB_NEG]");};
+            if( vp1_y_0 < 0 ){ ERR("[PRIA:vp1_y_0:OOB_NEG]");};
+
+            /** Rough out of bounds check **/
+            if( vpc_x_1 > U ){ ERR("[PRIA:vpc_x_1:OOB_POS]");};
+            if( vpc_y_1 > U ){ ERR("[PRIA:vpc_y_1:OOB_POS]");};
+            if( vp0_x_1 > U ){ ERR("[PRIA:vp0_x_1:OOB_POS]");};
+            if( vp0_y_1 > U ){ ERR("[PRIA:vp0_y_1:OOB_POS]");};
+            if( vp1_x_1 > U ){ ERR("[PRIA:vp1_x_1:OOB_POS]");};
+            if( vp1_y_1 > U ){ ERR("[PRIA:vp1_y_1:OOB_POS]");};
+
+            /** Specific out of bounds check   **/
+            /** VP1: Offscreen/Source/TileMap  **/
+            I32 vp1_max=( 256 - 1 ); /** for paint5d system**/
+            if( vp1_x_1 > vp1_max ){ ERR("[vp1_x_1:max]");};
+            if( vp1_y_1 > vp1_max ){ ERR("[vp1_y_1:max]");};
+
+        #undef  U
+        //:-------------------------------:bound_check_inputs://
+        //:call_with_casts_to_u32:---------------------------://
+        //:store_viewports:----------------------------------://
+        #define T U32 /** T is for type     **/
+
+            AAC2020_TAUDEPO_Put( 
+                AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+            ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+            ,   AAC2020_TAUDEPO.P5D_VPC //:DEX_VAR
+            ,   (T)vpc_x_0 ,(T)vpc_x_1 ,(T)vpc_y_0 ,(T)vpc_y_1
+            );;
+
+            AAC2020_TAUDEPO_Put( 
+                AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+            ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+            ,   AAC2020_TAUDEPO.P5D_VP0 //:DEX_VAR
+            ,   (T)vp0_x_0 ,(T)vp0_x_1 ,(T)vp0_y_0 ,(T)vp0_y_1
+            );;
+
+            AAC2020_TAUDEPO_Put( 
+                AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+            ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+            ,   AAC2020_TAUDEPO.P5D_VP1 //:DEX_VAR
+            ,   (T)vp1_x_0 ,(T)vp1_x_1 ,(T)vp1_y_0 ,(T)vp1_y_1
+            );;
+
+        #undef  T
+        //:----------------------------------:store_viewports://
+        //:---------------------------:call_with_casts_to_u32://
+    }
+
+#undef  U32                                           //: 01 ://
+#undef  I32                                           //: 02 ://
+#undef  ERR                                           //: 03 ://
+//:=================================:VIEWPORT_HELPER_FUNCTION://
+//:IOU:INIT_OR_UPDATE:=======================================://
+#define I32 int32_t /** GCC: <stdint.h> **/
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void        /** IOU:Initialize_Or_Update **/
+    AAC2020_PAINT5D_IOU_ViewportRectangles( void )
+    {           /** IOU:Initialize_Or_Update **/
+
+        //:  #_GET_SIZE_OF_VIEWPORT_####  ://
+        //:  #_DEFAULT_TERMINAL_HEIGHT_#  ://
+
+        I32 cli_wid = AAC2020_GINAWIN_GetClient_WID() ;
+        I32 cli_hig = AAC2020_GINAWIN_GetClient_HIG() ;
+
+        I32 ter_hig=( 64 ); //:Default_Terminal_Height
+
+        I32 rec_wid ; /** rectangle width  **/
+        I32 rec_hig ; /** rectangle height **/
+        I32 rec_min ; /** MIN( rec_wid , rec_hig ) **/
+
+        I32 lover_x ; /** leftovers x **/
+        I32 lover_y ; /** leftovers y **/
+
+        rec_wid = cli_wid;
+        if( ( cli_hig - ter_hig ) > 0 ){
+
+            rec_hig = cli_hig - ter_hig;
+
+        }else{
+
+            /** Hide terminal if not enough room to display **/
+            rec_hig = cli_hig ;
+
+        };;
+
+        /** rec_min =MIN(rec_wid,rec_hig) **/
+        if( rec_wid > rec_hig ){
+            rec_min = rec_hig;
+        }else{
+            rec_min = rec_wid;
+        };;
+
+        /** get leftovers after accounting for       ........**/
+        /** square destination viewport size P5D_VP1 ........**/
+        lover_x = ( cli_wid - rec_min );
+        lover_y = ( cli_hig - rec_min );
+        if( lover_x < 0 ){ lover_x = 0; };
+        if( lover_y < 0 ){ lover_y = 0; };
+    
+        /** calculate canvas viewport that covers context    **/
+        I32 vpc_x_0 = 0;
+        I32 vpc_x_1 =( cli_wid - 1);
+        I32 vpc_y_0 = 0;
+        I32 vpc_y_1 =( cli_hig - 1);
+
+        /** calculate destination viewport, square, inside   **/
+        /** canvas viewport (P5D_VPC)                        **/
+        I32 vp0_x_0 = (    0        ) + (lover_x/2);
+        I32 vp0_x_1 = ( cli_wid - 1 ) - (lover_x/2);
+        I32 vp0_y_0 = (    0        ) + (lover_y/2);
+        I32 vp0_y_1 = ( cli_hig - 1 ) - (lover_y/2);
+         
+        /** Set the data viewport. Start zoomed all the way  **/
+        /** out so that we can see EVERYTHING.               **/
+        I32 vp1_x_0 =(     0   );
+        I32 vp1_x_1 =( 256 - 1 );
+        I32 vp1_y_0 =(     0   );
+        I32 vp1_y_1 =( 256 - 1 );
+
+        //:Make_Sure_Nothing_Went_Negative:------------------://
+        
+            /** @VID_IID[ 0084 ]TIME[ 05:14:30 ] *********** **/
+            /** If we end up getting one of these asserts    **/
+            /** to fail, we may need to handle things like   **/
+            /** resizing viewport to very small to handle    **/
+            /** more gracefully if the source is ___NOT___   **/
+            /** an error in our logic.                       **/
+            /** ******************************************** **/
+
+            assert( vpc_x_0 >= 0 );
+            assert( vpc_x_1 >= 0 );
+            assert( vpc_y_0 >= 0 );
+            assert( vpc_y_1 >= 0 );
+
+            assert( vp0_x_0 >= 0 );
+            assert( vp0_x_1 >= 0 );
+            assert( vp0_y_0 >= 0 );
+            assert( vp0_y_1 >= 0 );
+
+            assert( vp1_x_0 >= 0 );
+            assert( vp1_x_1 >= 0 );
+            assert( vp1_y_0 >= 0 );
+            assert( vp1_y_1 >= 0 );
+
+            /** ******************************************** **/
+            /** Don't check upper bounds. Checked in the     **/
+            /** helper function that comes next.             **/
+            /** ******************************************** **/
+ 
+        //:------------------:Make_Sure_Nothing_Went_Negative://
+
+        //:--------------------------------------------------://
+        //: @VID_IID[ 0084 ]TIME[ 04:28:10 ] ................://
+        //: Explanation on why viewports are named such.     ://
+        //:                                                  ://
+        //: VP0 because we always have exactly ONE dest      ://
+        //: VP1 because we might want other numbers that     ://
+        //: sample from other sources. For example,          ://
+        //: VP2 might be the name of our [terminal/console]  ://
+        //: data viewport.                                   ://
+        //:                                                  ://
+        //: VP0:Viewport_Zero(0): (Destination/Screen)       ://
+        //: VP1:Viewport_One(1) : (Offscreen/Source/Tilemap) ://
+        //: VPC:Viewport_Canvas : (Or: Window/OpenGL)        ://
+        //:--------------------------------------------------://
+
+        AAC2020_PAINT5D_PUT_rec_inc_ALL(
+            vpc_x_0 , vpc_x_1 , vpc_y_0 , vpc_y_1  //:P5D_VPC://
+        ,   vp0_x_0 , vp0_x_1 , vp0_y_0 , vp0_y_1  //:P5D_VP0://
+        ,   vp1_x_0 , vp1_x_1 , vp1_y_0 , vp1_y_1  //:P5D_VP1://
+        );;
+
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void        /** IOU:Initialize_Or_Update **/
+    AAC2020_PAINT5D_IOU_DefaultBrushState( void )
+    {           /** IOU:Initialize_Or_Update **/
+
+        /** ************************************************ ***
+
+            Initial Values We Have ___STRONG___ opinions about:
+            @VID_IID[ 0084 ]TIME[ 02:50:30 ]
+
+            til_qua : NO_STRONG_OPINION
+            loc_t_x : NO_STRONG_OPINION
+            loc_t_y : NO_STRONG_OPINION
+
+            til_exp = 7 : 
+            Start at largest (7) tile exponent to encourage   
+            working up the drawing from general vaugness      
+            to sharper (smaller tiles) details.               
+
+            til_lay = 0 :                                      
+            Start at BACKMOST tile layer (0)                  
+            To encourage water color like designing where     
+            artist paints in the background first before      
+            working up the more detailed foreground.          
+            #_WHY_IS_0_THE_BACK_MOST_LAYER_#       
+
+            aus_dex = 0 :
+            Start creating the FIRST aus_dex
+            (auto tile set) and then work your way forward
+            to the other sets. This makes the most sense.
+
+            til_val = 0 :
+            Start at the first tile value so that when user
+            uses the NEXT_TILE_VALUE button, they get 
+            a change in the tile value as expected, and are
+            able to immediately cycle through all tile values.
+
+        *** ************************************************ **/
+
+        aac2020_paint5d_Put_BrushState(
+            0  //: I32 : [ t_q / til_qua ] : 01 ://
+        ,   7  //: I32 : [ t_e / til_exp ] : 02 ://
+        ,   0  //: I32 : [ t_l / til_lay ] : 03 ://
+        ,   0  //: I32 : [ l_x / loc_t_x ] : 04 ://
+        ,   0  //: I32 : [ l_y / loc_t_y ] : 05 ://
+        ,   0  //: I32 : [ a_d / aus_dex ] : 06 ://
+        ,   0  //: I32 : [ t_v / til_val ] : 07 ://
+        );;
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+#undef  I32
+//:=======================================:IOU:INIT_OR_UPDATE://
+//:INITIALIZE_PAINT5D:=======================================://
+#define U32  uint32_t /** GCC: <stdint.h> **/         //: 01 ://
+#define I32   int32_t /** GCC: <stdint.h> **/         //: 02 ://
+#define I16   int16_t /** GCC: <stdint.h> **/         //: 03 ://
+#define ERR   aac2020_paint5d_Halt                    //: 04 ://
+#define O_K   aac2020_paint5d_Okay                    //: 05 ://
+#define I_D   aac2020_paint5d_Info_dec                //: 06 ://
+#define INF   aac2020_paint5d_Info                    //: 07 ://
+#define LOG   aac2020_paint5d_Info_any                //: 08 ://
+
+    U32
+    AAC2020_PAINT5D_Init( U32 u32 )
+    {
+        if( u32 ){ /** Reserved for future use **/ };
+
+        //:#_INI_SPAM_AND_RECURSION_GAURD_#:-----------------://
+
+        /** Hackishly debug what is going on. **/
+        AAC2020_PAINT5D_init_call_count++;
+        I_D("[AAC2020_PAINT5D_init_call_count]:%d\n"
+                ,AAC2020_PAINT5D_init_call_count       );;
+
+        if( AAC2020_CEDITOR_dex_ing == 
+            AAC2020_CEDITOR_paint5d
+        ){  
+            /** If not recursion, it might be being called   **/
+            /** rapidly from another thread. Re-entering     **/
+            /** before it is exiting. But that seems         **/
+            /** unlikely. I think that would require         **/
+            /** more than one thread to call this function.  **/
+
+            ERR("[LIKELY_UNINTENTIONAL_RECURSION]"); 
+        };;
+
+            /** #_EDITOR_INIT_SPAM_GAURD_# **/
+            if( AAC2020_CEDITOR_nex_edi 
+            ==  AAC2020_CEDITOR_dex_edi
+            ){
+                O_K("[PAINT5D:Init_Already_Up_To_Date]");
+            };;
+
+        /** We are now initilaizing paint5d **/
+        AAC2020_CEDITOR_dex_ing=( 
+        AAC2020_CEDITOR_paint5d  );;
+
+        //:-----------------:#_INI_SPAM_AND_RECURSION_GAURD_#://
+
+        /** Early Exit Will Trigger Recursion Guard Error **/
+        O_K( "[OH_FUCK...Code_Below_Was_Never_Ran_Before]" );;
+
+        //:ALL_MEMBERS_OF_PAINT5D:---------------------------://
+
+            //:#_PAINT5D_DATA_IS_A_TEMPORARY_CONTAINER_NOW_#://
+
+        //:---------------------------:ALL_MEMBERS_OF_PAINT5D://
+        //:ALLOCATES_OPEN_GL_TEXTURE:------------------------://
+    
+            //+ #GPUDATA_IS_NOW_A_TEMPORARY_CONTAINER# + + + +//
+            //- AAC2020_GPUDATA_InitInstance(  - - - - - - - -//
+            //-     ACC2020_PAINT5D_dat      );; - - - - - - -//
+
+        //:------------------------:ALLOCATES_OPEN_GL_TEXTURE://
+        //:LOAD_INITIAL_EDITOR_STATE:------------------------://
+        LOG("[PAINT5D:LOAD_INITIAL_EDITOR_STATE:BEG]",0);
+
+            //:LIES: Load_Initial_Editor_State
+            AAC2020_VITAL_TODO("[P5D_LIES_FROM_SAVE_FILE]");
+
+            /** UPDATES: P5D_VPC , P5D_VP0 , P5D_VP1  **/
+            /** IOU: Init_Or_Update  @IOU@            **/
+            
+            AAC2020_PAINT5D_IOU_DefaultBrushState( );
+
+            /** viewport sizing will depenend on brush **/
+            /** state in some cases I think...         **/
+            AAC2020_PAINT5D_IOU_ViewportRectangles();
+
+        LOG("[PAINT5D:LOAD_INITIAL_EDITOR_STATE:END]",0);
+        //:------------------------:LOAD_INITIAL_EDITOR_STATE://
+        //:LOAD_INITIAL_TEXTURE_DATA:------------------------://
+        #define DAT gpudata_paint5d
+        #define F_S( name ) AAC2020_PIXNAME_##name
+
+            /** #_TODOS_CAN_BREAK_COLUMN_LIMIT_# **/
+            /** For now just load a test pattern to confirm we    * * * * * **/
+            /** have data. But once that is done, we will want to * * * * * **/
+            /** load from a save file on disk on startup.         * * * * * **/
+            AAC2020_VITAL_TODO("[Eventually_This_Should_Load_Save_File_Data]");
+
+
+
+            struct AAC2020_GPUDATA gpudata_paint5d ={ 0 };
+
+
+
+            if( strcmp( &(F_S( paint5d )[0]) ,"paint5d" )!= 0 ){
+                aac2020_paint5d_Halt("[BAD_NAME_2020]");
+            };;
+
+
+            
+            //: FILE_SCOPE(  F_S  ) --> TEMP_STRUCT(  DAT  );
+            DAT.tex_lot =    F_S( paint5d_tex_lot          );
+            DAT.tex_han =    F_S( paint5d_tex_han          ); 
+            DAT.sam_loc =    F_S( paint5d_tex_sam.sam_loc  );
+            DAT.sam_val =    F_S( paint5d_tex_sam.sam_val  );
+            DAT.sam_has =    F_S( paint5d_tex_sam_HAS      );
+            DAT.pix_wid =  ( 512                           );
+            DAT.pix_hig =  ( 512                           );
+            DAT.pix_nam = &( F_S( paint5d )[0]             );
+
+            DAT.cpu_pix =&( 
+                AAC2020_PIXNAME_paint5d_cpu_pix[0] 
+            );;
+
+
+
+            AAC2020_PIXLOAD_TestPattern(   &( DAT ) );
+            AAC2020_PIXLOAD_UploadTexture( &( DAT ) );
+            
+
+            //:get_paint5d_sampler_location:-----------------://
+            #define HAS_CHK AAC2020_PIXLOAD_HasSampler
+            #define INF_DEC aac2020_paint5d_Info_dec
+
+                //:#_GPUDATA_INPUT_OBJECT_IS_OUTPUT_OBJECT_#://
+                AAC2020_PIXLOAD_sam_has    ( &( DAT ) );
+                AAC2020_PIXLOAD_sam_loc    ( &( DAT ) );
+                AAC2020_PIXLOAD_sam_val_PUT( &( DAT ) );
+
+                if( DAT.sam_has >= 1 && DAT.sam_loc <=(0 - 1) ){
+                    ERR("[FULL_OF_LIES:@VDAWEA@:001]");
+                }else 
+                if( DAT.sam_has <= 0 && DAT.sam_loc >=(  0  ) ){
+                    ERR("[FULL_OF_LIES:@VDAWEA@:002]");
+                };;
+
+                /** Keep the error prone way of doing this   **/
+                /** As a redundancy to check for agreement.  **/
+
+                I32 has = HAS_CHK( "paint5d" );
+                if( DAT.sam_has != has ){ ERR("[WTF:0433AM]");};
+
+                INF_DEC( "[DAT.sam_loc]:%d\n" , DAT.sam_loc );
+                INF_DEC( "[DAT.sam_val]:%d\n" , DAT.sam_val );
+
+            #undef  HAS_CHK
+            #undef  INF_DEC
+            //:-----------------:get_paint5d_sampler_location://
+
+            if( has >= 1 ){
+
+                /** Update Texture Sampler Uniform On GPU **/
+
+                aac2020_pixload_PushSampler(  &( DAT ) );
+
+                /** Persist Changes: **/
+
+                //: TEMP_STRUCT(  DAT  ) --> FILE_SCOPE(  F_S  )
+                F_S( paint5d_tex_lot         ) = DAT.tex_lot ;
+                F_S( paint5d_tex_han         ) = DAT.tex_han ;
+                F_S( paint5d_tex_sam.sam_loc ) = DAT.sam_loc ;
+                F_S( paint5d_tex_sam.sam_val ) = DAT.sam_val ;
+                F_S( paint5d_tex_sam_HAS     ) = DAT.sam_has ;
+                //:                    ( 512 ) = DAT.pix_wid ://
+                //:                    ( 512 ) = DAT.pix_hig ://
+                //:                 "paint5d" ~=~DAT.pix_nam ://
+    
+                aac2020_paint5d_Okay("[HAS_TEXTURE_SAMPLER]");
+            }else{
+
+                /** Whether this is a good or bad message **/
+                /** depends on you looking at code and    **/
+                /** deciding.                             **/
+                INF("[NO_TEXTURE_SAMPLER:PAINT5D]");
+    
+            };;
+           
+        #undef DAT
+        #undef F_S
+        //:------------------------:LOAD_INITIAL_TEXTURE_DATA://
+        //:ERROR_CHECK:--------------------------------------://
+
+            //:#_PAINT5D_DATA_ERROR_CHECK_NOW_POINTLESS_#://
+            
+        //:--------------------------------------:ERROR_CHECK://
+        //:#_INI_SPAM_AND_RECURSION_GAURD_#:-----------------://
+
+            /** DONE initializing. **/
+
+            AAC2020_CEDITOR_dex_ini=( 
+            AAC2020_CEDITOR_paint5d  );;
+
+            /** No editor initializ-ING now. **/
+            AAC2020_CEDITOR_dex_ing=( 0xFFFFFFFF );
+
+        //:-----------------:#_INI_SPAM_AND_RECURSION_GAURD_#://
+        //:Run_Unit_Test_If_Never_Ran_Before:----------------://
+        #define KIL AAC2020_PAINT5D_unreliable_utc_kill_switch
+        #define E_U extern U32
+
+            if( aac2020_paint5d_unit_test_ran_or_running <= 0 ){
+                aac2020_paint5d_unit_test_ran_or_running =( 1 );
+                aac2020_paint5d_unit_test_is_running_now =( 1 );
+
+                if( KIL >= 1 ){
+
+                    srand(time(NULL)); 
+                    I16 rnd_i16 = rand(); //: 0 to 0x7fff
+                    if( rnd_i16 < ( 0x7fff / 20 ) ){
+
+                        /** 0x7fff / 20 : Means: 1 in 20 **/
+
+                        E_U AAC2020_PAINT5D_UnitTest( U32  );
+                            AAC2020_PAINT5D_UnitTest( 0x00 );
+                    };;
+                }else{
+                    if( 1 == 1 ){
+
+                        E_U AAC2020_PAINT5D_UnitTest( U32  );
+                            AAC2020_PAINT5D_UnitTest( 0x00 );
+                    };;
+                };;
+
+                aac2020_paint5d_unit_test_is_running_now =( 0 );
+            };;
+
+        #undef KIL
+        #undef E_U
+        //:----------------:Run_Unit_Test_If_Never_Ran_Before://
+
+        return( 0x00 );
+
+    }
+
+#undef  U32                                           //: 01 ://
+#undef  I32                                           //: 02 ://
+#undef  I16                                           //: 03 ://
+#undef  ERR                                           //: 04 ://
+#undef  O_K                                           //: 05 ://
+#undef  I_D                                           //: 06 ://
+#undef  INF                                           //: 07 ://
+#undef  LOG                                           //: 08 ://
+//:=======================================:INITIALIZE_PAINT5D://
 //:SECTION_UNIT_TEST:========================================://
 //:UNIT_TEST_SECTION:========================================://
 #define MAX_EXP AAC2020_PAINT5D_MAX_til_exp           //: 01 ://
