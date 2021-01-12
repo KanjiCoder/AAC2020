@@ -64,10 +64,11 @@
 //:INITIALIZE_PAINT5D:=======================================://
 #define U32  uint32_t /** GCC: <stdint.h> **/         //: 01 ://
 #define I32   int32_t /** GCC: <stdint.h> **/         //: 02 ://
-#define ERR   aac2020_paint5d_Halt                    //: 03 ://
-#define O_K   aac2020_paint5d_Okay                    //: 04 ://
-#define I_D   aac2020_paint5d_Info_dec                //: 05 ://
-#define INF   aac2020_paint5d_Info                    //: 06 ://
+#define I16   int16_t /** GCC: <stdint.h> **/         //: 03 ://
+#define ERR   aac2020_paint5d_Halt                    //: 04 ://
+#define O_K   aac2020_paint5d_Okay                    //: 05 ://
+#define I_D   aac2020_paint5d_Info_dec                //: 06 ://
+#define INF   aac2020_paint5d_Info                    //: 07 ://
 
     U32
     AAC2020_PAINT5D_Init( U32 u32 )
@@ -227,10 +228,7 @@
 
             //:#_PAINT5D_DATA_ERROR_CHECK_NOW_POINTLESS_#://
             
-
         //:--------------------------------------:ERROR_CHECK://
-
-
         //:#_INI_SPAM_AND_RECURSION_GAURD_#:-----------------://
 
             /** DONE initializing. **/
@@ -242,19 +240,38 @@
             AAC2020_CEDITOR_dex_ing=( 0xFFFFFFFF );
 
         //:-----------------:#_INI_SPAM_AND_RECURSION_GAURD_#://
-
         //:Run_Unit_Test_If_Never_Ran_Before:----------------://
+        #define KIL AAC2020_PAINT5D_unreliable_utc_kill_switch
+        #define E_U extern U32
 
             if( aac2020_paint5d_unit_test_ran_or_running <= 0 ){
                 aac2020_paint5d_unit_test_ran_or_running =( 1 );
                 aac2020_paint5d_unit_test_is_running_now =( 1 );
 
-                extern U32 AAC2020_PAINT5D_UnitTest( U32  );
-                           AAC2020_PAINT5D_UnitTest( 0x00 );
+                if( KIL >= 1 ){
+
+                    srand(time(NULL)); 
+                    I16 rnd_i16 = rand(); //: 0 to 0x7fff
+                    if( rnd_i16 < ( 0x7fff / 20 ) ){
+
+                        /** 0x7fff / 20 : Means: 1 in 20 **/
+
+                        E_U AAC2020_PAINT5D_UnitTest( U32  );
+                            AAC2020_PAINT5D_UnitTest( 0x00 );
+                    };;
+                }else{
+                    if( 1 == 1 ){
+
+                        E_U AAC2020_PAINT5D_UnitTest( U32  );
+                            AAC2020_PAINT5D_UnitTest( 0x00 );
+                    };;
+                };;
 
                 aac2020_paint5d_unit_test_is_running_now =( 0 );
             };;
 
+        #undef KIL
+        #undef E_U
         //:----------------:Run_Unit_Test_If_Never_Ran_Before://
 
         return( 0x00 );
@@ -263,10 +280,11 @@
 
 #undef  U32                                           //: 01 ://
 #undef  I32                                           //: 02 ://
-#undef  ERR                                           //: 03 ://
-#undef  O_K                                           //: 04 ://
-#undef  I_D                                           //: 05 ://
-#undef  INF                                           //: 06 ://
+#undef  I16                                           //: 03 ://
+#undef  ERR                                           //: 04 ://
+#undef  O_K                                           //: 05 ://
+#undef  I_D                                           //: 06 ://
+#undef  INF                                           //: 07 ://
 //:=======================================:INITIALIZE_PAINT5D://
 //:HELPER_FUNCTIONS:GENERIC:=================================://
 #define I32  int32_t /** GCC: <stdint.h> **/
@@ -2148,10 +2166,12 @@
         //:----------------------------------:tile_value:READ://
         //:tile_value:TRANSFORM:-----------------------------://
 
+            assert( 3 == AAC2020_PAINT5D_MAX_til_val );
+
             til_val =CAP( 
                 (I32)til_val + del_t_v 
             ,   (U16) 0 //:<---[ @HARD_CODED@ ]
-            ,   (U16)15 //:<---[ @HARD_CODED@ ]
+            ,   (U16) 3 //:<---[ @HARD_CODED@ ]
             );;
 
         //:-----------------------------:tile_value:TRANSFORM://
@@ -2176,7 +2196,7 @@
         I32 del_t_e /** Delta: TileExponent( t_e ) **/
     )
     {
-        U32 til_val; /** [ TileValue / Tile_Value / til_val ]**/
+        U32 til_exp; /** [ Tile_Exponent / til_exp ] **/
         U32     u_1; /** Unused # 1 **/
         U32     u_2; /** Unused # 2 **/
         U32     u_3; /** Unused # 3 **/
@@ -2186,18 +2206,44 @@
             AAC2020_TAUDEPO_Get( 
                 AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
             ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
-            ,   AAC2020_TAUDEPO.P5D_T_V //:DEX_VAR : [ TIL_VAL ]
-            ,  &(til_val),&(u_1),&(u_2),&(u_3)
+            ,   AAC2020_TAUDEPO.P5D_T_E //:DEX_VAR : [ TIL_EXP ]
+            ,  &(til_exp),&(u_1),&(u_2),&(u_3)
             );;
 
         //:----------------------------------:tile_value:READ://
         //:tile_value:TRANSFORM:-----------------------------://
 
-            til_val =CAP( 
-                (I32)til_val + del_t_e 
+            //:##############################################://
+            #if( AAC2020_PAINT5D_MISC_INLINED_TESTS >= 1 ) 
+
+                U32 original_tile_exponent =( til_exp );
+
+            #endif //:#######################################://
+            //:##############################################://
+
+            assert( 15 == AAC2020_PAINT5D_MAX_aus_dex );
+
+            til_exp =CAP( 
+                (I32)til_exp + del_t_e 
             ,   (U16) 0 //:<---[ @HARD_CODED@ ]
             ,   (U16)15 //:<---[ @HARD_CODED@ ]
             );;
+
+            //:##############################################://
+            #if( AAC2020_PAINT5D_MISC_INLINED_TESTS >= 1 ) 
+
+                if( 0 == original_tile_exponent ){
+                if( 1 == del_t_e ){
+
+                    if( 1 != til_exp ){
+                        printf("[til_exp]:%d\n",til_exp);
+                        ERR("[YOUR_CAP_FUNCTION_SUCKS_2021]");
+                    };;
+
+                };;};;
+
+            #endif //:#######################################://
+            //:##############################################://
 
         //:-----------------------------:tile_value:TRANSFORM://
         //:tile_value:WRITE:---------------------------------://
@@ -2205,8 +2251,8 @@
             AAC2020_TAUDEPO_Put( 
                 AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
             ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
-            ,   AAC2020_TAUDEPO.P5D_T_V //:DEX_VAR : [TIL_VAL  ]
-            ,   (til_val), (u_1), (u_2), (u_3)
+            ,   AAC2020_TAUDEPO.P5D_T_E //:DEX_VAR : [ TIL_EXP ]
+            ,   (til_exp), (u_1), (u_2), (u_3)
             );;
 
         //:---------------------------------:tile_value:WRITE://
@@ -2238,6 +2284,8 @@
         //:----------------------------------:tile_value:READ://
         //:tile_value:TRANSFORM:-----------------------------://
  
+            assert( 2 == AAC2020_PAINT5D_MAX_til_lay );
+
             til_lay =CAP( 
                 (I32)til_lay + del_t_l 
             ,   (U16) 0 //:<---[ @HARD_CODED@ ]
@@ -3664,7 +3712,7 @@
         void
         aac2020_paint5d_UTC_ZoomCamera( void )
         {
-        #define NUMBER_OF_TESTS (        12 ) /**TWELVE(12)  **/
+        #define NUMBER_OF_TESTS (        22 ) /**TWENTY_2(22)**/
         #define NUMBER_OF_TEST_ELEMENTS ( 9 ) /**   NINE(9)  **/
             //:variable_declare:-----------------------------://
 
@@ -3757,6 +3805,30 @@
         ,   255, 255, 255, 255 ,0+    1   ,   255, 255, 255, 255
         ,   255, 255, 255, 255 ,0-    1   ,   253, 255, 253, 255
         //:_x_0 _x_1 _y_0 _y_1               _x_0 _x_1 _y_0 _y_1
+
+        //: 9 extra tests where we DONT hit the boarders:
+        //: @VID_IID[ 0084 ]TIME[ 00:06:50 ]
+
+        //:_x_0 _x_1 _y_0 _y_1               _x_0 _x_1 _y_0 _y_1
+        ,   100, 200, 100, 200 ,   0x00   ,   100, 200, 100, 200
+        ,   100, 200, 100, 200 ,0+    1   ,   101, 199, 101, 199
+        ,   100, 200, 100, 200 ,0-    1   ,    99, 201,  99, 201
+
+        //:_x_0 _x_1 _y_0 _y_1               _x_0 _x_1 _y_0 _y_1
+        ,   100, 200, 0x0, 100 ,   0x00   ,   100, 200, 0x0, 100
+        ,   100, 200, 0x0, 100 ,0+    1   ,   101, 199,   1,  99
+        ,   100, 200, 0x0, 100 ,0-    1   ,    99, 201, 0x0, 102
+
+        //:_x_0 _x_1 _y_0 _y_1               _x_0 _x_1 _y_0 _y_1
+        ,   0x0, 100, 100, 200 ,   0x00   ,   0x0, 100, 100, 200
+        ,   0x0, 100, 100, 200 ,0+    1   ,     1,  99, 101, 199
+        ,   0x0, 100, 100, 200 ,0-    1   ,   0x0, 102,  99, 201
+
+        //: @VID_IID[ 0084 ]TIME[ 00:18:48 ]
+        //: ONE MORE TEST AND THEN FVCK THIS SHIT.
+
+        //:_x_0 _x_1 _y_0 _y_1               _x_0 _x_1 _y_0 _y_1
+        ,   0x0,   3, 0x0,   3 , 0-9001   ,   0x0, 255, 0x0, 255
 
         //: STARTING_CAMERA_PAB     ZOOM     ENDING_CAMERA_PAB
         //: inn_ inn_ inn_ inn_   tra_ tra_  exp_ exp_ exp_ exp_
@@ -3896,8 +3968,6 @@
                 #undef  MAX_Y_1                       //: 08 ://
                 //:-----------:check_against_expected_outputs://
             };; //:NEXT[ t_i (test_index ) ]
-
-            ERR("[DO_MORE_TEST_CASES:20201:649PM]");
 
             AAC2020_TODOMAN_Vital( "[TODO_FINISH_TEST:ZOOMCAMERA]" );
             return;
@@ -4371,10 +4441,16 @@
                     if( 0 != failed_unit_test ){
 
                         /** Print Off Test Index **/
+                        printf("\n\n");
                         printf("[t_i]:%d\n", t_i );
 
-                        printf("[act_T_E:exp_T_E]:(%d):(%d)\n"
-                        , act_T_E , exp_T_E );;
+                        printf("[inn_T_E]:%d\n", inn_T_E);
+                        printf("[off_T_E]:%d\n", off_T_E);
+                        printf("[exp_T_E]:%d\n", exp_T_E);
+                        printf("\n\n");
+
+                        printf("[act_T_E:::exp_T_E]:(%d):(%d)\n"
+                               , act_T_E , exp_T_E );;
 
                         ERR("[BRUSH_TILE_EXPONENT_TEST_FAIL]");
                     };;
@@ -4472,7 +4548,7 @@
                 //:----------------:set_initial_camera_bounds://
                 //:apply_camera_translation:-----------------://
 
-                    aac2020_paint5d_DeltaMutate_TileExponent(
+                    aac2020_paint5d_DeltaMutate_TileLayer(
                         off_T_L //: del_t_l :............
                     );;         //: ( Delta Tile LAYER )
 

@@ -390,8 +390,20 @@
 //:DEBUG_VARIABLES:==========================================://
 #define I32 int32_t /** GCC: <stdint.h> **/
 #define U08 uint8_t /** GCC: <stdint.h> **/
+#define ZER (  0  ) /** @VID_IID[ 0084 ]TIME[ 00:53:30 ] **/
 
-    I32 AAC2020_PAINT5D_init_call_count =( 0 );
+    /** @VID_IID[ 0084 ]TIME[ 00:39:12 ] ................... **/
+    /** Usually turns off unit tests, but not 100% of time.  **/
+    /** This is to avoid code rot while still saving time    **/
+    /** When we have long running unit tests.                **/
+    U08 AAC2020_PAINT5D_unreliable_utc_kill_switch=( 1 );
+
+    I32 AAC2020_PAINT5D_init_call_count ={ ZER };
+
+    /** @VID_IID[ 0084 ]TIME[ 01:07:10 ] ....................**/
+    /** For tests that are NOT inside unit test code but     **/
+    /** rather inlined into the functions themselves.        **/
+    #define AAC2020_PAINT5D_MISC_INLINED_TESTS ( 0 )
 
     #define AAC2020_PAINT5D_BOUND_CHECK_INPUTS ( 1 )
 
@@ -402,8 +414,8 @@
         /** The redundancy is NOT NEEDED and is only there   **/
         /** to make the code more readable.                  **/
         
-        U08 aac2020_paint5d_unit_test_ran_or_running = ( 0 );
-        U08 aac2020_paint5d_unit_test_is_running_now = ( 0 );
+        U08 aac2020_paint5d_unit_test_ran_or_running ={ ZER };
+        U08 aac2020_paint5d_unit_test_is_running_now ={ ZER };
 
         //:----------------------------------:unit_test_flags://
 
@@ -413,4 +425,5 @@
 
 #undef  U08
 #undef  I32
+#undef  ZER
 //:==========================================:DEBUG_VARIABLES://
