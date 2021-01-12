@@ -2736,6 +2736,33 @@
 #undef  I32
 #undef  KEY_P5D
 //:================================:KEYBOARD_HANDLER:(KeyInn)://
+//:SUB_SYSTEM_BACKUP_CODE:===================================://
+#define U08 uint8_t /** GCC: <stdint.h> **/
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    void
+    AAC2020_PAINT5D_Backup_taudirt(
+        U08* *BYREF_taudirt
+    )
+    {
+        AAC2020_TAUDIRT_Backup_taudirt( BYREF_taudirt );
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    void
+    AAC2020_PAINT5D_Restore_taudirt(
+        U08* *BYREF_taudirt
+    )
+    {
+        AAC2020_TAUDIRT_Restore_taudirt( BYREF_taudirt );
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+#undef  U08
+//:===================================:SUB_SYSTEM_BACKUP_CODE://
 //:SECTION_UNIT_TEST:========================================://
 //:UNIT_TEST_SECTION:========================================://
 #define MAX_EXP AAC2020_PAINT5D_MAX_til_exp           //: 01 ://
@@ -2805,7 +2832,7 @@
             U08* taudepo =((void*)0); /** USED    SYSTEM     **/
             U08* paint5d =((void*)0); /** CURRENT SYSTEM     **/
             
-            AAC2020_PIXBACK_Backup_taudirt( &(taudirt) );
+            AAC2020_PAINT5D_Backup_taudirt( &(taudirt) );
             AAC2020_PIXBACK_Backup_taudepo( &(taudepo) );
             AAC2020_PIXBACK_Backup_paint5d( &(paint5d) );
 
@@ -2852,7 +2879,7 @@
                 assert( ((void*)0) != taudepo );
                 assert( ((void*)0) != paint5d );
 
-                AAC2020_PIXBACK_Restore_taudirt( &(taudirt) );
+                AAC2020_PAINT5D_Restore_taudirt( &(taudirt) );
                 AAC2020_PIXBACK_Restore_taudepo( &(taudepo) );
                 AAC2020_PIXBACK_Restore_paint5d( &(paint5d) );
 
