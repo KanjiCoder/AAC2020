@@ -1436,6 +1436,19 @@
 #undef  ERR                                           //: 05 ://
 //:=================================:PAINT5D_QUARKMAP_GET_PUT://
 //:=================================:PAINT5D_QUARKMAP_PUT_GET://
+//:OPEN_GL_PAINT5D_Get:======================================://
+//:OPEN_GL_PAINT5D_painpix_CTO_glocpix:======================://
+
+    /** @VID_IID[ 0085 ]TIME[ 01:04:20 ] ************ **/
+    /** We want this code to be written in a way that **/
+    /** it can be cut+paste easily into our GLSL      **/
+    /** shaders with minimal changes.                 **/
+    /** ********************************************* **/
+
+    #include "./OPEN_GL_HAKCODE/P5D_OGL._"
+
+//:======================:OPEN_GL_PAINT5D_painpix_CTO_glocpix://
+//:======================================:OPEN_GL_PAINT5D_Get://
 //:CREATED_TO_HELP_UNIT_TEST_USER_CONTROLS:==================://
 //:ORIGINALLY_NOT_WIRED_INTO_KEYBOARD:=======================://
 #define I32  int32_t /** GCC: <stdint.h> **/          //: 01 ://
@@ -3006,7 +3019,7 @@
 
                     srand(time(NULL)); 
                     I16 rnd_i16 = rand(); //: 0 to 0x7fff
-                    if( rnd_i16 < ( 0x7fff / 20 ) ){
+                    if( rnd_i16 < ( 0x7fff / 10 ) ){
 
                         /** 0x7fff / 20 : Means: 1 in 20 **/
 
