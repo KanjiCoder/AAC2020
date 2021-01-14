@@ -14,6 +14,7 @@
 #define I32 int32_t /** GCC: <stdint.h> **/
 #define IV2   struct AAC2020_OPEN_GL_IV2
 
+
         U32
         aac2020_polyfill_texel_fetch(
             I32 texture_to_sample_DONT_USE
@@ -24,15 +25,37 @@
             /** @VID_IID[ 0085 ]TIME[ 02:40:05 ] ******* **/
             if( texture_to_sample_DONT_USE ){ /** NOOP **/ };
             if(   level_of_detail_DONT_USE ){ /** NOOP **/ };
+            /** **************************************** **/
+
+            U32 u32_var; /** Output 32 bit pixel value. **/
 
             I32 glo_dex; /** Global Pixel Index **/
             I32 glo_com; /** Global Comp. Index **/
             glo_dex = glo.x + ( glo.y  *  512 );
             glo_com =( glo_dex * 4  );
 
-            return( 
-            AAC2020_PIXNAME_paint5d_cpu_pix[ glo_com ]
-            );;
+            //:BIT_PACK_YOUR_PIXEL:--------------------------://
+            #define CPU_PIX AAC2020_PIXNAME_paint5d_cpu_pix
+
+                /** **************************************** ***
+                    @VID_IID[ 0086 ]TIME[ 01:29:10 ]
+                    Bit shifting code copied directly from
+                    aac2020_paint5d_UTC_BitPack_Get 's bitshift
+                    code because we are really good at fucking
+                    up trivial bit shifting code.
+                *** **************************************** **/
+
+                u32_var=( 0x00 
+                | ( CPU_PIX[ glo_com + 0 ] << 24 ) //: R ://
+                | ( CPU_PIX[ glo_com + 1 ] << 16 ) //: G ://
+                | ( CPU_PIX[ glo_com + 2 ] <<  8 ) //: B ://
+                | ( CPU_PIX[ glo_com + 3 ] <<  0 ) //: A ://
+                );;  /** @PAIRED_BITPACKING_CODE_2021_01_14@ **/
+
+            #undef  CPU_PIX
+            //:--------------------------:BIT_PACK_YOUR_PIXEL://
+           
+            return( u32_var );
         }
 
 #undef  U32
@@ -70,17 +93,17 @@
         {                                          //: x ://
         #define BIN_011 ( 3 )                      //: x ://
                                                    //: x ://
-            U32 var_u32 ;                          //: x ://
+            U32 u32_var ;                          //: x ://
             U32 til_val ;                          //: x ://
                                                    //: x ://
-            var_u32 = T_F(                         //: x ://
+            u32_var = T_F(                         //: x ://
                 P5D //:texture_to_sample           //: x ://
             ,   glo //:integer_texel_coord         //: x ://
             ,    0  //:level_of_detail_zero        //: x ://
             );;                                    //: x ://
                                                    //: x ://
             til_val =(                             //: x ://
-                ( var_u32 >> (aus_dex*2) )         //: x ://
+                ( u32_var >> (aus_dex*2) )         //: x ://
                 &                                  //: x ://
                 BIN_011                            //: x ://
             );;                                    //: x ://
@@ -124,7 +147,7 @@
         #define T til_exp                          //: x ://
         #define D diagpix                          //: x ://
                                                    //: x ://
-            I32 diagpix;                           //: x ://
+            I32 diagpix =( 9999 );                 //: x ://
                                                    //: x ://
             //:@VID_IID[ 0085 ]TIME[ 01:53:00 ]    //: x ://
             //:TODO: Make into lookup table:       //: x ://
@@ -142,7 +165,7 @@
                 /// if out of range, ///           //: x ://
                 /// set to invalid   ///           //: x ://
                 /// config pixel.    ///           //: x ://
-                D = 255 ;                          //: x ://
+                D = 9001 ;                         //: x ://
                                                    //: x ://
             };;                                    //: x ://
                                                    //: x ://

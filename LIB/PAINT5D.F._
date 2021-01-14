@@ -1445,6 +1445,7 @@
     /** shaders with minimal changes.                 **/
     /** ********************************************* **/
 
+    /** contains: aac2020_P5D_OGL_UnitTest **/
     #include "./OPEN_GL_HAKCODE/P5D_OGL._"
 
 //:======================:OPEN_GL_PAINT5D_painpix_CTO_glocpix://
@@ -3033,6 +3034,19 @@
                             AAC2020_PAINT5D_UnitTest( 0x00 );
                     };;
                 };;
+
+                /** **************************************** **/
+                /** @VID_IID[ 0086 ]TIME[ 00:08:40 ]         **/
+                /** @VID_IID[ 0086 ]TIME[ 00:45:40 ]         **/
+                /** Always run this unit test. Tests  file   **/
+                /** OPEN_GL_HAKCODE/P5D_OGL._ ************** **/
+                #define E_V extern void
+
+                    E_V aac2020_P5D_OGL_UnitTest( void );
+                        aac2020_P5D_OGL_UnitTest(      );
+
+                #undef  E_V
+                /** **************************************** **/
 
                 aac2020_paint5d_unit_test_is_running_now =( 0 );
             };;
@@ -5913,7 +5927,7 @@
                 | ( cpu_pix[ glo_com + 1 ] << 16 ) //: G ://
                 | ( cpu_pix[ glo_com + 2 ] <<  8 ) //: B ://
                 | ( cpu_pix[ glo_com + 3 ] <<  0 ) //: A ://
-                );;
+                );;  /** @PAIRED_BITPACKING_CODE_2021_01_14@ **/
 
                 /** replace correct 2 bits within u32_var **/
                 u32_var=(
@@ -7789,3 +7803,303 @@
 #undef  LOG                                           //: 11 ://
 //:========================================:UNIT_TEST_SECTION://
 //:========================================:SECTION_UNIT_TEST://
+//:UNIT_TEST_SECTION:P5D_OGL:================================://
+#define U08  uint8_t /** GCC: <stdint.h> **/          //: 01 ://
+#define I08   int8_t /** GCC: <stdint.h> **/          //: 02 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 03 ://
+#define I32  int32_t /** GCC: <stdint.h> **/          //: 04 ://
+#define I16  int16_t /** GCC: <stdint.h> **/          //: 05 ://
+#define ERR  aac2020_paint5d_Halt                     //: 06 ://
+
+    void
+    aac2020_P5D_OGL_UnitTest( void )
+    {
+
+        //:SYSTEM_DATA:BACKUP:-------------------------------://
+
+            /** taudirt : AAC2020_TAUDIRT_DIR_ANY            **/
+            /** taudepo : AAC2020_PIXNAME_taudepo_cpu_pix    **/
+            /** paint5d : AAC2020_PIXNAME_paint5d_cpu_pix    **/
+                                                             
+            U08* taudirt =((void*)0); /** DIRTY   TREE       **/
+            U08* taudepo =((void*)0); /** USED    SYSTEM     **/
+            U08* paint5d =((void*)0); /** CURRENT SYSTEM     **/
+
+            extern void 
+            AAC2020_PAINT5D_Backup_taudirt( U08** );;
+            AAC2020_PAINT5D_Backup_taudirt( &(taudirt) );
+
+            AAC2020_PIXBACK_Backup_taudepo( &(taudepo) );
+            AAC2020_PIXBACK_Backup_paint5d( &(paint5d) );
+
+            AAC2020_TODOMAN_Vital(
+                "[FIX:taudirt_backup_is_invalid_back_reference]"
+            );;
+
+        //:-------------------------------:SYSTEM_DATA:BACKUP://
+        //:RUN_UNIT_TESTS:-----------------------------------://
+
+            /** utc: unit test code **/
+            extern void aac2020_P5D_OGL_utc_private( void );
+                        aac2020_P5D_OGL_utc_private( );
+
+        //:-----------------------------------:RUN_UNIT_TESTS://
+        //:SYSTEM_DATA:RESTORE:------------------------------://
+            //:assert_different_pointers:--------------------://
+
+                assert( taudirt != taudepo );
+                assert( taudirt != paint5d );
+
+                assert( taudepo != taudirt );
+                assert( taudepo != paint5d );
+
+                assert( paint5d != taudirt );
+                assert( paint5d != taudepo );
+
+            //:--------------------:assert_different_pointers://
+            //:more_asserts_and_data_restore:----------------://
+
+                /** @VID_IID[ 0075 ]TIME[ 00H 58M 55S ] **/
+                assert( ((void*)0) != taudirt );
+                assert( ((void*)0) != taudepo );
+                assert( ((void*)0) != paint5d );
+
+                extern void
+                AAC2020_PAINT5D_Restore_taudirt( U08** );
+                AAC2020_PAINT5D_Restore_taudirt( &(taudirt) );
+
+                AAC2020_PIXBACK_Restore_taudepo( &(taudepo) );
+                AAC2020_PIXBACK_Restore_paint5d( &(paint5d) );
+
+                /** @VID_IID[ 0075 ]TIME[ 00H 57M 05S ] **/
+                assert( ((void*)0) == taudirt );
+                assert( ((void*)0) == taudepo );
+                assert( ((void*)0) == paint5d );
+
+            //:----------------:more_asserts_and_data_restore://
+        //:------------------------------:SYSTEM_DATA:RESTORE://
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    aac2020_P5D_OGL_utc_private( void )
+    {
+    #define E_V extern void
+
+    
+        /** @VID_IID[ 0086 ]TIME[ 01:06:55 ] *************** **/
+        /** We only care that this test passes. So only      **/
+        /** write enough test code for OTHER functions in    **/
+        /** P5D_OGL._ as to figure out how to fix the        **/
+        /** code and get this function working properly.     **/
+
+        E_V aac2020_P5D_OGL_utc_PAINT5D_get( void );
+            aac2020_P5D_OGL_utc_PAINT5D_get(      );
+
+        /** ************************************************ **/
+
+    #undef  E_V
+    }
+
+    void
+    aac2020_P5D_OGL_utc_PAINT5D_get( void )
+    {
+        //:variable_declare:---------------------------------://
+
+            /** iterate over every pixel of bitmap **/
+            I32 p_x; //:Pixel X
+            I32 p_y; //:Pixel Y
+            I32 aus; //:auset index
+
+            /** for original functions **/
+            U08 u08_til_qua ;
+            U08 u08_til_exp ;
+            U08 u08_til_lay ;
+            U08 u08_loc_t_x ;
+            U08 u08_loc_t_y ;
+            I16 i16_glo_t_x ;
+            I16 i16_glo_t_y ;
+
+            /** for original functions **/
+            U08 u08_aus_dex ;
+            U08 u08_til_val ;
+
+            /** for return from GLSL version of function. **/
+            U32 u32_til_val ;
+
+            /** for determining if we passed tests or not. **/
+            I08 i08_u32_til_val ;
+            I08 i08_u08_til_val ;
+
+        //:---------------------------------:variable_declare://
+
+        u08_til_val=( 0 );
+        for( p_y = 0 ; p_y <= ( 512-1 ) ; p_y ++ ){
+        for( p_x = 0 ; p_x <= ( 512-1 ) ; p_x ++ ){
+        for( aus = 0 ; aus <= (   15  ) ; aus ++ ){
+        /** #_SCANLINE_ORDER_MEANS_Y_IS_THE_OUTER_LOOP_# **/
+
+            //:IDENTICAL_CODE_IN_BOTH_LOOPS:-----------------://
+            u08_aus_dex =( (U08)aus );
+            u08_til_val++;
+            if( u08_til_val >  3 ){ u08_til_val = 0; };
+            /** @VID_IID[ 0086 ]TIME[ 01:12:00 ] **/
+            /** SKIP THE CONFIGURATION PIXELS.   **/
+            if( 255 == p_x && 255 == p_y ){ continue; };
+            if( 511 == p_x && 255 == p_y ){ continue; };
+            if( 255 == p_x && 511 == p_y ){ continue; };
+            if( 511 == p_x && 511 == p_y ){ continue; };
+            //:-----------------:IDENTICAL_CODE_IN_BOTH_LOOPS://
+
+            aac2020_paint5d_glocpix_CTO_painpix(
+              &(u08_til_qua )            //: U08* ://
+            , &(u08_til_exp )            //: U08* ://
+            , &(u08_til_lay )            //: U08* ://
+            , &(u08_loc_t_x )            //: U08* ://
+            , &(u08_loc_t_y )            //: U08* ://
+            ,  (i16_glo_t_x = (I16)p_x ) //: I16  ://
+            ,  (i16_glo_t_y = (I16)p_y ) //: I16  ://
+            );;
+
+            AAC2020_PAINT5D_Put(
+               u08_til_qua  //:  U08  ://
+            ,  u08_til_exp  //:  U08  ://
+            ,  u08_til_lay  //:  U08  ://
+            ,  u08_loc_t_x  //:  U08  ://
+            ,  u08_loc_t_y  //:  U08  ://
+            ,  u08_aus_dex  //:  U08  ://
+            ,  u08_til_val  //:  U08  ://
+            );;          
+
+            /** Use GLSL version of getter **/
+            u32_til_val=(                                    
+                OPEN_GL_PAINT5D_Get(                       
+                    (I32)u08_til_qua                           
+                ,   (I32)u08_til_exp                           
+                ,   (I32)u08_til_lay                           
+                ,   (I32)u08_loc_t_x                           
+                ,   (I32)u08_loc_t_y                           
+                ,   (I32)u08_aus_dex   
+                ));;
+
+                 i08_u32_til_val = ((I08)u32_til_val) ;
+                 i08_u08_til_val = ((I08)u08_til_val) ;
+            if(  i08_u32_til_val
+            !=   i08_u08_til_val
+            ){
+                printf("\n\n\n");
+                //:Does_Original_Ganster_Get_Fail_Too?:------://
+                U08 O_G_til_val;    /** O_G:original_ganster **/
+                AAC2020_PAINT5D_Get(
+                   u08_til_qua  //:  U08  ://
+                ,  u08_til_exp  //:  U08  ://
+                ,  u08_til_lay  //:  U08  ://
+                ,  u08_loc_t_x  //:  U08  ://
+                ,  u08_loc_t_y  //:  U08  ://
+                ,  u08_aus_dex  //:  U08  ://
+                ,&(O_G_til_val) //:  U08  ://
+                );;   
+                if( O_G_til_val == u08_til_val ){
+                    printf("[TRANSCRIPTION_PROBLEM_RED]\n");
+                }else{
+                    printf("[THIS_IS_MUCH_MUCH_WORSE_RED]\n");
+                };;
+                //:------:Does_Original_Ganster_Get_Fail_Too?://
+
+                printf("[p_x,p_y]:(%d,%d)\n",p_x,p_y);
+
+                printf("[O_G_til_val]:%d\n"
+                ,        O_G_til_val );;
+
+                printf("[i08_u32_til_val]:%d\n"
+                ,        i08_u32_til_val );;
+
+                printf("[i08_u08_til_val]:%d\n"
+                ,        i08_u08_til_val );;
+
+                ERR("[FAILED_GLSL_TEST_OF_PAINT5D:001]");
+            };;
+
+        };;};;};;
+
+        /** RUN A 2ND TIME WITH ONLY GETTER TO DETECT        **/
+        /** MEMORY STOMPS. @VID_IID[ 0086 ]TIME[ 00:37:08 ]  **/
+
+        u08_til_val=( 0 );
+        for( p_y = 0 ; p_y <= ( 512-1 ) ; p_y ++ ){
+        for( p_x = 0 ; p_x <= ( 512-1 ) ; p_x ++ ){
+        for( aus = 0 ; aus <= (   15  ) ; aus ++ ){
+        /** #_SCANLINE_ORDER_MEANS_Y_IS_THE_OUTER_LOOP_# **/
+
+            //:IDENTICAL_CODE_IN_BOTH_LOOPS:-----------------://
+            u08_aus_dex =( (U08)aus );
+            u08_til_val++;
+            if( u08_til_val >  3 ){ u08_til_val = 0; };
+            /** @VID_IID[ 0086 ]TIME[ 01:12:00 ] **/
+            /** SKIP THE CONFIGURATION PIXELS.   **/
+            if( 255 == p_x && 255 == p_y ){ continue; };
+            if( 511 == p_x && 255 == p_y ){ continue; };
+            if( 255 == p_x && 511 == p_y ){ continue; };
+            if( 511 == p_x && 511 == p_y ){ continue; };
+            //:-----------------:IDENTICAL_CODE_IN_BOTH_LOOPS://
+
+            /** Use GLSL version of getter **/
+            u32_til_val=(                                    
+                OPEN_GL_PAINT5D_Get(                       
+                    (I32)u08_til_qua                           
+                ,   (I32)u08_til_exp                           
+                ,   (I32)u08_til_lay                           
+                ,   (I32)u08_loc_t_x                           
+                ,   (I32)u08_loc_t_y                           
+                ,   (I32)u08_aus_dex   
+                ));;
+
+                 i08_u32_til_val = ((I08)u32_til_val) ;
+                 i08_u08_til_val = ((I08)u08_til_val) ;
+            if(  i08_u32_til_val
+            !=   i08_u08_til_val
+            ){
+                printf("\n\n\n");
+                //:Does_Original_Ganster_Get_Fail_Too?:------://
+                U08 O_G_til_val;    /** O_G:original_ganster **/
+                AAC2020_PAINT5D_Get(
+                   u08_til_qua  //:  U08  ://
+                ,  u08_til_exp  //:  U08  ://
+                ,  u08_til_lay  //:  U08  ://
+                ,  u08_loc_t_x  //:  U08  ://
+                ,  u08_loc_t_y  //:  U08  ://
+                ,  u08_aus_dex  //:  U08  ://
+                ,&(O_G_til_val) //:  U08  ://
+                );;   
+                if( O_G_til_val == u08_til_val ){
+                    printf("[TRANSCRIPTION_PROBLEM_BLUE]\n");
+                }else{
+                    printf("[THIS_IS_MUCH_MUCH_WORSE_BLUE]\n");
+                };;
+                //:------:Does_Original_Ganster_Get_Fail_Too?://
+
+                printf("[p_x,p_y]:(%d,%d)\n",p_x,p_y);
+
+                printf("[O_G_til_val]:%d\n"
+                ,        O_G_til_val );;
+
+                printf("[i08_u32_til_val]:%d\n"
+                ,        i08_u32_til_val );;
+
+                printf("[i08_u08_til_val]:%d\n"
+                ,        i08_u08_til_val );;
+
+                ERR("[FAILED_GLSL_TEST_OF_PAINT5D:002]");
+            };;
+    
+        };;};;};;
+
+    }
+
+#undef  U08                                           //: 01 ://
+#undef  I08                                           //: 02 ://
+#undef  U32                                           //: 03 ://
+#undef  I32                                           //: 04 ://
+#undef  I16                                           //: 05 ://
+#undef  ERR                                           //: 06 ://
+//:================================:UNIT_TEST_SECTION:P5D_OGL://
