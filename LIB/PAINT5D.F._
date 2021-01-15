@@ -7885,7 +7885,33 @@
     aac2020_P5D_OGL_utc_private( void )
     {
     #define E_V extern void
+    #define   V        void
 
+        /** ************************************************ **/
+        /** Functions are tested in order:               * * **/
+        /** Lowest Level --> to --> Highest Level        * * **/
+        /** AKA: Most depended on to least depended on.  * * **/
+        /** @VID_IID[ 0087 ]TIME[ 00:23:32 ] *************** **/
+        /** ************************************************ **/
+
+        E_V aac2020_P5D_OGL_utc_polyfill_texel_fetch( void );
+            aac2020_P5D_OGL_utc_polyfill_texel_fetch(      );
+
+        /** TEST:       OPEN_GL_PAINT5D_BitPack_Get( )**/
+        E_V aac2020_P5D_OGL_utc_PAINT5D_BitPack_Get(V);
+            aac2020_P5D_OGL_utc_PAINT5D_BitPack_Get( );
+
+        /** TEST:       OPEN_GL_PAINT5D_til_exp_CTO_max_cor()**/
+        E_V aac2020_P5D_OGL_utc_PAINT5D_til_exp_CTO_max_cor(V);
+            aac2020_P5D_OGL_utc_PAINT5D_til_exp_CTO_max_cor( );
+
+        /** TEST:       OPEN_GL_PAINT5D_til_exp_CTO_diagpix()**/
+        E_V aac2020_P5D_OGL_utc_PAINT5D_til_exp_CTO_diagpix(V);
+            aac2020_P5D_OGL_utc_PAINT5D_til_exp_CTO_diagpix( );
+
+        /** TEST:       OPEN_GL_PAINT5D_painpix_CTO_glocpix()**/
+        E_V aac2020_P5D_OGL_utc_PAINT5D_painpix_CTO_glocpix(V);
+            aac2020_P5D_OGL_utc_PAINT5D_painpix_CTO_glocpix( );
     
         /** @VID_IID[ 0086 ]TIME[ 01:06:55 ] *************** **/
         /** We only care that this test passes. So only      **/
@@ -7893,16 +7919,341 @@
         /** P5D_OGL._ as to figure out how to fix the        **/
         /** code and get this function working properly.     **/
 
-        E_V aac2020_P5D_OGL_utc_PAINT5D_get( void );
-            aac2020_P5D_OGL_utc_PAINT5D_get(      );
+        /** TEST:       OPEN_GL_PAINT5D_Get(......); ******* **/
+        E_V aac2020_P5D_OGL_utc_PAINT5D_Get( void );
+            aac2020_P5D_OGL_utc_PAINT5D_Get(      );
 
         /** ************************************************ **/
 
     #undef  E_V
+    #undef    V
     }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void aac2020_P5D_OGL_utc_polyfill_texel_fetch( void )
+    {
+    #define IV2 struct AAC2020_OPEN_GL_IV2
+    #define BIN_011 ( 3 ) /** binary: 11 **/
 
-    void
-    aac2020_P5D_OGL_utc_PAINT5D_get( void )
+        /** ************************************************ **/
+        /** @VID_IID[ 0088 ]TIME[ 00:53:50 ]                 **/                    
+        /** We don't actually have a CPU side texel fetch    **/
+        /** function to compare the P5D_OGL._ code against...**/
+        /** So I am not sure exactly how we will be testing  **/
+        /** this code.                                       **/
+        /** ************************************************ **/
+        //:..................................................://
+        U08*    cpu_pix =( AAC2020_PIXNAME_paint5d_cpu_pix );
+        //:..................................................://
+        U32     u32_var       ; //:pixel_value_to_store
+        U32     u32_got       ; //:value got from texel fetch 
+        //:..................................................://
+        U32         C_r       ; //:check_what_you_put
+        U32         C_g       ; //:check_what_you_put
+        U32         C_b       ; //:check_what_you_put
+        U32         C_a       ; //:check_what_you_put
+        //:..................................................://    
+        U32         B_r =( 0 ); //:BYTE: red
+        U32         B_g =( 0 ); //:BYTE: green
+        U32         B_b =( 0 ); //:BYTE: blue
+        U32         B_a =( 0 ); //:BYTE: alpha
+        //:..................................................://      
+        I32         p_x       ; //:pixel x
+        I32         p_y       ; //:pixel y
+        I32     glo_com       ; //:global component index
+        IV2         glo       ; //:global_xy == [ p_x , p_y ]
+        //:..................................................://
+        U08         a_d       ; //:Auset_inDex
+        U08         t_v       ; //:Tile_Value
+        U32     rbp_001       ; //:Re_Built_Pixel: Method #1
+        U32     rbp_002       ; //:Re_Built_Pixel: Method #2
+        U08         ad2       ; //:Auset_inDex times TWO(2)
+
+        u32_var=( 0 );
+        for( p_y = 0 ; p_y <= ( 512-1 ) ; p_y ++ ){
+        for( p_x = 0 ; p_x <= ( 512-1 ) ; p_x ++ ){
+
+            /** Increment with primes. **/
+            B_r += 1 ; if( B_r > 255 ){ B_r = B_r - 255; };
+            B_g += 3 ; if( B_g > 255 ){ B_g = B_g - 255; };
+            B_b += 5 ; if( B_b > 255 ){ B_b = B_b - 255; };
+            B_a += 7 ; if( B_a > 255 ){ B_a = B_a - 255; };
+
+            u32_var = ( 0x00
+            |   (  ((U08)B_r)  << 24 )
+            |   (  ((U08)B_g)  << 16 )
+            |   (  ((U08)B_b)  <<  8 )
+            |   (  ((U08)B_a)  <<  0 )
+            );;
+
+            C_r = ( u32_var >> 24 ) & 0xFF ;
+            C_g = ( u32_var >> 16 ) & 0xFF ;
+            C_b = ( u32_var >>  8 ) & 0xFF ;
+            C_a = ( u32_var >>  0 ) & 0xFF ;
+
+            if(  0
+            || ( B_r != C_r )
+            || ( B_g != C_g )
+            || ( B_b != C_b )
+            || ( B_a != C_a )
+            ){
+                ERR("[YOU_DONT_KNOW_BIT_SHIFTING_2021]");
+            };;
+
+            glo_com = ( ( p_y * 512 ) + p_x ) * 4 ;
+
+            cpu_pix[ glo_com + 0 ] = ((U08)B_r);
+            cpu_pix[ glo_com + 1 ] = ((U08)B_g);
+            cpu_pix[ glo_com + 2 ] = ((U08)B_b);
+            cpu_pix[ glo_com + 3 ] = ((U08)B_a);
+
+            glo.x = ( p_x );
+            glo.y = ( p_y );
+            u32_got=(
+                aac2020_polyfill_texel_fetch(
+                    0 //:Texture Sampler, Not Used in C version.
+                , glo //:Global X/Y coordinate of pixel.
+                ,   0 //:[ L.O.D. ] Always zero in all code.
+                ));;
+            
+            if( u32_got != u32_var ){
+                ERR("[texel_fetch_definitely_broken_2021]");
+            };;
+
+            //: Try Using: aac2020_paint5d_BitPack_Get       ://
+            //: To re-build the pixel we put. If that works  ://
+            //: Then I am satisfied to maybe... 70% that     ://
+            //: the texel fetch code works properly.         ://
+            rbp_001 =( 0x00 );
+            rbp_002 =( 0x00 );
+            for( a_d = 0 ; a_d <= 15 ; a_d ++ ){
+
+                /** GET: t_v ( tile value ) **/
+                aac2020_paint5d_BitPack_Get(
+                      cpu_pix  //: U08* :  ://
+                ,(U08)glo_com  //: U08  :  ://
+                ,         a_d  //: U08  :  ://
+                ,       &(t_v) //: U08  :  ://
+                );;
+
+                ad2=( a_d * 2 );
+                rbp_001=( rbp_001 | ( t_v           << ad2 ) );
+                rbp_002=( rbp_002 | ((t_v & BIN_011)<< ad2 ) );
+                if( rbp_001 != rbp_002 ){
+                    ERR("[WTF:rbp_001!=rbp_002]");
+                };;
+            };;
+
+            if( 0
+            ||  ( rbp_001 != u32_got )
+            ||  ( rbp_001 != u32_var )
+            ){
+                printf("[rbp_001]:%d\n" , rbp_001 );
+                printf("[u32_got]:%d\n" , u32_got );
+                printf("[u32_var]:%d\n" , u32_var );
+
+                /** **************************************** **/
+                /** If we are lucky, the hex representation  **/
+                /** of number will be enough to figure out   **/
+                /** what went wrong. If unlucky, we will need**/
+                /** to printf as binary.                     **/
+                /** @VID_IID[ 0088 ]TIME[ 01:45:20 ]         **/
+                /** **************************************** **/
+                printf("[hex:rbp_001]:%08x\n" , rbp_001 );
+                printf("[hex:u32_got]:%08x\n" , u32_got );
+                printf("[hex:u32_var]:%08x\n" , u32_var );
+
+                ERR("[Maybe_BitPacking_Code_Is_Wrong:2021]");
+            };;
+
+
+        };;};;
+
+    #undef IV2
+    #undef BIN_011
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void aac2020_P5D_OGL_utc_PAINT5D_BitPack_Get( void )
+    {
+        /** @VID_IID[ 0088 ]TIME[ 00:10:08 ] *************** **/
+        /** Functions in "OPEN_GL_HAKCODE/P5D_OGL._"   * * * **/
+        /** are transcribed versions of functions in   * * * **/
+        /** PAINT5D.F._ . The goal is re-write the     * * * **/
+        /** code in a way that is more compatible      * * * **/
+        /** with GLSL syntax so minimal changes will   * * * **/
+        /** need to be done to paste it into our       * * * **/
+        /** shader code.                               * * * **/
+        /** ************************************************ **/
+
+        I32         p_x; //:Global pixel coordinate on:
+        I32         p_y; //:AAC2020_PIXNAME_paint5d_cpu_pix
+                         //:SEE[ DIAGRAM[ #DIA_P5D_MAIN# ]  ]
+                         //:SEE[    FILE[ PAINT5D.D._    ]  ]
+
+        I32         aus; //:What auto-tile-set (auset) is
+                         //:being targeted. Paint5D system
+                         //:is configured to store 16 total
+                         //:ausets per texture.
+                         //:SEE[ DIAGRAM[ #DIA_P5D_U32#  ]  ]
+                         //:SEE[    FILE[ PAINT5D.D._    ]  ]
+
+        U08*    cpu_pix =( AAC2020_PIXNAME_paint5d_cpu_pix );
+                         //:The system data storing the
+                         //:designs Josh will be working on
+                         //:in paint5d.
+
+        I32     glo_com; //:Global Component Index (red byte)
+        I32     aus_dex; //:Same as [ aus ]
+        I32     til_val; //:Tile Value: [ 0 | 1 | 2 | 3 ]
+                         //:( 2 bits used to store tile value )
+            
+        U08 u08_til_val; //:  8 bit version of til_val
+        U32 u32_til_val; //: 32 bit version of til_val
+
+        /** @VID_IID[ 0088 ]TIME[ 00:16:50 ] *************** **/
+        /** AAC2020_OPEN_GL_IV2 :                            **/
+        /** This struct exists to help us make the code      **/
+        /** as similiar to GLSL code as possible to          **/
+        /** HOPEFULLY make it so ZERO CHANGES need to be     **/
+        /** done when pasting this code into our GLSL        **/
+        /** shader string.                                   **/
+        /** ************************************************ **/
+
+            struct AAC2020_OPEN_GL_IV2
+            glo; //:<-- [ glo.x , glo.y ] == [ p_x , p_y ]
+
+        /** ************************************************ **/
+
+        til_val=( 0 );
+        for( p_y = 0 ; p_y <= ( 512-1 ) ; p_y ++ ){
+        for( p_x = 0 ; p_x <= ( 512-1 ) ; p_x ++ ){
+        for( aus = 0 ; aus <= (   15  ) ; aus ++ ){
+        /** #_SCANLINE_ORDER_MEANS_Y_IS_THE_OUTER_LOOP_# **/
+
+            //:The_Setup:------------------------------------://
+            
+                /** Set Auset Index **/
+                aus_dex =( aus );
+
+                /** Generate Tile Value **/
+                til_val++;
+                if( til_val >  3 ){ til_val = 0; };
+
+                /** Skip Configuration Pixel **/
+                if( 255 == p_x && 255 == p_y ){ continue; };
+                if( 511 == p_x && 255 == p_y ){ continue; };
+                if( 255 == p_x && 511 == p_y ){ continue; };
+                if( 511 == p_x && 511 == p_y ){ continue; };
+
+                /** **************************************** **/
+                /** @VID_IID[ 0087 | 0088 ]....Ooops...      **/
+                /** @TIME[ 00:22:28 ] ********************** **/
+                /** Convert [ p_x , p_y ] to component index **/
+                /** Use index to xy formula for a 512x512    **/
+                /** bitmap, then multiply by 4 to convert    **/
+                /** the pixel location to RED_BYTE location. **/
+
+                    glo_com =( ( p_y * 512 ) + p_x ) * 4 ;
+
+                /** **************************************** **/
+
+            //:------------------------------------:The_Setup://
+            //:Test_Original_Code:---------------------------://
+
+                aac2020_paint5d_BitPack_Put(
+                         cpu_pix  //:<-- [ Bitmap / Texture ]
+                ,   (U08)glo_com   
+                ,   (U08)aus_dex   
+                ,   (U08)til_val  //:<-- Put this value into
+                );;               //:    [ Bitmap / Texture ]
+
+                aac2020_paint5d_BitPack_Get(
+                         cpu_pix  //:<-- [ Bitmap / Texture ]
+                ,   (U08)glo_com  
+                ,   (U08)aus_dex  
+                ,  &(u08_til_val) //:<-- Read Value From
+                );;               //:    [ Bitmap / Texture ]
+
+                if( (I08)u08_til_val
+                !=  (I08)    til_val
+                ){
+                    /** Hope you never see this error. As it **/
+                    /** means you transcribed buggy code.    **/
+                    /** @VID_IID[ 0087 ]TIME[ 00:42:30 ]     **/
+                    ERR("[PROBLEM_IS_THE_ORIGINAL_CODE_2021]");
+                };;
+
+            //:---------------------------:Test_Original_Code://
+            //:Cross_Check_New_Code:-------------------------://
+            /** ******************************************** **/
+            /** OPEN_GL_PAINT5D_BitPack_Get is a re-write    **/
+            /** of aac2020_paint5d_BitPack_Get and thus      **/
+            /** should have the same exact outputs as        **/
+            /** aac2020_paint5d_BitPack_Get for a given set  **/
+            /** of inputs. @VID_IID[ 0088 ]TIME[ 00:03:23 ]  **/
+            /** ******************************************** **/
+
+                glo.x = p_x;
+                glo.y = p_y;
+
+                u32_til_val=(
+                    OPEN_GL_PAINT5D_BitPack_Get(
+                        glo      //:Pixel Location
+                    ,   aus_dex  //:Bit Location To Unpack
+                    ));;
+
+                if( (I08)u32_til_val
+                !=  (I08)    til_val
+                ){
+                    printf("\n\n\n");
+                    printf("[p_x,p_y,aus]:(%d,%d,%d)\n"
+                    ,        p_x,p_y,aus );;
+                    printf("[u32_til_val]:%d\n"
+                    ,        u32_til_val );;
+                    printf("[....til_val]:%d\n"
+                    ,            til_val );;
+
+                    /** ************************************ **/
+                    /** @VID_IID[ 0088 ]TIME[ 00:06:55 ]     **/
+                    /** This is the best case scenario for   **/
+                    /** test code failure. Means we did      **/
+                    /** something very stupid while transcri-**/
+                    /** -bing the code.                      **/
+                    ERR("[PROBLEM_IS_THE_TRANSCRIPTION_2021]");
+                    /** ************************************ **/
+                };;
+
+            //:-------------------------:Cross_Check_New_Code://
+
+        };;};;};; //:NEXT[ p_x , p_y , aus ]://
+
+    return;
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void aac2020_P5D_OGL_utc_PAINT5D_til_exp_CTO_max_cor( void )
+    {
+
+
+
+    return;
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void aac2020_P5D_OGL_utc_PAINT5D_til_exp_CTO_diagpix( void )
+    {
+
+
+
+    return;
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void aac2020_P5D_OGL_utc_PAINT5D_painpix_CTO_glocpix( void )
+    {
+
+
+
+    return;
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void aac2020_P5D_OGL_utc_PAINT5D_Get( void )
     {
         //:variable_declare:---------------------------------://
 
