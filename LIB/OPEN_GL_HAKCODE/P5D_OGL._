@@ -8,65 +8,79 @@
 //:******************************:DO_NOT_PASTE_INTO_GLSL_CODE://
 //:DO_NOT_PASTE_INTO_GLSL_CODE:******************************://
 #define I32 int32_t /** GCC: <stdint.h> **/
+#define U08 uint8_t /** GCC: <stdint.h> **/
 
-        struct AAC2020_OPEN_GL_IV2{
-            I32 x ;
-            I32 y ;
-        };
+        /** Mocked up "ivec2" to store global [x,y] * * * *  **/
+        /** coordinates.                            * * * *  **/
+        /** @VID_IID[ 0092 ]TIME[ 00:27:55 ]        * * * *  **/
+
+            struct AAC2020_OPEN_GL_IV2{
+                I32 x ;
+                I32 y ;
+            };
+
+        /** Needed to adapt the texel fetch polyfill.* * * * **/
+        /** aac2020_polyfill_texel_fetch             * * * * **/
+        /** @VID_IID[ 0092 ]TIME[ 00:26:45 ]         * * * * **/
+
+            struct AAC2020_OPEN_GL_UV4{
+
+                U08 x ; //:RED
+                U08 y ; //:GREEN
+                U08 z ; //:BLUE
+                U08 w ; //:ALPHA
+
+            };
 
 #undef  I32
+#undef  U08
 //:******************************:DO_NOT_PASTE_INTO_GLSL_CODE://
 //:DO_NOT_PASTE_INTO_GLSL_CODE:******************************://
-#define U32 uint32_t /** GCC: <stdint.h> **/
-#define I32  int32_t /** GCC: <stdint.h> **/
-#define IV2   struct AAC2020_OPEN_GL_IV2
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 01 ://
+#define I32  int32_t /** GCC: <stdint.h> **/          //: 02 ://
+#define IV2   struct AAC2020_OPEN_GL_IV2              //: 03 ://
+#define UV4   struct AAC2020_OPEN_GL_UV4              //: 04 ://
+#define SAM      int /** IGNORED IN [C99/C11] **/     //: 05 ://
 
-        U32
+        UV4
         aac2020_polyfill_texel_fetch(
-            I32 texture_to_sample_DONT_USE
+            SAM u32_sam //:<--GLSL only. Zero For [C99/C11]  ://
         ,   IV2 glo
-        ,   I32 level_of_detail_DONT_USE
+        ,   I32 levodet_ALWAYS_ZERO
         )
         {
             /** @VID_IID[ 0085 ]TIME[ 02:40:05 ] ******* **/
-            if( texture_to_sample_DONT_USE ){ /** NOOP **/ };
-            if(   level_of_detail_DONT_USE ){ /** NOOP **/ };
+            /** @VID_IID[ 0092 ]TIME[ 01:06:40 ] ******* **/
+            if(   u32_sam             ){ /** NOOP **/ };
+            if(   levodet_ALWAYS_ZERO ){ /** NOOP **/ };
             /** **************************************** **/
 
-            U32 u32_var; /** Output 32 bit pixel value. **/
+            UV4 uv4; /** Output 32 bit pixel value. **/
 
             I32 glo_dex; /** Global Pixel Index **/
             I32 glo_com; /** Global Comp. Index **/
             glo_dex = glo.x + ( glo.y  *  512 );
             glo_com =( glo_dex * 4  );
 
-            //:BIT_PACK_YOUR_PIXEL:--------------------------://
+            //:NO_LONGER_BIT_PACKED:-------------------------://
             #define CPU_PIX AAC2020_PIXNAME_paint5d_cpu_pix
 
-                /** **************************************** ***
-                    @VID_IID[ 0086 ]TIME[ 01:29:10 ]
-                    Bit shifting code copied directly from
-                    aac2020_paint5d_UTC_BitPack_Get 's bitshift
-                    code because we are really good at fucking
-                    up trivial bit shifting code.
-                *** **************************************** **/
-
-                u32_var=( 0x00 
-                | ( CPU_PIX[ glo_com + 0 ] << 24 ) //: R ://
-                | ( CPU_PIX[ glo_com + 1 ] << 16 ) //: G ://
-                | ( CPU_PIX[ glo_com + 2 ] <<  8 ) //: B ://
-                | ( CPU_PIX[ glo_com + 3 ] <<  0 ) //: A ://
-                );;  /** @PAIRED_BITPACKING_CODE_2021_01_14@ **/
+                uv4.x = CPU_PIX[ glo_com + 0 ] ; //:RED
+                uv4.y = CPU_PIX[ glo_com + 1 ] ; //:GREEN
+                uv4.z = CPU_PIX[ glo_com + 2 ] ; //:BLUE
+                uv4.w = CPU_PIX[ glo_com + 3 ] ; //:ALPHA
 
             #undef  CPU_PIX
-            //:--------------------------:BIT_PACK_YOUR_PIXEL://
+            //:-------------------------:NO_LONGER_BIT_PACKED://
            
-            return( u32_var );
+            return( uv4 );
         }
 
-#undef  U32
-#undef  I32
-#undef  IV2
+#undef  U32                                           //: 01 ://
+#undef  I32                                           //: 02 ://
+#undef  IV2                                           //: 03 ://
+#undef  UV4                                           //: 04 ://
+#undef  SAM                                           //: 05 ://
 //:******************************:DO_NOT_PASTE_INTO_GLSL_CODE://
 //:*******************************************:GLSL_POLYFILLS://
 //:OPEN_GL_PAINT5D_Get:======================================://
@@ -74,221 +88,288 @@
 
     //:OPEN_GL_PAINT5D_Get:==============================://
     //:type_macros:--------------------------------------://
-    #ifdef MACRO_THIS_IS_GLSL                      //: x ://
-                                                   //: x ://
-        /** When Running As GLSL Code. **/         //: x ://
-                                                   //: x ://
-        #define U32         uint                   //: x ://
-        #define I32          int                   //: x ://
-        #define IV2        ivec2                   //: x ://
-        #define T_F   texelFetch                   //: x ://
-        #define P5D      paint5d                   //: x ://
-    #else                                          //: x ://
-                                                   //: x ://
-        /** When Running As C99/C11 Code. **/      //: x ://
-                                                   //: x ://
-        #define U32   uint32_t                     //: x ://
-        #define I32    int32_t                     //: x ://
-        #define IV2   struct AAC2020_OPEN_GL_IV2   //: x ://
-        #define T_F   aac2020_polyfill_texel_fetch //: x ://
-        #define P5D   ( 0 )                        //: x ://
-    #endif                                         //: x ://
+    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL           //[ x ]//
+                                                   //[ x ]//
+        /** When Running As GLSL Code. **/         //[ x ]//
+                                                   //[ x ]//
+        #define U32         uint    //:  01  ://   //[ x ]//
+        #define I32          int    //:  02  ://   //[ x ]//
+        #define IV2        ivec2    //:  03  ://   //[ x ]//
+        #define UV4        uvec4    //:  04  ://   //[ x ]//
+        #define T_F   texelFetch    //:  05  ://   //[ x ]//
+        #define P5D      paint5d    //:  06  ://   //[ x ]//
+        #define SAM   usampler2D    //:  07  ://   //[ x ]//
+        #define U00    uint( 0 )    //:  08  ://   //[ x ]//
+        #define I00     int( 0 )    //:  09  ://   //[ x ]//
+        #define B_3    uint( 3 )    //:  10  ://
+    #else                                          //[ x ]//
+                                                   //[ x ]//
+        /** When Running As C99/C11 Code. **/      //[ x ]//
+                                                   //[ x ]//
+        #define U32   uint32_t                     //[ x ]//
+        #define I32    int32_t                     //[ x ]//
+        #define IV2   struct AAC2020_OPEN_GL_IV2   //[ x ]//
+        #define UV4   struct AAC2020_OPEN_GL_UV4   //[ x ]//
+        #define T_F   aac2020_polyfill_texel_fetch //[ x ]//
+        #define P5D   ( 0 )                        //[ x ]//
+        #define SAM    int                         //[ x ]//
+        #define U00    0x00                        //[ x ]//
+        #define I00   ( 0 )                        //[ x ]//
+        #define B_3   ( 3 )                        //[ x ]//
+    #endif                                         //[ x ]//
     //:--------------------------------------:type_macros://
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
-        U32                                        //: x ://
-        OPEN_GL_PAINT5D_BitPack_Get(               //: x ://
-            IV2     glo                            //: x ://
-        ,   I32 aus_dex                            //: x ://
-        )                                          //: x ://
-        {                                          //: x ://
-        #define BIN_011 ( 3 )                      //: x ://
-                                                   //: x ://
-            U32 u32_var ;                          //: x ://
-            U32 til_val ;                          //: x ://
-                                                   //: x ://
-            u32_var = T_F(                         //: x ://
-                P5D //:texture_to_sample           //: x ://
-            ,   glo //:integer_texel_coord         //: x ://
-            ,    0  //:level_of_detail_zero        //: x ://
-            );;                                    //: x ://
-                                                   //: x ://
-            til_val =(                             //: x ://
-                ( u32_var >> (aus_dex*2) )         //: x ://
-                &                                  //: x ://
-                BIN_011                            //: x ://
-            );;                                    //: x ://
-                                                   //: x ://
-            return( til_val );                     //: x ://
-                                                   //: x ://
-        #undef  BIN_011                            //: x ://
-        }                                          //: x ://
-                                                   //: x ://
+        U32                                        //[ x ]//
+        OPEN_GL_PAINT5D_TexelFetch_U32(            //[ x ]//
+            SAM u32_sam  //:<-- GLSL only.......:////[ x ]//
+        ,   IV2 glo                                //[ x ]//
+        ,   I32 levodet_ALWAYS_ZERO                //[ x ]//
+        )                                          //[ x ]//
+        {                                          //[ x ]//
+            U32 u32_var; /** Output/Return **/     //[ x ]//
+                                                   //[ x ]//
+            //:TEXEL_FETCH_RETURNS_XYZW_U08:-------------://     
+            /** GET: [ x,y,z,w ] / [r,g,b,a]  **/  //[ x ]//
+            /**      texel As a uvec 4 type.  **/  //[ x ]//
+                UV4 uv4=(                          //[ x ]//
+                    T_F(                           //[ x ]//
+                        u32_sam                    //[ x ]//
+                    ,   glo                        //[ x ]//
+                    ,   levodet_ALWAYS_ZERO        //[ x ]//
+                    ));;                           //[ x ]//
+                                                   //[ x ]//
+            //:-------------:TEXEL_FETCH_RETURNS_XYZW_U08://
+            //:BIT_PACK_YOUR_PIXEL:----------------------://
+            #define CPU_PIX AAC2020_PIXNAME_paint5d_cpu_pix
+            /** **************************************** ***
+                @VID_IID[ 0086 ]TIME[ 01:29:10 ]   //[ x ]//
+                Bit shifting code copied directly  //[ x ]//
+                from                               //[ x ]//
+                aac2020_paint5d_UTC_BitPack_Get 's //[ x ]//
+                bitshift code because we are       //[ x ]//
+                really good at fucking up          //[ x ]//
+                trivial bit shifting code.         //[ x ]//
+                                                   //[ x ]//
+                @VID_IID[ 0092 ]TIME[ 00:32:23 ]   //[ x ]//
+                Code relocated to here because we  //[ x ]//
+                mistakenly thought native GLSL     //[ x ]//
+                texelFetch returned a unit32 but   //[ x ]//
+                actually                           //[ x ]//
+                returns a [ uvec4 / UV4 ]          //[ x ]//
+            *** **************************************** **/
+                                                   //[ x ]//
+                u32_var=( U00 /** 0x00 **/         //[ x ]//
+                | ( uv4.x << 24 ) //: R ://        //[ x ]//
+                | ( uv4.y << 16 ) //: G ://        //[ x ]//
+                | ( uv4.z <<  8 ) //: B ://        //[ x ]//
+                | ( uv4.w <<  0 ) //: A ://        //[ x ]//
+                );;  /** @PAIR_CODE_2021_01_14@ **///[ x ]//
+                                                   //[ x ]//
+            #undef  CPU_PIX                        //[ x ]//
+            //:----------------------:BIT_PACK_YOUR_PIXEL://
+            return( u32_var );                     //[ x ]//
+        }                                          //[ x ]//
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
-        I32                                        //: - ://
-        OPEN_GL_PAINT5D_til_exp_CTO_max_cor(       //: - ://
-            I32         til_exp                    //: - ://
-        )                                          //: - ://
-        {                                          //: - ://
-        #define T_E til_exp                        //: - ://
-        #define M_C max_cor                        //: - ://
-                                                   //: - ://
-            I32 max_cor;                           //: - ://
-            if( 0 == T_E ){ M_C = ( 128 - 1 ); };  //: 1 ://
-            if( 1 == T_E ){ M_C = (  64 - 1 ); };  //: 2 ://
-            if( 2 == T_E ){ M_C = (  32 - 1 ); };  //: 3 ://
-            if( 3 == T_E ){ M_C = (  16 - 1 ); };  //: 4 ://
-            if( 4 == T_E ){ M_C = (   8 - 1 ); };  //: 5 ://
-            if( 5 == T_E ){ M_C = (   4 - 1 ); };  //: 6 ://
-            if( 6 == T_E ){ M_C = (   2 - 1 ); };  //: 7 ://
-            if( 7 == T_E ){ M_C = (   1 - 1 ); };  //: 8 ://
-                                                   //: - ://
-                                                   //: - ://
-            return( max_cor );                     //: - ://
-                                                   //: - ://
-        #undef  T_E                                //: - ://
-        #undef  M_C                                //: - ://
-        }                                          //: - ://
+        U32                                        //[ x ]//
+        OPEN_GL_PAINT5D_BitPack_Get(               //[ x ]//
+            IV2     glo                            //[ x ]//
+        ,   I32 aus_dex                            //[ x ]//
+        )                                          //[ x ]//
+        {                                          //[ x ]//
+        #define BIN_011 ( B_3 )                    //[ x ]//
+                                                   //[ x ]//
+            U32 u32_var ;                          //[ x ]//
+            U32 til_val ;                          //[ x ]//
+                                                   //[ x ]//
+            u32_var =(                             //[ x ]//
+                OPEN_GL_PAINT5D_TexelFetch_U32(    //[ x ]//          
+                    P5D //:texture_to_sample    :////[ x ]//
+                ,   glo //:integer_texel_coord  :////[ x ]//
+                ,   I00 //:level_of_detail_zero :////[ x ]//
+                ));;                               //[ x ]//
+                                                   //[ x ]//
+            til_val =(                             //[ x ]//
+                ( u32_var >> (aus_dex*2) )         //[ x ]//
+                &                                  //[ x ]//
+                BIN_011                            //[ x ]//
+            );;                                    //[ x ]//
+                                                   //[ x ]//
+            return( til_val );                     //[ x ]//
+                                                   //[ x ]//
+        #undef  BIN_011                            //[ x ]//
+        }                                          //[ x ]//
+                                                   //[ x ]//
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
-        I32                                        //: x ://
-        OPEN_GL_PAINT5D_til_exp_CTO_diagpix(       //: x ://
-            I32         til_exp                    //: x ://
-        )                                          //: x ://
-        {                                          //: x ://
-        #define T til_exp                          //: x ://
-        #define D diagpix                          //: x ://
-                                                   //: x ://
-            I32 diagpix =( 9999 );                 //: x ://
-                                                   //: x ://
-            //:@VID_IID[ 0085 ]TIME[ 01:53:00 ]    //: x ://
-            //:TODO: Make into lookup table:       //: x ://
-            //:BUT MUST GET WORKING IN OPENGL      //: x ://
-            //:BEFORE YOU DO SUCH REFACTOR!        //: x ://
-            if( 0 == T ){ D = 0   ; }else          //: x ://
-            if( 1 == T ){ D = 128 ; }else          //: x ://     
-            if( 2 == T ){ D = 192 ; }else          //: x ://
-            if( 3 == T ){ D = 224 ; }else          //: x ://
-            if( 4 == T ){ D = 240 ; }else          //: x ://
-            if( 5 == T ){ D = 248 ; }else          //: x ://
-            if( 6 == T ){ D = 252 ; }else          //: x ://
-            if( 7 == T ){ D = 254 ; }else{         //: x ://
-                                                   //: x ://
-                /// if out of range, ///           //: x ://
-                /// set to invalid   ///           //: x ://
-                /// config pixel.    ///           //: x ://
-                D = 9001 ;                         //: x ://
-                                                   //: x ://
-            };;                                    //: x ://
-                                                   //: x ://
-            return( diagpix );                     //: x ://
-                                                   //: x ://
-        #undef  T                                  //: x ://
-        #undef  D                                  //: x ://
-        }                                          //: x ://
+        I32                                        //[ - ]//
+        OPEN_GL_PAINT5D_til_exp_CTO_max_cor(       //[ - ]//
+            I32         til_exp                    //[ - ]//
+        )                                          //[ - ]//
+        {                                          //[ - ]//
+        #define T_E til_exp                        //[ - ]//
+        #define M_C max_cor                        //[ - ]//
+                                                   //[ - ]//
+            I32 max_cor;                           //[ - ]//
+            if( 0 == T_E ){ M_C = ( 128 - 1 ); };  //[ 1 ]//
+            if( 1 == T_E ){ M_C = (  64 - 1 ); };  //[ 2 ]//
+            if( 2 == T_E ){ M_C = (  32 - 1 ); };  //[ 3 ]//
+            if( 3 == T_E ){ M_C = (  16 - 1 ); };  //[ 4 ]//
+            if( 4 == T_E ){ M_C = (   8 - 1 ); };  //[ 5 ]//
+            if( 5 == T_E ){ M_C = (   4 - 1 ); };  //[ 6 ]//
+            if( 6 == T_E ){ M_C = (   2 - 1 ); };  //[ 7 ]//
+            if( 7 == T_E ){ M_C = (   1 - 1 ); };  //[ 8 ]//
+                                                   //[ - ]//
+                                                   //[ - ]//
+            return( max_cor );                     //[ - ]//
+                                                   //[ - ]//
+        #undef  T_E                                //[ - ]//
+        #undef  M_C                                //[ - ]//
+        }                                          //[ - ]//
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
-        IV2                                        //: x ://
-        OPEN_GL_PAINT5D_painpix_CTO_glocpix(       //: x ://
-            I32 til_qua                            //: x ://
-        ,   I32 til_exp                            //: x ://
-        ,   I32 til_lay                            //: x ://
-        ,   I32 loc_t_x                            //: x ://
-        ,   I32 loc_t_y                            //: x ://
-        ){                                         //: x ://
+        I32                                        //[ x ]//
+        OPEN_GL_PAINT5D_til_exp_CTO_diagpix(       //[ x ]//
+            I32         til_exp                    //[ x ]//
+        )                                          //[ x ]//
+        {                                          //[ x ]//
+        #define T til_exp                          //[ x ]//
+        #define D diagpix                          //[ x ]//
+                                                   //[ x ]//
+            I32 diagpix =( 9999 );                 //[ x ]//
+                                                   //[ x ]//
+            //:@VID_IID[ 0085 ]TIME[ 01:53:00 ] :////[ x ]//
+            //:TODO: Make into lookup table:    :////[ x ]//
+            //:BUT MUST GET WORKING IN OPENGL   :////[ x ]//
+            //:BEFORE YOU DO SUCH REFACTOR!     :////[ x ]//
+            if( 0 == T ){ D = 0   ; }else          //[ x ]//
+            if( 1 == T ){ D = 128 ; }else          //[ x ]//     
+            if( 2 == T ){ D = 192 ; }else          //[ x ]//
+            if( 3 == T ){ D = 224 ; }else          //[ x ]//
+            if( 4 == T ){ D = 240 ; }else          //[ x ]//
+            if( 5 == T ){ D = 248 ; }else          //[ x ]//
+            if( 6 == T ){ D = 252 ; }else          //[ x ]//
+            if( 7 == T ){ D = 254 ; }else{         //[ x ]//
+                                                   //[ x ]//
+                /// if out of range, ///           //[ x ]//
+                /// set to invalid   ///           //[ x ]//
+                /// config pixel.    ///           //[ x ]//
+                D = 9001 ;                         //[ x ]//
+                                                   //[ x ]//
+            };;                                    //[ x ]//
+                                                   //[ x ]//
+            return( diagpix );                     //[ x ]//
+                                                   //[ x ]//
+        #undef  T                                  //[ x ]//
+        #undef  D                                  //[ x ]//
+        }                                          //[ x ]//
+        //:- - - - - - - - - - - -- - - - - - - - - - - -://
+        IV2                                        //[ x ]//
+        OPEN_GL_PAINT5D_painpix_CTO_glocpix(       //[ x ]//
+            I32 til_qua                            //[ x ]//
+        ,   I32 til_exp                            //[ x ]//
+        ,   I32 til_lay                            //[ x ]//
+        ,   I32 loc_t_x                            //[ x ]//
+        ,   I32 loc_t_y                            //[ x ]//
+        ){                                         //[ x ]//
         //:declare__variables: . . . . . . . . . . . . . ://
-                                                   //: x ://
-            IV2 glo; /** glo_t_x & glo_t_y **/     //: x ://
-            IV2 tem; /** tempi_x & tempi_y **/     //: x ://
-            IV2 qua; /** o_x_qua & o_y_qua **/     //: x ://
-            IV2 lay; /** o_x_lay & o_y_lay **/     //: x ://
-                                                   //: x ://
-            I32 dia; /** diagpix **/               //: x ://
-            I32 m_c; /** max_cor **/               //: x ://
-                                                   //: x ://
+                                                   //[ x ]//
+            IV2 glo; /** glo_t_x & glo_t_y **/     //[ x ]//
+            IV2 tem; /** tempi_x & tempi_y **/     //[ x ]//
+            IV2 qua; /** o_x_qua & o_y_qua **/     //[ x ]//
+            IV2 lay; /** o_x_lay & o_y_lay **/     //[ x ]//
+                                                   //[ x ]//
+            I32 dia; /** diagpix **/               //[ x ]//
+            I32 m_c; /** max_cor **/               //[ x ]//
+                                                   //[ x ]//
         //: . . . . . . . . . . . . . :declare__variables://
         //:CALCULATE::painpix_CTO_glocpix: . . . . . . . ://
-                                                   //: x ://
-            m_c =(                                 //: x ://
-            OPEN_GL_PAINT5D_til_exp_CTO_max_cor(   //: x ://
-                            til_exp ));;           //: x ://
-            dia =(                                 //: x ://
-            OPEN_GL_PAINT5D_til_exp_CTO_diagpix(   //: x ://
-                            til_exp ));;           //: x ://
-                                                   //: x ://
-            tem.x =  til_qua       % ( 2 ) ;       //: x ://
-            tem.y = (til_qua-tem.x)/ ( 2 ) ;       //: x ://
-                                                   //: x ://
-            qua.x = ( tem.x * 256 );               //: x ://
-            qua.y = ( tem.y * 256 );               //: x ://
-                                                   //: x ://
-            tem.x =  til_lay          % (  2  ) ;  //: x ://
-            tem.y = (til_lay - tem.x) / (  2  ) ;  //: x ://
-                                                   //: x ://
-            lay.x = ( tem.x * ( m_c + 1 ) ) ;      //: x ://
-            lay.y = ( tem.y * ( m_c + 1 ) ) ;      //: x ://
-                                                   //: x ://
-            glo.x=( qua.x +dia+ lay.x + loc_t_x ); //: x ://
-            glo.y=( qua.y +dia+ lay.y + loc_t_y ); //: x ://
-                                                   //: x ://
+                                                   //[ x ]//
+            m_c =(                                 //[ x ]//
+            OPEN_GL_PAINT5D_til_exp_CTO_max_cor(   //[ x ]//
+                            til_exp ));;           //[ x ]//
+            dia =(                                 //[ x ]//
+            OPEN_GL_PAINT5D_til_exp_CTO_diagpix(   //[ x ]//
+                            til_exp ));;           //[ x ]//
+                                                   //[ x ]//
+            tem.x =  til_qua       % ( 2 ) ;       //[ x ]//
+            tem.y = (til_qua-tem.x)/ ( 2 ) ;       //[ x ]//
+                                                   //[ x ]//
+            qua.x = ( tem.x * 256 );               //[ x ]//
+            qua.y = ( tem.y * 256 );               //[ x ]//
+                                                   //[ x ]//
+            tem.x =  til_lay          % (  2  ) ;  //[ x ]//
+            tem.y = (til_lay - tem.x) / (  2  ) ;  //[ x ]//
+                                                   //[ x ]//
+            lay.x = ( tem.x * ( m_c + 1 ) ) ;      //[ x ]//
+            lay.y = ( tem.y * ( m_c + 1 ) ) ;      //[ x ]//
+                                                   //[ x ]//
+            glo.x=( qua.x +dia+ lay.x + loc_t_x ); //[ x ]//
+            glo.y=( qua.y +dia+ lay.y + loc_t_y ); //[ x ]//
+                                                   //[ x ]//
         //: . . . . . . . :CALCULATE::painpix_CTO_glocpix://
         //:return_from_function: . . . . . . . . . . . . ://
-                                                   //: x ://
-            /** glo == glo_t_x & glo_t_y **/       //: x ://
-            return( glo );                         //: x ://
-                                                   //: x ://
+                                                   //[ x ]//
+            /** glo == glo_t_x & glo_t_y **/       //[ x ]//
+            return( glo );                         //[ x ]//
+                                                   //[ x ]//
         //: . . . . . . . . . . . . :return_from_function://
-        }                                          //: x ://
+        }                                          //[ x ]//
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
-        U32                                        //: x ://
-        OPEN_GL_PAINT5D_Get(                       //: x ://
-            I32  til_qua                           //: x ://
-        ,   I32  til_exp                           //: x ://
-        ,   I32  til_lay                           //: x ://
-        ,   I32  loc_t_x                           //: x ://
-        ,   I32  loc_t_y                           //: x ://
-        ,   I32  aus_dex                           //: x ://
-                                                   //: x ://
-        )                                          //: x ://
-        {                                          //: x ://
+        U32                                        //[ x ]//
+        OPEN_GL_PAINT5D_Get(                       //[ x ]//
+            I32  til_qua                           //[ x ]//
+        ,   I32  til_exp                           //[ x ]//
+        ,   I32  til_lay                           //[ x ]//
+        ,   I32  loc_t_x                           //[ x ]//
+        ,   I32  loc_t_y                           //[ x ]//
+        ,   I32  aus_dex                           //[ x ]//
+                                                   //[ x ]//
+        )                                          //[ x ]//
+        {                                          //[ x ]//
         //:declare__variables: . . . . . . . . . . . . . ://
-                                                   //: x ://
-            U32 til_val =( 0 );                    //: x ://
-                                                   //: x ://
-            /** glo == glo_t_x & glo_t_y  **/      //: x ://
-            IV2 glo    ;                           //: x ://
-                                                   //: x ://
+                                                   //[ x ]//
+            U32 til_val =( U00 );                  //[ x ]//
+                                                   //[ x ]//
+            /** glo == glo_t_x & glo_t_y  **/      //[ x ]//
+            IV2 glo    ;                           //[ x ]//
+                                                   //[ x ]//
         //: . . . . . . . . . . . . . :declare__variables://
         //:get_pixel_and_extract_tile_value: . . . . . . ://
-                                                   //: x ://
-            glo=(                                  //: x ://
-            OPEN_GL_PAINT5D_painpix_CTO_glocpix(   //: x ://
-                til_qua                            //: x ://
-            ,   til_exp                            //: x ://
-            ,   til_lay                            //: x ://
-            ,   loc_t_x                            //: x ://
-            ,   loc_t_y                            //: x ://
-            ));;                                   //: x ://
-                                                   //: x ://
-            til_val=(                              //: x ://
-            OPEN_GL_PAINT5D_BitPack_Get(           //: x ://
-                glo                                //: x ://
-            ,   aus_dex                            //: x ://
-            ));;                                   //: x ://
-                                                   //: x ://
+                                                   //[ x ]//
+            glo=(                                  //[ x ]//
+            OPEN_GL_PAINT5D_painpix_CTO_glocpix(   //[ x ]//
+                til_qua                            //[ x ]//
+            ,   til_exp                            //[ x ]//
+            ,   til_lay                            //[ x ]//
+            ,   loc_t_x                            //[ x ]//
+            ,   loc_t_y                            //[ x ]//
+            ));;                                   //[ x ]//
+                                                   //[ x ]//
+            til_val=(                              //[ x ]//
+            OPEN_GL_PAINT5D_BitPack_Get(           //[ x ]//
+                glo                                //[ x ]//
+            ,   aus_dex                            //[ x ]//
+            ));;                                   //[ x ]//
+                                                   //[ x ]//
         //: . . . . . . :get_pixel_and_extract_tile_value://
         //:return_from_function: . . . . . . . . . . . . ://
-                                                   //: x ://
-            return( til_val );                     //: x ://
-                                                   //: x ://
+                                                   //[ x ]//
+            return( til_val );                     //[ x ]//
+                                                   //[ x ]//
         //: . . . . . . . . . . . . :return_from_function://
-        }                                          //: x ://
+        }                                          //[ x ]//
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
     //:type_macros:--------------------------------------://
-                                                   //: x ://
-        #undef U32                                 //: x ://
-        #undef I32                                 //: x ://
-        #undef IV2                                 //: x ://
-        #undef T_F                                 //: x ://
-        #undef P5D                                 //: x ://
-                                                   //: x ://
+                                                   //[ x ]//
+        #undef U32      //:  01  ://               //[ x ]//
+        #undef I32      //:  02  ://               //[ x ]//
+        #undef IV2      //:  03  ://               //[ x ]//
+        #undef UV4      //:  04  ://               //[ x ]//
+        #undef T_F      //:  05  ://               //[ x ]//
+        #undef P5D      //:  06  ://               //[ x ]//
+        #undef SAM      //:  07  ://               //[ x ]//
+        #undef U00      //:  08  ://               //[ x ]//
+        #undef I00      //:  09  ://               //[ x ]//
+        #undef B_3      //:  10  ://               //[ x ]//
+                                                   //[ x ]//
     //:--------------------------------------:type_macros://
     //:==============================:OPEN_GL_PAINT5D_Get://  
 

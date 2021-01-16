@@ -5969,7 +5969,7 @@
                 | ( cpu_pix[ glo_com + 1 ] << 16 ) //: G ://
                 | ( cpu_pix[ glo_com + 2 ] <<  8 ) //: B ://
                 | ( cpu_pix[ glo_com + 3 ] <<  0 ) //: A ://
-                );;  /** @PAIRED_BITPACKING_CODE_2021_01_14@ **/
+                );;  /** @PAIR_CODE_2021_01_14@ **/
 
                 /** replace correct 2 bits within u32_var **/
                 u32_var=(
@@ -8180,7 +8180,7 @@
             glo.x = ( p_x );
             glo.y = ( p_y );
             u32_got=(
-                aac2020_polyfill_texel_fetch(
+                OPEN_GL_PAINT5D_TexelFetch_U32(
                     0 //:Texture Sampler, Not Used in C version.
                 , glo //:Global X/Y coordinate of pixel.
                 ,   0 //:[ L.O.D. ] Always zero in all code.
