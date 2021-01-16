@@ -1,5 +1,12 @@
 //:GLSL_POLYFILLS:*******************************************://
 //:DO_NOT_PASTE_INTO_GLSL_CODE:******************************://
+
+    #ifdef MACRO_THIS_IS_GLSL
+        #error THIS_IS_NOT_GLSL_CODE_2021
+    #endif
+
+//:******************************:DO_NOT_PASTE_INTO_GLSL_CODE://
+//:DO_NOT_PASTE_INTO_GLSL_CODE:******************************://
 #define I32 int32_t /** GCC: <stdint.h> **/
 
         struct AAC2020_OPEN_GL_IV2{
@@ -11,7 +18,7 @@
 //:******************************:DO_NOT_PASTE_INTO_GLSL_CODE://
 //:DO_NOT_PASTE_INTO_GLSL_CODE:******************************://
 #define U32 uint32_t /** GCC: <stdint.h> **/
-#define I32 int32_t /** GCC: <stdint.h> **/
+#define I32  int32_t /** GCC: <stdint.h> **/
 #define IV2   struct AAC2020_OPEN_GL_IV2
 
         U32
@@ -69,18 +76,22 @@
     //:type_macros:--------------------------------------://
     #ifdef MACRO_THIS_IS_GLSL                      //: x ://
                                                    //: x ://
+        /** When Running As GLSL Code. **/         //: x ://
+                                                   //: x ://
         #define U32         uint                   //: x ://
         #define I32          int                   //: x ://
         #define IV2        ivec2                   //: x ://
         #define T_F   texelFetch                   //: x ://
         #define P5D      paint5d                   //: x ://
     #else                                          //: x ://
+                                                   //: x ://
+        /** When Running As C99/C11 Code. **/      //: x ://
+                                                   //: x ://
         #define U32   uint32_t                     //: x ://
         #define I32    int32_t                     //: x ://
         #define IV2   struct AAC2020_OPEN_GL_IV2   //: x ://
         #define T_F   aac2020_polyfill_texel_fetch //: x ://
         #define P5D   ( 0 )                        //: x ://
-                                                   //: x ://
     #endif                                         //: x ://
     //:--------------------------------------:type_macros://
         //:- - - - - - - - - - - -- - - - - - - - - - - -://

@@ -61,6 +61,48 @@
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 #undef  I32
 //:=================================:INFO_STATUS_INFO_MESSAGE://
+//:HELPER_FUNCTIONS_BINARY_PRINT:============================://
+#define I32  int32_t /** GCC: <stdint.h> **/
+#define U32 uint32_t /** GCC: <stdint.h> **/
+#define CHR const char
+
+    void
+    aac2020_paint5d_BinaryPrintf( 
+        CHR* txt
+    ,   U32  num    
+    )
+    {
+        printf( "%s    " , txt );
+
+        /** ************************************************ ***
+            @VID_IID[ 0091 ]TIME[ 00:16:50 ]
+            Copied Of: BINPRIN_BinaryPrintf
+            https://github.com/KanjiCoder/BINPRIN
+        *** ************************************************ **/
+
+        U32 bit ;
+        U32 cou ; //:Counter for dividers
+        U32 e_o = 1; //:every other
+
+        printf(   "( "   );
+        for( I32 i = ( 32 - 1 ) ; i >= 0 ; i-- ){
+            cou++;
+            bit = ( ( num >> i ) & 1 );
+            printf( "%d" , bit );
+            if( 0 == cou % 4 && 0 != i ){ 
+                e_o = ( ! e_o );
+                if( 0 == e_o ){ printf(" - " ); };
+                if( 1 == e_o ){ printf(" | " ); };
+            };;
+        };;
+        printf(   " )"   );
+        printf(   "\n"   );
+    }
+
+#undef  I32
+#undef  U32
+#undef  CHR
+//:============================:HELPER_FUNCTIONS_BINARY_PRINT://
 //:HELPER_FUNCTIONS:GENERIC:=================================://
 #define I32  int32_t /** GCC: <stdint.h> **/
 #define U32 uint32_t /** GCC: <stdint.h> **/
@@ -780,7 +822,7 @@
  //:aac2020_paint5d_Put_BitPack <--- @CTRL_F_HELP@
     aac2020_paint5d_BitPack_Put(
         U08* cpu_pix //: AAC2020_PIXNAME_paint5d_cpu_pix     ://
-    ,   U08  glo_com //: Component Index. Divisible By 4.    ://
+    ,   I32  glo_com //: Component Index. Divisible By 4.    ://
     ,   U08  aus_dex //: Auset Index: 0-to-15 inclusive.     ://
     ,   U08  til_val //: <-- Value To Put                    ://
     )
@@ -914,7 +956,7 @@
  //:aac2020_paint5d_Get_BitPack <--- @CTRL_F_HELP@
     aac2020_paint5d_BitPack_Get(
         U08* cpu_pix //: AAC2020_PIXNAME_paint5d_cpu_pix     ://
-    ,   U08  glo_com //: Component Index. Divisible By 4.    ://
+    ,   I32  glo_com //: Component Index. Divisible By 4.    ://
     ,   U08  aus_dex //: Auset Index: 0-to-15 inclusive.     ://
     ,   U08* til_val //: <-- Value To Get                    ://
     )
@@ -7894,6 +7936,18 @@
         /** @VID_IID[ 0087 ]TIME[ 00:23:32 ] *************** **/
         /** ************************************************ **/
 
+        /** ************************************************ **/
+        /** @VID_IID[ 0091 ]TIME[ 00:49:58 ]                 **/
+        /** Failure of "polyfill_texel_fetch" leads me       **/
+        /** to believe that BitPack_Get might actually       **/
+        /** be wrong. Lets do tests that are aware of        **/
+        /** the internal bit layout used.                    **/
+
+        E_V aac2020_P5D_OGL_utc_PokeAndProd_BitPack_Get( V );
+            aac2020_P5D_OGL_utc_PokeAndProd_BitPack_Get(   );
+
+        /** ************************************************ **/
+
         E_V aac2020_P5D_OGL_utc_polyfill_texel_fetch( void );
             aac2020_P5D_OGL_utc_polyfill_texel_fetch(      );
 
@@ -7927,6 +7981,123 @@
 
     #undef  E_V
     #undef    V
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void aac2020_P5D_OGL_utc_PokeAndProd_BitPack_Get( void )
+    {
+    #define PIX AAC2020_PIXNAME_paint5d_cpu_pix
+
+        AAC2020_TODOMAN_Vital(
+            /** @VID_IID[ 0091 ]TIME[ 01:23:50 ] **/
+            "[aac2020_paint5d_BitPack_Get:USE_I32_For_glo_dex]"
+        );;
+
+        //:declare_vars:-------------------------------------://
+
+            I32 g_c ; //:global_component_index / glo_com
+            U08 a_d ; //:auset_dex / aus_dex
+
+            U08 pak_t_v ; //:packed tile value
+            U08 got_t_v ; //:gotten tile value
+
+        //:-------------------------------------:declare_vars://
+        //:manual_pack_and_unpack_test:001:------------------://
+        #define SHOULDNT_MATTER ( 0xFF )
+
+            /** @VID_IID[ 0091 ]TIME[ 01:10:10 ] *********** **/
+            /** I suspect aac2020_paint5d_UTC_BitPack_Get    **/
+            /** is not well enough tested and missing tests  **/
+            /** were we do a SET by manually bit packing.    **/
+            /**                                              **/
+            /** Pack the tile value directly into the pixel  **/
+            /** byte array here and confirm we can get it    **/
+            /** back out with the getter method.             **/
+            /** ******************************************** **/
+
+            g_c     =( 0 );
+            a_d     =( 0 );
+            pak_t_v =( 3 ); /** BIN_011 **/
+
+            PIX[ g_c + 0 ] = SHOULDNT_MATTER ;
+            PIX[ g_c + 1 ] = SHOULDNT_MATTER ;
+            PIX[ g_c + 2 ] = SHOULDNT_MATTER ;
+            PIX[ g_c + 3 ] = ( pak_t_v << ( 0 ) );
+
+            /** GET: t_v ( tile value ) **/
+            aac2020_paint5d_BitPack_Get(
+                        PIX  //: U08* :  CPU_PIX ://
+            ,           g_c  //: I32  :  glo_com ://
+            ,           a_d  //: U08  :  aus_dex ://
+            ,     &(got_t_v) //: U08  :  til_val ://
+            );;
+        
+            if( got_t_v != pak_t_v ){
+                //:MPAUT:Manual_Pack_And_Unpack_Test:
+                ERR("[MUCH_PROBLEMS_WOW_2021_MPAUT:001]");
+            };;
+
+        #undef  SHOULDNT_MATTER
+        //:------------------:manual_pack_and_unpack_test:001://
+        //:manual_pack_and_unpack_test:002:------------------://
+        #define SHOULDNT_MATTER ( 222 )
+
+            g_c     =( 0 );
+            a_d     =( 4 ); /** <--CHANGED[ @VID_IID[0091]  ]**/
+                            /**             @TIME[ 01:12:55 ]**/
+                            /**             @DELTA@          **/
+            pak_t_v =( 3 ); /** BIN_011 **/
+
+            PIX[ g_c + 0 ] = SHOULDNT_MATTER ;
+            PIX[ g_c + 1 ] = SHOULDNT_MATTER ;
+            PIX[ g_c + 2 ] = ( pak_t_v << ( 0 ) ); /**@DELTA@**/
+            PIX[ g_c + 3 ] = SHOULDNT_MATTER ;
+
+            /** GET: t_v ( tile value ) **/
+            aac2020_paint5d_BitPack_Get(
+                        PIX  //: U08* :  CPU_PIX ://
+            ,           g_c  //: I32  :  glo_com ://
+            ,           a_d  //: U08  :  aus_dex ://
+            ,     &(got_t_v) //: U08  :  til_val ://
+            );;
+        
+            if( got_t_v != pak_t_v ){
+                //:MPAUT:Manual_Pack_And_Unpack_Test:
+                ERR("[MUCH_PROBLEMS_WOW_2021_MPAUT:002]");
+            };;
+
+        #undef  SHOULDNT_MATTER
+        //:------------------:manual_pack_and_unpack_test:002://
+        //:manual_pack_and_unpack_test:003:------------------://
+        #define SHOULDNT_MATTER ( 23 )
+
+            g_c     =( 64 * 4 * 7 );
+            a_d     =( 4 ); /** <--CHANGED[ @VID_IID[0091]  ]**/
+                            /**             @TIME[ 01:12:55 ]**/
+                            /**             @DELTA@          **/
+            pak_t_v =( 3 ); /** BIN_011 **/
+
+            PIX[ g_c + 0 ] = SHOULDNT_MATTER ;
+            PIX[ g_c + 1 ] = SHOULDNT_MATTER ;
+            PIX[ g_c + 2 ] = ( pak_t_v << ( 0 ) ); /**@DELTA@**/
+            PIX[ g_c + 3 ] = SHOULDNT_MATTER ;
+
+            /** GET: t_v ( tile value ) **/
+            aac2020_paint5d_BitPack_Get(
+                        PIX  //: U08* :  CPU_PIX ://
+            ,           g_c  //: I32  :  glo_com ://
+            ,           a_d  //: U08  :  aus_dex ://
+            ,     &(got_t_v) //: U08  :  til_val ://
+            );;
+        
+            if( got_t_v != pak_t_v ){
+                //:MPAUT:Manual_Pack_And_Unpack_Test:
+                ERR("[MUCH_PROBLEMS_WOW_2021_MPAUT:002]");
+            };;
+
+        #undef  SHOULDNT_MATTER
+        //:------------------:manual_pack_and_unpack_test:003://
+
+    #undef PIX 
     }
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     void aac2020_P5D_OGL_utc_polyfill_texel_fetch( void )
@@ -8019,6 +8190,20 @@
                 ERR("[texel_fetch_definitely_broken_2021]");
             };;
 
+            //:double_check:u32_got:-------------------------://
+
+                U32 dub_chk=( 0x00 /**dub_chk==doublecheck**/
+                |   cpu_pix[ glo_com + 0 ] << 24 
+                |   cpu_pix[ glo_com + 1 ] << 16
+                |   cpu_pix[ glo_com + 2 ] <<  8               
+                |   cpu_pix[ glo_com + 3 ] <<  0   
+                );;
+                if( dub_chk != u32_var ){
+                    ERR("[MY_OH_MY_2021_01_15_0623PM]");
+                };;
+
+            //:-------------------------:double_check:u32_got://
+
             //: Try Using: aac2020_paint5d_BitPack_Get       ://
             //: To re-build the pixel we put. If that works  ://
             //: Then I am satisfied to maybe... 70% that     ://
@@ -8030,9 +8215,9 @@
                 /** GET: t_v ( tile value ) **/
                 aac2020_paint5d_BitPack_Get(
                       cpu_pix  //: U08* :  ://
-                ,(U08)glo_com  //: U08  :  ://
-                ,         a_d  //: U08  :  ://
-                ,       &(t_v) //: U08  :  ://
+                ,     glo_com  //: I32 <--- #FIXED_IID_0091# ://
+                ,         a_d  //: U08  :   @VID_IID[  0091 ]://
+                ,       &(t_v) //: U08  :   @TIME[ 01:33:25 ]://
                 );;
 
                 ad2=( a_d * 2 );
@@ -8061,6 +8246,16 @@
                 printf("[hex:rbp_001]:%08x\n" , rbp_001 );
                 printf("[hex:u32_got]:%08x\n" , u32_got );
                 printf("[hex:u32_var]:%08x\n" , u32_var );
+
+                aac2020_paint5d_BinaryPrintf(
+                    "[BINARY_OF:rbp_001]" , rbp_001 );;
+                aac2020_paint5d_BinaryPrintf(
+                    "[BINARY_OF:rbp_002]" , rbp_002 );;
+
+                aac2020_paint5d_BinaryPrintf(
+                    "[BINARY_OF:u32_got]" , u32_got );;
+                aac2020_paint5d_BinaryPrintf(
+                    "[BINARY_OF:u32_var]" , u32_var );;
 
                 ERR("[Maybe_BitPacking_Code_Is_Wrong:2021]");
             };;
@@ -8161,14 +8356,14 @@
 
                 aac2020_paint5d_BitPack_Put(
                          cpu_pix  //:<-- [ Bitmap / Texture ]
-                ,   (U08)glo_com   
+                ,   (I32)glo_com   
                 ,   (U08)aus_dex   
                 ,   (U08)til_val  //:<-- Put this value into
                 );;               //:    [ Bitmap / Texture ]
 
                 aac2020_paint5d_BitPack_Get(
                          cpu_pix  //:<-- [ Bitmap / Texture ]
-                ,   (U08)glo_com  
+                ,   (I32)glo_com  
                 ,   (U08)aus_dex  
                 ,  &(u08_til_val) //:<-- Read Value From
                 );;               //:    [ Bitmap / Texture ]
@@ -8231,25 +8426,34 @@
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     void aac2020_P5D_OGL_utc_PAINT5D_til_exp_CTO_max_cor( void )
     {
-
-
-
+        /** ***************************************** **/
+        /** NO_TESTS_NEEDED_BECAUSE MAIN TEST PASSED: **/
+        /**(     aac2020_P5D_OGL_utc_PAINT5D_Get     )**/
+        /**                                           **/
+        /**      @VID_IID[ 0091 ]TIME[ 01:40:00 ]     **/
+        /** ***************************************** **/
     return;
     }
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     void aac2020_P5D_OGL_utc_PAINT5D_til_exp_CTO_diagpix( void )
     {
-
-
-
+        /** ***************************************** **/
+        /** NO_TESTS_NEEDED_BECAUSE MAIN TEST PASSED: **/
+        /**(     aac2020_P5D_OGL_utc_PAINT5D_Get     )**/
+        /**                                           **/
+        /**      @VID_IID[ 0091 ]TIME[ 01:40:00 ]     **/
+        /** ***************************************** **/
     return;
     }
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     void aac2020_P5D_OGL_utc_PAINT5D_painpix_CTO_glocpix( void )
     {
-
-
-
+        /** ***************************************** **/
+        /** NO_TESTS_NEEDED_BECAUSE MAIN TEST PASSED: **/
+        /**(     aac2020_P5D_OGL_utc_PAINT5D_Get     )**/
+        /**                                           **/
+        /**      @VID_IID[ 0091 ]TIME[ 01:40:00 ]     **/
+        /** ***************************************** **/
     return;
     }
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
