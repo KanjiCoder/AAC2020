@@ -1,44 +1,37 @@
-
- 
-#if( AAC2020_CRASH_ON_VITAL_TODO >= 1 )
-
-    #error TODO: Alter this once we get project running again.
-
-#endif
-
 //:AAC2020_PAINT5D_DEFAULT_001:==============================://
-    const char* AAC2020_PAINT5D_DEFAULT_001=(
-                    //|(( VER ))_____________________________|//
-                    "#version 330 core                       \n"
-                    "//:#_KEEP_USAMPLER_HIGH_#://            \n"
-                    "//:#_SAM_PRECISION_BEFORE_SAM_VAR_#://  \n"
-                    "precision highp usampler2D;             \n"
-    
-                  "#define AAC2020_MACRO_THIS_IS_OPEN_GL (1) \n"
-
-                    //|(( UNI ))_____________________________|//
-                        //[:::::SHADERTOY__COMPATIBILITY:::::]//
-                        "#define fragCoord gl_FragCoord      \n"
-                        "uniform vec3 iResolution;           \n"
-                        "uniform usampler2D taudepo;         \n"
-                        "uniform usampler2D paint5d;         \n"
-                                        
-                    //|(( INN ))_____________________________|//
-                    //:      fag_tec:FrAG_shader_TExture_Coord
-                    "in vec2 fag_tec;                        \n"    
-                                                              
-                    //|(( OUT ))_____________________________|//
-                    "out vec4 FragColor;                     \n"
-
+const char* AAC2020_PAINT5D_DEFAULT_001=( //:////////////////://
 //://////////////////////////////////////////////////////////://
-//:OPEN_GL_PAINT5D_Get:--------------------------------------://
+"#version 330 core                           \n"//://////////://
+"#define AAC2020_MACRO_THIS_IS_OPEN_GL (1)   \n"//://////////://
+//://////////////////////////////////////////////////////////://
+//|Everything Below Is Cut+Pasted From       |////://////////://
+//|The C99 File: P5D_OGL._                   |////://////////://
+//://////////////////////////////////////////////////////////://
 
-//:******************************:DO_NOT_PASTE_INTO_GLSL_CODE://
-//:*******************************************:GLSL_POLYFILLS://
-//:OPEN_GL_PAINT5D_Get:======================================://
-//:OPEN_GL_PAINT5D_painpix_CTO_glocpix:======================://
-
-"   //:OPEN_GL_PAINT5D_Get:==============================:// \n"
+"   //:P5D_001____AAC2020_PAINT5D_DEFAULT_001:===========:// \n"
+"   //:glsl_file_scope_stuff:----------------------------:// \n"
+"   #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL           //[ x ]// \n"
+"                                                  //[ x ]// \n"
+"       //:#_KEEP_USAMPLER_HIGH_#          ://     //[ x ]// \n"
+"       //:#_SAM_PRECISION_BEFORE_SAM_VAR_#://     //[ x ]// \n"
+"       precision highp usampler2D;                //[ x ]// \n"
+"                                                  //[ x ]// \n"
+"       //|(( UNI ))____________________________|////[ x ]// \n"
+"       //[:::::::SHADERTOY_COMPATIBILITY:::::::]////[ x ]// \n"
+"       #define fragCoord gl_FragCoord             //[ x ]// \n"
+"       uniform vec3 iResolution;                  //[ x ]// \n"
+"       uniform usampler2D taudepo;                //[ x ]// \n"
+"       uniform usampler2D paint5d;                //[ x ]// \n"
+"                                                  //[ x ]// \n"
+"       //|(( INN ))____________________________|////[ x ]// \n"
+"       //:     fag_tec:FrAGshaderTExtureCoord  :////[ x ]// \n"
+"       in vec2 fag_tec;                           //[ x ]// \n"
+"                                                  //[ x ]// \n"
+"       //|(( OUT ))____________________________|////[ x ]// \n"
+"       out vec4 FragColor;                        //[ x ]// \n"
+"                                                  //[ x ]// \n"
+"   #endif                                         //[ x ]// \n"
+"   //:----------------------------:glsl_file_scope_stuff:// \n"
 "   //:type_macros:--------------------------------------:// \n"
 "   #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL           //[ x ]// \n"
 "                                                  //[ x ]// \n"
@@ -53,7 +46,9 @@
 "       #define SAM   usampler2D    //:  07  ://   //[ x ]// \n"
 "       #define U00    uint( 0 )    //:  08  ://   //[ x ]// \n"
 "       #define I00     int( 0 )    //:  09  ://   //[ x ]// \n"
-"       #define B_3    uint( 3 )    //:  10  ://             \n"
+"       #define B_3    uint( 3 )    //:  10  ://   //[ x ]// \n"
+"       #define V_A                 //:  11  ://   //[ x ]// \n"
+"       #define FV4         vec4    //:  12  ://   //[ x ]// \n"
 "   #else                                          //[ x ]// \n"
 "                                                  //[ x ]// \n"
 "       /** When Running As C99/C11 Code. **/      //[ x ]// \n"
@@ -68,8 +63,34 @@
 "       #define U00    0x00                        //[ x ]// \n"
 "       #define I00   ( 0 )                        //[ x ]// \n"
 "       #define B_3   ( 3 )                        //[ x ]// \n"
+"       #define V_A   void                         //[ x ]// \n"
+"       #define FV4   struct AAC2020_OPEN_GL_FV4   //[ x ]// \n"
 "   #endif                                         //[ x ]// \n"
 "   //:--------------------------------------:type_macros:// \n"
+"   //:constructor_macros:-------------------------------:// \n"
+"   #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL                     \n"
+"                                                            \n"
+"       #define FV4_MAK vec4                                 \n"
+"                                                            \n"
+"   #else                                                    \n"
+"                                                            \n"
+"       #define FV4_MAK aac2020_polyfill_GLSL_MakeVec4       \n"
+"                                                            \n"
+"   #endif                                                   \n"
+"   //:-------------------------------:constructor_macros:// \n"
+"   //:main_shim_macros:---------------------------------:// \n"
+"   #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL                     \n"
+"                                                            \n"
+"       #define RET_MAIN void /** <-- GLSL     code **/      \n"
+"       #define FUN_MAIN main /** <-- GLSL     code **/      \n"
+"                                                            \n"
+"   #else                                                    \n"
+"                                                            \n"
+"       #define RET_MAIN FV4 /** <-- [C99/C11] code **/      \n"
+"       #define FUN_MAIN OPEN_GL_PAINT5D_Main                \n"
+"                                                            \n"
+"   #endif                                                   \n"
+"   //:---------------------------------:main_shim_macros:// \n"
 "       //:- - - - - - - - - - - -- - - - - - - - - - - -:// \n"
 "       U32                                        //[ x ]// \n"
 "       OPEN_GL_PAINT5D_TexelFetch_U32(            //[ x ]// \n"
@@ -134,7 +155,7 @@
 "           U32 til_val ;                          //[ x ]// \n"
 "                                                  //[ x ]// \n"
 "           u32_var =(                             //[ x ]// \n"
-"               OPEN_GL_PAINT5D_TexelFetch_U32(    //[ x ]// \n"   
+"               OPEN_GL_PAINT5D_TexelFetch_U32(    //[ x ]// \n"     
 "                   P5D //:texture_to_sample    :////[ x ]// \n"
 "               ,   glo //:integer_texel_coord  :////[ x ]// \n"
 "               ,   I00 //:level_of_detail_zero :////[ x ]// \n"
@@ -309,6 +330,38 @@
 "       //: . . . . . . . . . . . . :return_from_function:// \n"
 "       }                                          //[ x ]// \n"
 "       //:- - - - - - - - - - - -- - - - - - - - - - - -:// \n"
+"       RET_MAIN                                             \n"
+"       FUN_MAIN(                                            \n"
+"           V_A /** V_A: Void_Argument **/                   \n"
+"       ){                                                   \n"
+"                                                            \n"
+"           /** @VID_IID[ 0093 ]TIME[ 00:21:10 ] **/         \n"
+"           #ifndef AAC2020_MACRO_THIS_IS_OPEN_GL            \n"
+"               FV4 FragColor; /** <-- C99 Code  **/         \n"
+"           #endif                                           \n"
+"                                                            \n"
+"           FragColor = FV4_MAK(                             \n"
+"               1.0                                          \n"
+"           ,   0.0                                          \n"
+"           ,   1.0                                          \n"
+"           ,   1.0 //:Alpha                                 \n"
+"           );;                                              \n"
+"                                                            \n"
+"                                                            \n"
+"           #ifndef AAC2020_MACRO_THIS_IS_OPEN_GL            \n"
+"                                                            \n"
+"               /** ************************** ***           \n"
+"               If [C99/C11] code, return the                \n"
+"               fragment color here.                         \n"
+"               @VID_IID[ 0093 ]TIME[ 00:51:30 ]             \n"
+"               *** ************************** **/           \n"
+"                                                            \n"
+"               return( FragColor ); /**<-- C99**/           \n"
+"                                                            \n"
+"           #endif                                           \n"
+"                                                            \n"
+"       }                                                    \n"
+"       //:- - - - - - - - - - - -- - - - - - - - - - - -:// \n"
 "   //:type_macros:--------------------------------------:// \n"
 "                                                  //[ x ]// \n"
 "       #undef U32      //:  01  ://               //[ x ]// \n"
@@ -321,131 +374,25 @@
 "       #undef U00      //:  08  ://               //[ x ]// \n"
 "       #undef I00      //:  09  ://               //[ x ]// \n"
 "       #undef B_3      //:  10  ://               //[ x ]// \n"
+"       #undef V_A      //:  11  ://               //[ x ]// \n"
+"       #undef FV4      //:  12  ://               //[ x ]// \n"
 "                                                  //[ x ]// \n"
 "   //:--------------------------------------:type_macros:// \n"
-"   //:==============================:OPEN_GL_PAINT5D_Get:// \n"
+"   //:constructor_macros:-------------------------------:// \n"
+"   /** @VID_IID[ 0093 ]TIME{ 00:31:40 ] *************** **/ \n"
+"   /** Decided on [MAK] for [MAKE] as our constructor   **/ \n"
+"   /** postfix ........................................ **/ \n"
+"                                                            \n"
+"       #undef FV4_MAK                                       \n"
+"                                                            \n"
+"   //:-------------------------------:constructor_macros:// \n"
+"   //:main_shim_macros:---------------------------------:// \n"
+"                                                            \n"
+"       #undef RET_MAIN                                      \n"
+"       #undef FUN_MAIN                                      \n"
+"                                                            \n"
+"   //:---------------------------------:main_shim_macros:// \n"
+"   //:===========:P5D_001____AAC2020_PAINT5D_DEFAULT_001:// \n"                                          
 
-
-//:--------------------------------------:OPEN_GL_PAINT5D_Get://
-//://////////////////////////////////////////////////////////://
-                                                                  
-                    //|(( FUN ))_____________________________|//
-                    "void main()                             \n"
-                    "{                                       \n"
-                                                                                                    
-                    " //:tic:texture_integer_color           \n"
-                    "uvec4 tic;                              \n"
-
-        //|ARRAY_SPELLING_OUT_TEXT:__________________________|//
-    "   #define U08 unsigned char                            \n"
-    "   #define _ 0                                          \n"
-    "   #define X 1                                          \n"
-    "   U08 msg_arr[ 25 * 7 ]=U08[ 25 * 7 ](                 \n"
-    //:                  10                  20        25    ://
-    //: 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5    ://
-    "   _,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,X,_,_,   \n"
-    "   _,X,X,X,_,X,X,X,_,X,X,_,_,_,_,_,_,_,_,_,_,X,X,_,_,   \n"
-    "   _,X,_,X,_,X,_,_,_,X,_,X,_,_,_,_,_,_,_,_,_,_,X,_,_,   \n"
-    "   _,X,X,X,_,X,X,X,_,X,_,X,_,X,X,X,_,X,X,X,_,_,X,_,_,   \n"
-    "   _,X,_,_,_,_,_,X,_,X,_,X,_,X,_,X,_,X,_,X,_,_,X,_,_,   \n"
-    "   _,X,_,_,_,X,X,X,_,X,X,_,_,X,X,X,_,X,X,X,_,_,X,_,_,   \n"
-    "   _,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,X,X,X,_    \n"
-    //: DEF001:Default_001                                   ://
-    "  );;                                                   \n"
-    "  #undef  _                                             \n"
-    "  #undef  X                                             \n"
-    "  #undef  U08                                           \n"
-
-//: #error "[TODO:UseTileMapMathToDraw:SYNERR:Message]"
-
-    //| gfc: gl_FragCoord , but top-left origin is [0,0] ___ |//
-    "   vec2 gfc = vec2(                                     \n"
-    "       0             + gl_FragCoord.x                   \n"
-    "   ,   iResolution.y - gl_FragCoord.y                   \n"
-    "   );;                                                  \n"
-
-    //| Normalized_UV_Screen_Coord:__________________________|//
-    "   vec2 u_v = gfc.xy / iResolution.xy;                  \n"
-                
-    //| Calculate_Tile_Coordinate:___________________________|//
-    "   //: tpW : tile_wid_in_pixels                         \n"
-    "   //: tpH : tile_hig_in_pixels                         \n"
-    "   int ntX    = 25; //:Number_Of_Tiles:X-axis           \n"
-    "   int ntY    =  7; //:Number_Of_tiles:Y-axis           \n"
-    "   int tpW    = int( iResolution.x / ntX    );          \n"
-    "   int tpH    = int( iResolution.y / ntY    );          \n"
-    "   int tile_x = int( gfc.x / float( tpW )  );           \n"
-    "   int tile_y = int( gfc.y / float( tpH )  );           \n"
-
-    //| Get 1D index of tile:(dex_til):______________________|//
-    "   int dex_til = tile_x + ( ntX * tile_y);              \n"
-
-    //| Get tile Value:______________________________________|//
-    "   uint tile_value = msg_arr[ dex_til ];                \n"
-
-    //| Draw_Tile_Or_Background_Gradient:____________________|//
-    "   if( tile_value > uint(0) ){                          \n"
-            //|Set output pixel color:_______________________|//
-            //[USING_A_TEXEL_FETCH_OF_PAINT5D:_______________]//
-        
-            "   #define    USE_TEXEL_FETCH ( 1 )             \n"
-            "                                                \n"
-            "   #define    ARG_001 ( paint5d )               \n"
-            "   ivec2      arg_002 = ivec2(   //             \n"
-            "   /**/       int( gfc.x - 0.5 ) //             \n"
-            "   ,          int( gfc.y - 0.5 ) //             \n"
-            "   );;                          ;//             \n"
-            "   int        arg_003 = int( 0 );//             \n"
-            "                                                \n"
-            "   if( 1 != 1 ){                                \n"
-            "                                                \n"
-            "       //:Error: Failed To Set Sampler:         \n"
-            "       FragColor=vec4(0.5,0.2,0.0,1.0);         \n"
-            "                                                \n"
-            "   }else                                        \n"
-            "   if( USE_TEXEL_FETCH >= 1 ){                  \n"
-            "       FragColor = vec4(                        \n"
-            "           texelFetch(                          \n"
-            "           /**/ARG_001 // Texture_To_Sample     \n"
-            "           ,   arg_002 // Texel_Coordinates     \n"
-            "           ,   arg_003 // Level_Of_Detail       \n"
-            "           )                                    \n"
-            "       );;                                      \n"
-            "   }else{                                       \n"
-            "       /** Because I have no fucking clue **/   \n"
-            "       /** What I am doing apparently.    **/   \n"
-            "       FragColor = vec4(                        \n"
-            "           texture(                             \n"
-            "           /**/ARG_001   // Texture_To_Sample   \n"
-            "           ,  (vec2(arg_002)+0.5) / 512.0       \n"
-            "           )                                    \n"
-            "       );;                                      \n"
-            "                                                \n"
-            "   };;                                          \n"
-            "   #undef     ARG_001                           \n"
-            "   #undef     USE_TEXEL_FETCH                   \n"  
-
-    "   }else{                                               \n"
-    "                                                        \n"
-                        //|Set output pixel color:___________|//
-        "   if( gfc.x-0.5 < 512.0 && gfc.y-0.5 < 512.0 ){      "
-        "                                                      "
-        "       FragColor = texelFetch(                        "
-        "           taudepo                /** sampler **/     "
-        "       ,   ivec2( gfc.xy - 0.5 )  /** pixel   **/     "
-        "       ,   int( 0 )               /** L.O.D.  **/     "
-        "       );;                                            "
-        "                                                      "
-        "   }else{                                             "
-        "       FragColor = vec4(                              "
-        "       /**/0.0                                        "
-        "       ,  (u_v.x/2.0)                                 "
-        "       ,   u_v.x                                      "
-        "       ,   1.0f                                       "
-        "       );;                                            "
-        "   };;                                                "
-
-    "   };;                                                  \n"
-    "} //:main://                                          \n\0"
-    ); /////////////////////////////////////////////////////////
+); //:///////////////////////////////////////////////////////://
 //:==============================:AAC2020_PAINT5D_DEFAULT_001://
