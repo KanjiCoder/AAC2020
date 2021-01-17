@@ -1,0 +1,307 @@
+# AAC2020 : Atomic Alice C11 2020
+
+    //:ABOUT:================================================://
+
+        //:SUMMARY:------------------------------------------://
+
+            Fractal auto tiling engine.
+
+        //:------------------------------------------:SUMMARY://
+        //:WARNING:------------------------------------------://
+
+            I am __VERY__ oppinionated about how to write code.
+            My code gets more insane as the years go by.
+            But I have reasons for why I do what I do.
+
+            If you find my opinions offensive, just remember
+            that I kinda sound like Micky Mouse. And if
+            Micky Mouse was trash talking me I'd just
+            laugh my ass off.
+
+        //:------------------------------------------:WARNING://
+        //:INNER_WORKINGS:-----------------------------------://
+
+            1. Zero external dependencies.
+            2. Zero headers, loads DLLs at runtime.
+            3. Zero references to <windows.h>
+
+                Uses assembly code to get access to
+                LoadLibrary and GetProcAddress and then
+                grabs all of the win32 and openGL
+                function pointers from there.
+        
+        //:-----------------------------------:INNER_WORKINGS://
+        //:LIBCHAN:------------------------------------------://
+
+            This project uses a concept called a 
+            "library chain" (LIBCHAN). All sub library code is 
+            included into the project in an EXACT order. Each 
+            library being assigned a different library chain 
+            index. You can compile up to ANY index and get a 
+            working executable file. The idea behind this is 
+            to allow a way to quickly binary search through
+            the code base if ever some type of hard to pin down
+            undefined behavior is introduced into the project.
+
+        //:------------------------------------------:LIBCHAN://
+        //:GOALS:--------------------------------------------://
+
+            //:goal_01:single_payload:- - - - - - - - - - - -://
+
+                The goal of this project is a single payload
+                of 1 executable file when finished. 
+                No installer. If you want to share a build,
+                you only need to pass around the 
+                resulting .exe.
+
+            //:- - - - - - - - - - - -:goal_01:single_payload://
+            //:goal_02:data__leverage:- - - - - - - - - - - -://
+
+                As an engine for INDIE teams, we need to
+                leverage our bits. Get the most bang for
+                our buck with the least number of bits.
+                This isn't just about performance, it is
+                about asset creation time.
+
+                Modern auto tiling engines involve a lot
+                of redundancy with their graphics, so much
+                that there are often automated tools to
+                help generate auto tile sets.
+
+                This is a waste in 2 ways:
+
+                1. Waste of artist time.
+                2. Waste of engine memory.
+
+                To best leverage our data so the artists can
+                achieve the most work per human brain hour,
+                all auto tiles are stored as 4 tile graphics.
+                Top left, top right, bottom left, bottom 
+                right. The engine will use this data to
+                extrapolate a 16 tile auto tile set.
+
+                Auto tile sets are refered to as 
+                "ausets" in this code base. "Subtiles" are
+                the individual graphics that make up a
+                single "auset".
+
+            //:- - - - - - - - - - - -:goal_02:data__leverage://
+            //:goal_03:rigid_not_flexible:- - - - - - - - - -://
+
+                This code base chooses to treat code as a 
+                "House" rather than some type of amorphous
+                half baked ideolistic thing that can be
+                endlessly molded and refactored to your
+                desires.
+
+                Being able to understand and find our way
+                around the code is a very high priority.
+                And we will try and write our code in
+                a very NON-abstract and RIGID way.
+
+                The loss of flexibility is worth the
+                gains in comprehension.
+
+                I also believe that code is read many more
+                times than it is written, so code shall
+                NEVER be written in a style that saves
+                me time as a developer.
+
+            //:- - - - - - - - - -:goal_03:rigid_not_flexible://
+            //:goal_04:mental_torque__turtle_coding:- - - - -://
+
+                The goal is a slow and steady pace of 
+                development. Development will always be 
+                slow. But the code will be solid.
+                Sometimes sub librarys will be composed of
+                over 50% unit testing code.
+
+                NOTE: I do not believe in "TDD"
+                      (Test Driven Development)
+
+                The code base is written using "DOD".
+                (Data Oriented Design). As Mike Acton would
+                say "Different Data Different Problem."
+
+                Code will be written starting at whatever
+                point is mentally clearest to the human.
+                Sometimes that will mean a TDD style of
+                interface & tests first. Other times that
+                will mean doing the exact oppisite and 
+                starting from the low level details.
+
+                Start writing code from wherever your
+                vision of the code is the clearest.
+                Arbitrarily doing the "interface" or
+                "low level details" first is a mindless
+                strategy that could be hindering you
+                half of the time.
+
+            //:- - - - -:goal_04:mental_torque__turtle_coding://
+            //:goal_05:flat_project:- - - - - - - - - - - - -://
+
+                We will keep the project structure as
+                flat as possible. The last thing I want
+                to see is more than one obvious choice
+                as to where a source file should go.
+
+                A branching project structure can be nice
+                for exploring a project and looking for things,
+                but other than that I think it's a stupid
+                idea.
+
+                Since branching folders is nice for FINDING
+                things, we have a folder called "DOC/FPT"
+                where you can setup a tree structure.
+                FPT stands for "Fake Project Tree".
+
+                This solves the problem of finding things
+                without creating refactoring problems and
+                organization headaches.
+
+                Example:
+                    LIB/PAINT5D.D._
+                    LIB/PAINT5D.F._
+                
+                    Is stored in a massive flat LIB folder.
+
+                    But you might also be able to find it as:
+
+                    DOC/FPT/EDITORS/PAINT5D.txt
+                    DOC/FPT/SOME/OTHER/CATEGORY/PAINT5D.txt
+
+                    There! You can have "PAINT5D" wherever
+                    it organizationally makes sense, even
+                    if it is more than one place!
+
+            //:- - - - - - - - - - - - -:goal_05:flat_project://
+            //:goal_06:coarse_grain:- - - - - - - - - - - - -://
+
+                Avoid splitting files into multiple smaller
+                files only in the name of manigability.
+
+                Every sub system should be composed of
+                exactly 2 files. A data file and a function
+                file. 
+
+                It doesn't matter if there is 1000s of lines
+                of code in the file, don't split it up.
+
+                    (  There are exceptions to the rule.   )    
+                    (  But code length is NOT one of them. )    
+                    (  For example: P5D_OGL._ is code that )
+                    (  logically belongs in PAINT5D.F._    )
+                    (  but since it is written to be       )
+                    (  ran as both C99 & GLSL , putting    )
+                    (  it into it's own file makes it      )
+                    (  easier to cut+paste it into         )
+                    (  GLSL shaders.                       )
+                
+                Ideally only ONE PERSON should be touching
+                any sub-system at a time. Splitting a
+                sub-system into multiple files just
+                increases administrative effort and makes
+                it easier for multiple people to be 
+                editing the same system at the same time.
+
+                My experience working on projects with
+                other people leads me to believe that
+                any more than one person working in a 
+                specific domain will lead to negative
+                work being done as people step all over
+                each other's proverbial toes.
+
+            //:- - - - - - - - - - - - -:goal_06:coarse_grain://
+            //:goal_07:looks_matter:- - - - - - - - - - - - -://
+
+                Looks matter. By meticulously lining up
+                code we can use our "fast thinking"
+                part of the brain to "mentally lint"
+                code quickly with minimal human brain cycles.
+
+                I want code that is so meticulously lined
+                up and organized that people who know nothing
+                about the code can spot an error because
+                the code just "looks wrong".
+
+                No matter how many tests we right, the
+                halting problem proves we can never
+                gaurantee the correctness of a programming.
+    
+                So by lining stuff up meticulously, we
+                have one more line of defense in the
+                battle to create correct code.
+
+            //:- - - - - - - - - - - - -:goal_07:looks_matter://
+
+        //:--------------------------------------------:GOALS://
+        //:MISC:---------------------------------------------://
+
+            1. spaces , not tabs. No Auto Formatting.
+
+                Maybe I did too much art school. But I
+                format and align code on a case by case
+                basis, there is no way tabs are going to
+                fly here. People say I am being authoritarian
+                and imposing my viewing preferences on
+                other people by using spaces... Well...
+                Hey... I have a hard time with your 120
+                column limit code when I use a vertical
+                monitor and like to keep things to a
+                hard limit of 64 characters.
+    
+            2. Hard column limit of 64 characters.
+
+                The only exception is TODO notes.
+                Because TODO notes are allowed to be annoying
+                and abnoxious. Hence the idiom
+                "the squeeky wheel gets the grease".
+
+            3. No forward declarations.
+
+                Exception: Unit tests because they get
+                so large it is nice to keep them in
+                the bottom of the file.
+
+                By avoiding forward declarations we can  
+                have a gaurantee of where to find
+                the function definition. It is always
+                ABOVE the call site in the source.
+
+            4. Unit tests in the SAME FILE as code being tested.
+
+                To help prevent rot of test code, we are
+                NOT going to keep a seperate test project
+                or test folder. Test code should be so
+                engrained into the system that it is a
+                herculean effort to REMOVE IT.
+
+                At some point we may want to make that
+                herculean effort to seperate our concerns.
+                But until we have a substantial and successful
+                project we should make it as difficult to
+                de-activate or remove test code as possible.
+
+                But even then I doubt it. Having the test
+                code in the same file as the file being
+                tested makes it really easy to CTRL+F
+                though the code when it fails and find
+                problems.
+
+            5. No header files.
+
+                A header file is basically a big chunk
+                of forward declarations. They are not 
+                allowed. If you want a summary of
+                functions in a file, you can create a
+                NOTES ( sub_system_name.N._ ) file for that.
+
+            6. This is how I write code.
+               
+                Sure, there are some disasters in the code
+                base. But this README.MD file has been
+                formatted using my typical coding style.
+
+        //:---------------------------------------------:MISC://
+
+    //:================================================:ABOUT://
