@@ -233,6 +233,25 @@
                 battle to create correct code.
 
             //:- - - - - - - - - - - - -:goal_07:looks_matter://
+            //:goal_08:simple_tools:- - - - - - - - - - - - -://
+
+                Someone who knows nothing about C code should
+                be able to build this project by just
+                clicking the build script.
+            
+                A slightly experienced person should be
+                able to build by feeding AAC2020.C11
+                into GCC. No linker or dependency
+                configuration required.
+
+                Code should be so consistent that we don't 
+                need a fancy IDE or code ananlysis tools
+                to find our way around.
+
+                My preferred kitchen tool is a pocket knife,
+                not a blender.
+
+            //:- - - - - - - - - - - - -:goal_08:simple_tools://
 
         //:--------------------------------------------:GOALS://
         //:MISC:---------------------------------------------://
