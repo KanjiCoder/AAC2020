@@ -232,6 +232,186 @@
 #undef  SMF /** www.youtube.com/watch?v=_bSEfx6D8mA **/
 #undef  U32
 //:===============================================:TOUCH_FILE://
+//:SAVE_PNG_FILE_TO_DISK:====================================://
+#define U08    uint8_t /** GCC: <stdint.h> **/        //: 01 ://
+#define U32   uint32_t /** GCC: <stdint.h> **/        //: 02 ://
+#define I32    int32_t /** GCC: <stdint.h> **/        //: 03 ://
+#define CHR const char                                //: 04 ://
+#define TXT       char                                //: 05 ://
+#define ERR aac2020_fileboi_Halt                      //: 06 ://
+
+    int
+    AAC2020_FILEBOI_SaveFile_PNG(
+        CHR* nof_wex /** NameOfFile__WithEXtension       ....**/
+    ,   U08* pix_arr /** PIXel ARRay in RGBA byte format ....**/
+    ,   U32  pix_wid /** Width  in pixels of pix_arr     ....**/
+    ,   U32  pix_hig /** Height in pixels of pix_arr     ....**/
+    )
+    {
+        /** @VID_IID[ 0095 ]TIME[ 01:32:50 ] *************** **/
+        /** This function was made by copying and pasting    **/
+        /** R:\G\AAC2020\LIB\MAIN\AAC2020_TestSaveFile_PNG._ **/
+        /** and refactoring it to be more general use.       **/
+        /** ************************************************ **/
+
+        //:error_check_inputs:-------------------------------://
+
+            if( ((CHR*)0) == nof_wex ){ 
+                ERR("[KANJICODER_SAYS:NIL_STR_nof_wex_2021]");
+            };;
+
+            if( ((U08*)0) == pix_arr ){ 
+                ERR("[KANJICODER_SAYS:NIL_ARR_pix_arr:2021]");
+            };;
+            if( 0 == pix_wid || 0 == pix_hig ){
+                ERR("[INVALID_PNG_SIZE]");
+            };;
+
+            /** ".PNG" is 4 characters. Thus file name **/
+            /** should be MORE than 4 characters.      **/
+            if( strlen( nof_wex ) <= 4 ){
+                ERR("[NO_POSSIBLE_WAY_NAME_IS_VALID_2021]");
+            };;
+
+            if(   '/' == nof_wex[ 0 ] //:FORWARDSLASH___CHAR
+            ||   '\\' == nof_wex[ 0 ] //:BACKSLASH_CHARACTER
+            ){
+                ERR("[DO_NOT_PUT_SLASH_BEFORE_BASE_FOLDER]");
+            };;
+
+        //:-------------------------------:error_check_inputs://
+
+        //- unsigned char pix_arr[512*512*4]; //:AKA[ image ]-//
+        //- unsigned int  pix_wid=( 512 );                   -//
+        //- unsigned int  pix_hig=( 512 );                   -//
+
+        //:SAVE_FILE_PNG:------------------------------------://
+        #define FILE_PNG ( "USE:nof_wex" );
+
+            //:create_relative_file_path:fil_png:------------://
+
+                /**  @VID_IID[ 0095 ]TIME[ 01:08:42 ] ...... **/
+                /**  Base Name Of The Saved File.     ...... **/
+                CHR* nam_bas = "MOD/" ;
+
+                I32  len_nof = strlen( nof_wex );
+                I32  len_bas = strlen( nam_bas );
+                I32  len_all =( len_nof + len_bas );
+                TXT* fil_png =((TXT*)0);
+
+                /** @VID_IID[ 0095 ]TIME[ 01:07:20 ]  ...... **/
+                /** Create max index (m_i) variables. ...... **/
+                I32 m_i_bas =( len_bas           - 1 );
+                I32 m_i_nof =( len_nof + len_bas - 1 );
+
+                fil_png = calloc(1, ( len_all + 1 ) );
+
+                I32 l_i =( 0 ); //:local_index
+
+                for( I32 i = 0 ; i < len_all ; i ++ ){
+
+                    if( i >=(   0   )
+                    &&  i <=(m_i_bas)
+                    ){
+                        l_i =( i - 0 );
+                        if( l_i < 0 || l_i > m_i_bas ){
+                            ERR("[l_i:OOB:FROM:BASEFOLDER]");
+                        };;
+
+                        fil_png[ i ] = nam_bas[ l_i ];
+                    }else
+                    if( i >=( m_i_bas + 1 ) 
+                    &&  i <=( m_i_nof + 0 )
+                    ){
+                        /** @VID_IID[ 0096 ]TIME[ 00:13:00 ] **/
+                        /** Minus_One_Fix_To_Var[ l_i ]  *** **/
+                        l_i =( i - m_i_bas - 1 );
+                        if( l_i < 0 || l_i > (len_nof-1) ){
+                            ERR("[l_i:OOB:FROM:FILENAME]");
+                        };;
+                        fil_png[ i ] = nof_wex[ l_i ];
+                    }else{
+                        ERR("[OUT_OF_BOUNDS_SAVE_FILE_2021]");
+                    };;
+                };;
+
+                /** @VID_IID[ 0095 ]TIME[ 01:25:16 ]      ...**/
+                /** Make absolutely sure there is a null  ...**/
+                /** terminator at the end of all of this. ...**/
+                fil_png[ (len_all+1)-1 ]=( 0x00 );
+
+            //:------------:create_relative_file_path:fil_png://
+
+            //: We don't have a touchFolder, only TouchFile.
+            //: AAC2020_FILEBOI_TouchFolder("./MOD");
+            AAC2020_FILEBOI_TouchFile( fil_png /**file_png**/ );
+
+            U32 result = ( 11223344 /** TRAPVALUE **/ );
+
+            #if( AAC2020_INCLUDE_LODEPNG >= 1 ) //:##########://
+
+                result=( 
+                    lodepng_encode32_file( 
+
+                        fil_png  //:AKA[ file_png ]
+
+                    ,   pix_arr  //:AKA[ image ]
+                    ,   pix_wid 
+                    ,   pix_hig
+                    )
+                );;
+
+            #endif //:#######################################://
+            #if( AAC2020_INCLUDE_LODEPNG <= 0 ) //:##########://
+
+                /** @VID_IID[ 3H 17M 18S ] ***************** **/
+                /** When lodepng is not included, we just    **/
+                /** want to pretend it returned success      **/
+                /** so that we do not crash the program.     **/
+                /** ((( result = ( 0 ) )))                   **/
+                /** **************************************** **/
+
+                result = ( 0 );
+
+                /** @VID_IID[ 0065 ]TIME[ 3H 19M 29S ]   * * **/
+                /** SILENCE THE COMPILER.                * * **/
+                if( pix_arr[0]> 1 ){ /** NOOP: NO:LODEPNG **/ };
+                if( pix_wid   > 1 ){ /** NOOP: NO:LODEPNG **/ };
+                if( pix_hig   > 1 ){ /** NOOP: NO:LODEPNG **/ };
+
+                printf("\n\n");
+                printf("[*********************************]\n");
+                printf("[- - - - - - - - - - - - - - - - -]\n")
+                printf("[FROM:LIB/FILEBOI.F._.............]\n");
+                printf("[- - - - - - - - - - - - - - - - -]\n");
+                printf("[PNG_FILE_IS_JUST_A_STUB_FILE.....]\n");
+                printf("[PLEASE_INCLUDE_LODEPNG_TO_FIX....]\n");
+                printf("[SET:AAC2020_INCLUDE_LODEPNG >= 1 ]\n");
+                printf("[*********************************]\n");
+                printf("[SHOULD_BE_IN: LIBCHAN.TOP._ .....]\n");
+                printf("[*********************************]\n");
+                printf("\n\n");
+                fflush( stdout );
+
+            #endif //:#######################################://
+            //:free_calloc_memory:---------------------------://
+
+                free( fil_png /**[ file_png / file_path ]**/ );
+
+            //:---------------------------:free_calloc_memory://
+        #undef  FILE_PNG
+        //:------------------------------------:SAVE_FILE_PNG://
+
+        return( result );
+    } 
+
+#undef  U08                                           //: 01 ://
+#undef  U32                                           //: 02 ://
+#undef  I32                                           //: 03 ://
+#undef  CHR                                           //: 04 ://
+#undef  TXT                                           //: 05 ://
+#undef  ERR                                           //: 06 ://
+//:====================================:SAVE_PNG_FILE_TO_DISK://
 //:FILE_MACROS:BOT:##########################################://
  
     /** REDEFINE, THEN UNDEF. For Redundancy. **/

@@ -1825,7 +1825,7 @@
 #undef  ERR                                           //: 04 ://
 //:==================:CREATED_TO_HELP_UNIT_TEST_USER_CONTROLS://
 //:=======================:ORIGINALLY_NOT_WIRED_INTO_KEYBOARD://
-//:FUNCTIONS_WIRED_INTO_KEYBOARD:============================://
+//:functions_wired_into_keyboard:============================://
 //:TAU:UNIFORM_CONTROLLER_FUNCTIONS:=========================://
 #define CAP aac2020_paint5d_i32_Cap_u32               //: 01 ://
 #define I32  int32_t /** GCC: <stdint.h> **/          //: 02 ://
@@ -2415,17 +2415,197 @@
 #undef  U08                                           //: 05 ://
 #undef  ERR                                           //: 06 ://
 //:=========================:TAU:UNIFORM_CONTROLLER_FUNCTIONS://
-//:============================:FUNCTIONS_WIRED_INTO_KEYBOARD://
+//:============================:functions_wired_into_keyboard://
+//:functions_wired_into_keyboard:============================://
+//:DEFAULT_TILE_DESIGN_FILL_PATTERN:=========================://
+#define CPU_PIX AAC2020_PIXNAME_paint5d_cpu_pix       //: 01 ://
+#define MAX_COM ((512*512*4)-1) /**Max com_dex **/    //: 02 ://
+#define     U08 uint8_t    /** GCC: <stdint.h> **/    //: 03 ://
+#define     I32 int32_t    /** GCC: <stdint.h> **/    //: 04 ://
+#define     B11 3 /** B11 == BINARY:11 ....... **/    //: 05 ://
+#define     ERR aac2020_paint5d_Halt                  //: 06 ://
+#define     LOG aac2020_paint5d_Info_any              //: 07 ://
+
+    void
+    aac2020_paint5d_DrawDefaultAuset_001(
+        void
+    )
+    {   
+        LOG("[aac2020_paint5d_DrawDefaultAuset_001:BEG]",0);
+
+        I32 clr; //: clr for clear
+                     
+        I32 aus; //: aus for aus_dex
+        I32 t_q; //: t_q for til_qua
+        I32 t_e; //: t_e for til_exp
+        I32 t_l; //: t_l for til_lay
+        I32 e_e; //: e_e for "edge index"
+
+        I32 t_v; //: t_v for til_val
+
+        I32 x_0; //: Iterate through X & Y
+        I32 x_1; //: coordinates by specifying
+        I32 y_0; //: the bounds of our
+        I32 y_1; //: double loop.
+
+        I32 m_c; //: max_cor (Maximum [t_x | t_y] coordinate)
+        I32 t_x; //: loc_t_x coordinate
+        I32 t_y; //: loc_t_y coordinate
+
+        /** Before we draw, clear our canvas. **/   
+        /** @VID_IID[ 0094 ]TIME[ 00:25:50 ]  **/
+        for( clr = 0 ; clr <= MAX_COM ; clr++ ){
+            CPU_PIX[ clr ]=((U08)( 0x00 ));
+        };;
+    
+        assert( (16-1)== AAC2020_PAINT5D_MAX_aus_dex ); //: aus
+        assert( ( 4-1)== AAC2020_PAINT5D_MAX_til_qua ); //: t_q
+        assert( (   7)== AAC2020_PAINT5D_MAX_til_exp ); //: t_e
+        assert( ( 3-1)== AAC2020_PAINT5D_MAX_til_lay ); //: t_l
+        assert(    B11== AAC2020_PAINT5D_MAX_til_val ); //: t_v
+
+        /** @VID_IID[ 0094 ]TIME[ 01:19:40 ]       * * * * * **/
+        /** Variable shadowing is bad. Rewind the  * * * * * **/
+        /** video a minute or so to see what I     * * * * * **/
+        /** just deleted.                          * * * * * **/
+        for( aus = 0 ; aus <= (16-1) ; aus ++ ){
+        for( t_q = 0 ; t_q <= ( 4-1) ; t_q ++ ){
+        for( t_e = 0 ; t_e <= (   7) ; t_e ++ ){
+        for( t_l = 0 ; t_l <= ( 3-1) ; t_l ++ ){
+        for( e_e = 0 ; e_e <= ( 4-1) ; e_e ++ ){
+
+            m_c =((I32)
+                aac2020_paint5d_til_exp_CTO_max_cor( t_e )
+                );;         /** til_exp ==> max_cor **/
+                            /**   t_e ======> m_c   **/
+
+            /** @VID_IID[ 0094 ]TIME[ 00:57:00 ] ******** ** **/
+            /** Have the tile value depend on what layer  ** **/
+            /** we are on, as this will be helpful for    ** **/
+            /** debugging the pattern when we are         ** **/
+            /** inspecting it in MS-Paint or rendering    ** **/
+            /** it with GLSL code.  ** ****************** ** **/
+            t_v =(  t_l + 1  );    /** ****************** ** **/
+            assert( t_v <= 3 );    /** ****************** ** **/
+
+            //:configure_edge_to_draw:-----------------------://
+
+                /** @VID_IID[ 0094 ]TIME[ 01:07:05 ] ******* **/
+                /** We just one a single line of tiles drawn **/
+                /** around the boarders of the currently     **/
+                /** active sub-tile of the active auset.     **/
+                /** **************************************** **/
+
+                if( 0 == e_e ){ //:TOP: EDGE
+
+                    x_0=(   0      ); //:MOVE_ON:X_AXIS
+                    x_1=(  m_c     ); //:MOVE_ON:X_AXIS
+
+                    y_0=(   0      ); //:STATIC:TOP
+                    y_1=(   0      ); //:STATIC:TOP
+                }else
+                if( 1 == e_e ){ //:BOT: EDGE
+
+                    x_0=(   0      ); //:MOVE_ON:X_AXIS
+                    x_1=(  m_c     ); //:MOVE_ON:X_AXIS
+
+                    y_0=(  m_c     ); //:STATIC:BOT
+                    y_1=(  m_c     ); //:STATIC:BOT
+                }else
+                if( 2 == e_e ){ //:LEF: EDGE
+
+                    x_0=(   0      ); //:STATIC:LEF
+                    x_1=(   0      ); //:STATIC:LEF
+
+                    y_0=(   0      ); //:MOVE_ON:Y_AXIS
+                    y_1=(  m_c     ); //:MOVE_ON:Y_AXIS
+                }else
+                if( 3 == e_e ){ //:RIG: EDGE
+
+                    x_0=(  m_c     ); //:STATIC:RIG
+                    x_1=(  m_c     ); //:STATIC:RIG
+
+                    y_0=(   0      ); //:MOVE_ON:Y_AXIS
+                    y_1=(  m_c     ); //:MOVE_ON:Y_AXIS
+                }else{
+                    ERR("[BAD_EDGE_INDEX:YEAR:2021]");
+                };;
+
+            //:-----------------------:configure_edge_to_draw://
+            //:draw_one_edge:--------------------------------://
+
+                for( t_x = x_0 ; t_x <= x_1 ; t_x ++ ){
+                for( t_y = y_0 ; t_y <= y_1 ; t_y ++ ){
+
+                    /** Hard Coded To Use: CPU_PIX **/
+                    AAC2020_PAINT5D_Put(
+                        (U08)t_q //: U08 [ til_qua / t_q ] 1 ://
+                    ,   (U08)t_e //: U08 [ til_exp / t_e ] 2 ://
+                    ,   (U08)t_l //: U08 [ til_lay / t_l ] 3 ://
+                    ,   (U08)t_x //: U08 [ loc_t_x / t_x ] 4 ://
+                    ,   (U08)t_y //: U08 [ loc_t_y / t_y ] 5 ://
+                    ,   (U08)aus //: U08 [ aus_dex / aus ] 6 ://
+                    ,   (U08)t_v //: U08 [ til_val / t_v ] 7 ://
+                    );;                               
+
+                };;};;
+
+            //:--------------------------------:draw_one_edge://
+
+        };;};;};;};;};;
+
+        LOG("[aac2020_paint5d_DrawDefaultAuset_001:END]",0);
+    }
+
+#undef  CPU_PIX                                       //: 01 ://
+#undef  MAX_COM                                       //: 02 ://
+#undef      U08                                       //: 03 ://
+#undef      I32                                       //: 04 ://
+#undef      B11                                       //: 05 ://
+#undef      ERR                                       //: 06 ://
+#undef      LOG                                       //: 07 ://
+//:=========================:DEFAULT_TILE_DESIGN_FILL_PATTERN://
+//:============================:functions_wired_into_keyboard://
 //:KEYBOARD_HANDLER:(KeyInn):================================://
-#define I32 int32_t /** GCC: <stdint.h> **/
-#define DEX_EDI_paint5d ( 1 )
-#define KEY_P5D ( AAC2020_KEYBIND.PAINT5D )
+#define             I32 int32_t /**GCC: <stdint.h> **///: 01 ://
+#define DEX_EDI_paint5d ( 1 )                         //: 02 ://
+#define         KEY_P5D ( AAC2020_KEYBIND.PAINT5D )   //: 03 ://
+#define             LOG   aac2020_paint5d_Info_any    //: 04 ://
     
     I32
     aac2020_paint5d_KeyInn( signed char chr_key )
     {
         I32 res_var =( 0 );
 
+        //:SAVE_PAINT5D_SYSTEM_DATA_TO_DISK_AS_PNG_FILE:-----://
+
+            if( chr_key == KEY_P5D.p5d_out ){
+
+                /** @VID_IID[ 0095 ]TIME[ 02:13:45 ]     *** **/
+                /** SAVE_FILE: ".../MOD/paint5d.PNG"     *** **/
+                /** For testing we will want to use the  *** **/
+                /** [ "P" / p5d_pat ] key before saving  *** **/
+                /** to disk so we have some type of      *** **/
+                /** meaningful pattern to look at in our *** **/
+                /** MS-PAINT software of choice.         *** **/
+
+                AAC2020_PIXSAVE_SaveFile_paint5d( );
+                printf("[CMD:p5d_out]\n");
+                fflush( stdout );
+            };;
+
+
+        //:-----:SAVE_PAINT5D_SYSTEM_DATA_TO_DISK_AS_PNG_FILE://
+        //:OVERWRITE_EDITOR_WITH_DEFAULT_AUSETS:-------------://
+
+            if( chr_key == KEY_P5D.p5d_pat ){
+
+                aac2020_paint5d_DrawDefaultAuset_001( );
+                printf("[CMD:p5d_pat]\n");
+                fflush( stdout );
+            };;
+
+        //:-------------:OVERWRITE_EDITOR_WITH_DEFAULT_AUSETS://
         //:CAMERA_CONTROL:-----------------------------------://
 
             //:MoveCamera_XY:--------------------------------://
@@ -2563,9 +2743,10 @@
         return( res_var );
     }
 
-#undef  DEX_EDI_paint5d
-#undef  I32
-#undef  KEY_P5D
+#undef              I32                               //: 01 ://
+#undef  DEX_EDI_paint5d                               //: 02 ://
+#undef          KEY_P5D                               //: 03 ://
+#undef              LOG                               //: 04 ://
 //:================================:KEYBOARD_HANDLER:(KeyInn)://
 //:SUB_SYSTEM_BACKUP_CODE:===================================://
 #define U08 uint8_t /** GCC: <stdint.h> **/
@@ -2863,42 +3044,13 @@
 #define INF   aac2020_paint5d_Info                    //: 07 ://
 #define LOG   aac2020_paint5d_Info_any                //: 08 ://
 
-    U32
-    AAC2020_PAINT5D_Init( U32 u32 )
-    {
-        if( u32 ){ /** Reserved for future use **/ };
-
-        //:#_INI_SPAM_AND_RECURSION_GAURD_#:-----------------://
-
-        /** Hackishly debug what is going on. **/
-        AAC2020_PAINT5D_init_call_count++;
-        I_D("[AAC2020_PAINT5D_init_call_count]:%d\n"
-                ,AAC2020_PAINT5D_init_call_count       );;
-
-        if( AAC2020_CEDITOR_dex_ing == 
-            AAC2020_CEDITOR_paint5d
-        ){  
-            /** If not recursion, it might be being called   **/
-            /** rapidly from another thread. Re-entering     **/
-            /** before it is exiting. But that seems         **/
-            /** unlikely. I think that would require         **/
-            /** more than one thread to call this function.  **/
-
-            ERR("[LIKELY_UNINTENTIONAL_RECURSION]"); 
-        };;
-
-            /** #_EDITOR_INIT_SPAM_GAURD_# **/
-            if( AAC2020_CEDITOR_nex_edi 
-            ==  AAC2020_CEDITOR_dex_edi
-            ){
-                O_K("[PAINT5D:Init_Already_Up_To_Date]");
-            };;
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    aac2020_paint5d_Init( void ){
 
         /** We are now initilaizing paint5d **/
         AAC2020_CEDITOR_dex_ing=( 
         AAC2020_CEDITOR_paint5d  );;
-
-        //:-----------------:#_INI_SPAM_AND_RECURSION_GAURD_#://
 
         /** Early Exit Will Trigger Recursion Guard Error **/
         O_K( "[OH_FUCK...Code_Below_Was_Never_Ran_Before]" );;
@@ -3096,6 +3248,55 @@
         #undef KIL
         #undef E_U
         //:----------------:Run_Unit_Test_If_Never_Ran_Before://
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    U32
+    AAC2020_PAINT5D_Init( U32 u32 )
+    {
+        if( u32 ){ /** Reserved for future use **/ };
+
+        //:#_INI_SPAM_AND_RECURSION_GAURD_#:-----------------://
+
+        /** Hackishly debug what is going on. **/
+        AAC2020_PAINT5D_init_call_count++;
+        I_D("[AAC2020_PAINT5D_init_call_count]:%d\n"
+                ,AAC2020_PAINT5D_init_call_count       );;
+
+        if( AAC2020_CEDITOR_dex_ing == 
+            AAC2020_CEDITOR_paint5d
+        ){  
+            /** If not recursion, it might be being called   **/
+            /** rapidly from another thread. Re-entering     **/
+            /** before it is exiting. But that seems         **/
+            /** unlikely. I think that would require         **/
+            /** more than one thread to call this function.  **/
+
+            ERR("[LIKELY_UNINTENTIONAL_RECURSION]"); 
+        };;
+
+            //:actually_implement_init_gaurd:----------------://
+            /** ******************************************** ***
+            @VID_IID[ 0096 ]TIME[ 00:26:42 ]
+            If we are ALREADY in the paint5d system and
+            we went a command to SWITCH TO paint5d, we do
+            NOT want to re-initialize the system.
+            *** ******************************************** **/
+
+                /** #_EDITOR_INIT_SPAM_GAURD_# **/
+                if( AAC2020_CEDITOR_nex_edi  //:NEXT____EDITOR
+                ==  AAC2020_CEDITOR_dex_edi  //:CURRENT_EDITOR
+                ){
+                    O_K("[PAINT5D:Init_Already_Up_To_Date]");
+                }else{
+                    aac2020_paint5d_Init();
+                };;
+
+            //:----------------:actually_implement_init_gaurd://
+
+        //:-----------------:#_INI_SPAM_AND_RECURSION_GAURD_#://
+        
 
         return( 0x00 );
 

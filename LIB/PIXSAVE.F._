@@ -1,0 +1,75 @@
+//:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=====================://
+    void 
+    aac2020_pixsave_Halt( const char* msg_err )
+    {
+        printf("[FATAL_ERROR:aac2020_pixsave]:%s\n", msg_err );
+        fflush(stdout);
+        exit( 123 );
+    }
+//:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+//:LOG_AFTER_HALT:===========================================://
+    void
+    aac2020_pixsave_Info_any(
+        const char* str_fmt
+    ,   void*       dat_any   
+    )
+    { if( AAC2020_SILENCE.PIXSAVE <= 0 ){
+
+        /** Same Line As Next Printf **/
+        printf("[pixsave_log]....(   " ); fflush( stdout );
+        printf( str_fmt , dat_any      ); fflush( stdout );
+        printf(               "   )\n" ); fflush( stdout );
+
+    };; }
+//:===========================================:LOG_AFTER_HALT://
+//:INITIALIZE_PIXSAVE:=======================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+
+    U32
+    AAC2020_PIXSAVE_InitNone( U32 u32 )
+    {
+        if( u32 ){ /** Reserved for future use **/ };
+
+        /** @VID_IID[ 0095 ]TIME[ 00:16:40 ] *************** **/
+        /** Just a function library of [ static/singleton ]  **/
+        /** functions. No init code is really needed.        **/
+        /** ************************************************ **/
+
+        return( 0x00 );
+    }
+
+#undef  U32
+//:=======================================:INITIALIZE_PIXSAVE://
+//:PIXEL_SAVER_EXPORTING_UTILITY_FUNCTIONS:==================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    void
+    AAC2020_PIXSAVE_SaveFile_taudepo( void )
+    {
+        AAC2020_FILEBOI_SaveFile_PNG(
+            "taudepo.PNG"                    //: <-- nof_wex ://
+        ,   AAC2020_PIXNAME_taudepo_cpu_pix  //: <-- pix_arr ://
+        ,   (U32)512                         //: <-- pix_wid ://
+        ,   (U32)512                         //: <-- pix_hig ://
+        );;
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    void
+    AAC2020_PIXSAVE_SaveFile_paint5d( void )
+    {
+        AAC2020_FILEBOI_SaveFile_PNG(
+            "paint5d.PNG"                    //: <-- nof_wex ://
+        ,   AAC2020_PIXNAME_paint5d_cpu_pix  //: <-- pix_arr ://
+        ,   (U32)512                         //: <-- pix_wid ://
+        ,   (U32)512                         //: <-- pix_hig ://
+        );;
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+ 
+#undef  U32
+//:==================:PIXEL_SAVER_EXPORTING_UTILITY_FUNCTIONS://

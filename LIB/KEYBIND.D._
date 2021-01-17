@@ -94,6 +94,9 @@
             //: - - - - - - - - - - - -- - - - - - - - - - - ://
             CHR xxxxxxx  ;  //: #LAX_COMMA_HACK#
             //: - - - - - - - - - - - -- - - - - - - - - - - ://
+            CHR p5d_out      ;  //: [OUTPUT/SAVE]:USES:PIXSAVE
+            CHR p5d_pat      ;  //: PATTERN: DrawDefaultAuset
+            //: - - - - - - - - - - - -- - - - - - - - - - - ://
             CHR p5d_vp1_lef  ;  //: CAMERA_CONTROL          LEFT
             CHR p5d_vp1_rig  ;  //: CAMERA_CONTROL         RIGHT
             CHR p5d_vp1_upp  ;  //: CAMERA_CONTROL            UP
@@ -166,6 +169,39 @@
     ,   .PAINT5D={
              .xxxxxxx =( 0 )  //:#_PAINT5D_BINDING_CHOICES_#://
 
+
+            /** ******************************************** ***
+                @VID_IID[ 0095 ]TIME[ 02:09:30 ] 
+                @VID_IID[ 0095 ]TIME[ 02:11:10 ]DONE
+
+                Binding save of paint5d data to "O" key.
+                "O" is for "Ouput". We use "O" because it
+                is on the RIGHT hand and is something we
+                think we will use LESS FREQUENTLY.
+                Also... "S" key is already used.
+
+                Press[ '0' ]==> AAC2020_PIXSAVE_SaveFile_paint5d
+
+            *** ******************************************** **/
+
+                ,.p5d_out = 'O'
+
+            /** ******************************************** ***
+                @VID_IID[ 0094 ]TIME[ 01:27:40 ]
+                @VID_IDD[ 0094 ]TIME[ 01:30:10 ]DONE
+
+                Draw default auset pattern (pat==pattern)
+                using the "P" key. Call the fuction:
+                aac2020_paint5d_DrawDefaultAuset_001
+
+                Be careful, this will nuke your work!
+                TODO: Press it 3 times in a row to make
+                      it work. Make a "key combos"
+                      sub library for that.
+            *** ******************************************** **/
+
+                ,.p5d_pat = 'P' //:P for PATTERN
+
             /** ******************************************** ***
                 @VID_IID[ 0066 ]TIME[ 2H 51M 20S ] 
                 Made variables a bit longer so we can
@@ -223,3 +259,15 @@
 #undef  U08 
 #undef  CHR 
 //:===========================================:LIBRARY_STRUCT://
+//:#CONTROL_F_HELP#==========================================://
+/** ******************************************************** ***
+
+    @VID_IID[ 0094 ]TIME[ 01:47:00 ]
+    [ p5d_sav | p5d_save ] ======> [ p5d_out ]
+    "Out" for "Output" rather than "Sav" for "Save"
+    so that we can more easily associate with the "O"
+    key on the RIGHT hand instead of the "S" key on the
+    LEFT hand.
+
+*** ******************************************************** **/
+//:=========================================:#CONTROL_F_HELP#://

@@ -37,7 +37,7 @@ _Static_assert( AAC2020_INCLUDE_GRAQUAD == 14 ,       "14");
 //:==================================================:GRAQUAD://
 //:TAUDEPO:==================================================://
 #if(            AAC2020_INCLUDE_TAUDEPO >=  1 )
-_Static_assert( AAC2020_INCLUDE_TAUDEPO == 22 ,       "22");
+_Static_assert( AAC2020_INCLUDE_TAUDEPO == 23 ,       "23");
 
     #define  FMACROS_TAUDEPO_LoopTick   AAC2020_TAUDEPO_LoopTick
 #endif
@@ -48,7 +48,7 @@ _Static_assert( AAC2020_INCLUDE_TAUDEPO == 22 ,       "22");
 //:==================================================:TAUDEPO://
 //:TAUSYNC:==================================================://
 #if(            AAC2020_INCLUDE_TAUSYNC >=  1 )
-_Static_assert( AAC2020_INCLUDE_TAUSYNC == 24 ,       "24");
+_Static_assert( AAC2020_INCLUDE_TAUSYNC == 25 ,       "25");
 
     #define  FMACROS_TAUSYNC_LoopTick   AAC2020_TAUSYNC_LoopTick
 #endif
@@ -77,6 +77,7 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 24 ,       "24");
     *******
 [REPLACE_KEYS]
     CPUNIFO
+    PIXSAVE
     PIXBACK
     PIXLOAD
     TAUDIRT
@@ -92,6 +93,14 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 24 ,       "24");
 #define      FMACROS_CPUNIFO_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:CPUNIFO://
+//:InitNone:PIXSAVE:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_PIXSAVE >=  1 )
+#define      FMACROS_PIXSAVE_InitNone AAC2020_PIXSAVE_InitNone
+#endif
+#if( AAC2020_INCLUDE_PIXSAVE == 0 )
+#define      FMACROS_PIXSAVE_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:PIXSAVE://
 //:InitNone:PIXBACK:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_PIXBACK >=  1 )
 #define      FMACROS_PIXBACK_InitNone AAC2020_PIXBACK_InitNone
@@ -283,26 +292,27 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 24 ,       "24");
     ( SEE: AAC2020.C11   )  <--[ Likely Locations For ]
     ( SEE: LIBCHAN.TOP._ )  <--[ Official List        ]
 
-    SILENCE ( 1 ) Controls Silencing of non-debug messages.
-    TODOMAN ( 2 ) Replaces: AAC2020_VITAL_TODO and MAYBE_TODO
-    FILEBOI ( 3 ) File System Access Calls.
-    NATIKEY ( 4 ) Native Keyboard To Library Cross Platform Keys
-    IKEYBOX ( 5 ) Collection Of Keys Pressed To Avoid Callbacks
-    IMOUBOX ( 6 ) Collection Of Mouse Data   To Avoid Callbacks
-    KEYBIND ( 7 ) List of keyboard bindings. DATA ONLY NAMESPACE
-    CEDITOR ( 8 ) Current Editor In Focus. (#_EDITOR_CENTRIC_#)
-    GINAWIN ( 9 ) Graphics_Init_And_WINDOW (Native Window Code)
-    DUI     (10 ) Dialog_UI(s) (NATIVE,WIN32)EXAMPLE:ColorPicker
-    GLEBIND (11 ) open GL Easy BINDings (FUNCTIONS)
-    GLCONST (12 ) open GL CONSTants     (DATA     )
-    CPUNIFO (13 ) CPU UNIFOrms (Uniforms Synced To CPU side)
-    GRAQUAD (14 ) GRAdient QUAD (Fragment Shader Surface)
-    FREE_01 (15 ) Free Spot, no code here.
-    FRAGBED (16 ) Fragment Shader Test Bed (Usable Program)
-    PIXNAME (17 ) PIXelNAME: Names+Data for every subsystem.
-    GPUDATA (18 ) Temp Container For Passing Around PIXNAME data
-    PIXLOAD (19 ) Used to load [PIXNAME/GPUDATA] onto GPU.
-    TAUDEPO (20 ) Texture_As_Uniform: DEPOt
-    PAINT5D (21 ) Initialize and control PIXNAME_paint5d data
+    SILENCE (## ) Controls Silencing of non-debug messages.
+    TODOMAN (## ) Replaces: AAC2020_VITAL_TODO and MAYBE_TODO
+    FILEBOI (## ) File System Access Calls.
+    NATIKEY (## ) Native Keyboard To Library Cross Platform Keys
+    IKEYBOX (## ) Collection Of Keys Pressed To Avoid Callbacks
+    IMOUBOX (## ) Collection Of Mouse Data   To Avoid Callbacks
+    KEYBIND (## ) List of keyboard bindings. DATA ONLY NAMESPACE
+    CEDITOR (## ) Current Editor In Focus. (#_EDITOR_CENTRIC_#)
+    GINAWIN (## ) Graphics_Init_And_WINDOW (Native Window Code)
+    DUI     (## ) Dialog_UI(s) (NATIVE,WIN32)EXAMPLE:ColorPicker
+    GLEBIND (## ) open GL Easy BINDings (FUNCTIONS)
+    GLCONST (## ) open GL CONSTants     (DATA     )
+    CPUNIFO (## ) CPU UNIFOrms (Uniforms Synced To CPU side)
+    GRAQUAD (## ) GRAdient QUAD (Fragment Shader Surface)
+    FREE_01 (## ) Free Spot, no code here.
+    FRAGBED (## ) Fragment Shader Test Bed (Usable Program)
+    PIXNAME (## ) PIXelNAME: Names+Data for every subsystem.
+    PIXSAVE (## ) PIXel_SAVER: Saves system data to hard disk
+    GPUDATA (## ) Temp Container For Passing Around PIXNAME data
+    PIXLOAD (## ) Used to load [PIXNAME/GPUDATA] onto GPU.
+    TAUDEPO (## ) Texture_As_Uniform: DEPOt
+    PAINT5D (## ) Initialize and control PIXNAME_paint5d data
 
 *** ******************************************************** **/
