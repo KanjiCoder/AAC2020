@@ -8257,6 +8257,7 @@
 
             #define B____00_00_00_00____00_00_00_00_____B 0x0000
             #define B____01_01_01_01____01_01_01_01_____B 0x5555
+            #define B____00_00_00_00____00_00_00_11_____B (  3 )
     
         //:-----------------:DEFINE_OR_UNDEF_BINARY_CONSTANTS://
 
@@ -8318,6 +8319,10 @@
         ,   B____01_01_01_01____01_01_01_01_____B  //:<-- l_01 
         ,   B____01_01_01_01____01_01_01_01_____B  //:<-- l_02 
 
+
+            #error : WE NEED TESTS TO MAKE SURE THAT
+            #error : THE CLUSTERS ARE ACCESSED IN THE   
+            #error : CORRECT ORDER
 
         };;
 
@@ -8438,7 +8443,11 @@
                 || (cal_cuvbits[lay] != exp_cuvbits)
                 ){
 
-                    /** TCM_BW: TEST_CODE_MIGHT_BE_WRONG **/
+                    /** @VID_IID[ 0098 ]TIME[ 05:42:10 ] ... **/
+                    /** TCM_BW: TEST_CODE_MIGHT_BE_WRONG     **/
+                    /** Because the our calculated expected  **/
+                    /** value does not match our hard coded  **/
+                    /** expected value. .................... **/
                     if(cal_cuvbits[lay] != exp_cuvbits){
                         printf("\n\n");
                         printf("[*****************]\n");
@@ -8513,6 +8522,7 @@
                
             #undef  B____00_00_00_00____00_00_00_00_____B //05//
             #undef  B____01_01_01_01____01_01_01_01_____B //06//
+            #undef  B____00_00_00_00____00_00_00_11_____B //07//
     
         //:-----------------:DEFINE_OR_UNDEF_BINARY_CONSTANTS://
 
