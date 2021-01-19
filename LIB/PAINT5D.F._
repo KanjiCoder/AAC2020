@@ -8,7 +8,8 @@
     {
 
         printf("[PAINT5D_HALT____MSG_ERR]:%s\n", msg_err );
-        fflush(stdout);exit(  11 /** 4*20-69 **/ );         
+        fflush(stdout);
+        exit(  11 /** 4*20-69 **/ );         
 
     }
 
@@ -551,7 +552,7 @@
 
                 /** @CALC@ **/
                 o_x_qua = ( i16_gtx / 256 );
-                o_y_qua = ( i16_gty / 256 ); //:<<<<<<<<<<<<<<<<<<<<< o_x , o_y change to c_x , c_y for "cell" instead of offset.
+                o_y_qua = ( i16_gty / 256 ); //:<<<<<<<<<<<<<<<<<<<<< REFACTOR_TO[ qua_c_x , qua_c_y ]
 
                 /** @REBASE_LOCAL@ **/
                 rem_i_x = i16_gtx - ( o_x_qua * 256 );
@@ -1488,6 +1489,7 @@
     /** ********************************************* **/
 
     /** contains: aac2020_P5D_OGL_UnitTest **/
+    #include "./OPEN_GL_HAKCODE/P5D_OGL.POL._"
     #include "./OPEN_GL_HAKCODE/P5D_OGL._"
 
 //:======================:OPEN_GL_PAINT5D_painpix_CTO_glocpix://
@@ -3214,7 +3216,7 @@
 
                     srand(time(NULL)); 
                     I16 rnd_i16 = rand(); //: 0 to 0x7fff
-                    if( rnd_i16 < ( 0x7fff / 10 ) ){
+                    if( rnd_i16 < ( 0x7fff / 50 ) ){
 
                         /** 0x7fff / 20 : Means: 1 in 20 **/
 
@@ -8053,6 +8055,7 @@
 #define I32  int32_t /** GCC: <stdint.h> **/          //: 04 ://
 #define I16  int16_t /** GCC: <stdint.h> **/          //: 05 ://
 #define ERR  aac2020_paint5d_Halt                     //: 06 ://
+#define LOG  aac2020_paint5d_Info_any                 //: 07 ://
 
     void
     aac2020_P5D_OGL_UnitTest( void )
@@ -8081,11 +8084,13 @@
 
         //:-------------------------------:SYSTEM_DATA:BACKUP://
         //:RUN_UNIT_TESTS:-----------------------------------://
+        LOG("[ABOUT_TO_CALL:aac2020_P5D_OGL_utc_private]\n",0);
 
             /** utc: unit test code **/
             extern void aac2020_P5D_OGL_utc_private( void );
                         aac2020_P5D_OGL_utc_private( );
 
+        LOG("[OUTSIDE_OF::::aac2020_P5D_OGL_utc_private]\n",0);
         //:-----------------------------------:RUN_UNIT_TESTS://
         //:SYSTEM_DATA:RESTORE:------------------------------://
             //:assert_different_pointers:--------------------://
@@ -8180,8 +8185,341 @@
 
         /** ************************************************ **/
 
+        /** @VID_IID[ 0097 ]TIME[ 06:11:05 ] **/
+        /** Stubbing in test for "Bitpacked Sampler" **/
+        printf("[BEF_ENTER:utc_..._cuvipix_CTO_cuvbits]\n");
+        E_V aac2020_P5D_OGL_utc_PAINT5D_cuvipix_CTO_cuvbits(V);
+            aac2020_P5D_OGL_utc_PAINT5D_cuvipix_CTO_cuvbits( );
+        printf("[AFT_ENTER:utc_..._cuvipix_CTO_cuvbits]\n");
+
     #undef  E_V
     #undef    V
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void aac2020_P5D_OGL_utc_PAINT5D_cuvipix_CTO_cuvbits( void)
+    {
+    #define TAB_INN_WID ( 3 * 8 ) /** num columns **/
+    #define TAB_OUT_WID (   3   ) /** 3 output columns **/
+    #define NUM_TESTS   (   2   )
+    #define CUVIPIX     struct AAC2020_OPEN_GL_PAINT5D_CUVIPIX
+    
+        //:DECLARE_ALL_VARS_EXCEPT_TABLES:-------------------://
+
+            /** [ITERATOR/LOOP] VARS **/
+
+            I32 t_i     ; //: tes_dex / test index           ://
+            I32 mti     ; //: Max___Test___Index             ://
+            //:- - - - - - - - - - - -- - - - - - - - - - - -://
+            I32 t_e     ; //: til_exp / tile_exponent        ://
+            I32 lay     ; //: til_lay / tile_layer(enum/dex) ://
+            I32 t_q     ; //: til_qua / tile_quadrant        ://
+            I32 a_d     ; //: aus_dex / Auset_inDex          ://
+
+            /** Tile Coords. Always [ 0,0 ] for now. ........**/
+
+            I32 t_x     ; //: loc_t_x : local_tile_x  .......://
+            I32 t_y     ; //: loc_t_y : local_tile_y  .......://
+
+            /** Test array unpacking calculation vars. ......**/
+
+            I32 bas_tes ; /** BASe_address: TESt #           **/
+            I32 bas_tv3 ; /** BASe_address: tile_vals(three) **/
+            I32 dexodat ; /** inDEX_Of_DATa( data point )    **/
+            U08 put_t_v ; /** PUT_tile_value,TileValueToPut  **/
+
+            /** Canvas_User_View_Pixel (Pixel Location) .....**/
+
+            CUVIPIX cuvipix;
+
+            /** Expected and [ gotten / actual ] outputs. ...**/
+            /** cuvbits: Canvas_User_View___BITS ............**/
+            /**                                              **/
+            /** @VID_IID[ 0098 ]TIME[ 04:05:10 ]             **/
+            /** cal_cuvbits: EXPLAINED. .....................**/
+
+            U32 exp_cuvbits   ; /** Expected: cuvbits .......**/
+            U32 cal_cuvbits[3]; /** exp_cuvbits:CALCULATED...**/
+            U32 got_cuvbits   ; /** Gotten  : cuvbits .......**/
+
+        //:DEFINE_OR_UNDEF_BINARY_CONSTANTS:-----------------://
+        /** ************************************************ ***
+        @VID_IID[ 0098 ]TIME[ 02:27:00 ]
+        C99 does not have binary constant notation, so we
+        will have to hard code some defines for the
+        expected output valuess to make this code more
+        managable.
+        *** ************************************************ **/
+
+            #define B_00 ( 0 )
+            #define B_01 ( 1 )
+            #define B_10 ( 2 )
+            #define B_11 ( 3 )
+
+            #define B____00_00_00_00____00_00_00_00_____B 0x0000
+            #define B____01_01_01_01____01_01_01_01_____B 0x5555
+    
+        //:-----------------:DEFINE_OR_UNDEF_BINARY_CONSTANTS://
+
+        /** ************************************* **/
+        /** @VID_IID[ 0097 ]TIME[ 06:21:30 ]      **/
+        /** Usually we have one test table with   **/
+        /** inputs and expected outputs in the    **/
+        /** same row. These tests have a LOT      **/
+        /** of inputs though. So have two tables. **/
+        /** One for inputs and one for expected   **/
+        /** outputs.                              **/
+        /** ************************************* **/
+        
+        U32 tab_utc_inn[ TAB_INN_WID * NUM_TESTS ]={
+
+        //:INPUTS_FOR_TEST[ 01 ]:
+            //: All 3 layers
+            //: 3 two bit colors because there are 3 layers
+            //: for any tile you can set down.
+            //: 8 rows because there are 8 tile sizes
+            //: (til_exp 0 to 7 )
+                B_00,B_00,B_00  //:<--- tile exponent #0 
+            ,   B_00,B_00,B_00  //:<--- tile exponent #1 
+            ,   B_00,B_00,B_00  //:<--- tile exponent #2 
+            ,   B_00,B_00,B_00  //:<--- tile exponent #3 
+            ,   B_00,B_00,B_00  //:<--- tile exponent #4
+            ,   B_00,B_00,B_00  //:<--- tile exponent #5 
+            ,   B_00,B_00,B_00  //:<--- tile exponent #6 
+            ,   B_00,B_00,B_00  //:<--- tile exponent #7
+            //: |   |    |   |
+            //: l_00,l_01,l_02 <-- 3 layers.
+
+        //:INPUTS_FOR_TEST[ 02 ]:
+            ,   B_01,B_01,B_01  //:<--- tile exponent #0 
+            ,   B_01,B_01,B_01  //:<--- tile exponent #1 
+            ,   B_01,B_01,B_01  //:<--- tile exponent #2 
+            ,   B_01,B_01,B_01  //:<--- tile exponent #3 
+            ,   B_01,B_01,B_01  //:<--- tile exponent #4
+            ,   B_01,B_01,B_01  //:<--- tile exponent #5 
+            ,   B_01,B_01,B_01  //:<--- tile exponent #6 
+            ,   B_01,B_01,B_01  //:<--- tile exponent #7
+            //: |   |    |   |
+            //: l_00,l_01,l_02 <-- 3 layers.
+
+
+            #error ADD_MORE_TEST_CASES_TO_THIS_TEST_2021_01_19
+
+        };;
+
+        U32 tab_utc_out[ TAB_OUT_WID * NUM_TESTS ]={
+
+            //:1st test expected output
+            B____00_00_00_00____00_00_00_00_____B  //:<-- l_00  
+        ,   B____00_00_00_00____00_00_00_00_____B  //:<-- l_01 
+        ,   B____00_00_00_00____00_00_00_00_____B  //:<-- l_02 
+
+            //:2nd test expected output
+        ,   B____01_01_01_01____01_01_01_01_____B  //:<-- l_00  
+        ,   B____01_01_01_01____01_01_01_01_____B  //:<-- l_01 
+        ,   B____01_01_01_01____01_01_01_01_____B  //:<-- l_02 
+
+
+        };;
+
+        //:SIMPLE_PUT_GET_TEST:------------------------------://
+        /** Loop through all tests, but only use     **/
+        /** auset zero. Immediately check values     **/
+        /** after setting.                           **/
+        mti=( NUM_TESTS - 1 );
+
+        //:TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT://
+        for( t_i = 0 ; t_i <= mti ; t_i ++ ){
+        //:TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT://
+
+        /** @VID_IID[ 0098 ]TIME[ 04:26:42 ] **/
+        cal_cuvbits[ 0 ]=( 0x00 ); //:layer #0 (l_00)
+        cal_cuvbits[ 1 ]=( 0x00 ); //:layer #1 (l_01)
+        cal_cuvbits[ 2 ]=( 0x00 ); //:layer #2 (l_02)
+
+        for( lay = 0 ; lay <=(3-1); lay ++ ){
+        for( t_e = 0 ; t_e <=(8-1); t_e ++ ){
+        
+
+            //:Get expected output:
+            exp_cuvbits =(
+                tab_utc_out[ (t_i * TAB_OUT_WID) + lay ]
+            );;
+
+            bas_tes = ( t_i * TAB_INN_WID     );
+            bas_tv3 = ( bas_tes + ( t_e * 3 ) ); //:3tilevalues
+            dexodat = ( bas_tv3 + lay ); //:inDEX_Of_DATum
+            assert( dexodat <= ((TAB_INN_WID * NUM_TESTS)-1) );
+            put_t_v = tab_utc_inn[ dexodat ];
+            assert( put_t_v <= 3 /**BIN_011**/ );
+            
+            //:calculate:cal_cuvbits:------------------------://
+
+                assert( lay >= 0 && lay <= (3-1) );
+
+                cal_cuvbits[ lay ] =(
+                cal_cuvbits[ lay ]
+                   |
+                (
+                    put_t_v <<( t_e * 2 )
+                ));;
+
+            //:------------------------:calculate:cal_cuvbits://
+            
+            for( t_q = 0 ; t_q <=( 4-1) ; t_q ++ ){
+            for( a_d = 0 ; a_d <=(16-1) ; a_d ++ ){
+
+                /** **************************************** **/
+                /** @VID_IID[ 0097 ]TIME[ 07:36:50 ]         **/
+                /** [0,0] is the ONLY local coordinate that  **/
+                /** is valid for ALL possible values of      **/
+                /** [ til_exp / t_e ]( Tile(size)Exponent )  **/
+                t_x =( 0 ); /** t_x === loc_t_x              **/
+                t_y =( 0 ); /** t_y === loc_t_y              **/
+                /** **************************************** **/
+
+                AAC2020_PAINT5D_Put(
+                /**/(U08)    t_q     //: U08  til_qua / t_q  ://
+                ,   (U08)    t_e     //: U08  til_exp / t_e  ://
+                ,   (U08)    lay     //: U08  til_lay / t_l  ://
+                ,   (U08)    t_x     //: U08  loc_t_x / t_x  ://
+                ,   (U08)    t_y     //: U08  loc_t_y / t_y  ://
+                ,   (U08)    a_d     //: U08  aus_dex / a_d  ://
+                ,   (U08)    put_t_v //: U08  til_val / t_v  ://
+                );;
+
+            };;};;//:NEXT[ t_q , a_d       ]
+        };;};;    //:NEXT[ t_e , lay       ]
+
+        /** Loop through again. Using a triple loop instead  **/
+        /** of quadruple loop and check your outputs against **/
+        /** expected values. @VID_IID[ 0098 ]TIME[ 04:38:02 ]**/
+        /**                                                  **/
+        /** @VID_IID[ 0098 ]TIME{ 04:45:10 ]....             **/
+        /** UPDATE... make it another quadruple loop.        **/
+        /** and include the tile exponent (t_e)              **/
+
+        for( lay = 0 ; lay <=( 3-1) ; lay ++ ){
+        for( t_e = 0 ; t_e <=( 8-1) ; t_e ++ ){
+        for( t_q = 0 ; t_q <=( 4-1) ; t_q ++ ){
+        for( a_d = 0 ; a_d <=(16-1) ; a_d ++ ){
+
+                /** @VID_IID[ 0098 ]TIME[ 04:44:00 ] ........**/
+                /** As long as all test code in this      ...**/
+                /** function uses a [t_x,t_y]==[0,0]      ...**/
+                /** the tile exponent (t_e) value should  ...**/
+                /** NOT affect the results of the tests.  ...**/
+                t_x=( 0 );
+                t_y=( 0 );
+
+                /** @VID_IID[0098]TIME[ 04:49:40 ] ......... **/
+                /** #_WHY_t_e_DOESNT_CHANGE_TEST_OUTPUTS_#.. **/
+                cuvipix=(
+                OPEN_GL_PAINT5D_painpix_CTO_cuvipix(
+                /**/(I32)    t_q     //: [ til_qua | t_q ]   ://
+                ,   (I32)    t_e     //: [ til_exp | t_e ]   ://
+                ,   (I32)    lay     //: [ til_lay | t_l ]   ://
+                ,   (I32)    t_x     //: [ loc_t_x | t_x ]   ://
+                ,   (I32)    t_y     //: [ loc_t_y | t_y ]   ://
+                ));;
+
+                got_cuvbits=(
+                OPEN_GL_PAINT5D_cuvipix_CTO_cuvbits(
+                /**/cuvipix.cuv_i_x  //: I32 cuv_i_x_000_255 ://
+                ,   cuvipix.cuv_i_y  //: I32 cuv_i_y_000_255 ://
+                ,   (I32)lay         //: I32 lay_dex_000_002 ://
+                ,   (I32)a_d         //: I32 aus_dex_000_015 ://
+                ));;
+
+                if( 0
+                /** @VID_IID[ 0098 ]TIME[ 04:13:30 ] **/
+                /** Compare exp_cuvbits against both **/
+                /** of these things................. **/
+                || (got_cuvbits      != exp_cuvbits) 
+                || (cal_cuvbits[lay] != exp_cuvbits)
+                ){
+
+                    /** TCM_BW: TEST_CODE_MIGHT_BE_WRONG **/
+                    if(cal_cuvbits[lay] != exp_cuvbits){
+                        printf("\n\n");
+                        printf("[*****************]\n");
+                        printf("[TCM_BW:2021_01_19]\n");
+                        printf("[*****************]\n");
+                        printf("\n\n");
+                    };;
+    
+                    printf("[COMPARE_YOUR_BITS_YOU_FOOL!]\n");
+
+                    printf("[t_i]:%d\n", t_i );
+                    printf("[t_e]:%d\n", t_e );
+                    printf("[lay]:%d\n", lay );
+
+                    aac2020_paint5d_BinaryPrintf(
+                    "[got_cuvbits]",got_cuvbits  );;
+
+                    aac2020_paint5d_BinaryPrintf(
+                    "[exp_cuvbits]",exp_cuvbits  );;
+
+                    aac2020_paint5d_BinaryPrintf(
+                    "[cal_cuvbits[lay]]",cal_cuvbits[lay]  );;
+
+                    ERR("[CUVBITS_DONT_MATCH_YEAR_2021]");
+
+                };;
+
+        };;};;};;};; //:NEXT[ lay , t_q , a_d ]
+
+        //:TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT://
+        };; //:NEXT[       t_i             ]
+        //:TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT://
+
+        //:------------------------------:SIMPLE_PUT_GET_TEST://
+////    //:PUT_ALL_THEN_GET_ALL_TEST:------------------------://
+////    /** Same as previous test. But set all values then **/
+////    /** check all values. To make sure there are no    **/
+////    /** memory stomps.                                 **/
+////    for( t_i = 0 ; t_i <= mti ; t_i ++ ){
+////
+////
+////    };;
+////    for( t_i = 0 ; t_i <= mti ; t_i ++ ){
+////
+////
+////    };;
+////    //:------------------------:PUT_ALL_THEN_GET_ALL_TEST://
+////    //:PUT_ALL_GET_ALL_USING_ALL_AUSETS:-----------------://
+////    /** Loop through all tests.                  **/
+////    /** And set all test values for every auset. **/
+////    for( t_i = 0 ; t_i <= mti ; t_i ++ ){
+////    for( a_d = 0 ; a_d <= a_d ; a_d ++ ){
+////
+////
+////    };;};;
+////    for( t_i = 0 ; t_i <= mti ; t_i ++ ){
+////    for( a_d = 0 ; a_d <= a_d ; a_d ++ ){
+////
+////
+////    };;};;
+////    //:-----------------:PUT_ALL_GET_ALL_USING_ALL_AUSETS://
+
+
+        AAC2020_TODOMAN_Vital("[MORE_TEST_CASES_2021_BLUE]");
+
+        //:DEFINE_OR_UNDEF_BINARY_CONSTANTS:-----------------://
+
+            #undef  B_00                                  //01//
+            #undef  B_01                                  //02//
+            #undef  B_10                                  //03//
+            #undef  B_11                                  //04//
+               
+            #undef  B____00_00_00_00____00_00_00_00_____B //05//
+            #undef  B____01_01_01_01____01_01_01_01_____B //06//
+    
+        //:-----------------:DEFINE_OR_UNDEF_BINARY_CONSTANTS://
+
+    #undef TAB_INN_WID 
+    #undef TAB_OUT_WID 
+    #undef NUM_TESTS   
+    #undef CUVIPIX
     }
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     void aac2020_P5D_OGL_utc_PokeAndProd_BitPack_Get( void )
@@ -8858,4 +9196,54 @@
 #undef  I32                                           //: 04 ://
 #undef  I16                                           //: 05 ://
 #undef  ERR                                           //: 06 ://
+#undef  LOG                                           //: 07 ://
 //:================================:UNIT_TEST_SECTION:P5D_OGL://
+//:VARIABLE_NAMES_AND_CONTROL_F_HELP:========================://
+/** ******************************************************** ***
+
+    WRONG[ cuviloc ]===>CORRECT[ cuvipix ]
+    WRONG[ cuv_loc ]===>CORRECT[ cuvipix ]
+
+    WRONG[ o_x_qua ]===>CORRECT[ qua_c_x ]
+    WRONG[ o_y_qua ]===>CORRECT[ qua_c_y ]
+    WRONG[ i_x_qua ]===>CORRECT[ qua_c_x ]
+    WRONG[ i_y_qua ]===>CORRECT[ qua_c_y ]
+    WRONG[ qua_o_x ]===>CORRECT[ qua_c_x ]
+    WRONG[ qua_o_y ]===>CORRECT[ qua_c_y ]
+    WRONG[ qua_i_x ]===>CORRECT[ qua_c_x ]
+    WRONG[ qua_i_y ]===>CORRECT[ qua_c_y ]
+
+    WRONG[ o_x_lay ]===>CORRECT[ lay_c_x ]
+    WRONG[ o_y_lay ]===>CORRECT[ lay_c_y ]
+    WRONG[ i_x_lay ]===>CORRECT[ lay_c_x ]
+    WRONG[ i_y_lay ]===>CORRECT[ lay_c_y ]
+    WRONG[ lay_o_x ]===>CORRECT[ lay_c_x ]
+    WRONG[ lay_o_y ]===>CORRECT[ lay_c_y ]
+    WRONG[ lay_i_x ]===>CORRECT[ lay_c_x ]
+    WRONG[ lay_i_y ]===>CORRECT[ lay_c_y ]
+
+        qua_c_x : QUAdrant Cell X
+        qua_c_y : QUAdrant Cell Y
+
+        lay_c_x : Layer    Cell X ( tile layer cell , x )
+        lay_c_y : Layer    Cell Y ( tile layer cell , y )
+
+        cuvipix : Canvas_User_VIew:PIXel (pixel coordinate)
+
+        --------------------------------------------------------
+        painpix : Conceptually it is all of these values
+                  but there is no formal struct.
+                  IN THE EXACT ORDER BELOW.
+
+            01: til_qua   <-- Auset Tile Sub Quadrant Index  
+            02: til_exp   <-- TileExponent (TileSizeEnum)    
+            03: til_lay   <-- TileLayer .................    
+            04: loc_t_x   <-- Local  Tile X Coord / b_x      
+            05: loc_t_y   <-- Local  Tile Y Coord / b_y      
+        --------------------------------------------------------
+
+*** ******************************************************** **/
+//:========================:VARIABLE_NAMES_AND_CONTROL_F_HELP://
+
+
+

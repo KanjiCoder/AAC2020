@@ -1,0 +1,133 @@
+//[||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]//
+//[       POL: Polyfill (C99 code mimicking glsl funcs)      ]//
+//[||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]//
+
+//:GLSL_POLYFILLS:*******************************************://
+//:DO_NOT_PASTE_INTO_GLSL_CODE:******************************://
+
+    #ifdef MACRO_THIS_IS_GLSL
+        #error THIS_IS_NOT_GLSL_CODE_2021
+    #endif
+
+//:******************************:DO_NOT_PASTE_INTO_GLSL_CODE://
+//:DO_NOT_PASTE_INTO_GLSL_CODE:******************************://
+#define I32 int32_t /** GCC: <stdint.h> **/
+#define U08 uint8_t /** GCC: <stdint.h> **/
+#define F32 float
+
+        /** Mocked up "ivec2" to store global [x,y] * * * *  **/
+        /** coordinates.                            * * * *  **/
+        /** @VID_IID[ 0092 ]TIME[ 00:27:55 ]        * * * *  **/
+
+            struct AAC2020_OPEN_GL_IV2{
+                I32 x ;
+                I32 y ;
+            };
+
+        /** Needed to adapt the texel fetch polyfill.* * * * **/
+        /** aac2020_polyfill_texel_fetch             * * * * **/
+        /** @VID_IID[ 0092 ]TIME[ 00:26:45 ]         * * * * **/
+
+            struct AAC2020_OPEN_GL_UV4{
+
+                U08 x ; //:RED
+                U08 y ; //:GREEN
+                U08 z ; //:BLUE
+                U08 w ; //:ALPHA
+
+            };
+
+        /** @VID_IID[ 0093 ]TIME[ 00:24:50 ]   * * * * * * * **/
+        /** Another Shim for float vectors for * * * * * * * **/
+        /** output frag color.                 * * * * * * * **/
+
+            struct AAC2020_OPEN_GL_FV4{
+
+                F32 x ; //:RED
+                F32 y ; //:GREEN
+                F32 z ; //:BLUE
+                F32 w ; //:ALPHA
+
+            };
+
+
+#undef  I32
+#undef  U08
+#undef  F32
+//:******************************:DO_NOT_PASTE_INTO_GLSL_CODE://
+//:DO_NOT_PASTE_INTO_GLSL_CODE:******************************://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 01 ://
+#define I32  int32_t /** GCC: <stdint.h> **/          //: 02 ://
+#define IV2   struct AAC2020_OPEN_GL_IV2              //: 03 ://
+#define UV4   struct AAC2020_OPEN_GL_UV4              //: 04 ://
+#define SAM      int /** IGNORED IN [C99/C11] **/     //: 05 ://
+#define FV4   struct AAC2020_OPEN_GL_FV4              //: 06 ://
+#define F32   float                                   //: 07 ://
+
+    //:GLSL_POLYFILL_TexelFetch:=============================://
+
+        UV4
+        aac2020_polyfill_texel_fetch(
+            SAM u32_sam //:<--GLSL only. Zero For [C99/C11]  ://
+        ,   IV2 glo
+        ,   I32 levodet_ALWAYS_ZERO
+        )
+        {
+            /** @VID_IID[ 0085 ]TIME[ 02:40:05 ] ******* **/
+            /** @VID_IID[ 0092 ]TIME[ 01:06:40 ] ******* **/
+            if(   u32_sam             ){ /** NOOP **/ };
+            if(   levodet_ALWAYS_ZERO ){ /** NOOP **/ };
+            /** **************************************** **/
+
+            UV4 uv4; /** Output 32 bit pixel value. **/
+
+            I32 glo_dex; /** Global Pixel Index **/
+            I32 glo_com; /** Global Comp. Index **/
+            glo_dex = glo.x + ( glo.y  *  512 );
+            glo_com =( glo_dex * 4  );
+
+            //:NO_LONGER_BIT_PACKED:-------------------------://
+            #define CPU_PIX AAC2020_PIXNAME_paint5d_cpu_pix
+
+                uv4.x = CPU_PIX[ glo_com + 0 ] ; //:RED
+                uv4.y = CPU_PIX[ glo_com + 1 ] ; //:GREEN
+                uv4.z = CPU_PIX[ glo_com + 2 ] ; //:BLUE
+                uv4.w = CPU_PIX[ glo_com + 3 ] ; //:ALPHA
+
+            #undef  CPU_PIX
+            //:-------------------------:NO_LONGER_BIT_PACKED://
+           
+            return( uv4 );
+        }
+
+        //:=========================:GLSL_POLYFILL_TexelFetch://
+        //:GLSL_POLYFILL_MakeVec4:===========================://
+
+            FV4
+            aac2020_polyfill_GLSL_MakeVec4(
+                F32 f_x
+            ,   F32 f_y
+            ,   F32 f_z
+            ,   F32 f_w
+            )
+            {
+                FV4 fv4;
+                fv4.x = ( f_x );
+                fv4.y = ( f_y );
+                fv4.z = ( f_z );
+                fv4.w = ( f_w );
+                return( fv4 );
+            }
+
+        //:===========================:GLSL_POLYFILL_MakeVec4://
+
+
+#undef  U32                                           //: 01 ://
+#undef  I32                                           //: 02 ://
+#undef  IV2                                           //: 03 ://
+#undef  UV4                                           //: 04 ://
+#undef  SAM                                           //: 05 ://
+#undef  FV4                                           //: 06 ://
+#undef  F32                                           //: 07 ://
+//:******************************:DO_NOT_PASTE_INTO_GLSL_CODE://
+//:*******************************************:GLSL_POLYFILLS://

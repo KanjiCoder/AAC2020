@@ -1,219 +1,121 @@
-//:GLSL_POLYFILLS:*******************************************://
-//:DO_NOT_PASTE_INTO_GLSL_CODE:******************************://
 
-    #ifdef MACRO_THIS_IS_GLSL
-        #error THIS_IS_NOT_GLSL_CODE_2021
-    #endif
-
-//:******************************:DO_NOT_PASTE_INTO_GLSL_CODE://
-//:DO_NOT_PASTE_INTO_GLSL_CODE:******************************://
-#define I32 int32_t /** GCC: <stdint.h> **/
-#define U08 uint8_t /** GCC: <stdint.h> **/
-#define F32 float
-
-        /** Mocked up "ivec2" to store global [x,y] * * * *  **/
-        /** coordinates.                            * * * *  **/
-        /** @VID_IID[ 0092 ]TIME[ 00:27:55 ]        * * * *  **/
-
-            struct AAC2020_OPEN_GL_IV2{
-                I32 x ;
-                I32 y ;
-            };
-
-        /** Needed to adapt the texel fetch polyfill.* * * * **/
-        /** aac2020_polyfill_texel_fetch             * * * * **/
-        /** @VID_IID[ 0092 ]TIME[ 00:26:45 ]         * * * * **/
-
-            struct AAC2020_OPEN_GL_UV4{
-
-                U08 x ; //:RED
-                U08 y ; //:GREEN
-                U08 z ; //:BLUE
-                U08 w ; //:ALPHA
-
-            };
-
-        /** @VID_IID[ 0093 ]TIME[ 00:24:50 ]   * * * * * * * **/
-        /** Another Shim for float vectors for * * * * * * * **/
-        /** output frag color.                 * * * * * * * **/
-
-            struct AAC2020_OPEN_GL_FV4{
-
-                F32 x ; //:RED
-                F32 y ; //:GREEN
-                F32 z ; //:BLUE
-                F32 w ; //:ALPHA
-
-            };
-
-
-#undef  I32
-#undef  U08
-#undef  F32
-//:******************************:DO_NOT_PASTE_INTO_GLSL_CODE://
-//:DO_NOT_PASTE_INTO_GLSL_CODE:******************************://
-#define U32 uint32_t /** GCC: <stdint.h> **/          //: 01 ://
-#define I32  int32_t /** GCC: <stdint.h> **/          //: 02 ://
-#define IV2   struct AAC2020_OPEN_GL_IV2              //: 03 ://
-#define UV4   struct AAC2020_OPEN_GL_UV4              //: 04 ://
-#define SAM      int /** IGNORED IN [C99/C11] **/     //: 05 ://
-#define FV4   struct AAC2020_OPEN_GL_FV4              //: 06 ://
-#define F32   float                                   //: 07 ://
-
-    //:GLSL_POLYFILL_TexelFetch:=============================://
-
-        UV4
-        aac2020_polyfill_texel_fetch(
-            SAM u32_sam //:<--GLSL only. Zero For [C99/C11]  ://
-        ,   IV2 glo
-        ,   I32 levodet_ALWAYS_ZERO
-        )
-        {
-            /** @VID_IID[ 0085 ]TIME[ 02:40:05 ] ******* **/
-            /** @VID_IID[ 0092 ]TIME[ 01:06:40 ] ******* **/
-            if(   u32_sam             ){ /** NOOP **/ };
-            if(   levodet_ALWAYS_ZERO ){ /** NOOP **/ };
-            /** **************************************** **/
-
-            UV4 uv4; /** Output 32 bit pixel value. **/
-
-            I32 glo_dex; /** Global Pixel Index **/
-            I32 glo_com; /** Global Comp. Index **/
-            glo_dex = glo.x + ( glo.y  *  512 );
-            glo_com =( glo_dex * 4  );
-
-            //:NO_LONGER_BIT_PACKED:-------------------------://
-            #define CPU_PIX AAC2020_PIXNAME_paint5d_cpu_pix
-
-                uv4.x = CPU_PIX[ glo_com + 0 ] ; //:RED
-                uv4.y = CPU_PIX[ glo_com + 1 ] ; //:GREEN
-                uv4.z = CPU_PIX[ glo_com + 2 ] ; //:BLUE
-                uv4.w = CPU_PIX[ glo_com + 3 ] ; //:ALPHA
-
-            #undef  CPU_PIX
-            //:-------------------------:NO_LONGER_BIT_PACKED://
-           
-            return( uv4 );
-        }
-
-        //:=========================:GLSL_POLYFILL_TexelFetch://
-        //:GLSL_POLYFILL_MakeVec4:===========================://
-
-            FV4
-            aac2020_polyfill_GLSL_MakeVec4(
-                F32 f_x
-            ,   F32 f_y
-            ,   F32 f_z
-            ,   F32 f_w
-            )
-            {
-                FV4 fv4;
-                fv4.x = ( f_x );
-                fv4.y = ( f_y );
-                fv4.z = ( f_z );
-                fv4.w = ( f_w );
-                return( fv4 );
-            }
-
-        //:===========================:GLSL_POLYFILL_MakeVec4://
-
-
-#undef  U32                                           //: 01 ://
-#undef  I32                                           //: 02 ://
-#undef  IV2                                           //: 03 ://
-#undef  UV4                                           //: 04 ://
-#undef  SAM                                           //: 05 ://
-#undef  FV4                                           //: 06 ://
-#undef  F32                                           //: 07 ://
-//:******************************:DO_NOT_PASTE_INTO_GLSL_CODE://
-//:*******************************************:GLSL_POLYFILLS://
 //:CUT_AND_PASTE_THIS_INTO_GLSL_SOURCE:======================://
 //:AAC2020_PAINT5D_DEFAULT_001:==============================://
 //:PASTE_INTO_FILE[ P5D_001._ ]:=============================://
 
     //:P5D_001____AAC2020_PAINT5D_DEFAULT_001:===========://
+    //|SIM:Shim_Ifdef_Macros:|||||||||||||||||||||||||||||//
     //:glsl_file_scope_stuff:----------------------------://
-    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL           //[ x ]//
-                                                   //[ x ]//
-        //:#_KEEP_USAMPLER_HIGH_#          ://     //[ x ]//
-        //:#_SAM_PRECISION_BEFORE_SAM_VAR_#://     //[ x ]//
-        precision highp usampler2D;                //[ x ]//
-                                                   //[ x ]//
-        //|(( UNI ))____________________________|////[ x ]//
-        //[:::::::SHADERTOY_COMPATIBILITY:::::::]////[ x ]//
-        #define fragCoord gl_FragCoord             //[ x ]//
-        uniform vec3 iResolution;                  //[ x ]//
-        uniform usampler2D taudepo;                //[ x ]//
-        uniform usampler2D paint5d;                //[ x ]//
-                                                   //[ x ]//
-        //|(( INN ))____________________________|////[ x ]//
-        //:     fag_tec:FrAGshaderTExtureCoord  :////[ x ]//
-        in vec2 fag_tec;                           //[ x ]//
-                                                   //[ x ]//
-        //|(( OUT ))____________________________|////[ x ]//
-        out vec4 FragColor;                        //[ x ]//
-                                                   //[ x ]//
-    #endif                                         //[ x ]//
+    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL           //| # |//
+                                                   //| # |//
+        //:#_KEEP_USAMPLER_HIGH_#          ://     //| # |//
+        //:#_SAM_PRECISION_BEFORE_SAM_VAR_#://     //| # |//
+        precision highp usampler2D;                //| # |//
+                                                   //| # |//
+        //|(( UNI ))____________________________|////| # |//
+        //[:::::::SHADERTOY_COMPATIBILITY:::::::]////| # |//
+        #define fragCoord gl_FragCoord             //| # |//
+        uniform vec3 iResolution;                  //| # |//
+        uniform usampler2D taudepo;                //| # |//
+        uniform usampler2D paint5d;                //| # |//
+                                                   //| # |//
+        //|(( INN ))____________________________|////| # |//
+        //:     fag_tec:FrAGshaderTExtureCoord  :////| # |//
+        in vec2 fag_tec;                           //| # |//
+                                                   //| # |//
+        //|(( OUT ))____________________________|////| # |//
+        out vec4 FragColor;                        //| # |//
+                                                   //| # |//
+    #endif                                         //| # |//
     //:----------------------------:glsl_file_scope_stuff://
     //:type_macros:--------------------------------------://
-    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL           //[ x ]//
-                                                   //[ x ]//
-        /** When Running As GLSL Code. **/         //[ x ]//
-                                                   //[ x ]//
-        #define U32         uint    //:  01  ://   //[ x ]//
-        #define I32          int    //:  02  ://   //[ x ]//
-        #define IV2        ivec2    //:  03  ://   //[ x ]//
-        #define UV4        uvec4    //:  04  ://   //[ x ]//
-        #define T_F   texelFetch    //:  05  ://   //[ x ]//
-        #define P5D      paint5d    //:  06  ://   //[ x ]//
-        #define SAM   usampler2D    //:  07  ://   //[ x ]//
-        #define U00    uint( 0 )    //:  08  ://   //[ x ]//
-        #define I00     int( 0 )    //:  09  ://   //[ x ]//
-        #define B_3    uint( 3 )    //:  10  ://   //[ x ]//
-        #define V_A                 //:  11  ://   //[ x ]//
-        #define FV4         vec4    //:  12  ://   //[ x ]//
-    #else                                          //[ x ]//
-                                                   //[ x ]//
-        /** When Running As C99/C11 Code. **/      //[ x ]//
-                                                   //[ x ]//
-        #define U32   uint32_t                     //[ x ]//
-        #define I32    int32_t                     //[ x ]//
-        #define IV2   struct AAC2020_OPEN_GL_IV2   //[ x ]//
-        #define UV4   struct AAC2020_OPEN_GL_UV4   //[ x ]//
-        #define T_F   aac2020_polyfill_texel_fetch //[ x ]//
-        #define P5D   ( 0 )                        //[ x ]//
-        #define SAM    int                         //[ x ]//
-        #define U00    0x00                        //[ x ]//
-        #define I00   ( 0 )                        //[ x ]//
-        #define B_3   ( 3 )                        //[ x ]//
-        #define V_A   void                         //[ x ]//
-        #define FV4   struct AAC2020_OPEN_GL_FV4   //[ x ]//
-    #endif                                         //[ x ]//
+    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL           //| # |//
+                                                   //| # |//
+        /** When Running As GLSL Code. **/         //| # |//
+                                                   //| # |//
+        #define U32         uint    //:  01  ://   //| # |//
+        #define I32          int    //:  02  ://   //| # |//
+        #define IV2        ivec2    //:  03  ://   //| # |//
+        #define UV4        uvec4    //:  04  ://   //| # |//
+        #define T_F   texelFetch    //:  05  ://   //| # |//
+        #define P5D      paint5d    //:  06  ://   //| # |//
+        #define SAM   usampler2D    //:  07  ://   //| # |//
+        #define U00    uint( 0 )    //:  08  ://   //| # |//
+        #define I00     int( 0 )    //:  09  ://   //| # |//
+        #define B_3    uint( 3 )    //:  10  ://   //| # |//
+        #define V_A                 //:  11  ://   //| # |//
+        #define FV4         vec4    //:  12  ://   //| # |//
+        #define ASS  /**NOTHING**/  //:  13  ://   //| # |//
+        #define ERR  /**NOTHING**/  //:  14  ://   //| # |//
+    #else                                          //| # |//
+                                                   //| # |//
+        /** When Running As C99/C11 Code. **/      //| # |//
+                                                   //| # |//
+        #define U32   uint32_t                     //| # |//
+        #define I32    int32_t                     //| # |//
+        #define IV2   struct AAC2020_OPEN_GL_IV2   //| # |//
+        #define UV4   struct AAC2020_OPEN_GL_UV4   //| # |//
+        #define T_F   aac2020_polyfill_texel_fetch //| # |//
+        #define P5D   ( 0 )                        //| # |//
+        #define SAM    int                         //| # |//
+        #define U00    0x00                        //| # |//
+        #define I00   ( 0 )                        //| # |//
+        #define B_3   ( 3 )                        //| # |//
+        #define V_A   void                         //| # |//
+        #define FV4   struct AAC2020_OPEN_GL_FV4   //| # |//
+        #define ASS   assert                       //| # |//
+        #define ERR   aac2020_paint5d_Halt         //| # |//
+    #endif                                         //| # |//
     //:--------------------------------------:type_macros://
-    //:constructor_macros:-------------------------------://
-    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL     
-
-        #define FV4_MAK vec4
-
-    #else
-
+    //:seven_letter_macros:------------------------------://
+    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL            
+                                                    
+        #define FV4_MAK      vec4                        
+        #define BIN_011 uint( 3 )  
+        #define CUVIPIX struct AAC2020_OPEN_GL_PAINT5D_CUVIPIX
+                                                    
+    #else                                           
+                                                    
         #define FV4_MAK aac2020_polyfill_GLSL_MakeVec4
-
-    #endif
-    //:-------------------------------:constructor_macros://
+        #define BIN_011 ((U32)3 )
+        #define CUVIPIX struct AAC2020_OPEN_GL_PAINT5D_CUVIPIX
+                                                    
+    #endif                                          
+    //:------------------------------:seven_letter_macros://
     //:main_shim_macros:---------------------------------://
-    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL 
-
-        #define RET_MAIN void /** <-- GLSL     code **/
-        #define FUN_MAIN main /** <-- GLSL     code **/
-
-    #else
-
-        #define RET_MAIN FV4 /** <-- [C99/C11] code **/
-        #define FUN_MAIN OPEN_GL_PAINT5D_Main
-
-    #endif
+    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL           //| # |//
+                                                   //| # |//
+        #define RET_MAIN void /** <-- GLSL**/      //| # |//
+        #define FUN_MAIN main /** <-- GLSL**/      //| # |//
+                                                   //| # |//
+    #else                                          //| # |//
+                                                   //| # |//
+        #define RET_MAIN FV4 /** <-- [C99/C11]**/  //| # |//
+        #define FUN_MAIN OPEN_GL_PAINT5D_Main      //| # |//
+                                                   //| # |//
+    #endif                                         //| # |//
     //:---------------------------------:main_shim_macros://
+    //||||||||||||||||||||||||||||||SIM:Shim_Ifdef_Macros|//
+    //:C99_AND_GLSL_STRUCTS:-----------------------------://
+    /** ************************************************ ***
+    @VID_IID[ 0097 ]TIME[ 08:00:00 ]
+    These structs are declared exactly the same for 
+    the [CPU / HOST] C99 code as they are for the
+    [ GPU / DEVICE ] GLSL code.
+    *** ************************************************ **/
+    //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+
+        struct AAC2020_OPEN_GL_PAINT5D_CUVIPIX{
+
+            I32 cuv_i_x ; //:canvas_user_view:(pixel)i_x
+            I32 cuv_i_y ; //:canvas_user_view:(pixel)i_y
+                          //:i_x == integer x
+                          //:i_y == integer y 
+        };
+    
+    //:-----------------------------:C99_AND_GLSL_STRUCTS://
+
+
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
         U32                                        //[ x ]//
         OPEN_GL_PAINT5D_TexelFetch_U32(            //[ x ]//
@@ -272,7 +174,7 @@
         ,   I32 aus_dex                            //[ x ]//
         )                                          //[ x ]//
         {                                          //[ x ]//
-        #define BIN_011 ( B_3 )                    //[ x ]//
+        ASS( B_3 == BIN_011 );                     //[ x ]//
                                                    //[ x ]//
             U32 u32_var ;                          //[ x ]//
             U32 til_val ;                          //[ x ]//
@@ -291,8 +193,6 @@
             );;                                    //[ x ]//
                                                    //[ x ]//
             return( til_val );                     //[ x ]//
-                                                   //[ x ]//
-        #undef  BIN_011                            //[ x ]//
         }                                          //[ x ]//
                                                    //[ x ]//
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
@@ -435,7 +335,7 @@
                 til_qua                            //[ x ]//
             ,   til_exp                            //[ x ]//
             ,   til_lay                            //[ x ]//
-            ,   loc_t_x                            //[ x ]//
+            ,   loc_t_x                            //[ x ]//  
             ,   loc_t_y                            //[ x ]//
             ));;                                   //[ x ]//
                                                    //[ x ]//
@@ -452,6 +352,339 @@
                                                    //[ x ]//
         //: . . . . . . . . . . . . :return_from_function://
         }                                          //[ x ]//
+        //:- - - - - - - - - - - -- - - - - - - - - - - -://
+
+        CUVIPIX
+        OPEN_GL_PAINT5D_painpix_CTO_cuvipix(
+            I32 til_qua /** Tile Quadrant ( t_q ) **/
+        ,   I32 til_exp /** Tile Exponent ( t_e ) **/
+        ,   I32 til_lay /** Tile Layer    ( t_l ) **/
+        ,   I32 loc_t_x /** Local Tile X  ( t_x ) **/
+        ,   I32 loc_t_y /** Local Tile Y  ( t_y ) **/
+        )
+        {
+            //:check_inputs:-----------------------------://
+
+                ASS( til_qua >= 0 && til_qua <= (  4-1) );
+                ASS( til_exp >= 0 && til_exp <= (  8-1) );
+                ASS( til_lay >= 0 && til_lay <= (  3-1) );
+                ASS( loc_t_x >= 0 && loc_t_x <= (128-1) );
+                ASS( loc_t_y >= 0 && loc_t_y <= (128-1) );
+
+            //:-----------------------------:check_inputs://
+            //:declare_vars:-----------------------------://
+
+                CUVIPIX cuvipix;
+
+                I32 qua_c_x; /** til_qua as cell x coord.**/
+                I32 qua_c_y; /** til_qua as cell y coord.**/
+                             /** AKA:til_qua's[x|y]coord.**/
+
+                I32 til_peb; /** TILe(span_in)PEBbles ...**/
+
+                I32 tor_i_x; /** TIle_ORigin:i_x ........**/
+                I32 tor_i_y; /** TIle_ORigin:i_y ........**/
+                  
+                I32 pox_qua; /** Pixel_Offset__X__:QUAd  **/
+                I32 poy_qua; /** Pixel_Offset__Y__:QUAd  **/
+                  
+            //:-----------------------------:declare_vars://
+
+            //:##########################################://
+            #ifndef AAC2020_MACRO_THIS_IS_OPEN_GL  //:###://
+
+                /** ***************************** ***
+                @VID_IID[ 0097 ]TIME[ 08:15:42 ]  
+                til_lay does not change the
+                canvas_user_view coordinate (cuvipix)
+                because the layers are.....
+                LAYERED directly on top of each other
+                at the same exact 2D coordinate.
+                *** ***************************** **/
+
+                if( til_lay ){ /** NOOP **/ };
+
+            #endif //:###################################://
+           
+            /** @VID_IID[ 0097 ]TIME[ 08:08:42 ]  **/
+            /** Convert tile quadrant index into  **/
+            /** it's XY cell location equivalent. **/
+            /** AKA: INDEX TO XY CONVERSION.      **/
+            qua_c_x =  til_qua           % 2 ;
+            qua_c_y = (til_qua - qua_c_x)/ 2 ;
+            ASS( qua_c_x >= 0 && qua_c_x <= 1 );
+            ASS( qua_c_x >= 0 && qua_c_x <= 1 );
+    
+            /** ********************************* **/
+            /** @VID_IID[ 0097 ]TIME[ 08:27:42 ]  **/
+            /** Get the span of the current tile  **/
+            /** in focus in terms of the smallest **/
+            /** tile size. ********************** **/
+            til_peb =(
+                1
+                +
+                OPEN_GL_PAINT5D_til_exp_CTO_max_cor(
+                                til_exp )
+            );;
+
+            //:##########################################://
+            #ifndef AAC2020_MACRO_THIS_IS_OPEN_GL //:####://
+
+                //:  @VID_IID[ 0098 ]TIME[ 03:52:30 ] :::://
+                //:  This error check is pointless ::::::://
+                I32 max_cor =( til_peb - 1 );
+
+                if( til_peb > (max_cor+1) ){
+
+            ////    printf("\n\n");
+            ////    printf("[painpix_CTO_cuvipix:ARGS]:\n");
+            ////    printf("\n");
+            ////    printf("[til_qua]:%d\n" , til_qua);
+            ////    printf("[til_exp]:%d\n" , til_exp);
+            ////    printf("[til_lay]:%d\n" , til_lay);
+            ////    printf("[loc_t_x]:%d\n" , loc_t_x);
+            ////    printf("[loc_t_y]:%d\n" , loc_t_y);
+            ////
+            ////    printf("[til_peb:>:max_cor]....\n\n");
+            ////    printf("[til_peb]:%d\n" , til_peb);
+            ////    printf("[max_cor]:%d\n" , max_cor);
+            ////
+            ////    printf("\n\n");
+
+                    ERR("[til_peb_IS_OOB_2021]");
+                };;
+
+            #endif //:###################################://
+
+            /** ********************************* **/
+            /** @VID_IID[ 0097 ]TIME[ 08:38:23 ]  **/
+            /** Get the top left origin of the    **/
+            /** current tile in focus.            **/
+            /** tor == Tile_ORigin                **/
+            /** tor_i_x:TileORigin:int_x          **/
+            /** tor_i_y:TileORigin:int_y          **/
+            tor_i_x =( til_peb * loc_t_x );
+            tor_i_y =( til_peb * loc_t_y );
+            ASS( tor_i_x >= 0 && tor_i_x <= (256-1) );
+            ASS( tor_i_y >= 0 && tor_i_y <= (256-1) );
+
+            /** pox : pixel [offset/origin] X **/
+            /** poy : pixel [offset/origin] Y **/
+            pox_qua = ( qua_c_x * 128 );
+            poy_qua = ( qua_c_y * 128 );
+            //:##########################################://
+            #ifndef AAC2020_MACRO_THIS_IS_OPEN_GL //:####://
+
+                if( 1
+                && ( pox_qua >= 0 && pox_qua <=(128 - 0)  )
+                && ( poy_qua >= 0 && poy_qua <=(128 - 0)  )
+                ){
+                    /** OKAY. Do nothing. **/
+                }else{
+                    printf("[pox_qua]:%d\n",pox_qua);
+                    printf("[poy_qua]:%d\n",poy_qua);
+                    ERR("[OOB_pox_qua_AND_poy_qua]");
+                };;
+
+            #endif //:###################################://
+            ASS( pox_qua >= 0 && pox_qua <=(128 - 0) );
+            ASS( poy_qua >= 0 && poy_qua <=(128 - 0) );
+            //://////////////////////////////////////////://
+
+            cuvipix.cuv_i_x=( pox_qua + tor_i_x );
+            cuvipix.cuv_i_y=( poy_qua + tor_i_y );
+            ASS( cuvipix.cuv_i_x >= 0 );
+            ASS( cuvipix.cuv_i_y >= 0 );
+            ASS( cuvipix.cuv_i_x <=( 256 - 1 ) );
+            ASS( cuvipix.cuv_i_y <=( 256 - 1 ) );
+
+            return( cuvipix );
+        }
+
+        //:- - - - - - - - - - - -- - - - - - - - - - - -://
+
+        U32 
+        OPEN_GL_PAINT5D_til_exp_CTO_squ_ash(
+        I32             til_exp
+        )
+        {
+            /** **************************************** ***
+            til_exp: Tile Exponent
+            squ_ash: Literally "SQUASH" for "squash amount"
+                CTO: ConvertTO
+            *** **************************************** **/
+            //:input_checks:-----------------------------://
+
+                ASS( til_exp >= 0 && til_exp <= (8-1) );
+
+            //:-----------------------------:input_checks://
+            //:declare_var:------------------------------://
+
+                I32 squ_ash=( 0 - 66077 /** @TRAP_VAL@ **/);
+
+            //:------------------------------:declare_var://
+            #if( AAC2020_CRASH_ON_VITAL_TODO >= 1 ) //:######://
+
+                #error OPTIMIZE_WITH_A_LOOKUP_TABLE
+
+            #endif //:#######################################://
+        
+            /** TODO: Re-write as lookup table once we       **/
+            /** have the final PAINT5D GLSL shader working.  **/
+            if( 0 == til_exp ){ squ_ash =   1; };
+            if( 1 == til_exp ){ squ_ash =   2; };
+            if( 2 == til_exp ){ squ_ash =   4; };
+            if( 3 == til_exp ){ squ_ash =   8; };
+            if( 4 == til_exp ){ squ_ash =  16; };
+            if( 5 == til_exp ){ squ_ash =  32; };
+            if( 6 == til_exp ){ squ_ash =  64; };
+            if( 7 == til_exp ){ squ_ash = 128; };
+            
+            return( squ_ash );
+        }
+
+        //:- - - - - - - - - - - -- - - - - - - - - - - -://
+
+        U32  
+        OPEN_GL_PAINT5D_cuvipix_CTO_cuvbits(
+
+            /** FUNCTION_WRITTEN_ON[ 2021_01_18 ]  **/
+            /**    VID_IID[ 0097 ]                 **/
+            /**    TIME[ 00:00:00 ]TO[ 06:02:20 ]  **/
+
+            I32 cuv_i_x_000_255  //:   [ cuvipix.i_x / cuv_i_x ]
+        ,   I32 cuv_i_y_000_255  //:   [ cuvipix.i_y / cuv_i_y ]
+        ,   I32 lay_dex_000_002  //:AKA[ lay_dex ]
+        ,   I32 aus_dex_000_015  //:AKA[ aus_dex ]
+        ){
+        #define C_X cuv_i_x_000_255               //: 01 ://
+        #define C_Y cuv_i_y_000_255               //: 02 ://
+        #define T_L lay_dex_000_002               //: 03 ://
+        #define A_D aus_dex_000_015               //: 04 ://
+        #define t_e_CTO_m_c OPEN_GL_PAINT5D_til_exp_CTO_max_cor
+        #define t_e_CTO_s_a OPEN_GL_PAINT5D_til_exp_CTO_squ_ash
+            //:input_checks:- - - - - - - - - - - - - - -://
+
+                ASS( cuv_i_x_000_255 >=  (  0  )  );
+                ASS( cuv_i_y_000_255 >=  (  0  )  );
+                ASS( lay_dex_000_002 >=  (  0  )  );
+                ASS( aus_dex_000_015 >=  (  0  )  );
+
+                ASS( cuv_i_x_000_255 <=  (256-1)  );
+                ASS( cuv_i_y_000_255 <=  (256-1)  );
+                ASS( lay_dex_000_002 <=    (3-1)  );
+                ASS( aus_dex_000_015 <=   (16-1)  );
+
+            //:- - - - - - - - - - - - - - -:input_checks://
+            //:var__declare:- - - - - - - - - - - - - - -://
+
+                //:UNSIGNED_FOR_BIT_PACKING:-------------://
+
+                /** Canvas_User_View:BITS  **/
+                U32 cuvbits =( U00 /** 0x00 **/ );
+
+                U32     t_v; /** [ TileValue / til_val ] **/
+
+                //:-------------:UNSIGNED_FOR_BIT_PACKING://
+                //:EVERYTHING_ELSE:----------------------://
+
+                /// glocpix not needed, OPEN_GL_PAINT5D_Get
+                /// function handles calculation of tha.
+                /// glocpix; /** GLObal Coord PIXels  ...**/
+                             /** Data View Coordinate ...**/
+
+            //  IV2 til_qua; /** Tile Quadrant ..........**/
+                I32 qua_c_x; /** Tile Quadrant: cell x   **/
+                I32 qua_c_y; /** Tile Quadrant: cell y   **/
+
+                I32 nos_t_x; /** NO_Squash(nos)TileX(t_x)**/
+                I32 nos_t_y; /** NO_Squash(nos)TileY(t_y)**/
+
+                I32     t_x; /** Final Local Tile [X|Y]  **/
+                I32     t_y; /** AKA[ loc_t_x | loc_t_y ]**/
+
+                I32     s_a; /** Squash Amount (squ_ash) **/
+
+                I32     t_q; /** TileQuadrant / til_qua  **/
+                I32     t_e; /** TileExponent / til_exp  **/
+                I32     m_c; /** MaximumCoord / max_cor  **/
+
+                //:----------------------:EVERYTHING_ELSE://
+
+            //:- - - - - - - - - - - - - - -:var__declare://
+
+            //: til_qua ==( [ cuv_i_x && cuv_i_y ] / 128 )
+            qua_c_x =( C_X / 128 );
+            qua_c_y =( C_Y / 128 );
+            ASS( qua_c_x >= 0 && qua_c_x <= 1 );
+            ASS( qua_c_y >= 0 && qua_c_y <= 1 );
+
+            /** @VID_IID[ 0098 ]TIME[ 05:32:00 ] **/
+            /** Fixed xy-to-index math here.     **/
+            t_q = qua_c_x + ( qua_c_y  *  2  );
+            ASS( t_q >= 0 && t_q <= (4-1) );
+
+            /** NOS: NOt_Squashed ............ **/
+            /** nos_t_x : Not squashed loc_t_x **/
+            /** nos_t_y : Not squashed loc_t_y **/
+            nos_t_x = C_X -( qua_c_x * 128 );
+            nos_t_y = C_Y -( qua_c_y * 128 );
+
+            /** t_e     == til_exp            **/
+            /** til_exp == TILe_size_EXPonent **/
+            for( t_e = 0 ; t_e <=( 8 - 1 ) ; t_e ++ ){
+
+                /** m_c == max_cor  **/
+                /** Max Coord Index **/
+                m_c = t_e_CTO_m_c(  t_e  );
+                s_a = t_e_CTO_s_a(  t_e  );
+
+                t_x = nos_t_x / s_a ;
+                t_y = nos_t_y / s_a ;
+
+                /**  t_y === loc_t_y ( PAINT5D.D._ )**/
+                /**  t_x === loc_t_x ( #_DIA_DAL_# )**/
+                ASS( t_x >= 0 && t_x <= m_c );
+                ASS( t_y >= 0 && t_y <= m_c );
+                 
+                //:BINARY PACKED TILE VALUES (til_val)
+                //:      BIN[ 00 ] ==> DEC[ 0 ]
+                //:      BIN[ 01 ] ==> DEC[ 1 ]
+                //:      BIN[ 10 ] ==> DEC[ 2 ]
+                //:      BIN[ 11 ] ==> DEC[ 3 ]
+                t_v=(
+                    OPEN_GL_PAINT5D_Get(                    
+                        t_q    //: I32 [ til_qua / t_q ] ://                        
+                    ,   t_e    //: I32 [ til_exp / t_e ] ://                        
+                    ,   T_L    //: I32 [ til_lay / t_l ] ://                        
+                    ,   t_x    //: I32 [ loc_t_x / t_x ] ://                        
+                    ,   t_y    //: I32 [ loc_t_y / t_y ] ://                        
+                    ,   A_D    //: I32 [ aus_dex / a_d ] ://                        
+                    ));;
+
+                ASS( t_v <= (4-1) );
+                ASS( t_v == ( BIN_011 & t_v) );
+                cuvbits=(
+                cuvbits |
+                    (
+                        /** 2 bits per tile value. **/
+                        /** Position based on it's **/
+                        /** tile exponent (t_e)    **/
+                        t_v <<( t_e * 2 )
+                    )
+                );;
+            };;
+
+            return( cuvbits );
+
+        #undef          C_X //:---------------------: 01 ://
+        #undef          C_Y //:---------------------: 02 ://
+        #undef          T_L //:---------------------: 03 ://
+        #undef          A_D //:---------------------: 04 ://
+        #undef  t_e_CTO_m_c //:---------------------: 05 ://
+        #undef  t_e_CTO_s_a //:---------------------: 06 ://
+        }
+
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
         RET_MAIN
         FUN_MAIN( 
@@ -499,16 +732,19 @@
         #undef B_3      //:  10  ://               //[ x ]//
         #undef V_A      //:  11  ://               //[ x ]//
         #undef FV4      //:  12  ://               //[ x ]//
+        #undef ASS      //:  13  ://               //[ x ]//
                                                    //[ x ]//
     //:--------------------------------------:type_macros://
-    //:constructor_macros:-------------------------------://
+    //:seven_letter_macros:------------------------------://
     /** @VID_IID[ 0093 ]TIME{ 00:31:40 ] *************** **/
     /** Decided on [MAK] for [MAKE] as our constructor   **/
     /** postfix ........................................ **/
 
         #undef FV4_MAK
+        #undef BIN_011
+        #undef CUVIPIX
 
-    //:-------------------------------:constructor_macros://
+    //:------------------------------:seven_letter_macros://
     //:main_shim_macros:---------------------------------://
 
         #undef RET_MAIN
@@ -520,3 +756,38 @@
 //:=============================:PASTE_INTO_FILE[ P5D_001._ ]://
 //:==============================:AAC2020_PAINT5D_DEFAULT_001://
 //:======================:CUT_AND_PASTE_THIS_INTO_GLSL_SOURCE://
+
+
+//:CTRL_F_HELP:==============================================://
+/** ******************************************************** ***
+
+    WRONG[ sqa_ash  ]CORRECT[ squ_ash ]
+    WRONG[ cuvibits ]CORRECT[ cuvbits ]
+
+    WRONG[ til_sip  ]CORRECT[ til_peb ]
+
+    WRONG[ qua_i_x  ]CORRECT[ qua_c_x ]( Cell , not integer )
+    WRONG[ qua_i_y  ]CORRECT[ qua_c_y ]( Cell , not integer )
+
+*** ******************************************************** **/
+//:==============================================:CTRL_F_HELP://
+//:VARIABLE_EXPLANATIONS:====================================://
+/** ******************************************************** ***
+
+    cuvbits :
+
+        All tile values for all    
+        tile sizes that are on the   
+        current pixel. Bitpacked     
+        into a 32 bit unsigned int.  
+
+    til_peb :
+
+        Tile Span Measured In Pebbles.
+        PEBBLE: The size of the SMALLEST tile.
+                (A tile with til_exp == 0 )
+
+
+
+*** ******************************************************** **/
+//:====================================:VARIABLE_EXPLANATIONS://

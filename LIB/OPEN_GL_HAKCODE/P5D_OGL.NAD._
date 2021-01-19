@@ -1,0 +1,54 @@
+//[||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]//
+//[       NAD: Notes And Diagrams                            ]//
+//[||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]//
+#FUNCTION_SIGNATURES############################################
+#FUNCTION_PROTOTYPES############################################
+
+
+        U32                                      
+        OPEN_GL_PAINT5D_BitPack_Get(             
+            IV2     glo                          
+        ,   I32 aus_dex                          
+        )                                        
+
+############################################FUNCTION_PROTOTYPES#
+############################################FUNCTION_SIGNATURES#
+#GLOCPIX_VS_CUVIPIX#############################################
+
+    GLOCPIX ==[ global_texture_coord_x
+              , global_texture_coord_y ]
+
+    CUVIPIX ==[ cuv_i_x (canvas_user_view.i_x )
+              , cuv_i_y (canvas_user_view.i_y ) ]
+
+    Both are GLOBAL coordinates. But GLOCPIX is a global
+    coord over the DATA VIEW while CUVIPIX is a global
+    coord over the USER VIEW.
+
+        DATA_VIEW: The texture packing the tilemap information.
+        USER_VIEW: Spatially laid out by how it is actually
+                   [rendered/seen] by the [artist/Josh].
+
+        DATA_VIEW == SEE[#PIXEL_DATA_PARTITIONS# in PAINT5D.D._]
+        USER_VIEW == SEE[#WHAT_THE_ARTIST_SEES#  in PAINT5D.D._]
+
+#############################################GLOCPIX_VS_CUVIPIX#
+#CUVBITS_INTERFACE##############################################
+
+    If we sample a single fragment coordinate, how 
+    many bits of data do we need?
+
+        We have 3 layers and we have 2 bit color.
+        We also have tile exponents 0 to 7 ( 8 total ).
+
+        48bits == ( 2 bit )*( 3 layers )*( 8 tile sizes )
+        16bits == ( 2 bit )      *       ( 8 tile sizes )
+
+    U32 /** cuvbits:CanvasUserViewBITS **/
+    OPEN_GL_PAINT5D_cuvipix_CTO_cuvbits_Get(
+        cuv_i_x_000_255 /** Canvas_User_View      **/
+    ,   cuv_i_y_000_255 /** Canvas_User_View      **/
+    ,   lay_dex_000_002 /** Layer Index To Sample **/
+    );;
+    
+##############################################CUVBITS_INTERFACE#

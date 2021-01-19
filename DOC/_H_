@@ -10,6 +10,121 @@
 *** ******************************************************** ***
 
 
+
+#_WHY_TILE_EXP_DOESNT_CHANGE_TEST_OUTPUTS_######################
+#_WHY_t_e_DOESNT_CHANGE_TEST_OUTPUTS_###########################
+
+
+    GET_TILE_OVER_CURRENT_PIXEL_OF_TILE_SIZE[ t_e == 0 ]
+    GET_TILE_OVER_CURRENT_PIXEL_OF_TILE_SIZE[ t_e == 1 ]
+    GET_TILE_OVER_CURRENT_PIXEL_OF_TILE_SIZE[ t_e == 2 ]
+    GET_TILE_OVER_CURRENT_PIXEL_OF_TILE_SIZE[ t_e == 3 ]
+    GET_TILE_OVER_CURRENT_PIXEL_OF_TILE_SIZE[ t_e == 4 ]
+    GET_TILE_OVER_CURRENT_PIXEL_OF_TILE_SIZE[ t_e == 5 ]
+    GET_TILE_OVER_CURRENT_PIXEL_OF_TILE_SIZE[ t_e == 6 ]
+    GET_TILE_OVER_CURRENT_PIXEL_OF_TILE_SIZE[ t_e == 7 ]
+
+    As long as [ loc_t_x , loc_t_y ]
+    is at [ 0,0 ] for all of our tests,
+    the til_exp value will not affect
+    the outcome because the origin is the
+    same no matter what ( til_exp / t_e )
+    value you plug into
+    [  OPEN_GL_PAINT5D_painpix_CTO_cuvipix ].   
+    ( SEE DIAGRAM BELOW )
+
+    |<------------- 3 ------------->|
+    |<----- 2 ----->|               |
+    |<- 1 ->|       |               |
+    | 0 |   |       |               |
+    @---+---+-------+---------------+
+    |ABC|   |       |               |
+    +---+   |       |               |
+    |       |       |               |
+    +-------+       |               |
+    |               |               |
+    |               |               |
+    |               |               |
+    +---------------+               |
+    |                               |
+    |                               |
+    |                               |
+    |                               |
+    |                               |
+    |                               |
+    |                               |
+    +-------------------------------+
+
+    If [ t_x , t_y ] == [ 1,1 ]
+    Then the ( til_exp / t_e ) value
+    WILL change the outcome.
+    @VID_IID[ 0098 ]TIME[ 05:04:51 ]
+
+    ( 0 == t_e ) ==> @A
+    ( 1 == t_e ) ==> @B
+    ( 2 == t_e ) ==> @C
+    ( 3 == t_e ) ==> @D
+
+    |<------------- 3 ------------->|
+    |<----- 2 ----->|               |
+    |<- 1 ->|       |               |
+    | 0 |   |       |               |
+    +---+---+-------+---------------+...........
+    |   |   |       |               |
+    +---@---+       |               |
+    |   | A |       |               |
+    +---+---@-------+               |
+    |       | \     |               |
+    |       |   B   |               |
+    |       |       |               |
+    +---------------@---------------+
+    |               | \             |
+    |               |   \           |
+    |               |     \         |
+    |               |       C       |  D: Not pictured
+    |               |               |     Not enough room
+    |               |               |     to draw that.
+    |               |               |
+    +---------------+---------------+
+    .
+    .
+    .                         
+
+###########################_WHY_t_e_DOESNT_CHANGE_TEST_OUTPUTS_#
+######################_WHY_TILE_EXP_DOESNT_CHANGE_TEST_OUTPUTS_#
+#_CANVAS_USER_VIEW_#############################################
+#CANVAS_USER_VIEW###############################################
+
+    #CANVAS_USER_VIEW: (CUV):
+   (AKA: #WHAT_THE_ARTIST_SEES# in PAINT5D.D._ )
+
+        @VID_IID[ 0098 ]TIME[ 00:11:11 ]
+        TODAYS_DATE[ 2021_01_19 ]
+
+        This is similiar to a glviewport view or a client
+        viewport view. However the dimensions of this view
+        do NOT change depending on the viewport size.
+
+        It is a static mapping of what 
+        [ pixels / tiles ] the USER
+        (Josh) will see in the viewport. 
+        And is similiar in nature to
+        #PIXEL_DATA_PARTITIONS#.
+
+        The difference between:
+        #PIXEL_DATA_PARTITIONS#
+        AND
+        #CANVAS_USER_VIEW#
+
+        Is one is partitioning the GPU DATA.
+        The other is partitioning the allocation
+        of fragment coords in a non-adjustable way.
+        (respectively: #PIXEL_DATA_PARTITIONS# )
+        (         and ,#CANVAS_USER_VIEW#      )
+
+
+###############################################CANVAS_USER_VIEW#
+#############################################_CANVAS_USER_VIEW_#
 #_SCANLINE_ORDER_MEANS_Y_IS_THE_OUTER_LOOP_#####################
 
     If you want to loop over X and Y coordinates in
