@@ -10,7 +10,93 @@
 *** ******************************************************** ***
 
 
+#_TEST_5_IS_TRANSPOSITION_PRECURSOR_############################
+    
+    @VID_IID[ 0099 ]TIME[ 04:26:20 ]
+    Comment extracted on DATE[ 2021_01_20 ]
 
+        /** @VID_IID[ 0099 ]TIME[ 02:17:20 ] *************** **/
+        /**                                                  **/
+        /** Test 5 is a precursor to detecting transposition **/
+        /** of columns error. Because the center column is   **/
+        /** different, no TRANSPOSITION error will           **/
+        /** be detected, because if we iterate through the   **/
+        /** columns in the WRONG ORDER, the index of the     **/
+        /** CENTER COLUMN is not changed. Regardless of      **/
+        /** which way we step through the column indexes,    **/
+        /** the center column index is ALWAYS == 1           **/
+        /**                                                  **/
+        /**                     CEN                          **/
+        /** FORWARDS:   |  0  |  1  |  2  |                  **/
+        /** BACKWARDS:  |  2  |  1  |  0  |                  **/
+        /**                     CEN                          **/
+        /**                                                  **/
+        /** ************************************************ **/
+        //:INPUTS_FOR_TEST[ 05 ]:
+            ,   B_11,B_00,B_11  //:<--- tile exponent #0 
+            ,   B_11,B_00,B_11  //:<--- tile exponent #1 
+            ,   B_11,B_00,B_11  //:<--- tile exponent #2 
+            ,   B_11,B_00,B_11  //:<--- tile exponent #3 
+            ,   B_11,B_00,B_11  //:<--- tile exponent #4
+            ,   B_11,B_00,B_11  //:<--- tile exponent #5 
+            ,   B_11,B_00,B_11  //:<--- tile exponent #6 
+            ,   B_11,B_00,B_11  //:<--- tile exponent #7
+            //: |   |    |   |
+            //: l_00,l_01,l_02 <-- 3 layers.
+
+############################_TEST_5_IS_TRANSPOSITION_PRECURSOR_#
+#_USUALLY_ONE_TEST_TABLE_DATE_2021_01_20_#######################
+
+    ************************************************************
+    @VID_IID[ 0099 ]TIME[ 03:24:30 ]
+    Comment extracted into _H_ file at this time
+    On DATE[ 2021_01_20 ]
+    ************************************************************
+
+        /** ************************************* **/
+        /** @VID_IID[ 0097 ]TIME[ 06:21:30 ]      **/
+        /** Usually we have one test table with   **/
+        /** inputs and expected outputs in the    **/
+        /** same row. These tests have a LOT      **/
+        /** of inputs though. So have two tables. **/
+        /** One for inputs and one for expected   **/
+        /** outputs.                              **/
+        /** ************************************* **/
+
+    ************************************************************
+
+#######################_USUALLY_ONE_TEST_TABLE_DATE_2021_01_20_#
+#_P5D_UNIT_TEST_COMMENT_2021_01_20_655PM_#######################
+
+
+    @VID_IID[ 0099 ]TIME[ 04:22:23 ]
+    Extracted Comment And The Code It With.
+
+
+        //:DEFINE_OR_UNDEF_BINARY_CONSTANTS:-----------------://
+        /** ************************************************ ***
+        @VID_IID[ 0098 ]TIME[ 02:27:00 ]
+        C99 does not have binary constant notation, so we
+        will have to hard code some defines for the
+        expected output valuess to make this code more
+        managable.
+        *** ************************************************ **/
+
+            #define B_00 ( 0 )
+            #define B_01 ( 1 )
+            #define B_10 ( 2 )
+            #define B_11 ( 3 )
+
+            #define B____00_00_00_00____00_00_00_00_____B 0x0000
+            #define B____01_01_01_01____01_01_01_01_____B 0x5555
+            #define B____00_00_00_00____00_00_00_11_____B (  3 )
+            #define B____11_00_11_00____11_00_11_00_____B 0xCCCC
+            #define B____11_00_11_00____11_00_11_01_____B 0xCCCD
+            #define B____11_11_11_11____11_11_11_11_____B 0xFFFF
+    
+        //:-----------------:DEFINE_OR_UNDEF_BINARY_CONSTANTS://
+
+#######################_P5D_UNIT_TEST_COMMENT_2021_01_20_655PM_#
 #_WHY_TILE_EXP_DOESNT_CHANGE_TEST_OUTPUTS_######################
 #_WHY_t_e_DOESNT_CHANGE_TEST_OUTPUTS_###########################
 

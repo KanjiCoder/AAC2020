@@ -1,0 +1,48 @@
+      
+//:P5D_UTD: PAINT5D UnitTestData:  
+
+//:FOR_TESTING:cuvipix_CTO_cuvbits:==========================://
+/** ******************************************************** ***
+    Comming up with binary constants in
+    aac2020_P5D_OGL_utc_PAINT5D_cuvipix_CTO_cuvbits 
+    is quite tedious. Let's write another test function that
+    STARTS with the 16 bit binary and then derives all of the
+    test input columns that define [ til_lay , til_exp ]
+    and run tests on that.
+
+    Do __NOT__ alter these arrays. One is encoded with the 
+    bytes in big endian order, the other in little 
+    endian order.
+    
+    If one array passes the tests, but the other fails, it
+    is a sign that there is some type of endian weirdness
+    going on.
+*** ******************************************************** **/
+#define U16 uint16_t /** GCC: <stdint.h> **/
+
+
+    U16 
+    aac2020_P5D_UTD_cuvipix_CTO_cuvbits_BIG_END[ 40 ]={ 
+        0x6161,0x6332,0x3032,0x305f,0x656e
+    ,   0x6769,0x6e65,0x5f63,0x6f70,0x7972
+    ,   0x6967,0x6874,0x5f79,0x6561,0x725f
+    ,   0x3230,0x3231,0x5f31,0x5f32,0x315f
+    ,   0x6279,0x5f64,0x656b,0x617a,0x6568
+    ,   0x6e5f,0x636f,0x7270,0x5f77,0x7269
+    ,   0x7474,0x656e,0x5f62,0x795f,0x6b61
+    ,   0x6e6a,0x6963,0x6f64,0x6572,0x0000
+    };
+    U16 
+    aac2020_P5D_UTD_cuvipix_CTO_cuvbits_LIT_END[ 40 ]={ 
+        0x6161,0x3263,0x3230,0x5f30,0x6e65
+    ,   0x6967,0x656e,0x635f,0x706f,0x7279
+    ,   0x6769,0x7468,0x795f,0x6165,0x5f72
+    ,   0x3032,0x3132,0x315f,0x325f,0x5f31
+    ,   0x7962,0x645f,0x6b65,0x7a61,0x6865
+    ,   0x5f6e,0x6f63,0x7072,0x775f,0x6972
+    ,   0x7474,0x6e65,0x625f,0x5f79,0x616b
+    ,   0x6a6e,0x6369,0x646f,0x7265,0x0000
+    };
+
+#undef  U16
+//:==========================:FOR_TESTING:cuvipix_CTO_cuvbits://
