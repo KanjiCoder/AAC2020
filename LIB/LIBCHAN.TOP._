@@ -76,8 +76,9 @@
     #define AAC2020_MAC_LIBCHAN_024 (24 )
     #define AAC2020_MAC_LIBCHAN_025 (25 )
     #define AAC2020_MAC_LIBCHAN_026 (26 )
+    #define AAC2020_MAC_LIBCHAN_027 (27 )
 
-    #define AAC2020_MAC_LIBCHAN_MAX (26 ) //:<-- Complile_Limit
+    #define AAC2020_MAC_LIBCHAN_MAX (27 ) //:<-- Complile_Limit
 
 //:============================================:LIBRARY_CHAIN://
 //:DATA:DATA_BEFORE_FUNCTIONS:===============================://
@@ -311,6 +312,16 @@
         #define AAC2020_INCLUDE_PAINT5D ( 0 )
         #endif
 
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_027 )
+
+        //:@VID_IID[ 0103 ]TIME[ 02:18:30   ]
+        //:FORMERLY_KNOWN_AS[   P5D_OGL.D._ ]
+        #include               "P5D1OGL.D._"    
+        #define AAC2020_INCLUDE_P5D1OGL (27 )
+        #else   //:     INCLUDE_P5D1OGL ( - )
+        #define AAC2020_INCLUDE_P5D1OGL ( 0 )
+        #endif
+
 #if( AAC2020_MAC_LIBCHAN_CUR > AAC2020_MAC_LIBCHAN_MAX  )
 
     #error "[DATA:EXCEEDING_LIBCHAN_MAX:DATA]"
@@ -531,6 +542,16 @@
         #define AAC2020_INCLUDE_PAINT5D (26 )
         #else   //:     INCLUDE_PAINT5D ( - )
         #define AAC2020_INCLUDE_PAINT5D ( 0 )
+        #endif
+
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_027 )
+
+        //:@VID_IID[ 0103 ]TIME[ 02:18:30   ]
+        //:FORMERLY_KNOWN_AS[   P5D_OGL.F._ ]
+        #include               "P5D1OGL.F._"    
+        #define AAC2020_INCLUDE_P5D1OGL (27 )
+        #else   //:     INCLUDE_P5D1OGL ( - )
+        #define AAC2020_INCLUDE_P5D1OGL ( 0 )
         #endif
 
 #if( AAC2020_MAC_LIBCHAN_CUR > AAC2020_MAC_LIBCHAN_MAX  )

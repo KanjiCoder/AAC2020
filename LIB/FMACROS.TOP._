@@ -83,6 +83,7 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 25 ,       "25");
     TAUDIRT
     TAUTYPE
     TAUSYNC
+    P5D1OGL
 *** ******************************************************** **/
 //[| InitNone:BEG |]=========================================]//
 //:InitNone:CPUNIFO:- - - - - - - - - - - - - - - - - - - - -://
@@ -141,6 +142,14 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 25 ,       "25");
 #define      FMACROS_TAUSYNC_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:TAUSYNC://
+//:InitNone:P5D1OGL:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_P5D1OGL >=  1 )
+#define      FMACROS_P5D1OGL_InitNone AAC2020_P5D1OGL_InitNone
+#endif
+#if( AAC2020_INCLUDE_P5D1OGL == 0 )
+#define      FMACROS_P5D1OGL_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:P5D1OGL://
 //[=========================================[| InitNone:END |]//
 
 

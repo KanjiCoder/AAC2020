@@ -131,6 +131,11 @@
               #error "[OUT_OF_ORDER:AAC2020_INCLUDE_PAINT5D]"
 #endif
 #endif
+#if( 0                           != AAC2020_INCLUDE_P5D1OGL )
+#if( macro_libchan_order_P5D1OGL != AAC2020_INCLUDE_P5D1OGL )
+              #error "[OUT_OF_ORDER:AAC2020_INCLUDE_P5D1OGL]"
+#endif
+#endif
 
     //:ONE_MORE_REDUNDANT_CHECK_BEFORE_WE_UNDEFINE:==========://
 
@@ -212,6 +217,9 @@
     #if( macro_libchan_order_PAINT5D != 26 )
     #error "[TAIL_ORDER_FAIL:PAINT5D]"
     #endif
+    #if( macro_libchan_order_P5D1OGL != 27 )
+    #error "[TAIL_ORDER_FAIL:P5D1OGL]"
+    #endif
 
     //:==========:ONE_MORE_REDUNDANT_CHECK_BEFORE_WE_UNDEFINE://
 
@@ -248,6 +256,7 @@
     #undef  macro_libchan_order_TAUTYPE   //:----## 24 ##----://
     #undef  macro_libchan_order_TAUSYNC   //:----## 25 ##----://
     #undef  macro_libchan_order_PAINT5D   //:----## 26 ##----://
+    #undef  macro_libchan_order_P5D1OGL   //:----## 27 ##----://
  
     //:==========:DONT_POLLUTE_OTHER_PEOPLES_CODE_WITH_MACROS://
 
