@@ -366,6 +366,19 @@
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
     U08
+    aac2020_paint5d_til_exp_CTO_til_peb(
+                U08 til_exp
+    )
+    {
+        assert( til_exp <=( 8 - 1 ) );
+
+        U08 til_peb=(
+        aac2020_paint5d_LUT_til_exp_CTO_til_peb[ til_exp ] );;
+
+        return( til_peb );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    U08
     aac2020_paint5d_til_exp_CTO_bip_sip(
                 U08 til_exp
     )
@@ -657,7 +670,14 @@
 #define ERR  aac2020_paint5d_Halt                     //: 06 ://
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-
+    //: INDEX:                                               ://
+    //:      001: aac2020_paint5d_glocpix_CTO_painpix        ://
+    //:      002: aac2020_paint5d_painpix_CTO_glocpix        ://
+    //:      ----------------------------------------        ://
+    //:      003: aac2020_paint5d_glocpix_CTO_cuvipix        ://
+    //:      004: aac2020_paint5d_cuvipix_CTO_glocpix        ://
+    //:                                                      ://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     void
     aac2020_paint5d_glocpix_CTO_painpix(
         U08*  RES  til_qua /** Auset Tile Sub Quadrant Index **/
@@ -1002,9 +1022,99 @@
         //:--------------------:CALCULATE:painpix_CTO_glocpix://
 
     }
-
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    aac2020_paint5d_glocpix_CTO_cuvipix(
+    /**/U08*  RES  til_exp /** TileExponent (TileSizeEnum)   **/
+    ,   U08*  RES  til_lay /** TileLayer .................   **/
+    ,   U08*  RES  cuv_i_x /** CanvasUserView_(coord)_X      **/
+    ,   U08*  RES  cuv_i_y /** CanvasUserView_(coord)_Y      **/
+    ,   I16        glo_t_x /** Global Tile X Coord           **/
+    ,   I16        glo_t_y /** Global Tile X Coord           **/
+    )
+    {
+        if( til_exp ){ /** NOOP **/ };
+        if( til_lay ){ /** NOOP **/ };
+        if( cuv_i_x ){ /** NOOP **/ };
+        if( cuv_i_y ){ /** NOOP **/ };
+        if( glo_t_x ){ /** NOOP **/ };
+        if( glo_t_y ){ /** NOOP **/ };
 
+        ERR("[YAGNI:DONT_WRITE_IT_UNITL_YOU_NEED_IT]");
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    aac2020_paint5d_cuvipix_CTO_glocpix(
+    /**/U08        til_exp /** TileExponent (TileSizeEnum)   **/
+    ,   U08        til_lay /** TileLayer .................   **/
+    ,   U08        cuv_i_x /** CanvasUserView_(coord)_X      **/
+    ,   U08        cuv_i_y /** CanvasUserView_(coord)_Y      **/
+    ,   I16*  RES  glo_t_x /** Global Tile X Coord           **/
+    ,   I16*  RES  glo_t_y /** Global Tile X Coord           **/
+    )
+    {
+        //:error_check_inputs:-------------------------------://
+
+            if( til_exp > (  8-1) ){ ERR("[til_exp_2021]" ); };
+            if( til_lay > (  3-1) ){ ERR("[til_lay_2021]" ); };
+            /// cuv_i_x > (256-1) )  ERR("[cuv_i_x_2021]" );////
+            /// cuv_i_y > (256-1) )  ERR("[cuv_i_y_2021]" );////
+
+            /** References can never be null **/
+            if( ((I16*)0) ==glo_t_x ){ ERR("[glo_t_x_2021]" );};
+            if( ((I16*)0) ==glo_t_y ){ ERR("[glo_t_y_2021]" );};
+
+        //:-------------------------------:error_check_inputs://
+
+        /** What quadrant are you in on the bitmap ? **/
+        U08 til_qua_q_x =( cuv_i_x / 128 );
+        U08 til_qua_q_y =( cuv_i_y / 128 );
+        assert( til_qua_q_x <= 1 );
+        assert( til_qua_q_y <= 1 );
+
+        /** ************************************************ **/
+        /** Origin of quadrant in terms of pebble coords.    **/
+        /** @VID_IID[ 0106 ]TIME[ 02:11:52 ] .............   **/
+        U08 til_qua_o_x =( til_qua_q_x * 128 ); /** ******** **/
+        U08 til_qua_o_y =( til_qua_q_y * 128 ); /** ******** **/
+        assert( til_qua_o_x <= (128 + 0) );
+        assert( til_qua_o_y <= (128 + 0) );
+
+        /** xy to index formula for 2x2 cells **/
+        U08 til_qua = til_qua_q_x + ( til_qua_q_y  * 2 );
+        assert( til_qua <=(4-1) );
+
+        U08 til_peb=(
+        aac2020_paint5d_til_exp_CTO_til_peb(
+                        til_exp ));;
+  
+
+        /** ********************************* **/
+        /** @VID_IID[ 0106 ]TIME[ 03:05:00 ]  **/
+        /** locuv_x: LocalCanvasUserView_X    **/
+        /** locuv_y: LocalCanvasUserView_Y    **/
+        U08 locuv_x = ( cuv_i_x - til_qua_o_x );
+        U08 locuv_y = ( cuv_i_y - til_qua_o_y );
+        assert( locuv_x <= (128-1) );     /** **/
+        assert( locuv_y <= (128-1) );     /** **/
+        /** ********************************* **/
+
+        U08 loc_t_x=( locuv_x / til_peb );
+        U08 loc_t_y=( locuv_y / til_peb );
+        assert( loc_t_x <= ( 128-1) );
+        assert( loc_t_y <= ( 128-1) );
+
+        aac2020_paint5d_painpix_CTO_glocpix(
+            til_qua /** Auset Tile Sub Quadrant Index **/
+        ,   til_exp /** TileExponent (TileSizeEnum)   **/
+        ,   til_lay /** TileLayer .................   **/
+        ,   loc_t_x /** Local  Tile X Coord / b_x     **/
+        ,   loc_t_y /** Local  Tile Y Coord / b_y     **/
+        ,   glo_t_x /** Global Tile X Coord           **/
+        ,   glo_t_y /** Global Tile X Coord           **/
+        );;
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 #undef  U08                                           //: 01 ://
 #undef  U16                                           //: 02 ://
 #undef  I16                                           //: 03 ://

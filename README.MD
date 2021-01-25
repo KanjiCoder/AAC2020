@@ -1,5 +1,10 @@
 # AAC2020 : Atomic Alice C11 2020
 
+## INDEX:
+### 1: ABOUT
+### 2: CONCEPTUAL TYPES
+### 3: DIAGRAMS
+
     //:ABOUT:================================================://
 
         //:SUMMARY:------------------------------------------://
@@ -7,6 +12,31 @@
             Fractal auto tiling engine.
 
         //:------------------------------------------:SUMMARY://
+        //:ENGINE_FEATURES:----------------------------------://
+
+            Main Engine Features:
+            
+            1. Each auto tile design contains
+               different LAYERS and TILE SIZES.
+               (PAINT5D Sub System Does This Part)
+
+            2. Each AUSET (auto tile set)
+               has only 4 graphics and the
+               16 sub-tiles needed for proper
+               WANG auto tiles is generated
+               from those 4 graphics.
+               (SUBSYSTEM_DOES_NOT_EXIST_YET)
+
+            3. Auto Tiling Of Tiles within a rendered
+               LEVEL MAP.
+               (SUBSYSTEM_DOES_NOT_EXIST_YET)
+
+            4. Tiles are drawn using
+               other TILES instead of pixels
+               creating FRACTAL AUTO TILES
+               (SUBSYSTEM_DOES_NOT_EXIST_YET)
+
+        //:----------------------------------:ENGINE_FEATURES://
         //:WARNING:------------------------------------------://
 
             I am __VERY__ oppinionated about how to write code.
@@ -324,3 +354,149 @@
         //:---------------------------------------------:MISC://
 
     //:================================================:ABOUT://
+    //:CONCEPTUAL_TYPES:=====================================://
+
+        painpix :-------------------------------------------:
+        01 : til_qua :( t_q ): [ 0 -to- 3                   ]
+        02 : til_exp :( t_e ): [ 0 -to- 7                   ]
+        03 : til_lay :( t_l ): [ 0 -to- 2                   ]
+        04 : loc_t_x :( t_x ): [ 0 -to- til_exp_CTO_max_cor ]
+        05 : loc_t_y :( t_y ): [ 0 -to- til_exp_CTO_max_cor ]
+    
+        glocpix :-----------------------:
+        01 : glo_t_x :( g_x ): [ 0 -to- (512-1) ]
+        02 : glo_t_y :( g_y ): [ 0 -to- (512-1) ]
+
+        cuvipix :-----------------------:
+        01 : cuv_i_x :( i_x ): [ 0 -to- (256-1) ]
+        02 : cuv_i_y :( i_y ): [ 0 -to- (256-1) ]
+
+    //:=====================================:CONCEPTUAL_TYPES://
+    //:DIAGRAMS:=============================================://
+    //:DIAGRAMS:PAINT5D_MENTAL_MODELS:|||||||||||||||||||||||://
+
+    [ EDI_001 / PAINT5D ] : DATA_LAYOUT 
+    UNITS_IN_DIAGRAM_BELOW_ARE[ PIXELS ]
+
+    |<--------------------- 512 --------------------->|
+    |<---------256--------->| |<---------256--------->|
+    |<-- 128 -->|                                     |
+    +--=--+--=--+--=--+--=--+ +--=--+--=--+--=--+--=--+ ---+---
+    |           |           | |           |           |    |
+    | @til_lay  | @til_lay  | |           |           |    0
+    +     0     +     1     + +           +           +@til_exp
+    |     @til_qua === 0    | |     @til_qua === 1    |    0
+    |           |           | |           |           |    |
+    +--=--+--=--+--=--+--=--+ +--=--+--=--+--=--+--=--+ ---+---
+    |           |  0  |  1  | |           |     |     |@til_exp
+    | @til_lay  |     |     | |           |     |     |    1
+    +     2     +-----+--+--+ +           +-----+--+--+ ---+---
+    |           |  2  |__|__| |           |     |__|__| <- 2
+    |           |     |__|..| |           |     |__|..| 
+    +--=--+--=--+--=--+--=--+ +--=--+--=--+--=--+--=--+
+    +--=--+--=--+--=--+--=--+ +--=--+--=--+--=--+--=--+ -------
+    |           |           | |           |           |    |
+    |           |           | |           |           |    |
+    +           +           + +           +           +    |
+    |     @til_qua === 2    | |     @til_qua === 3    |    |
+    |           |           | |           |           |    3
+    +--=--+--=--+--=--+--=--+ +--=--+--=--+--=--+--=--+@til_qua
+    |           |     |     | |           |     |     |    3
+    |           |     |     | |           |     |     |    |
+    +           +-----+--+--+ +           +-----+--+--+    |
+    |           |     |__|__| |           |     |__|__|    |
+    |           |     |__|..| |           |     |__|..|    |
+    +--=--+--=--+--=--+--=--+ +--=--+--=--+--=--+--=--+ -------
+
+    [ EDI_001 / PAINT5D ] : #CANVAS_USER_VIEW# :
+    UNITS_IN_DIAGRAM_BELOW_ARE[ PEBBLES ]
+                 
+    @-----------------------+ @-----------------------+ -------
+    |                       | |                       |    |
+    |                       | |                       |    |
+    |                       | |                       |    |
+    |                       | |                       |    |
+    |                       | |                       |    |
+    |   TOP_LEF: SUB_TILE   | |  TOP_RIG: SUB_TILE    |    |
+    |  #TOP_LEF__SUB_TILE#  | | #TOP_RIG__SUB_TILE#   |    |
+    |                       | |                       |    |
+    |                       | |                       |    |
+    |                       | |                       |    |
+    |                       | |                       |    |
+    +-----------------------+ +-----------------------+   256
+    +-----------------------+ +-----------------------+    |
+    |                       | |                       |    |
+    |                       | |                       |    |
+    |                       | |                       |    |
+    |                       | |                       |    |
+    |                       | |                       |    |
+    |   BOT_LEF: SUB_TILE   | |  BOT_RIG: SUB_TILE    |    |
+    |  #BOT_LEF__SUB_TILE#  | | #BOT_RIG__SUB_TILE#   |    |
+    |                       | |                       |    |
+    |                       | |                       |    |
+    |                       | |                       |    |
+    |                       | |                       |    |
+    +-----------------------+ +-----------------------+ -------
+    |<-------- 128 -------->|                         |
+    |<--------------------- 256 --------------------->|
+
+    Help Understanding Test Code: 
+    aac2020_P5D1OGL_UTC_painpix_CTO_cuvipix( ... )
+    TEST_SECTION[ #BOTTOM_LEFT_ALL_TILE_EXPONENTS# ]
+
+    When converting from painpix to cuvipix , we loose
+    information because large tiles cover multiple
+    pebble-sized tiles on the #CANVAS_USER_VIEW# diagram.
+    The location of any tile in terms of canvas user view
+    pebble units will be the top-left-most pebble the tile
+    is overlayed over. For example, the largest tile put
+    in the top-left quadrant of canvas user view will have
+    a coordinate of [0,0]. Where as if it were in the
+    bottom right quadrant, it's coordinate would be
+    [128,128].
+                                       .
+                                       .
+                                       .
+                                   +---+ til_exp == 0 
+                                   | X | SUBTRACT( 0 )
+                                ...+---+ FORMULA[ (2^0)-1 ]
+
+                                       |
+                               +---+---+
+                               | X |   |
+                               +---+---+ til_exp == 1
+                               |   |   | SUBTRACT( 1 )
+                            ...+---+---+ FORMULA[ (2^1)-1 ]
+                    
+                                       |
+                       +---+---+---+---+
+                       | X |   |   |   |
+                       +---+---+---+---+
+                       |   |   |   |   |
+                       +---+---+---+---+
+                       |   |   |   |   |
+                       +---+---+---+---+ til_exp == 2
+                       |   |   |   |   | SUBTRACT( 3 )
+                    ...+---+---+---+---+ FORMULA[ (2^2)-1 ]
+
+                                       |
+       +---+---+---+---+---+---+---+---+
+       | X |   |   |   |   |   |   |   |
+       +---+---+---+---+---+---+---+---+
+       |   |   |   |   |   |   |   |   |
+       +---+---+---+---+---+---+---+---+
+       |   |   |   |   |   |   |   |   |
+       +---+---+---+---+---+---+---+---+
+       |   |   |   |   |   |   |   |   |
+       +---+---+---+---+---+---+---+---+
+       |   |   |   |   |   |   |   |   |
+       +---+---+---+---+---+---+---+---+
+       |   |   |   |   |   |   |   |   |
+       +---+---+---+---+---+---+---+---+
+       |   |   |   |   |   |   |   |   |
+       +---+---+---+---+---+---+---+---+ til_exp == 2
+       |   |   |   |   |   |   |   |   | SUBTRACT( 7 )
+    ...+---+---+---+---+---+---+---+---+ FORMULA[ (2^3)-1 ]
+ 
+    //:|||||||||||||||||||||||:DIAGRAMS:PAINT5D_MENTAL_MODELS://
+    //:=============================================:DIAGRAMS://
