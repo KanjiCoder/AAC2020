@@ -532,6 +532,13 @@
 
         //:----------------------------------------:PUT_TESTS://
         //:DO_THE_PUT_TEST_BEFORE_THESE_GETTER_TESTS:--------://
+        //:DO_PUTGET_TEST_BEFORE_THE_TWO_GETTER_TESTS:-------://
+
+            E_V
+            aac2020_P5D1OGL_UTC_cuvipix_CTO_cuvbits_Put_Get(V);
+            aac2020_P5D1OGL_UTC_cuvipix_CTO_cuvbits_Put_Get();
+
+        //:-------:DO_PUTGET_TEST_BEFORE_THE_TWO_GETTER_TESTS://
         /** ************************************************ ***
         @VID_IID[ 0097 ]TIME[ 06:11:05 ]  
         Stubbing in test for "Bitpacked Sampler"  
@@ -574,6 +581,212 @@
     #undef    V
     } //:[END_FUNC]://
     //: - - - - - - - - - - - - -:aac2020_P5D1OGL_UTC_private://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    aac2020_P5D1OGL_UTC_cuvipix_CTO_cuvbits_Put_Get( void )
+    {
+    #define NUM_TES ( 40 )
+    #define NUM_COL (  5 )
+    LOG("[...._P5D1OGL_UTC_cuvipix_CTO_cuvbits_Put_Get:BEG]",0);
+
+        /** ************************************************ ***
+        @VID_IID[ 07:44:50 ]
+        STEPS:
+            1. CALL: cuvipix_CTO_cuvbits_Put
+            2. CALL: cuvipix_CTO_cuvbits_Get
+            3. Make sure what you[ Put ]Is_What_You[ Get ]
+        *** ************************************************ **/
+
+        U32 tab_utc[ NUM_TES * NUM_COL ]={
+        //: TOP_LEF
+        //: cuv_i_x | cuv_i_y | lay_dex | aus_dex | cuv_b16  ://
+                0x0 ,     0x0 ,     0x0 ,     0x0 ,  0x0000
+            ,   0x0 ,     0x0 ,     0x0 ,     0x0 ,  0xFFFF
+            ,   0x0 ,     0x0 ,     0x0 ,     0x0 ,  0xFF00
+            ,   0x0 ,     0x0 ,     0x0 ,     0x0 ,  0x00FF
+            ,   0x0 ,     0x0 ,     0x0 ,     0x0 ,  0xABCD
+    
+        //: TOP_RIG
+        //: cuv_i_x | cuv_i_y | lay_dex | aus_dex | cuv_b16  ://
+            ,   255 ,     0x0 ,     0x0 ,     0x0 ,  0x0000
+            ,   255 ,     0x0 ,     0x0 ,     0x0 ,  0xFFFF
+            ,   255 ,     0x0 ,     0x0 ,     0x0 ,  0xFF00
+            ,   255 ,     0x0 ,     0x0 ,     0x0 ,  0x00FF
+            ,   255 ,     0x0 ,     0x0 ,     0x0 ,  0xABCD
+
+        //: BOT_LEF
+        //: cuv_i_x | cuv_i_y | lay_dex | aus_dex | cuv_b16  ://
+            ,   0x0 ,     255 ,     0x0 ,     0x0 ,  0x0000
+            ,   0x0 ,     255 ,     0x0 ,     0x0 ,  0xFFFF
+            ,   0x0 ,     255 ,     0x0 ,     0x0 ,  0xFF00
+            ,   0x0 ,     255 ,     0x0 ,     0x0 ,  0x00FF
+            ,   0x0 ,     255 ,     0x0 ,     0x0 ,  0xABCD
+
+        //: BOT_RIG
+        //: cuv_i_x | cuv_i_y | lay_dex | aus_dex | cuv_b16  ://
+            ,   255 ,     255 ,     0x0 ,     0x0 ,  0x0000
+            ,   255 ,     255 ,     0x0 ,     0x0 ,  0xFFFF
+            ,   255 ,     255 ,     0x0 ,     0x0 ,  0xFF00
+            ,   255 ,     255 ,     0x0 ,     0x0 ,  0x00FF
+            ,   255 ,     255 ,     0x0 ,     0x0 ,  0xABCD
+
+            //:Same tests as above, but we changed
+            //:the layer index and auset index.
+
+        //: cuv_i_x | cuv_i_y | lay_dex | aus_dex | cuv_b16  ://
+            ,   0x0 ,     0x0 ,       1 ,       1 ,  0x0000
+            ,   0x0 ,     0x0 ,       2 ,       2 ,  0xFFFF
+            ,   0x0 ,     0x0 ,       1 ,       3 ,  0xFF00
+            ,   0x0 ,     0x0 ,       2 ,       4 ,  0x00FF
+            ,   0x0 ,     0x0 ,       1 ,       5 ,  0xABCD
+        //: cuv_i_x | cuv_i_y | lay_dex | aus_dex | cuv_b16  ://
+            ,   255 ,     0x0 ,       2 ,       6 ,  0x0000
+            ,   255 ,     0x0 ,       1 ,       7 ,  0xFFFF
+            ,   255 ,     0x0 ,       2 ,       8 ,  0xFF00
+            ,   255 ,     0x0 ,       1 ,       9 ,  0x00FF
+            ,   255 ,     0x0 ,       2 ,      10 ,  0xABCD
+        //: cuv_i_x | cuv_i_y | lay_dex | aus_dex | cuv_b16  ://
+            ,   0x0 ,     255 ,       1 ,      11 ,  0x0000
+            ,   0x0 ,     255 ,       2 ,      12 ,  0xFFFF
+            ,   0x0 ,     255 ,       1 ,      13 ,  0xFF00
+            ,   0x0 ,     255 ,       2 ,      14 ,  0x00FF
+            ,   0x0 ,     255 ,       1 ,      15 ,  0xABCD
+        //: cuv_i_x | cuv_i_y | lay_dex | aus_dex | cuv_b16  ://
+            ,   255 ,     255 ,       2 ,       1 ,  0x0000
+            ,   255 ,     255 ,       1 ,       2 ,  0xFFFF
+            ,   255 ,     255 ,       2 ,       3 ,  0xFF00
+            ,   255 ,     255 ,       1 ,       4 ,  0x00FF
+            ,   255 ,     255 ,       2 ,       5 ,  0xABCD
+        //: cuv_i_x | cuv_i_y | lay_dex | aus_dex | cuv_b16  ://
+        };;
+        /** ************************************************ ***
+        *** @VID_IID[ 0106 ]TIME[ 08:28:37 ]                 ***
+        *** AzarlakTwitch: "I hardly understand what "       ***
+        *** "I'm doing,  and I'm the one who wrote it"       ***
+        *** - I relate to this way more than I should        ***
+        *** NotLikeThis                                      ***
+        *** ************************************************ **/
+        for( I32 t_i = 0 ; t_i <= (NUM_TES-1) ; t_i ++ ){
+
+             I32 bas =( t_i * NUM_COL );
+
+             U32 cuv_i_x = tab_utc[ bas + 0 ];
+             U32 cuv_i_y = tab_utc[ bas + 1 ];
+             U32 lay_dex = tab_utc[ bas + 2 ];
+             U32 aus_dex = tab_utc[ bas + 3 ];
+             U32 cuv_b16 = tab_utc[ bas + 4 ];
+             U32 got_b16 ;
+
+
+            OPEN_GL_PAINT5D_cuvipix_CTO_cuvbits_Put( ///////////
+                                                             ///
+                //|LOCATION_OF_THE_DATA|||||||||||||||||||||||//
+               (I32)cuv_i_x          //:AKA[ cuvipix.i_x ]   ///
+            ,  (I32)cuv_i_y          //:AKA[ cuvipix.i_y ]   ///    
+                                                             ///    
+                //|VALUES_OF_THE_DATA|||||||||||||||||||||||||//    
+            ,  (I32)lay_dex          //:AKA[ lay_dex ]       ///    
+            ,  (I32)aus_dex          //:AKA[ aus_dex ]       ///    
+            ,  (U32)cuv_b16          //:STORES_8_TILE_VALUES ///    
+                                                             ///    
+            );; ////////////////////////////////////////////////    
+                                                                    
+            got_b16=(                                               
+            OPEN_GL_PAINT5D_cuvipix_CTO_cuvbits_Get( ///////////    
+               (I32)cuv_i_x          //:AKA[ cuvipix.i_x ]   ///    
+            ,  (I32)cuv_i_y          //:AKA[ cuvipix.i_y ]   ///    
+            ,  (I32)lay_dex          //:AKA[ lay_dex ]       ///    
+            ,  (I32)aus_dex          //:AKA[ aus_dex ]       ///    
+            ));; ///////////////////////////////////////////////    
+                                                                    
+            if( cuv_b16 != got_b16 ){                               
+                                                                    
+                ERR("[IVE_MADE_A_TERRIBLE_MISTAKE_YEAR_2021]");     
+                                                                    
+            };;                                                     
+        };;  
+
+        //:procedural_batch_put_then_get_test:---------------://
+        #define PUT OPEN_GL_PAINT5D_cuvipix_CTO_cuvbits_Put
+        #define GET OPEN_GL_PAINT5D_cuvipix_CTO_cuvbits_Get
+
+            I32 c_x; /** CanvasUserView_X AKA cuv_i_x **/
+            I32 c_y; /** CanvasUserView_Y AKA cuv_i_y **/
+            I32 lay; /** layer index **/
+            I32 aus; /** auset index **/
+            U32 b16; /** 16 bits packing 8 2 bit tile values **/
+            U32 g16; /** GOTTEN[ b16 ] **/
+
+            b16=( 0 );
+            for( c_x = 0 ; c_x <= (256-1) ; c_x ++ ){
+            for( c_y = 0 ; c_y <= (256-1) ; c_y ++ ){
+            for( lay = 0 ; lay <= (  3-1) ; lay ++ ){
+            for( aus = 0 ; aus <= ( 16-1) ; aus ++ ){
+            b16++;
+            
+                b16=((b16)%(0xFFFF+1));
+                      PUT( c_x,c_y,lay,aus,b16 )  ;
+                g16=( GET( c_x,c_y,lay,aus     ) );
+                if( b16 != g16 ){
+                    ERR("[DUCK_AND_COVER_2021]");
+                };;
+
+            };;};;};;};;
+            b16=( 0 );
+            for( c_x = 0 ; c_x <= (256-1) ; c_x ++ ){
+            for( c_y = 0 ; c_y <= (256-1) ; c_y ++ ){
+            for( lay = 0 ; lay <= (  3-1) ; lay ++ ){
+            for( aus = 0 ; aus <= ( 16-1) ; aus ++ ){
+            b16++;
+            
+                b16=((b16)%(0xFFFF+1));
+                g16 =GET( c_x,c_y,lay,aus );
+
+                if( b16 != g16 ){
+                    /** ************************************ ***
+                    @VID_IID[ 0106 ]TIME[ 09:41:50 ]
+                    This seems indicative of a memory stomp.
+                    My main question is if the memory stomp
+                    is an error in the code, or if the test
+                    code itself is wrong and we just don't
+                    know what the H3ll we are doing.
+                    *** ************************************ **/
+
+                    /** @VID_IID[ 0107 ]TIME[ 00:27:30 ]     **/
+                    /** Turns out we don't know what we are  **/
+                    /** doing. They only value guaranteed    **/
+                    /** to NOT be memory stomped in this     **/
+                    /** loop would be the smallest tile      **/
+                    /** size packed into the 2 least         **/
+                    /** significant bits.                    **/
+                    if( (b16 & 0x3) != (g16 & 0x3) ){   
+
+                        ERR("[YOU_DONT_KNOW_JACK_2021]");
+
+                    };;
+                };;
+
+            };;};;};;};;
+
+
+        #undef  PUT
+        #undef  GET
+        //:---------------:procedural_batch_put_then_get_test://
+                                                                    
+        #if( AAC2020_CRASH_ON_VITAL_TODO ) //:###############://    
+                                                                    
+            #error Are we sure we are not memory stomping?          
+            Must put a set of values, then get a set of             
+            values to verify that this is not happening.            
+                                                                    
+            @VID_IID[ 0106 ]TIME[ 08:19:10 ]                        
+
+        #endif //:###########################################://
+
+    LOG("[...._P5D1OGL_UTC_cuvipix_CTO_cuvbits_Put_Get:END]",0);
+    #undef  NUM_TES 
+    #undef  NUM_COL 
+    }
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     void
     aac2020_P5D1OGL_UTC_cuvipix_CTO_cuvbits_Put( void )
@@ -1597,6 +1810,14 @@ aus_015 ===>|   15-12   |   11-08   |   07-04       03-00   |
 
     *** **************************************************** **/
         
+        /** @VID_IID[ 0106 ]TIME[ 06:53:11 ]            **** **/
+        /** We shouldn't have to blank this out to get  **** **/
+        /** the tests working. But if that's the case,  **** **/
+        /** zeroing out the memory is the most          **** **/
+        /** sensible option.                            **** **/
+        for( I32 c = 0 ; c <=((512*512*4)-1) ; c++ ){
+            AAC2020_PIXNAME_paint5d_cpu_pix[ c ]=( 0x00 ); //:<<<<<<<<<<<<<<<<<<<<<<<<<<<<< REMOVE_ZEROING_OUT_WHEN_TEST_FINALLY_PASSES
+        };;
 
         //:DEFINE_OR_UNDEF_BINARY_CONSTANTS:-----------------://
         //| #_P5D_UNIT_TEST_COMMENT_2021_01_20_655PM_#       |//
@@ -2035,9 +2256,14 @@ aus_015 ===>|   15-12   |   11-08   |   07-04       03-00   |
         for( t_e = 0 ; t_e <=(8-1); t_e ++ ){
 
             bas_tes = ( t_i * TAB_INN_WID     );
+            assert( 0 ==  bas_tes % 24 );
+
             bas_tv3 = ( bas_tes + ( t_e * 3 ) ); //:3tilevalues
+            assert( 0 == bas_tv3 %  3  );
+
             dexodat = ( bas_tv3 + lay ); //:inDEX_Of_DATum
             assert( dexodat <= ((TAB_INN_WID * NUM_TESTS)-1) );
+
             put_t_v = tab_utc_inn[ dexodat ];
             assert( put_t_v <= 3 /**BIN_011**/ );
             
@@ -2143,6 +2369,16 @@ aus_015 ===>|   15-12   |   11-08   |   07-04       03-00   |
                 ,   (I32)    t_x     //: [ loc_t_x | t_x ]   ://
                 ,   (I32)    t_y     //: [ loc_t_y | t_y ]   ://
                 ));;
+
+////////////    OPEN_GL_PAINT5D_cuvipix_CTO_painpix(
+////////////         Maybe We Want to Write This? //////////////
+////////////         Maybe We Want to Write This? //////////////
+////////////         Maybe We Want to Write This? //////////////
+////////////         Maybe We Want to Write This? //////////////
+////////////         Maybe We Want to Write This? //////////////
+////////////    ));;
+
+            
 
                 got_cuvbits=(
                 OPEN_GL_PAINT5D_cuvipix_CTO_cuvbits_Get(
