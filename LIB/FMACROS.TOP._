@@ -15,7 +15,7 @@
 
 //:CPUNIFO:==================================================://
 #if(            AAC2020_INCLUDE_CPUNIFO >=  1 )
-_Static_assert( AAC2020_INCLUDE_CPUNIFO == 13 ,        "13");
+_Static_assert( AAC2020_INCLUDE_CPUNIFO == 17 ,        "17");
 
     #define  FMACROS_CPUNIFO_LoopTick   AAC2020_CPUNIFO_LoopTick
 #endif
@@ -26,7 +26,7 @@ _Static_assert( AAC2020_INCLUDE_CPUNIFO == 13 ,        "13");
 //:==================================================:CPUNIFO://
 //:GRAQUAD:==================================================://
 #if(            AAC2020_INCLUDE_GRAQUAD >=  1 )
-_Static_assert( AAC2020_INCLUDE_GRAQUAD == 14 ,       "14");
+_Static_assert( AAC2020_INCLUDE_GRAQUAD == 18 ,       "18");
 
     #define  FMACROS_GRAQUAD_LoopTick   AAC2020_GRAQUAD_LoopTick
 #endif
@@ -37,7 +37,7 @@ _Static_assert( AAC2020_INCLUDE_GRAQUAD == 14 ,       "14");
 //:==================================================:GRAQUAD://
 //:TAUDEPO:==================================================://
 #if(            AAC2020_INCLUDE_TAUDEPO >=  1 )
-_Static_assert( AAC2020_INCLUDE_TAUDEPO == 23 ,       "23");
+_Static_assert( AAC2020_INCLUDE_TAUDEPO == 27 ,       "27");
 
     #define  FMACROS_TAUDEPO_LoopTick   AAC2020_TAUDEPO_LoopTick
 #endif
@@ -48,7 +48,7 @@ _Static_assert( AAC2020_INCLUDE_TAUDEPO == 23 ,       "23");
 //:==================================================:TAUDEPO://
 //:TAUSYNC:==================================================://
 #if(            AAC2020_INCLUDE_TAUSYNC >=  1 )
-_Static_assert( AAC2020_INCLUDE_TAUSYNC == 25 ,       "25");
+_Static_assert( AAC2020_INCLUDE_TAUSYNC == 29 ,       "29");
 
     #define  FMACROS_TAUSYNC_LoopTick   AAC2020_TAUSYNC_LoopTick
 #endif
@@ -76,6 +76,12 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 25 ,       "25");
 [FIND_KEY]
     *******
 [REPLACE_KEYS]
+    SILENCE
+    KILTEST
+    REENUTR  
+    TODOMAN
+    IKEYLIS
+    IKEYCMD
     CPUNIFO
     PIXSAVE
     PIXBACK
@@ -86,6 +92,54 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 25 ,       "25");
     P5D1OGL
 *** ******************************************************** **/
 //[| InitNone:BEG |]=========================================]//
+//:InitNone:SILENCE:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_SILENCE >=  1 )
+#define      FMACROS_SILENCE_InitNone AAC2020_SILENCE_InitNone
+#endif
+#if( AAC2020_INCLUDE_SILENCE == 0 )
+#define      FMACROS_SILENCE_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:SILENCE://
+//:InitNone:KILTEST:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_KILTEST >=  1 )
+#define      FMACROS_KILTEST_InitNone AAC2020_KILTEST_InitNone
+#endif
+#if( AAC2020_INCLUDE_KILTEST == 0 )
+#define      FMACROS_KILTEST_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:KILTEST://
+//:InitNone:REENUTR:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_REENUTR >=  1 )
+#define      FMACROS_REENUTR_InitNone AAC2020_REENUTR_InitNone
+#endif
+#if( AAC2020_INCLUDE_REENUTR == 0 )
+#define      FMACROS_REENUTR_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:REENUTR://
+//:InitNone:TODOMAN:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_TODOMAN >=  1 )
+#define      FMACROS_TODOMAN_InitNone AAC2020_TODOMAN_InitNone
+#endif
+#if( AAC2020_INCLUDE_TODOMAN == 0 )
+#define      FMACROS_TODOMAN_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:TODOMAN://
+//:InitNone:IKEYLIS:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_IKEYLIS >=  1 )
+#define      FMACROS_IKEYLIS_InitNone AAC2020_IKEYLIS_InitNone
+#endif
+#if( AAC2020_INCLUDE_IKEYLIS == 0 )
+#define      FMACROS_IKEYLIS_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:IKEYLIS://
+//:InitNone:IKEYCMD:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_IKEYCMD >=  1 )
+#define      FMACROS_IKEYCMD_InitNone AAC2020_IKEYCMD_InitNone
+#endif
+#if( AAC2020_INCLUDE_IKEYCMD == 0 )
+#define      FMACROS_IKEYCMD_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:IKEYCMD://
 //:InitNone:CPUNIFO:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_CPUNIFO >=  1 )
 #define      FMACROS_CPUNIFO_InitNone AAC2020_CPUNIFO_InitNone
@@ -151,8 +205,6 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 25 ,       "25");
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:P5D1OGL://
 //[=========================================[| InitNone:END |]//
-
-
 //:AUTO_GENERATED_INIT_FUNCTIONS:============================://
 //:INITS: Auto Generated From Keyboard Shortcuts
 /** ******************************************************** ***
@@ -302,6 +354,8 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 25 ,       "25");
     ( SEE: LIBCHAN.TOP._ )  <--[ Official List        ]
 
     SILENCE (## ) Controls Silencing of non-debug messages.
+    KILTEST (## ) KILL TEST (Unit Test Killer/Silencer)
+    REENUTR (## ) UNIT TEST RUNNER. DO NOT [MAKE|USE] THIS CODE!
     TODOMAN (## ) Replaces: AAC2020_VITAL_TODO and MAYBE_TODO
     FILEBOI (## ) File System Access Calls.
     NATIKEY (## ) Native Keyboard To Library Cross Platform Keys
