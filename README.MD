@@ -534,11 +534,11 @@
     @VID_IID[ 0106 ]TIME[ 03:59:42 ]BEGIN_EXPLANTION
     @VID_IID[ 0106 ]TIME[ 04:02:16 ]END__EXPLANATION
     @VID_IID[ 0106 ]TIME[ 04:04:00 ]MORE_EXPLANATION
-
+    
     #_DIA_P5D_PIXEL_CAKE_SLICES_#
-
+    
     #_THE_PIXEL_PAYLOAD_FOR_TILE_SIZES_IS_NOT_THIS_#
-
+    
     |<----R----->|<-----G----->|<-----B----->|<-----A----->|
     15 14 13 12   11 10 09 08   07 06 05 04   03 02 01 00 |
     00 00 00 00 | 00 00 00 00 | 00 00 00 00 | 00 00 00 00 |
@@ -578,6 +578,6 @@
                       +--=--+--=--+--=--+--=--+  .  .  .  .
                         .                        .  .  .  .
                         ...................................
-
+    
     //:|||||||||||||||:DIAGRAMS:P5D1OGL_AKA_PAINT5D_GLSL_CODE://
     //:=============================================:DIAGRAMS://
