@@ -9,6 +9,28 @@
     //[   VIDEO COMMENT TIMESTAMP EXAMPLE   ]//
 *** ******************************************************** ***
 
+
+@_PAIRED_CODE_GENERATE_B16_YEAR_2021_@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @VID_IID[ 0109 ]TIME[ 00:10:42 ]
+
+    We use this exact block of code in both of our
+    loops in the test code to make sure that the
+    generated values are generated EXACTLY the same
+    way in the[ PUT ]loop part of the test as they
+    are in the[ GET ]loop part of the test.
+
+    The goal is to PUT everything and then GET everything.
+    Doing so in a batched instead of interlaced order
+    can help us detect UN-INTENTIONAL memory stomping.
+
+    //:@_PAIRED_CODE_GENERATE_B16_YEAR_2021_@://
+    if(0 == meg){ b16=((inc)%(0xFFFF+1)); };
+    if(1 == meg){ b16=  BIG[ inc % 40 ] ; };
+    if(2 == meg){ b16=  LIT[ inc % 40 ] ; };
+    //:@_PAIRED_CODE_GENERATE_B16_YEAR_2021_@://
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@_PAIRED_CODE_GENERATE_B16_YEAR_2021_@
 @COMBO_BREAKER@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
     @COMBO_BREAKER: One of these things is not like the other.
