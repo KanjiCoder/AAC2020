@@ -3,10 +3,23 @@
     ## TURN ON[ -Wconversion ]
     ## And start fixing where things break. 
 
-    INN="./LIB/P5D1OGL.F_S._"
-    OUT="./LIB/P5D1OGL.F_S.STRING._"
-    awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT
+    ##_GENERATE_GLSL_CODE_FROM_C99_CODE_########################
 
+        ## @VID_IID[ 0114 ]TIME[ 03:07:50 ] ####################
+        ## All this does is surround every single line of     ##
+        ## the file in quote marks like this:                 ##
+        ##      $INN LINE:  Some Line Of Code                 ##
+        ##      $OUT LINE: "Some Line Of Code \n"             ##
+        ##                                                    ##
+        ## So we can automate process of creating GLSL        ##
+        ## code from C99 code.                                ##
+        ########################################################
+
+        INN="./LIB/P5D1OGL.FRA._"
+        OUT="./LIB/P5D1OGL.FRA.STRING._"
+        awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT
+
+    ########################_GENERATE_GLSL_CODE_FROM_C99_CODE_##
     ##  SC[ hkmf-mini] #########################################
     ## SEE[ hkmf-c11 ] for reference:  #########################
     ############################################################
