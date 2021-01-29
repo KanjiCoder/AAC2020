@@ -3,6 +3,10 @@
     ## TURN ON[ -Wconversion ]
     ## And start fixing where things break. 
 
+    INN="./LIB/P5D1OGL.F_S._"
+    OUT="./LIB/P5D1OGL.F_S.STRING._"
+    awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT
+
     ##  SC[ hkmf-mini] #########################################
     ## SEE[ hkmf-c11 ] for reference:  #########################
     ############################################################
