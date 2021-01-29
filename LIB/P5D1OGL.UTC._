@@ -1,0 +1,3370 @@
+//:HELPER_FUNCTIONS_FOR_UNIT_TESTS:==========================://
+/** ******************************************************** ***
+*** @VID_IID[ 0103 ]TIME[ 02:48:04 ]                         **
+*** Though these functions were originally written as helper **
+*** functions for unit tests, it does not mean that they     **
+*** are forever religated to that functionality if we find   **
+*** we need them for other stuff.                            **
+***                                                          **
+*** @VID_IID[ 0103 ]TIME[ 02:49:50 ]                         **
+*** Checked definition of [ religated ] and I believe my     **
+*** usage of the word is correct in this circumstance.       **
+*** ******************************************************** **/
+//:HELPER_FUNCTIONS_FOR_UNIT_TESTS:- - - - - - - - - - - - - ://
+#define I32 int32_t /** GCC: <stdint.h> **/           //: 01 ://
+#define U08 uint8_t /** GCC: <stdint.h> **/           //: 02 ://
+#define ERR aac2020_p5d1ogl_Halt                      //: 03 ://
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    #define CUVBOX4 struct aac2020_p5d1ogl_cuvbox4    //: 01 ://
+    #define DEX2031 dex2031                           //: 02 ://
+    #define ONE_BOX (( 128-1 )*4)                     //: 03 ://
+    #define ONE_EDG (( 128-1 )*1) /**ONE_EDGE**/      //: 04 ://
+    #define     ZER ( 0 )                             //: 05 ://
+
+    CUVBOX4
+    aac2020_p5d1ogl_dex2031_CTO_cuvbox4(
+        I32 dex2031 //: 0-to-2031 inclusive
+    ){
+        CUVBOX4 cuvbox4; //:[OUTPUT/RETURN]VALUE
+        I32 bas_dex=( 0-666 ); //:base index
+        I32 org_i_x=( 0-666 ); //:origin X
+        I32 org_i_y=( 0-666 ); //:origin Y
+        I32 off_i_x=( 0-666 ); //:offset X
+        I32 off_i_y=( 0-666 ); //:offset Y
+        //:error_check_input:--------------------------------://
+
+            if( dex2031 >=       0 
+            &&  dex2031 <= dex2031
+            ){
+                /**OKAY:Valid_Range**/
+            }else{
+                ERR("[dex2031_is_out_of_bounds]");
+            };;
+
+        //:--------------------------------:error_check_input://
+        //:Which_Of_The_4_Boxes_Are_Being_Draw:--------------://
+
+            /** ******************************************** **/
+            /** @VID_IID[ 0105 ]TIME[ 02:50:23 ]             **/
+            /** 508 is the total number of [pixels/pebbles]  **/
+            /** in a box that surrounds the boundaries       **/
+            /** of ONE of the FOUR auset patterns on         **/
+            /** the CUV (canvas_user_view) ***************** **/
+            assert( 508 == ((128-1)*4) );
+            assert( 508 == ( ONE_BOX ) );
+            assert( 127 == ( ONE_EDG ) );
+
+            if( dex2031 <( ONE_BOX  * 1 )){ //: BOX:TOP_LEF
+                bas_dex = ( dex2031 -(0*ONE_BOX) );
+                org_i_x =( ZER );
+                org_i_y =( ZER );
+                assert( dex2031 >=((508*0)+0)     //:1ST_BOX
+                &&      dex2031 <=((508*1)-1) );; //:1ST_BOX
+            }else
+            if( dex2031 <( ONE_BOX  * 2 )){ //: BOX:TOP_RIG
+                bas_dex = ( dex2031 -(1*ONE_BOX) );
+                org_i_x =( 128 );
+                org_i_y =( ZER );
+                assert( dex2031 >=((508*1)+0)     //:2ND_BOX
+                &&      dex2031 <=((508*2)-1) );; //:2ND_BOX
+            }else
+            if( dex2031 <( ONE_BOX  * 3 )){ //: BOX:BOT_LEF
+                bas_dex = ( dex2031 -(2*ONE_BOX) );
+                org_i_x =( ZER );
+                org_i_y =( 128 );
+                assert( dex2031 >=((508*2)+0)     //:3RD_BOX
+                &&      dex2031 <=((508*3)-1) );; //:3RD_BOX
+            }else
+            if( dex2031 <( ONE_BOX  * 4 )){ //: BOX:BOT_RIG
+                bas_dex = ( dex2031 -(3*ONE_BOX) );
+                org_i_x =( 128 );
+                org_i_y =( 128 );                 //:4TH_BOX
+                assert( dex2031 >=((508*3)+0)     //:4TH_BOX
+                &&      dex2031 <=((508*4)-1) );; //:4TH_BOX
+            }else{
+                ERR("[dex2031_OUT_OF_BOUNDS]");
+            };;
+
+        //:--------------:Which_Of_The_4_Boxes_Are_Being_Draw://
+        //:offset_for_drawing_one_of_the_4_boxes:------------://
+
+            if( bas_dex <( ONE_EDG*1 ) ){
+                off_i_x = bas_dex;
+                off_i_y =( 0 );
+                assert(  bas_dex >=((127*0)+0)     //:1ST_EDG
+                &&       bas_dex <=((127*1)-1) );; //:1ST_EDG
+            }else
+            if( bas_dex <( ONE_EDG*2 ) ){
+                off_i_x =(127);
+                off_i_y =bas_dex-( 127*1 );
+                assert(  bas_dex >=((127*1)+0)     //:2ND_EDG
+                &&       bas_dex <=((127*2)-1) );; //:2ND_EDG
+            }else
+            if( bas_dex <(ONE_EDG*3 ) ){
+                off_i_x =127-( bas_dex-(127*2) );
+                off_i_y =( 127 );
+                assert(  bas_dex >=((127*2)+0)     //:3RD_EDG
+                &&       bas_dex <=((127*3)-1) );; //:3RD_EDG
+            }else
+            if( bas_dex <( ONE_EDG*4 ) ){
+                off_i_x = ( 0 );
+                off_i_y =127-( bas_dex-(127*3) );
+                assert( bas_dex >=((127*3)+0)     //:4TH_EDG
+                &&      bas_dex <=((127*4)-1) );; //:4TH_EDG
+            }else{
+                ERR("[bas_dex_OUT_OF_BOUNDS]");
+            };;
+
+        //:------------:offset_for_drawing_one_of_the_4_boxes://
+        //:add_everything_together:--------------------------://
+
+            cuvbox4.cuv_i_x=( org_i_x + off_i_x );
+            cuvbox4.cuv_i_y=( org_i_y + off_i_y );
+
+            //:bound_check_output:---------------------------://
+
+                assert( cuvbox4.cuv_i_x >= 0
+                &&      cuvbox4.cuv_i_x <=(256-1)
+                );;
+
+                assert( cuvbox4.cuv_i_y >= 0
+                &&      cuvbox4.cuv_i_y <=(256-1)
+                );;
+
+            //:---------------------------:bound_check_output://
+            //:edge_check_output:----------------------------://
+
+                I32 bad_edg=( 0 ); /** bad edge?          **/
+                I32 lef_rig=( 0 ); /** on horizontal edge **/
+                I32 top_bot=( 0 ); /** on vertical   edge **/
+
+                if( 0
+                ||    0 == cuvbox4.cuv_i_x  //:LEF__EDGE
+                ||  127 == cuvbox4.cuv_i_x  //:INNER_LEF
+                ||  128 == cuvbox4.cuv_i_x  //:INNER_RIG
+                ||  255 == cuvbox4.cuv_i_x  //:RIG__EDGE
+                ){
+                    lef_rig=( 1 ); //:on vertical edge
+                };;
+
+                if( 0
+                ||    0 == cuvbox4.cuv_i_y  //:TOP__EDGE
+                ||  127 == cuvbox4.cuv_i_y  //:INNER_TOP
+                ||  128 == cuvbox4.cuv_i_y  //:INNER_BOT
+                ||  255 == cuvbox4.cuv_i_y  //:BOT__EDGE
+                ){
+                    top_bot=( 1 ); //:on horizontal edge
+                };;
+
+                if( 0 == lef_rig && 0 == top_bot ){
+                    bad_edg=( 1 );
+                };;
+                
+                if( bad_edg >= 1 ){
+
+                    printf("\n\n");
+
+                    printf("[dex2031]:%d\n"
+                            ,dex2031 );;
+                
+                    printf("[cuvbox4.cuv_i_x]:%d\n"
+                            ,cuvbox4.cuv_i_x );;
+                      
+                    printf("[cuvbox4.cuv_i_y]:%d\n"
+                            ,cuvbox4.cuv_i_y );;
+
+                    ERR("[BAD_OUTPUT_EDGE_LOCATION]");
+                };;
+
+            //:----------------------------:edge_check_output://
+
+        //:--------------------------:add_everything_together://
+
+        return( cuvbox4 );
+    }
+
+    #undef  CUVBOX4    //:- - - ---- - - - - - - - - - -: 01 ://
+    #undef  DEX2031    //:- - - ---- - - - - - - - - - -: 02 ://
+    #undef  ONE_BOX    //:- - - ---- - - - - - - - - - -: 03 ://
+    #undef  ONE_EDG    //:- - - ---- - - - - - - - - - -: 04 ://
+    #undef      ZER    //:- - - ---- - - - - - - - - - -: 05 ://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    I32
+    aac2020_p5d1ogl_til_exp_CTO_max_cor(
+        I32         til_exp
+    )
+    {
+        assert( til_exp >= 0 && til_exp <= (8-1) );
+
+        U08 u08_max_cor =( 0 + 222 );
+        I32 i32_max_cor =( 0 - 666 );
+
+        u08_max_cor=(
+            aac2020_paint5d_til_exp_CTO_max_cor( 
+                       (U08)til_exp             ) );;
+
+        i32_max_cor =( (I32) u08_max_cor );
+        assert( i32_max_cor >= 0 && i32_max_cor <= (128-1) );
+    
+        return( i32_max_cor );
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    I32
+    aac2020_p5d1ogl_GetCorner_T_X(
+        I32     corner_to_target
+    ,   I32     t_e //:<---------- til_exp / tileSizeExponent
+    )           
+    {
+    /** **************************************************** ***
+    @VID_IID[ 0109 ]TIME[ 00:42:00 ]
+    @VID_IID[ 0109 ]TIME[ 00:44:55 ]DONE_EXPLAINING
+    GETS_ONE_OF_FOUR_EXTREME_CORNERS_IN_LOCAL_PARTITION
+    LOCAL_PARTITION_SIZE_BASED_ON[ til_exp ]
+    DIAGRAM[ #DIA_P5D_MAIN# ]
+    FILE[    PAINT5D.D._    ]
+    *** **************************************************** **/
+        I32 t_x; //:<-- [ output/return_value ]
+
+        if( 1 == corner_to_target ){ //:TOP_LEF
+            t_x =( 0 );
+        }else
+        if( 2 == corner_to_target ){ //:TOP_RIG
+            t_x = aac2020_p5d1ogl_til_exp_CTO_max_cor( t_e );
+        }else
+        if( 3 == corner_to_target ){ //:BOT_LEF
+            t_x =( 0 );
+        }else
+        if( 4 == corner_to_target ){ //:BOT_RIG
+            t_x = aac2020_p5d1ogl_til_exp_CTO_max_cor( t_e );
+        }else{
+            ERR("[BAD_CORNER_TO_TARGET:T_X]");
+        };;
+
+        return( t_x );
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    I32
+    aac2020_p5d1ogl_GetCorner_T_Y(
+        I32     corner_to_target
+    ,   I32     t_e //:<---------- til_exp / tileSizeExponent
+    )           
+    {
+    /** **************************************************** ***
+    @VID_IID[ 0109 ]TIME[ 00:43:00 ]
+    @VID_IID[ 0109 ]TIME[ 00:44:42 ]DONE_EXPLAINING
+    GETS_ONE_OF_FOUR_EXTREME_CORNERS_IN_LOCAL_PARTITION
+    LOCAL_PARTITION_SIZE_BASED_ON[ til_exp ]
+    DIAGRAM[ #DIA_P5D_MAIN# ]
+    FILE[    PAINT5D.D._    ]
+    *** **************************************************** **/
+        I32 t_y; //:<-- [ output/return_value ]
+    
+        if( 1 == corner_to_target ){ //:TOP_LEF
+            t_y =( 0 );
+        }else
+        if( 2 == corner_to_target ){ //:TOP_RIG
+            t_y =( 0 );
+        }else
+        if( 3 == corner_to_target ){ //:BOT_LEF
+            t_y = aac2020_p5d1ogl_til_exp_CTO_max_cor( t_e );
+        }else
+        if( 4 == corner_to_target ){ //:BOT_RIG
+            t_y = aac2020_p5d1ogl_til_exp_CTO_max_cor( t_e );
+        }else{
+            ERR("[BAD_CORNER_TO_TARGET:T_Y]");
+        };;
+
+        return( t_y );
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+#undef  I32                                           //: 01 ://
+#undef  U08                                           //: 02 ://
+#undef  ERR                                           //: 03 ://
+//:==========================:HELPER_FUNCTIONS_FOR_UNIT_TESTS://
+//:UNIT_TEST_SECTION:P5D1OGL:================================://
+#define U08  uint8_t /** GCC: <stdint.h> **/          //: 01 ://
+#define I08   int8_t /** GCC: <stdint.h> **/          //: 02 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 03 ://
+#define I32  int32_t /** GCC: <stdint.h> **/          //: 04 ://
+#define I16  int16_t /** GCC: <stdint.h> **/          //: 05 ://
+#define U16 uint16_t /** GCC: <stdint.h> **/          //: 06 ://
+#define ERR  aac2020_p5d1ogl_Halt                     //: 07 ://
+#define LOG  aac2020_p5d1ogl_Info_any                 //: 08 ://
+
+    void
+    aac2020_P5D1OGL_UnitTest( void )
+    {
+
+        //:SYSTEM_DATA:BACKUP:-------------------------------://
+
+            /** taudirt : AAC2020_TAUDIRT_DIR_ANY            **/
+            /** taudepo : AAC2020_PIXNAME_taudepo_cpu_pix    **/
+            /** paint5d : AAC2020_PIXNAME_paint5d_cpu_pix    **/
+                                                             
+            U08* taudirt =((void*)0); /** DIRTY   TREE       **/
+            U08* taudepo =((void*)0); /** USED    SYSTEM     **/
+            U08* paint5d =((void*)0); /** CURRENT SYSTEM     **/
+
+            extern void 
+            AAC2020_PAINT5D_Backup_taudirt( U08** );;
+            AAC2020_PAINT5D_Backup_taudirt( &(taudirt) );
+
+            AAC2020_PIXBACK_Backup_taudepo( &(taudepo) );
+            AAC2020_PIXBACK_Backup_paint5d( &(paint5d) );
+
+            AAC2020_TODOMAN_Vital(
+                "[FIX:taudirt_backup_is_invalid_back_reference]"
+            );;
+
+        //:-------------------------------:SYSTEM_DATA:BACKUP://
+        //:RUN_UNIT_TESTS:-----------------------------------://
+        LOG("[ABOUT_TO_CALL:aac2020_P5D1OGL_UTC_private]\n",0);
+
+            /** utc: unit test code **/
+            extern void aac2020_P5D1OGL_UTC_private( void );
+                        aac2020_P5D1OGL_UTC_private( );
+
+        LOG("[OUTSIDE_OF::::aac2020_P5D1OGL_UTC_private]\n",0);
+        //:-----------------------------------:RUN_UNIT_TESTS://
+        //:SYSTEM_DATA:RESTORE:------------------------------://
+        LOG("[P5D1OGL:PAINT5D_SYSTEM_DATA_RESTORE:BEG]",0);
+
+            //:assert_different_pointers:--------------------://
+
+                assert( taudirt != taudepo );
+                assert( taudirt != paint5d );
+
+                assert( taudepo != taudirt );
+                assert( taudepo != paint5d );
+
+                assert( paint5d != taudirt );
+                assert( paint5d != taudepo );
+
+            //:--------------------:assert_different_pointers://
+            //:more_asserts_and_data_restore:----------------://
+
+                /** @VID_IID[ 0075 ]TIME[ 00H 58M 55S ] **/
+                assert( ((void*)0) != taudirt );
+                assert( ((void*)0) != taudepo );
+                assert( ((void*)0) != paint5d );
+
+                extern void
+                AAC2020_PAINT5D_Restore_taudirt( U08** );
+                AAC2020_PAINT5D_Restore_taudirt( &(taudirt) );
+
+                AAC2020_PIXBACK_Restore_taudepo( &(taudepo) );
+                AAC2020_PIXBACK_Restore_paint5d( &(paint5d) );
+
+                /** @VID_IID[ 0075 ]TIME[ 00H 57M 05S ] **/
+                assert( ((void*)0) == taudirt );
+                assert( ((void*)0) == taudepo );
+                assert( ((void*)0) == paint5d );
+
+            //:----------------:more_asserts_and_data_restore://
+
+        LOG("[P5D1OGL:PAINT5D_SYSTEM_DATA_RESTORE:END]",0);
+        //:------------------------------:SYSTEM_DATA:RESTORE://
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    //:aac2020_P5D1OGL_UTC_private:- - - - - - - - - - - - - ://
+    void aac2020_P5D1OGL_UTC_private( void )
+    {
+    #define E_V extern void
+    #define   V        void
+
+        /** ************************************************ **/
+        /** Functions are tested in order:               * * **/
+        /** Lowest Level --> to --> Highest Level        * * **/
+        /** AKA: Most depended on to least depended on.  * * **/
+        /** @VID_IID[ 0087 ]TIME[ 00:23:32 ] *************** **/
+        /** ************************************************ **/
+
+        /** ************************************************ **/
+        /** @VID_IID[ 0091 ]TIME[ 00:49:58 ]                 **/
+        /** Failure of "polyfill_texel_fetch" leads me       **/
+        /** to believe that BitPack_Get might actually       **/
+        /** be wrong. Lets do tests that are aware of        **/
+        /** the internal bit layout used.                    **/
+
+        E_V aac2020_P5D1OGL_UTC_PokeAndProd_BitPack_Get( V );
+            aac2020_P5D1OGL_UTC_PokeAndProd_BitPack_Get(   );
+
+        /** ************************************************ **/
+
+        E_V aac2020_P5D1OGL_UTC_polyfill_texel_fetch( void );
+            aac2020_P5D1OGL_UTC_polyfill_texel_fetch(      );
+
+        /** TEST:       AAC2020_P5D1OGL_BitPack_Get( )**/
+        E_V aac2020_P5D1OGL_UTC_BitPack_Get(V);
+            aac2020_P5D1OGL_UTC_BitPack_Get( );
+
+        /** TEST:       AAC2020_P5D1OGL_til_exp_CTO_max_cor()**/
+        E_V aac2020_P5D1OGL_UTC_til_exp_CTO_max_cor(V);
+            aac2020_P5D1OGL_UTC_til_exp_CTO_max_cor( );
+
+        /** TEST:       AAC2020_P5D1OGL_til_exp_CTO_diagpix()**/
+        E_V aac2020_P5D1OGL_UTC_til_exp_CTO_diagpix(V);
+            aac2020_P5D1OGL_UTC_til_exp_CTO_diagpix( );
+
+        /** TEST:       AAC2020_P5D1OGL_painpix_CTO_glocpix()**/
+        E_V aac2020_P5D1OGL_UTC_painpix_CTO_glocpix(V);
+            aac2020_P5D1OGL_UTC_painpix_CTO_glocpix( );
+    
+        /** ************************************************ **/
+        /** @VID_IID[ 0086 ]TIME[ 01:06:55 ] *************** **/
+        /** We only care that this test passes. So only      **/
+        /** write enough test code for OTHER functions in    **/
+        /** P5D1OGL._ as to figure out how to fix the        **/
+        /** code and get this function working properly.     **/
+
+        /** TEST:       AAC2020_P5D1OGL_Get(......); ******* **/
+        E_V aac2020_P5D1OGL_UTC_Get( void );        /******* **/
+            aac2020_P5D1OGL_UTC_Get(      );        /******* **/
+                                                    /******* **/
+        /** ************************************************ **/
+
+        //:inserted_test_on_2020_01_23:----------------------://
+        /** ************************************************ ***
+            @VID_IID[ 0103 ]TIME[ 04:24:30 ]
+            aac2020_P5D1OGL_UTC_cuvipix_CTO_cuvbits_Get is
+            FAILING and uses    painpix_CTO_cuvipix
+            internally so let's test THIS function
+            BEFORE WE TEST      cuvipix_CTO_cuvbits .
+        *** ************************************************ **/
+        E_V aac2020_P5D1OGL_UTC_painpix_CTO_cuvipix( void );
+            aac2020_P5D1OGL_UTC_painpix_CTO_cuvipix(      );
+        //:----------------------:inserted_test_on_2020_01_23://
+        //:PUT_TESTS:DO_FIRST:-------------------------------://
+
+            E_V
+            aac2020_P5D1OGL_UTC_cuvipix_CTO_cuvbits_Put( void );
+            aac2020_P5D1OGL_UTC_cuvipix_CTO_cuvbits_Put(      );
+
+        //:----------------------------------------:PUT_TESTS://
+        //:DO_THE_PUT_TEST_BEFORE_THESE_GETTER_TESTS:--------://
+        //:DO_PUTGET_TEST_BEFORE_THE_TWO_GETTER_TESTS:-------://
+
+            E_V
+            aac2020_P5D1OGL_UTC_cuvipix_CTO_cuvbits_Put_Get(V);
+            aac2020_P5D1OGL_UTC_cuvipix_CTO_cuvbits_Put_Get();
+
+        //:-------:DO_PUTGET_TEST_BEFORE_THE_TWO_GETTER_TESTS://
+        /** ************************************************ ***
+        @VID_IID[ 0097 ]TIME[ 06:11:05 ]  
+        Stubbing in test for "Bitpacked Sampler"  
+        
+        @VID_IID[ 0105 ]TIME[ 01:20:13 ]
+        aac2020_P5D1OGL_UTC_cuvipix_CTO_cuvbits_Get     &&&&&
+        aac2020_P5D1OGL_UTC_P5D_cuvipix_CTO_cuvbits_002 TESTS
+        are confusing as hell. Let's run a  
+        aac2020_P5D1OGL_UTC_cuvipix_CTO_cuvbits_Put
+        test BEFORE these tests.
+        *** ************************************************ **/
+        #define TEST( name ) aac2020_P5D1OGL_UTC_##name
+
+            /** ******************************************** **/
+            /** @VID_IID[ 0109 ]TIME[ 01:07:52 ]             **/
+            /** I never want to ever have to look            **/
+            /** At this test code ever again in my life!     **/
+            /** ******************************************** **/
+
+            E_V TEST( why_next_test_cant_use_corners )( void );
+                TEST( why_next_test_cant_use_corners )(      );
+            E_V TEST( cuvipix_CTO_cuvbits_Get        )( void );
+                TEST( cuvipix_CTO_cuvbits_Get        )(      );
+             //:aac2020_P5D1OGL_UTC_cuvipix_CTO_cuvbits_Get://
+
+        #undef  TEST
+        /** ************************************************ **/
+        /** Like previous function, but we start from the    **/
+        /** 16 bit binary expected output values and work    **/
+        /** backwards to extract the input data test columns **/
+        /** as seen in previous function's                   **/
+        /** [ tab_utc_inn ] array.                           **/
+        /** @VID_IID[ 0100 ]TIME[ 02:49:23 ] ............... **/
+        E_V aac2020_P5D1OGL_UTC_P5D_cuvipix_CTO_cuvbits_002(V);
+            aac2020_P5D1OGL_UTC_P5D_cuvipix_CTO_cuvbits_002( );
+
+        //:--------:DO_THE_PUT_TEST_BEFORE_THESE_GETTER_TESTS://
+
+    #undef  E_V
+    #undef    V
+    } //:[END_FUNC]://
+    //: - - - - - - - - - - - - -:aac2020_P5D1OGL_UTC_private://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    aac2020_P5D1OGL_UTC_cuvipix_CTO_cuvbits_Put_Get( void )
+    {
+    #define NUM_TES ( 40 )
+    #define NUM_COL (  5 )
+    LOG("[o_o:P5D1OGL_UTC_cuvipix_CTO_cuvbits_Put_Get:BEG]",0);
+        //:declare_variables:--------------------------------://
+
+            //:declared_during_1st_test_chunk:---------------://
+
+            I32     t_i ; /** Test Index                     **/
+            I32     bas ; /** BASe: First Test Element Index **/
+            //:- - - - - - - - - - - -- - - - - - - - - - - -://
+            U32 cuv_i_x ; /** CanvasUserView:Integer:X       **/
+            U32 cuv_i_y ; /** CanvasUserView:Integer:Y       **/
+            U32 lay_dex ; /** Layer Index                    **/
+            U32 aus_dex ; /** Auset Index                    **/
+            U32 cuv_b16 ; /** CanvasUserView_BITS_16_of_them **/
+            U32 got_b16 ; /** GOTTEN:cuv_b16                 **/
+
+            //:---------------:declared_during_1st_test_chunk://
+            //:declared_during_2nd_test_chunk:---------------://
+
+            I32 c_x; /** CanvasUserView_X AKA cuv_i_x **/
+            I32 c_y; /** CanvasUserView_Y AKA cuv_i_y **/
+            I32 lay; /** layer index **/
+            I32 aus; /** auset index **/
+            //:- - - - - - - - - - - -- - - - - - - - - - - -://
+            U32 b16; /** 16 bits packing 8 2 bit tile values **/
+            U32 g16; /** GOTTEN[ b16 ] **/
+
+            //:---------------:declared_during_2nd_test_chunk://
+            //:declared_during_3rd_test_chunk:---------------://
+
+            I32 off; /** tab_off[ # ]Step Amount For Looping **/
+            
+            U32 mas; /** tab_mas[ # ]Bit Masking. 16 bits.   **/
+
+            I32 meg; /** Mega Test Index                  ...**/
+                     /** @VID_IID[ 0108 ]TIME[ 00:56:30 ] ...**/
+                     /** ( 0 == meg )==> generate values  ...**/
+                     /** ( 1 == meg )==> BIG_END   table  ...**/
+                     /** ( 2 == meg )==> LIT_END   table  ...**/
+                     /** SEE[ P5D_UTD._ ] ...................**/
+
+            U32 inc; /** @VID_IID[ 0108 ]TIME[ 01:04:23 ]  ..**/
+                     /** b16 being an increment value and  ..**/
+                     /** a 16 bit payload makes tests      ..**/
+                     /** too confusing.                    ..**/
+                     /** MUST BE AN UNSIGNED INTEGER!      ..**/
+
+            //:---------------:declared_during_3rd_test_chunk://
+
+        //:--------------------------------:declare_variables://
+        /** ************************************************ ***
+        @VID_IID[ 07:44:50 ]
+        STEPS:
+            1. CALL: cuvipix_CTO_cuvbits_Put
+            2. CALL: cuvipix_CTO_cuvbits_Get
+            3. Make sure what you[ Put ]Is_What_You[ Get ]
+        *** ************************************************ **/
+        U32 tab_utc[ NUM_TES * NUM_COL ]={
+        //: TOP_LEF
+        //: cuv_i_x | cuv_i_y | lay_dex | aus_dex | cuv_b16  ://
+                0x0 ,     0x0 ,     0x0 ,     0x0 ,  0x0000
+            ,   0x0 ,     0x0 ,     0x0 ,     0x0 ,  0xFFFF
+            ,   0x0 ,     0x0 ,     0x0 ,     0x0 ,  0xFF00
+            ,   0x0 ,     0x0 ,     0x0 ,     0x0 ,  0x00FF
+            ,   0x0 ,     0x0 ,     0x0 ,     0x0 ,  0xABCD
+    
+        //: TOP_RIG
+        //: cuv_i_x | cuv_i_y | lay_dex | aus_dex | cuv_b16  ://
+            ,   255 ,     0x0 ,     0x0 ,     0x0 ,  0x0000
+            ,   255 ,     0x0 ,     0x0 ,     0x0 ,  0xFFFF
+            ,   255 ,     0x0 ,     0x0 ,     0x0 ,  0xFF00
+            ,   255 ,     0x0 ,     0x0 ,     0x0 ,  0x00FF
+            ,   255 ,     0x0 ,     0x0 ,     0x0 ,  0xABCD
+
+        //: BOT_LEF
+        //: cuv_i_x | cuv_i_y | lay_dex | aus_dex | cuv_b16  ://
+            ,   0x0 ,     255 ,     0x0 ,     0x0 ,  0x0000
+            ,   0x0 ,     255 ,     0x0 ,     0x0 ,  0xFFFF
+            ,   0x0 ,     255 ,     0x0 ,     0x0 ,  0xFF00
+            ,   0x0 ,     255 ,     0x0 ,     0x0 ,  0x00FF
+            ,   0x0 ,     255 ,     0x0 ,     0x0 ,  0xABCD
+
+        //: BOT_RIG
+        //: cuv_i_x | cuv_i_y | lay_dex | aus_dex | cuv_b16  ://
+            ,   255 ,     255 ,     0x0 ,     0x0 ,  0x0000
+            ,   255 ,     255 ,     0x0 ,     0x0 ,  0xFFFF
+            ,   255 ,     255 ,     0x0 ,     0x0 ,  0xFF00
+            ,   255 ,     255 ,     0x0 ,     0x0 ,  0x00FF
+            ,   255 ,     255 ,     0x0 ,     0x0 ,  0xABCD
+
+            //:Same tests as above, but we changed
+            //:the layer index and auset index.
+
+        //: cuv_i_x | cuv_i_y | lay_dex | aus_dex | cuv_b16  ://
+            ,   0x0 ,     0x0 ,       1 ,       1 ,  0x0000
+            ,   0x0 ,     0x0 ,       2 ,       2 ,  0xFFFF
+            ,   0x0 ,     0x0 ,       1 ,       3 ,  0xFF00
+            ,   0x0 ,     0x0 ,       2 ,       4 ,  0x00FF
+            ,   0x0 ,     0x0 ,       1 ,       5 ,  0xABCD
+        //: cuv_i_x | cuv_i_y | lay_dex | aus_dex | cuv_b16  ://
+            ,   255 ,     0x0 ,       2 ,       6 ,  0x0000
+            ,   255 ,     0x0 ,       1 ,       7 ,  0xFFFF
+            ,   255 ,     0x0 ,       2 ,       8 ,  0xFF00
+            ,   255 ,     0x0 ,       1 ,       9 ,  0x00FF
+            ,   255 ,     0x0 ,       2 ,      10 ,  0xABCD
+        //: cuv_i_x | cuv_i_y | lay_dex | aus_dex | cuv_b16  ://
+            ,   0x0 ,     255 ,       1 ,      11 ,  0x0000
+            ,   0x0 ,     255 ,       2 ,      12 ,  0xFFFF
+            ,   0x0 ,     255 ,       1 ,      13 ,  0xFF00
+            ,   0x0 ,     255 ,       2 ,      14 ,  0x00FF
+            ,   0x0 ,     255 ,       1 ,      15 ,  0xABCD
+        //: cuv_i_x | cuv_i_y | lay_dex | aus_dex | cuv_b16  ://
+            ,   255 ,     255 ,       2 ,       1 ,  0x0000
+            ,   255 ,     255 ,       1 ,       2 ,  0xFFFF
+            ,   255 ,     255 ,       2 ,       3 ,  0xFF00
+            ,   255 ,     255 ,       1 ,       4 ,  0x00FF
+            ,   255 ,     255 ,       2 ,       5 ,  0xABCD
+        //: cuv_i_x | cuv_i_y | lay_dex | aus_dex | cuv_b16  ://
+        };;
+        /** ************************************************ ***
+        *** @VID_IID[ 0106 ]TIME[ 08:28:37 ]                 ***
+        *** AzarlakTwitch: "I hardly understand what "       ***
+        *** "I'm doing,  and I'm the one who wrote it"       ***
+        *** - I relate to this way more than I should        ***
+        *** NotLikeThis                                      ***
+        *** ************************************************ **/
+        for( t_i = 0 ; t_i <= (NUM_TES-1) ; t_i ++ ){
+
+            bas =( t_i * NUM_COL );
+        
+            cuv_i_x = tab_utc[ bas + 0 ];
+            cuv_i_y = tab_utc[ bas + 1 ];
+            lay_dex = tab_utc[ bas + 2 ];
+            aus_dex = tab_utc[ bas + 3 ];
+            cuv_b16 = tab_utc[ bas + 4 ];
+            got_b16 =( 0xABCD );
+
+
+            AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Put( ///////////
+                                                             ///
+                //|LOCATION_OF_THE_DATA|||||||||||||||||||||||//
+               (I32)cuv_i_x          //:AKA[ cuvipix.i_x ]   ///
+            ,  (I32)cuv_i_y          //:AKA[ cuvipix.i_y ]   ///    
+                                                             ///    
+                //|VALUES_OF_THE_DATA|||||||||||||||||||||||||//    
+            ,  (I32)lay_dex          //:AKA[ lay_dex ]       ///    
+            ,  (I32)aus_dex          //:AKA[ aus_dex ]       ///    
+            ,  (U32)cuv_b16          //:STORES_8_TILE_VALUES ///    
+                                                             ///    
+            );; ////////////////////////////////////////////////    
+                                                                    
+            got_b16=(                                               
+            AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Get( ///////////    
+               (I32)cuv_i_x          //:AKA[ cuvipix.i_x ]   ///    
+            ,  (I32)cuv_i_y          //:AKA[ cuvipix.i_y ]   ///    
+            ,  (I32)lay_dex          //:AKA[ lay_dex ]       ///    
+            ,  (I32)aus_dex          //:AKA[ aus_dex ]       ///    
+            ));; ///////////////////////////////////////////////    
+                                                                    
+            if( cuv_b16 != got_b16 ){                               
+                                                                    
+                ERR("[IVE_MADE_A_TERRIBLE_MISTAKE_YEAR_2021]");     
+                                                                    
+            };;                                                     
+        };;  
+
+        //:procedural_batch_put_then_get_test:---------------://
+        #define PUT AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Put
+        #define GET AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Get
+
+            b16=( 0 );
+            for( c_x = 0 ; c_x <= (256-1) ; c_x ++ ){
+            for( c_y = 0 ; c_y <= (256-1) ; c_y ++ ){
+            for( lay = 0 ; lay <= (  3-1) ; lay ++ ){
+            for( aus = 0 ; aus <= ( 16-1) ; aus ++ ){
+            b16++;
+            
+                b16=((b16)%(0xFFFF+1));
+                      PUT( c_x,c_y,lay,aus,b16 )  ;
+                g16=( GET( c_x,c_y,lay,aus     ) );
+                if( b16 != g16 ){
+                    ERR("[DUCK_AND_COVER_2021]");
+                };;
+
+            };;};;};;};;
+            b16=( 0 );
+            for( c_x = 0 ; c_x <= (256-1) ; c_x ++ ){
+            for( c_y = 0 ; c_y <= (256-1) ; c_y ++ ){
+            for( lay = 0 ; lay <= (  3-1) ; lay ++ ){
+            for( aus = 0 ; aus <= ( 16-1) ; aus ++ ){
+            b16++;
+            
+                b16=((b16)%(0xFFFF+1));
+                g16 =GET( c_x,c_y,lay,aus );
+
+                if( b16 != g16 ){
+                    /** ************************************ ***
+                    @VID_IID[ 0106 ]TIME[ 09:41:50 ]
+                    This seems indicative of a memory stomp.
+                    My main question is if the memory stomp
+                    is an error in the code, or if the test
+                    code itself is wrong and we just don't
+                    know what the H3ll we are doing.
+                    *** ************************************ **/
+
+                    /** @VID_IID[ 0107 ]TIME[ 00:27:30 ]     **/
+                    /** Turns out we don't know what we are  **/
+                    /** doing. They only value guaranteed    **/
+                    /** to NOT be memory stomped in this     **/
+                    /** loop would be the smallest tile      **/
+                    /** size packed into the 2 least         **/
+                    /** significant bits.                    **/
+                    if( (b16 & 0x3) != (g16 & 0x3) ){   
+
+                        ERR("[YOU_DONT_KNOW_JACK_2021]");
+
+                    };;
+                };;
+
+            };;};;};;};;
+
+
+        #undef  PUT
+        #undef  GET
+        //:---------------:procedural_batch_put_then_get_test://
+        //:master_get_put_test_2021_01_26:-------------------://
+        #define PUT AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Put
+        #define GET AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Get
+        #define BIG aac2020_P5D_UTD_cuvipix_CTO_cuvbits_BIG_END
+        #define LIT aac2020_P5D_UTD_cuvipix_CTO_cuvbits_LIT_END
+        /** ************************************************ ***
+        @VID_IID[ 0108 ]TIME[ 00:26:30 ]
+
+        This is our master "memory stomp" test for emulating
+        Josh clicking on the canvas to set various tiles of
+        different sizes. That is a rough analogy because
+        Josh's brush will never be loaded with all possible
+        tile sizes that could be under the point in which
+        he is clicking.
+
+        @VID_IID[ 0108 ]TIME[ 00:27:42 ]
+    
+        SEE____FILE[ R:\G\AAC2020\LIB\PAINT5D.D._ ]
+        SEE_DIAGRAM[ #CANVAS_USER_VIEW#           ]
+        SEE_DIAGRAM[ #DIA_P5D_MAIN#               ]
+
+        The larger your step size, the LESS tiles that
+        get OVERRIDDEN. Each "click" you do lays an 8
+        tile payload specifiying the tiles of each
+        tile size exponent ( til_exp / t_e ) to lay down.
+        *** ************************************************ **/
+
+            /** @VID_IID[ 0108 ]TIME[ 00:35:42 ] ........... **/
+            /** s_a is ambigious..                  ........ **/
+            /** s_a ==> shift_amount ?  ==> tab_shi ........ **/
+            /** s_a ==> step__amount ?  ==> tab_off ........ **/
+
+                               /**table:off (off:OFFSET-amt )**/
+            I32 tab_off[ 8 ]={ /**table:s_a (s_a:Step_Amount)**/
+            //:001  002  004  008  016  032  064  128  <-- peb
+                 1,   2,   4,   8,  16,  32,  64, 128 
+            //:000  001  002  003  004  005  006  007  <-- t_e
+            };;
+
+            /** ******************************************** **/
+            /** @VID_IID[ 0108 ]TIME[ 00:40:23 ]          ...**/
+            /** Hardcoded because if we generate these on ...**/
+            /** the fly, the tests become harder to       ...**/
+            /** mentally reason about.                    ...**/
+            /** ABOVE_AND_BELOW[ tab_off ]AND[ tab_mas ]     **/
+            /** ******************************************** **/
+
+            U32 tab_mas[ 8 ]={
+            /**/0x0003 //:[ 00 00 00 00 | 00 00 00 11 ] t_e == 0
+            ,   0x000F //:[ 00 00 00 00 | 00 00 11 11 ] t_e == 1
+            ,   0x003F //:[ 00 00 00 00 | 00 11 11 11 ] t_e == 2
+            ,   0x00FF //:[ 00 00 00 00 | 11 11 11 11 ] t_e == 3
+            ,   0x03FF //:[ 00 00 00 11 | 11 11 11 11 ] t_e == 4
+            ,   0x0FFF //:[ 00 00 11 11 | 11 11 11 11 ] t_e == 5
+            ,   0x3FFF //:[ 00 11 11 11 | 11 11 11 11 ] t_e == 6
+            ,   0xFFFF //:[ 11 11 11 11 | 11 11 11 11 ] t_e == 7
+            };;
+
+            /** @VID_IID[ 0108 ]TIME[ 00:39:00 ] ........... **/
+            //-I32 tab_shi[ 8 ]={ /*DONT NEED SHIFT TABLE */ -//
+
+            for( meg = 0 ; meg <=(3-1) ; meg ++ ){
+            for( t_i = 0 ; t_i <=(8-1) ; t_i ++ ){
+
+                off = tab_off[ t_i ];
+                mas = tab_mas[ t_i ];
+
+                inc=( 0 );
+                for( c_x = 0 ; c_x <= (256-1) ; c_x += off  ){
+                for( c_y = 0 ; c_y <= (256-1) ; c_y += off  ){
+                for( lay = 0 ; lay <= (  3-1) ; lay +=( 1 ) ){
+                for( aus = 0 ; aus <= ( 16-1) ; aus +=( 1 ) ){
+                inc++;
+                
+                    //:@_PAIRED_CODE_GENERATE_B16_YEAR_2021_@://
+                    if(0 == meg){ b16=((inc)%(0xFFFF+1)); };
+                    if(1 == meg){ b16=  BIG[ inc % 40 ] ; };
+                    if(2 == meg){ b16=  LIT[ inc % 40 ] ; };
+                    //:@_PAIRED_CODE_GENERATE_B16_YEAR_2021_@://
+
+                          PUT( c_x,c_y,lay,aus,b16 )  ;
+                    g16=( GET( c_x,c_y,lay,aus     ) );
+                    if( b16 != g16 ){
+                        ERR("[DUCKS_DESERVE_TO_DIE_2021]");
+                    };;
+
+                };;};;};;};;
+                inc=( 0 );
+                for( c_x = 0 ; c_x <= (256-1) ; c_x += off  ){
+                for( c_y = 0 ; c_y <= (256-1) ; c_y += off  ){
+                for( lay = 0 ; lay <= (  3-1) ; lay +=( 1 ) ){
+                for( aus = 0 ; aus <= ( 16-1) ; aus +=( 1 ) ){
+                inc++;
+                
+                    //:@_PAIRED_CODE_GENERATE_B16_YEAR_2021_@://
+                    if(0 == meg){ b16=((inc)%(0xFFFF+1)); };
+                    if(1 == meg){ b16=  BIG[ inc % 40 ] ; };
+                    if(2 == meg){ b16=  LIT[ inc % 40 ] ; };
+                    //:@_PAIRED_CODE_GENERATE_B16_YEAR_2021_@://
+
+                    g16 =GET( c_x,c_y,lay,aus );
+
+                    if( b16 != g16 ){
+
+                        /** ******************************** **/
+                        /** @VID_IID[ 0108 ]TIME[ 00:49:00 ] **/
+                        /** Check only the bits that we      **/
+                        /** are certain have NOT been        **/
+                        /** memory stompped. ..........      **/
+                        /** ******************************** **/
+                        if( (b16 & mas) != (g16 & mas) ){   
+
+                            ERR("[MEGA_TEST_FAIL_2021]");
+
+                        };;
+                    };;
+
+                };;};;};;};;
+
+            };;};;
+        #undef  PUT
+        #undef  GET
+        #undef  BIG
+        #undef  LIT
+        //:-------------------:master_get_put_test_2021_01_26://
+
+    LOG("[o_o:P5D1OGL_UTC_cuvipix_CTO_cuvbits_Put_Get:END]",0);
+    #undef  NUM_TES 
+    #undef  NUM_COL 
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    aac2020_P5D1OGL_UTC_cuvipix_CTO_cuvbits_Put( void )
+    {
+    /** **************************************************** ***
+    @VID_IID[ 01:28:42 ]
+    This function should test that things were put properly
+    by looking at the underlying data... Not by using the
+    corresponding GET function.
+    ( AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Get )
+
+    Later we will want to have a putter test that DOES test
+    using the "get" function. A "put_get" test.
+    *** **************************************************** **/
+    LOG("[aac2020_P5D1OGL_UTC_cuvipix_CTO_cuvbits_Put:BEG]",0);
+
+        //:declare_variables:--------------------------------://
+        #define C_B struct aac2020_p5d1ogl_cuvbox4
+
+            I32 dex2031 ; /** Rectangle Boarder INDEX .......**/
+            I32 lay_002 ; /** Layer Index                ....**/
+            I32 aus_015 ; /** AUSet Index                ....**/
+            C_B cuvbox4 ; /** Rectangle Boarder Coord    ....**/
+            I32 cuv_i_x ; /** cuvbox4.cuv_i_x            ....**/
+            I32 cuv_i_y ; /** cuvbox4.cuv_i_y            ....**/
+                          /**                            ....**/
+            U32 cuv_b16 ; /** Bits defining 8 tiles vals ....**/
+                          /** For tile sizes(til_exp) 0-7....**/
+                          /**                            ....**/
+            U08 u08_t_e ; /** u08_til_exp : Tile Exponent ...**/
+            U08 u08_lay ; /** u08_til_lay : Tile LAYER    ...**/
+
+            /** ******************************************** ***
+            @VID_IID[ 0106 ]TIME[ 01:09:20 ]STARTED_EXPLAINING
+            @VID_IID[ 0106 ]TIME[ 01:11:50 ]DONE____EXPLAINING
+
+            PIXEL_COORDINATE CAN BE 16 BITS SIGNED BUT
+            THE COMPONENT_INDEX MUST BE 32 BIT SIGNED TO
+            HAVE ENOUGH ADDRESSING SPACE FOR ALL BYTES!!!!!!!!!!
+
+            PIXEL_COORDINATE ==[ i16_glo_t_x , i16_glo_t_y ]
+
+            COMPONENT_INDEX  ==[          com_dex          ]
+            
+            *** ******************************************** **/
+
+            I16 i16_glo_t_x; /** Global Tile Location On ....**/
+            I16 i16_glo_t_y; /** CPU_PIX memory block........**/
+                             /**                             **/
+            I32     com_dex; /** Pixel Component Index. .....**/
+
+            /** @VID_IID[ 0106 ]TIME[ 04:10:52 ]************ **/
+            /** figure out what til_qua the dex2031          **/
+            /** Maps to so that we can color it with the     **/
+            /** correct visual unit testing color.           **/
+            I32     til_qua;
+
+        #undef  C_B
+        //:--------------------------------:declare_variables://
+        //:set_traps:----------------------------------------://
+
+            i16_glo_t_x=( 0-666 );
+            i16_glo_t_y=( 0-666 );
+
+        //:----------------------------------------:set_traps://
+
+        /** @VID_IID[ 0105 ]TIME[ 01:34:02 ] *************** **/
+        /** Get a fresh canvas to start working on.          **/
+        /** Lets try to test this in such a way that we can  **/
+        /** export the texture memory cpu side bitmap to     **/
+        /** a PNG file and visually analyse it to see        **/
+        /** where we went wrong. This will require thinking  **/
+        /** about how to draw a pattern using this putter    **/
+        /** function.                                        **/
+        for( I32 i = 0 ; i <=((512*512*4)-1) ; i++ ){   /**--**/
+            AAC2020_PIXNAME_paint5d_cpu_pix[ i ]=( (U08)0x00 );
+        };;                                             /**--**/
+        /**                                              **  **/
+        /** ************************************************ **/
+
+        //: AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Put
+
+        for( dex2031 = 0 ; dex2031 <=(2031) ; dex2031 ++ ){
+        for( lay_002 = 0 ; lay_002 <=( 3-1) ; lay_002 ++ ){
+        for( aus_015 = 0 ; aus_015 <=(16-1) ; aus_015 ++ ){
+
+            /** All 16 bits set should result in **/
+            /** pure white with 100% alpha.      **/
+            cuv_b16=( 0xFFFF );
+
+            cuvbox4=(
+            aac2020_p5d1ogl_dex2031_CTO_cuvbox4(
+                            dex2031 ));;
+
+            cuv_i_x =( cuvbox4.cuv_i_x );
+            cuv_i_y =( cuvbox4.cuv_i_y );
+
+            assert( cuv_i_x >= 0
+            &&      cuv_i_x <=(256-1) );;
+            assert( cuv_i_y >= 0
+            &&      cuv_i_y <=(256-1) );;
+
+            AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Put(         
+                cuv_i_x  //: cuv_i_x_000_255
+            ,   cuv_i_y  //: cuv_i_y_000_255
+            ,   lay_002  //: lay_dex_000_002   
+            ,   aus_015  //: aus_dex_000_015  
+            ,   cuv_b16  //: cuvbits_sixteen    
+            );;
+        
+        };;};;};;
+
+        for( dex2031 = 0 ; dex2031 <=(2031) ; dex2031 ++ ){
+        for( u08_t_e = 0 ; u08_t_e <=(8-1 ) ; u08_t_e ++ ){
+        for( u08_lay = 0 ; u08_lay <=(3-1 ) ; u08_lay ++ ){
+        #define CPU_PIX AAC2020_PIXNAME_paint5d_cpu_pix
+
+            cuvbox4=(
+            aac2020_p5d1ogl_dex2031_CTO_cuvbox4(
+                            dex2031 ));;
+
+            cuv_i_x =( cuvbox4.cuv_i_x );
+            cuv_i_y =( cuvbox4.cuv_i_y );
+
+            aac2020_paint5d_cuvipix_CTO_glocpix(
+
+            /**/  u08_t_e      /** til_exp : TileExponent    **/
+            ,     u08_lay      /** til_lay : TileLayer ......**/
+            ,    (U08)cuv_i_x  /** CanvasUserView_(coord)_X  **/
+            ,    (U08)cuv_i_y  /** CanvasUserView_(coord)_Y  **/
+            ,   &(i16_glo_t_x) /** Global Tile X Coord       **/
+            ,   &(i16_glo_t_y) /** Global Tile X Coord       **/
+
+            );;
+
+            if( ( 0-666 ) == i16_glo_t_x
+            ||  ( 0-666 ) == i16_glo_t_y
+            ){
+                ERR("[TRAP_FOR_GLO_TXY_ACTIVATED]");
+            };;
+            if( i16_glo_t_x  <  0 //:@NEVER_NEGATIVE@://
+            ||  i16_glo_t_y  <  0 //:@NEVER_NEGATIVE@://
+            ){
+                printf("\n\n");
+
+                printf("[i16_glo_t_x]:%d\n"
+                       , i16_glo_t_x );;
+                printf("[i16_glo_t_y]:%d\n"
+                       , i16_glo_t_y );;
+
+                ERR("[YOU_DONE_GONE_NEGATIVE_YOU_FOOL]");
+            };;
+
+            com_dex =(  
+                //: Pixel Index
+                (
+                    ( ((I32)i16_glo_t_x) *  1  )
+                    +        
+                    ( ((I32)i16_glo_t_y) * 512 ) 
+                )
+                *
+                4 //: 4 components per pixel. RGBA
+            );;
+
+            /** All channels of the pixel should be **/
+            /** confirmed to be all 1 bits.         **/
+            /** AKA: Opaque white pixels.           **/
+            /** @VID_IID[ 0105 ]TIME[ 07:53:50 ]    **/
+            if( 1
+            &&( 0xFF == CPU_PIX[ com_dex + 0 ] )  //:RED
+            &&( 0xFF == CPU_PIX[ com_dex + 1 ] )  //:GREEN
+            &&( 0xFF == CPU_PIX[ com_dex + 2 ] )  //:BLUE
+            &&( 0xFF == CPU_PIX[ com_dex + 3 ] )  //:ALPHA
+            ){
+                /** Do nothing. Looks good boss. **/
+            }else{
+
+                printf("\n\n");
+
+                printf( "[i16_glo_t_x]:%d\n",
+                          i16_glo_t_x );;
+                printf( "[i16_glo_t_y]:%d\n",
+                          i16_glo_t_y );;
+
+                printf("\n\n");
+                printf( "[com_dex]:%d\n",
+                          com_dex );;
+
+                printf("\n\n");
+                printf("[CPU_PIX[com_dex+0]]:%d\n"
+                        ,CPU_PIX[com_dex+0] );;
+
+                printf("[CPU_PIX[com_dex+1]]:%d\n"
+                        ,CPU_PIX[com_dex+1] );;
+
+                printf("[CPU_PIX[com_dex+2]]:%d\n"
+                        ,CPU_PIX[com_dex+2] );;
+
+                printf("[CPU_PIX[com_dex+3]]:%d\n"
+                        ,CPU_PIX[com_dex+3] );;
+
+                printf("\n\n");
+                ERR("[ALL_COMPONENTS_NOT_0XFF_YEAR_2012]");
+            };;
+
+        #undef  CPU_PIX
+        };;};;};; //:NEXT[ dex2031 , u08_t_e , u08_lay ].....://
+
+        /** Another test where each quadrant gets a **/
+        /** different color.........................**/
+
+        for( dex2031 = 0 ; dex2031 <=(2031) ; dex2031 ++ ){
+        for( lay_002 = 0 ; lay_002 <=( 3-1) ; lay_002 ++ ){
+        for( aus_015 = 0 ; aus_015 <=(16-1) ; aus_015 ++ ){
+
+            /** ******************************************** ***
+            @VID_IID[ 0106 ]TIME[ 03:41:08 ]
+            We want to manipulate the 16bit
+            [ cuv_b16 ]payload in order to make the output
+            file have distinctly colored quadrants in 
+            the color order: RED, GREEN, BLUE, WHITE.
+
+            WRONG_DIAGRAM[[ #_DIA_P5D_PIXEL_CAKE_SLICES_# ] ]
+            #_THE_PIXEL_PAYLOAD_FOR_TILE_SIZES_IS_NOT_THIS_#
+
+            *** ******************************************** **/
+
+            /** @VID_IID[ 0106 ]TIME[ 04:24:00 ]      ****** **/
+            /** @VID_IID[ 0106 ]TIME[ 04:26:00 ]DONE_EXPLAIN **/
+            /** This formula only works because the   ****** **/
+            /** function that maps[ dex2031 ]value to ****** **/
+            /** a pixel[ x,y ]coordinate does it      ****** **/
+            /** in a regular fashion going through    ****** **/
+            /** each[ til_qua ]index in order NEVER   ****** **/
+            /** re-visiting a[ til_qua ]that was      ****** **/
+            /** previously visited.                   ****** **/
+            /** ( aac2020_p5d1ogl_dex2031_CTO_cuvbox4 ) **** **/
+            til_qua = ( dex2031 / ( 2032/4 ) );
+
+            /** ******************************************** ***
+til_qua ===>|     0     |     1     |     2     |     3     |
+            |                                               |
+aus_015 ===>|   15-12   |   11-08   |   07-04       03-00   |
+(aus_dex)   |<----R---->|<----G---->|<----B---->|<----A---->|
+            | 0000 0000 | 0000 0000 | 0000 0000 | 1111 1111 |   
+            | |                                  /        | |
+            | |               ALPHA_BITS_ALWAYS_1         | |
+            |MSB     @VID_IID[ 0106 ]T[ 05:06:32 ]       LSB|
+            |<-------------------- 32 --------------------->|
+
+                AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Put(         
+                    cuv_i_x  //: <-- Doesn't affect RGBA color
+                ,   cuv_i_y  //: <-- Doesn't affect RGBA color
+                ,   lay_002  //: <-- Doesn't affect RGBA color
+
+                VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+                ,   aus_015  //: <--- Determines the 2 bits
+                             //:      in all target pixels
+                             //:      to be overridden.
+                ,   cuv_b16  //: <--- Bit payload to be unpacked
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                );;
+            *** ******************************************** **/
+            //:Implement_Diagram_Above:----------------------://
+
+                cuv_b16=( 0x0000 );
+
+                if(   
+                   ( 0 == til_qua  )
+                && ( aus_015 <= 15 )
+                && ( aus_015 >= 12 )
+                ){
+                    cuv_b16=( 0xFFFF );
+                }else
+                if(  
+                   ( 1 == til_qua  )
+                && ( aus_015 <= 11 )
+                && ( aus_015 >=  8 )
+                ){
+                    cuv_b16=( 0xFFFF );
+                }else
+                if(   
+                   ( 2 == til_qua  )
+                && ( aus_015 <=  7 )
+                && ( aus_015 >=  4 )
+                ){
+                    cuv_b16=( 0xFFFF );
+                }else
+                if(  
+                   /** @COMBO_BREAKER@ **/
+                    (
+                       ( 1==1 /** ANY:til_qua **/  )
+                    && ( aus_015 <=  3 )
+                    && ( aus_015 >=  0 )
+                    )
+                    ||
+                    (
+                        3 == til_qua
+                    )
+                ){
+                    /** ************************************ **/
+                    /** ALL ONE BITS IS FULL ALPHA MY FRIEND **/
+                    /** @VID_IID[ 0106 ]T[ 05:09:05 ]        **/
+                    /** @rbsrbs ---------------------------- **/
+                    cuv_b16=( 0xFFFF );
+                }else{
+                    cuv_b16=( 0x0000 );
+                };;
+                            
+            //:----------------------:Implement_Diagram_Above://
+
+            cuvbox4=(
+            aac2020_p5d1ogl_dex2031_CTO_cuvbox4(
+                            dex2031 ));;
+
+            cuv_i_x =( cuvbox4.cuv_i_x );
+            cuv_i_y =( cuvbox4.cuv_i_y );
+
+            assert( cuv_i_x >= 0
+            &&      cuv_i_x <=(256-1) );;
+            assert( cuv_i_y >= 0
+            &&      cuv_i_y <=(256-1) );;
+
+            AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Put(         
+                cuv_i_x  //: cuv_i_x_000_255
+            ,   cuv_i_y  //: cuv_i_y_000_255
+            ,   lay_002  //: lay_dex_000_002   
+            ,   aus_015  //: aus_dex_000_015  
+            ,   cuv_b16  //: cuvbits_sixteen    
+            );;
+        
+        };;};;};;
+
+        /** @VID_IID[ 0106 ]TIME[ 05:48:30 ] *********** **/
+        /** Progmatically assert every quadrant ended up **/
+        /** drawn with lines of either solid RED, solid  **/
+        /** GREEN, solid BLUE, or solid WHITE.           **/
+        /** ******************************************** **/
+
+        for( dex2031 = 0 ; dex2031 <=(2031) ; dex2031 ++ ){
+        for( u08_t_e = 0 ; u08_t_e <=(8-1 ) ; u08_t_e ++ ){
+        for( u08_lay = 0 ; u08_lay <=(3-1 ) ; u08_lay ++ ){
+        #define CPU_PIX AAC2020_PIXNAME_paint5d_cpu_pix
+
+            cuvbox4=(
+            aac2020_p5d1ogl_dex2031_CTO_cuvbox4(
+                            dex2031 ));;
+
+            cuv_i_x =( cuvbox4.cuv_i_x );
+            cuv_i_y =( cuvbox4.cuv_i_y );
+
+            aac2020_paint5d_cuvipix_CTO_glocpix(
+
+            /**/  u08_t_e      /** til_exp : TileExponent    **/
+            ,     u08_lay      /** til_lay : TileLayer ......**/
+            ,    (U08)cuv_i_x  /** CanvasUserView_(coord)_X  **/
+            ,    (U08)cuv_i_y  /** CanvasUserView_(coord)_Y  **/
+            ,   &(i16_glo_t_x) /** Global Tile X Coord       **/
+            ,   &(i16_glo_t_y) /** Global Tile X Coord       **/
+
+            );;
+
+            if( ( 0-666 ) == i16_glo_t_x
+            ||  ( 0-666 ) == i16_glo_t_y
+            ){
+                ERR("[TRAP_FOR_GLO_TXY_ACTIVATED]");
+            };;
+            if( i16_glo_t_x  <  0 //:@NEVER_NEGATIVE@://
+            ||  i16_glo_t_y  <  0 //:@NEVER_NEGATIVE@://
+            ){
+                printf("\n\n");
+
+                printf("[i16_glo_t_x]:%d\n"
+                       , i16_glo_t_x );;
+                printf("[i16_glo_t_y]:%d\n"
+                       , i16_glo_t_y );;
+
+                ERR("[YOU_DONE_GONE_NEGATIVE_YOU_FOOL]");
+            };;
+
+            com_dex =(  
+                //: Pixel Index
+                (
+                    ( ((I32)i16_glo_t_x) *  1  )
+                    +        
+                    ( ((I32)i16_glo_t_y) * 512 ) 
+                )
+                *
+                4 //: 4 components per pixel. RGBA
+            );;
+
+ 
+            if( cuv_i_x <= 127 && cuv_i_y <= 127 ){
+
+                if( 1
+                &&( 0xFF == CPU_PIX[ com_dex + 0 ] )  //:RED
+                &&( 0x00 == CPU_PIX[ com_dex + 1 ] )  //:GREEN
+                &&( 0x00 == CPU_PIX[ com_dex + 2 ] )  //:BLUE
+                &&( 0xFF == CPU_PIX[ com_dex + 3 ] )  //:ALPHA
+                ){ /** OKAY_DO_NOTHING **/ }else{
+                    ERR("[OHNOITSALLOVERGODIEINAFIRE2021:001]");
+                };;
+
+            }else
+            if( cuv_i_x >= 128 && cuv_i_y <= 127 ){
+
+                if( 1
+                &&( 0x00 == CPU_PIX[ com_dex + 0 ] )  //:RED
+                &&( 0xFF == CPU_PIX[ com_dex + 1 ] )  //:GREEN
+                &&( 0x00 == CPU_PIX[ com_dex + 2 ] )  //:BLUE
+                &&( 0xFF == CPU_PIX[ com_dex + 3 ] )  //:ALPHA
+                ){ /** OKAY_DO_NOTHING **/ }else{
+                    ERR("[OHNOITSALLOVERGODIEINAFIRE2021:002]");
+                };;
+
+            }else
+            if( cuv_i_x <= 127 && cuv_i_y >= 128 ){
+
+                if( 1
+                &&( 0x00 == CPU_PIX[ com_dex + 0 ] )  //:RED
+                &&( 0x00 == CPU_PIX[ com_dex + 1 ] )  //:GREEN
+                &&( 0xFF == CPU_PIX[ com_dex + 2 ] )  //:BLUE
+                &&( 0xFF == CPU_PIX[ com_dex + 3 ] )  //:ALPHA
+                ){ /** OKAY_DO_NOTHING **/ }else{
+                    ERR("[OHNOITSALLOVERGODIEINAFIRE2021:003]");
+                };;
+
+            }else
+            if( cuv_i_x >= 128 && cuv_i_y >= 128 ){
+
+                if( 1
+                &&( 0xFF == CPU_PIX[ com_dex + 0 ] )  //:RED
+                &&( 0xFF == CPU_PIX[ com_dex + 1 ] )  //:GREEN
+                &&( 0xFF == CPU_PIX[ com_dex + 2 ] )  //:BLUE
+                &&( 0xFF == CPU_PIX[ com_dex + 3 ] )  //:ALPHA
+                ){ /** OKAY_DO_NOTHING **/ }else{
+                    ERR("[OHNOITSALLOVERGODIEINAFIRE2021:004]");
+                };;
+
+            }else{ /** ELSE_NOTHING_LEAVE_ME_ALONE **/ };;
+
+        #undef  CPU_PIX
+        };;};;};; //:NEXT[ dex2031 , u08_t_e , u08_lay ].....://
+
+
+    //:------------------------------------------------------://
+    //: This saves the test data to disk so you can visually ://
+    //: inspect it. No reason to keep this code active.      ://
+    //: Only really need to use this if something goes       ://
+    //: horribly wrong. @VID_IID[ 0106 ]TIME[ 06:00:23 ]     ://
+    //: /** TOUT001: Test_OUTput#001 **/                     ://
+    //: AAC2020_FILEBOI_SaveFile_PNG(                        ://
+    //:     "P5D1OGL_TOUT001.PNG"            //: <-- nof_wex ://
+    //: ,   AAC2020_PIXNAME_paint5d_cpu_pix  //: <-- pix_arr ://
+    //: ,   (U32)512                         //: <-- pix_wid ://
+    //: ,   (U32)512                         //: <-- pix_hig ://
+    //: );;                                             //:  ://
+    //:------------------------------------------------------://
+
+    LOG("[aac2020_P5D1OGL_UTC_cuvipix_CTO_cuvbits_Put:END]",0);
+    }
+    //: - - - - -:aac2020_P5D1OGL_UTC_cuvipix_CTO_cuvbits_Put://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void aac2020_P5D1OGL_UTC_painpix_CTO_cuvipix( void )
+    {
+    #define NUM_TES ( 4 * 11 )
+    #define NUM_COL (   7    )
+    #define CUVIPIX struct AAC2020_P5D1OGL_CUVIPIX
+    LOG("[aac2020_P5D1OGL_UTC_painpix_CTO_cuvipix:BEG]",0);
+
+        //:declare_all_variables_except_test_tables:---------://
+
+            /** LOOP VARS **/
+
+                I32 t_i; //:Current Test Index
+                I32 b_a; //:Base Address Of Current Test
+
+            /** INPUTS **/
+
+                I32 t_q; /** til_qua : Tile Quadrant **/
+                I32 t_e; /** til_exp : Tile Exponent **/
+                I32 t_l; /** til_lay : Tile Layer    **/
+                I32 t_x; /** loc_t_x : Tile Local X  **/
+                I32 t_y; /** loc_t_y : Tile Local Y  **/
+
+            /** OUTPUTS : EXPECTED **/
+
+                I32 i_x; /** cuv_i_x : CanvasUserView: X **/
+                I32 i_y; /** cuv_i_y : CanvasUserView: Y **/
+
+            /** OUTPUTS: ACTUAL    **/
+
+                CUVIPIX cuvipix ;
+
+        //:---------:declare_all_variables_except_test_tables://
+        //:Table_of_UnitTestCode:----------------------------://
+        I32 tab_utc[ NUM_TES * NUM_COL ]={
+
+        //: TARGET_TOP_LEFT:.................................://
+        //:|<--------| INPUT |--------->|---|<-- OUT -->| ...://
+        //:|t_q | t_e | t_l | t_x | t_y |---| i_x | i_y | ...://
+        /**/  0 , 0x0 , 0x0 , 0x0 , 0x0   ,     0 ,   0
+        ,     1 , 0x0 , 0x0 , 0x0 , 0x0   ,   128 ,   0
+        ,     2 , 0x0 , 0x0 , 0x0 , 0x0   ,     0 , 128
+        ,     3 , 0x0 , 0x0 , 0x0 , 0x0   ,   128 , 128
+
+        //: TARGET_BOTTOM_RIGHT:.............................://
+        //:|<--------| INPUT |--------->|---|<-- OUT -->| ...://
+        //:|t_q | t_e | t_l | t_x | t_y |---| i_x | i_y | ...://
+        ,     0 , 0x0 , 0x0 , 127 , 127   ,   127 , 127
+        ,     1 , 0x0 , 0x0 , 127 , 127   ,   255 , 127
+        ,     2 , 0x0 , 0x0 , 127 , 127   ,   127 , 255
+        ,     3 , 0x0 , 0x0 , 127 , 127   ,   255 , 255
+
+        /** Check for transposition errors by doing something**/
+        /** Like previous test but check TOP_LEF and BOT_RIG **/
+        /** corners.                                         **/
+
+        //: TARGET_TOP_RIGHT:................................://
+        //:|<--------| INPUT |--------->|---|<-- OUT -->| ...://
+        //:|t_q | t_e | t_l | t_x | t_y |---| i_x | i_y | ...://
+        ,     0 , 0x0 , 0x0 , 127 ,   0   ,   127 ,   0
+        ,     1 , 0x0 , 0x0 , 127 ,   0   ,   255 ,   0
+        ,     2 , 0x0 , 0x0 , 127 ,   0   ,   127 , 128
+        ,     3 , 0x0 , 0x0 , 127 ,   0   ,   255 , 128
+
+        //: TARGET_BOTTOM_LEFT:..............................://
+        //:|<--------| INPUT |--------->|---|<-- OUT -->| ...://
+        //:|t_q | t_e | t_l | t_x | t_y |---| i_x | i_y | ...://
+        ,     0 , 0x0 , 0x0 ,   0 , 127   ,     0 , 127
+        ,     1 , 0x0 , 0x0 ,   0 , 127   ,   128 , 127
+        ,     2 , 0x0 , 0x0 ,   0 , 127   ,     0 , 255
+        ,     3 , 0x0 , 0x0 ,   0 , 127   ,   128 , 255
+  
+        /** TEST_SECTION[ #BOTTOM_LEFT_ALL_TILE_EXPONENTS# ] **/
+        /** Target extreme bottom left for every quadrant    **/
+        /** and using tile exponents (t_e) 1 -to- 7          **/
+        /** @VID_IID[ 0103 ]TIME[ 05:14:44 ] .............   **/
+        /** @VID_IID[ 0103 ]TIME[ 05:18:22 ] TOP_LEFT_PEBBLE **/
+        /** @VID_IID[ 0103 ]TIME[ 05:33:33 ] README.MD       **/
+        /** @VID_IID[ 0103 ]TIME[ 06:00:42 ] COPYING_DATA    **/
+
+        //:|<--------| INPUT |--------->|---|<-- OUT -->| ...://
+        //:|t_q | t_e | t_l | t_x | t_y |---| i_x | i_y | ...://
+        ,     0 ,   1 , 0x0 ,  63 ,  63   ,   126 , 126
+        ,     1 ,   1 , 0x0 ,  63 ,  63   ,   254 , 126
+        ,     2 ,   1 , 0x0 ,  63 ,  63   ,   126 , 254//:(-  1)
+        ,     3 ,   1 , 0x0 ,  63 ,  63   ,   254 , 254
+              /** [ i_x , i_y ] can be derived by copying **/
+              /** TARGET_BOTTOM_RIGHT and subtract 1      **/
+        //:|t_q | t_e | t_l | t_x | t_y |---| i_x | i_y | ...://
+        ,     0 ,   2 , 0x0 ,  31 ,  31   ,   124 , 124
+        ,     1 ,   2 , 0x0 ,  31 ,  31   ,   252 , 124
+        ,     2 ,   2 , 0x0 ,  31 ,  31   ,   124 , 252//:(-  3)
+        ,     3 ,   2 , 0x0 ,  31 ,  31   ,   252 , 252
+        //:|t_q | t_e | t_l | t_x | t_y |---| i_x | i_y | ...://
+        ,     0 ,   3 , 0x0 ,  15 ,  15   ,   120 , 120
+        ,     1 ,   3 , 0x0 ,  15 ,  15   ,   248 , 120
+        ,     2 ,   3 , 0x0 ,  15 ,  15   ,   120 , 248//:(-  7)
+        ,     3 ,   3 , 0x0 ,  15 ,  15   ,   248 , 248
+        //:|t_q | t_e | t_l | t_x | t_y |---| i_x | i_y | ...://
+        ,     0 ,   4 , 0x0 ,   7 ,   7   ,   112 , 112
+        ,     1 ,   4 , 0x0 ,   7 ,   7   ,   240 , 112
+        ,     2 ,   4 , 0x0 ,   7 ,   7   ,   112 , 240//:(- 15)
+        ,     3 ,   4 , 0x0 ,   7 ,   7   ,   240 , 240
+        //:|t_q | t_e | t_l | t_x | t_y |---| i_x | i_y | ...://
+        ,     0 ,   5 , 0x0 ,   3 ,   3   ,    96 ,  96
+        ,     1 ,   5 , 0x0 ,   3 ,   3   ,   224 ,  96
+        ,     2 ,   5 , 0x0 ,   3 ,   3   ,    96 , 224//:(- 31)
+        ,     3 ,   5 , 0x0 ,   3 ,   3   ,   224 , 224
+        //:|t_q | t_e | t_l | t_x | t_y |---| i_x | i_y | ...://
+        ,     0 ,   6 , 0x0 ,   1 ,   1   ,    64 ,  64
+        ,     1 ,   6 , 0x0 ,   1 ,   1   ,   192 ,  64
+        ,     2 ,   6 , 0x0 ,   1 ,   1   ,    64 , 192//:(- 63)
+        ,     3 ,   6 , 0x0 ,   1 ,   1   ,   192 , 192
+        //:|t_q | t_e | t_l | t_x | t_y |---| i_x | i_y | ...://
+        ,     0 ,   7 , 0x0 ,   0 ,   0   ,     0 ,   0
+        ,     1 ,   7 , 0x0 ,   0 ,   0   ,   128 ,   0
+        ,     2 ,   7 , 0x0 ,   0 ,   0   ,     0 , 128//:(-127)
+        ,     3 ,   7 , 0x0 ,   0 ,   0   ,   128 , 128
+        //:|t_q | t_e | t_l | t_x | t_y |---| i_x | i_y | ...://
+        //:|<--------| INPUT |--------->|---|<-- OUT -->| ...://
+        };;
+        //:----------------------------:Table_of_UnitTestCode://
+        //:loop_through_tests:-------------------------------://
+        for( t_i = 0 ; t_i <=( NUM_TES-1 ) ; t_i ++ ){
+
+            b_a = ( t_i * NUM_COL );
+
+            t_q =(  tab_utc[ b_a + 0 ] ); //: INPUT: til_qua ://
+            t_e =(  tab_utc[ b_a + 1 ] ); //: INPUT: til_exp ://
+            t_l =(  tab_utc[ b_a + 2 ] ); //: INPUT: til_lay ://
+            t_x =(  tab_utc[ b_a + 3 ] ); //: INPUT: loc_t_x ://
+            t_y =(  tab_utc[ b_a + 4 ] ); //: INPUT: loc_t_y ://
+    
+            i_x =(  tab_utc[ b_a + 5 ] ); //:   OUT: cuv_i_x ://
+            i_y =(  tab_utc[ b_a + 6 ] ); //:   OUT: cuv_i_y ://
+
+        //: 1234567 ://
+            cuvipix=(
+        //: 123_123 ://
+                AAC2020_P5D1OGL_painpix_CTO_cuvipix(
+                /**/t_q  /** til_qua : Tile Quadrant **/
+                ,   t_e  /** til_exp : Tile Exponent **/
+                ,   t_l  /** til_lay : Tile Layer    **/
+                ,   t_x  /** loc_t_x : Tile Local X  **/
+                ,   t_y  /** loc_t_y : Tile Local Y  **/
+                ));;
+
+            if( 0
+            || ( cuvipix.cuv_i_x != i_x )
+            || ( cuvipix.cuv_i_y != i_y )
+            ){
+            #define P_F printf 
+
+                P_F("\n\n");
+                P_F("[GOT]:...\n");
+                P_F("[cuvipix.cuv_i_x]:%d\n",cuvipix.cuv_i_x );
+                P_F("[cuvipix.cuv_i_y]:%d\n",cuvipix.cuv_i_y );
+
+                P_F("\n\n");
+                P_F("[EXP]:...\n");
+                P_F("[i_x]:%d\n",i_x );;
+                P_F("[i_y]:%d\n",i_y );;
+
+                ERR("[FAILED:P5D1OGL_UTC_painpix_CTO_cuvipix]");
+
+            #undef  P_F
+            };;
+
+        };;  //:[FOR]://
+        //:-------------------------------:loop_through_tests://
+
+    LOG("[aac2020_P5D1OGL_UTC_painpix_CTO_cuvipix:END]",0);
+    #undef NUM_TES 
+    #undef NUM_COL 
+    #undef CUVIPIX
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void aac2020_P5D1OGL_UTC_P5D_cuvipix_CTO_cuvbits_002( void)
+    {
+    //:MACROS_2020_01_21_0820_PM:----------------------------://
+    #define TAB_INN_WID ( 3 * 8  ) //: num columns      : 01 ://
+    #define TAB_OUT_WID (   3    ) //: 3 output columns : 02 ://
+    #define NUM_TESTS   ( 39 / 3 ) //: 3 U16's per test.: 03 ://
+    #define CUVIPIX     struct AAC2020_P5D1OGL_CUVIPIX
+    #define L_1 MACRO___P5D_UTD_cuvipix_CTO_cuvbits_LIT_END__LEN
+    #define L_2 MACRO___P5D_UTD_cuvipix_CTO_cuvbits_BIG_END__LEN
+    #define BIG_END  aac2020_P5D_UTD_cuvipix_CTO_cuvbits_BIG_END
+    #define LIT_END  aac2020_P5D_UTD_cuvipix_CTO_cuvbits_LIT_END
+    #define BIN_011  ( 3 )                            //: 09 ://
+    #define    B_00  ( 0 )                            //: 10 ://
+    #define    B_01  ( 1 )                            //: 11 ://
+    #define    B_10  ( 2 )                            //: 12 ://
+    #define    B_11  ( 3 )                            //: 13 ://
+    #define    AAI   aac2020_paint5d_BASSU16_AssertAndInspect
+    //:MACROS_2020_01_21_0820_PM:----------------------------://
+
+    LOG("[OH_BOY_THIS_WAS_A_CRAZY_IDEA_JAN_2021:BEG]\n",0);
+
+        //:declare_variables:--------------------------------://
+
+            I32 big_lit =( 0 ); //:BIG_END or LIT_END test data?
+
+            U16  tab_utc_inn[ TAB_INN_WID * NUM_TESTS ]={0};
+            U16* tab_utc_out =((U16*)0);  /** p5d_utd **/
+
+            //:indexes:--------------------------------------://
+            /** indexes into tab_utc_inn **/
+
+                I32 i_1 ; //:INDEX #1: test  index
+                I32 i_2 ; //:INDEX #2: Block Index
+                I32 i_3 ; //:INDEX #3: 2 bit binary value index.
+
+            /** indexes into[ p5d_utd / tab_utc_out ] **/
+            /** (...cuvipix_CTO_cuvbits_BIG_END)      **/
+            /** (...cuvipix_CTO_cuvbits_LIT_END)      **/
+
+                I32 u16_dex;
+
+            //:--------------------------------------:indexes://
+            //:relative_offsets:-----------------------------://
+
+                I32 o23 ; //:Offset between: [ 0 -to- 23 ]
+
+            //:-----------------------------:relative_offsets://
+            //:values_quantities_or_scalars:-----------------://
+
+                U16 u16_var; //: 16 bits.
+                U08 u08_var; //:  2 bits.
+
+            //:-----------------:values_quantities_or_scalars://
+            //:loop_variables:-------------------------------://
+
+                I32 t_e ; //: tile exponent (til_exp / t_e )
+                I32 lay ; //: tile layer    (til_lay / t_l )
+
+            //:-------------------------------:loop_variables://
+
+        //:--------------------------------:declare_variables://
+
+        /** This code is LIKE                            ....**/
+        /** [ ...utc_cuvipix_CTO_cuvbits ]       ....**/
+        /** Except we use 16 bit hex codes to generate   ....**/
+        /** the first table. For ease of coding use the  ....**/
+        /** same variable names as the function we are   ....**/
+        /** basing this off of.                          ....**/
+        /** @VID_IID[ 0100 ]TIME[ 00:16:06 ]             ....**/
+
+        /** Make sure both arrays of data are the same len.  **/
+        /** @VID_IID[ 0100 ]TIME[ 00:44:55 ]                 **/
+        /** IN_FILE[ R:\G\AAC2020\LIB\DAT\UTD\P5D_UTD._ ]    **/
+        _Static_assert( 
+            MACRO___P5D_UTD_cuvipix_CTO_cuvbits_LIT_END__LEN
+        ==  MACRO___P5D_UTD_cuvipix_CTO_cuvbits_BIG_END__LEN
+        ,  "[LENS_NOT_EQUAL_DATE_2021_01_21]" );;
+
+        /** We see from the tables in P5D_UTD._ that we have **/
+        /** enough data for 13 tests total.   .............. **/
+        /** @VID_IID[ 0100 ]TIME[ 00:48:00 ]  .............. **/
+        _Static_assert( 13 == NUM_TESTS , "[OHBOYS_2021:A]" );
+        
+        _Static_assert(  3*8*13 == 312  , "[OHBOYS_2021:B]");
+        _Static_assert(  39/3   ==  13  , "[OHBOYS_2021:C]");
+        _Static_assert(  40/3   ==  13  , "[OHBOYS_2021:D]");
+        _Static_assert( TAB_INN_WID * NUM_TESTS  == 312 
+        , "[WHAT_DOES_MARCELLUS_WALLUS_LOOK_LIKE_2021]" );;
+        
+
+        /** Are we testing big endian or little endian? **/
+        for( big_lit = 1 ; big_lit <= 2 ; big_lit ++ ){
+
+           if( 1 == big_lit ){ tab_utc_out = BIG_END; }else
+           if( 2 == big_lit ){ tab_utc_out = LIT_END; }else
+           { ERR("[BAD_BIG_LIT_YEAR_2021]"); };;;;;;;;;
+
+            //:populate_test_data_table:---------------------://
+            for( i_1 = 0 ; i_1 <= (NUM_TESTS-1) ; i_1 ++ ){
+                 i_2 =(    i_1 *  TAB_INN_WID ); /**BlockDex**/
+
+                if( 0 != ( i_2 % 24 ) ){
+                    /** @VID_IID[ 0102 ]TIME[ 01:16:50 ] ....**/
+                    /** Each block of data for each test     **/
+                    /** case INPUT is a block of 24 values.  **/
+                    /** 3 columns for 3 layers, each column  **/
+                    /** being 8 values HIGH because we have  **/
+                    /** tile exponents 0 to 7                **/
+                    ERR("[BLOCK_BASE_ADDR_NOT_MULTIPLE_OF_24]");
+                };;
+
+                //:Scanline order through             ://
+                //:@_ONE_OF_THESE_BLOCKS_2021_01_21_@ ://
+                for( t_e = 0 ; t_e <= (8-1) ; t_e ++ ){
+                for( lay = 0 ; lay <= (3-1) ; lay ++ ){
+
+                    /** Get Datum Index. 2bit binary index ..**/
+                    /** @VID_IID[ 0102 ]TIME[ 01:20:30 ]     **/
+                    /** Added[ o23 ]Offset Variable + Assert **/
+
+                        o23 = ( (t_e*3) + lay );
+                        i_3 = ( i_2 + o23 );
+                        assert( o23 >= 0 && o23 <= 23 );
+
+                    /** Get index of hextet in P5D_UTD._ file**/
+                    /** @VID_IID[ 0100 ]TIME[ 01:08:10 ]     **/
+                    /** It is on the LEFT SCREEN NOW.        **/
+
+                        u16_dex=(( i_1 *  3 ) + lay );
+                
+                    /** ************************************ **/
+                    /** Extract correct 2 bit value          **/
+                    /** p5d_utd == tab_utc_out               **/
+                    /** @VID_IID[ 0102 ]TIME[ 01:26:00 ]     **/
+                    /** Fixing Bug;                          **/
+                    /** WRONG  : ( u16_var >> t_e    )       **/
+                    /** CORRECT: ( u16_var >>(t_e*2) )       **/
+                    /** ************************************ **/
+
+                        assert( u16_dex <=( 39-1) );
+                        u16_var=(  tab_utc_out[ u16_dex ] );
+
+                        //: te_te_te_te_te_te_te_te <-- t_e  ://
+                        //: 07 06 05 04 03 02 01 00 .........://
+                        //: 00 00 00 00 00 00 00 00 .........://
+                        u08_var=( 
+                            ( u16_var >>(t_e*2) ) & BIN_011
+                        );;
+                        assert( u08_var <= 3 );
+
+                    /** Put 2 bit value into test data array **/
+                    /** ------------------------------------ **/
+                    /** @VID_IID[ 0102 ]TIME[ 01:35:50 ].....**/
+                    /** I see I got lazy with the TYPES of   **/
+                    /** these different tables. Or at least a**/
+                    /** bit too inconsistant for my liking.  **/
+    
+                        assert(i_3 <=(TAB_INN_WID*NUM_TESTS)-1);
+                        tab_utc_inn[ i_3 ]=( u08_var );
+
+                        //:sanity_checks:--------------------://
+                        /** Original Sanity Check.           **/
+                        /** @VID_IID[ 0100 ]TIME[ 02:32:00 ] **/
+                        /** Sanity check was wrong.          **/
+                        /** @VID_IID[ 0102 ]TIME[ 00:31:32 ] **/
+    
+                        I08 f=(    0 ); /** failed? **/
+                        U16 U=( 0x00 ); /** Uint16 to inspect**/
+
+                        if( 1 == big_lit ){ //:BIG_END
+
+                            if( 0 == lay && 0 == i_1 ){
+                                U=( 0x6161);
+                                if( 0x6161 != u16_var ){f=1;};
+                            };;
+                            if( 1 == lay && 1 == i_1 ){
+                                U=( 0x656e);
+                                if( 0x656e != u16_var ){f=1;};
+                            };;
+                            if( 2 == lay && 2 == i_1 ){
+                                U=( 0x6f70);
+                                if( 0x6f70 != u16_var ){f=1;};
+                            };;
+                        }else
+                        if( 2 == big_lit ){ //:LIT_END
+                            if( 0 == lay && 0 == i_1 ){
+                                U=( 0x6161);
+                                if( 0x6161 != u16_var ){f=1;};
+                            };;
+                            if( 1 == lay && 1 == i_1 ){
+                                U=( 0x6e65);
+                                if( 0x6e65 != u16_var ){f=1;};
+                            };;
+                            if( 2 == lay && 2 == i_1 ){
+                                U=( 0x706f);
+                                if( 0x706f != u16_var ){f=1;};
+                            };;
+                        };;
+
+                        if( 0 != f ){   
+                        #define P printf
+
+                            P("\n\n");
+                            P("[big_lit]:%d\n"    , big_lit);
+                            P("[....t_e]:%d\n"    ,     t_e);     
+                            P("[....lay]:%d\n"    ,     lay);     
+                            P("[u16_var]:0x%04x\n", u16_var);
+
+                            AAI( U , u16_var,"[AAI_2021_AAI]" );
+            
+                            /** Should never reach here now. **/
+                            ERR("[SANITY_CHECK_FAILED]"   );
+
+                        //: #error FIX_LOOKUP_LOGIC
+
+                        #undef  P
+                        };;
+                        //:--------------------:sanity_checks://
+
+                };;};;
+
+            };;
+            //:---------------------:populate_test_data_table://
+            //:SANITY_CHECK:---------------------------------://
+            /** ******************************************** **/
+            /** Hard code the expected inputs for the first  **/
+            /** test block of both big endian and little     **/
+            /** to confirm we unpacked the data correctly.   **/
+            /** @VID_IID[ 0100 ]TIME[ 01:39:42 ] ........... **/
+            /** ******************************************** **/
+
+            assert( BIG_END[ 0 ] == 0x6161 ); //:<-- l_00
+            assert( BIG_END[ 1 ] == 0x6332 ); //:<-- l_01
+            assert( BIG_END[ 2 ] == 0x3032 ); //:<-- l_02
+            U32 tab_utc_inn_BIG[ 3 * 8 ]={
+                    B_01,B_10,B_10  //:<--- tile exponent #0 
+                ,   B_00,B_00,B_00  //:<--- tile exponent #1 
+                ,   B_10,B_11,B_11  //:<--- tile exponent #2 
+                ,   B_01,B_00,B_00  //:<--- tile exponent #3 
+                ,   B_01,B_11,B_00  //:<--- tile exponent #4
+                ,   B_00,B_00,B_00  //:<--- tile exponent #5 
+                ,   B_10,B_10,B_11  //:<--- tile exponent #6 
+                ,   B_01,B_01,B_00  //:<--- tile exponent #7
+            };;
+
+            assert( LIT_END[ 0 ] == 0x6161 ); //:<-- l_00
+            assert( LIT_END[ 1 ] == 0x3263 ); //:<-- l_01
+            assert( LIT_END[ 2 ] == 0x3230 ); //:<-- l_02
+            U32 tab_utc_inn_LIT[ 3 * 8 ]={
+                    B_01,B_11,B_00  //:<--- tile exponent #0 
+                ,   B_00,B_00,B_00  //:<--- tile exponent #1 
+                ,   B_10,B_10,B_11  //:<--- tile exponent #2 
+                ,   B_01,B_01,B_00  //:<--- tile exponent #3 
+                ,   B_01,B_10,B_10  //:<--- tile exponent #4
+                ,   B_00,B_00,B_00  //:<--- tile exponent #5 
+                ,   B_10,B_11,B_11  //:<--- tile exponent #6 
+                ,   B_01,B_00,B_00  //:<--- tile exponent #7
+            };;
+
+            /** @VID_IID[ 0100 ]TIME[ 02:17:23 ] ............**/
+            /** Loop through the first generated block of  ..**/
+            /** test input values to make sure we are      ..**/
+            /** generating them correctly.                 ..**/
+            for( I32 d_c = 0 ; d_c <=((3*8)-1) ; d_c++ ){
+
+                /**  d_c == dex_chk == index check **/
+
+                if( 1 == big_lit ){ //:BIG_END
+                    if( tab_utc_inn_BIG[ d_c /** dex_chk **/ ]
+                    !=  tab_utc_inn[     d_c /** dex_chk **/ ]
+                    ){
+                        printf("\n\n\n");
+                        U16 big = tab_utc_inn_BIG[ d_c ];
+                        U16 inn = tab_utc_inn[     d_c ];
+                        printf("[d_c]:%d\n"      , d_c );
+                        printf("[big]:%d\n"      , big );
+                        printf("[inn]:%d\n"      , inn );
+
+                        printf("[EXTRACT_TABLE_WRONG:BIG_END]");
+                        AAI( big , inn , "[AAI_BIG_INN_2021]");
+                    };;
+
+                }else
+                if( 2 == big_lit ){ //:LIT_END
+                    if( tab_utc_inn_LIT[ d_c /** dex_chk **/ ]
+                    !=  tab_utc_inn[     d_c /** dex_chk **/ ]
+                    ){
+                        printf("\n\n\n");
+                        U16 lit = tab_utc_inn_LIT[ d_c ];
+                        U16 inn = tab_utc_inn[     d_c ];
+                        printf("[d_c]:%d\n"      , d_c );
+                        printf("[lit]:%d\n"      , lit );
+                        printf("[inn]:%d\n"      , inn );
+
+                        printf("[EXTRACT_TABLE_WRONG:LIT_END]");
+                        AAI( lit , inn , "[AAI_LIT_INN_2021]");
+                    };;
+                }else{
+                    ERR("[BAD_BIG_LIT_VALUE_2021]");
+                };;
+            };;//:NEXT[ d_c ]AKA[ dex_chk ]://
+
+            //:---------------------------------:SANITY_CHECK://
+
+            /** ******************************************** **/
+            /** @VID_IID[ 0103 ]TIME[ 01:54:00 ]         *** **/
+            /** Logic was getting really hard to follow  *** **/
+            /** So we put it all in an include here.     *** **/
+            /**                                          *** **/
+            /** When you know WHAT you want to do but    *** **/
+            /** are unable to do it because you cannot   *** **/
+            /** find your way around the code, it is     *** **/
+            /** time to break stuff down into smaller    *** **/
+            /** chunks.                                  *** **/
+                                                             ///
+                //[ ACTUAL_TEST_RUNNER_CODE ]//              ///
+                #include "./P5D1OGL.UTC.HAK_001._"           ///
+                                                             ///
+            /** ******************************************** **/
+
+        };; //: NEXT[ big_lit ]
+
+    LOG("[OH_BOY_THIS_WAS_A_CRAZY_IDEA_JAN_2021:END]\n",0);
+
+    //:----------------------------:MACROS_2020_01_21_0820_PM://
+    #undef TAB_INN_WID  //:-----------------------------: 01 ://
+    #undef TAB_OUT_WID  //:-----------------------------: 02 ://
+    #undef NUM_TESTS    //:-----------------------------: 03 ://
+    #undef CUVIPIX      //:-----------------------------: 04 ://
+    #undef L_1          //:-----------------------------: 05 ://
+    #undef L_2          //:-----------------------------: 06 ://
+    #undef BIG_END      //:-----------------------------: 07 ://
+    #undef LIT_END      //:-----------------------------: 08 ://
+    #undef BIN_011      //:-----------------------------: 09 ://
+    #undef    B_00      //:-----------------------------: 10 ://
+    #undef    B_01      //:-----------------------------: 11 ://
+    #undef    B_10      //:-----------------------------: 12 ://
+    #undef    B_11      //:-----------------------------: 13 ://
+    #undef     AAI      //:-----------------------------: 14 ://
+    //:----------------------------:MACROS_2020_01_21_0820_PM://
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void aac2020_P5D1OGL_UTC_why_next_test_cant_use_corners( ){
+    /** **************************************************** **/
+    /** @VID_IID[ 0109 ]TIME[ 01:02:22 ]                     **/
+    /** This test code should give you insight as to         **/
+    /** WHY aac2020_P5D1OGL_UTC_cuvipix_CTO_cuvbits_Get      **/
+    /** had to be reverted to only test for the TOP_LEF      **/
+    /** corner and no other corner.                          **/
+    /** Basically, there is information loss when            **/
+    /** converting between coordinate spaces because         **/
+    /** different[ til_exp ]values have different local      **/
+    /** coordinate ranges.                                   **/
+    /** **************************************************** **/
+
+    //[ SCREW WRITING THIS. ******************************** ]//
+    //[ I would have to create a                             ]//
+    //[ AAC2020_P5D1OGL_cuvipix_CTO_painpix ]                ]//
+    //[ function, which I DO NOT NEED. Just to               ]//
+    //[ illustrate why a previous unit test was              ]//
+    //[ erronous. Not worth my time and not                  ]//
+    //[ interested in the moment. I want something           ]//
+    //[ my artist ( Josh ) can use, let's not waste          ]//
+    //[ time.                                                ]//
+    //[ @VID_IID[ 0109 ]TIME[ 01:15:33 ]                     ]//
+    //[ **************************************************** ]//
+
+////    I32 tab_utc[ xxxxxxxxxx * xxxxxxxxx ]={
+////
+////        //: t_e | t_x | t_y
+////
+////    };;
+////
+////    t_x = aac2020_p5d1ogl_GetCorner_T_X(   
+////    /**/        corner_to_target ,  t_e );;        
+////                                        
+////    t_y = aac2020_p5d1ogl_GetCorner_T_Y(   
+////    /**/        corner_to_target ,  t_e );;    
+////
+////    for( t_e = 0 ; t_e <= (8-1) ; t_e ++ ){
+////                      
+////        cuvipix=(
+////        AAC2020_P5D1OGL_painpix_CTO_cuvipix(
+////        /**/(I32)    t_q     //: [ til_qua | t_q ]   ://
+////        ,   (I32)    t_e     //: [ til_exp | t_e ]   ://
+////        ,   (I32)    lay     //: [ til_lay | t_l ]   ://
+////        ,   (I32)    t_x     //: [ loc_t_x | t_x ]   ://
+////        ,   (I32)    t_y     //: [ loc_t_y | t_y ]   ://
+////        ));;
+////
+////        AAC2020_P5D1OGL_cuvipix_CTO_painpix(
+////                        cuvipix.cuv_i_x
+////                       ,cuvipix.cuv_i_y
+////        );;
+////
+////    };;
+
+    return;
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void aac2020_P5D1OGL_UTC_cuvipix_CTO_cuvbits_Get( )
+    {
+    #define TAB_INN_WID ( 3 * 8 ) /** num columns **/
+    #define TAB_OUT_WID (   3   ) /** 3 output columns **/
+    #define NUM_TESTS   (   8   ) /** Number Of Tests  **/
+    #define CUVIPIX     struct AAC2020_P5D1OGL_CUVIPIX
+    /** **************************************************** ***
+        @VID_IID[ 0104 ]TIME[ 00:36:03 ]BEGAN_EXPLAINING
+        @VID_IID[ 0104 ]TIME[ 00:41:40 ]DONE__EXPLAINING
+
+        cuvipix_CTO_cuvbits:
+            CanvasUserView_PIXEL(coord)
+            Convert_TO ( CTO)
+            CanvasUserView_BITS
+
+        We want to look at a certain pixel on the canvas user
+        view and figure out what tiles are underneith that
+        pixel. The function[ cuvipix_CTO_cuvbits ]returns
+        a 16bit bit-packed value of all of the 2-bit tile
+        values for a given layer under the specified
+        canvas user view pixel.
+
+        If we want to get PEDANTIC.
+        A [ cuvipix / CanvasUserViewPixel ]
+        Is ACTUALLY a "Canvas User View PEBBLE".
+
+        A "PEBBLE" being the smallest possible tile.
+        Our proverbial graphical "Plank" unit.
+
+        However, I tend to abstract everything as pixels,
+        hence the name "cuvipix". And... A name means whatever
+        I decide it means... So to refactor to "cuvipeb"
+        would be a waste of my time.
+
+    *** **************************************************** **/
+        
+        /** @VID_IID[ 0106 ]TIME[ 06:53:11 ]            **** **/
+        /** We shouldn't have to blank this out to get  **** **/
+        /** the tests working. But if that's the case,  **** **/
+        /** zeroing out the memory is the most          **** **/
+        /** sensible option.                            **** **/
+        for( I32 c = 0 ; c <=((512*512*4)-1) ; c++ ){
+            AAC2020_PIXNAME_paint5d_cpu_pix[ c ]=( 0x00 ); //:<<<<<<<<<<<<<<<<<<<<<<<<<<<<< REMOVE_ZEROING_OUT_WHEN_TEST_FINALLY_PASSES
+        };;
+
+        //+--------------------------------------------------+//
+        I32 corner_to_target=( 1 );   //+--------------------+//
+        //- 1 ==> TOP_LEF  @VID_IID[ 0103 ]TIME[ 02:35:42 ]  -//
+        //- 2 ==> TOP_RIG  We think targeting different      -//
+        //- 3 ==> BOT_LEF  extreme corners to set the data   -//
+        //- 4 ==> BOT_RIG  will give use more thural tests   -//
+        //+ @VID_IID[ 0109 ]TIME[ 00:56:50 ]                 +//
+        //+ We tried to jerry rig this test to run in 4      +//
+        //+ passes for the 4 extreme corners in order to     +//
+        //+ find edge cases of failure. But looking over     +//
+        //+ the code, I find this test does not accomidate   +//
+        //+ such a thing. We've written a lot of test        +//
+        //+ code EXTRA to figure out why this test was       +//
+        //+ failing. We now know why. Let's just hard        +//
+        //+ code the test for [ corner_to_target == 1 ]      +//
+        //+ The reason it does NOT fail on this corner       +//
+        //+ is because that uses [ 0,0 ] as the coordinate   +//
+        //+ position. And no information is lost when        +//
+        //+ switching to different tile size exponents       +//
+        //+ ( til_exp ). For example. The largest tile       +//
+        //+ size exist on a [ 1x1 ]tile map and it's only    +//
+        //+ possible coordinate is [ 0,0 ]so if you switch   +//
+        //+ from a coordinate where [ til_exp == 0 ] to      +//
+        //+ a coordinate where [ til_exp == 7 ](Largest)     +//
+        //+ and back again to coord where [ til_exp == 0 ]   +//
+        //+ the conversion of the coordinate space           +//
+        //+ will ALWAYS be LOSSY unless you used coord       +//
+        //+ [0,0].                                           +//
+        //+--------------------------------------------------+//
+
+        //:DEFINE_OR_UNDEF_BINARY_CONSTANTS:-----------------://
+        //| #_P5D_UNIT_TEST_COMMENT_2021_01_20_655PM_#       |//
+
+            #define B_00 ( 0 )
+            #define B_01 ( 1 )
+            #define B_10 ( 2 )
+            #define B_11 ( 3 )
+
+            #define B____00_00_00_00____00_00_00_00_____B 0x0000
+            #define B____01_01_01_01____01_01_01_01_____B 0x5555
+            #define B____00_00_00_00____00_00_00_11_____B (  3 )
+            #define B____11_00_11_00____11_00_11_00_____B 0xCCCC
+            #define B____11_00_11_00____11_00_11_01_____B 0xCCCD
+            #define B____11_11_11_11____11_11_11_11_____B 0xFFFF
+            #define B____11_11_11_11____00_00_00_00_____B 0xFF00
+            #define B____00_00_00_00____11_11_11_11_____B 0x00FF
+            #define B____00_00_11_11____11_11_00_00_____B 0x0FF0
+
+            #define B____00_11_10_00____01_00_11_10_____B 0x384E
+            #define B____11_00_00_10____11_01_10_00_____B 0xC2D8
+            #define B____00_01_10_11____10_00_11_00_____B 0x1B8C
+
+        //:-----------------:DEFINE_OR_UNDEF_BINARY_CONSTANTS://
+
+        //| #_USUALLY_ONE_TEST_TABLE_DATE_2021_01_20_# ......|//
+        U32 tab_utc_inn[ TAB_INN_WID * NUM_TESTS ]={
+
+        //:INPUTS_FOR_TEST[ 01 ]:
+            //: All 3 layers
+            //: 3 two bit colors because there are 3 layers
+            //: for any tile you can set down.
+            //: 8 rows because there are 8 tile sizes
+            //: (til_exp 0 to 7 )
+                B_00,B_00,B_00  //:<--- tile exponent #0 
+            ,   B_00,B_00,B_00  //:<--- tile exponent #1 
+            ,   B_00,B_00,B_00  //:<--- tile exponent #2 
+            ,   B_00,B_00,B_00  //:<--- tile exponent #3 
+            ,   B_00,B_00,B_00  //:<--- tile exponent #4
+            ,   B_00,B_00,B_00  //:<--- tile exponent #5 
+            ,   B_00,B_00,B_00  //:<--- tile exponent #6 
+            ,   B_00,B_00,B_00  //:<--- tile exponent #7
+            //: |   |    |   |
+            //: l_00,l_01,l_02 <-- 3 layers.
+
+        //:INPUTS_FOR_TEST[ 02 ]:
+        //:@_ONE_OF_THESE_BLOCKS_2021_01_21_@
+            ,   B_01,B_01,B_01  //:<--- tile exponent #0 
+            ,   B_01,B_01,B_01  //:<--- tile exponent #1 
+            ,   B_01,B_01,B_01  //:<--- tile exponent #2 
+            ,   B_01,B_01,B_01  //:<--- tile exponent #3 
+            ,   B_01,B_01,B_01  //:<--- tile exponent #4
+            ,   B_01,B_01,B_01  //:<--- tile exponent #5 
+            ,   B_01,B_01,B_01  //:<--- tile exponent #6 
+            ,   B_01,B_01,B_01  //:<--- tile exponent #7
+            //: |   |    |   |
+            //: l_00,l_01,l_02 <-- 3 layers.
+
+        //:INPUTS_FOR_TEST[ 03 ]:
+            ,   B_00,B_00,B_00  //:<--- tile exponent #0 
+            ,   B_11,B_11,B_11  //:<--- tile exponent #1 
+            ,   B_00,B_00,B_00  //:<--- tile exponent #2 
+            ,   B_11,B_11,B_11  //:<--- tile exponent #3 
+            ,   B_00,B_00,B_00  //:<--- tile exponent #4
+            ,   B_11,B_11,B_11  //:<--- tile exponent #5 
+            ,   B_00,B_00,B_00  //:<--- tile exponent #6 
+            ,   B_11,B_11,B_11  //:<--- tile exponent #7
+            //: |   |    |   |
+            //: l_00,l_01,l_02 <-- 3 layers.
+
+        //:INPUTS_FOR_TEST[ 04 ]:
+            ,   B_11,B_11,B_11  //:<--- tile exponent #0 
+            ,   B_11,B_11,B_11  //:<--- tile exponent #1 
+            ,   B_11,B_11,B_11  //:<--- tile exponent #2 
+            ,   B_11,B_11,B_11  //:<--- tile exponent #3 
+            ,   B_11,B_11,B_11  //:<--- tile exponent #4
+            ,   B_11,B_11,B_11  //:<--- tile exponent #5 
+            ,   B_11,B_11,B_11  //:<--- tile exponent #6 
+            ,   B_11,B_11,B_11  //:<--- tile exponent #7
+            //: |   |    |   |
+            //: l_00,l_01,l_02 <-- 3 layers.
+
+        //| #_TEST_5_IS_TRANSPOSITION_PRECURSOR_# |//
+        //:INPUTS_FOR_TEST[ 05 ]:
+            ,   B_11,B_00,B_11  //:<--- tile exponent #0 
+            ,   B_11,B_00,B_11  //:<--- tile exponent #1 
+            ,   B_11,B_00,B_11  //:<--- tile exponent #2 
+            ,   B_11,B_00,B_11  //:<--- tile exponent #3 
+            ,   B_11,B_00,B_11  //:<--- tile exponent #4
+            ,   B_11,B_00,B_11  //:<--- tile exponent #5 
+            ,   B_11,B_00,B_11  //:<--- tile exponent #6 
+            ,   B_11,B_00,B_11  //:<--- tile exponent #7
+            //: |   |    |   |
+            //: l_00,l_01,l_02 <-- 3 layers.
+
+        /** Check For Transposition errors related to        **/   
+        /** current column layer. @VID_IID[ 0099]T[04:31:42] **/
+        //:INPUTS_FOR_TEST[ 06 ]:
+            ,   B_11,B_00,B_00  //:<--- tile exponent #0 
+            ,   B_11,B_00,B_00  //:<--- tile exponent #1 
+            ,   B_11,B_00,B_00  //:<--- tile exponent #2 
+            ,   B_11,B_00,B_00  //:<--- tile exponent #3 
+            ,   B_11,B_00,B_00  //:<--- tile exponent #4
+            ,   B_11,B_00,B_00  //:<--- tile exponent #5 
+            ,   B_11,B_00,B_00  //:<--- tile exponent #6 
+            ,   B_11,B_00,B_00  //:<--- tile exponent #7
+            //: |   |    |   |
+            //: l_00,l_01,l_02 <-- 3 layers.
+
+        //:INPUTS_FOR_TEST[ 07 ]:
+            ,   B_11,B_00,B_00  //:<--- tile exponent #0 
+            ,   B_11,B_00,B_00  //:<--- tile exponent #1 
+            ,   B_11,B_11,B_00  //:<--- tile exponent #2 
+            ,   B_11,B_11,B_00  //:<--- tile exponent #3 
+            ,   B_00,B_11,B_11  //:<--- tile exponent #4
+            ,   B_00,B_11,B_11  //:<--- tile exponent #5 
+            ,   B_00,B_00,B_11  //:<--- tile exponent #6 
+            ,   B_00,B_00,B_11  //:<--- tile exponent #7
+            //: |   |    |   |
+            //: l_00,l_01,l_02 <-- 3 layers.
+
+        //:INPUTS_FOR_TEST[ 08 ]:
+            ,   B_10,B_00,B_00  //:<--- tile exponent #0 
+            ,   B_11,B_10,B_11  //:<--- tile exponent #1 
+            ,   B_00,B_01,B_00  //:<--- tile exponent #2 
+            ,   B_01,B_11,B_10  //:<--- tile exponent #3 
+            ,   B_00,B_10,B_11  //:<--- tile exponent #4
+            ,   B_10,B_00,B_10  //:<--- tile exponent #5 
+            ,   B_11,B_00,B_01  //:<--- tile exponent #6 
+            ,   B_00,B_11,B_00  //:<--- tile exponent #7
+            //: |   |    |   |
+            //: l_00,l_01,l_02 <-- 3 layers.
+        };;
+
+        U32 tab_utc_out[ TAB_OUT_WID * NUM_TESTS ]={
+
+            //:1st : test_expected_output
+            //: @_A_CLUSTER_OF_THREE__IN__P5D_TEST_@
+            B____00_00_00_00____00_00_00_00_____B  //:<-- l_00  
+        ,   B____00_00_00_00____00_00_00_00_____B  //:<-- l_01 
+        ,   B____00_00_00_00____00_00_00_00_____B  //:<-- l_02 
+
+            //:2nd : test_expected_output
+            //: @_A_CLUSTER_OF_THREE__IN__P5D_TEST_@
+        ,   B____01_01_01_01____01_01_01_01_____B  //:<-- l_00  
+        ,   B____01_01_01_01____01_01_01_01_____B  //:<-- l_01 
+        ,   B____01_01_01_01____01_01_01_01_____B  //:<-- l_02 
+
+            //:3rd : test_expected_output
+            //: @_A_CLUSTER_OF_THREE__IN__P5D_TEST_@
+        ,   B____11_00_11_00____11_00_11_00_____B  //:<-- l_00
+        ,   B____11_00_11_00____11_00_11_00_____B  //:<-- l_01
+        ,   B____11_00_11_00____11_00_11_00_____B  //:<-- l_02
+
+            //:4th : test_expected_output
+            //: @_A_CLUSTER_OF_THREE__IN__P5D_TEST_@
+        ,   B____11_11_11_11____11_11_11_11_____B  //:<-- l_00
+        ,   B____11_11_11_11____11_11_11_11_____B  //:<-- l_01
+        ,   B____11_11_11_11____11_11_11_11_____B  //:<-- l_02
+
+            //:5th : test_expected_output
+            //: @_A_CLUSTER_OF_THREE__IN__P5D_TEST_@
+        ,   B____11_11_11_11____11_11_11_11_____B  //:<-- l_00
+        ,   B____00_00_00_00____00_00_00_00_____B  //:<-- l_01 
+        ,   B____11_11_11_11____11_11_11_11_____B  //:<-- l_02
+
+            //:6th : test_expected_output
+            //: @_A_CLUSTER_OF_THREE__IN__P5D_TEST_@
+        ,   B____11_11_11_11____11_11_11_11_____B  //:<-- l_00
+        ,   B____00_00_00_00____00_00_00_00_____B  //:<-- l_01 
+        ,   B____00_00_00_00____00_00_00_00_____B  //:<-- l_02
+
+            //:7th : test_expected_output
+            //: @_A_CLUSTER_OF_THREE__IN__P5D_TEST_@  
+        ,   B____00_00_00_00____11_11_11_11_____B  //:<-- l_00
+        ,   B____00_00_11_11____11_11_00_00_____B  //:<-- l_01 
+        ,   B____11_11_11_11____00_00_00_00_____B  //:<-- l_02
+
+
+            //:8th : test_expected_output
+            //: @_A_CLUSTER_OF_THREE__IN__P5D_TEST_@  
+        ,   B____00_11_10_00____01_00_11_10_____B
+        ,   B____11_00_00_10____11_01_10_00_____B
+        ,   B____00_01_10_11____10_00_11_00_____B
+
+            //[ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ]//
+            //# WE NEED TESTS TO MAKE SURE THAT  #//
+            //# THE CLUSTERS ARE ACCESSED IN THE #//
+            //# CORRECT ORDER                    #//
+            //[ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ]//
+
+        };;
+
+
+        //:Double_Check_Some_Binary_Consts:------------------://
+        /** ************************************************ ***
+        @VID_IID[ 0099 ]TIME[ 04:53:32 ]
+        *** ************************************************ **/
+
+            assert(
+                B____00_11_10_00____01_00_11_10_____B
+                ==( 0x00  
+                    | (B_00)<<(7*2)
+                    | (B_11)<<(6*2)
+                    | (B_10)<<(5*2)
+                    | (B_00)<<(4*2)
+
+                    | (B_01)<<(3*2)
+                    | (B_00)<<(2*2)
+                    | (B_11)<<(1*2)
+                    | (B_10)<<(0*2)
+                )
+            );;
+
+            assert(
+                B____11_00_00_10____11_01_10_00_____B
+                ==( 0x00  
+                    | (B_11)<<(7*2)
+                    | (B_00)<<(6*2)
+                    | (B_00)<<(5*2)
+                    | (B_10)<<(4*2)
+                          
+                    | (B_11)<<(3*2)
+                    | (B_01)<<(2*2)
+                    | (B_10)<<(1*2)
+                    | (B_00)<<(0*2)
+                )
+            );;
+
+            assert(
+                B____00_01_10_11____10_00_11_00_____B
+                ==( 0x00  
+                    | (B_00)<<(7*2)
+                    | (B_01)<<(6*2)
+                    | (B_10)<<(5*2)
+                    | (B_11)<<(4*2)
+                         
+                    | (B_10)<<(3*2)
+                    | (B_00)<<(2*2)
+                    | (B_11)<<(1*2)
+                    | (B_00)<<(0*2)
+                )
+            );;
+        //:------------------:Double_Check_Some_Binary_Consts://
+        //:DECLARE_ALL_VARS_EXCEPT_TABLES:-------------------://
+
+            /** [ITERATOR/LOOP] VARS **/
+
+            I32 t_i     ; //: tes_dex / test index           ://
+            I32 mti     ; //: Max___Test___Index             ://
+            I32 dex     ; //: Current Index Of Whatever.     ://
+            //:- - - - - - - - - - - -- - - - - - - - - - - -://
+            I32 t_e     ; //: til_exp / tile_exponent        ://
+            I32 lay     ; //: til_lay / tile_layer(enum/dex) ://
+            I32 t_q     ; //: til_qua / tile_quadrant        ://
+            I32 a_d     ; //: aus_dex / Auset_inDex          ://
+
+            /** Tile Coords. Always [ 0,0 ] for now. ........**/
+
+            I32 t_x     ; //: loc_t_x : local_tile_x  .......://
+            I32 t_y     ; //: loc_t_y : local_tile_y  .......://
+
+            /** Test array unpacking calculation vars. ......**/
+
+            I32 bas_tes ; /** BASe_address: TESt #           **/
+            I32 bas_tv3 ; /** BASe_address: tile_vals(three) **/
+            I32 dexodat ; /** inDEX_Of_DATa( data point )    **/
+            U08 put_t_v ; /** PUT_tile_value,TileValueToPut  **/
+
+            /** Canvas_User_View_Pixel (Pixel Location) .....**/
+
+            CUVIPIX cuvipix;
+
+            /** Expected and [ gotten / actual ] outputs. ...**/
+            /** cuvbits: Canvas_User_View___BITS ............**/
+            /**                                              **/
+            /** @VID_IID[ 0098 ]TIME[ 04:05:10 ]             **/
+            /** cal_cuvbits: EXPLAINED. .....................**/
+
+            U32 exp_cuvbits   ; /** Expected: cuvbits .......**/
+            U32 cal_cuvbits[3]; /** exp_cuvbits:CALCULATED...**/
+            U32 got_cuvbits   ; /** Gotten  : cuvbits .......**/
+
+            /** @VID_IID[ 0099 ]TIME[ 02:59:30 ]             **/
+            /** Calculate all expected clusters of 16 bits   **/
+            /** ahead of time from the test data array.      **/
+            U32* arr_cuvbits_003=((U32*)0);
+            U32  cur_cuvbits_003=( 0x00  );
+            I32  m_i_cuvbits_003=(( TAB_OUT_WID*NUM_TESTS)-1);
+
+        //:-------------------:DECLARE_ALL_VARS_EXCEPT_TABLES://
+        //:generated_table_of_expected_outputs:--------------://
+        //:calculated_expected_outputs:----------------------://
+        /** ************************************************ ***
+        @VID_IID[ 0099 ]TIME[ 03:02:02 ]
+        Expected output values for every single test. But
+        instead of hard coded in the[ tab_utc_out ]table they
+        are derived from the input test data table
+        [ tab_utc_inn ]
+        *** ************************************************ **/
+
+            /** ******************************************** **/
+            /** arr_cuvbits_003 ==                  ******** **/
+            /** generated_table_of_expected_outputs ******** **/
+            /** ******************************************** **/
+
+            /** @VID_IID[ 0103 ]TIME[ 01:43:05 ]    **/
+            /** 2nd memory stomp from calloc fixed. **/
+            assert( sizeof( U32 )              == 4   );
+            assert( sizeof( arr_cuvbits_003[0] == 4 ) );
+            arr_cuvbits_003=calloc( 
+                (TAB_OUT_WID*NUM_TESTS ) //:NUMBER_OF_ELEMENTS
+            ,   sizeof( U32 )            //:SIZE_OF_ONE_ELEMENT
+            );;
+
+            mti=( NUM_TESTS - 1 );
+
+            for( t_i = 0 ; t_i <= mti ; t_i ++ ){
+            for( lay = 0 ; lay <=(3-1); lay ++ ){
+
+                cur_cuvbits_003=( 0x00 );
+
+                /** Tile Eponent Loop. **/
+                for( t_e = 0 ; t_e <=(8-1) ; t_e ++ ){
+
+                    cur_cuvbits_003=(
+                    cur_cuvbits_003
+                        | //:<-- Smash Together With Or ( | )::/
+                        (
+                            tab_utc_inn[
+                                0
+                                /** Base_Index_For_Block **/
+                                +  ( t_i * TAB_INN_WID )
+
+                                /** ************************ ***
+                                @VID_IID[ 0099 ]T[ 03:49:42]
+                                Initial Offset For Layer  
+                                Column in the data.       
+                                *** ************************ **/
+                                +  ( lay * 1 )
+
+                                /** Point to next value in ****/
+                                /** current column.        ****/
+                                +  ( t_e * 3 )
+                            ]
+                            <<( t_e * 2 )
+                        )
+                    );;
+
+                };;//:NEXT[ t_e / til_exp ](TileSizeExponent)://
+
+                dex =(  ( t_i * TAB_OUT_WID ) + lay );
+                assert( dex >=0 && dex <= m_i_cuvbits_003 );
+                arr_cuvbits_003[ dex ]=(  cur_cuvbits_003 );
+                
+            };;};;
+
+        //:----------------------:calculated_expected_outputs://
+        //:--------------:generated_table_of_expected_outputs://
+
+        //:Cross_Check_Expected_Outputs:---------------------://
+        /** ************************************************ ***
+        @VID_IID[ 0099 ]TIME[ 03:27:30 ]
+        Cross check hard coded expected outputs ( tab_utc_out )
+        against the generated table of expected outputs
+        ( arr_cuvbits_003 )
+        *** ************************************************ **/
+        #define DEX_MAX (( TAB_OUT_WID * NUM_TESTS ) - 1 )  
+        #define BPRINTF aac2020_paint5d_BinaryPrintf
+        LOG("[BEG:Cross_Check_Expected_Outputs:BEG]\n",0);
+
+            mti=( NUM_TESTS - 1 );
+            for(    t_i = 0  ;  t_i <= mti ; t_i ++ ){
+            assert( t_i >= 0 && t_i <= (NUM_TESTS - 1 ) );
+
+                bas_tes = ( t_i * TAB_OUT_WID );
+                
+                for(    lay = 0 ;  lay <= (3-1) ; lay++ ){
+                assert( lay >=0 && lay <= 2 );
+                    
+                    dex = ( bas_tes + lay );
+                    assert( dex <= DEX_MAX );
+
+                    if(     tab_utc_out[ dex ]
+                    !=  arr_cuvbits_003[ dex ]
+                    ){
+                        U32 h_c=(     tab_utc_out[ dex ] );
+                        U32 gen=( arr_cuvbits_003[ dex ] );
+
+                        printf("\n\n");
+
+                        printf("[test__index:t_i]:%d\n", t_i );
+                        printf("[layer_index:lay]:%d\n", lay );
+                        printf("[data__index:dex]:%d\n", dex );
+
+                        printf("\n\n");
+
+                        /** @VID_IID[099]TIME[03:37:00 ]     **/
+                        /** Inspect the bits of non-matching **/
+                        /** values.                          **/
+                        BPRINTF("[hard_coded:h_c]",    h_c);
+                        BPRINTF("[_generated:gen]",    gen);
+
+                        printf("\n\n");
+
+                        /** @VID_IID[ 0099 ]TIME[03:23:42 ]  **/
+                        ERR("[BAD_GENERATED_EXPECTED_VALUES]");
+
+                        
+                    };;
+
+                };;
+            };;
+    
+        LOG("[END:Cross_Check_Expected_Outputs:END]\n",0);
+        #undef  DEX_MAX
+        #undef  BPRINTF
+        //:---------------------:Cross_Check_Expected_Outputs://
+
+        //:SIMPLE_PUT_GET_TEST:------------------------------://
+        /** Loop through all tests, but only use     **/
+        /** auset zero. Immediately check values     **/
+        /** after setting.                           **/
+        mti=( NUM_TESTS - 1 );
+
+        //:TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT://
+        for( t_i = 0 ; t_i <= mti ; t_i ++ ){
+        //:TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT://
+
+        /** @VID_IID[ 0098 ]TIME[ 04:26:42 ] **/
+        cal_cuvbits[ 0 ]=( 0x00 ); //:layer #0 (l_00)
+        cal_cuvbits[ 1 ]=( 0x00 ); //:layer #1 (l_01)
+        cal_cuvbits[ 2 ]=( 0x00 ); //:layer #2 (l_02)
+
+        for( lay = 0 ; lay <=(3-1); lay ++ ){
+        for( t_e = 0 ; t_e <=(8-1); t_e ++ ){
+
+            bas_tes = ( t_i * TAB_INN_WID     );
+            assert( 0 ==  bas_tes % 24 );
+
+            bas_tv3 = ( bas_tes + ( t_e * 3 ) ); //:3tilevalues
+            assert( 0 == bas_tv3 %  3  );
+
+            dexodat = ( bas_tv3 + lay ); //:inDEX_Of_DATum
+            assert( dexodat <= ((TAB_INN_WID * NUM_TESTS)-1) );
+
+            put_t_v = tab_utc_inn[ dexodat ];
+            assert( put_t_v <= 3 /**BIN_011**/ );
+            
+            //:calculate:cal_cuvbits:------------------------://
+
+                assert( lay >= 0 && lay <= (3-1) );
+
+                cal_cuvbits[ lay ] =(
+                cal_cuvbits[ lay ]
+                   |
+                (
+                    put_t_v <<( t_e * 2 )
+                ));;
+
+            //:------------------------:calculate:cal_cuvbits://
+            
+            for( t_q = 0 ; t_q <=( 4-1) ; t_q ++ ){
+            for( a_d = 0 ; a_d <=(16-1) ; a_d ++ ){
+
+                /** **************************************** **/
+                /** @VID_IID[ 0097 ]TIME[ 07:36:50 ]         **/
+                /** [0,0] is the ONLY local coordinate that  **/
+                /** is valid for ALL possible values of      **/
+                /** [ til_exp / t_e ]( Tile(size)Exponent )  **/
+                /**                                          **/
+                /**         t_x === loc_t_x                  **/
+                /**         t_y === loc_t_y                  **/
+                /**                                          **/
+                /** @VID_IID[ 0103 ]TIME[ 02:43:42 ]     --- **/
+                /** [ t_x , t_y ] is no longer hard      --- **/
+                /** coded to [0,0] for our tests.        --- **/
+                /** ---------------------------------------- **/
+                                                         /** **/
+                t_x = aac2020_p5d1ogl_GetCorner_T_X(     /** **/
+                      corner_to_target ,  t_e );;        /** **/
+                                                         /** **/
+                t_y = aac2020_p5d1ogl_GetCorner_T_Y(     /** **/
+                      corner_to_target ,  t_e );;        /** **/
+                                                         /** **/
+                /** **************************************** **/
+
+                AAC2020_PAINT5D_Put(
+                /**/(U08)    t_q     //: U08  til_qua / t_q  ://
+                ,   (U08)    t_e     //: U08  til_exp / t_e  ://
+                ,   (U08)    lay     //: U08  til_lay / t_l  ://
+                ,   (U08)    t_x     //: U08  loc_t_x / t_x  ://
+                ,   (U08)    t_y     //: U08  loc_t_y / t_y  ://
+                ,   (U08)    a_d     //: U08  aus_dex / a_d  ://
+                ,   (U08)    put_t_v //: U08  til_val / t_v  ://
+                );;
+
+            };;};;//:NEXT[ t_q , a_d       ]
+        };;};;    //:NEXT[ t_e , lay       ]
+
+        /** Loop through again. Using a triple loop instead  **/
+        /** of quadruple loop and check your outputs against **/
+        /** expected values. @VID_IID[ 0098 ]TIME[ 04:38:02 ]**/
+        /**                                                  **/
+        /** @VID_IID[ 0098 ]TIME{ 04:45:10 ]....             **/
+        /** UPDATE... make it another quadruple loop.        **/
+        /** and include the tile exponent (t_e)              **/
+
+        for( lay = 0 ; lay <=( 3-1) ; lay ++ ){
+        for( t_e = 0 ; t_e <=( 8-1) ; t_e ++ ){
+        for( t_q = 0 ; t_q <=( 4-1) ; t_q ++ ){
+        for( a_d = 0 ; a_d <=(16-1) ; a_d ++ ){
+
+                /** **************************************** **/
+                /** @VID_IID[ 0099 ]TIME[ 04:16:30 ]         **/
+                /** This assignment was in wrong location.   **/
+                //:Get expected output:                      ///
+                exp_cuvbits =(                               ///
+                    tab_utc_out[ (t_i * TAB_OUT_WID) + lay ] ///
+                );;                                          ///
+                /** **************************************** **/
+
+                /** **************************************** **/
+                /** @VID_IID[ 0098 ]TIME[ 04:44:00 ] ........**/
+                /** As long as all test code in this      ...**/
+                /** function uses a [t_x,t_y]==[0,0]      ...**/
+                /** the tile exponent (t_e) value should  ...**/
+                /** NOT affect the results of the tests.  ...**/    
+                /**                                          **/
+                /** @VID_IID[ 0103 ]TIME[ 02:45:45 ]         **/
+                /** [ t_x ,t_y ]No_Longer_Hard_Coded ]       **/
+                /** ---------------------------------------- **/
+                                                         /** **/
+                t_x = aac2020_p5d1ogl_GetCorner_T_X(     /** **/
+                      corner_to_target ,  t_e );;        /** **/
+                                                         /** **/
+                t_y = aac2020_p5d1ogl_GetCorner_T_Y(     /** **/
+                      corner_to_target ,  t_e );;        /** **/
+                                                         /** **/
+                /** **************************************** **/
+
+                /** @VID_IID[0098]TIME[ 04:49:40 ] ......... **/
+                /** #_WHY_t_e_DOESNT_CHANGE_TEST_OUTPUTS_#.. **/
+                cuvipix=(
+                AAC2020_P5D1OGL_painpix_CTO_cuvipix(
+                /**/(I32)    t_q     //: [ til_qua | t_q ]   ://
+                ,   (I32)    t_e     //: [ til_exp | t_e ]   ://
+                ,   (I32)    lay     //: [ til_lay | t_l ]   ://
+                ,   (I32)    t_x     //: [ loc_t_x | t_x ]   ://
+                ,   (I32)    t_y     //: [ loc_t_y | t_y ]   ://
+                ));;
+
+                got_cuvbits=(
+                AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Get(
+                /**/cuvipix.cuv_i_x  //: I32 cuv_i_x_000_255 ://
+                ,   cuvipix.cuv_i_y  //: I32 cuv_i_y_000_255 ://
+                ,   (I32)lay         //: I32 lay_dex_000_002 ://
+                ,   (I32)a_d         //: I32 aus_dex_000_015 ://
+                ));;
+
+                /** @VID_IID[ 0099 ]TIME[ 04:03:30 ] ........**/
+                /** Re-calculate index accessor for  ........**/
+                /** arr_cuvbits_003                  ........**/
+                dex=(
+                    0
+                    +  ( t_i * TAB_OUT_WID )
+                    +  ( lay )
+                );;
+
+                if( 0
+                /** @VID_IID[ 0098 ]TIME[ 04:13:30 ] **/
+                /** Compare exp_cuvbits against both **/
+                /** of these things................. **/
+                || (got_cuvbits          != exp_cuvbits) 
+                || (cal_cuvbits[lay]     != exp_cuvbits)
+                || (arr_cuvbits_003[dex] != exp_cuvbits)
+                ){
+
+                    /** ************************************ **/
+                    /** @VID_IID[ 0099 ]TIME[ 03:58:50 ] ....**/
+                    /** If you get this error message,   ....**/
+                    /** the mistake is in your test      ....**/
+                    /** runner code, and possibly NOT    ....**/
+                    /** the function being tested.       ....**/
+                    /** Fix your test runner code first. ....**/
+                    /** ************************************ **/
+                    if( arr_cuvbits_003[dex] //:All_Generated
+                    !=      cal_cuvbits[lay] //:3___Generated
+                    ){
+                    #define BPRINTF aac2020_paint5d_BinaryPrintf
+
+                        printf("\n\n");
+
+                        printf( "[dex]:%d\n", dex );
+                        printf( "[lay]:%d\n", lay );
+
+                        printf("\n\n");
+
+                        BPRINTF("[gen]",arr_cuvbits_003[dex]);
+                        BPRINTF("[3_X]",    cal_cuvbits[lay]);
+
+                        printf("\n\n");
+
+                        ERR("[CAL_CUVBITS_IS_WRONG]");
+
+                    #undef  BPRINTF
+                    };;
+
+                    /** @VID_IID[ 0098 ]TIME[ 05:42:10 ] ... **/
+                    /** TCM_BW: TEST_CODE_MIGHT_BE_WRONG     **/
+                    /** Because the our calculated expected  **/
+                    /** value does not match our hard coded  **/
+                    /** expected value. .................... **/
+                    if(cal_cuvbits[lay] != exp_cuvbits){
+                        printf("\n\n");
+                        printf("[************************]\n");
+                        printf("[TCM_BW::::::::2021_01_19]\n");
+                        printf("[TEST_CODE_PROBABLY_WRONG]\n");
+                        printf("[************************]\n");
+                        printf("\n\n");
+                    };;
+    
+                    /** Clarify what "lay" is in terms of    **/
+                    /** our expected output key.             **/
+                    /** @_A_CLUSTER_OF_THREE__IN__P5D_TEST_@ **/
+                    printf("[COMPARE_YOUR_BITS_YOU_FOOL!]\n");
+                    printf("[EXPECTED_OUTPUT_CLUSTER_DEX]:%d\n"
+                            ,lay );;
+
+                    printf("\n");
+
+                    printf("[t_i]:%d\n", t_i );
+                    printf("[t_e]:%d\n", t_e );
+                    printf("[lay]:%d\n", lay );
+
+                    aac2020_paint5d_BinaryPrintf(
+                    "[got_cuvbits]",got_cuvbits  );;
+
+                    aac2020_paint5d_BinaryPrintf(
+                    "[exp_cuvbits]",exp_cuvbits  );;
+
+                    /** Generated Expecteds: 3 AT A TIME **/
+                    aac2020_paint5d_BinaryPrintf(
+                    "[cal_cuvbits[lay]]",cal_cuvbits[lay]  );;
+
+                    /** Generated Expecteds: ALL AT ONCE **/
+                    aac2020_paint5d_BinaryPrintf(
+                    "[gen_cuvbits[dex]]",arr_cuvbits_003[dex]);;
+
+                    printf("\n");
+                    #define  CTT corner_to_target 
+                    printf("[corner_to_target]:(%d)\n"
+                        ,    corner_to_target       );;
+                    if( 1 == CTT ){ printf("[>>TOP_LEF<<]"); };
+                    if( 2 == CTT ){ printf("[>>TOP_RIG<<]"); };
+                    if( 3 == CTT ){ printf("[>>BOT_LEF<<]"); };
+                    if( 4 == CTT ){ printf("[>>BOT_RIG<<]"); };
+                    #undef   CTT
+                    printf("\n");
+
+                    /** ************************************ **/
+                    /** @VID_IID[ 0104 ]TIME[ 00:00:42 ]     **/
+                    /** This test used to PASS... UNTIL      **/
+                    /** we added the[ CTT ]logic to check    **/
+                    /** for different extreme corner cases.  **/
+                    /** ************************************ **/
+                    ERR("[FAILED___cuvipix_CTO_cuvbits___001]");
+
+                };;
+
+        };;};;};;};; //:NEXT[ lay , t_q , a_d ]
+
+        //:TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT://
+        };; //:NEXT[       t_i             ]
+        //:TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT://
+
+        AAC2020_TODOMAN_Vital("[MORE_TEST_CASES_2021_BLUE]");
+
+        /** ************************************************ **/
+        /** @VID_IID[ 0103 ]TIME[ 02:03:00 ]                 **/
+        /** Double checked. f_r_e_e is in correct location.  **/
+        /**                                                  **/
+        /** Free the computed expected outputs.      ******* **/
+        /** Expected outputs computed from the input ******* **/
+        /** data table.                              ******* **/
+                                                     /** *** **/
+            free( arr_cuvbits_003 );                 /** *** **/
+                                                     /** *** **/
+        /** ************************************************ **/
+
+        //:DEFINE_OR_UNDEF_BINARY_CONSTANTS:-----------------://
+
+            #undef  B_00                                  //01//
+            #undef  B_01                                  //02//
+            #undef  B_10                                  //03//
+            #undef  B_11                                  //04//
+               
+            #undef  B____00_00_00_00____00_00_00_00_____B //05//
+            #undef  B____01_01_01_01____01_01_01_01_____B //06//
+            #undef  B____00_00_00_00____00_00_00_11_____B //07//
+            #undef  B____11_00_11_00____11_00_11_00_____B //08//
+            #undef  B____11_00_11_00____11_00_11_01_____B //09//
+            #undef  B____11_11_11_11____11_11_11_11_____B //10//
+            #undef  B____11_11_11_11____00_00_00_00_____B //11//
+            #undef  B____00_00_00_00____11_11_11_11_____B //12//
+            #undef  B____00_00_11_11____11_11_00_00_____B //13//
+            #undef  B____00_11_10_00____01_00_11_10_____B //14//
+            #undef  B____11_00_00_10____11_01_10_00_____B //15//
+            #undef  B____00_01_10_11____10_00_11_00_____B //16//
+
+        //:-----------------:DEFINE_OR_UNDEF_BINARY_CONSTANTS://
+
+    #undef TAB_INN_WID 
+    #undef TAB_OUT_WID 
+    #undef NUM_TESTS   
+    #undef CUVIPIX
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void aac2020_P5D1OGL_UTC_PokeAndProd_BitPack_Get( void )
+    {
+    #define PIX AAC2020_PIXNAME_paint5d_cpu_pix
+
+        AAC2020_TODOMAN_Vital(
+            /** @VID_IID[ 0091 ]TIME[ 01:23:50 ] **/
+            "[aac2020_paint5d_BitPack_Get:USE_I32_For_glo_dex]"
+        );;
+
+        //:declare_vars:-------------------------------------://
+
+            I32 g_c ; //:global_component_index / glo_com
+            U08 a_d ; //:auset_dex / aus_dex
+
+            U08 pak_t_v ; //:packed tile value
+            U08 got_t_v ; //:gotten tile value
+
+        //:-------------------------------------:declare_vars://
+        //:manual_pack_and_unpack_test:001:------------------://
+        #define SHOULDNT_MATTER ( 0xFF )
+
+            /** @VID_IID[ 0091 ]TIME[ 01:10:10 ] *********** **/
+            /** I suspect aac2020_paint5d_UTC_BitPack_Get    **/
+            /** is not well enough tested and missing tests  **/
+            /** were we do a SET by manually bit packing.    **/
+            /**                                              **/
+            /** Pack the tile value directly into the pixel  **/
+            /** byte array here and confirm we can get it    **/
+            /** back out with the getter method.             **/
+            /** ******************************************** **/
+
+            g_c     =( 0 );
+            a_d     =( 0 );
+            pak_t_v =( 3 ); /** BIN_011 **/
+
+            PIX[ g_c + 0 ] = SHOULDNT_MATTER ;
+            PIX[ g_c + 1 ] = SHOULDNT_MATTER ;
+            PIX[ g_c + 2 ] = SHOULDNT_MATTER ;
+            PIX[ g_c + 3 ] = ( pak_t_v << ( 0 ) );
+
+            /** GET: t_v ( tile value ) **/
+            aac2020_paint5d_BitPack_Get(
+                        PIX  //: U08* :  CPU_PIX ://
+            ,           g_c  //: I32  :  glo_com ://
+            ,           a_d  //: U08  :  aus_dex ://
+            ,     &(got_t_v) //: U08  :  til_val ://
+            );;
+        
+            if( got_t_v != pak_t_v ){
+                //:MPAUT:Manual_Pack_And_Unpack_Test:
+                ERR("[MUCH_PROBLEMS_WOW_2021_MPAUT:001]");
+            };;
+
+        #undef  SHOULDNT_MATTER
+        //:------------------:manual_pack_and_unpack_test:001://
+        //:manual_pack_and_unpack_test:002:------------------://
+        #define SHOULDNT_MATTER ( 222 )
+
+            g_c     =( 0 );
+            a_d     =( 4 ); /** <--CHANGED[ @VID_IID[0091]  ]**/
+                            /**             @TIME[ 01:12:55 ]**/
+                            /**             @DELTA@          **/
+            pak_t_v =( 3 ); /** BIN_011 **/
+
+            PIX[ g_c + 0 ] = SHOULDNT_MATTER ;
+            PIX[ g_c + 1 ] = SHOULDNT_MATTER ;
+            PIX[ g_c + 2 ] = ( pak_t_v << ( 0 ) ); /**@DELTA@**/
+            PIX[ g_c + 3 ] = SHOULDNT_MATTER ;
+
+            /** GET: t_v ( tile value ) **/
+            aac2020_paint5d_BitPack_Get(
+                        PIX  //: U08* :  CPU_PIX ://
+            ,           g_c  //: I32  :  glo_com ://
+            ,           a_d  //: U08  :  aus_dex ://
+            ,     &(got_t_v) //: U08  :  til_val ://
+            );;
+        
+            if( got_t_v != pak_t_v ){
+                //:MPAUT:Manual_Pack_And_Unpack_Test:
+                ERR("[MUCH_PROBLEMS_WOW_2021_MPAUT:002]");
+            };;
+
+        #undef  SHOULDNT_MATTER
+        //:------------------:manual_pack_and_unpack_test:002://
+        //:manual_pack_and_unpack_test:003:------------------://
+        #define SHOULDNT_MATTER ( 23 )
+
+            g_c     =( 64 * 4 * 7 );
+            a_d     =( 4 ); /** <--CHANGED[ @VID_IID[0091]  ]**/
+                            /**             @TIME[ 01:12:55 ]**/
+                            /**             @DELTA@          **/
+            pak_t_v =( 3 ); /** BIN_011 **/
+
+            PIX[ g_c + 0 ] = SHOULDNT_MATTER ;
+            PIX[ g_c + 1 ] = SHOULDNT_MATTER ;
+            PIX[ g_c + 2 ] = ( pak_t_v << ( 0 ) ); /**@DELTA@**/
+            PIX[ g_c + 3 ] = SHOULDNT_MATTER ;
+
+            /** GET: t_v ( tile value ) **/
+            aac2020_paint5d_BitPack_Get(
+                        PIX  //: U08* :  CPU_PIX ://
+            ,           g_c  //: I32  :  glo_com ://
+            ,           a_d  //: U08  :  aus_dex ://
+            ,     &(got_t_v) //: U08  :  til_val ://
+            );;
+        
+            if( got_t_v != pak_t_v ){
+                //:MPAUT:Manual_Pack_And_Unpack_Test:
+                ERR("[MUCH_PROBLEMS_WOW_2021_MPAUT:002]");
+            };;
+
+        #undef  SHOULDNT_MATTER
+        //:------------------:manual_pack_and_unpack_test:003://
+
+    #undef PIX 
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void aac2020_P5D1OGL_UTC_polyfill_texel_fetch( void )
+    {
+    #define IV2 struct AAC2020_POLYOGL_IV2
+    #define BIN_011 ( 3 ) /** binary: 11 **/
+
+        /** ************************************************ **/
+        /** @VID_IID[ 0088 ]TIME[ 00:53:50 ]                 **/                    
+        /** We don't actually have a CPU side texel fetch    **/
+        /** function to compare the P5D1OGL._ code against...**/
+        /** So I am not sure exactly how we will be testing  **/
+        /** this code.                                       **/
+        /** ************************************************ **/
+        //:..................................................://
+        U08*    cpu_pix =( AAC2020_PIXNAME_paint5d_cpu_pix );
+        //:..................................................://
+        U32     u32_var       ; //:pixel_value_to_store
+        U32     u32_got       ; //:value got from texel fetch 
+        //:..................................................://
+        U32         C_r       ; //:check_what_you_put
+        U32         C_g       ; //:check_what_you_put
+        U32         C_b       ; //:check_what_you_put
+        U32         C_a       ; //:check_what_you_put
+        //:..................................................://    
+        U32         B_r =( 0 ); //:BYTE: red
+        U32         B_g =( 0 ); //:BYTE: green
+        U32         B_b =( 0 ); //:BYTE: blue
+        U32         B_a =( 0 ); //:BYTE: alpha
+        //:..................................................://      
+        I32         p_x       ; //:pixel x
+        I32         p_y       ; //:pixel y
+        I32     glo_com       ; //:global component index
+        IV2         glo       ; //:global_xy == [ p_x , p_y ]
+        //:..................................................://
+        U08         a_d       ; //:Auset_inDex
+        U08         t_v       ; //:Tile_Value
+        U32     rbp_001       ; //:Re_Built_Pixel: Method #1
+        U32     rbp_002       ; //:Re_Built_Pixel: Method #2
+        U08         ad2       ; //:Auset_inDex times TWO(2)
+
+        u32_var=( 0 );
+        for( p_y = 0 ; p_y <= ( 512-1 ) ; p_y ++ ){
+        for( p_x = 0 ; p_x <= ( 512-1 ) ; p_x ++ ){
+
+            /** Increment with primes. **/
+            B_r += 1 ; if( B_r > 255 ){ B_r = B_r - 255; };
+            B_g += 3 ; if( B_g > 255 ){ B_g = B_g - 255; };
+            B_b += 5 ; if( B_b > 255 ){ B_b = B_b - 255; };
+            B_a += 7 ; if( B_a > 255 ){ B_a = B_a - 255; };
+
+            u32_var = ( 0x00
+            |   (  ((U08)B_r)  << 24 )
+            |   (  ((U08)B_g)  << 16 )
+            |   (  ((U08)B_b)  <<  8 )
+            |   (  ((U08)B_a)  <<  0 )
+            );;
+
+            C_r = ( u32_var >> 24 ) & 0xFF ;
+            C_g = ( u32_var >> 16 ) & 0xFF ;
+            C_b = ( u32_var >>  8 ) & 0xFF ;
+            C_a = ( u32_var >>  0 ) & 0xFF ;
+
+            if(  0
+            || ( B_r != C_r )
+            || ( B_g != C_g )
+            || ( B_b != C_b )
+            || ( B_a != C_a )
+            ){
+                ERR("[YOU_DONT_KNOW_BIT_SHIFTING_2021]");
+            };;
+
+            glo_com = ( ( p_y * 512 ) + p_x ) * 4 ;
+
+            cpu_pix[ glo_com + 0 ] = ((U08)B_r);
+            cpu_pix[ glo_com + 1 ] = ((U08)B_g);
+            cpu_pix[ glo_com + 2 ] = ((U08)B_b);
+            cpu_pix[ glo_com + 3 ] = ((U08)B_a);
+
+            glo.x = ( p_x );
+            glo.y = ( p_y );
+            u32_got=(
+                AAC2020_P5D1OGL_TexelFetch_U32(
+                    0 //:Texture Sampler, Not Used in C version.
+                , glo //:Global X/Y coordinate of pixel.
+                ,   0 //:[ L.O.D. ] Always zero in all code.
+                ));;
+            
+            if( u32_got != u32_var ){
+                ERR("[texel_fetch_definitely_broken_2021]");
+            };;
+
+            //:double_check:u32_got:-------------------------://
+
+                U32 dub_chk=( 0x00 /**dub_chk==doublecheck**/
+                |   cpu_pix[ glo_com + 0 ] << 24 
+                |   cpu_pix[ glo_com + 1 ] << 16
+                |   cpu_pix[ glo_com + 2 ] <<  8               
+                |   cpu_pix[ glo_com + 3 ] <<  0   
+                );;
+                if( dub_chk != u32_var ){
+                    ERR("[MY_OH_MY_2021_01_15_0623PM]");
+                };;
+
+            //:-------------------------:double_check:u32_got://
+
+            //: Try Using: aac2020_paint5d_BitPack_Get       ://
+            //: To re-build the pixel we put. If that works  ://
+            //: Then I am satisfied to maybe... 70% that     ://
+            //: the texel fetch code works properly.         ://
+            rbp_001 =( 0x00 );
+            rbp_002 =( 0x00 );
+            for( a_d = 0 ; a_d <= 15 ; a_d ++ ){
+
+                /** GET: t_v ( tile value ) **/
+                aac2020_paint5d_BitPack_Get(
+                      cpu_pix  //: U08* :  ://
+                ,     glo_com  //: I32 <--- #FIXED_IID_0091# ://
+                ,         a_d  //: U08  :   @VID_IID[  0091 ]://
+                ,       &(t_v) //: U08  :   @TIME[ 01:33:25 ]://
+                );;
+
+                ad2=( a_d * 2 );
+                rbp_001=( rbp_001 | ( t_v           << ad2 ) );
+                rbp_002=( rbp_002 | ((t_v & BIN_011)<< ad2 ) );
+                if( rbp_001 != rbp_002 ){
+                    ERR("[WTF:rbp_001!=rbp_002]");
+                };;
+            };;
+
+            if( 0
+            ||  ( rbp_001 != u32_got )
+            ||  ( rbp_001 != u32_var )
+            ){
+                printf("[rbp_001]:%d\n" , rbp_001 );
+                printf("[u32_got]:%d\n" , u32_got );
+                printf("[u32_var]:%d\n" , u32_var );
+
+                /** **************************************** **/
+                /** If we are lucky, the hex representation  **/
+                /** of number will be enough to figure out   **/
+                /** what went wrong. If unlucky, we will need**/
+                /** to printf as binary.                     **/
+                /** @VID_IID[ 0088 ]TIME[ 01:45:20 ]         **/
+                /** **************************************** **/
+                printf("[hex:rbp_001]:%08x\n" , rbp_001 );
+                printf("[hex:u32_got]:%08x\n" , u32_got );
+                printf("[hex:u32_var]:%08x\n" , u32_var );
+
+                aac2020_paint5d_BinaryPrintf(
+                    "[BINARY_OF:rbp_001]" , rbp_001 );;
+                aac2020_paint5d_BinaryPrintf(
+                    "[BINARY_OF:rbp_002]" , rbp_002 );;
+
+                aac2020_paint5d_BinaryPrintf(
+                    "[BINARY_OF:u32_got]" , u32_got );;
+                aac2020_paint5d_BinaryPrintf(
+                    "[BINARY_OF:u32_var]" , u32_var );;
+
+                ERR("[Maybe_BitPacking_Code_Is_Wrong:2021]");
+            };;
+
+
+        };;};;
+
+    #undef IV2
+    #undef BIN_011
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void aac2020_P5D1OGL_UTC_BitPack_Get( void )
+    {
+        /** @VID_IID[ 0088 ]TIME[ 00:10:08 ] *************** **/
+        /** Functions in "OPEN_GL_HAKCODE/P5D1OGL._"   * * * **/
+        /** are transcribed versions of functions in   * * * **/
+        /** PAINT5D.F._ . The goal is re-write the     * * * **/
+        /** code in a way that is more compatible      * * * **/
+        /** with GLSL syntax so minimal changes will   * * * **/
+        /** need to be done to paste it into our       * * * **/
+        /** shader code.                               * * * **/
+        /** ************************************************ **/
+
+        I32         p_x; //:Global pixel coordinate on:
+        I32         p_y; //:AAC2020_PIXNAME_paint5d_cpu_pix
+                         //:SEE[ DIAGRAM[ #DIA_P5D_MAIN# ]  ]
+                         //:SEE[    FILE[ PAINT5D.D._    ]  ]
+
+        I32         aus; //:What auto-tile-set (auset) is
+                         //:being targeted. Paint5D system
+                         //:is configured to store 16 total
+                         //:ausets per texture.
+                         //:SEE[ DIAGRAM[ #DIA_P5D_U32#  ]  ]
+                         //:SEE[    FILE[ PAINT5D.D._    ]  ]
+
+        U08*    cpu_pix =( AAC2020_PIXNAME_paint5d_cpu_pix );
+                         //:The system data storing the
+                         //:designs Josh will be working on
+                         //:in paint5d.
+
+        I32     glo_com; //:Global Component Index (red byte)
+        I32     aus_dex; //:Same as [ aus ]
+        I32     til_val; //:Tile Value: [ 0 | 1 | 2 | 3 ]
+                         //:( 2 bits used to store tile value )
+            
+        U08 u08_til_val; //:  8 bit version of til_val
+        U32 u32_til_val; //: 32 bit version of til_val
+
+        /** @VID_IID[ 0088 ]TIME[ 00:16:50 ] *************** **/
+        /** AAC2020_POLYOGL_IV2 :                            **/
+        /** This struct exists to help us make the code      **/
+        /** as similiar to GLSL code as possible to          **/
+        /** HOPEFULLY make it so ZERO CHANGES need to be     **/
+        /** done when pasting this code into our GLSL        **/
+        /** shader string.                                   **/
+        /** ************************************************ **/
+
+            struct AAC2020_POLYOGL_IV2
+            glo; //:<-- [ glo.x , glo.y ] == [ p_x , p_y ]
+
+        /** ************************************************ **/
+
+        til_val=( 0 );
+        for( p_y = 0 ; p_y <= ( 512-1 ) ; p_y ++ ){
+        for( p_x = 0 ; p_x <= ( 512-1 ) ; p_x ++ ){
+        for( aus = 0 ; aus <= (   15  ) ; aus ++ ){
+        /** #_SCANLINE_ORDER_MEANS_Y_IS_THE_OUTER_LOOP_# **/
+
+            //:The_Setup:------------------------------------://
+            
+                /** Set Auset Index **/
+                aus_dex =( aus );
+
+                /** Generate Tile Value **/
+                til_val++;
+                if( til_val >  3 ){ til_val = 0; };
+
+                /** Skip Configuration Pixel **/
+                if( 255 == p_x && 255 == p_y ){ continue; };
+                if( 511 == p_x && 255 == p_y ){ continue; };
+                if( 255 == p_x && 511 == p_y ){ continue; };
+                if( 511 == p_x && 511 == p_y ){ continue; };
+
+                /** **************************************** **/
+                /** @VID_IID[ 0087 | 0088 ]....Ooops...      **/
+                /** @TIME[ 00:22:28 ] ********************** **/
+                /** Convert [ p_x , p_y ] to component index **/
+                /** Use index to xy formula for a 512x512    **/
+                /** bitmap, then multiply by 4 to convert    **/
+                /** the pixel location to RED_BYTE location. **/
+
+                    glo_com =( ( p_y * 512 ) + p_x ) * 4 ;
+
+                /** **************************************** **/
+
+            //:------------------------------------:The_Setup://
+            //:Test_Original_Code:---------------------------://
+
+                aac2020_paint5d_BitPack_Put(
+                         cpu_pix  //:<-- [ Bitmap / Texture ]
+                ,   (I32)glo_com   
+                ,   (U08)aus_dex   
+                ,   (U08)til_val  //:<-- Put this value into
+                );;               //:    [ Bitmap / Texture ]
+
+                aac2020_paint5d_BitPack_Get(
+                         cpu_pix  //:<-- [ Bitmap / Texture ]
+                ,   (I32)glo_com  
+                ,   (U08)aus_dex  
+                ,  &(u08_til_val) //:<-- Read Value From
+                );;               //:    [ Bitmap / Texture ]
+
+                if( (I08)u08_til_val
+                !=  (I08)    til_val
+                ){
+                    /** Hope you never see this error. As it **/
+                    /** means you transcribed buggy code.    **/
+                    /** @VID_IID[ 0087 ]TIME[ 00:42:30 ]     **/
+                    ERR("[PROBLEM_IS_THE_ORIGINAL_CODE_2021]");
+                };;
+
+            //:---------------------------:Test_Original_Code://
+            //:Cross_Check_New_Code:-------------------------://
+            /** ******************************************** **/
+            /** AAC2020_P5D1OGL_BitPack_Get is a re-write    **/
+            /** of aac2020_paint5d_BitPack_Get and thus      **/
+            /** should have the same exact outputs as        **/
+            /** aac2020_paint5d_BitPack_Get for a given set  **/
+            /** of inputs. @VID_IID[ 0088 ]TIME[ 00:03:23 ]  **/
+            /** ******************************************** **/
+
+                glo.x = p_x;
+                glo.y = p_y;
+
+                u32_til_val=(
+                    AAC2020_P5D1OGL_BitPack_Get(
+                        glo      //:Pixel Location
+                    ,   aus_dex  //:Bit Location To Unpack
+                    ));;
+
+                if( (I08)u32_til_val
+                !=  (I08)    til_val
+                ){
+                    printf("\n\n\n");
+                    printf("[p_x,p_y,aus]:(%d,%d,%d)\n"
+                    ,        p_x,p_y,aus );;
+                    printf("[u32_til_val]:%d\n"
+                    ,        u32_til_val );;
+                    printf("[....til_val]:%d\n"
+                    ,            til_val );;
+
+                    /** ************************************ **/
+                    /** @VID_IID[ 0088 ]TIME[ 00:06:55 ]     **/
+                    /** This is the best case scenario for   **/
+                    /** test code failure. Means we did      **/
+                    /** something very stupid while transcri-**/
+                    /** -bing the code.                      **/
+                    ERR("[PROBLEM_IS_THE_TRANSCRIPTION_2021]");
+                    /** ************************************ **/
+                };;
+
+            //:-------------------------:Cross_Check_New_Code://
+
+        };;};;};; //:NEXT[ p_x , p_y , aus ]://
+
+    return;
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void aac2020_P5D1OGL_UTC_til_exp_CTO_max_cor( void )
+    {
+        /** ***************************************** **/
+        /** NO_TESTS_NEEDED_BECAUSE MAIN TEST PASSED: **/
+        /**(     aac2020_P5D1OGL_UTC_Get     )**/
+        /**                                           **/
+        /**      @VID_IID[ 0091 ]TIME[ 01:40:00 ]     **/
+        /** ***************************************** **/
+    return;
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void aac2020_P5D1OGL_UTC_til_exp_CTO_diagpix( void )
+    {
+        /** ***************************************** **/
+        /** NO_TESTS_NEEDED_BECAUSE MAIN TEST PASSED: **/
+        /**(     aac2020_P5D1OGL_UTC_Get     )**/
+        /**                                           **/
+        /**      @VID_IID[ 0091 ]TIME[ 01:40:00 ]     **/
+        /** ***************************************** **/
+    return;
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void aac2020_P5D1OGL_UTC_painpix_CTO_glocpix( void )
+    {
+        /** ***************************************** **/
+        /** NO_TESTS_NEEDED_BECAUSE MAIN TEST PASSED: **/
+        /**(     aac2020_P5D1OGL_UTC_Get     )**/
+        /**                                           **/
+        /**      @VID_IID[ 0091 ]TIME[ 01:40:00 ]     **/
+        /** ***************************************** **/
+    return;
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void aac2020_P5D1OGL_UTC_Get( void )
+    {
+        //:variable_declare:---------------------------------://
+
+            /** iterate over every pixel of bitmap **/
+            I32 p_x; //:Pixel X
+            I32 p_y; //:Pixel Y
+            I32 aus; //:auset index
+
+            /** for original functions **/
+            U08 u08_til_qua ;
+            U08 u08_til_exp ;
+            U08 u08_til_lay ;
+            U08 u08_loc_t_x ;
+            U08 u08_loc_t_y ;
+            I16 i16_glo_t_x ;
+            I16 i16_glo_t_y ;
+
+            /** for original functions **/
+            U08 u08_aus_dex ;
+            U08 u08_til_val ;
+
+            /** for return from GLSL version of function. **/
+            U32 u32_til_val ;
+
+            /** for determining if we passed tests or not. **/
+            I08 i08_u32_til_val ;
+            I08 i08_u08_til_val ;
+
+        //:---------------------------------:variable_declare://
+
+        u08_til_val=( 0 );
+        for( p_y = 0 ; p_y <= ( 512-1 ) ; p_y ++ ){
+        for( p_x = 0 ; p_x <= ( 512-1 ) ; p_x ++ ){
+        for( aus = 0 ; aus <= (   15  ) ; aus ++ ){
+        /** #_SCANLINE_ORDER_MEANS_Y_IS_THE_OUTER_LOOP_# **/
+
+            //:IDENTICAL_CODE_IN_BOTH_LOOPS:-----------------://
+            u08_aus_dex =( (U08)aus );
+            u08_til_val++;
+            if( u08_til_val >  3 ){ u08_til_val = 0; };
+            /** @VID_IID[ 0086 ]TIME[ 01:12:00 ] **/
+            /** SKIP THE CONFIGURATION PIXELS.   **/
+            if( 255 == p_x && 255 == p_y ){ continue; };
+            if( 511 == p_x && 255 == p_y ){ continue; };
+            if( 255 == p_x && 511 == p_y ){ continue; };
+            if( 511 == p_x && 511 == p_y ){ continue; };
+            //:-----------------:IDENTICAL_CODE_IN_BOTH_LOOPS://
+
+            aac2020_paint5d_glocpix_CTO_painpix(
+              &(u08_til_qua )            //: U08* ://
+            , &(u08_til_exp )            //: U08* ://
+            , &(u08_til_lay )            //: U08* ://
+            , &(u08_loc_t_x )            //: U08* ://
+            , &(u08_loc_t_y )            //: U08* ://
+            ,  (i16_glo_t_x = (I16)p_x ) //: I16  ://
+            ,  (i16_glo_t_y = (I16)p_y ) //: I16  ://
+            );;
+
+            AAC2020_PAINT5D_Put(
+               u08_til_qua  //:  U08  ://
+            ,  u08_til_exp  //:  U08  ://
+            ,  u08_til_lay  //:  U08  ://
+            ,  u08_loc_t_x  //:  U08  ://
+            ,  u08_loc_t_y  //:  U08  ://
+            ,  u08_aus_dex  //:  U08  ://
+            ,  u08_til_val  //:  U08  ://
+            );;          
+
+            /** Use GLSL version of getter **/
+            u32_til_val=(                                    
+                AAC2020_P5D1OGL_Get(                       
+                    (I32)u08_til_qua                           
+                ,   (I32)u08_til_exp                           
+                ,   (I32)u08_til_lay                           
+                ,   (I32)u08_loc_t_x                           
+                ,   (I32)u08_loc_t_y                           
+                ,   (I32)u08_aus_dex   
+                ));;
+
+                 i08_u32_til_val = ((I08)u32_til_val) ;
+                 i08_u08_til_val = ((I08)u08_til_val) ;
+            if(  i08_u32_til_val
+            !=   i08_u08_til_val
+            ){
+                printf("\n\n\n");
+                //:Does_Original_Ganster_Get_Fail_Too?:------://
+                U08 O_G_til_val;    /** O_G:original_ganster **/
+                AAC2020_PAINT5D_Get(
+                   u08_til_qua  //:  U08  ://
+                ,  u08_til_exp  //:  U08  ://
+                ,  u08_til_lay  //:  U08  ://
+                ,  u08_loc_t_x  //:  U08  ://
+                ,  u08_loc_t_y  //:  U08  ://
+                ,  u08_aus_dex  //:  U08  ://
+                ,&(O_G_til_val) //:  U08  ://
+                );;   
+                if( O_G_til_val == u08_til_val ){
+                    printf("[TRANSCRIPTION_PROBLEM_RED]\n");
+                }else{
+                    printf("[THIS_IS_MUCH_MUCH_WORSE_RED]\n");
+                };;
+                //:------:Does_Original_Ganster_Get_Fail_Too?://
+
+                printf("[p_x,p_y]:(%d,%d)\n",p_x,p_y);
+
+                printf("[O_G_til_val]:%d\n"
+                ,        O_G_til_val );;
+
+                printf("[i08_u32_til_val]:%d\n"
+                ,        i08_u32_til_val );;
+
+                printf("[i08_u08_til_val]:%d\n"
+                ,        i08_u08_til_val );;
+
+                ERR("[FAILED_GLSL_TEST_OF_PAINT5D:001]");
+            };;
+
+        };;};;};;
+
+        /** RUN A 2ND TIME WITH ONLY GETTER TO DETECT        **/
+        /** MEMORY STOMPS. @VID_IID[ 0086 ]TIME[ 00:37:08 ]  **/
+
+        u08_til_val=( 0 );
+        for( p_y = 0 ; p_y <= ( 512-1 ) ; p_y ++ ){
+        for( p_x = 0 ; p_x <= ( 512-1 ) ; p_x ++ ){
+        for( aus = 0 ; aus <= (   15  ) ; aus ++ ){
+        /** #_SCANLINE_ORDER_MEANS_Y_IS_THE_OUTER_LOOP_# **/
+
+            //:IDENTICAL_CODE_IN_BOTH_LOOPS:-----------------://
+            u08_aus_dex =( (U08)aus );
+            u08_til_val++;
+            if( u08_til_val >  3 ){ u08_til_val = 0; };
+            /** @VID_IID[ 0086 ]TIME[ 01:12:00 ] **/
+            /** SKIP THE CONFIGURATION PIXELS.   **/
+            if( 255 == p_x && 255 == p_y ){ continue; };
+            if( 511 == p_x && 255 == p_y ){ continue; };
+            if( 255 == p_x && 511 == p_y ){ continue; };
+            if( 511 == p_x && 511 == p_y ){ continue; };
+            //:-----------------:IDENTICAL_CODE_IN_BOTH_LOOPS://
+
+            /** Use GLSL version of getter **/
+            u32_til_val=(                                    
+                AAC2020_P5D1OGL_Get(                       
+                    (I32)u08_til_qua                           
+                ,   (I32)u08_til_exp                           
+                ,   (I32)u08_til_lay                           
+                ,   (I32)u08_loc_t_x                           
+                ,   (I32)u08_loc_t_y                           
+                ,   (I32)u08_aus_dex   
+                ));;
+
+                 i08_u32_til_val = ((I08)u32_til_val) ;
+                 i08_u08_til_val = ((I08)u08_til_val) ;
+            if(  i08_u32_til_val
+            !=   i08_u08_til_val
+            ){
+                printf("\n\n\n");
+                //:Does_Original_Ganster_Get_Fail_Too?:------://
+                U08 O_G_til_val;    /** O_G:original_ganster **/
+                AAC2020_PAINT5D_Get(
+                   u08_til_qua  //:  U08  ://
+                ,  u08_til_exp  //:  U08  ://
+                ,  u08_til_lay  //:  U08  ://
+                ,  u08_loc_t_x  //:  U08  ://
+                ,  u08_loc_t_y  //:  U08  ://
+                ,  u08_aus_dex  //:  U08  ://
+                ,&(O_G_til_val) //:  U08  ://
+                );;   
+                if( O_G_til_val == u08_til_val ){
+                    printf("[TRANSCRIPTION_PROBLEM_BLUE]\n");
+                }else{
+                    printf("[THIS_IS_MUCH_MUCH_WORSE_BLUE]\n");
+                };;
+                //:------:Does_Original_Ganster_Get_Fail_Too?://
+
+                printf("[p_x,p_y]:(%d,%d)\n",p_x,p_y);
+
+                printf("[O_G_til_val]:%d\n"
+                ,        O_G_til_val );;
+
+                printf("[i08_u32_til_val]:%d\n"
+                ,        i08_u32_til_val );;
+
+                printf("[i08_u08_til_val]:%d\n"
+                ,        i08_u08_til_val );;
+
+                ERR("[FAILED_GLSL_TEST_OF_PAINT5D:002]");
+            };;
+    
+        };;};;};;
+
+    }
+
+#undef  U08                                           //: 01 ://
+#undef  I08                                           //: 02 ://
+#undef  U32                                           //: 03 ://
+#undef  I32                                           //: 04 ://
+#undef  I16                                           //: 05 ://
+#undef  U16                                           //: 06 ://
+#undef  ERR                                           //: 07 ://
+#undef  LOG                                           //: 08 ://
+//:================================:UNIT_TEST_SECTION:P5D1OGL://

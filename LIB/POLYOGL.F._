@@ -1,73 +1,29 @@
-//[||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]//
-//[       POL: Polyfill (C99 code mimicking glsl funcs)      ]//
-//[||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]//
-
-//:GLSL_POLYFILLS:*******************************************://
-//:DO_NOT_PASTE_INTO_GLSL_CODE:******************************://
-
+#include "./POLYOGL.___.LIBCHAN_ORDER_ENFORCER._"
+//:GLSL_POLYFILLS_GAURD:*************************************://
     #ifdef MACRO_THIS_IS_GLSL
         #error THIS_IS_NOT_GLSL_CODE_2021
     #endif
-
-//:******************************:DO_NOT_PASTE_INTO_GLSL_CODE://
-//:DO_NOT_PASTE_INTO_GLSL_CODE:******************************://
-#define I32 int32_t /** GCC: <stdint.h> **/
-#define U08 uint8_t /** GCC: <stdint.h> **/
-#define F32 float
-
-        /** Mocked up "ivec2" to store global [x,y] * * * *  **/
-        /** coordinates.                            * * * *  **/
-        /** @VID_IID[ 0092 ]TIME[ 00:27:55 ]        * * * *  **/
-
-            struct AAC2020_OPEN_GL_IV2{
-                I32 x ;
-                I32 y ;
-            };
-
-        /** Needed to adapt the texel fetch polyfill.* * * * **/
-        /** aac2020_polyfill_texel_fetch             * * * * **/
-        /** @VID_IID[ 0092 ]TIME[ 00:26:45 ]         * * * * **/
-
-            struct AAC2020_OPEN_GL_UV4{
-
-                U08 x ; //:RED
-                U08 y ; //:GREEN
-                U08 z ; //:BLUE
-                U08 w ; //:ALPHA
-
-            };
-
-        /** @VID_IID[ 0093 ]TIME[ 00:24:50 ]   * * * * * * * **/
-        /** Another Shim for float vectors for * * * * * * * **/
-        /** output frag color.                 * * * * * * * **/
-
-            struct AAC2020_OPEN_GL_FV4{
-
-                F32 x ; //:RED
-                F32 y ; //:GREEN
-                F32 z ; //:BLUE
-                F32 w ; //:ALPHA
-
-            };
-
-
-#undef  I32
-#undef  U08
-#undef  F32
-//:******************************:DO_NOT_PASTE_INTO_GLSL_CODE://
+//:*************************************:GLSL_POLYFILLS_GAURD://
+//:INIT_NONE:================================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+    U32 AAC2020_POLYOGL_InitNone( U32 u32 ){
+        if( u32 ){  };return( 0x00 ); /** #_INIT_NONE_HOW_# **/
+    }
+#undef  U32
+//:================================================:INIT_NONE://
 //:DO_NOT_PASTE_INTO_GLSL_CODE:******************************://
 #define U32 uint32_t /** GCC: <stdint.h> **/          //: 01 ://
 #define I32  int32_t /** GCC: <stdint.h> **/          //: 02 ://
-#define IV2   struct AAC2020_OPEN_GL_IV2              //: 03 ://
-#define UV4   struct AAC2020_OPEN_GL_UV4              //: 04 ://
+#define IV2   struct AAC2020_POLYOGL_IV2              //: 03 ://
+#define UV4   struct AAC2020_POLYOGL_UV4              //: 04 ://
 #define SAM      int /** IGNORED IN [C99/C11] **/     //: 05 ://
-#define FV4   struct AAC2020_OPEN_GL_FV4              //: 06 ://
+#define FV4   struct AAC2020_POLYOGL_FV4              //: 06 ://
 #define F32   float                                   //: 07 ://
 
     //:GLSL_POLYFILL_TexelFetch:=============================://
 
         UV4
-        aac2020_polyfill_texel_fetch(
+        AAC2020_POLYOGL_tex_fet(
             SAM u32_sam //:<--GLSL only. Zero For [C99/C11]  ://
         ,   IV2 glo
         ,   I32 levodet_ALWAYS_ZERO
@@ -104,7 +60,7 @@
         //:GLSL_POLYFILL_MakeVec4:===========================://
 
             FV4
-            aac2020_polyfill_GLSL_MakeVec4(
+            AAC2020_POLYOGL_MAK_FV4(
                 F32 f_x
             ,   F32 f_y
             ,   F32 f_z
@@ -122,7 +78,7 @@
         //:===========================:GLSL_POLYFILL_MakeVec4://
         //:GLSL_POLYFILL_Make_I32:===========================://
             I32
-            aac2020_polyfill_GLSL_Make_I32(
+            AAC2020_POLYOGL_MAK_I32(
                 F32 f32
             )
             {
@@ -132,7 +88,7 @@
         //:===========================:GLSL_POLYFILL_Make_I32://
         //:GLSL_POLYFILL_Make_F32:===========================://
             F32
-            aac2020_polyfill_GLSL_Make_F32(
+            AAC2020_POLYOGL_MAK_F32(
                 I32 i32
             )
             {

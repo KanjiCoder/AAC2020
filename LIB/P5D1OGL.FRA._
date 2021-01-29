@@ -1,10 +1,8 @@
 
-//: F_S: Fragment Shader Code
 
-//:CUT_AND_PASTE_THIS_INTO_GLSL_SOURCE:======================://
-//:AAC2020_PAINT5D_DEFAULT_001:==============================://
-//:PASTE_INTO_FILE[ P5D_001._ ]:=============================://
-
+    //[CUT_AND_PASTE_THIS_INTO_GLSL_SOURCE:==============]//
+    //[AAC2020_PAINT5D_DEFAULT_001:======================]//
+    //[PASTE_INTO_FILE[ P5D_001._ ]:=====================]//
     //:P5D_001____AAC2020_PAINT5D_DEFAULT_001:===========://
     //|SIM:Shim_Ifdef_Macros:|||||||||||||||||||||||||||||//
     //:glsl_file_scope_stuff:----------------------------://
@@ -70,9 +68,9 @@
                                                    //| # |//
         #define U32   uint32_t                     //| # |//
         #define I32    int32_t                     //| # |//
-        #define IV2   struct AAC2020_OPEN_GL_IV2   //| # |//
-        #define UV4   struct AAC2020_OPEN_GL_UV4   //| # |//
-        #define T_F   aac2020_polyfill_texel_fetch //| # |//
+        #define IV2   struct AAC2020_POLYOGL_IV2   //| # |//
+        #define UV4   struct AAC2020_POLYOGL_UV4   //| # |//
+        #define T_F   AAC2020_POLYOGL_tex_fet //| # |//
         #define P5D   ( 0 )                        //| # |//
         #define SAM    int                         //| # |//
         #define U00    0x00                        //| # |//
@@ -80,7 +78,7 @@
         #define U03   ( 3 )                        //| # |//
         #define B_3   ( 3 )                        //| # |//
         #define V_A   void                         //| # |//
-        #define FV4   struct AAC2020_OPEN_GL_FV4   //| # |//
+        #define FV4   struct AAC2020_POLYOGL_FV4   //| # |//
         #define ASS   assert                       //| # |//
         #define ERR   aac2020_p5d1ogl_Halt         //| # |//
     #endif                                         //| # |//
@@ -98,12 +96,12 @@
                                                    //| # |//
     #else                                          //| # |//
                                                    //| # |//
-        #define FV4_MAK aac2020_polyfill_GLSL_MakeVec4   ///
-        #define I32_MAK aac2020_polyfill_GLSL_Make_I32
-        #define F32_MAK aac2020_polyfill_GLSL_Make_F32
+        #define FV4_MAK AAC2020_POLYOGL_MAK_FV4   ///
+        #define I32_MAK AAC2020_POLYOGL_MAK_I32
+        #define F32_MAK AAC2020_POLYOGL_MAK_F32
         #define BIN_011 ((U32)3 )                  //| # |//
         #define CUVIPIX struct AAC2020_P5D1OGL_CUVIPIX   ///
-        #define TYP_F_C struct AAC2020_OPEN_GL_FV4
+        #define TYP_F_C struct AAC2020_POLYOGL_FV4
         #define INN_F_C F_C
                                                    //| # |//
     #endif                                         //| # |//
@@ -117,7 +115,7 @@
     #else                                          //| # |//
                                                    //| # |//
         #define RET_MAIN FV4 /** <-- [C99/C11]**/  //| # |//
-        #define FUN_MAIN OPEN_GL_PAINT5D_Main      //| # |//
+        #define FUN_MAIN AAC2020_P5D1OGL_Main      //| # |//
                                                    //| # |//
     #endif                                         //| # |//
     //:---------------------------------:main_shim_macros://
@@ -142,7 +140,7 @@
     //:-----------------------------:C99_AND_GLSL_STRUCTS://
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
         U32                                        //[ x ]//
-        OPEN_GL_PAINT5D_TexelFetch_U32(            //[ x ]//
+        AAC2020_P5D1OGL_TexelFetch_U32(            //[ x ]//
             SAM u32_sam  //:<-- GLSL only.......:////[ x ]//
         ,   IV2 glo                                //[ x ]//
         ,   I32 levodet_ALWAYS_ZERO                //[ x ]//
@@ -193,7 +191,7 @@
         }                                          //[ x ]//
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
         U32                                        //[ x ]//
-        OPEN_GL_PAINT5D_BitPack_Get(               //[ x ]//
+        AAC2020_P5D1OGL_BitPack_Get(               //[ x ]//
             IV2     glo                            //[ x ]//
         ,   I32 aus_dex                            //[ x ]//
         )                                          //[ x ]//
@@ -204,7 +202,7 @@
             U32 til_val ;                          //[ x ]//
                                                    //[ x ]//
             u32_var =(                             //[ x ]//
-                OPEN_GL_PAINT5D_TexelFetch_U32(    //[ x ]//          
+                AAC2020_P5D1OGL_TexelFetch_U32(    //[ x ]//          
                     P5D //:texture_to_sample    :////[ x ]//
                 ,   glo //:integer_texel_coord  :////[ x ]//
                 ,   I00 //:level_of_detail_zero :////[ x ]//
@@ -221,7 +219,7 @@
                                                    //[ x ]//
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
         I32                                        //[ - ]//
-        OPEN_GL_PAINT5D_til_exp_CTO_til_peb(       //[ - ]//
+        AAC2020_P5D1OGL_til_exp_CTO_til_peb(       //[ - ]//
             I32         til_exp                    //[ - ]//
         )                                          //[ - ]//
         {                                          //[ - ]//
@@ -250,7 +248,7 @@
         }                                          //[ - ]//
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
         I32                                        //[ - ]//
-        OPEN_GL_PAINT5D_til_exp_CTO_max_cor(       //[ - ]//
+        AAC2020_P5D1OGL_til_exp_CTO_max_cor(       //[ - ]//
             I32         til_exp                    //[ - ]//
         )                                          //[ - ]//
         {                                          //[ - ]//
@@ -275,7 +273,7 @@
         }                                          //[ - ]//
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
         I32                                        //[ x ]//
-        OPEN_GL_PAINT5D_til_exp_CTO_diagpix(       //[ x ]//
+        AAC2020_P5D1OGL_til_exp_CTO_diagpix(       //[ x ]//
             I32         til_exp                    //[ x ]//
         )                                          //[ x ]//
         {                                          //[ x ]//
@@ -311,7 +309,7 @@
         }                                          //[ x ]//
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
         IV2                                        //[ x ]//
-        OPEN_GL_PAINT5D_painpix_CTO_glocpix(       //[ x ]//
+        AAC2020_P5D1OGL_painpix_CTO_glocpix(       //[ x ]//
             I32 til_qua                            //[ x ]//
         ,   I32 til_exp                            //[ x ]//
         ,   I32 til_lay                            //[ x ]//
@@ -332,10 +330,10 @@
         //:CALCULATE::painpix_CTO_glocpix: . . . . . . . ://
                                                    //[ x ]//
             m_c =(                                 //[ x ]//
-            OPEN_GL_PAINT5D_til_exp_CTO_max_cor(   //[ x ]//
+            AAC2020_P5D1OGL_til_exp_CTO_max_cor(   //[ x ]//
                             til_exp ));;           //[ x ]//
             dia =(                                 //[ x ]//
-            OPEN_GL_PAINT5D_til_exp_CTO_diagpix(   //[ x ]//
+            AAC2020_P5D1OGL_til_exp_CTO_diagpix(   //[ x ]//
                             til_exp ));;           //[ x ]//
                                                    //[ x ]//
             tem.x =  til_qua       % ( 2 ) ;       //[ x ]//
@@ -363,7 +361,7 @@
         }                                          //[ x ]//
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
         U32                                        //[ x ]//
-        OPEN_GL_PAINT5D_Get(                       //[ x ]//
+        AAC2020_P5D1OGL_Get(                       //[ x ]//
             I32  til_qua                           //[ x ]//
         ,   I32  til_exp                           //[ x ]//
         ,   I32  til_lay                           //[ x ]//
@@ -384,7 +382,7 @@
         //:get_pixel_and_extract_tile_value: . . . . . . ://
                                                    //[ x ]//
             glo=(                                  //[ x ]//
-            OPEN_GL_PAINT5D_painpix_CTO_glocpix(   //[ x ]//
+            AAC2020_P5D1OGL_painpix_CTO_glocpix(   //[ x ]//
                 til_qua                            //[ x ]//
             ,   til_exp                            //[ x ]//
             ,   til_lay                            //[ x ]//
@@ -393,7 +391,7 @@
             ));;                                   //[ x ]//
                                                    //[ x ]//
             til_val=(                              //[ x ]//
-            OPEN_GL_PAINT5D_BitPack_Get(           //[ x ]//
+            AAC2020_P5D1OGL_BitPack_Get(           //[ x ]//
                 glo                                //[ x ]//
             ,   aus_dex                            //[ x ]//
             ));;                                   //[ x ]//
@@ -408,7 +406,7 @@
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
                                                    //[ x ]//
         CUVIPIX                                    //[ x ]//
-        OPEN_GL_PAINT5D_painpix_CTO_cuvipix(       //[ x ]//
+        AAC2020_P5D1OGL_painpix_CTO_cuvipix(       //[ x ]//
             I32 til_qua /** Tile Quadrant( t_q )**///[ x ]//
         ,   I32 til_exp /** Tile Exponent( t_e )**///[ x ]//
         ,   I32 til_lay /** Tile Layer   ( t_l )**///[ x ]//
@@ -483,7 +481,7 @@
             /** tile size. ***************************** **/
             /** @VID_IID[ 0103 ]TIME[ 04:05:20 ]    .....**/
             /** Fixed the logic for getting til_peb .....**/
-            til_peb =( OPEN_GL_PAINT5D_til_exp_CTO_til_peb(
+            til_peb =( AAC2020_P5D1OGL_til_exp_CTO_til_peb(
                                        til_exp )); //:***://
                                                    //:***://
                                                    //:***://
@@ -566,7 +564,7 @@
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
                                                    //:---://
         I32                                        //:---://
-        OPEN_GL_PAINT5D_til_exp_CTO_squ_ash(       //:---://
+        AAC2020_P5D1OGL_til_exp_CTO_squ_ash(       //:---://
         I32             til_exp                    //:---://
         )                                          //:---://
         {                                          //:---://
@@ -647,12 +645,12 @@
         #define TOR_I_Y p5d_tor.loc_t_y            //:---://
                                                    //:---://
             diagpix=(                              //:---://
-            OPEN_GL_PAINT5D_til_exp_CTO_diagpix(   //:---://
+            AAC2020_P5D1OGL_til_exp_CTO_diagpix(   //:---://
                             til_exp ));;           //:---://
                                                    //:---://
                                                    //:---://
             max_cor=(                              //:---://
-            OPEN_GL_PAINT5D_til_exp_CTO_max_cor(   //:---://
+            AAC2020_P5D1OGL_til_exp_CTO_max_cor(   //:---://
                             til_exp ));            //:---://
                                                    //:---://
             if( 0 == lay_dex ){                    //:---://
@@ -722,7 +720,7 @@
         /** @VID_IID[ 0105 ]TIME[ 04:41:40 ]         *** **/
         /** This code only exists to test the        *** **/
         /** getter function                          *** **/
-        /** OPEN_GL_PAINT5D_cuvipix_CTO_cuvbits_Get  *** **/
+        /** AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Get  *** **/
         /**                                          *** **/
         /** We cannot[ PUT ]pixels within GLSL       *** **/
         /** shader code. Hence the gaurd used to     *** **/
@@ -731,7 +729,7 @@
         /** @VID_IID[ 0105 ]TIME[ 04:43:42]EXPLAINED *** **/
         /** ******************************************** **/
         void                                             ///
-        OPEN_GL_PAINT5D_cuvipix_CTO_cuvbits_Put(         ///
+        AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Put(         ///
                                                          ///
             //|LOCATION_OF_THE_DATA|||||||||||||||||||||||//
             I32 cuv_i_x_000_255  //:AKA[ cuvipix.i_x ]   ///
@@ -831,7 +829,7 @@
                 /** Local To Data Parition Coordinates ..**/
                                                           //
                 til_peb=(                                 //
-                    OPEN_GL_PAINT5D_til_exp_CTO_til_peb(  //
+                    AAC2020_P5D1OGL_til_exp_CTO_til_peb(  //
                                     TIL_EXP ));           //
                 ASS( til_peb >= 0 && til_peb <= 128 );    //
                                                           //
@@ -843,7 +841,7 @@
                 //:local_tile_exact_bounds_check:--------://
                                                           //
                     max_cor=(                             //
-                    OPEN_GL_PAINT5D_til_exp_CTO_max_cor(  //
+                    AAC2020_P5D1OGL_til_exp_CTO_max_cor(  //
                                     TIL_EXP ));;          //
                                                           //
                     if( loc_t_x > max_cor                 //
@@ -892,7 +890,7 @@
                                                           //
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
         U32                                              ///
-        OPEN_GL_PAINT5D_cuvipix_CTO_cuvbits_Get(         ///
+        AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Get(         ///
                                                          ///
             /** FUNCTION_WRITTEN_ON[ 2021_01_18 ]  **/   ///
             /**    VID_IID[ 0097 ]                 **/   ///
@@ -907,8 +905,8 @@
         #define C_Y cuv_i_y_000_255               //: 02 ://
         #define T_L lay_dex_000_002               //: 03 ://
         #define A_D aus_dex_000_015               //: 04 ://
-        #define ETO_m_c OPEN_GL_PAINT5D_til_exp_CTO_max_cor
-        #define ETO_s_a OPEN_GL_PAINT5D_til_exp_CTO_squ_ash
+        #define ETO_m_c AAC2020_P5D1OGL_til_exp_CTO_max_cor
+        #define ETO_s_a AAC2020_P5D1OGL_til_exp_CTO_squ_ash
             //:input_checks:- - - - - - - - - - - - - - -://
                                                      //:i://
                 ASS( cuv_i_x_000_255 >=  (  0  )  ); //:i://
@@ -935,7 +933,7 @@
                 //:EVERYTHING_ELSE:----------------------://
                                                       //////
                 /// glocpix not needed,               //////
-                /// OPEN_GL_PAINT5D_Get function      //////
+                /// AAC2020_P5D1OGL_Get function      //////
                 ///  handles calculation of that.     //////
                 /// glocpix; /** GLObal Coord PIXels  ...**/
                              /** Data View Coordinate ...**/
@@ -1000,7 +998,7 @@
                 //:      BIN[ 10 ] ==> DEC[ 2 ]          ://
                 //:      BIN[ 11 ] ==> DEC[ 3 ]          ://
                 t_v=(                                    ///
-                    OPEN_GL_PAINT5D_Get(                 ///
+                    AAC2020_P5D1OGL_Get(                 ///
                         t_q    //: I32 [ til_qua / t_q ] ://                         
                     ,   t_e    //: I32 [ til_exp / t_e ] ://                        
                     ,   T_L    //: I32 [ til_lay / t_l ] ://                        
@@ -1036,7 +1034,7 @@
         FUN_MAIN( 
                        TYP_F_C          INN_F_C
         //[ GLSL:|     NOTHING     |    NOTHING   - - - -]//
-        //[  C99:|  struct FV4     |    F_C      - - - -]//
+        //[  C99:|  struct FV4     |    F_C       - - - -]//
         ){
              
             /** @VID_IID[ 0093 ]TIME[ 00:21:10 ] **/
@@ -1127,42 +1125,6 @@
                                                    //[ x ]//
     //:---------------------------------:main_shim_macros://
     //:===========:P5D_001____AAC2020_PAINT5D_DEFAULT_001://  
-
-//:=============================:PASTE_INTO_FILE[ P5D_001._ ]://
-//:==============================:AAC2020_PAINT5D_DEFAULT_001://
-//:======================:CUT_AND_PASTE_THIS_INTO_GLSL_SOURCE://
-
-
-//:CTRL_F_HELP:==============================================://
-/** ******************************************************** ***
-
-    WRONG[ sqa_ash  ]CORRECT[ squ_ash ]
-    WRONG[ cuvibits ]CORRECT[ cuvbits ]
-
-    WRONG[ til_sip  ]CORRECT[ til_peb ]
-
-    WRONG[ qua_i_x  ]CORRECT[ qua_c_x ]( Cell , not integer )
-    WRONG[ qua_i_y  ]CORRECT[ qua_c_y ]( Cell , not integer )
-
-*** ******************************************************** **/
-//:==============================================:CTRL_F_HELP://
-//:VARIABLE_EXPLANATIONS:====================================://
-/** ******************************************************** ***
-
-    cuvbits :
-
-        All tile values for all    
-        tile sizes that are on the   
-        current pixel. Bitpacked     
-        into a 32 bit unsigned int.  
-
-    til_peb :
-
-        Tile Span Measured In Pebbles.
-        PEBBLE: The size of the SMALLEST tile.
-                (A tile with til_exp == 0 )
-
-
-
-*** ******************************************************** **/
-//:====================================:VARIABLE_EXPLANATIONS://
+    //[=====================:PASTE_INTO_FILE[ P5D_001._ ]]//
+    //[======================:AAC2020_PAINT5D_DEFAULT_001]//
+    //[==============:CUT_AND_PASTE_THIS_INTO_GLSL_SOURCE]//

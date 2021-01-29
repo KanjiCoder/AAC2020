@@ -1,0 +1,112 @@
+/** ******************************************************** ***
+    -----------------------------------------
+    LIBCHAN ORDERS WE CARE ABOUT FOR: POLYOGL
+    -----------------------------------------
+
+        CPUNIFO
+        PIXNAME
+ 
+        POLYOGL <-- POLYOGL_INCLUDED_HERE
+
+        TAUDIRT
+        TAUDEPO
+        TAUTYPE
+        TAUSYNC
+        PAINT5D
+        P5D1OGL
+
+    -----------------------------------------
+    LIBCHAN ORDERS WE CARE ABOUT FOR: POLYOGL
+    -----------------------------------------
+*** ******************************************************** **/
+/** ******************************************************** ***
+
+    @VID_IID[ 0114 ]TIME[ 00:57:00 ]
+
+    LIBCHAN defines an EXACT ordering of subsystems 
+    however their is wiggle room in how you can order.
+    This file makes sure that we enforce certain 
+    ordering constraints that do NOT have wiggle room.
+
+    EXAMPLE:
+    [ B & C ]depend_on[ A ]
+    [ Y & Z ]depend_on[ X ]
+
+        VALID_ORDER : A,B,C,  X,Y,Z
+        VALID_ORDER : X,Y,Z,  A,B,C
+        
+        To make sure the dependencies we CARE ABOUT are
+        not accidentially ordered wrong, we can make
+        LIBCHAN_ORDER_ENFORCER files like this one.
+
+*** ******************************************************** **/
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+    #define POLYOGL  macro_libchan_order_POLYOGL  //:---: 01 ://
+    #define CPUNIFO  macro_libchan_order_CPUNIFO  //:---: 02 ://
+    #define PIXNAME  macro_libchan_order_PIXNAME  //:---: 03 ://
+    #if( ! ( POLYOGL > CPUNIFO) ) //:########################://
+
+        #error "[POLYOGL__USE__CPUNIFO:THUS_MUST_COME_AFTER]"
+
+    #endif //:###############################################://
+    #if( ! ( POLYOGL > PIXNAME) ) //:########################://
+
+        #error "[POLYOGL__USE__PIXNAME:THUS_MUST_COME_AFTER]"
+
+    #endif //:###############################################://
+    #undef  POLYOGL  //:--------------------------------: 01 ://
+    #undef  CPUNIFO  //:--------------------------------: 02 ://
+    #undef  PIXNAME  //:--------------------------------: 03 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+
+    #define PO  macro_libchan_order_POLYOGL  //:--------: 01 ://
+    #define T1  macro_libchan_order_TAUDIRT  //:--------: 02 ://
+    #define T2  macro_libchan_order_TAUDEPO  //:--------: 03 ://
+    #define T3  macro_libchan_order_TAUTYPE  //:--------: 04 ://
+    #define T4  macro_libchan_order_TAUSYNC  //:--------: 05 ://
+    #if( ! ( PO < T1 && PO < T2 && PO < T3 && PO < T4 )) //:#://
+
+        /** ************************************************ **/
+        /** @VID_IID[ 0114 ]TIME[ 00:48:05 ]                 **/
+        /** We might want to write a GLSL shader for         **/
+        /** the TAU system. And associate it with            **/
+        /** NUMPAD key ZERO. So enforce this ordering.       **/
+        /** ************************************************ **/
+
+        #error "[RESERVE_RIGHT_TO_WRITE_GLSL_SHADER_FOR_TAU]"
+
+    #endif //:###############################################://
+    #undef  PO  //:-------------------------------------: 01 ://
+    #undef  T1  //:-------------------------------------: 02 ://
+    #undef  T2  //:-------------------------------------: 03 ://
+    #undef  T3  //:-------------------------------------: 04 ://
+    #undef  T4  //:-------------------------------------: 05 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+    #define PO  macro_libchan_order_POLYOGL  //::- - - - - -:://
+    #define P1  macro_libchan_order_PAINT5D  //::- - - - - -:://
+    #define P2  macro_libchan_order_P5D1OGL  //::- - - - - -:://
+    #if( ! ( PO < P1 && PO < P2  )) //:######################://
+
+        /** @VID_IID[ 0114 ]TIME[ 00:52:23 ] *************** **/
+        /** POLYOGL must be included BEFORE PAINT5D systems. **/
+        /** Because those systems reference POLYOGL          **/
+        /** structs and polyfills.                           **/
+        /** ************************************************ **/
+
+        #error "[PAINT5D_USES_POLYFILLS]"
+
+    #endif //:###############################################://
+    #undef  PO  //:-------------------------------------: 01 ://
+    #undef  P1  //:-------------------------------------: 02 ://
+    #undef  P2  //:-------------------------------------: 03 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+/** ******************************************************** ***
+
+    @VID_IID[ 0114 ]TIME[ 00:38:32 ]
+
+    POLYOGL uses PIXNAME to emulate texel fetches.
+    POLYOGL uses CPUNIFO to emulate iResolution & iMouse
+
+*** ******************************************************** **/
+
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://

@@ -37,7 +37,7 @@ _Static_assert( AAC2020_INCLUDE_GRAQUAD == 18 ,       "18");
 //:==================================================:GRAQUAD://
 //:TAUDEPO:==================================================://
 #if(            AAC2020_INCLUDE_TAUDEPO >=  1 )
-_Static_assert( AAC2020_INCLUDE_TAUDEPO == 27 ,       "27");
+_Static_assert( AAC2020_INCLUDE_TAUDEPO == 28 ,       "28");
 
     #define  FMACROS_TAUDEPO_LoopTick   AAC2020_TAUDEPO_LoopTick
 #endif
@@ -48,7 +48,7 @@ _Static_assert( AAC2020_INCLUDE_TAUDEPO == 27 ,       "27");
 //:==================================================:TAUDEPO://
 //:TAUSYNC:==================================================://
 #if(            AAC2020_INCLUDE_TAUSYNC >=  1 )
-_Static_assert( AAC2020_INCLUDE_TAUSYNC == 29 ,       "29");
+_Static_assert( AAC2020_INCLUDE_TAUSYNC == 30 ,       "30");
 
     #define  FMACROS_TAUSYNC_LoopTick   AAC2020_TAUSYNC_LoopTick
 #endif
@@ -86,6 +86,7 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 29 ,       "29");
     PIXSAVE
     PIXBACK
     PIXLOAD
+    POLYOGL
     TAUDIRT
     TAUTYPE
     TAUSYNC
@@ -172,6 +173,14 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 29 ,       "29");
 #define      FMACROS_PIXLOAD_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:PIXLOAD://
+//:InitNone:POLYOGL:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_POLYOGL >=  1 )
+#define      FMACROS_POLYOGL_InitNone AAC2020_POLYOGL_InitNone
+#endif
+#if( AAC2020_INCLUDE_POLYOGL == 0 )
+#define      FMACROS_POLYOGL_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:POLYOGL://
 //:InitNone:TAUDIRT:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_TAUDIRT >=  1 )
 #define      FMACROS_TAUDIRT_InitNone AAC2020_TAUDIRT_InitNone
