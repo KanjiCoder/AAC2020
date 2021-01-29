@@ -9,6 +9,87 @@
     //[   VIDEO COMMENT TIMESTAMP EXAMPLE   ]//
 *** ******************************************************** ***
 
+#_UNRELIABLE_KILL_SWITCH_#######################################
+
+    ////////////////////////////////////////////////////////////
+
+    @VID_IID[ 0112 ]TIME[ 00:42:23 ]
+    
+    A hackish way to shut off tests but make sure they still
+    run every once and a while randomly. 
+
+    PRO: Protects us from test rot a little bit.
+    CON: We could accidentially cause random stuttering in
+         people's final games if we forget to shut this
+         behavior off when engine is ready to release.
+
+    ////////////////////////////////////////////////////////////
+
+    Removed FROM: PAINT5D.D._
+
+    /** @VID_IID[ 0084 ]TIME[ 00:39:12 ] ................... **/
+    /** Usually turns off unit tests, but not 100% of time.  **/
+    /** This is to avoid code rot while still saving time    **/
+    /** When we have long running unit tests.                **/
+    U08 AAC2020_PAINT5D_unreliable_utc_kill_switch=( 1 );
+
+    Removed FROM: PAINT5D.F._
+
+        //:Run_Unit_Test_If_Never_Ran_Before:----------------://
+        #define KIL AAC2020_PAINT5D_unreliable_utc_kill_switch
+        #define E_U extern U32
+
+            if( aac2020_paint5d_unit_test_ran_or_running <= 0 ){
+                aac2020_paint5d_unit_test_ran_or_running =( 1 );
+                aac2020_paint5d_unit_test_is_running_now =( 1 );
+
+                if( KIL >= 1 ){
+
+                    srand(time(NULL)); 
+                    I16 rnd_i16 = rand(); //: 0 to 0x7fff
+                    if( rnd_i16 < ( 0x7fff / 50 ) ){
+
+                        /** 0x7fff / 20 : Means: 1 in 20 **/
+
+                        E_U AAC2020_PAINT5D_UnitTest( U32  );
+                            AAC2020_PAINT5D_UnitTest( 0x00 );
+                    };;
+                }else{
+                    if( 1 == 1 ){
+
+                        E_U AAC2020_PAINT5D_UnitTest( U32  );
+                            AAC2020_PAINT5D_UnitTest( 0x00 );
+                    };;
+                };;
+
+                aac2020_paint5d_unit_test_is_running_now =( 0 );
+            };;
+
+        #undef KIL
+        #undef E_U
+        //:----------------:Run_Unit_Test_If_Never_Ran_Before://
+
+
+#UNIT_TEST_MANAGER##############################################
+#_UNIT_TEST_MANAGER_############################################
+
+    UNIT_TEST_MANAGER: KILTEST
+
+        The only unit test management we have is a subsystem
+        like "SILENCE" called "KILTEST" that is used to shut
+        off certain unit tests.
+
+        0 == Test Is Off.
+        1 == First nesting depth of tests gauranteed.
+        2 == Heavy Tests That Have Additional Gauring
+             around them will also run.
+
+        0 == NO TESTS
+        1 == LIGHT TESTING
+        2 == HEAVY TESTING
+
+##############################################UNIT_TEST_MANAGER#
+#############################################_UNIT_TEST_MANAGER#
 #_HIDLIST_AND_HIDEXEC_##########################################
 
     THIS_COMMENT_APPLIES_TO_BOTH[ HIDLIST ]AND[ HIDEXEC ]
@@ -3604,6 +3685,12 @@
 
         So I have a way to silence top-level code that is not
         part of any sub-library in the LIBCHAN.
+    ------------------------------------------------------------
+    @VID_IID[ 0112 ]TIME[ 00:15:28 ]
+    UPDATE: AACMAIN code exist in:
+            1. R:\G\AAC2020\LIB\MAIN\D._
+            2. R:\G\AAC2020\LIB\MAIN\F._
+            3. R:\G\AAC2020\LIB\MAIN\.....ANYTHING_IN_HERE.....
     ------------------------------------------------------------
 
 ##############################################_WHAT_IS_AACMAIN_#

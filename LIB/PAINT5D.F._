@@ -3499,37 +3499,35 @@
 
         //:-----------------:#_INI_SPAM_AND_RECURSION_GAURD_#://
         //:Run_Unit_Test_If_Never_Ran_Before:----------------://
-        #define KIL AAC2020_PAINT5D_unreliable_utc_kill_switch
-        #define E_U extern U32
+        #define OVERRIDE AAC2020_KILTEST.KILTEST  //:////////://
+        #define      ONN AAC2020_KILTEST.PAINT5D  //:////////://
+        #define      E_U extern U32               //:////////://
 
             if( aac2020_paint5d_unit_test_ran_or_running <= 0 ){
                 aac2020_paint5d_unit_test_ran_or_running =( 1 );
                 aac2020_paint5d_unit_test_is_running_now =( 1 );
 
-                if( KIL >= 1 ){
+                if( OVERRIDE <= ( 0-1 ) ){/**OVERRIDE:ALL_OFF**/
+                    /** DO NOTHING **/
+                }else
+                if( OVERRIDE >= ( 0+1 ) ){/**OVERRIDE:ALL_ONN**/
+                  
+                   E_U AAC2020_PAINT5D_UnitTest( U32  );
+                       AAC2020_PAINT5D_UnitTest( 0x00 );
 
-                    srand(time(NULL)); 
-                    I16 rnd_i16 = rand(); //: 0 to 0x7fff
-                    if( rnd_i16 < ( 0x7fff / 50 ) ){
+                }else
+                if( AAC2020_KILTEST.PAINT5D >= 1 /** ONN? **/ ){
 
-                        /** 0x7fff / 20 : Means: 1 in 20 **/
-
-                        E_U AAC2020_PAINT5D_UnitTest( U32  );
-                            AAC2020_PAINT5D_UnitTest( 0x00 );
-                    };;
-                }else{
-                    if( 1 == 1 ){
-
-                        E_U AAC2020_PAINT5D_UnitTest( U32  );
-                            AAC2020_PAINT5D_UnitTest( 0x00 );
-                    };;
+                   E_U AAC2020_PAINT5D_UnitTest( U32  );
+                       AAC2020_PAINT5D_UnitTest( 0x00 );
                 };;
 
                 aac2020_paint5d_unit_test_is_running_now =( 0 );
             };;
 
-        #undef KIL
-        #undef E_U
+        #undef OVERRIDE  //://///////////////////////////////://
+        #undef      ONN  //://///////////////////////////////://
+        #undef      E_U  //://///////////////////////////////://
         //:----------------:Run_Unit_Test_If_Never_Ran_Before://
     }
 

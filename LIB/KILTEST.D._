@@ -1,2 +1,98 @@
 
 //: KILTEST.D._: Unit Test Killer ( Data File )
+
+//:LIBRARY_STRUCT:===========================================://
+#define U08 uint8_t /** GCC: <stdint.h> **/
+#define I08 int8_t /** GCC: <stdint.h> **/
+
+        struct AAC2020_KILTEST_LIBRARY_STRUCT{
+        
+        I08   KILTEST ; //:SPECIAL: 
+                        //: -1: ALL TESTS OFF  
+                        //: +1: ALL TESTS ON
+                        //:  0: No Override Behavior
+            
+        U08   TODOMAN ; //:[ ? ]://
+        U08   FILEBOI ; //:[ ? ]://  X: Has Silence Code Been
+        U08   NATIKEY ; //:[ ? ]://     added to this subsystem?
+        U08   IKEYBOX ; //:[ ? ]://
+        U08   IMOUBOX ; //:[ ? ]://     X == YES
+        U08   KEYBIND ; //:[ ? ]://     _ == NO
+        U08   CEDITOR ; //:[ ? ]://     * == No Test Code Exists
+        U08   GINAWIN ; //:[ ? ]://     ? == Unknown State
+        U08   DUI     ; //:[ ? ]://          Have not looked
+        U08   GLEBIND ; //:[ ? ]://          at stuff closely
+        U08   GLCONST ; //:[ ? ]://          yet.
+        U08   CPUNIFO ; //:[ ? ]://
+        U08   GRAQUAD ; //:[ ? ]://
+        U08   FREE_01 ; //:[ ? ]://
+        U08   FRAGBED ; //:[ ? ]://  
+        U08   PIXNAME ; //:[ ? ]://
+        U08   PIXSAVE ; //:[ ? ]://
+        U08   PIXBACK ; //:[ ? ]://
+        U08   GPUDATA ; //:[ ? ]://
+        U08   PIXLOAD ; //:[ ? ]://
+        U08   TAUDIRT ; //:[ ? ]://   
+        U08   TAUDEPO ; //:[ ? ]://   
+        U08   TAUTYPE ; //:[ ? ]://  
+        U08   TAUSYNC ; //:[ ? ]://   
+        U08   PAINT5D ; //:[ ? ]://
+        U08   P5D1OGL ; //:[ ? ]://
+        
+        }AAC2020_KILTEST={
+        #define off ( 0 )  //: Do NOT test this system  : 01 ://
+        #define L_1 ( 1 )  //: Test Some But not all    : 02 ://
+        #define ALL ( 2 )  //: Test Everything          : 03 ://
+        #define NOT_IMPLEMENTED ( 2 ) //: Equals: ALL   : 04 ://
+
+            .KILTEST =  0  //: If Zero, No overrides.        ://
+        
+        ,   .TODOMAN = NOT_IMPLEMENTED  
+        ,   .FILEBOI = NOT_IMPLEMENTED
+        ,   .NATIKEY = NOT_IMPLEMENTED
+        ,   .IKEYBOX = NOT_IMPLEMENTED
+        ,   .IMOUBOX = NOT_IMPLEMENTED
+        ,   .KEYBIND = NOT_IMPLEMENTED
+        ,   .CEDITOR = NOT_IMPLEMENTED
+        ,   .GINAWIN = NOT_IMPLEMENTED
+        ,   .DUI     = NOT_IMPLEMENTED
+        ,   .GLEBIND = NOT_IMPLEMENTED   
+        ,   .GLCONST = NOT_IMPLEMENTED   
+        ,   .CPUNIFO = NOT_IMPLEMENTED   
+        ,   .GRAQUAD = NOT_IMPLEMENTED   
+        ,   .FREE_01 = NOT_IMPLEMENTED   
+        ,   .FRAGBED = NOT_IMPLEMENTED   
+        ,   .PIXNAME = NOT_IMPLEMENTED   
+        ,   .PIXSAVE = NOT_IMPLEMENTED
+        ,   .PIXBACK = NOT_IMPLEMENTED
+        ,   .GPUDATA = NOT_IMPLEMENTED   
+        ,   .PIXLOAD = NOT_IMPLEMENTED   
+        ,   .TAUDIRT = NOT_IMPLEMENTED   
+        ,   .TAUDEPO = NOT_IMPLEMENTED   
+        ,   .TAUTYPE = NOT_IMPLEMENTED   
+        ,   .TAUSYNC = NOT_IMPLEMENTED   
+        ,   .PAINT5D = off //:<-- CPU  version of PAINT5D   
+        ,   .P5D1OGL = off //:<-- GLSL version of PAINT5D
+        
+        #undef             off //:----------------------: 01 ://
+        #undef             L_1 //:----------------------: 02 ://
+        #undef             ALL //:----------------------: 03 ://
+        #undef NOT_IMPLEMENTED //:----------------------: 04 ://
+        };
+
+        #if( AAC2020_CRASH_ON_VITAL_TODO >= 1 ) //:##########://
+
+            /** ******************************************** **/
+            /** Comment out error if not a current TODO.     **/
+            /** But do not erase from source as todo will    **/
+            /** pop back up from time to time. ............. **/
+            /** @VID_IID[ 0112 ]TIME[ 00:28:23 ]............ **/
+            /** ******************************************** **/
+
+            #error: Finish_Adding__KILTEST__Code_For_Systems    
+
+        #endif //:###########################################://
+        
+#undef  U08
+#undef  I08
+//:===========================================:LIBRARY_STRUCT://

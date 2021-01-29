@@ -50,12 +50,29 @@
         /** @VID_IID[ 0103 ]TIME[ 01:01:32 ]__MOVED__**/
         /** Always run this unit test. Tests  file   **/
         /** OPEN_GL_HAKCODE/P5D1OGL._ ************** **/
-        #define E_V extern void                      ///
+        #define      E_V  extern void                /// 
+        #define OVERRIDE  AAC2020_KILTEST.KILTEST    ///
+                                                     ///
+        if( OVERRIDE <= ( 0-1 ) ){                   ///
+                                                     ///
+            /** override: all tests off          **/ ///
+            /** Do nothing. ............         **/ ///
+            /** @VID_IID[ 0112 ]TIME[ 01:52:30 ] **/ ///
+                                                     ///
+        }else                                        ///
+        if( OVERRIDE >= ( 0+1 ) ){                   ///
                                                      ///
                 E_V aac2020_P5D1OGL_UnitTest( void );///
                     aac2020_P5D1OGL_UnitTest(      );///
+        }else                                        ///
+        if( AAC2020_KILTEST.P5D1OGL >= 1 ){          ///
                                                      ///
-        #undef  E_V                                  ///
+                E_V aac2020_P5D1OGL_UnitTest( void );///
+                    aac2020_P5D1OGL_UnitTest(      );///                           
+        };;                                          ///
+                                                     ///
+        #undef       E_V                             ///
+        #undef  OVERRIDE                             ///
         /** **************************************** **/
 
         return( 0x00 );
@@ -1424,7 +1441,7 @@ aus_015 ===>|   15-12   |   11-08   |   07-04       03-00   |
     {
     #define NUM_TES ( 4 * 11 )
     #define NUM_COL (   7    )
-    #define CUVIPIX struct AAC2020_OPEN_GL_PAINT5D_CUVIPIX
+    #define CUVIPIX struct AAC2020_P5D1OGL_CUVIPIX
     LOG("[aac2020_P5D1OGL_UTC_painpix_CTO_cuvipix:BEG]",0);
 
         //:declare_all_variables_except_test_tables:---------://
@@ -1602,7 +1619,7 @@ aus_015 ===>|   15-12   |   11-08   |   07-04       03-00   |
     #define TAB_INN_WID ( 3 * 8  ) //: num columns      : 01 ://
     #define TAB_OUT_WID (   3    ) //: 3 output columns : 02 ://
     #define NUM_TESTS   ( 39 / 3 ) //: 3 U16's per test.: 03 ://
-    #define CUVIPIX     struct AAC2020_OPEN_GL_PAINT5D_CUVIPIX
+    #define CUVIPIX     struct AAC2020_P5D1OGL_CUVIPIX
     #define L_1 MACRO___P5D_UTD_cuvipix_CTO_cuvbits_LIT_END__LEN
     #define L_2 MACRO___P5D_UTD_cuvipix_CTO_cuvbits_BIG_END__LEN
     #define BIG_END  aac2020_P5D_UTD_cuvipix_CTO_cuvbits_BIG_END
@@ -2001,7 +2018,7 @@ aus_015 ===>|   15-12   |   11-08   |   07-04       03-00   |
     #define TAB_INN_WID ( 3 * 8 ) /** num columns **/
     #define TAB_OUT_WID (   3   ) /** 3 output columns **/
     #define NUM_TESTS   (   8   ) /** Number Of Tests  **/
-    #define CUVIPIX     struct AAC2020_OPEN_GL_PAINT5D_CUVIPIX
+    #define CUVIPIX     struct AAC2020_P5D1OGL_CUVIPIX
     /** **************************************************** ***
         @VID_IID[ 0104 ]TIME[ 00:36:03 ]BEGAN_EXPLAINING
         @VID_IID[ 0104 ]TIME[ 00:41:40 ]DONE__EXPLAINING
