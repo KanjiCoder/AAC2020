@@ -56,14 +56,17 @@
         #define TAU      taudepo    //:  07  ://   //| # |//
         #define P5D      paint5d    //:  08  ://   //| # |//
         #define SAM   usampler2D    //:  09  ://   //| # |//
-        #define U00    uint( 0 )    //:  10  ://   //| # |//
-        #define I00     int( 0 )    //:  11  ://   //| # |//
-        #define U03    uint( 3 )    //:  12  ://   //| # |//
-        #define B_3    uint( 3 )    //:  13  ://   //| # |//
-        #define V_A                 //:  14  ://   //| # |//
-        #define FV4         vec4    //:  15  ://   //| # |//
-        #define ASS  /**NOTHING**/  //:  16  ://   //| # |//
-        #define ERR  /**NOTHING**/  //:  17  ://   //| # |//
+        #define UFF    uint(0xFF)   //:  10  ://   //| # |//
+        #define U00    uint( 0  )   //:  11  ://   //| # |//
+        #define I00     int( 0  )   //:  12  ://   //| # |//
+        #define U03    uint( 3  )   //:  13  ://   //| # |//
+        #define B_3    uint( 3  )   //:  14  ://   //| # |//
+        #define B11    uint( 3  )   //:  15  ://   //| # |//
+        #define H55    uint(0x55)   //:  16  ://   //| # |//
+        #define V_A                 //:  17  ://   //| # |//
+        #define FV4         vec4    //:  18  ://   //| # |//
+        #define ASS  /**NOTHING**/  //:  19  ://   //| # |//
+        #define ERR  /**NOTHING**/  //:  20  ://   //| # |//
     #else                                          //| # |//
                                                    //| # |//
         /** When Running As C99/C11 Code. **/      //| # |//
@@ -77,38 +80,43 @@
         #define TAU   ( 0 )         //:  07  ://   //| # |//
         #define P5D   ( 1 )         //:  08  ://   //| # |//
         #define SAM    int          //:  09  ://   //| # |//
-        #define U00    0x00         //:  10  ://   //| # |//
-        #define I00   ( 0 )         //:  11  ://   //| # |//
-        #define U03   ( 3 )         //:  12  ://   //| # |//
-        #define B_3   ( 3 )         //:  13  ://   //| # |//
-        #define V_A   void          //:  14  ://   //| # |//
+        #define UFF    0xFF         //:  10  ://   //| # |//
+        #define U00    0x00         //:  11  ://   //| # |//
+        #define I00   ( 0 )         //:  12  ://   //| # |//
+        #define U03   ( 3 )         //:  13  ://   //| # |//
+        #define B_3   ( 3 )         //:  14  ://   //| # |//
+        #define B11   ( 3 )         //:  15  ://   //| # |//
+        #define H55    0x55         //:  16  ://   //| # |//
+        #define V_A   void          //:  17  ://   //| # |//
         #define FV4   struct AAC2020_POLYOGL_FV4   //| # |//
-        #define ASS   assert        //:  16  ://   //| # |//
+        #define ASS   assert        //:  19  ://   //| # |//
         #define ERR   aac2020_p5d1ogl_Halt         //| # |//
     #endif                                         //| # |//
     //:--------------------------------------:type_macros://
     //:seven_letter_macros:------------------------------://
     #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL           //| # |//
                                                    //| # |//
-        #define FV4_MAK      vec4                  //| 1 |//
-        #define IV2_MAK     ivec2                  //| 2 |//
-        #define I32_MAK       int                  //| 3 |//
-        #define F32_MAK     float                  //| 4 |//
-        #define BIN_011 uint( 3 )                  //| 5 |//
+        #define MAK_FV4      vec4                  //| 1 |//
+        #define MAK_IV2     ivec2                  //| 2 |//
+        #define MAK_U32      uint                  //| 3 |//
+        #define MAK_I32       int                  //| 4 |//
+        #define MAK_F32     float                  //| 5 |//
+        #define BIN_011 uint( 3 )                  //| 6 |//
         #define CUVIPIX struct AAC2020_P5D1OGL_CUVIPIX   ///
-        #define TYP_F_C /** nothing **/            //| 7 |//
-        #define INN_F_C /** nothing **/            //| 8 |//
+        #define TYP_F_C /** nothing **/            //| 8 |//
+        #define INN_F_C /** nothing **/            //| 9 |//
                                                    //| # |//
     #else                                          //| # |//
                                                    //| # |//
-        #define FV4_MAK AAC2020_POLYOGL_MAK_FV4    //| 1 |//
-        #define IV2_MAK AAC2020_POLYOGL_IV2_MAK    //| 2 |//
-        #define I32_MAK AAC2020_POLYOGL_MAK_I32    //| 3 |//
-        #define F32_MAK AAC2020_POLYOGL_MAK_F32    //| 4 |//
-        #define BIN_011 ((U32)3 )                  //| 5 |//
+        #define MAK_FV4 AAC2020_POLYOGL_MAK_FV4    //| 1 |//
+        #define MAK_IV2 AAC2020_POLYOGL_MAK_IV2    //| 2 |//
+        #define MAK_U32 AAC2020_POLYOGL_MAK_U32    //| 3 |//
+        #define MAK_I32 AAC2020_POLYOGL_MAK_I32    //| 4 |//
+        #define MAK_F32 AAC2020_POLYOGL_MAK_F32    //| 5 |//
+        #define BIN_011 ((U32)3 )                  //| 6 |//
         #define CUVIPIX struct AAC2020_P5D1OGL_CUVIPIX   ///
-        #define TYP_F_C struct AAC2020_POLYOGL_FV4 //| # |//
-        #define INN_F_C F_C                        //| 8 |//
+        #define TYP_F_C struct AAC2020_POLYOGL_FV4 //| 8 |//
+        #define INN_F_C F_C                        //| 9 |//
                                                    //| # |//
     #endif                                         //| # |//
     //:------------------------------:seven_letter_macros://
@@ -1072,8 +1080,8 @@
                 /** HELLO_WORLD **/
             #endif
 
-            I32 cuv_i_x =I32_MAK( F_C.x - 0.5 );
-            I32 cuv_i_y =I32_MAK( 
+            I32 cuv_i_x =MAK_I32( F_C.x - 0.5 );
+            I32 cuv_i_y =MAK_I32( 
                 (
                     (P5D1OGL_GET_res_hig()   - 1.0 )
                    -(                F_C.y         ) 
@@ -1082,19 +1090,99 @@
             if( cuv_i_x == 0 ){ /** NOOP **/ };
             if( cuv_i_y == 0 ){ /** NOPP **/ };
 
-            UV4 uv4_p5d=(
-                T_F( P5D , IV2_MAK(cuv_i_x,cuv_i_y),0 ));;
+    ////    UV4 uv4_p5d=(
+    ////        T_F( P5D , MAK_IV2(cuv_i_x,cuv_i_y),0 ));;
+
+            U32 u32_l_0=(
+            AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Get( 
+                cuv_i_x  //:AKA[ cuvipix.i_x ]   ///
+            ,   cuv_i_y  //:AKA[ cuvipix.i_y ]   ///
+            ,         0  //:AKA[ lay_dex ]       ///
+            ,         0  //:AKA[ aus_dex ]       ///   
+            ));;////////////////////////////////////
+            U32 u32_l_1=(
+            AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Get( 
+                cuv_i_x  //:AKA[ cuvipix.i_x ]   ///
+            ,   cuv_i_y  //:AKA[ cuvipix.i_y ]   ///
+            ,         1  //:AKA[ lay_dex ]       ///
+            ,         0  //:AKA[ aus_dex ]       ///   
+            ));;////////////////////////////////////
+            U32 u32_l_2=(
+            AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Get( 
+                cuv_i_x  //:AKA[ cuvipix.i_x ]   ///
+            ,   cuv_i_y  //:AKA[ cuvipix.i_y ]   ///
+            ,         2  //:AKA[ lay_dex ]       ///
+            ,         0  //:AKA[ aus_dex ]       ///   
+            ));;////////////////////////////////////
+
+            /** @VID_IID[ 0118 ]TIME[ 00:18:23 ]    **/
+            /** This operation is nonsense. Just a  **/
+            /** placeholder piece of logic for now. **/
+    ////    U32 u32_pix=( U00  
+    ////    |   ( u32_l_0 << 24 )
+    ////    |   ( u32_l_1 << 16 )
+    ////    |   ( u32_l_2 <<  8 )
+    ////    |   (     UFF <<  0 )
+    ////    );;
+
+            U32 u32_pix =( U00 |
+                ((( U00 
+                  + ((( u32_l_0 >> 0 ) & B11) * H55)
+                  + ((( u32_l_0 >> 2 ) & B11) * H55)
+                  + ((( u32_l_0 >> 4 ) & B11) * H55)
+                  + ((( u32_l_0 >> 6 ) & B11) * H55)
+                  + ((( u32_l_0 >> 8 ) & B11) * H55)
+                  + ((( u32_l_0 >>10 ) & B11) * H55)
+                  + ((( u32_l_0 >>12 ) & B11) * H55)
+                  + ((( u32_l_0 >>14 ) & B11) * H55)
+                ) / MAK_U32( 8 ) ) 
+                << 24 )
+            |
+                ((( U00 
+                  + ((( u32_l_1 >> 0 ) & B11) * H55)
+                  + ((( u32_l_1 >> 2 ) & B11) * H55)
+                  + ((( u32_l_1 >> 4 ) & B11) * H55)
+                  + ((( u32_l_1 >> 6 ) & B11) * H55)
+                  + ((( u32_l_1 >> 8 ) & B11) * H55)
+                  + ((( u32_l_1 >>10 ) & B11) * H55)
+                  + ((( u32_l_1 >>12 ) & B11) * H55)
+                  + ((( u32_l_1 >>14 ) & B11) * H55)
+                ) / MAK_U32( 8 ) )
+                << 16 )
+            |
+                ((( U00 
+                  + ((( u32_l_2 >> 0 ) & B11) * H55)
+                  + ((( u32_l_2 >> 2 ) & B11) * H55)
+                  + ((( u32_l_2 >> 4 ) & B11) * H55)
+                  + ((( u32_l_2 >> 6 ) & B11) * H55)
+                  + ((( u32_l_2 >> 8 ) & B11) * H55)
+                  + ((( u32_l_2 >>10 ) & B11) * H55)
+                  + ((( u32_l_2 >>12 ) & B11) * H55)
+                  + ((( u32_l_2 >>14 ) & B11) * H55)
+                ) / MAK_U32( 8 ) )
+                << 8 )
+            |
+                ( UFF << 0 )
+            );;
+                
+
+            UV4 uv4_pix;
+            uv4_pix.x = ( u32_pix >> 24 ) & UFF ;
+            uv4_pix.y = ( u32_pix >> 16 ) & UFF ;
+            uv4_pix.z = ( u32_pix >>  8 ) & UFF ;
+            uv4_pix.w = ( u32_pix >>  0 ) & UFF ;
+
 
             /** @VID_IID[ 0116 ]TIME[ 01:33:00 ] ******* **/
             /** MAKE SURE[ P ]key for[ pattern ]uploads  **/
             /** to GPU and we can SEE IT. Do this        **/
             /** BEFORE making more elaborate shader code.**/
             /** *******************************************/
-            FragColor = FV4_MAK(
+            FragColor = MAK_FV4(
 
-                F32_MAK( uv4_p5d.x ) / 255.0
-            ,   F32_MAK( uv4_p5d.y ) / 255.0
-            ,   F32_MAK( uv4_p5d.z ) / 255.0
+                MAK_F32( uv4_pix.x ) / 255.0
+            ,   MAK_F32( uv4_pix.y ) / 255.0
+            ,   MAK_F32( uv4_pix.z ) / 255.0
             ,   1.0 //:Alpha
             );;
 
@@ -1130,14 +1218,17 @@
         #undef  TAU      //:  07  ://              //[ x ]//
         #undef  P5D      //:  08  ://              //[ x ]//
         #undef  SAM      //:  09  ://              //[ x ]//
-        #undef  U00      //:  10  ://              //[ x ]//
-        #undef  I00      //:  11  ://              //[ x ]//
-        #undef  U03      //:  12  ://              //[ x ]//
-        #undef  B_3      //:  13  ://              //[ x ]//
-        #undef  V_A      //:  14  ://              //[ x ]//
-        #undef  FV4      //:  15  ://              //[ x ]//
-        #undef  ASS      //:  16  ://              //[ x ]//
-        #undef  ERR      //:  17  ://              //[ x ]//
+        #undef  UFF      //:  10  ://              //[ x ]//
+        #undef  U00      //:  11  ://              //[ x ]//
+        #undef  I00      //:  12  ://              //[ x ]//
+        #undef  U03      //:  13  ://              //[ x ]//
+        #undef  B_3      //:  14  ://              //[ x ]//
+        #undef  B11      //:  15  ://              //[ x ]//
+        #undef  H55      //:  16  ://              //[ x ]//
+        #undef  V_A      //:  17  ://              //[ x ]//
+        #undef  FV4      //:  18  ://              //[ x ]//
+        #undef  ASS      //:  19  ://              //[ x ]//
+        #undef  ERR      //:  20  ://              //[ x ]//
                                                    //[ x ]//
     //:--------------------------------------:type_macros://
     //:seven_letter_macros:------------------------------://
@@ -1145,10 +1236,10 @@
     /** Decided on [MAK] for [MAKE] as our constructor   **/
     /** postfix ........................................ **/
                                                    //[ x ]//
-        #undef  FV4_MAK                            //[ 1 ]//
-        #undef  IV2_MAK                            //[ 2 ]//
-        #undef  I32_MAK                            //[ 3 ]//
-        #undef  F32_MAK                            //[ 4 ]//
+        #undef  MAK_FV4                            //[ 1 ]//
+        #undef  MAK_IV2                            //[ 2 ]//
+        #undef  MAK_I32                            //[ 3 ]//
+        #undef  MAK_F32                            //[ 4 ]//
         #undef  BIN_011                            //[ 5 ]//
         #undef  CUVIPIX                            //[ 6 ]//
         #undef  TYP_F_C                            //[ 7 ]//
