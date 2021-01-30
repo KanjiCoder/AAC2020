@@ -1,0 +1,66 @@
+    
+/** ******************************************************** ***
+
+    PIXNAME
+    PIXSAVE
+    PIXPUSH
+
+
+    PIXLOAD <-- You are here and relative to the system
+                names above and below in the LIBCHAN.
+
+    TAUDEPO
+    PAINT5D
+
+*** ******************************************************** **/
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+//: BELOW: BEFORES:                                          ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+
+    #define LIB  macro_libchan_order_PIXLOAD  //:-------: 01 ://
+    #define B_1  macro_libchan_order_PIXNAME  //:-------: 02 ://
+    #define B_2  macro_libchan_order_PIXSAVE  //:-------: 03 ://
+    #define B_3  macro_libchan_order_PIXPUSH  //:-------: 04 ://
+    #if( ! ( LIB > B_1 && LIB > B_2 && LIB > B_3 )) //:######://
+
+        /** ************************************ **/
+        /** @VID_IID[ 0117 ]TIME[ 00:00:42 ]     **/
+        /** PIXLOAD should be included after the **/
+        /** dependencies[ D_1 , D_2 , D_3 ]      **/
+        /** ************************************ **/
+
+        #error "[PIXLOAD_COMES_AFTER_THESE_SYSTEMS]"
+
+    #endif //:###############################################://
+    #undef  LIB  //:------------------------------------: 01 ://
+    #undef  B_1  //:------------------------------------: 02 ://
+    #undef  B_2  //:------------------------------------: 03 ://
+    #undef  B_3  //:------------------------------------: 04 ://
+
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+//: ABOVE: BEFORES:                                          ://
+//: BELOW: AFTERS:                                           ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+
+    #define LIB  macro_libchan_order_PIXLOAD  //:-------: 01 ://
+    #define A_1  macro_libchan_order_TAUDEPO  //:-------: 02 ://
+    #define A_2  macro_libchan_order_PAINT5D  //:-------: 03 ://
+    #if( ! ( LIB < A_1 && LIB < A_2 )) //:######://
+
+        /** ************************************ **/
+        /** @VID_IID[ 0117 ]TIME[ 00:00:42 ]     **/
+        /** PIXLOAD should be included after the **/
+        /** dependencies[ D_1 , D_2 , D_3 ]      **/
+        /** ************************************ **/
+
+        #error "[PIXLOAD_COMES_AFTER_THESE_SYSTEMS]"
+
+    #endif //:###############################################://
+    #undef  LIB  //:------------------------------------: 01 ://
+    #undef  A_1  //:------------------------------------: 02 ://
+    #undef  A_2  //:------------------------------------: 03 ://
+
+
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+//: ABOVE: AFTERS:                                           ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://

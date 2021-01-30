@@ -2897,6 +2897,8 @@
             if( chr_key == KEY_P5D.p5d_pat ){
 
                 aac2020_paint5d_DrawDefaultAuset_001( );
+                AAC2020_PIXPUSH_t2d_PAINT5D( );
+
                 printf("[CMD:p5d_pat]\n");
                 fflush( stdout );
             };;
@@ -3418,18 +3420,18 @@
 
 
 
-            AAC2020_PIXLOAD_TestPattern(   &( DAT ) );
-            AAC2020_PIXLOAD_UploadTexture( &( DAT ) );
+            AAC2020_PIXPUSH_TestPattern(   &( DAT ) );
+            AAC2020_PIXPUSH_UploadTexture( &( DAT ) );
             
 
             //:get_paint5d_sampler_location:-----------------://
-            #define HAS_CHK AAC2020_PIXLOAD_HasSampler
+            #define HAS_CHK AAC2020_PIXPUSH_HasSampler
             #define INF_DEC aac2020_paint5d_Info_dec
 
                 //:#_GPUDATA_INPUT_OBJECT_IS_OUTPUT_OBJECT_#://
-                AAC2020_PIXLOAD_sam_has    ( &( DAT ) );
-                AAC2020_PIXLOAD_sam_loc    ( &( DAT ) );
-                AAC2020_PIXLOAD_sam_val_PUT( &( DAT ) );
+                AAC2020_PIXPUSH_sam_has    ( &( DAT ) );
+                AAC2020_PIXPUSH_sam_loc    ( &( DAT ) );
+                AAC2020_PIXPUSH_sam_val_PUT( &( DAT ) );
 
                 if( DAT.sam_has >= 1 && DAT.sam_loc <=(0 - 1) ){
                     ERR("[FULL_OF_LIES:@VDAWEA@:001]");
@@ -3455,7 +3457,7 @@
 
                 /** Update Texture Sampler Uniform On GPU **/
 
-                aac2020_pixload_PushSampler(  &( DAT ) );
+                aac2020_PIXPUSH_PushSampler(  &( DAT ) );
 
                 /** Persist Changes: **/
 

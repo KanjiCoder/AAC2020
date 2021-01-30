@@ -475,6 +475,7 @@
 #undef  FATALERR  //: 06 :-----------------------------------://
 //:===================================:SAVE_TEXT_FILE_TO_DISK://
 //:SIMPLE_KEY_HANDLER:=======================================://
+#define CHR      const char
 #define U32      uint32_t /** GCC: <stdint.h> **/
 #define I32       int32_t /** GCC: <stdint.h> **/
 #define INFO     aac2020_fragbed_Info
@@ -499,69 +500,49 @@
 #define BED_008  AAC2020_KEYBIND.FRAGBED.bed_008
 #define BED_009  AAC2020_KEYBIND.FRAGBED.bed_009
 
-    I32
-    aac2020_fragbed_KeyInn_Simple(
-        signed char chr_key
+
+
+//  I32
+//  aac2020_fragbed_KeyInn_Simple(
+//      signed char chr_key
+//  )
+//  {
+//      CHR* str_fra =((void*)0);
+//      I32  dex_fou =( 0 - 660077 );
+//      
+//      aac2020_fragbed_KIS_chr_key_CTO_str_fra_AND_dex_fou(
+//                          chr_key , &(str_fra) ,&(dex_fou) );;
+//  
+//  }
+
+    void /********* KIS == KeyInn_Simple ******************* **/
+    aac2020_fragbed_KIS_chr_key_CTO_dex_fou_AND_str_fra(
+        CHR          chr_key
+    ,   I32   *BYREF_dex_fou
+    ,   CHR*  *BYREF_str_fra
     )
     {
-        assert( 48 == '0' );
-        assert( 57 == '9' );
-        if( 0
-        ||  chr_key < '0'
-        ||  chr_key > '9'   
-        ){
-            /** is_valid_num_key == FALSE **/
+        //:SET_TRAPS_ON_RETURN_VARS:-------------------------://
 
-            /** ******************************************** ***
-                @VID_IID[ 0066 ]TIME[ 01H 12M 47S ] 
+            /**   dex_fou : inDEX_FOUnd (index of found item)**/
+            /**   dex_fou == shader_found (when dex_fou >= 1)**/
+            
+            int      dex_fou =(  0 - 2 /**MUST_BE_NEGATIVE**/); 
+            const char*  str =((void*)0); //:frag_shader_str
+            
+        //:-------------------------:SET_TRAPS_ON_RETURN_VARS://
 
-                EXPECTS_VALID_SUB_SYSTEM_KEY_2020 :
-
-                Private Version Of Keyboard Handler Always 
-                Expects taht the key it is given is a valid
-                key to change the current sub-system
-                shader in focus.
-            *** ******************************************** **/
-
+        //: #_PRIVATE_FRAGBED_FUNC_REQUIRES_VALID_INPUT_# ://
+        assert(       48 == '0' );  assert( 57 == '9' );
+        if( 0 ||  chr_key < '0'   ||    chr_key > '9' ){
+            /** #_FRAGBED_INVALID_NUMBER_KEY_# **/
             FUCK_YOU("[EXPECTS_VALID_SUB_SYSTEM_KEY_2020]");
-
-            /** ******************************************** **/
         };;
 
-            /** ******************************************** ***  
-            @VID_IID[ 0066 ]TIME[ 0H 55M 59S ]                
-                                                              
-            PRIVATE version of AAC2020_FRAGBED_KeyInn_Simple  
-            This version assumes[ chr_key ]is a valid         
-            key to load a sub-system shader.                  
-                                                              
-            At this time it means an ascii value              
-            between '0' and '9'                               
-            *** ******************************************** **/ 
-
-        I32 is_valid_num_key =( 
-            ( chr_key >= '0' && chr_key <= '9' )
-        );;
+        #define C_K      chr_key
+        I32     is_valid_num_key =(( C_K >='0' && C_K <='9'));;
         assert( is_valid_num_key >= 1 );
-
-        //:AKA[ AAC2020_ReadKeySimple ]
-        /** ************************************************ ***
-
-        @VID_IID[ 0066 ]TIME[ 0H 6M 6S ]!!!!!!!!!!!!!!!!!!!!!!!!
-        UPDATE[ 2020_12_28 ]
-        DO NOT USE CALLBACKS FOR THIS. DO NOT WIRE UP 
-        AS A CALLBACK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-        Default ( ONLY ) keyboard callback for FRAGBED    
-        USEAGE:                                           
-            AAC2020_GINAWIN_SimpleKeyHandler_SetCallback(  
-            &( AAC2020_FRAGBED_KeyInn_Simple ) );;  
-        *** ************************************************ **/
-
-        /** 404: Shader Not Found. Don't take seriously.     **/
-        /**      Any negative number will do.                **/
-
-        int   shader_index_loaded=( 0 - 404 ); 
+        #undef  C_K
 
         //:FTI:Forgot_To_Init:
         if( AAC2020_FRAGBED_inited <= 0 ){
@@ -574,6 +555,7 @@
             INFO(    "[AAC2020_FRAGBED_KeyInn_Simple]...\n");
             INFO_CHR("[FRAGBED:KEY]:%c\n" , chr_key );
 
+            #define P_0 ((void*)0)
             #define P_1 AAC2020_FRAGBED_loaded_001_ptr //:###://
             #define P_2 AAC2020_FRAGBED_loaded_002_ptr //:###://
             #define P_3 AAC2020_FRAGBED_loaded_003_ptr //:###://
@@ -584,41 +566,36 @@
             #define P_8 AAC2020_FRAGBED_loaded_008_ptr //:###://
             #define P_9 AAC2020_FRAGBED_loaded_009_ptr //:###://
 
-            /**   dex_fou : inDEX_FOUnd (index of found item)**/
-            /**   dex_fou == shader_found (when dex_fou >= 1)**/
-
-            int   dex_fou =(   0    ); 
-
-            if(   shader_index_loaded ){ /**@QUELCHNOTUSED@**/};
-            const char*    str =((void*)0); //:frag_shader_str
-
             //:#DO_SWITCH#:==================================://
             #define KEY chr_key
-            #define BIF if( dex_fou > 0 ){break;};
+            #define BIF if( dex_fou >= 0 ){break;};
             do{
-                if( KEY == BED_001 ){ str = P_1; dex_fou = 1; };
-            BIF
-                if( KEY == BED_002 ){ str = P_2; dex_fou = 2; };
-            BIF
-                if( KEY == BED_003 ){ str = P_3; dex_fou = 3; };
-            BIF
-                if( KEY == BED_004 ){ str = P_4; dex_fou = 4; };
-            BIF
-                if( KEY == BED_005 ){ str = P_5; dex_fou = 5; };
-            BIF
-                if( KEY == BED_006 ){ str = P_6; dex_fou = 6; };
-            BIF
-                if( KEY == BED_007 ){ str = P_7; dex_fou = 7; };
-            BIF
-                if( KEY == BED_008 ){ str = P_8; dex_fou = 8; };
-            BIF
-                if( KEY == BED_009 ){ str = P_9; dex_fou = 9; };
+                if( KEY == BED_000 ){ dex_fou = 0; str = P_0; };
+            BIF    
+                if( KEY == BED_001 ){ dex_fou = 1; str = P_1; };
+            BIF                                               
+                if( KEY == BED_002 ){ dex_fou = 2; str = P_2; };
+            BIF                                               
+                if( KEY == BED_003 ){ dex_fou = 3; str = P_3; };
+            BIF                                               
+                if( KEY == BED_004 ){ dex_fou = 4; str = P_4; };
+            BIF                                               
+                if( KEY == BED_005 ){ dex_fou = 5; str = P_5; };
+            BIF                                               
+                if( KEY == BED_006 ){ dex_fou = 6; str = P_6; };
+            BIF                                               
+                if( KEY == BED_007 ){ dex_fou = 7; str = P_7; };
+            BIF                                               
+                if( KEY == BED_008 ){ dex_fou = 8; str = P_8; };
+            BIF                                               
+                if( KEY == BED_009 ){ dex_fou = 9; str = P_9; };
             BIF
             }while( 0 );
             #undef  KEY   /** chr_key , key pressed **/
             #undef  BIF   /** BIF:Break_If_Found    **/
             //:==================================:#DO_SWITCH#://
 
+            #undef  P_0  //:#################################://
             #undef  P_1  //:#################################://
             #undef  P_2  //:#################################://
             #undef  P_3  //:#################################://
@@ -629,6 +606,42 @@
             #undef  P_8  //:#################################://
             #undef  P_9  //:#################################://
 
+        }else
+        if( is_valid_num_key <= 0 ){
+
+            /** 1FU: ONE(1) FUCK YOU **/
+            FUCK_YOU("[AAC2020_FRAGBED:IGNORED_KEY:1FU]\n");
+
+        }else{ //:[ is_valid_num_key ?  ]
+
+            /** DFU: DOUBLE( 2X ) FUCK YOU **/
+            FUCK_YOU("[AAC2020_FRAGBED:INVALID_KEY:DFU]\n");
+
+        };;
+
+
+        //:return_via_output_parameters:---------------------://
+
+            /** @_REFERENCES_ARE_NEVER_NULL_@ **/
+            assert( ((void*)0) != BYREF_dex_fou );
+            assert( ((void*)0) != BYREF_str_fra );
+            
+            (*BYREF_dex_fou)=( dex_fou );
+            (*BYREF_str_fra)=(     str );
+           
+        //:---------------------:return_via_output_parameters://
+    }
+
+    void /********* KIS == KeyInn_Simple ******************* **/
+    aac2020_fragbed_KIS_dex_fou_AND_str_fra_EXE_rfs_GET_sil(
+    /**/I32             dex_fou
+    ,   CHR*                        str_fra
+    ,   I32                                      *BYREF_sil
+    )
+    {
+       //: #_FRAGBED_CODE_SHOULD___NOT___USE_CALLBACKS_#
+        /** #_404_SHADER_NOT_FOUND_# ................ **/
+        int   shader_index_loaded=( 0 - 404 ); 
 
             int should_re_load_the_shader_uniforms=( 0 );
             
@@ -640,8 +653,8 @@
                 //: the screen will display the              ://
                 //: letters: "synerr" for "syntax_error"     ://
                 AAC2020_GRAQUAD_ReLoadFragShader_SyntaxErrorsOk(
-                    str           //: frag_shader_str
-                ,   strlen( str ) //: frag_shader_len
+                            str_fra   //: frag_shader_str
+                ,   strlen( str_fra ) //: frag_shader_len
                 );;
 
                 should_re_load_the_shader_uniforms = ( 1 );
@@ -649,7 +662,11 @@
             }else
             if( dex_fou <= 0 ){
 
-                if( '0' == chr_key ){
+                //:------------------------------------------://
+                //:@VID_IID[ 0117 ]TIME[ 02:39:00 ] ---------://
+                //:------------------------------------------://
+                //( '0' == chr_key )
+                if(  0  == dex_fou ){
 
                     /** Any time you call a shader reload    **/
                     /** function, ( AAC2020_GRAQUAD_RFS_*** )**/
@@ -711,15 +728,47 @@
                 #endif
             };;
 
-        }else
-        if( is_valid_num_key <= 0 ){
+        //:return_via_output_parameter:----------------------://
 
-            FUCK_YOU("[AAC2020_FRAGBED:IGNORED_KEY]\n");
-        };;
+            assert(   shader_index_loaded >= 0 );
+            assert(   shader_index_loaded <= 9 );
 
-        assert(   shader_index_loaded >= 0 );
-        assert(   shader_index_loaded <= 9 );
-        return(   shader_index_loaded      );
+            /** @_BYREF_INPUTS_ARE_NEVER_NULL_@ **/
+            assert( ((void*)0) != BYREF_sil );
+
+            (*BYREF_sil)=( shader_index_loaded  );
+
+        //:----------------------:return_via_output_parameter://
+    }
+
+    I32
+    aac2020_fragbed_KeyInn_Simple(
+        signed char chr_key
+    )
+    {
+
+        ////////////////////////////////////////////////////////
+
+        I32  dex_fou =( 0 - 660077 );
+        CHR* str_fra =((void*)0);
+        
+        /** KIS == KeyInn_Simple **/
+        aac2020_fragbed_KIS_chr_key_CTO_dex_fou_AND_str_fra(
+                            chr_key  ,&(dex_fou), &(str_fra) );;
+
+        ////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////
+
+        I32 sil =( 0-999 ); /** sil==shader_index_loaded **/
+
+        /** KIS == KeyInn_Simple **/
+        aac2020_fragbed_KIS_dex_fou_AND_str_fra_EXE_rfs_GET_sil(
+                            dex_fou  ,  str_fra  ,        &(sil)
+        );;
+
+        ////////////////////////////////////////////////////////
+
+        return( sil /** shader_index_loaded **/ );
     }
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
@@ -779,26 +828,27 @@
     }
 
 //: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
-#undef  U32                                           //: 01 ://
-#undef  I32                                           //: 02 ://
-#undef  INFO                                          //: 03 ://
-#undef  INFO_CHR                                      //: 04 ://
-#undef  FUCK_YOU                                      //: 05 ://
+#undef  CHR                                           //: 01 ://
+#undef  U32                                           //: 02 ://
+#undef  I32                                           //: 03 ://
+#undef  INFO                                          //: 04 ://
+#undef  INFO_CHR                                      //: 05 ://
+#undef  FUCK_YOU                                      //: 06 ://
 //: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://                                               //: -- ://
-#undef  FN_01                                         //: 06 ://
-#undef  FN_02                                         //: 07 ://
-#undef  FN_03                                         //: 08 ://
+#undef  FN_01                                         //: 07 ://
+#undef  FN_02                                         //: 08 ://
+#undef  FN_03                                         //: 09 ://
 //: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
-#undef  BED_000                                       //: 09 ://
-#undef  BED_001                                       //: 10 ://
-#undef  BED_002                                       //: 11 ://
-#undef  BED_003                                       //: 12 ://
-#undef  BED_004                                       //: 13 ://
-#undef  BED_005                                       //: 14 ://
-#undef  BED_006                                       //: 15 ://
-#undef  BED_007                                       //: 16 ://
-#undef  BED_008                                       //: 17 ://
-#undef  BED_009                                       //: 18 ://
+#undef  BED_000                                       //: 10 ://
+#undef  BED_001                                       //: 11 ://
+#undef  BED_002                                       //: 12 ://
+#undef  BED_003                                       //: 13 ://
+#undef  BED_004                                       //: 14 ://
+#undef  BED_005                                       //: 15 ://
+#undef  BED_006                                       //: 16 ://
+#undef  BED_007                                       //: 17 ://
+#undef  BED_008                                       //: 18 ://
+#undef  BED_009                                       //: 19 ://
 //:=======================================:SIMPLE_KEY_HANDLER://
 //:INIT:=====================================================://
 #define U32  uint32_t /** GCC: <stdint.h> **/

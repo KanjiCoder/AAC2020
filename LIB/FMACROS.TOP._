@@ -37,7 +37,7 @@ _Static_assert( AAC2020_INCLUDE_GRAQUAD == 18 ,       "18");
 //:==================================================:GRAQUAD://
 //:TAUDEPO:==================================================://
 #if(            AAC2020_INCLUDE_TAUDEPO >=  1 )
-_Static_assert( AAC2020_INCLUDE_TAUDEPO == 28 ,       "28");
+_Static_assert( AAC2020_INCLUDE_TAUDEPO == 29 ,       "29");
 
     #define  FMACROS_TAUDEPO_LoopTick   AAC2020_TAUDEPO_LoopTick
 #endif
@@ -48,7 +48,7 @@ _Static_assert( AAC2020_INCLUDE_TAUDEPO == 28 ,       "28");
 //:==================================================:TAUDEPO://
 //:TAUSYNC:==================================================://
 #if(            AAC2020_INCLUDE_TAUSYNC >=  1 )
-_Static_assert( AAC2020_INCLUDE_TAUSYNC == 30 ,       "30");
+_Static_assert( AAC2020_INCLUDE_TAUSYNC == 31 ,       "31");
 
     #define  FMACROS_TAUSYNC_LoopTick   AAC2020_TAUSYNC_LoopTick
 #endif
@@ -85,6 +85,7 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 30 ,       "30");
     CPUNIFO
     PIXSAVE
     PIXBACK
+    PIXPUSH
     PIXLOAD
     POLYOGL
     TAUDIRT
@@ -165,6 +166,14 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 30 ,       "30");
 #define      FMACROS_PIXBACK_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:PIXBACK://
+//:InitNone:PIXPUSH:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_PIXPUSH >=  1 )
+#define      FMACROS_PIXPUSH_InitNone AAC2020_PIXPUSH_InitNone
+#endif
+#if( AAC2020_INCLUDE_PIXPUSH == 0 )
+#define      FMACROS_PIXPUSH_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:PIXPUSH://
 //:InitNone:PIXLOAD:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_PIXLOAD >=  1 )
 #define      FMACROS_PIXLOAD_InitNone AAC2020_PIXLOAD_InitNone
@@ -383,7 +392,7 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 30 ,       "30");
     PIXNAME (## ) PIXelNAME: Names+Data for every subsystem.
     PIXSAVE (## ) PIXel_SAVER: Saves system data to hard disk
     GPUDATA (## ) Temp Container For Passing Around PIXNAME data
-    PIXLOAD (## ) Used to load [PIXNAME/GPUDATA] onto GPU.
+    PIXPUSH (## ) Used to load [PIXNAME/GPUDATA] onto GPU.
     TAUDEPO (## ) Texture_As_Uniform: DEPOt
     PAINT5D (## ) Initialize and control PIXNAME_paint5d data
 

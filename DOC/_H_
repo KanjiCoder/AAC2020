@@ -9,6 +9,88 @@
     //[   VIDEO COMMENT TIMESTAMP EXAMPLE   ]//
 *** ******************************************************** ***
 
+
+@_REFERENCES_ARE_NEVER_NULL_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @VID_IID[ 0117 ]TIME[ 02:00:00 ] 
+
+    When emulating a C++ "pass by reference" the
+    reference pointer can never be null. Because a
+    reference can.
+    
+        1. Never be null.
+        2. Never be re-assigned.
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@_REFERENCES_ARE_NEVER_NULL_@
+#_404_SHADER_NOT_FOUND_#########################################
+
+    /** 404: Shader Not Found. Don't take seriously.     **/
+    /**      Any negative number will do.                **/
+
+#########################################_404_SHADER_NOT_FOUND_#
+#_FRAGBED_CODE_SHOULD___NOT___USE_CALLBACKS_####################
+
+    //:AKA[ AAC2020_ReadKeySimple ]
+    /** ************************************************ ***
+    @VID_IID[ 0066 ]TIME[ 0H 6M 6S ]!!!!!!!!!!!!!!!!!!!!!!!!
+    UPDATE[ 2020_12_28 ]
+    DO NOT USE CALLBACKS FOR THIS. DO NOT WIRE UP 
+    AS A CALLBACK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    
+    Default ( ONLY ) keyboard callback for FRAGBED    
+    USEAGE:                                           
+        AAC2020_GINAWIN_SimpleKeyHandler_SetCallback(  
+        &( AAC2020_FRAGBED_KeyInn_Simple ) );;  
+    *** ************************************************ **/
+
+####################_FRAGBED_CODE_SHOULD___NOT___USE_CALLBACKS_#
+#_PRIVATE_FRAGBED_FUNC_REQUIRES_VALID_INPUT_####################
+
+    /** ******************************************** ***  
+    @VID_IID[ 0066 ]TIME[ 0H 55M 59S ]                
+                                                    
+    PRIVATE version of AAC2020_FRAGBED_KeyInn_Simple  
+    This version assumes[ chr_key ]is a valid         
+    key to load a sub-system shader.                  
+                                                    
+    At this time it means an ascii value              
+    between '0' and '9'                               
+    *** ******************************************** **/ 
+
+####################_PRIVATE_FRAGBED_FUNC_REQUIRES_VALID_INPUT_#
+#_FRAGBED_INVALID_NUMBER_KEY_###################################
+    
+    /////////////////////////////////////////////
+    @VID_IID[ 0117 ]TIME[ 01:30:30 ]
+    Large comments extracted from this block of
+    code in FRAGBED.F._ file.
+    /////////////////////////////////////////////
+
+    assert( 48 == '0' );
+    assert( 57 == '9' );
+    if( 0
+    ||  chr_key < '0'
+    ||  chr_key > '9'   
+    ){
+        /** is_valid_num_key == FALSE **/
+    
+        /** ******************************************** ***
+            @VID_IID[ 0066 ]TIME[ 01H 12M 47S ] 
+    
+            EXPECTS_VALID_SUB_SYSTEM_KEY_2020 :
+    
+            Private Version Of Keyboard Handler Always 
+            Expects that the key it is given is a valid
+            key to change the current sub-system
+            shader in focus.
+        *** ******************************************** **/
+    
+        FUCK_YOU("[EXPECTS_VALID_SUB_SYSTEM_KEY_2020]");
+    
+        /** ******************************************** **/
+    };;
+
+###################################_FRAGBED_INVALID_NUMBER_KEY_#
 #_INIT_NONE_HOW_################################################
 
     @VID_IID[ 0114 ]TIME[ 01:34:50 ]
@@ -3465,8 +3547,8 @@
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@TAU_PUT@@TAU_GET@
 #FILL_PATTERN###################################################
 
-    [ fill-pattern ]SEE[ AAC2020_PIXLOAD_TestPattern ]
-    [ fill pattern ]SEE[ AAC2020_PIXLOAD_TestPattern ]
+    [ fill-pattern ]SEE[ AAC2020_PIXPUSH_TestPattern ]
+    [ fill pattern ]SEE[ AAC2020_PIXPUSH_TestPattern ]
 
 ###################################################FILL_PATTERN#
 @NEVER_SILENCE_ME@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -3510,10 +3592,10 @@
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@VDAWEA@
 #_GPUDATA_INPUT_OBJECT_IS_OUTPUT_OBJECT_########################
 
-        AAC2020_PIXLOAD_sam_get <-- DONT USE.
+        AAC2020_PIXPUSH_sam_get <-- DONT USE.
 
-        PIK: AAC2020_PIXLOAD_sam_loc( &gpudata ) <--[A]
-        PIK: AAC2020_PIXLOAD_sam_val( &gpudata ) <--[B]
+        PIK: AAC2020_PIXPUSH_sam_loc( &gpudata ) <--[A]
+        PIK: AAC2020_PIXPUSH_sam_val( &gpudata ) <--[B]
 
         [A]: Loads sampler location into: gpudata->sam_loc
         [B]: Loads sampler    value into: gpudata->sam_val
@@ -3550,9 +3632,9 @@
 
     Because we look before we leap, we should always see
     that a texture sampler is flagged as existing inside
-    the[ aac2020_pixload_PushSampler ]function.
+    the[ aac2020_PIXPUSH_PushSampler ]function.
 
-    REMOVED_THIS_COMMENTARY_FROM:PIXLOAD.F._ :
+    REMOVED_THIS_COMMENTARY_FROM:PIXPUSH.F._ :
 
         Do nothing. Just always re-fetch the        
         Uniform after uploading the texture data.   
@@ -3566,7 +3648,7 @@
 #_WE_NEVER_USE___ZERO_FOR___SAM_VAL_############################
 
     In reference to this.... AGAIN!
-    #_2ND_GUESSING_PIXLOAD_TEX_SAM_ERR_#    
+    #_2ND_GUESSING_PIXPUSH_TEX_SAM_ERR_#    
 
     sam_val cannot be ZERO because WE DONT USE ZERO
     AS A TEXTURE SLOT IN THIS CODE BASE.
@@ -3598,7 +3680,7 @@
     [aac2020_paint5d_Okay]:
             [OH_FUCK...Code_Below_Was_Never_Ran_Before]
 
-    [FATAL_ERROR:AAC2020_pixload]:[IMPROPER_SETUP:sam_loc]
+    [FATAL_ERROR:AAC2020_PIXPUSH]:[IMPROPER_SETUP:sam_loc]
     [ENTER_TO_EXIT]:
     ************************************************************
 
@@ -4501,7 +4583,7 @@
 
 ################################_sam_val_ALWAYS_EQUALS_tex_lot_#
 ################################_tex_lot_ALWAYS_EQUALS_sam_val_#
-#_2ND_GUESSING_PIXLOAD_TEX_SAM_ERR_#############################
+#_2ND_GUESSING_PIXPUSH_TEX_SAM_ERR_#############################
                                          
         Actually... This could happen because     
         AAC2020_GPUDATA_InitInstanceAll may have  
@@ -4514,7 +4596,7 @@
         Wait... it is an error but only if....    
         Only if... "tex_sam_HAS" is true.         
 
-#############################_2ND_GUESSING_PIXLOAD_TEX_SAM_ERR_#
+#############################_2ND_GUESSING_PIXPUSH_TEX_SAM_ERR_#
 #TEX_IMAGE_2D_CORRECTION########################################
 
     SEARCHED_FOR[ texImage2D ]WHAT_YOU_WANT[ glTexImage2D ]
