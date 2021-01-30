@@ -758,14 +758,51 @@
 
         ////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////
+        #define FUN( func_name ) aac2020_fragbed_##func_name
+    ////aac2020_fragbed_KIS_dex_fou_AND_str_fra_EXE_rfs_GET_sil
 
-        I32 sil =( 0-999 ); /** sil==shader_index_loaded **/
+        /** Until other wise noted. Shader index loaded  ....**/
+        /** is the current shader in focus.............. ....**/
+        /** sil==shader_index_loaded  .................. ....**/
+        I32 sil =( AAC2020_CEDITOR_dex_edi ); 
+        
+        if( dex_fou != ((I32)AAC2020_CEDITOR_dex_edi) ){
 
-        /** KIS == KeyInn_Simple **/
-        aac2020_fragbed_KIS_dex_fou_AND_str_fra_EXE_rfs_GET_sil(
-                            dex_fou  ,  str_fra  ,        &(sil)
-        );;
+            /** KIS == KeyInn_Simple **/
+            FUN( KIS_dex_fou_AND_str_fra_EXE_rfs_GET_sil )(
+                     dex_fou  ,  str_fra  ,        &(sil)
+            );;
+                
+        }else{
+            
+            /** ******************************************** **/
+            /** @VID_IID[ 0117 ]TIME[ 02:54:40 ]             **/
+            /** PAINT5D does NOT re-init if PAINT5D is       **/
+            /** ALREADY LOADED. Which is good... Unless      **/
+            /** fragbed (which paint5D is BUILT ON TOP OF    **/
+            /** decides IT WILL RE-INIT. This will whipe     **/
+            /** the PAINT5D specific setup code that         **/
+            /** was ran ON TOP OF FRAGBED.                   **/
+            /** ******************************************** **/
 
+            aac2020_fragbed_Info(
+                "[PAINT5D_AND_OTHER_SUB_SYSTEMS_THAT_ARE]\n"
+                "[BUILT_ON_TOP_OF_FRAGBED_DO_NOT_RE_INIT]\n"
+                "[IF_WE_SWITCH_FROM_SHADER_INDEX__00__TO]\n"
+                "[SHADER_INDEX__00__(Same_Indexes)______]\n"
+                "[Because_The_Init_Would_Be_A_Waste.....]\n"
+                "[Our_Conceputal_Base_Class_FRAGBED.....]\n"
+                "[Must_Also_Abide_By_This_Rule_To_Avoid_]\n"
+                "[Fragbed_from_tearing_down_the.........]\n"
+                "[SubSystems_Built_On_Top_Of_It.........]\n"
+                "[For_Example:PAINT5D...................]\n"
+            );;
+            aac2020_fragbed_Info(
+                "[OK:FRAGBED_SKIP_RELOAD_TO_AVOID_DATA_WHIPE]"
+            );;
+        };;
+    ////aac2020_fragbed_KIS_dex_fou_AND_str_fra_EXE_rfs_GET_sil
+        #undef FUN
         ////////////////////////////////////////////////////////
 
         return( sil /** shader_index_loaded **/ );
