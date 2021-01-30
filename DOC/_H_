@@ -9,7 +9,31 @@
     //[   VIDEO COMMENT TIMESTAMP EXAMPLE   ]//
 *** ******************************************************** ***
 
+#_BITPACKED_INTO_EXE_TEST_AUSET_PLAN_###########################
 
+    TODO: Create a comman line utility that uses lodePNG
+          to convert a 256x256 bitmap into hexcodes
+          we can embed into C source code.
+
+If we use a 256*256 pure black and white bitmap
+to encode 3 different layered designs in a quarkmap
+like structure we will need:
+
+65,536 BITS   ( 256 * 256 == 65,536 )
+
+65536 / 32 bits per UINT32 hex code ==> 2,048 hex codes
+
+( 409 == 2,048 / 5 )
+409 lines like this to create a default auset tile
+design to encode into the engine.
+0xFFFFFFFF , 0xFFFFFFFF , 0xFFFFFFFF , 0xFFFFFFFF , 0xFFFFFFFF  
+0xFFFFFFFF , 0xFFFFFFFF , 0xFFFFFFFF , 0xFFFFFFFF , 0xFFFFFFFF  
+0xFFFFFFFF , 0xFFFFFFFF , 0xFFFFFFFF , 0xFFFFFFFF , 0xFFFFFFFF  
+0xFFFFFFFF , 0xFFFFFFFF , 0xFFFFFFFF , 0xFFFFFFFF , 0xFFFFFFFF  
+0xFFFFFFFF , 0xFFFFFFFF , 0xFFFFFFFF , 0xFFFFFFFF , 0xFFFFFFFF  
+0xFFFFFFFF , 0xFFFFFFFF , 0xFFFFFFFF , 0xFFFFFFFF , 0xFFFFFFFF  
+
+###########################_BITPACKED_INTO_EXE_TEST_AUSET_PLAN_#
 @_REFERENCES_ARE_NEVER_NULL_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
     @VID_IID[ 0117 ]TIME[ 02:00:00 ] 
