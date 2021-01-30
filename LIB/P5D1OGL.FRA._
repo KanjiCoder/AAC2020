@@ -47,62 +47,68 @@
                                                    //| # |//
         /** When Running As GLSL Code. **/         //| # |//
                                                    //| # |//
-        #define U32         uint    //:  01  ://   //| # |//
-        #define I32          int    //:  02  ://   //| # |//
-        #define IV2        ivec2    //:  03  ://   //| # |//
-        #define UV4        uvec4    //:  04  ://   //| # |//
-        #define T_F   texelFetch    //:  05  ://   //| # |//
-        #define P5D      paint5d    //:  06  ://   //| # |//
-        #define SAM   usampler2D    //:  07  ://   //| # |//
-        #define U00    uint( 0 )    //:  08  ://   //| # |//
-        #define I00     int( 0 )    //:  09  ://   //| # |//
-        #define U03    uint( 3 )    //:  10  ://   //| # |//
-        #define B_3    uint( 3 )    //:  11  ://   //| # |//
-        #define V_A                 //:  12  ://   //| # |//
-        #define FV4         vec4    //:  13  ://   //| # |//
-        #define ASS  /**NOTHING**/  //:  14  ://   //| # |//
-        #define ERR  /**NOTHING**/  //:  15  ://   //| # |//
+        #define F32        float    //:  01  ://   //| # |//
+        #define U32         uint    //:  02  ://   //| # |//
+        #define I32          int    //:  03  ://   //| # |//
+        #define IV2        ivec2    //:  04  ://   //| # |//
+        #define UV4        uvec4    //:  05  ://   //| # |//
+        #define T_F   texelFetch    //:  06  ://   //| # |//
+        #define TAU      taudepo    //:  07  ://   //| # |//
+        #define P5D      paint5d    //:  08  ://   //| # |//
+        #define SAM   usampler2D    //:  09  ://   //| # |//
+        #define U00    uint( 0 )    //:  10  ://   //| # |//
+        #define I00     int( 0 )    //:  11  ://   //| # |//
+        #define U03    uint( 3 )    //:  12  ://   //| # |//
+        #define B_3    uint( 3 )    //:  13  ://   //| # |//
+        #define V_A                 //:  14  ://   //| # |//
+        #define FV4         vec4    //:  15  ://   //| # |//
+        #define ASS  /**NOTHING**/  //:  16  ://   //| # |//
+        #define ERR  /**NOTHING**/  //:  17  ://   //| # |//
     #else                                          //| # |//
                                                    //| # |//
         /** When Running As C99/C11 Code. **/      //| # |//
                                                    //| # |//
-        #define U32   uint32_t                     //| # |//
-        #define I32    int32_t                     //| # |//
+        #define F32      float      //:  01  ://   //| # |//
+        #define U32   uint32_t      //:  02  ://   //| # |//
+        #define I32    int32_t      //:  03  ://   //| # |//
         #define IV2   struct AAC2020_POLYOGL_IV2   //| # |//
         #define UV4   struct AAC2020_POLYOGL_UV4   //| # |//
-        #define T_F   AAC2020_POLYOGL_tex_fet //| # |//
-        #define P5D   ( 0 )                        //| # |//
-        #define SAM    int                         //| # |//
-        #define U00    0x00                        //| # |//
-        #define I00   ( 0 )                        //| # |//
-        #define U03   ( 3 )                        //| # |//
-        #define B_3   ( 3 )                        //| # |//
-        #define V_A   void                         //| # |//
+        #define T_F   AAC2020_POLYOGL_tex_fet      //| # |//
+        #define TAU   ( 0 )         //:  07  ://   //| # |//
+        #define P5D   ( 1 )         //:  08  ://   //| # |//
+        #define SAM    int          //:  09  ://   //| # |//
+        #define U00    0x00         //:  10  ://   //| # |//
+        #define I00   ( 0 )         //:  11  ://   //| # |//
+        #define U03   ( 3 )         //:  12  ://   //| # |//
+        #define B_3   ( 3 )         //:  13  ://   //| # |//
+        #define V_A   void          //:  14  ://   //| # |//
         #define FV4   struct AAC2020_POLYOGL_FV4   //| # |//
-        #define ASS   assert                       //| # |//
+        #define ASS   assert        //:  16  ://   //| # |//
         #define ERR   aac2020_p5d1ogl_Halt         //| # |//
     #endif                                         //| # |//
     //:--------------------------------------:type_macros://
     //:seven_letter_macros:------------------------------://
     #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL           //| # |//
                                                    //| # |//
-        #define FV4_MAK      vec4                  //| # |//
-        #define I32_MAK       int      
-        #define F32_MAK     float
-        #define BIN_011 uint( 3 )                  //| # |//
+        #define FV4_MAK      vec4                  //| 1 |//
+        #define IV2_MAK     ivec2                  //| 2 |//
+        #define I32_MAK       int                  //| 3 |//
+        #define F32_MAK     float                  //| 4 |//
+        #define BIN_011 uint( 3 )                  //| 5 |//
         #define CUVIPIX struct AAC2020_P5D1OGL_CUVIPIX   ///
-        #define TYP_F_C /** nothing **/
-        #define INN_F_C /** nothing **/
+        #define TYP_F_C /** nothing **/            //| 7 |//
+        #define INN_F_C /** nothing **/            //| 8 |//
                                                    //| # |//
     #else                                          //| # |//
                                                    //| # |//
-        #define FV4_MAK AAC2020_POLYOGL_MAK_FV4   ///
-        #define I32_MAK AAC2020_POLYOGL_MAK_I32
-        #define F32_MAK AAC2020_POLYOGL_MAK_F32
-        #define BIN_011 ((U32)3 )                  //| # |//
+        #define FV4_MAK AAC2020_POLYOGL_MAK_FV4    //| 1 |//
+        #define IV2_MAK AAC2020_POLYOGL_IV2_MAK    //| 2 |//
+        #define I32_MAK AAC2020_POLYOGL_MAK_I32    //| 3 |//
+        #define F32_MAK AAC2020_POLYOGL_MAK_F32    //| 4 |//
+        #define BIN_011 ((U32)3 )                  //| 5 |//
         #define CUVIPIX struct AAC2020_P5D1OGL_CUVIPIX   ///
-        #define TYP_F_C struct AAC2020_POLYOGL_FV4
-        #define INN_F_C F_C
+        #define TYP_F_C struct AAC2020_POLYOGL_FV4 //| # |//
+        #define INN_F_C F_C                        //| 8 |//
                                                    //| # |//
     #endif                                         //| # |//
     //:------------------------------:seven_letter_macros://
@@ -141,7 +147,7 @@
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
         U32                                        //[ x ]//
         AAC2020_P5D1OGL_TexelFetch_U32(            //[ x ]//
-            SAM u32_sam  //:<-- GLSL only.......:////[ x ]//
+            SAM u32_sam //:<--[C99/C11]AND[GLSL]:////[ x ]//
         ,   IV2 glo                                //[ x ]//
         ,   I32 levodet_ALWAYS_ZERO                //[ x ]//
         )                                          //[ x ]//
@@ -1030,6 +1036,25 @@
         #undef      ETO_s_a //:---------------------: 06 ://
         }                                                ///
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
+        F32
+        P5D1OGL_GET_res_wid( void )
+        {
+            #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL
+                return( iResolution.x );
+            #else
+                return( AAC2020_CPUNIFO_iResolution_wid );
+            #endif
+        }
+        F32
+        P5D1OGL_GET_res_hig( void )
+        {
+            #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL
+                return( iResolution.y );
+            #else
+                return( AAC2020_CPUNIFO_iResolution_hig );
+            #endif
+        }
+        //:- - - - - - - - - - - -- - - - - - - - - - - -://   
         RET_MAIN
         FUN_MAIN( 
                        TYP_F_C          INN_F_C
@@ -1050,18 +1075,26 @@
             I32 cuv_i_x =I32_MAK( F_C.x - 0.5 );
             I32 cuv_i_y =I32_MAK( 
                 (
-                    (         R_Y   - 1.0 )
-                   -(         F_C.y       ) 
+                    (P5D1OGL_GET_res_hig()   - 1.0 )
+                   -(                F_C.y         ) 
                 )-0.5 
             );;
             if( cuv_i_x == 0 ){ /** NOOP **/ };
             if( cuv_i_y == 0 ){ /** NOPP **/ };
 
+            UV4 uv4_p5d=(
+                T_F( P5D , IV2_MAK(cuv_i_x,cuv_i_y),0 ));;
+
+            /** @VID_IID[ 0116 ]TIME[ 01:33:00 ] ******* **/
+            /** MAKE SURE[ P ]key for[ pattern ]uploads  **/
+            /** to GPU and we can SEE IT. Do this        **/
+            /** BEFORE making more elaborate shader code.**/
+            /** *******************************************/
             FragColor = FV4_MAK(
 
-                F32_MAK( cuv_i_x ) / 255.0
-            ,   F32_MAK( cuv_i_y ) / 255.0
-            ,   0.0
+                F32_MAK( uv4_p5d.x ) / 255.0
+            ,   F32_MAK( uv4_p5d.y ) / 255.0
+            ,   F32_MAK( uv4_p5d.z ) / 255.0
             ,   1.0 //:Alpha
             );;
 
@@ -1088,21 +1121,23 @@
     //:----------------:always_exists_error_string_macros://
     //:type_macros:--------------------------------------://
                                                    //[ x ]//
-        #undef  U32      //:  01  ://              //[ x ]//
-        #undef  I32      //:  02  ://              //[ x ]//
-        #undef  IV2      //:  03  ://              //[ x ]//
-        #undef  UV4      //:  04  ://              //[ x ]//
-        #undef  T_F      //:  05  ://              //[ x ]//
-        #undef  P5D      //:  06  ://              //[ x ]//
-        #undef  SAM      //:  07  ://              //[ x ]//
-        #undef  U00      //:  08  ://              //[ x ]//
-        #undef  I00      //:  09  ://              //[ x ]//
-        #undef  U03      //:  10  ://              //[ x ]//
-        #undef  B_3      //:  11  ://              //[ x ]//
-        #undef  V_A      //:  12  ://              //[ x ]//
-        #undef  FV4      //:  13  ://              //[ x ]//
-        #undef  ASS      //:  14  ://              //[ x ]//
-        #undef  ERR      //:  15  ://              //[ x ]//
+        #undef  F32      //:  01  ://              //[ x ]//
+        #undef  U32      //:  02  ://              //[ x ]//
+        #undef  I32      //:  03  ://              //[ x ]//
+        #undef  IV2      //:  04  ://              //[ x ]//
+        #undef  UV4      //:  05  ://              //[ x ]//
+        #undef  T_F      //:  06  ://              //[ x ]//
+        #undef  TAU      //:  07  ://              //[ x ]//
+        #undef  P5D      //:  08  ://              //[ x ]//
+        #undef  SAM      //:  09  ://              //[ x ]//
+        #undef  U00      //:  10  ://              //[ x ]//
+        #undef  I00      //:  11  ://              //[ x ]//
+        #undef  U03      //:  12  ://              //[ x ]//
+        #undef  B_3      //:  13  ://              //[ x ]//
+        #undef  V_A      //:  14  ://              //[ x ]//
+        #undef  FV4      //:  15  ://              //[ x ]//
+        #undef  ASS      //:  16  ://              //[ x ]//
+        #undef  ERR      //:  17  ://              //[ x ]//
                                                    //[ x ]//
     //:--------------------------------------:type_macros://
     //:seven_letter_macros:------------------------------://
@@ -1110,13 +1145,14 @@
     /** Decided on [MAK] for [MAKE] as our constructor   **/
     /** postfix ........................................ **/
                                                    //[ x ]//
-        #undef  FV4_MAK                            //[ x ]//
-        #undef  I32_MAK                            //[ x ]//
-        #undef  F32_MAK                            //[ x ]//
-        #undef  BIN_011                            //[ x ]//
-        #undef  CUVIPIX                            //[ x ]//
-        #undef  TYP_F_C                            //[ x ]//
-        #undef  INN_F_C                            //[ x ]//
+        #undef  FV4_MAK                            //[ 1 ]//
+        #undef  IV2_MAK                            //[ 2 ]//
+        #undef  I32_MAK                            //[ 3 ]//
+        #undef  F32_MAK                            //[ 4 ]//
+        #undef  BIN_011                            //[ 5 ]//
+        #undef  CUVIPIX                            //[ 6 ]//
+        #undef  TYP_F_C                            //[ 7 ]//
+        #undef  INN_F_C                            //[ 8 ]//
                                                    //[ x ]//
     //:------------------------------:seven_letter_macros://
     //:main_shim_macros:---------------------------------://

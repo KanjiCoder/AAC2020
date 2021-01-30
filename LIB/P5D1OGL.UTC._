@@ -2812,6 +2812,7 @@ aus_015 ===>|   15-12   |   11-08   |   07-04       03-00   |
     {
     #define IV2 struct AAC2020_POLYOGL_IV2
     #define BIN_011 ( 3 ) /** binary: 11 **/
+    #define P5D_TEX ( 1 ) /** paint5d texture memory index **/
 
         /** ************************************************ **/
         /** @VID_IID[ 0088 ]TIME[ 00:53:50 ]                 **/                    
@@ -2889,9 +2890,9 @@ aus_015 ===>|   15-12   |   11-08   |   07-04       03-00   |
             glo.y = ( p_y );
             u32_got=(
                 AAC2020_P5D1OGL_TexelFetch_U32(
-                    0 //:Texture Sampler, Not Used in C version.
-                , glo //:Global X/Y coordinate of pixel.
-                ,   0 //:[ L.O.D. ] Always zero in all code.
+                P5D_TEX //:System_Texture_Memory_To_Sample
+                ,   glo //:Global X/Y coordinate of pixel.
+                ,     0 //:[ L.O.D. ] Always zero in all code.
                 ));;
             
             if( u32_got != u32_var ){
@@ -2971,8 +2972,9 @@ aus_015 ===>|   15-12   |   11-08   |   07-04       03-00   |
 
         };;};;
 
-    #undef IV2
-    #undef BIN_011
+    #undef IV2     //:- - - - - ---- - - - - - - - - - -: 01 ://
+    #undef BIN_011 //:- - - - - ---- - - - - - - - - - -: 02 ://
+    #undef P5D_TEX //:- - - - - ---- - - - - - - - - - -: 03 ://
     }
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     void aac2020_P5D1OGL_UTC_BitPack_Get( void )

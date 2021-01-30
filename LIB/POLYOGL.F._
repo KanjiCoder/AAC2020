@@ -4,6 +4,15 @@
         #error THIS_IS_NOT_GLSL_CODE_2021
     #endif
 //:*************************************:GLSL_POLYFILLS_GAURD://
+//:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=====================://
+    void 
+    aac2020_polyogl_Halt( const char* msg_err )
+    {
+        printf("[FATAL_ERROR:aac2020_polyogl]:%s\n", msg_err );
+        fflush(stdout);
+        exit( 114 /** 11:46 PM RIGHT NOW **/ );
+    }
+//:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
 //:INIT_NONE:================================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
     U32 AAC2020_POLYOGL_InitNone( U32 u32 ){
@@ -12,15 +21,57 @@
 #undef  U32
 //:================================================:INIT_NONE://
 //:DO_NOT_PASTE_INTO_GLSL_CODE:******************************://
-#define U32 uint32_t /** GCC: <stdint.h> **/          //: 01 ://
-#define I32  int32_t /** GCC: <stdint.h> **/          //: 02 ://
-#define IV2   struct AAC2020_POLYOGL_IV2              //: 03 ://
-#define UV4   struct AAC2020_POLYOGL_UV4              //: 04 ://
-#define SAM      int /** IGNORED IN [C99/C11] **/     //: 05 ://
-#define FV4   struct AAC2020_POLYOGL_FV4              //: 06 ://
-#define F32   float                                   //: 07 ://
+#define U08  uint8_t /** GCC: <stdint.h> **/          //: 01 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 02 ://
+#define I32  int32_t /** GCC: <stdint.h> **/          //: 03 ://
+#define IV2   struct AAC2020_POLYOGL_IV2              //: 04 ://
+#define UV4   struct AAC2020_POLYOGL_UV4              //: 05 ://
+#define FV2   struct AAC2020_POLYOGL_FV2              //: 06 ://
+#define SAM      int /** IGNORED IN [C99/C11] **/     //: 07 ://
+#define FV4   struct AAC2020_POLYOGL_FV4              //: 08 ://
+#define F32   float                                   //: 09 ://
+#define ERR   aac2020_polyogl_Halt                    //: 10 ://
 
+    //:GLSL_POLYFILL_Get_IResolution:========================://
+    
+        //:@VID_IID[ 0116 ]TIME[ 00:12:32 ] **************** ://
+        //:ACTUALLY. Not a polyfill. But a wrapper function  ://
+        //:that needs two different implementations depending://
+        //:on if it is running as [C99/C11] or GLSL.         ://
+        //: ************************************************ ://
+        FV2 
+        AAC2020_POLYOGL_Get_iResolution( void ){
+            /**   DNMF: Dont_Make_This_Function **/
+            ERR("[DNMF:AAC2020_POLYOGL_Get_iResolution]");
+            /**   USE[ P5D1OGL_GET_res_wid ] ........... **/
+            /**   USE[ P5D1OGL_GET_res_hig ] ........... **/
+            FV2 fv2 ={ 0-666 , 0-666 };
+            return( fv2 );
+        } 
+        F32 
+        AAC2020_POLYOGL_Get_iResolution_X( void ){
+            /**   DNMF: Dont_Make_This_Function **/
+            ERR("[DNMF:AAC2020_POLYOGL_Get_iResolution_X]");
+            /**   USE[ P5D1OGL_GET_res_wid ] ........... **/
+            return( (F32)0-666 );
+        } 
+        F32
+        AAC2020_POLYOGL_Get_iResolution_Y( void ){
+            /**  @CTRL_F_HELP@ : Get_Res_Y | Get_Res_Hig **/
+            /**   DNMF: Dont_Make_This_Function          **/
+            /**   USE[ P5D1OGL_GET_res_hig ] ........... **/
+            ERR("[DNMF:AAC2020_POLYOGL_Get_iResolution_Y]");
+            return( (F32)0-666 );
+        } 
+    //:========================:GLSL_POLYFILL_Get_IResolution://
     //:GLSL_POLYFILL_TexelFetch:=============================://
+
+        #if( AAC2020_CRASH_ON_VITAL_TODO >= 1 ) //:##########://
+
+            /** @VID_IID[ 0116 ]TIME[ 00:44:10 ] **/
+            #error "[IMPLEMENT:u32_sam:ON_CPU_C99_SIDE]"
+
+        #endif //:###########################################://
 
         UV4
         AAC2020_POLYOGL_tex_fet(
@@ -42,15 +93,35 @@
             glo_dex = glo.x + ( glo.y  *  512 );
             glo_com =( glo_dex * 4  );
 
-            //:NO_LONGER_BIT_PACKED:-------------------------://
-            #define CPU_PIX AAC2020_PIXNAME_paint5d_cpu_pix
+            //:PICK_YOUR_MEMORY_BLOCK:-----------------------://
+            #define TAU ( 0 ) /** SYSTEM 0 ==> TextureSlot 0 **/
+            #define P5D ( 1 ) /** SYSTEM 1 ==> TextureSlot 1 **/
 
+                U08* cpu_pix =((U08*)0);
+
+                switch( u32_sam ){
+                case ( TAU ) :{
+                    cpu_pix = AAC2020_PIXNAME_taudepo_cpu_pix ;
+                };;break;
+                case ( P5D ) :{
+                    cpu_pix = AAC2020_PIXNAME_paint5d_cpu_pix ;
+                };;break;
+                default:{
+                    ERR("[BAD_TEXTURE_MEMORY_ENUM]");
+                };;};;
+
+            #undef  TAU  //: TAU == taudepo :-----------: 01 ://
+            #undef  P5D  //: P5D == paint5d :-----------: 02 ://
+            //:-----------------------:PICK_YOUR_MEMORY_BLOCK://
+            //:NO_LONGER_BIT_PACKED:-------------------------://
+            #define     CPU_PIX  cpu_pix
+                    //: CPU_PIX ://
                 uv4.x = CPU_PIX[ glo_com + 0 ] ; //:RED
                 uv4.y = CPU_PIX[ glo_com + 1 ] ; //:GREEN
                 uv4.z = CPU_PIX[ glo_com + 2 ] ; //:BLUE
                 uv4.w = CPU_PIX[ glo_com + 3 ] ; //:ALPHA
-
-            #undef  CPU_PIX
+                    //: CPU_PIX ://
+            #undef      CPU_PIX
             //:-------------------------:NO_LONGER_BIT_PACKED://
            
             return( uv4 );
@@ -76,6 +147,18 @@
             }
 
         //:===========================:GLSL_POLYFILL_MakeVec4://
+        //:GLSL_POLYFILL_Make_IV2:===========================://
+            IV2
+            AAC2020_POLYOGL_IV2_MAK(
+                I32 i_x
+            ,   I32 i_y
+            )
+            {
+                IV2 iv2;
+                iv2.x = ( i_x );
+                iv2.y = ( i_y );
+                return( iv2 );
+            }
         //:GLSL_POLYFILL_Make_I32:===========================://
             I32
             AAC2020_POLYOGL_MAK_I32(
@@ -97,12 +180,24 @@
             }
         //:===========================:GLSL_POLYFILL_Make_F32://
 
-#undef  U32                                           //: 01 ://
-#undef  I32                                           //: 02 ://
-#undef  IV2                                           //: 03 ://
-#undef  UV4                                           //: 04 ://
-#undef  SAM                                           //: 05 ://
-#undef  FV4                                           //: 06 ://
-#undef  F32                                           //: 07 ://
+#undef  U08                                           //: 01 ://
+#undef  U32                                           //: 02 ://
+#undef  I32                                           //: 03 ://
+#undef  IV2                                           //: 04 ://
+#undef  UV4                                           //: 05 ://
+#undef  FV2                                           //: 06 ://
+#undef  SAM                                           //: 07 ://
+#undef  FV4                                           //: 08 ://
+#undef  F32                                           //: 09 ://
+#undef  ERR                                           //: 10 ://
 //:******************************:DO_NOT_PASTE_INTO_GLSL_CODE://
 //:*******************************************:GLSL_POLYFILLS://
+
+
+
+
+
+
+
+
+
