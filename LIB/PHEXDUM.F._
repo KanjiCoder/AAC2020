@@ -949,6 +949,21 @@
 #define U08  uint8_t /** GCC: <stdint.h> **/          //: 03 ://
 #define ERR aac2020_phexdum_Halt                      //: 04 ://
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    //#  ##################################################  #//
+    //#                                                      #//
+    //#  @VID_IID[ 0128 ]TIME[ 07:41:23 ]                    #//
+    //#                                                      #//
+    //[  [ u08_arr ]___IS____NOT____AN_ARRAY_OF_PIXELS !!!!  ]//
+    //#                                                      #//
+    //+  Use: AAC2020_PHEXDUM_u32_arr_CTO_pix_arr            +//
+    //+  Use: AAC2020_PHEXDUM_pix_arr_CTO_u32_arr            +//
+    //#  If you want to convert directly from a hard-coded   #//
+    //#  embedded asset to an array of pixels.               #//
+    //#                                                      #//
+    //#  ##################################################  #//
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     void
     AAC2020_PHEXDUM_u08_arr_CTO_u32_arr(
         U08*        u08_arr  //:<--------------ARR_DAT
@@ -1088,6 +1103,137 @@
 #undef  ERR  //:----------------------------------------: 04 ://
 //:=======================================:U32_ARR_TO_U08_ARR://
 //:=======================================:U08_ARR_TO_U32_ARR://
+//:U32_ARR_TO_PIX_ARR:=======================================://
+//:PIX_ARR_TO_U32_ARR:=======================================://
+#define I32  int32_t /** GCC: <stdint.h> **/          //: 01 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 02 ://
+#define U08  uint8_t /** GCC: <stdint.h> **/          //: 03 ://
+#define U_C        unsigned char                      //: 04 ://
+#define CUC  const unsigned char                      //: 05 ://
+#define ERR aac2020_phexdum_Halt                      //: 06 ://
+
+    /** @VID_IID[ 0128 ]TIME[ 08:07:00 ] ***************** **/
+    /** u32_arr: PNG file binary encoded into uint32 array **/
+    /** pix_arr: RGBA u08 byte array encoding pixel  data  **/
+    /** ************************************************** **/
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    AAC2020_PHEXDUM_u32_arr_CTO_pix_arr(
+        U32*        u32_arr  //:<--------------ARR_DAT
+    ,   I32         u32_len  //:<--------------ARR_LEN
+    ,   U08*             *BYREF_pix_arr //:<-- ARR_DAT
+    ,   I32              *BYREF_pix_wid //:<-- ARR_LEN
+    ,   I32              *BYREF_pix_hig //:<-- ARR_LEN
+    )
+    {
+        //:input_checks:-------------------------------------://
+
+            /** @VID_IID[ 0128 ]TIME[ 08:17:50 ] **/
+            
+            assert( ((U32* )0) != (       u32_arr ) );
+            assert( ((I32  )0) != (       u32_len ) );
+                                                 
+            assert( ((U08**)0) != ( BYREF_pix_arr ) );
+            assert( ((I32* )0) != ( BYREF_pix_wid ) );
+            assert( ((I32* )0) != ( BYREF_pix_hig ) );
+
+            assert( ((U08* )0) == (*BYREF_pix_arr ) );
+            assert( ((I32  )0) == (*BYREF_pix_wid ) );
+            assert( ((I32  )0) == (*BYREF_pix_hig ) );
+
+        //:-------------------------------------:input_checks://
+        //:declare_variables:--------------------------------://
+
+            //:STEP:001: convert[ u32_arr ]TO[ u08_arr ]Bytes://
+
+                U08* u08_arr=((U08*)0); //:PNG_BINARY_DATA_BYTES
+                I32  u08_len=(      0); //:Length_Of_Said__Array
+
+            //:STEP:002: convert[ u08_arr ]TO[ pix_arr ]RGBA:://
+
+                U08* pix_arr=((U08*)0); //:Pixel_Component_Array
+                U32  pix_wid=(      0); //:Length_Of_Said__Array
+                U32  pix_hig=(      0); //:Length_Of_Said__Array
+
+        //:--------------------------------:declare_variables://
+        //:call_conversion_functions:------------------------://
+
+
+            //:STEP:001:
+
+            AAC2020_PHEXDUM_u32_arr_CTO_u08_arr(
+            /**/    u32_arr  //:EX:PAINT5D_DEFAULT_DATA_001_PNG  
+            ,       u32_len  //:EX:PAINT5D_DEFAULT_DATA_001_NOE  
+            ,     &(u08_arr) //:DEFLATED:001_PNG //:@_OUT_PAR_@
+            ,     &(u08_len) //:DEFLATED:001_NOE //:@_OUT_PAR_@
+            );;
+
+            //:STEP:002:
+
+            CUC* chr_inn=( u08_arr );
+            U_C* chr_out=( (U_C*)0 );  /** lodePNG is stupid **/
+           
+            lodepng_decode32(
+              &(         chr_out   ) //:<--[ pix_arr ]:::::::://
+            , &(         pix_wid   ) //:        ^            ://
+            , &(         pix_hig   ) //:        ^            ://
+            ,            chr_inn     //:<--[ u08_arr ]:::::::://
+            ,    (size_t)u08_len   
+            );;
+
+            /** Technically violating strict aliasing rules? **/
+            pix_arr =((U08*)chr_out);
+
+        //:------------------------:call_conversion_functions://
+        //:free_INTERMEDIARY_memory_ONLY:--------------------://
+        #define FREE_this_memory        free          //: 01 ://
+        #define KEEP_this_memory( whatever )          //: 02 ://
+
+            FREE_this_memory( u08_arr ); //:<-- INTERMEDIARY
+            KEEP_this_memory( pix_arr ); //:<-- OUTPUT 
+
+        #undef  FREE_this_memory  //:-------------------: 01 ://
+        #undef  KEEP_this_memory  //:-------------------: 02 ://
+        //:--------------------:free_INTERMEDIARY_memory_ONLY://
+        //:RETURN_via_OUTPUT_param:--------------------------://
+
+            (*BYREF_pix_arr)=(      pix_arr );
+            (*BYREF_pix_wid)=( (I32)pix_wid );
+            (*BYREF_pix_hig)=( (I32)pix_hig );
+
+        //:--------------------------:RETURN_via_OUTPUT_param://
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    void
+    AAC2020_PHEXDUM_pix_arr_CTO_u32_arr(
+        U08*        pix_arr  //:<--------------ARR_DAT
+    ,   I32         pix_len  //:<--------------ARR_LEN
+    ,   U32*             *BYREF_u32_arr //:<-- ARR_DAT
+    ,   I32              *BYREF_u32_len //:<-- ARR_LEN
+    )
+    {
+        /** @VID_IID[ 0128 ]TIME[ 08:05:23 ]  **/
+        /** SILENCE_THE_COMPILER_WARNINGS     **/
+        if(         pix_arr[0]  ){ /** NOOP **/ }
+        if(         pix_len     ){ /** NOOP **/ }
+        if( (*BYREF_u32_arr[0]) ){ /** NOOP **/ }
+        if( (*BYREF_u32_len   ) ){ /** NOOP **/ }
+
+        ERR("[@NOT_IMP@:AAC2020_PHEXDUM_pix_arr_CTO_u32_arr]");
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+#undef  I32  //:----------------------------------------: 01 ://
+#undef  U32  //:----------------------------------------: 02 ://
+#undef  U08  //:----------------------------------------: 03 ://
+#undef  U_C  //:----------------------------------------: 04 ://
+#undef  CUC  //:----------------------------------------: 05 ://
+#undef  ERR  //:----------------------------------------: 06 ://
+//:=======================================:U32_ARR_TO_PIX_ARR://
+//:=======================================:PIX_ARR_TO_U32_ARR://
 //:================:HELPER_FUNCTIONS_I_DIDNT_REALIZE_I_NEEDED://
 //:PRIVATE_API_HELPER_FUNCTIONS:=============================://
 #define I32    int32_t /** GCC: <stdint.h> **/        //: 01 ://

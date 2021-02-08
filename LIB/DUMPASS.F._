@@ -1,0 +1,102 @@
+
+//:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=====================://
+    void 
+    aac2020_dumpass_Halt( const char* msg_err )
+    {
+        printf("[FATAL_ERROR:aac2020_dumpass]:%s\n", msg_err );
+        fflush(stdout);
+        exit( 123 );
+    }
+//:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+//:LOG_AFTER_HALT:===========================================://
+    void
+    aac2020_dumpass_Info_any(
+        const char* str_fmt
+    ,   void*       dat_any   
+    )
+    { if( AAC2020_SILENCE.DUMPASS <= 0 ){
+        /** Same Line As Next Printf **/
+        printf("[dumpass_log]....(   " ); fflush( stdout );
+        printf( str_fmt , dat_any      ); fflush( stdout );
+        printf(               "   )\n" ); fflush( stdout );
+
+    };; }
+//:===========================================:LOG_AFTER_HALT://
+//:INIT_NONE:================================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+    U32
+    AAC2020_DUMPASS_InitNone( U32 u32 ){
+        if( u32 ){ /** reserved for future use **/ };
+        return( 0x00 );
+    }
+#undef  U32
+//:================================================:INIT_NONE://
+//:FUNCTIONS_CATEGORIZED_BY_ASSET_WORKED_WITH:===============://
+#define P_F   printf /** BeforeCrash_MSG **/          //: 01 ://
+#define U08  uint8_t /** GCC: <stdint.h> **/          //: 02 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 03 ://
+#define I32  int32_t /** GCC: <stdint.h> **/          //: 04 ://
+#define ERR aac2020_dumpass_Halt /**ERROR**/          //: 05 ://
+
+    //:PAINT5D_DEFAULT_DATA_001.PNG:=-=-=-=-=-=-=-=-=-=-=-=-=://
+
+        void
+        AAC2020_DUMPASS_png_001_RAM_paint5d( 
+
+            U08 update_gpu_memory_after_loading_into_cpu
+        )
+        {
+            U08* pix_arr=((U08*)0); //:Pixel_Component_Array
+            I32  pix_wid=(      0); //:Length_Of_Said__Array
+            I32  pix_hig=(      0); //:Length_Of_Said__Array
+
+            AAC2020_PHEXDUM_u32_arr_CTO_pix_arr(
+            /**/    PAINT5D_DEFAULT_DATA_001_PNG //:  u32_arr
+            ,       PAINT5D_DEFAULT_DATA_001_NOE //:  u32_len
+            ,     &(pix_arr) //:DEFLATED:001_PNG //:@_OUT_PAR_@
+            ,     &(pix_wid) //:--------:001_PNG //:@_OUT_PAR_@
+            ,     &(pix_hig) //:--------:001_PNG //:@_OUT_PAR_@
+            );;
+
+            if( (512*512*4) != (pix_wid*pix_hig*4) ){
+            
+                P_F("[FIX_ASS:PAINT5D_DEFAULT_DATA_001.PNG]\n");
+                ERR("[EMBEDDED_ASSET_NOT_512_x_512:png_001]!!");
+            };;
+
+            I32  com_dex;
+            I32      m_i =(( 512 * 512 * 4 ) - 1 );
+            for( com_dex = 0 ; com_dex <= m_i ; com_dex ++ ){
+                AAC2020_PIXNAME_paint5d_cpu_pix[ com_dex ]=(
+                                        pix_arr[ com_dex ]
+                );;
+            };;
+
+            free( pix_arr ); /** Free After Copying **/
+
+            if( update_gpu_memory_after_loading_into_cpu >= 1 ){
+
+                /** **************************************** **/
+                /**   @VID_IID[ 0128 ]TIME[ 07:32:07 ]       **/
+                /**   Never use this option.                 **/
+                /**                                          **/
+                /**   CMC: Caller_Must_Call                  **/
+                /**   Yes, uglier to make the caller update  **/
+                /**   GPU memory.                            **/
+                /**   But "Flat is better than nested" and   **/
+                /**   makes us less likely to do inefficient **/
+                /**   things like spam texture pushes.       **/
+                /** **************************************** **/
+                ERR("[CMC:AAC2020_PIXPUSH_t2d_PAINT5D()]");
+
+            };;
+        }
+
+    //:=-=-=-=-=-=-=-=-=-=-=-=-=:PAINT5D_DEFAULT_DATA_001.PNG://
+
+#undef  P_F  //:----------------------------------------: 01 ://
+#undef  U08  //:----------------------------------------: 02 ://
+#undef  U32  //:----------------------------------------: 03 ://
+#undef  I32  //:----------------------------------------: 04 ://
+#undef  ERR  //:----------------------------------------: 05 ://
+//:===============:FUNCTIONS_CATEGORIZED_BY_ASSET_WORKED_WITH://

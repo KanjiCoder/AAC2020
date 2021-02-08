@@ -37,7 +37,7 @@ _Static_assert( AAC2020_INCLUDE_GRAQUAD == 20 ,       "20");
 //:==================================================:GRAQUAD://
 //:TAUDEPO:==================================================://
 #if(            AAC2020_INCLUDE_TAUDEPO >=  1 )
-_Static_assert( AAC2020_INCLUDE_TAUDEPO == 31 ,       "31");
+_Static_assert( AAC2020_INCLUDE_TAUDEPO == 32 ,       "32");
 
     #define  FMACROS_TAUDEPO_LoopTick   AAC2020_TAUDEPO_LoopTick
 #endif
@@ -48,7 +48,7 @@ _Static_assert( AAC2020_INCLUDE_TAUDEPO == 31 ,       "31");
 //:==================================================:TAUDEPO://
 //:TAUSYNC:==================================================://
 #if(            AAC2020_INCLUDE_TAUSYNC >=  1 )
-_Static_assert( AAC2020_INCLUDE_TAUSYNC == 33 ,       "33");
+_Static_assert( AAC2020_INCLUDE_TAUSYNC == 34 ,       "34");
 
     #define  FMACROS_TAUSYNC_LoopTick   AAC2020_TAUSYNC_LoopTick
 #endif
@@ -91,6 +91,7 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 33 ,       "33");
     PIXBACK
     PIXPUSH
     PIXLOAD
+    DUMPASS
     POLYOGL
     TAUDIRT
     TAUTYPE
@@ -106,7 +107,6 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 33 ,       "33");
 #define      FMACROS_SILENCE_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:SILENCE://
-
 //:InitNone:KILTEST:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_KILTEST >=  1 )
 #define      FMACROS_KILTEST_InitNone AAC2020_KILTEST_InitNone
@@ -219,6 +219,14 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 33 ,       "33");
 #define      FMACROS_PIXLOAD_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:PIXLOAD://
+//:InitNone:DUMPASS:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_DUMPASS >=  1 )
+#define      FMACROS_DUMPASS_InitNone AAC2020_DUMPASS_InitNone
+#endif
+#if( AAC2020_INCLUDE_DUMPASS == 0 )
+#define      FMACROS_DUMPASS_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:DUMPASS://
 //:InitNone:POLYOGL:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_POLYOGL >=  1 )
 #define      FMACROS_POLYOGL_InitNone AAC2020_POLYOGL_InitNone
