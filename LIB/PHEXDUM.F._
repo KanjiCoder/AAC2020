@@ -1,0 +1,2954 @@
+
+//: PHEXDUM.F._ :PNG_HEX_DUMP: Functions
+
+//:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=====================://
+    void 
+    aac2020_phexdum_Halt( const char* msg_err )
+    {
+        printf("[FATAL_ERROR:aac2020_phexdum]:%s\n", msg_err );
+        fflush(stdout);
+        exit( 189 );
+    }
+//:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+//:LOG_AFTER_HALT:===========================================://
+#define I32 int32_t /** GCC: <stdint.h> **/           //: 01 ://
+#define CHR const char                                //: 02 ://
+#define ERR aac2020_phexdum_Halt                      //: 03 ://
+
+    void
+    aac2020_phexdum_Info_any(
+        CHR*  str_fmt
+    ,   void* dat_any   
+    )
+    { 
+
+        I32 logging_is_on=( 0 - 1234 /**INVALID_VALUE**/ );
+        
+        #ifdef AAC2020_INCLUDE_SILENCE
+        /** Compiled as part of main AAC2020 engine. **/
+            
+            if( AAC2020_SILENCE.PHEXDUM <= 0 ){
+                logging_is_on=( 1 );
+            }else
+            if( AAC2020_SILENCE.PHEXDUM >= 1 ){
+                logging_is_on=( 0 );
+            }else{
+                ERR("[WTF_ARE_YOU_DOING?]");
+            };;
+
+            /** @VID_IID[ 0128 ]TIME[ 03:33:33 ] *********** **/
+            /** Override turns of logging for ALL SYSTEMS.   **/
+            if( AAC2020_SILENCE.SILENCE >= 1 ){
+                logging_is_on=( 0 );
+            };;
+
+        #else
+        /** Compiled as stand-alone command line utility. **/
+
+            logging_is_on =( 
+                AAC2020_PHEXDUM_STAND_ALONE_ONLY_LOGGING_ON );;
+
+        #endif
+
+        //: 
+        if( logging_is_on >= 1 ){
+            /** Same Line As Next Printf **/
+            printf("[phexdum_log]....(   " ); fflush( stdout );
+            printf( str_fmt , dat_any      ); fflush( stdout );
+            printf(               "   )\n" ); fflush( stdout );
+        }else
+        if( 0 == logging_is_on ){
+            /** do nothing **/
+        }else{
+            ERR("[YOUR_LOGGING_CONFIG_LOGIC_SUCKS_2021]");
+        };;
+        
+    }
+
+#undef  I32  //:----------------------------------------: 01 ://
+#undef  CHR  //:----------------------------------------: 02 ://
+#undef  ERR  //:----------------------------------------: 03 ://
+//:===========================================:LOG_AFTER_HALT://
+//:INFO_PRINT_STRING:========================================://
+#define CHR const char
+#define ERR aac2020_phexdum_Halt
+
+    /** ****************************************** **/
+    /** I'd like to get rid of this function. But  **/
+    /** right now just get things working.         **/
+    /** @VID_IID[ 0121 ]TIME[ 01:12:55 ] ********* **/
+    /** ****************************************** **/
+
+    void
+    aac2020_phexdum_Info_str( 
+        CHR* msg_fmt /** Format String **/
+    ,   CHR* msg_inf /** Information String **/
+    )
+    {
+        if( ((CHR*)0) == msg_fmt ){ ERR("[NIL:msg_fmt]"); };
+        if( ((CHR*)0) == msg_inf ){ ERR("[NIL:msg_inf]"); };
+        
+        aac2020_phexdum_Info_any(
+                   msg_fmt
+        ,   (void*)msg_inf
+        );;
+    }
+
+#undef  CHR
+#undef  ERR
+//:========================================:INFO_PRINT_STRING://
+//:INIT_NONE:================================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+        U32 AAC2020_PHEXDUM_InitNone( U32 u32 ){
+            if( u32 ){ }; return( 0x00 );   }
+#undef  U32
+//:================================================:INIT_NONE://
+//:==========================================================://
+//:FILE_READ_WRITE_SECTION:||||||||||||||||||||||||||||||||||://
+//:==========================================================://
+#define DONT_DECLARE_MACROS_____ON_____FILE_READ_WRITE_SECTION
+
+    /** **************************************************** **/
+    /** @VID_IID[ 0123 ]TIME[ 00:16:50 ]                     **/
+    /** Code in[ FILE_READ_WRITE_SECTION ] was copy          **/
+    /** pasted from[ AAC2020_FILEBOI ]system. That           **/
+    /** is why this entire section has 1-extra level         **/
+    /** of indentation. Do NOT attach macros to the          **/
+    /** [ FILE_READ_WRITE_SECTION ]HEADER or FOOTER          **/
+    /** dividers as you typically would in other             **/
+    /** code sections.                                       **/
+    /** **************************************************** **/
+
+    //:PRIVATE:RECURIVE_MAKE_DIRECTORY:======================://
+    #define ERR aac2020_phexdum_Halt
+    #define I_S aac2020_phexdum_Info_str 
+
+        int
+        aac2020_phexdum_MakeOneDirectory(
+            const char* name
+        )
+        {
+            /** mkdstat : mkdir_status_zero_is_success **/
+            int mkdstat=( 23 );
+
+            #ifdef __linux__
+                mkdstat = mkdir(name, 0777);  
+            #else
+                mkdstat = mkdir(name);
+            #endif
+
+            return( mkdstat );
+        }
+
+        //: - - - - - - - - - - - ---- - - - - - - - - - - - ://
+
+        void aac2020_phexdum_mkdir(char* path) 
+        {
+            if( ((char*)0) != strrchr(path, '\\' ) ){
+                ERR("BACK_SLASHES_NOT_SUPPORTED]");
+            };;
+
+            char *sep = strrchr(path, '/');
+            if( ((char*)0) != sep ){
+
+                *sep = 0;
+                aac2020_phexdum_mkdir(path);
+                *sep = '/';
+            };;
+
+            if(
+                aac2020_phexdum_MakeOneDirectory(path) 
+            && 
+                errno != EEXIST
+            ){
+                //: if( AAC2020_SILENCE.PHEXDUM <= 0 ){
+
+                    /** REVISIT[ DATE[ 2020_12_09 ] ] ****** **/
+                    /** Is this an error? Why the fuck did I **/
+                    /** Write this? I have no clue what this **/
+                    /** should mean? Is it info or actually  **/
+                    /** an error that should fail fast?      **/
+                    I_S("[FUCKING_FILES_MAN]:(((%s)))\n", path); 
+
+                //: };;
+            };;
+        }
+
+    #undef  ERR
+    #undef  I_S
+    //:======================:PRIVATE:RECURIVE_MAKE_DIRECTORY://
+    //:TOUCH_FILE:===========================================://
+    #define U32 uint32_t /** GCC: <stdint.h>   **/
+    #define MML ( 256 )  /** MML:Macro_Max_Len **/
+    #define LOG aac2020_phexdum_Info_any
+    #define ERR aac2020_phexdum_Halt
+    #define CHR const char
+    #define I_S aac2020_phexdum_Info_str 
+
+        U32
+        AAC2020_PHEXDUM_TouchFile(
+            const char* fil_nam /** EX:fip_inn **/
+        )
+        {
+            LOG("[AAC2020_PHEXDUM_TouchFile:BEG]",0);
+            if( ((CHR*)0) == fil_nam ){
+                ERR("[AAC2020_PHEXDUM_TouchFile:NIL_FILE]");
+            };;
+            I_S("[PHEXDUM_TouchFile]:%s\n" , fil_nam );;  
+
+            //:GET_STR_LEN_AND_VALIDATE:---------------------://
+            #define NILIDEX ( 1 ) /** 1 null terminator **/
+                int str_len = strlen( fil_nam );
+                if( str_len > ( MML - NILIDEX ) ){
+                    /** ************************************ ***
+                    Must be short enough to accomidate      
+                    Length of string plus null terminator.  
+                    TLC_FNT:Too_Long_Cant_Fit_Null_Terminator
+                    *** ************************************ **/
+                    ERR("[KANJICODER:TLC_FNT:2021]");
+                };;
+            #undef  NILIDEX  /** 1 null terminator **/
+            //:---------------------:GET_STR_LEN_AND_VALIDATE://
+            //:EXPECT_EXACTLY_ONE_DOT:-----------------------://
+            //:DO_NOT_ALLOW_BACKSLASH:-----------------------://
+            /** ******************************************** ***
+            Constraints make it easier to implement code.    ***
+            nos : Number of slashes (BACK SLAHES)            ***
+            nod : Number of dots    (periods    )            ***
+            @VID_IID[ 0123 ]TIME[ 01:22:22 ]                 ***
+            *** ******************************************** **/
+
+                int nos = ( 0 );   /** nos: Number_Of_Slashes**/
+                int nod = ( 0 );   /** nod: Number_Of_Dots   **/
+                for( int i = 0; i < str_len; i++ ){
+
+                    if( fil_nam[i] == '.'  ){ nod++; };
+                    if( fil_nam[i] == '\\' ){ nos++; };
+                };;
+
+                if( nod >   1  ){ ERR("[TOO_MANY_DOTS]"); }else
+                if( nod <=  0  ){ ERR("[ZERO_____DOTS]"); }else
+                if(  1  == nod ){ /** OKAY. NOOP **/      }else
+                {   //:EDCL:ExpectedDeadCodeLine
+                    ERR("[KANJICODER:WTF:EDCL:2021]");
+                };; 
+
+                /** USB: Un_Supported_Backslashes.Year 2021. **/
+                if( nos != 0 ){ ERR("[KANJICODER:USB:2021]");};
+
+            //:-----------------------:DO_NOT_ALLOW_BACKSLASH://
+            //:-----------------------:EXPECT_EXACTLY_ONE_DOT://
+            //:CREATE_DIRECTORY:-----------------------------://
+
+                //:PATH_ONLY_SUB_STRING:- - - - - - - - - - -://
+
+                    //:FIND__LAST_SLASH:. . . . . . . . . . .://
+
+                        int dex_las =( 0 - 1 );
+                        for( int i = 0; i < str_len; i++ ){
+                            if( '/' == fil_nam[ i ]  ){
+                                dex_las =( i );
+                            };;
+                        };;
+
+                    //:. . . . . . . . . . .:FIND__LAST_SLASH://
+                    //:TAKE_TO_LAST_SLASH:. . . . . . . . . .://
+                    /** ************************************ ***
+                    dir_sus : DIRectory_SUb_String  
+                    dex_las : dex_last_slash : IndexOfLastSlash
+                    *** ************************************ **/
+
+                        char dir_sus[ MML ] = {0};
+                        for( int i = 0; i < dex_las; i++ ){
+
+                            if( '.' != fil_nam[ i ]  ){
+
+                                dir_sus[ i ] = fil_nam[ i ];
+
+                            }else{
+                                //:DNE:Did_Not_Expect
+                                //:DBL:Dot_Before_Lastslash
+                                ERR("[DNE_DBL:2021_02_03]");
+                            };;
+
+                        };;
+
+                    //:. . . . . . . . . .:TAKE_TO_LAST_SLASH://
+
+                //:- - - - - - - - - - -:PATH_ONLY_SUB_STRING://
+                //:RECURSIVE_MAKE_DIR:- - - - - - - - - - - -://
+     
+                    if( dex_las <= 0 ){
+                        /** ******************************** ***
+                        Creation of directory requires at    ***
+                        least ONE character BEFORE the       ***
+                        last slash. Example/Reason: f/t.x    ***
+                                                             ***
+                        So... Do nothing?                    ***
+                        @VID_IID[ 0123 ]TIME[ 01:10:40 ]     ***
+                        *** ******************************** **/
+                    }else
+                    if( dex_las  < 1 ){
+                        /** ******************************** ***
+                        ECATOH: ExpectedCaseAboveTOHandle    ***
+                        "<1" is the same as "<=0"            ***
+                        *** ******************************** **/
+
+                        aac2020_phexdum_Halt("[ECATOH]");
+
+                    }else{
+                        //:RECURSIVE_MAKE_DIR:4REAL:. . . . .://
+                        /** ******************************** ***
+                        dir_sus : DIRectory_SUb_String       ***
+                        *** ******************************** **/
+                        #define M_K_D_I_R aac2020_phexdum_mkdir
+                        I_S(  "[M_K_D_I_R::dir_sus]:%s\n"
+                                          ,dir_sus );;
+                                M_K_D_I_R( dir_sus );
+                        #undef  M_K_D_I_R
+                        //:. . . . .:RECURSIVE_MAKE_DIR:4REAL://
+                    };;
+
+                //:- - - - - - - - - - - -:RECURSIVE_MAKE_DIR://
+
+            //:-----------------------------:CREATE_DIRECTORY://
+            //:CREATE_FILE_IF_NOT_EXIST:---------------------://
+            /** ******************************************** ***
+                Open For: APPEND/BINARY/UPDATE (a/b/+)    
+                Using wrong open can DELETE FILE CONTENTS   
+                Which is not what we want. We want a touch.  
+            *** ******************************************** **/
+
+                FILE*   fil_han = fopen( fil_nam , "ab+" );
+                fclose( fil_han );
+
+            //:---------------------:CREATE_FILE_IF_NOT_EXIST://
+
+            LOG("[AAC2020_PHEXDUM_TouchFile:END]",0);
+            return( 0x00 );
+        }
+
+    #undef  MML
+    #undef  U32       
+    #undef  LOG
+    #undef  ERR
+    #undef  CHR  //: 3UDaT44     :----------------------: ## ://
+    #undef  I_S  //: _bSEfx6D8mA :----------------------: ## ://
+    //:===========================================:TOUCH_FILE://
+    //:SAVE_TXT_FILE_TO_DISK:================================://
+    //:SAVE_C99_FILE_TO_DISK:================================://
+    #define U08  uint8_t /** GCC: <stdint.h> **/      //: 01 ://
+    #define I32  int32_t /** GCC: <stdint.h> **/      //: 02 ://
+    #define U32 uint32_t /** GCC: <stdint.h> **/      //: 03 ://
+    #define CHR const char                            //: 04 ://
+    #define LOG aac2020_phexdum_Info_any              //: 05 ://
+    #define ERR aac2020_phexdum_Halt                  //: 06 ://
+
+        I32
+        AAC2020_PHEXDUM_SaveFile_TXT(
+            CHR* nof_wex /** NameOfFile__WithEXtension   ....**/
+        ,   CHR* chr_arr /** String To Save To Disk .........**/
+        ,   U32  str_len /** Num Chars In chr_arr   .........**/
+        )
+        {
+        /** ************************************************ ***
+        @VID_IID[ 0120 ]TIME[ 07:44:05 ]
+        Decided on[ AAC2020_PHEXDUM_SaveFile_TXT ]
+        Instead of[ AAC2020_PHEXDUM_SaveFile_TEX ]
+        Because "TEX" can mean "Texture" in some contexts.
+        *** ************************************************ **/
+            LOG("[AAC2020_PHEXDUM_SaveFile_TXT:BEG]",0);
+            //:input_checks:---------------------------------://
+            #define N_S ((CHR*)0)
+
+                /** @VID_IID[ 0121 ]TIME[ 00:31:00 ] **/
+                /** ZON: Zero_Or_Negative.           **/
+                if( N_S == nof_wex ){ ERR("[NIL:nof_wex]"); };
+                if( N_S == chr_arr ){ ERR("[NIL:chr_arr]"); };
+                if(  0  >= str_len ){ ERR("[ZON:str_len]"); };
+
+            #undef  N_S
+            //:---------------------------------:input_checks://
+            //:declare_variables:----------------------------://
+
+                FILE* fil_han =((FILE*)0 );
+                I32   fil_nob =( 0 - 747 );
+
+            //:----------------------------:declare_variables://
+
+            /** EXAMPLE:    TouchFile( "myTextFile.txt" );   **/
+            AAC2020_PHEXDUM_TouchFile( nof_wex );
+
+            /** ******************************************** ***
+            @VID_IID[ 0120 ]TIME[ 09:16:20 ] ( "w+" )
+            @VID_IID[ 0120 ]TIME[ 09:33:12 ] ( "w"  )
+            @VID_IID[ 0121 ]TIME[ 00:37:42 ] ( rbsrbs says )
+            https://linux.die.net/man/3/fdopen
+
+                rbsrbs: that will always be 0 
+                        if you open in mode "w"
+
+                rbsrbs: in linux b is ignored but 
+                        always good to be explicit
+            *** ******************************************** **/
+
+            /** Create if not exist. Truncate to zero. **/
+            fil_han = fopen( nof_wex , "wb" );
+
+            //:get_number_of_bytes_in_file:------------------://
+            /** SEEK_SET : GCC: unistd.h && mmsystem.h **/
+            /** SEEK_END : GCC: unistd.h && mmsystem.h **/
+            #define MACRO_SEEK_SET 0  
+            #define MACRO_SEEK_END 2  
+
+                //:Seek to end and get number of bytes.
+                //:Then reset file handle to start of file.
+                fseek( fil_han , 0 , MACRO_SEEK_END );
+                fil_nob = ftell( fil_han ); 
+                fseek( fil_han , 0 , MACRO_SEEK_SET );
+
+            #undef  MACRO_SEEK_SET
+            #undef  MACRO_SEEK_END
+            //:------------------:get_number_of_bytes_in_file://
+            //:make_sure_number_of_bytes_is_zero:------------://
+
+                if( 0  > fil_nob ){
+
+                    printf("[fil_nob]:%d\n" , fil_nob );
+                    ERR("[NEGATIVE_NUMBER_OF_BYTES_IN_FILE]");
+
+                }else
+                if( 0 != fil_nob ){
+
+                    printf("[fil_nob]:%d\n" , fil_nob );
+                    ERR("[EXPECTED_TRUNCATED_TO_ZERO_FILE]");
+
+                };;
+
+            //:------------:make_sure_number_of_bytes_is_zero://
+            //:write_text_using_binary_write:----------------://
+            #define MACRO_SEEK_SET 0  /**unistd.h, mmsystem.h**/
+
+                if( ((void*)0) != fil_han ){
+                
+                    fseek( fil_han , 0 , MACRO_SEEK_SET );
+                    fwrite( 
+                        chr_arr
+                    ,   1       //:[ ASCII_CHAR == 1 byte ]://  
+                    ,   str_len //:Number_Of_Characters
+                                //:NOT[ str_nob ]because strings  
+                                //:not null term in text files .
+                
+                    ,   fil_han //:File We are writing into.
+                    );;
+                    fclose( fil_han );
+                
+                }else{
+                    /** IDKWID: I_Dont_Know_What_Iam_Doing **/
+                    printf("[SAVE_FAIL:nof_wex]:%s\n",nof_wex);
+                    ERR("[FAIL_TO_SAVE_TEXT_FILE:WHY:IDKWID]");
+                };;
+
+            #undef  MACRO_SEEK_SET
+            //:----------------:write_text_using_binary_write://
+
+            LOG("[AAC2020_PHEXDUM_SaveFile_TXT:END]",0);
+            return( 0x00 );
+        }
+
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+
+        I32
+        AAC2020_PHEXDUM_SaveFile_U08(
+            CHR* nof_wex /** NameOfFile__WithEXtension   ....**/
+        ,   U08* arr_u08 /** String To Save To Disk .........**/
+        ,   U32  arr_len /** Num Chars In chr_arr   .........**/
+        ){
+            I32 return_value_from_function=( 0 );
+
+            /** @VID_IID[ 0126 ]TIME[ 05:39:12 ] *********** **/
+            /**[HACK]:SaveFile_PNG is just a wrapper of      **/
+            /**       SaveFile_TXT because PNG is just a     **/
+            /**       series of bytes and so is ascii.       **/
+            /**       But slightly improper because          **/
+            /**       last bit of ascii is undefined.        **/
+            /** ******************************************** **/
+            CHR* chr_arr ;
+            U32  str_len ;
+            return_value_from_function=( 
+                AAC2020_PHEXDUM_SaveFile_TXT(
+                         nof_wex /** NameOfFile__WithEXt **/
+                ,   ( chr_arr = ((CHR*)arr_u08 )  )
+                ,   ( str_len = (      arr_len )  )
+                ));;
+
+            return( return_value_from_function );
+        }
+
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+
+    #undef  U08  //:------------------------------------: 01 ://
+    #undef  I32  //:------------------------------------: 02 ://
+    #undef  U32  //:------------------------------------: 03 ://
+    #undef  CHR  //:------------------------------------: 04 ://
+    #undef  LOG  //:------------------------------------: 05 ://
+    #undef  ERR  //:------------------------------------: 06 ://
+    //:================================:SAVE_C99_FILE_TO_DISK://
+    //:================================:SAVE_TXT_FILE_TO_DISK://
+    //:SAVE_PNG_FILE_TO_DISK:================================://
+    #define U08    uint8_t /** GCC: <stdint.h> **/    //: 01 ://
+    #define U32   uint32_t /** GCC: <stdint.h> **/    //: 02 ://
+    #define I32    int32_t /** GCC: <stdint.h> **/    //: 03 ://
+    #define CHR const char                            //: 04 ://
+    #define TXT       char                            //: 05 ://
+    #define ERR aac2020_phexdum_Halt                  //: 06 ://
+
+        int
+        AAC2020_PHEXDUM_SaveFile_PNG(
+            CHR* nof_wex /** NameOfFile__WithEXtension       **/
+        ,   U08* pix_arr /** PIXel ARRay in RGBA byte format **/
+        ,   U32  pix_wid /** Width  in pixels of pix_arr     **/
+        ,   U32  pix_hig /** Height in pixels of pix_arr     **/
+        )
+        {   /** ******************************************** ***
+            @VID_IID[ 0095 ]TIME[ 01:32:50 ]  
+            This function was made by copying and pasting     
+            R:\G\AAC2020\LIB\MAIN\AAC2020_TestSaveFile_PNG._  
+            and refactoring it to be more general use.   
+     
+            @VID_IID[ 0123 ]TIME[ 01:59:59 ]
+            This code is now officially cut-paste code
+            of cut-paste-code. Very meta.
+            *** ******************************************** **/
+            //:error_check_inputs:---------------------------://
+
+                if( ((CHR*)0) == nof_wex ){ 
+                    ERR("[AAC2020_SAYS:NIL_STR_nof_wex_2021]");
+                };;
+
+                if( ((U08*)0) == pix_arr ){ 
+                    ERR("[AAC2020_SAYS:NIL_ARR_pix_arr:2021]");
+                };;
+                if( 0 == pix_wid || 0 == pix_hig ){
+                    ERR("[INVALID_PNG_SIZE]");
+                };;
+
+                /** ".PNG" is 4 characters. Thus file name **/
+                /** should be MORE than 4 characters.      **/
+                if( strlen( nof_wex ) <= 4 ){
+                    ERR("[NO_POSSIBLE_WAY_NAME_IS_VALID_2021]");
+                };;
+
+                if(   '/' == nof_wex[ 0 ] //:FORWARDSLASH___CHAR
+                ||   '\\' == nof_wex[ 0 ] //:BACKSLASH_CHARACTER
+                ){
+                    /**   DO_NOT_PUT_SLASH_BEFORE_BASE_FOLDER**/
+                    ERR("[DO_NOT_PUT_SLASH_B4_BASE_FOLDER]");
+                };;
+            //:---------------------------:error_check_inputs://
+            //:SAVE_FILE_PNG:--------------------------------://
+            #define FILE_PNG ( "USE:nof_wex" );
+
+                //:create_relative_file_path:fip_png:--------://
+
+                    /**  @VID_IID[ 0095 ]TIME[ 01:08:42 ]    **/
+                    /**  Base Name Of The Saved File.        **/
+                    CHR* nam_bas = "MOD/" ;
+
+                    I32  len_nof = strlen( nof_wex );
+                    I32  len_bas = strlen( nam_bas );
+                    I32  len_all =( len_nof + len_bas );
+                    TXT* fip_png =((TXT*)0);
+
+                    /** @VID_IID[ 0095 ]TIME[ 01:07:20 ]     **/
+                    /** Create max index (m_i) variables.    **/
+                    I32 m_i_bas =( len_bas           - 1 );
+                    I32 m_i_nof =( len_nof + len_bas - 1 );
+
+                    fip_png = calloc(1, ( len_all + 1 ) );
+
+                    I32 l_i =( 0 ); //:local_index
+
+                    for( I32 i = 0 ; i < len_all ; i ++ ){
+                    #define E aac2020_phexdum_Halt //:///////://
+
+                        if( i >=(   0   )
+                        &&  i <=(m_i_bas)
+                        ){
+                            l_i =( i - 0 );
+                            if( l_i < 0 || l_i > m_i_bas ){
+                                E("[l_i:OOB:FROM:BASEFOLDER]");
+                            };;
+
+                            fip_png[ i ] = nam_bas[ l_i ];
+                        }else
+                        if( i >=( m_i_bas + 1 ) 
+                        &&  i <=( m_i_nof + 0 )
+                        ){  /** **************************** ***
+                            @VID_IID[ 0096 ]TIME[ 00:13:00 ]  
+                            Minus_One_Fix_To_Var[ l_i ]  
+                            *** **************************** **/
+                            l_i =( i - m_i_bas - 1 );
+                            if( l_i < 0 || l_i > (len_nof-1) ){
+                                E("[l_i:OOB:FROM:FILENAME]");
+                            };;
+                            fip_png[ i ] = nof_wex[ l_i ];
+                        }else{
+                            E("[OUT_OF_BOUNDS_SAVE_FILE_2021]");
+                        };;
+
+                    #undef  E  //:///////////////////////////://
+                    };; //://////////////////////////////////://
+                    /** ************************************ ***
+                    @VID_IID[ 0095 ]TIME[ 01:25:16 ]ORGINAL
+                    @VID_IID[ 0123 ]TIME[ 01:31:32 ]CLEANUP
+                    Make absolutely sure there is a null   
+                    terminator at the end of all of this.  
+                    *** ************************************ **/
+
+                    fip_png[ (len_all+1)-1 ]=( 0x00 );
+
+                    /** ************************************ **/
+                //:--------:create_relative_file_path:fip_png://
+
+                //: We don't have a touchFolder, only TouchFile.
+                //: AAC2020_PHEXDUM_TouchFolder("./MOD");
+                AAC2020_PHEXDUM_TouchFile( fip_png );
+
+                U32 result = ( 11223344 /** TRAPVALUE **/ );
+
+                #if( AAC2020_INCLUDE_LODEPNG >= 1 ) //:######://
+
+                    result=( 
+                        lodepng_encode32_file( 
+                            fip_png  //:FIlePath__of__PNG
+
+                        ,   pix_arr  //:PIXEL__u08__ARRay
+                        ,   pix_wid  //:Width__in__PIXELS
+                        ,   pix_hig  //:Height_in__PIXELS
+                        )
+                    );;
+
+                #endif //:###################################://
+                #if( AAC2020_INCLUDE_LODEPNG <= 0 ) //:######://
+                /** ********************************************
+                @VID_IID[ ???? ]TIME[ 3H 17M 18S ]       *** ***
+                @VID_IID[ 0123 ]TIME[ 01:51:42   ]       *** ***
+                When lodepng is not included, we just    *** ***
+                want to pretend it returned success      *** ***
+                so that we do not crash the program.     *** ***
+                ((( result = ( 0 ) )))                   *** ***
+                *** **************************************** **/
+                    result = ( 0 );
+
+                    /** @VID_IID[ 0065 ]TIME[ 3H 19M 29S ]   **/
+                    /** SILENCE THE COMPILER.                **/
+                    /** @NOP_NOL_PNG@ : NOOP: NO: LODEPNG    **/
+                    if( pix_arr[0]> 1 ){ /**  NOP_NOL_PNG **/ };
+                    if( pix_wid   > 1 ){ /**  NOP_NOL_PNG **/ };
+                    if( pix_hig   > 1 ){ /**  NOP_NOL_PNG **/ };
+
+                    #define P printf //://///////////////////://
+                    P("\n\n"                                  );
+                    P("[*********************************]\n" );
+                    P("[- - - - - - - - - - - - - - - - -]\n" );
+                    P("[FROM:LIB/PHEXDUM.F._.............]\n" );
+                    P("[- - - - - - - - - - - - - - - - -]\n" );
+                    P("[PNG_FILE_IS_JUST_A_STUB_FILE.....]\n" );
+                    P("[PLEASE_INCLUDE_LODEPNG_TO_FIX....]\n" );
+                    P("[SET:AAC2020_INCLUDE_LODEPNG >= 1 ]\n" );
+                    P("[*********************************]\n" );
+                    P("[SHOULD_BE_IN: LIBCHAN.TOP._ .....]\n" );
+                    P("[*********************************]\n" );
+                    P("\n\n"                                  );
+                    fflush( stdout ); //:////////////////////://
+                    #undef  P //:////////////////////////////://
+
+                #endif //:###################################://
+                //:free_calloc_memory:-----------------------://
+
+                    free( fip_png /** FIlePath_PNG **/ ); 
+
+                //:-----------------------:free_calloc_memory://
+            #undef  FILE_PNG
+            //:--------------------------------:SAVE_FILE_PNG://
+
+            return( result );
+        } 
+
+    #undef  U08                                       //: 01 ://
+    #undef  U32                                       //: 02 ://
+    #undef  I32                                       //: 03 ://
+    #undef  CHR                                       //: 04 ://
+    #undef  TXT                                       //: 05 ://
+    #undef  ERR                                       //: 06 ://
+    //:================================:SAVE_PNG_FILE_TO_DISK://
+    //:LOAD_FILE_IF_EXISTS:==================================://
+    #define I32   int32_t /** GCC: <stdint.h> **/     //: 01 ://
+    #define U32  uint32_t /** GCC: <stdint.h> **/     //: 02 ://
+    #define U08   uint8_t /** GCC: <stdint.h> **/     //: 03 ://
+    #define CHR  const char                           //: 04 ://
+    #define LOG  aac2020_phexdum_Info_any             //: 05 ://
+    #define ERR  aac2020_phexdum_Halt                 //: 06 ://
+
+        /** @VID_IID[ 01:46:50 ] *************************** **/
+        /** Using for both loading of ascii text and         **/
+        /** .PNG file binary data.                           **/
+        /**                                                  **/
+        /** rbsrbs: I don't like that mixing                 **/
+        /**                                                  **/
+        /** ************************************************ **/
+        /** @VID_IID[ 02:04:50 ]                             **/
+        /** rbsrbs: last bit of char is implemented defined  **/
+        /** ( Because ascii is 7 bits? )                     **/
+        /** ************************************************ **/
+
+        U32 
+        AAC2020_PHEXDUM_LoadFileIfExists(
+            CHR*         fip_inn //:EX:FRAGBED_001.frag
+        ,   P_T          bin_txt //: 1 == binary is ascii text
+        ,   U08*  *BYREF_fil_mem //:DESTINATION
+        ,   I32   *BYREF_fil_nob //:Number_Of_Bytes_In:fil_mem
+        )
+        {
+            //:check_inputs:---------------------------------://
+
+                /** References Can Never Be Null **/
+
+                if( ((void*)0) ==  BYREF_fil_mem   ){
+                    ERR("[AAC2020_PHEXDUM:REFS_NEVER_NULL]");
+                };;
+
+                /** @VID_IID[ 0121 ]TIME[ 01:38:30 ] *** **/
+                /** Expect void because this function    **/
+                /** has the job of allocating memory and **/
+                /** setting the data pointer.            **/
+                /** ************************************ **/
+
+                if( ((void*)0) != (*BYREF_fil_mem) ){
+                    ERR("[EXPECTED_NULL]");
+                };;
+
+            //:---------------------------------:check_inputs://
+            //:declare_variables:----------------------------://
+
+                U08* fil_mem     =((void*)0 );
+                int  fil_nob     =( 0 - 808 ); //: TrapValue
+                int  file_exists =( 0       ); //: 0 ==undefined 
+
+            //:----------------------------:declare_variables://
+            //:DOES_THE_FILE_EXIST_ON_DISK:?:----------------://
+            #define F_OK 0 /** unistd.h **/
+            #define FNAM fip_inn
+
+            if( access( FNAM , 0x00 /** F_OK **/ ) != -1 ) {
+            file_exists=( 1 );
+
+            //:DOES_THE_FILE_EXIST_ON_DISK:YES:
+     
+                //:READ_ALLOCATE_AND_COPY:-------------------://
+                /** SEEK_SET : GCC: unistd.h && mmsystem.h **/
+                /** SEEK_END : GCC: unistd.h && mmsystem.h **/
+                #define MACRO_SEEK_SET 0  
+                #define MACRO_SEEK_END 2  
+
+                    //:fil_nob:GET_FILE_NUMBER_OF_BYTES:-----://
+
+                        //:Open file for "read as binary" ("rb")
+                              fil_nob =( 0 - 404 );
+                        FILE* fil_han = fopen( 
+                            fip_inn , "rb" );;
+                        
+                        //:Seek to end and get number of bytes.
+                        //:Reset file handle to start of file.
+                        fseek( fil_han , 0 , MACRO_SEEK_END );
+                        fil_nob = ftell( fil_han );
+                        fseek( fil_han , 0 , MACRO_SEEK_SET );
+
+                    //:fil_nob:GET_FILE_NUMBER_OF_BYTES:-----://
+                    //:ALLOCATE_MEMORY:----------------------://
+                    #define ANYTEXT AAC2020_PHEXDUM_P_T_ANYTEXT
+                    #define PNGFILE AAC2020_PHEXDUM_P_T_PNGFILE
+
+                        if( ANYTEXT == bin_txt ){  
+
+                            //:1. Allocate_Memory.
+                            //:2. Add extra null byte to end.
+                            fil_mem = calloc( 1 , fil_nob+1 );
+                            ((char*)fil_mem)[ fil_nob ]='\0';
+                        }else
+                        if( PNGFILE == bin_txt ){  
+
+                            fil_mem = calloc( 1 , fil_nob+0 );
+                        }else{
+                            ERR("[bin_txt:zero==undefined]");
+                        };;
+
+                        //:Set output parameter(s):
+                        (*BYREF_fil_mem)=fil_mem;
+                        (*BYREF_fil_nob)=fil_nob;
+
+                    #undef ANYTEXT
+                    #undef PNGFILE
+                    //:----------------------:ALLOCATE_MEMORY://
+                    //:READ_FILE_INTO_ALLOCATED_MEMORY:------://
+
+                        fread( 
+                            fil_mem  //:<-- DESTINTION(WRITE)
+                        ,   fil_nob 
+                        ,   1        //:Read 1 byte at a time
+                        ,   fil_han  //:SOURCE(READ)
+                        );;
+
+                    //:------:READ_FILE_INTO_ALLOCATED_MEMORY://
+                    //:DONT_FORGET_TO_CLOSE_FILE:------------://
+
+                        fclose( fil_han );
+
+                    //:------------:DONT_FORGET_TO_CLOSE_FILE://
+                #undef MACRO_SEEK_SET
+                #undef MACRO_SEEK_END
+                //:-------------------:READ_ALLOCATE_AND_COPY://
+               
+                LOG("[file_YES_on_disk]:%s\n" 
+                ,   (void*)((CHR*)fip_inn)
+                );;
+             
+                file_exists=( 0 + 4 );
+            }else{ 
+                file_exists=( 0 - 4 );
+    
+                /** **************************************** **/
+                /** Not necessary because these would    *** **/
+                /** be the original inputs anyways. But  *** **/
+                /** do this for clarity and in case      *** **/
+                /** code above changes. Set to null      *** **/
+                /** and zero to signal failuire.         *** **/
+                /** @VID_IID[ 0121 ]TIME[ 04:51:12 ]     *** **/
+                /** **************************************** **/
+
+                (*BYREF_fil_mem)=((U08*)0);
+                (*BYREF_fil_nob)=(   0   );
+       
+                LOG("[file_NOT_on_disk]:%s\n"
+                , (void*)((CHR*)fip_inn) );;
+              
+            };;
+            #undef  F_OK
+            #undef  FNAM
+            //:----------------:DOES_THE_FILE_EXIST_ON_DISK:?://
+            //:ASSERT_NULL_TERMINATOR:-----------------------://
+            #define BYREF_BOI BYREF_fil_mem
+
+                /** ADDED[ DATE[ 2020_11_16 ] ] ************ **/
+
+                if( file_exists >= 1 ){
+
+                    if( '\0' != fil_mem[ fil_nob ] ){
+                        ERR("[DONE_FUCKED_UP:001]");
+                    };;
+
+                    if( '\0' != (*BYREF_BOI)[ fil_nob ] ){
+                        ERR("[DONE_FUCKED_UP:002]");
+                    };;
+
+                }else{
+                /** **************************************** ***
+                @VID_IID[ 0123 ]TIME[ 02:07:42 ]
+                If file does NOT exist... We do this stuff.
+                I don't know why. I don't even know if it is
+                needed. Maybe it is left-over vestigial code
+                from cutting+pasting+refactoring...
+                But not confident enough to delete it.
+                *** **************************************** **/
+
+                ERR("[WTF_AM_I_DOING:2021_02_03]");
+                 
+                //?   /** nod_noc: NotOnDisk:NumberOfChars **/
+                //?   int nod_noc = strlen(*BYREF_BOI);
+                //?   
+                //?   /** nod_nob: NotOnDisk:NumberOfBytes **/ 
+                //?   int nod_nob = ( nod_noc + 1 );
+                //?   
+                //?   if( '\0' != (*BYREF_BOI)[ nod_nob - 1 ]){
+                //?       ERR("[MESSED_UP_WITH_A_CAPTIAL_EFF]");
+                //?   };;
+
+                };;
+
+            #undef BYREF_BOI
+            //:-----------------------:ASSERT_NULL_TERMINATOR://
+
+            return( 0x00 );
+        }
+       
+    #undef  I32  //:------------------------------------: 01 ://
+    #undef  U32  //:------------------------------------: 02 ://
+    #undef  U08  //:------------------------------------: 03 ://
+    #undef  CHR  //:------------------------------------: 04 ://
+    #undef  LOG  //:------------------------------------: 05 ://
+    #undef  ERR  //:------------------------------------: 06 ://
+    //:==================================:LOAD_FILE_IF_EXISTS://
+
+#undef DONT_DECLARE_MACROS_____ON_____FILE_READ_WRITE_SECTION
+//:==========================================================://
+//:||||||||||||||||||||||||||||||||||:FILE_READ_WRITE_SECTION://
+//:==========================================================://
+//:FILE_ACCESS_WRAPPER_METHODS:==============================://
+#define BIN AAC2020_PHEXDUM_P_T_PNGFILE               //: 01 ://
+#define I32  int32_t /** GCC: <stdint.h> **/          //: 02 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 03 ://
+#define U08  uint8_t /** GCC: <stdint.h> **/          //: 04 ://
+#define CHR const char                                //: 05 ://
+
+    U32
+    AAC2020_PHEXDUM_LoadFile_U08(
+        CHR*         nof_wex //:AKA[ fip_inn ]
+    ,   U08*  *BYREF_u08_arr //:DESTINATION
+    ,   I32   *BYREF_u08_len //:Number_Of_Bytes_In:fil_mem
+    )
+    {
+        //:check_inputs:-------------------------------------://
+        assert( strlen(nof_wex) >= 3 ); //:[O.0]
+
+        assert( ((U08**)0) !=( BYREF_u08_arr ) );
+        assert( ((I32* )0) !=( BYREF_u08_len ) );
+
+        assert( ((U08* )0) ==(*BYREF_u08_arr ) );
+        assert( ((I32  )0) ==(*BYREF_u08_len ) );
+        //:-------------------------------------:check_inputs://
+        //:load_file:----------------------------------------://
+            U32 useless_return_value_because_not_implemented=(
+            AAC2020_PHEXDUM_LoadFileIfExists(
+                      nof_wex //: AKA[ fip_inn       ]
+            ,             BIN //: Loading Binary File
+            ,   BYREF_u08_arr //: AKA[ BYREF_fil_mem ]
+            ,   BYREF_u08_len //: AKA[ BYREF_fil_nob ]
+            ));;
+    
+        //:----------------------------------------:load_file://
+
+        /** @VID_IID[ 0127 ]TIME[ 02:21:23 ] *************** **/
+        /** Make it obvious that return value is not used.   **/
+        /** A non-zero flag would be nice for when there is  **/
+        /** a failure to load.                               **/
+        return( useless_return_value_because_not_implemented );
+    }
+
+#undef  BIN  //:----------------------------------------: 01 ://
+#undef  I32  //:----------------------------------------: 02 ://
+#undef  U32  //:----------------------------------------: 03 ://
+#undef  U08  //:----------------------------------------: 04 ://
+#undef  CHR  //:----------------------------------------: 05 ://
+//:==============================:FILE_ACCESS_WRAPPER_METHODS://
+//:HELPER_FUNCTIONS_I_DIDNT_REALIZE_I_NEEDED:================://
+//:U32_ARR_TO_U08_ARR:=======================================://
+//:U08_ARR_TO_U32_ARR:=======================================://
+#define I32  int32_t /** GCC: <stdint.h> **/          //: 01 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 02 ://
+#define U08  uint8_t /** GCC: <stdint.h> **/          //: 03 ://
+#define ERR aac2020_phexdum_Halt                      //: 04 ://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    AAC2020_PHEXDUM_u08_arr_CTO_u32_arr(
+        U08*        u08_arr  //:<--------------ARR_DAT
+    ,   I32         u08_len  //:<--------------ARR_LEN
+    ,   U32*             *BYREF_u32_arr //:<-- ARR_DAT
+    ,   I32              *BYREF_u32_len //:<-- ARR_LEN
+    )
+    {
+        //:input_checks:-------------------------------------://
+        assert( ((U08* )0) !=         u08_arr  ); //:INN_PUTS
+        if( u08_len <= 0 ){
+
+            ERR("[BAD:u08_len:u08_arr_CTO_u32_arr]");
+
+        };;
+ 
+        assert( ((U32**)0) !=   BYREF_u32_arr  ); //:OUT_PUTS
+        assert( ((I32* )0) !=   BYREF_u32_len  ); //:OUT_PUTS
+ 
+        assert( ((U32* )0) ==( *BYREF_u32_arr) ); //:OUT_PUTS
+        assert( ((I32  )0) ==( *BYREF_u32_len) ); //:OUT_PUTS
+        //:-------------------------------------:input_checks://
+        //:declare_and_allocate_vars:------------------------://
+
+            U32* u32_arr = calloc( u08_len/4 , sizeof( U32 ) );
+            I32  u32_len =       ( u08_len/4 );
+
+            I32  u32_dex ;                 /** u32_dex / u_d **/
+            I32  u32_m_i =( u32_len - 1 ); /** u32_m_i / m_i **/
+            I32      b_o ;                 /** base offset   **/
+
+        //:------------------------:declare_and_allocate_vars://
+        //:CORE_LOGIC_OF_FUNCTION:===========================://
+        #define INN u08_arr
+        #define OUT u32_arr
+        for( u32_dex = 0 ; u32_dex <= u32_m_i ; u32_dex++ ){
+
+            /** #_NETWORK_BYTE_ORDER_# **/
+
+            b_o = ( u32_dex * 4            );
+            assert( u32_dex * 4 ==     b_o );
+            assert(     b_o / 4 == u32_dex );
+
+            OUT[ u32_dex ]=( ((U32)0x00000000)
+            |   ( INN[ b_o + 0 ] << 24 )  
+            |   ( INN[ b_o + 1 ] << 16 )  
+            |   ( INN[ b_o + 2 ] <<  8 )  
+            |   ( INN[ b_o + 3 ] <<  0 )  
+            );;
+
+        };;
+        #undef  INN
+        #undef  OUT
+        //:===========================:CORE_LOGIC_OF_FUNCTION://
+        //:return_via_output_params:-------------------------://
+
+            (*BYREF_u32_arr)=( u32_arr );
+            (*BYREF_u32_len)=( u32_len );
+
+        //:-------------------------:return_via_output_params://
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    AAC2020_PHEXDUM_u32_arr_CTO_u08_arr(
+        U32*        u32_arr  //:<--------------ARR_DAT
+    ,   I32         u32_len  //:<--------------ARR_LEN
+    ,   U08*             *BYREF_u08_arr //:<-- ARR_DAT
+    ,   I32              *BYREF_u08_len //:<-- ARR_LEN
+    )
+    {
+        //:input_checks:-------------------------------------://
+        assert( ((U32* )0) !=         u32_arr  ); //:INN_PUTS
+        if( u32_len <= 0 ){
+
+            ERR("[BAD:u32_len:u32_arr_CTO_u08_arr]");
+
+        };;
+
+        assert( ((U08**)0) !=   BYREF_u08_arr  ); //:OUT_PUTS
+        assert( ((I32* )0) !=   BYREF_u08_len  ); //:OUT_PUTS
+
+        assert( ((U08* )0) ==( *BYREF_u08_arr) ); //:OUT_PUTS
+        assert( ((I32  )0) ==( *BYREF_u08_len) ); //:OUT_PUTS
+        //:-------------------------------------:input_checks://
+        //:declare_and_allocate_vars:------------------------://
+
+            U08* u08_arr = calloc( u32_len*4 , sizeof( U08 ) );
+            I32  u08_len =       ( u32_len*4 );
+
+            /** ******************************************** **/
+            /** @VID_IID[ 0127 ]TIME[ 00:22:33 ]             **/
+            /** NOT hungerian notation.                      **/
+            /** u32_dex ==     index of a uint32 array.      **/
+            /** u32_m_i == max index of uint32 array         **/
+            /** ******************************************** **/
+
+            I32  u32_dex ;                 /** u32_dex / u_d **/
+            I32  u32_m_i =( u32_len - 1 ); /** u32_m_i / m_i **/
+            I32      b_o ; /** Base Offset **/
+        //:------------------------:declare_and_allocate_vars://
+        //:CORE_LOGIC_OF_FUNCTION:===========================://
+        #define INN u32_arr
+        #define OUT u08_arr
+        for( u32_dex = 0 ; u32_dex <= u32_m_i ; u32_dex++ ){
+
+            /** ******************************************** ***
+            #_NETWORK_BYTE_ORDER_#:
+            [     0x01020304        ,        0x05060708     ]
+            [ 01 , 02 , 03 , 04     ,     05 , 06 , 07 , 07 ]
+            @VID_IID[ 0127 ]TIME[ 00:34:23 ]         
+            @VID_IID[ 0127 ]TIME[ 01:38:50 ]FIXED_ALGORITHM
+            *** ******************************************** **/
+        
+            b_o = (         4  * u32_dex );
+            assert(   b_o / 4 == u32_dex );
+
+            OUT[ b_o + 0 ]=( ( INN[ u32_dex ] >> 24 ) & 0xFF );
+            OUT[ b_o + 1 ]=( ( INN[ u32_dex ] >> 16 ) & 0xFF );
+            OUT[ b_o + 2 ]=( ( INN[ u32_dex ] >>  8 ) & 0xFF );
+            OUT[ b_o + 3 ]=( ( INN[ u32_dex ] >>  0 ) & 0xFF );
+
+        };;
+        #undef  INN
+        #undef  OUT
+        //:===========================:CORE_LOGIC_OF_FUNCTION://
+        //:return_via_output_params:-------------------------://
+
+            (*BYREF_u08_arr)=( u08_arr );
+            (*BYREF_u08_len)=( u08_len );
+
+        //:-------------------------:return_via_output_params://
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+#undef  I32  //:----------------------------------------: 01 ://
+#undef  U32  //:----------------------------------------: 02 ://
+#undef  U08  //:----------------------------------------: 03 ://
+#undef  ERR  //:----------------------------------------: 04 ://
+//:=======================================:U32_ARR_TO_U08_ARR://
+//:=======================================:U08_ARR_TO_U32_ARR://
+//:================:HELPER_FUNCTIONS_I_DIDNT_REALIZE_I_NEEDED://
+//:PRIVATE_API_HELPER_FUNCTIONS:=============================://
+#define I32    int32_t /** GCC: <stdint.h> **/        //: 01 ://
+#define U32   uint32_t /** GCC: <stdint.h> **/        //: 02 ://
+#define U08    uint8_t /** GCC: <stdint.h> **/        //: 03 ://
+#define CHR       char /** NON CONST STRING**/        //: 04 ://
+#define C_C const char                                //: 05 ://
+#define ERR aac2020_phexdum_Halt                      //: 06 ://
+#define T_U toupper                                   //: 07 ://
+#define ROO aac2020_phexdum_SquareRoot                //: 08 ://
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    U32
+    aac2020_phexdum_SquareRoot(
+    I32  inn  //:<-- Input To ROOT(ROO)
+    )
+    {
+    /** **************************************************** ***
+    @VID_IID[ 0125 ]TIME[ 01:33:03 ]
+    Because this is a private function, we can do the bare
+    minimum needed to ge the code working. 
+    Not going to support.
+    1: NON power of 2 images.
+    2: Power of 2 images over 512x512
+    *** **************************************************** **/
+        U32 out=( 0 );
+
+        //|<---HEX-->|<--DECIMAL-->|||||||||||<--DECROOT->||||//
+        if(     0x1  /**      1  **/ == inn ){ out =   1 ; };
+        if(     0x4  /**      4  **/ == inn ){ out =   2 ; };
+        if(    0x10  /**     16  **/ == inn ){ out =   4 ; };
+        if(    0x40  /**     64  **/ == inn ){ out =   8 ; };
+        if(   0x100  /**    256  **/ == inn ){ out =  16 ; };
+        if(   0x400  /**   1024  **/ == inn ){ out =  32 ; };
+        if(  0x1000  /**   4096  **/ == inn ){ out =  64 ; };
+        if(  0x4000  /**  16384  **/ == inn ){ out = 128 ; };
+        if( 0x10000  /**  65536  **/ == inn ){ out = 256 ; };
+        if( 0x40000  /** 262144  **/ == inn ){ out = 512 ; };
+        //|<---HEX-->|<--DECIMAL-->|||||||||||<--DECROOT->||||//
+
+        return( out );
+    }
+    
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    I32
+    aac2020_phexdum_StrCmp(
+        C_C* s_1
+    ,   C_C* s_2
+    )
+    {
+    #define CUC const unsigned char
+
+        while( *s_1 && (  T_U(*s_1) == T_U(*s_2)  ) ){
+            s_1++;
+            s_2++;
+        };;
+
+        /** ************************************************ **/
+        /** @VID_IID[ 0122 ]TIME[ 00:49:47 ]             *** **/
+        /** rbsrbs: the unsigned cast is quite           *** **/
+        /**         pedantic indeed                      *** **/
+        /** rbsrbs: it's mostly because the last bit of  *** **/
+        /**         char being undeterminate again       *** **/
+        /** ************************************************ **/
+        CUC u_1 = (CUC)( toupper( *s_1 ) ) ;
+        CUC u_2 = (CUC)( toupper( *s_2 ) ) ;
+        return(  u_1 - u_2  )              ;
+
+    #undef  CUC
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    CHR*
+    aac2020_phexdum_CFS(
+        CHR* non_freeable_string
+    )
+    {
+        /** CFS: CreateFreeableString                 **/
+        /** AKA: aac2020_phexdum_CreateFreeableString **/
+
+        I32  str_len =( strlen( non_freeable_string ) );
+        if(  str_len <= 0 ){
+            ERR("[BAD:str_len:aac2020_phexdum_CFS]");
+        };;
+
+        CHR* str_out = calloc( str_len + 1 , sizeof( CHR ) );
+
+        /** Copy String Contents. **/
+        while( str_len-- ){ str_out[ str_len ]
+              = non_freeable_string[ str_len ]; };
+
+        str_out[ str_len + 0 ]=( '\0' );
+        return( str_out );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    aac2020_phexdum_MAK_hex_str( 
+        U08* u08_arr //:INN: array of bytes
+    ,   I32  arr_dex //:INN: first index to read
+
+    ,   I32  *BYREF_las_dex  //:OUTPARAM: last_used_index
+    ,   CHR*    OUT_hex_str  //:OUTPARAM: built_hex_literal
+    )
+    {
+        //:input_checks:-------------------------------------://
+
+            if( ((U08*)0) == u08_arr ){ ERR("[NIL:u08_arr]"); };
+
+        //:-------------------------------------:input_checks://
+        //:core_logic_of_function:---------------------------://
+        #define HEX OUT_hex_str   //:-------------------: 01 ://
+
+        /** @VID_IID[ 0121 ]TIME[ 05:52:32 ] **/
+        /** rbsrbs: X for hex in cap letters **/
+        /** Creates[   "FF" ]                **/
+        /**     NOT[ "0xFF" ]                **/
+
+        sprintf( &( HEX[ 0 ]) , "%s"  , "0x"                  );
+        sprintf( &( HEX[ 2 ]) , "%02X", u08_arr[ arr_dex + 0 ]);
+        sprintf( &( HEX[ 4 ]) , "%02X", u08_arr[ arr_dex + 1 ]);
+        sprintf( &( HEX[ 6 ]) , "%02X", u08_arr[ arr_dex + 2 ]);
+        sprintf( &( HEX[ 8 ]) , "%02X", u08_arr[ arr_dex + 3 ]);
+
+        #undef  HEX  //:--------------------------------: 01 ://
+        //:---------------------------:core_logic_of_function://
+        //:said_in_a_clunkier_way:---------------------------://
+        /** ************************************************ ***
+
+            The non-compact way to do the above code.
+            @VID_IID[ 0121 ]TIME[ 06:02:32 ]INITIAL_CODE
+            @VID_IID[ 0121 ]TIME[ 06:08:11 ]FIXED_CODE_BELOW
+
+            //: "FF" + null terminator == 3 characters.  
+            CHR b_1[ 3 ]={ 0 };
+            CHR b_2[ 3 ]={ 0 };
+            CHR b_3[ 3 ]={ 0 };
+            CHR b_4[ 3 ]={ 0 };
+
+            OUT_hex_str[ 0 ] = '0' ;
+            OUT_hex_str[ 1 ] = 'x' ;
+           
+            OUT_hex_str[ 2 ] = b_1[ 0 ];
+            OUT_hex_str[ 3 ] = b_1[ 1 ];
+
+            OUT_hex_str[ 4 ] = b_2[ 0 ];
+            OUT_hex_str[ 5 ] = b_2[ 1 ];
+
+            OUT_hex_str[ 6 ] = b_3[ 0 ];
+            OUT_hex_str[ 7 ] = b_3[ 1 ];
+
+            OUT_hex_str[ 8 ] = b_4[ 0 ];
+            OUT_hex_str[ 9 ] = b_4[ 1 ];
+
+        *** ************************************************ **/
+        //:---------------------------:said_in_a_clunkier_way://
+        //:return_output_param(s):---------------------------://
+
+            //: [ 0 ] <-- first index ( arr_dex )
+            //: [ 1 ] 
+            //: [ 2 ] 
+            //: [ 3 ] <-- last  index ( BYREF_las_dex )
+            (*BYREF_las_dex)=( arr_dex + (4-1) );
+
+        //:---------------------------:return_output_param(s)://
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+#undef  I32  //:----------------------------------------: 01 ://
+#undef  U32  //:----------------------------------------: 02 ://
+#undef  U08  //:----------------------------------------: 03 ://
+#undef  CHR  //:----------------------------------------: 04 ://
+#undef  C_C  //:----------------------------------------: 05 ://
+#undef  ERR  //:----------------------------------------: 06 ://
+#undef  T_U  //:----------------------------------------: 07 ://
+#undef  ROO  //:----------------------------------------: 08 ://
+//:=============================:PRIVATE_API_HELPER_FUNCTIONS://
+//:PUBLIC_PROGRAM_API_FUNCTIONS:=============================://
+#define U08 uint8_t /** GCC: <stdint.h> **/           //: 01 ://
+#define I32 int32_t /** GCC: <stdint.h> **/           //: 02 ://
+#define CHR char                                      //: 03 ://
+#define ERR aac2020_phexdum_Halt                      //: 04 ://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    AAC2020_PHEXDUM_nak_tex_CTO_u08_arr(
+        CHR*        nak_tex
+    ,   I32         nak_len
+    ,   U08*             *BYREF_u08_arr  
+    ,   I32              *BYREF_arr_len  
+    )
+    {
+        /** @VID_IID[ 0126 ]TIME[ 02:46:11 ]FIRST__DRAFT *** **/
+        /** @VID_IID[ 0126 ]TIME[ 02:57:52 ]SECOND_DRAFT *** **/
+        /** @VID_IID[ 0126 ]TIME[ 03:03:23 ]THIRD__DRAFT *** **/
+
+        //:check_inputs:-------------------------------------://
+        #define U08_ARR  BYREF_u08_arr
+        #define ARR_LEN  BYREF_arr_len
+            
+            //:@VID_IID[ 0124 ]TIME[ 01:20:30 ] :::::::::::::://
+            if(((CHR* )0) ==  nak_tex ){ ERR("[001:0735AM]"); };
+            if(        0  >=  nak_len ){ ERR("[002:0735AM]"); };
+            if(((U08**)0) ==  U08_ARR ){ ERR("[003:0735AM]"); };
+            if(((I32* )0) ==  ARR_LEN ){ ERR("[004:0735AM]"); };
+            if(((U08* )0) !=(*U08_ARR)){ ERR("[005:0735AM]"); };
+            if((       0) !=(*ARR_LEN)){ ERR("[006:0735AM]"); };
+
+        #undef  U08_ARR  
+        #undef  ARR_LEN   
+        //:-------------------------------------:check_inputs://
+        //:variable_declaration:-----------------------------://
+
+            U08* u08_arr=((U08*)0);
+            I32  arr_len=(   0   );
+
+            I32  dex =(           0 );
+            I32  m_i =( nak_len - 1 );
+
+            CHR  win[ 3 ]  ; /** Scrolling Byte Window ......**/
+            I32  d_w       ; /** dex of win            ......**/
+            CHR  cur       ; /** current character     ......**/
+            I32  b_c       ; /** Byte counter          ......**/
+            I32  get       ; /** Get/Collect Byte Values? ...**/
+
+        //:-----------------------------:variable_declaration://
+        //:MAIN_FUNCTION_ALGORITHM:==========================://
+        for( get = 0 ; get <= (1) ; get ++ ){
+
+            if( 1 == get ){
+                arr_len =( b_c );
+                u08_arr =calloc( arr_len , sizeof( U08 ) );
+            };;
+            b_c = ( 0 ); /** Byte Counter Reset To Zero      **/
+            d_w = ( 1 ); /** DexWindow    Reset To ONE(1)    **/
+            
+        for( dex = 0 ; dex <= m_i ; dex ++ ){
+
+            cur = nak_tex[ dex ];
+            cur = toupper( cur );
+
+            /** ******************************************** **/
+            /** @VID_IID[ 0126 ]TIME[ 02:51:06 ]             **/
+            /** Must match "x" so we can throw away          **/
+            /** "0x" and not accidentially think that zero   **/
+            /** belongs to a hex byte value.                 **/
+            /** ******************************************** **/
+            if( ( cur >= 65 && cur <= 70 ) //: 'A' - 'F'
+            ||  ( cur >= 48 && cur <= 57 ) //: '0' - '9'
+            ||  (       'X' == cur       )
+            ){
+                d_w =( (d_w + 1) % 2 );
+                win[ d_w ]=( cur );
+                if( 1 == d_w ){ //:<--[ sliding_window_filled ]
+
+                    if( '0' == win[ 0 ] //:"0x" of "0xFFFF....."
+                    &&  'X' == win[ 1 ] //:"0x" of "0xFFFF....."
+                    ){
+                        //:Dont Use
+                    }else{
+                        //:Assume Data Is Valid 2 Digit Hex
+
+                        if( get >= 1 ){
+                            win[2]=((CHR)0); /** Null_Term **/
+                            u08_arr[ b_c ]=(
+                               strtoul( win, ((void*)0), 16 ));;
+                        };;
+                        b_c++;
+                    };;
+                };;  
+            };;
+        };;};;
+        //:==========================:MAIN_FUNCTION_ALGORITHM://
+        //:return_via_output_params:-------------------------://
+
+        ( *BYREF_u08_arr )=( u08_arr );
+        ( *BYREF_arr_len )=( arr_len );
+
+        //:-------------------------:return_via_output_params://
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    void
+    AAC2020_PHEXDUM_u08_arr_CTO_nak_tex(
+
+        U08*        u08_arr /**BINARY BYTES -or- PIXELS .....**/
+    ,   I32         arr_len /**rbsrbs: u08_pix_size .........**/
+
+    ,   CHR*             *BYREF_nak_tex
+    ,   I32              *BYREF_nak_len
+
+    ,   I32              *BYREF_nol_u32 
+                /** AKA: *BYREF_nof_hel **/
+    )
+    {
+    #define HEL_LEN ( 10 ) /** 0xFF00FF00 **/         //: 01 ://
+                           /** 1234567890 **/         //: -- ://
+    #define LIT_LEN ( HEL_LEN +1 +1 +1 +1 )           //: 02 ://
+    /** **************************************************** ***
+        Amount of characters per u32 hex literal 
+    
+        [+1][+1][<-- +10 -->][+1][+1]
+        ,         0xFF00FF00      \n 
+    
+    *** **************************************************** **/
+
+        //:check_inputs:-------------------------------------://
+        #define NAK_TEX BYREF_nak_tex  //:--------------: 01 ://
+        #define NAK_LEN BYREF_nak_len  //:--------------: 02 ://
+
+            /** @VID_IID[ 0121 ]TIME[ 08:39:42 ] **/
+            /** Explaining Input Checks......... **/
+
+            /** NIL: Nill as in nothing as in void ..........**/
+            /** SAT: Sated as in full as in filled ..........**/
+            /** N_Z: Non Zero as in positive or negative ....**/
+
+            if(((U08* )0) ==  u08_arr ){ ERR("[NIL:u08_arr]");}
+
+            if(((CHR**)0) ==  NAK_TEX ){ ERR("[NIL:NAK_TEX]");};
+            if(((CHR* )0) !=(*NAK_TEX)){ ERR("[SAT:NAK_TEX]");};
+
+            if(((I32* )0) ==  NAK_LEN ){ ERR("[NIL:NAK_LEN]");};
+            if(        0  !=(*NAK_LEN)){ ERR("[N_Z:NAK_LEN]");};
+
+        #undef  NAK_TEX  //:----------------------------: 01 ://
+        #undef  NAK_LEN  //:----------------------------: 02 ://
+        //:-------------------------------------:check_inputs://
+        //:variable_declaration:-----------------------------://
+
+            I32 nof_hel =( 0 ); /** NumberOf:HEx_Literals    **/
+                                /** 32bit hex literals.      **/
+                                /** AKA[ nol_u32 ]           **/
+                                                             
+            I32 u08_dex =( 0 ); /** u08_arr[ u08_dex ]       **/
+                                /** AKA: arr_dex             **/
+                                                             
+            I32 nak_dex =( 0 ); /** nak_tex[ nak_dex ]       **/
+                                /** AKA: str_dex             **/
+
+            I32 las_dex =( 0 ); /** Last index used when     **/
+                                /** collecting next: hex_str **/
+
+            CHR hex_str[ LIT_LEN ]={ 0 };
+
+            /** @VID_IID[ 0121 ]TIME[ 07:58:23 ] *********** **/
+            /** Don't want to mix BYREF double-pointer       **/
+            /** crazy logic with our other logic, so use     **/
+            /** these variables instead of                   **/
+            /**      [ BYREF_nak_tex ]AND[ BYREF_nak_len ]   **/
+            /** and then do:                                 **/
+            /**     (*BYREF_nak_tex)==nak_tex                **/
+            /**     (*BYREF_nak_len)==nak_len                **/
+            /** when ready to return via output param.       **/
+            /** ******************************************** **/
+                                        /** **************** **/
+                CHR* nak_tex=((CHR*)0); /** **************** **/
+                I32  nak_len=(   0   ); /** **************** **/
+                I32  nol_u32=(   0   ); /** **************** **/
+                                        /** **************** **/
+            /** ******************************************** **/
+
+            I32 some_column_counter;
+
+        //:-----------------------------:variable_declaration://
+        //:variable_assignments:-----------------------------://
+
+            some_column_counter =( 0 );
+
+        //:-----------------------------:variable_assignments://
+        //:allocate_string_memory:---------------------------://
+
+            /** arr_len : u08_arr's length **/
+
+            nof_hel =( arr_len / 4 );
+            nol_u32 =( arr_len / 4 );
+            if( (4*nof_hel) < arr_len ){
+                   nof_hel++ ;
+                   nol_u32++ ;
+            };;
+        
+            /** Synonyms for each other. **/
+            if( nof_hel != nol_u32 ){
+                /** @VID_IID[ 0128 ]TIME[ 02:44:32 ]         **/
+                /** A bit hackish. But just get it working.  **/
+                ERR("[MUST_MATCH_EXACTLY:nof_hel:AND:nol_u32]");
+            };;
+
+            /** ******************************************** **/
+            /** @VID_IID[ 0121 ]TIME[ 07:50:50 ]             **/
+            /** We are calloc(ing) a bit more memory than    **/
+            /** needed per hex literal string. But better    **/
+            /** a bit too much memory than not enough.       **/
+            /** As long as we pad with null terminators,     **/
+            /** we will be fine.                             **/
+            /**                                              **/
+            /** @VID_IID[ 0121 ]TIME[ 07:52:23 ]             **/
+            /** Just in case we optimize[ nak_len ]          **/
+            /** add( +1 ) to calloc to make 100% certain     **/
+            /** we have room for a null terminator.          **/
+            /** ******************************************** **/
+
+            nak_len = ( nof_hel * LIT_LEN );
+            nak_tex = calloc( nak_len + 1 , sizeof( CHR ) );
+      
+        //:---------------------------:allocate_string_memory://
+        //:build_text_block_of_array_literals:---------------://
+        #define FUN aac2020_phexdum_MAK_hex_str
+        #define M_I ( arr_len - 1 )
+
+            nak_dex =( 0  );
+            las_dex =(0-10); /** last index of collect U32 **/
+            for( u08_dex = 0 ; u08_dex <= M_I ; u08_dex ++ ){
+
+                //: nak_dex++; /** FirstUsedValue == 0 **/
+                
+                /** @VID_IID[ 0121 ]TIME[ 06:45:50 ] ******* **/
+                /** rbsrbs: alwways true but first time  *** **/
+                /** rbsrbs: which is what you want, no?  *** **/
+                /** rbsrbs: first line dont have comma   *** **/
+                if(u08_dex) { 
+                    nak_tex[ nak_dex ] = ','  ;
+                             nak_dex++        ;
+                };;
+                /** **************************************** **/
+
+                /** u08_dex === arr_dex **/
+
+                FUN( 
+                    u08_arr //:INN: array of bytes
+                ,   u08_dex //:INN: first index to read
+
+                , &(las_dex) //:OUTPARAM: last_used_index
+                ,   hex_str  //:OUTPARAM: built_hex_literal
+                );;
+
+                /** __PRIME__ for-loop for next index **/
+                u08_dex =( las_dex );
+
+                
+                /** **************************************** ***
+                rbsrbs: you can use strcpy instead of second for
+                rbsrbs: that's pure insanity PepeLaugh
+                @VID_IID[ 0121 ]TIME[ 06:39:00 ]
+                Copy all ten characters of[ hex_str ]
+                into the naked index string.
+                *** **************************************** **/
+                nak_tex[ nak_dex +    0 ]=( hex_str[ 0 + 0 ] );
+                nak_tex[ nak_dex +    1 ]=( hex_str[ 0 + 1 ] );
+                nak_tex[ nak_dex +    2 ]=( hex_str[ 0 + 2 ] );
+                nak_tex[ nak_dex +    3 ]=( hex_str[ 0 + 3 ] );
+                nak_tex[ nak_dex +    4 ]=( hex_str[ 0 + 4 ] );
+                nak_tex[ nak_dex +    5 ]=( hex_str[ 0 + 5 ] );
+                nak_tex[ nak_dex +    6 ]=( hex_str[ 0 + 6 ] );
+                nak_tex[ nak_dex +    7 ]=( hex_str[ 0 + 7 ] );
+                nak_tex[ nak_dex +    8 ]=( hex_str[ 0 + 8 ] );
+                nak_tex[ nak_dex +    9 ]=( hex_str[ 0 + 9 ] );
+                         nak_dex +=( 10 );
+                /** **************************************** **/
+
+   
+                if( u08_dex < M_I ){
+                    some_column_counter++;
+                    if( some_column_counter >= 5 ){
+                        some_column_counter  = 0 ;
+
+                        nak_tex[ nak_dex ]='\n'; //: FILL____IT
+                                 nak_dex++     ; //: GET_OFF_IT
+
+                    };;
+
+                };;
+
+            };;
+
+        #undef  FUN
+        #undef  M_I
+        //:---------------:build_text_block_of_array_literals://
+        //:return_via_output_params:-------------------------://
+
+            (*BYREF_nak_tex)=( nak_tex );
+            (*BYREF_nak_len)=( nak_len );
+            (*BYREF_nol_u32)=( nol_u32 );
+
+        //:------------------------:return_via_output_params://
+
+
+    #undef  HEL_LEN /** Hex  Literal Length **/       //: 01 ://
+    #undef  LIT_LEN /** Literal Line Length **/       //: 02 ://
+    }
+
+#undef  U08  //:----------------------------------------: 01 ://
+#undef  I32  //:----------------------------------------: 02 ://
+#undef  CHR  //:----------------------------------------: 03 ://
+#undef  ERR  //:----------------------------------------: 04 ://
+//:=============================:PUBLIC_PROGRAM_API_FUNCTIONS://
+//:PUBLIC_COMMAND_LINE_FUNCTIONS:============================://
+#define I32  int32_t   /** GCC: <stdint.h> .....**/   //: 01 ://
+#define U32 uint32_t   /** GCC: <stdint.h>      **/   //: 02 ://
+#define U08  uint8_t   /** GCC: <stdint.h>      **/   //: 03 ://
+#define S_T   size_t   /** WHAT HEADER ?        **/   //: 04 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#define CHR                char                       //: 05 ://
+#define N_S ((CHR*)0)  /** char* NUL/NIL **/          //: 06 ://
+#define U_C       unsigned char                       //: 07 ://
+#define C_C const          char                       //: 08 ://
+#define CUC const unsigned char                       //: 09 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#define PAY struct AAC2020_PHEXDUM_payload            //: 10 ://
+#define P_T enum   AAC2020_PHEXDUM_payload_file_type  //: 11 ://
+#define CMD        PHEXDUM_CMDLINE_FUNCTION           //: 12 ://
+#define CFS        aac2020_phexdum_CFS                //: 13 ://
+#define ERR        aac2020_phexdum_Halt               //: 14 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#define E_V extern void                               //: 15 ://
+#define RET return                                    //: 16 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    /** **************************************************** ***
+    @VID_IID[ 0125 ]TIME[ 00:54:42 ]
+    Functions in this section listed in order of occurance.
+    *** **************************************************** **/
+
+    E_V AAC2020_PHEXDUM_CMD_pngfile_CTO_naktext( C_C* , PAY* );
+    E_V AAC2020_PHEXDUM_CMD_naktext_CTO_pngfile( C_C* , PAY* );
+
+    E_V AAC2020_PHEXDUM_CMD_pngfile_CTO_c99text( C_C* , PAY* );
+    E_V AAC2020_PHEXDUM_CMD_c99text_CTO_pngfile( C_C* , PAY* );
+
+    E_V AAC2020_PHEXDUM_CMD_NothingFound(        C_C* , PAY* );
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    AAC2020_PHEXDUM_CMD_pngfile_CTO_naktext( 
+    C_C*        rel_str_pngfile,PAY*naktext
+    )
+    {   if(N_S==rel_str_pngfile){ERR("[NILSTR_001]"); };
+
+        /**:CTRL_F_HELP:++++++++++++++++++++++++++++++++++++:***
+        [ png_cto_nak | png_to_nak | png-to-nak | png-cto-nak ]
+        [ pngfile_CTO_naktext | pngfile_to_naktext ]
+        [ pngfile-cto-naktext | pngfile-to-naktext ]
+        ***:++++++++++++++++++++++++++++++++++++:CTRL_F_HELP:**/
+        //:declare_variables:--------------------------------://
+        #define PNGFILE AAC2020_PHEXDUM_P_T_PNGFILE
+
+        /** LoadFileIfExists vars **/
+
+            C_C* fip_inn =( rel_str_pngfile  );
+            P_T  bin_txt =( PNGFILE );
+            U08* fil_mem =((U08*)0);
+            I32  fil_nob =(   0   );
+
+        /** lodepng_decode32 vars **/
+
+            U_C* out_chr_pix =((U_C*)0);
+            U32  out_i32_wid =(   0   );
+            U32  out_i32_hig =(   0   );
+            U08* inn_u08_buf =((U08*)0);
+            I32  inn_i32_siz =( 0 - 2 );
+
+        /** AAC2020_PHEXDUM_U08Arr_CTO_NakTex ...... **/
+        /** AAC2020_PHEXDUM_u08_arr_CTO_nak_tex vars **/
+
+            U08* u08_arr = ((U08*)0);
+            I32  arr_len = (   0   );
+
+            CHR* nak_tex = ((CHR*)0);
+            I32  nak_len = (   0   );
+
+            I32  nol_u32 = (   0   );
+
+        #undef PNGFILE
+        //:--------------------------------:declare_variables://
+        //:Load_File_From_Hard_Disk:-------------------------://
+
+            /** Or solid state drive or whatever the .... **/
+
+            AAC2020_PHEXDUM_LoadFileIfExists(
+                fip_inn  //: CHR*  FIlePath_INNput
+            ,   bin_txt  //: I32   is[ bin_txt ]?
+            , &(fil_mem) //: U08** DESTINATION
+            , &(fil_nob) //: I32*  file number of bytes
+            );;
+
+        //:-------------------------:Load_File_From_Hard_Disk://
+        //:Get_Array_Of_Bytes_To_Stringify:------------------://
+        #define STORE_PNG_FILE_BINARY_FROM_DISK ( 1 )
+        #define  STORE_UNCOMPRESSED_BITMAP_DATA ( 2 )
+
+            I32
+            storage_mode=( STORE_PNG_FILE_BINARY_FROM_DISK );
+
+            switch( storage_mode ){  //:- - - - - - - - - - -://
+
+            case ( STORE_UNCOMPRESSED_BITMAP_DATA ):{
+
+                lodepng_decode32(
+                  &( out_chr_pix           )
+                , &( out_i32_wid           )
+                , &( out_i32_hig           )
+                ,  ( inn_u08_buf = fil_mem )
+                ,  ( inn_i32_siz = fil_nob )
+                );;
+        
+                /**   @VID_IID[ 0121 ]TIME[ 08:08:15 ] **/
+                /**   AKA: out_u08_pix == out_chr_pix  **/
+                u08_arr =( out_chr_pix ); 
+                arr_len =( out_i32_wid 
+                         * out_i32_hig
+                         * 4 );;
+            };;break;
+            case ( STORE_PNG_FILE_BINARY_FROM_DISK ):{
+
+                u08_arr = fil_mem ;
+                arr_len = fil_nob ;               
+
+            };;break;
+            default:{
+
+                ERR("[BAD_STORAGE_CONSTANT_PROVIDED]");
+
+            };;};; //:- - - - - - - - - - - - - - - - - - - -://
+
+        #undef  STORE_PNG_FILE_BINARY_FROM_DISK  
+        #undef   STORE_UNCOMPRESSED_BITMAP_DATA  
+        //:------------------:Get_Array_Of_Bytes_To_Stringify://
+        //:Stringify_U08_Array_As_U32_Hex_Dump:--------------://
+
+            AAC2020_PHEXDUM_u08_arr_CTO_nak_tex(
+                            u08_arr
+            ,               arr_len
+            ,             &(nak_tex)
+            ,             &(nak_len)
+            ,             &(nol_u32) /** num_lit / noe_u32 **/
+            );;
+
+        //:--------------:Stringify_U08_Array_As_U32_Hex_Dump://
+        //:Save_File_To_Disk:--------------------------------://
+
+            /** NOPE! Dont do this. That is the job of the   **/
+            /** calling function. @VID_IID[0121]T[04:57:20 ] **/
+
+        //:--------------------------------:Save_File_To_Disk://
+        //:Null_Terminate_Your_Text:-------------------------://
+
+            /** EXPECT TEXT TO BE NULL TERMINATED **/
+            assert( nak_tex[ nak_len + 0 ] == '\0' );
+ 
+        //:-------------------------:Null_Terminate_Your_Text://
+        //:Fill_Output_Params:-------------------------------://
+        #define ANYTEXT AAC2020_PHEXDUM_P_T_ANYTEXT
+        #define NAKTEXT ( naktext -> anytext ) 
+        
+        naktext -> bin_txt         =(       ( ANYTEXT )  );
+        naktext -> anytext         =(       ( nak_tex )  );
+        naktext -> pngfile         =(       ( (U08*)0 )  );
+        naktext -> arr_len         =( strlen( NAKTEXT )  );
+        naktext -> anytext_nol_u32 =(       ( nol_u32 )  );
+
+        #undef  ANYTEXT
+        #undef  NAKTEXT
+        //:-------------------------------:Fill_Output_Params://
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    AAC2020_PHEXDUM_CMD_naktext_CTO_pngfile( 
+        C_C*    rel_str_naktext,PAY*pngfile
+    )
+    {   if(N_S==rel_str_naktext ){ ERR( "[NILSTR_002]"); };
+
+        //:<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TODO: FINISH
+
+        //+__________________________________________________+//
+        //+                                                  +//
+        //+declare_variables:--------------------------------+//
+        //| VARS: AAC2020_PHEXDUM_LoadFileIfExists |||||||||||//
+
+            C_C* fip_inn =( rel_str_naktext             );
+            I32  bin_txt =( AAC2020_PHEXDUM_P_T_ANYTEXT );
+            U08* fil_mem =((U08*)0                      );
+            I32  fil_nob =(   0                         );
+
+        //| VARS: AAC2020_PHEXDUM_nak_tex_CTO_u08_arr ||||||||//
+
+            CHR* nak_tex = ((CHR*)0); //:<-- INN
+            I32  nak_len = (   0   ); //:<-- INN
+
+            U08* u08_arr = ((U08*)0); //:<-- OUT
+            I32  arr_len = (   0   ); //:<-- OUT
+
+        //| VARS: lodepng_encode32 |||||||||||||||||||||||||||//
+
+            U_C* out_chr_buf =((U_C*)0);
+            S_T  out_i32_siz =(      0);
+
+            U08* inn_u08_pix =((U08*)0);
+            U32  inn_u32_wid =(   0   ); //:<--[ i32 ==> u32 ]
+            U32  inn_u32_hig =(   0   ); //:<--[ i32 ==> u32 ]
+
+        //| VARS: OUTPUT_RETURN ||||||||||||||||||||||||||||||//
+
+            U08* pngfile_arr =((U08*)0);
+            I32  pngfile_len =(      0);
+
+        //+--------------------------------:declare_variables+//
+        //+__________________________________________________+//
+        //:Load_File_From_Hard_Disk:-------------------------://
+
+            /** Or solid state drive or whatever the .... **/
+
+            AAC2020_PHEXDUM_LoadFileIfExists(
+                fip_inn  //: CHR*  FIlePath_INNput
+            ,   bin_txt  //: I32   is[ bin_txt ]?
+            , &(fil_mem) //: U08** DESTINATION
+            , &(fil_nob) //: I32*  file number of bytes
+            );;
+
+        //:-------------------------:Load_File_From_Hard_Disk://
+        //:U32_HexDumpAsciiString_To_U08_Bytes:--------------://
+
+            nak_tex =( CHR* )( fil_mem );
+            nak_len =(         fil_nob );
+
+            AAC2020_PHEXDUM_nak_tex_CTO_u08_arr(
+                            nak_tex //:<--- ASCII TEXT
+            ,               nak_len //:<--- ASCII TEXT
+            ,             &(u08_arr)//:<--- BYTE_ARRAY
+            ,             &(arr_len)//:<--- BYTE_ARRAY
+            );;
+
+        //:--------------:U32_HexDumpAsciiString_To_U08_Bytes://
+        //:GOT_RAW_BITMAP_OR_PNG_BINARY[?]:------------------://
+        #define STORE_PNG_FILE_BINARY_FROM_DISK ( 1 )
+        #define  STORE_UNCOMPRESSED_BITMAP_DATA ( 2 )
+    
+            I32
+            storage_mode=( STORE_PNG_FILE_BINARY_FROM_DISK );
+    
+            switch( storage_mode ){  //:- - - - - - - - - - -://
+    
+            case ( STORE_UNCOMPRESSED_BITMAP_DATA ):{
+            /** ******************************************** ***
+                When using conversion functions, we should 
+                use SAME conversion mode for both directions.
+                So... If you used[ storage_mode == 1 ]
+                for[ naktext_CTO_pngfile ]Then you should
+                also use[ storage_mode == 1 ]for the inverse
+                [ pngfile_CTO_naktext ].
+                @VID_IID[ 0124 ]TIME[ 00:31:01 ]
+            *** ******************************************** **/
+            #define ROO aac2020_phexdum_SquareRoot //:///////://
+
+                /** 4 bytes per pixel **/
+                U32 tot_pix =(    ( arr_len  / 4 ) );
+                U32 u32_san =( ROO( arr_len  / 4 ) );
+                if((u32_san * u32_san)!=(tot_pix)){
+                    ERR("[INVALID_U32_SPAN_YEAR:2021]");
+                };;
+    
+                /** Turn_Raw_Bitmap_Into_PNG_File **/
+                lodepng_encode32(
+                        &( out_chr_buf                      )
+                ,       &( out_i32_siz                      )
+                ,  (CUC*)( inn_u08_pix =      u08_arr       )
+                ,        ( inn_u32_wid = ROO( arr_len / 4 ) )
+                ,        ( inn_u32_hig = ROO( arr_len / 4 ) )
+                );;
+        
+                pngfile_arr =(      ( out_chr_buf ) );
+                pngfile_len =( (I32)( out_i32_siz ) );
+    
+            #undef ROO //:///////////////////////////////////://
+            };;break;
+            case ( STORE_PNG_FILE_BINARY_FROM_DISK ):{
+    
+                pngfile_arr = u08_arr ;
+                pngfile_len = arr_len ;               
+    
+            };;break;
+            default:{
+    
+                ERR("[BAD_STORAGE_CONSTANT_PROVIDED]");
+    
+            };;};; //:- - - - - - - - - - - - - - - - - - - -://
+    
+        #undef  STORE_PNG_FILE_BINARY_FROM_DISK  
+        #undef   STORE_UNCOMPRESSED_BITMAP_DATA  
+        //:------------------:GOT_RAW_BITMAP_OR_PNG_BINARY[?]://
+        //:Save_File_To_Disk:--------------------------------://
+    
+            /** NOPE! Dont do this. That is the job of the   **/
+            /** calling function. @VID_IID[0121]T[04:57:20 ] **/
+    
+        //:--------------------------------:Save_File_To_Disk://
+        //:return_png_binary_using_output_params:------------://
+
+        //-  (*BYREF_pngfile_arr)=( pngfile_arr ); -//
+        //-  (*BYREF_pngfile_len)=( pngfile_len ); -//
+
+        //:------------:return_png_binary_using_output_params://
+        //:Fill_Output_Params:-------------------------------://
+        #define PNGFILE AAC2020_PHEXDUM_P_T_PNGFILE
+        
+        pngfile -> bin_txt =( PNGFILE );
+        pngfile -> anytext =((CHR*)0);
+        pngfile -> pngfile =( pngfile_arr );
+        pngfile -> arr_len =( pngfile_len );
+
+        #undef  PNGFILE
+        //:-------------------------------:Fill_Output_Params://
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    AAC2020_PHEXDUM_CMD_pngfile_CTO_c99text( 
+        C_C*    rel_str_pngfile,PAY*c99text  
+    )
+    {   if(N_S==rel_str_pngfile){ERR("[NILSTR_002]");};
+
+        //:Fill_Output_Params:-------------------------------://
+        #define ANYTEXT AAC2020_PHEXDUM_P_T_ANYTEXT
+        
+        c99text -> bin_txt =( ANYTEXT );
+        c99text -> anytext =( 
+
+            /** *********************************** **/
+            /** @VID_IID[ 0128 ]TIME[ 00:21:23 ]    **/
+            /** The fastest code is the code you do **/
+            /** NOT write.  @_WONT_DO_@             **/
+            /** *********************************** **/
+            CFS("[@_WONT_DO_@::::png_CTO_c99]\n\0" ) 
+        );;
+
+        c99text -> pngfile =((U08*)0);
+        c99text -> arr_len =( strlen( c99text -> anytext   ) );
+
+        #undef  ANYTEXT
+        //:-------------------------------:Fill_Output_Params://
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    AAC2020_PHEXDUM_CMD_c99text_CTO_pngfile( 
+    C_C*        rel_str_c99text,PAY*pngfile
+    )
+    {   if(N_S==rel_str_c99text){ERR("[NILSTR_003]");};
+
+        //:declare_variables:--------------------------------://
+
+            U08* pngfile_arr =( (U08*)0 );
+            I32  pngfile_len =(       0 );
+
+        //:--------------------------------:declare_variables://
+        //:CORE_FUNCTION_WORK:-------------------------------://
+
+            //: @_WONT_DO_@                      ://
+            //: @VID_IID[ 0128 ]TIME[ 00:29:03 ] ://
+
+        //:-------------------------------:CORE_FUNCTION_WORK://
+        //:Fill_Output_Params:-------------------------------://
+        #define PNGFILE AAC2020_PHEXDUM_P_T_PNGFILE
+        #define TODOMSG "[@_WONT_DO_@:c99_CTO_png]\n\0"
+
+        //|__________________________________________________|//
+        //| If you ever decide to implement this function,   |//
+        //| get rid of these two lines.                      |//
+        pngfile_arr=(  (U08*)( CFS( TODOMSG ) )     );  //:<--01
+        pngfile_len=(  strlen( (CHR*)pngfile_arr )  );  //:<--02
+        //|__________________________________________________|//
+
+        pngfile -> bin_txt =( PNGFILE           );
+        pngfile -> anytext =( (CHR*)0           );
+        pngfile -> pngfile =( pngfile_arr       );
+        pngfile -> arr_len =( pngfile_len       );
+
+        #undef  PNGFILE
+        #undef  TODOMSG
+        //:-------------------------------:Fill_Output_Params://
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void 
+    AAC2020_PHEXDUM_CMD_NothingFound(
+    C_C*        rel_str_nothingfound , PAY* pay_err
+    ){  if(N_S==rel_str_nothingfound){ERR("[NILSTR_004]");};
+    #define NO_FIND "[PHEXDUM:COMMAND_NOT_FOUND]\n\0"
+
+        /** @VID_IID[ 0125 ]TIME[ 01:57:15 ] *************** **/
+        /** Not much logic here. Just fills the payload with **/
+        /** an error message to let the user know that the   **/
+        /** inputted command was not [recognized/found].     **/
+        /** ************************************************ **/
+
+        //:Fill_Output_Params:-------------------------------://
+        #define ANYTEXT AAC2020_PHEXDUM_P_T_ANYTEXT
+
+        CHR* str_msg =( NO_FIND );
+        CHR* str_msg_freeable =( CFS( str_msg ) );
+
+        pay_err -> bin_txt =( ANYTEXT                         );
+        pay_err -> anytext =( str_msg_freeable               );
+        pay_err -> pngfile =((U08*)0                          );
+        pay_err -> arr_len =( strlen( pay_err -> anytext    ) );
+
+        #undef  ANYTEXT
+        //:-------------------------------:Fill_Output_Params://
+        //:check_outputs:------------------------------------://
+
+            if( strlen( str_msg ) <= 0 ){
+                ERR( "[BAD_STRING_FOR_SOME_REASON]" );
+            };;
+            if( strlen( pay_err -> anytext ) <= 0 ){
+                ERR("[BAD_ANYTEXT_LENGTH]");
+            };;
+            if( pay_err -> arr_len <= 0 ){
+                ERR( "[BAD_ARRAY_LENGTH_FOR_OUTPUT]" );
+            };;
+
+        //:------------------------------------:check_outputs://
+
+    #undef NO_FIND
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    //:BOGUS_COMMANDS_I_WILL_NEVER_SUPPORT:------------------://
+
+        void
+        AAC2020_PHEXDUM_CMD_naktext_CTO_c99text( 
+            C_C*    rel_str_naktext,PAY*c99text  
+        )
+        {   if(N_S==rel_str_naktext){ERR("[NILSTR_1007AM]");};
+
+            //:Fill_Output_Params:---------------------------://
+            #define ANYTEXT AAC2020_PHEXDUM_P_T_ANYTEXT
+            
+            c99text -> bin_txt =( ANYTEXT );
+            c99text -> anytext =( 
+                /** @VID_IID[ 0128 ]TIME[ 00:46:52 ] **/
+                CFS("[BOGUS_FUNCTION:naktext_CTO_c99text]\n\0" ) 
+            );;
+
+            c99text -> pngfile =((U08*)0);
+            c99text -> arr_len =( strlen( c99text -> anytext ));
+
+            #undef  ANYTEXT
+            //:---------------------------:Fill_Output_Params://
+        }
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        void
+        AAC2020_PHEXDUM_CMD_c99text_CTO_naktext( 
+            C_C*    rel_str_c99text,PAY*naktext  
+        )
+        {   if(N_S==rel_str_c99text){ERR("[NILSTR_1007AM]");};
+
+            //:Fill_Output_Params:---------------------------://
+            #define ANYTEXT AAC2020_PHEXDUM_P_T_ANYTEXT
+            
+            naktext -> bin_txt =( ANYTEXT );
+            naktext -> anytext =( 
+                /** @VID_IID[ 0128 ]TIME[ 00:46:52 ] **/
+                CFS("[BOGUS_FUNCTION:c99text_CTO_naktext]\n\0" ) 
+            );;
+
+            naktext -> pngfile =((U08*)0);
+            naktext -> arr_len =( strlen( naktext -> anytext ));
+
+            #undef  ANYTEXT
+            //:---------------------------:Fill_Output_Params://
+        }
+
+    //:------------------:BOGUS_COMMANDS_I_WILL_NEVER_SUPPORT://
+
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#undef  I32  //:----------------------------------------: 01 ://
+#undef  U32  //:----------------------------------------: 02 ://
+#undef  U08  //:----------------------------------------: 03 ://
+#undef  S_T  //:----------------------------------------: 04 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#undef  CHR  //:----------------------------------------: 05 ://
+#undef  N_S  //:----------------------------------------: 06 ://
+#undef  U_C  //:----------------------------------------: 07 ://
+#undef  C_C  //:----------------------------------------: 08 ://
+#undef  CUC  //:----------------------------------------: 09 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#undef  PAY  //:----------------------------------------: 10 ://
+#undef  P_T  //:----------------------------------------: 11 ://
+#undef  CMD  //:----------------------------------------: 12 ://
+#undef  CFS  //:----------------------------------------: 13 ://
+#undef  ERR  //:----------------------------------------: 14 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#undef  E_V  //:----------------------------------------: 15 ://
+#undef  RET  //:----------------------------------------: 16 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+//:============================:PUBLIC_COMMAND_LINE_FUNCTIONS://
+//:COMMAND_LINE_HELPER_FUNCTIONS:============================://
+#define I32  int32_t /** GCC: <stdint.h> **/          //: 01 ://
+#define I_P intmax_t /** GCC: <stdint.h> **/          //: 02 ://
+#define CHR const char                                //: 03 ://
+#define ENU cmdenum                                   //: 04 ://
+#define V_F PHEXDUM___ANY___FUNCTION                  //: 05 ://
+#define CMD PHEXDUM_CMDLINE_FUNCTION                  //: 06 ://
+#define ERR aac2020_phexdum_Halt                      //: 07 ://
+#define LOG aac2020_phexdum_Info_any                  //: 08 ://
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    V_F* /** returns integer or string **/
+    aac2020_phexdum_PRIVATE_cmdname_CTO_cmdenum_ORR_cmdfunc(
+               CHR* cmdname
+    ,          CHR* cmdenum_ORR_cmdfunc
+    )
+    {
+    #define     NUMBER_OF_COMMANDS ( 6 )
+    #define NOC NUMBER_OF_COMMANDS
+
+        LOG("[...cmdname_CTO_cmdenum_ORR_cmdfunc:BEG]",0);
+
+        //:declare_variables:--------------------------------://
+
+        I32   cmdenum =(      0   ); /** Command Enum     **/
+        CMD*  cmdfunc =&(AAC2020_PHEXDUM_CMD_NothingFound ) ;
+
+        CHR** syn_syn[ NOC+1 ]={ 0 }; /** TAB:FUNCS:Synonyms **/
+        I32   tab_enu[ NOC+1 ]={ 0 }; /** TAB:FUNCS:Enums    **/
+        CMD*  tab_fun[ NOC+1 ]={ 0 }; /** TAB:FUNCS:Funcs    **/
+        
+        CHR** tab_syn     =((CHR**)0);
+
+        I32   syn =(    0    ); /** Command Synonym Index **/
+
+        I32   chkenum ; /** CHECK:enumeration value **/
+
+        //:--------------------------------:declare_variables://
+        //:populate_tables:----------------------------------://
+
+        syn_syn[ 0 ]=(aac2020_phexdum_SYN_invalid_command     );
+        syn_syn[ 1 ]=(aac2020_phexdum_SYN_naktext_CTO_c99text );
+        syn_syn[ 2 ]=(aac2020_phexdum_SYN_c99text_CTO_naktext );
+        syn_syn[ 3 ]=(aac2020_phexdum_SYN_pngfile_CTO_c99text );
+        syn_syn[ 4 ]=(aac2020_phexdum_SYN_c99text_CTO_pngfile );
+        syn_syn[ 5 ]=(aac2020_phexdum_SYN_pngfile_CTO_naktext );
+        syn_syn[ 6 ]=(aac2020_phexdum_SYN_naktext_CTO_pngfile );
+
+        /** tab_enu == ....... **/
+        tab_enu[ 0 ]=( 0 ); /** 0 == invalid enum **/
+        tab_enu[ 1 ]=(aac2020_phexdum_ENU_naktext_CTO_c99text );
+        tab_enu[ 2 ]=(aac2020_phexdum_ENU_c99text_CTO_naktext );
+        tab_enu[ 3 ]=(aac2020_phexdum_ENU_pngfile_CTO_c99text );
+        tab_enu[ 4 ]=(aac2020_phexdum_ENU_c99text_CTO_pngfile );
+        tab_enu[ 5 ]=(aac2020_phexdum_ENU_pngfile_CTO_naktext );
+        tab_enu[ 6 ]=(aac2020_phexdum_ENU_naktext_CTO_pngfile );
+
+        /** tab_fun === cmdjump **/
+        tab_fun[ 0 ]=(AAC2020_PHEXDUM_CMD_NothingFound        );
+        tab_fun[ 1 ]=(AAC2020_PHEXDUM_CMD_naktext_CTO_c99text );
+        tab_fun[ 2 ]=(AAC2020_PHEXDUM_CMD_c99text_CTO_naktext );
+        tab_fun[ 3 ]=(AAC2020_PHEXDUM_CMD_pngfile_CTO_c99text );
+        tab_fun[ 4 ]=(AAC2020_PHEXDUM_CMD_c99text_CTO_pngfile );
+        tab_fun[ 5 ]=(AAC2020_PHEXDUM_CMD_pngfile_CTO_naktext );
+        tab_fun[ 6 ]=(AAC2020_PHEXDUM_CMD_naktext_CTO_pngfile );
+
+        if( 0 != tab_enu[ 0 ] ){ ERR("[ENU_MAP_ERR:000]"); };
+        if( 1 != tab_enu[ 1 ] ){ ERR("[ENU_MAP_ERR:001]"); };
+        if( 2 != tab_enu[ 2 ] ){ ERR("[ENU_MAP_ERR:002]"); };
+        if( 3 != tab_enu[ 3 ] ){ ERR("[ENU_MAP_ERR:003]"); };
+        if( 4 != tab_enu[ 4 ] ){ ERR("[ENU_MAP_ERR:004]"); };
+        if( 5 != tab_enu[ 5 ] ){ ERR("[ENU_MAP_ERR:005]"); };
+        if( 6 != tab_enu[ 6 ] ){ ERR("[ENU_MAP_ERR:006]"); };
+
+        //:----------------------------------:populate_tables://
+        //:find_the_command:---------------------------------://
+        for( I32 cmd = NUMBER_OF_COMMANDS ; cmd >= 0 ; cmd -- ){
+
+            /** ******************************************** **/
+            /** @VID_IID[0120]TIME[ 01:17:02 ] ************* **/
+            /** Too terse. Will be hard to understand in a   **/
+            /** few months. So add lots of checking code to  **/
+            /** verify understanding.                        **/
+            /** ******************************************** **/
+
+            tab_syn =( aac2020_phexdum_SYN_SYN[ cmd ] );
+
+            if( tab_syn != syn_syn[ cmd ] ){
+                ERR("[SYN_SYN_TABLE_MISMATCH]");
+            };;
+
+            /** ******************************************** **/
+
+            //:are_we_on_the_command_we_want:----------------://
+            #define NOE AAC2020_PHEXDUM_SYN_NOE
+
+                /** loop through command synonyms **/
+                for( syn = 0 ; syn <= (NOE - 1) ; syn ++ ){
+
+                    if( ((CHR*)0) == tab_syn[ syn ] ){
+                        //:ShouldExitWithoutEverHitting
+                        //:TheNullTerminator
+                        ERR("[2021_02_04_0801PM]");
+                    };;
+
+                    if(0 ==strcmp( cmdname , tab_syn[ syn ] )){
+
+                        /** ******************************** **/
+                        /** @VID_IID[ 0120 ]TIME[ 01:42:42 ] **/
+                        /** Dont break here. We want to avoid**/
+                        /** different code execution paths...**/
+                        /** let loop run to the end..........**/
+                        /** ******************************** **/
+
+                        cmdenum =          cmd  ;
+                        cmdfunc = tab_fun[ cmd ];
+                        chkenum = tab_enu[ cmd ];
+
+                        if( cmdenum != chkenum ){
+                            ERR("[ENUMS_IMPROPERLY_MAPPED]");
+                        };;
+                    };;
+                };;
+
+            #undef NOE
+            //:----------------:are_we_on_the_command_we_want://
+        };;
+        //:---------------------------------:find_the_command://
+        //:return_enum_or_function_pointer:------------------://
+        /** ************************************************ ***
+        Void Function pointer here is being used like a void*
+        to return either a function or an integer value.
+        We use a void function pointer instead of a void
+        data pointer because compiler doesn't like it when
+        you cast a function pointer to a void data pointer.
+
+        V_F is used as a (void*) type.
+
+        @VID_IID[ 0126 ]TIME[ 00:31:50 ]
+        *** ************************************************ **/
+        #define S_C strcmp 
+
+            V_F* return_data=((V_F*)0);  
+
+            if( 0 == S_C( "cmdenum" , cmdenum_ORR_cmdfunc ) ){
+
+                return_data=(  (V_F*)((I_P)cmdenum)  );
+
+            }else
+            if( 0 == S_C( "cmdfunc" , cmdenum_ORR_cmdfunc ) ){
+
+                return_data=(  (V_F*)cmdfunc );
+
+            }else{
+                ERR("[INVALID_RETURN_DATA_REQUESTED]");
+            };;
+
+            LOG("[...cmdname_CTO_cmdenum_ORR_cmdfunc:END]",0);
+            return( return_data );
+        
+        #undef  S_C
+        //:------------------:return_enum_or_function_pointer://
+
+    #undef  NUMBER_OF_COMMANDS
+    #undef                 NOC
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    I32
+    AAC2020_PHEXDUM_cmdname_CTO_cmdenum(
+    CHR*            cmdname
+    )
+    {
+        I32 cmdenum=(I32)((I_P)(
+        aac2020_phexdum_PRIVATE_cmdname_CTO_cmdenum_ORR_cmdfunc(
+                                cmdname  , "cmdenum" )));;
+        return( cmdenum );;
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    CMD*
+    AAC2020_PHEXDUM_cmdname_CTO_cmdfunc(
+    CHR*            cmdname
+    )
+    {   /** #_WHY_CMD_CMD_CAST_#             **/
+        /** @VID_IID[ 0120 ]TIME[ 04:56:23 ] **/
+
+        CMD* cmdfunc=(CMD*)((CMD*)(
+        aac2020_phexdum_PRIVATE_cmdname_CTO_cmdenum_ORR_cmdfunc(
+                                cmdname  , "cmdfunc" )));;
+        return( cmdfunc );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+#undef  I32  //:----------------------------------------: 01 ://
+#undef  I_P  //:----------------------------------------: 02 ://
+#undef  CHR  //:----------------------------------------: 03 ://
+#undef  ENU  //:----------------------------------------: 04 ://
+#undef  V_F  //:----------------------------------------: 05 ://
+#undef  CMD  //:----------------------------------------: 06 ://
+#undef  ERR  //:----------------------------------------: 07 ://
+#undef  LOG  //:----------------------------------------: 08 ://
+//:============================:COMMAND_LINE_HELPER_FUNCTIONS://
+//:MAIN_SECTION:=============================================://
+#define CHR const char                           //:----: 01 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/     //:----: 02 ://
+#define I32  int32_t /** GCC: <stdint.h> **/     //:----: 03 ://
+#define CMD        PHEXDUM_CMDLINE_FUNCTION      //:----: 04 ://
+#define ERR        aac2020_phexdum_Halt          //:----: 05 ://
+#define LOG        aac2020_phexdum_Info_any      //:----: 06 ://
+#define PAY struct AAC2020_PHEXDUM_payload       //:----: 07 ://
+#define EXT extern                               //:----: 08 ://
+
+    I32 
+    AAC2020_PHEXDUM_StandAloneMain(
+        I32    arg_cou
+    ,   char** arg_arr
+    )
+    {
+    LOG("[main:BEG]",0);
+
+        //:LazyUnitTest:-------------------------------------://
+        if( aac2020_phexdum_UTC_ror <= 0 ){
+        if( arg_cou                 <= 1 ){
+
+            /** Only call unit test if test has not been *** **/
+            /** ran before. ror == "ran or running"      *** **/
+
+            EXT U32 AAC2020_PHEXDUM_UnitTest( U32  );
+                    AAC2020_PHEXDUM_UnitTest( 0x00 );
+
+            printf("[LAZY_UNIT_TEST_HAS_RAN]\n");
+            fflush(stdout);
+
+        };;};;
+        //:-------------------------------------:LazyUnitTest://
+        //:declare_vars:-------------------------------------://
+
+            /** Inputs And Outputs For Command Line **/
+
+            CHR* cmdname ; /** cmd: Command To Execute ......**/
+            CHR* fip_004 ; /** File Path Out: Length File ...**/
+            CHR* fip_inn ; /** File Path Inn  ...............**/
+            CHR* fip_out ; /** File Path Out  ...............**/
+            CHR* tex_out ; /** Output text    ...............**/
+            I32  tex_out_freeable ; /** freeable pointer?    **/
+            CHR* fid_out ; /** File DATA Out  ...............**/
+            I32  fid_nob ; /** File Data Number Of Bytes     **/
+                           /** fid_nob === fid_len ..........**/
+
+            /**  Sanitized Command Enumeration **/
+            /**  And corresponding jump table  **/
+
+            I32  cmdenum       =(   0   ); // <--CMD:ENUMERATION 
+            CMD* cmdjump[ 4+1 ]={   0   }; // <--CMD:JUMP_TABLE 
+            CMD* cmdfunc       =((CMD*)0); // <--CMD:FUNCTION 
+
+            /** ******************************************** **/
+            /** @VID_IID[ 0125 ]TIME[ 02:06:15 ]        **** **/
+            /** Keep payload object at outermost scope  **** **/
+            /** of function to avoid accidentially      **** **/
+            /** auto-freeing memory when you still want **** **/
+            /** to use the object.                      **** **/
+            /** ******************************************** **/
+            PAY  payload    ={ 0 };
+            I32  payload_has=( 0 ); /** payload exists ? **/
+            
+        //:-------------------------------------:declare_vars://
+        //:default_values:-----------------------------------://
+
+            /** ******************************************** **/
+            /** @VID_IID[ 0128 ]T[ 01:41:23 ]WHY[ fip_004 ]  **/
+            /** @VID_IID[ 0128 ]T[ 01:43:23 ]WHY[ fip_004 ]  **/
+            /** fip_txt_out, EXAMPLE: "naked_array.txt.len._"**/
+            /**     fip_004, EXAMPLE: "naked_array.txt.len._"**/
+            /** ******************************************** **/
+            fip_004 =( AAC2020_PHEXDUM_DEFAULT_fip_004 );
+                                                       
+            fip_out =( AAC2020_PHEXDUM_DEFAULT_fip_out );
+                                                       
+            tex_out =( AAC2020_PHEXDUM_DEFAULT_tex_out );
+            fid_out =( AAC2020_PHEXDUM_DEFAULT_fid_out );
+
+            tex_out_freeable =( 0 );
+
+        //:-----------------------------------:default_values://
+
+        if( 0 == (arg_cou - 1) /** 0 user arguments **/ ){
+
+            CHR* error_output_text_message=(
+                "[ZERO_ARGS:WANTED:2_OR_3]\n\0"
+            );;
+            tex_out = ( error_output_text_message );
+
+        }else
+        if( 1 == ( arg_cou - 1) /** 1 user argument(s) **/ ){
+
+            CHR* error_output_text_message=(
+                "[ONE_ARGUMENT:WANTED:2_OR_3]\n\0"
+            );;
+            tex_out = ( error_output_text_message );
+
+        }else
+        if( 0
+        ||  2 == (arg_cou - 1) /** 2 user arguments **/
+        ||  3 == (arg_cou - 1) /** 3 user arguments **/
+        ||  4 == (arg_cou - 1) /** 4 user arguments **/
+        ){  
+
+            cmdname =( arg_arr[ 1 ] ); /** command      **/
+            fip_inn =( arg_arr[ 2 ] ); /** FIlePath:INN **/
+            
+            //:LOAD_OPTIONAL_ARGUMENTS:======================://
+
+                //:ARG_3:OUTPUT_FILE_FOR_DATA:===============://
+                #define ARG_003 ( 3 )
+
+                    if( ( arg_cou - 1 ) >=  ARG_003 ){
+                    #define STR_CMP aac2020_phexdum_StrCmp
+                        fip_out =( arg_arr[ ARG_003 ] );
+
+                        /** rbsrbs: my_stricmp Kappa **/
+                        if( 0 == STR_CMP( fip_inn , fip_out ) ){
+
+                            //:#_PHEXDUM_RETURN_NOT_EXIT_#://
+                            printf( "[FILE_NAMES_MATCH:001]\n");
+                            fflush(stdout);
+                            return( 1 );
+                        };;
+                    #undef  STR_CMP
+                    };;
+
+                #undef  ARG_003
+                //:===============:ARG_3:OUTPUT_FILE_FOR_DATA://
+                //:ARG_4:LENGTH_OF_DATA_NUMBER_IN_FILE:======://
+                #define ARG_004 ( 4 ) //////////////////////////
+
+                /** @VID_IID[ 0128 ]TIME[ 01:30:23 ] ******* **/
+                /** EXAMPLE: "naked_array.txt.len._"  ****** **/
+
+                    if( ( arg_cou - 1 ) >=  ARG_004 ){
+                    #define SCI aac2020_phexdum_StrCmp
+    
+                        /** EXAMPLE: "naked_array.txt.len._" **/
+                        /** fip_004 , aka: fip_txt_out       **/
+                        fip_004 =( arg_arr[ ARG_004 ] );
+
+                        /** rbsrbs: my_stricmp Kappa **/
+                        if( 0
+                        ||  0 == SCI( fip_inn , fip_004 ) 
+                        ||  0 == SCI( fip_out , fip_004 ) 
+                        ){
+                            //:#_PHEXDUM_RETURN_NOT_EXIT_#://
+                            printf( "[FILE_NAMES_MATCH:002]\n");
+                            fflush(stdout);
+                            return( 1 );
+                        };;
+                    #undef  SCI
+                    };;
+
+                #undef  ARG_004  ///////////////////////////////
+                //:======:ARG_4:LENGTH_OF_DATA_NUMBER_IN_FILE://
+            //:======================:LOAD_OPTIONAL_ARGUMENTS://
+            //:call_function_from_jump_table:================://
+            #define JMP cmdjump
+
+            LOG("[ABOUT_TO_CALL:::::::cmdname_CTO_cmdenum]",0);
+            cmdenum=( AAC2020_PHEXDUM_cmdname_CTO_cmdenum(
+                                      cmdname ));;
+            LOG("[ABOUT_TO_CALL:::::::cmdname_CTO_cmdfunc]",0);
+            cmdfunc=( AAC2020_PHEXDUM_cmdname_CTO_cmdfunc(
+                                      cmdname ));;
+
+            LOG("[ABOUT_TO_POPULATE_JUMP_TABLE]",0);
+            if( cmdenum >= 0 && cmdenum <= 6 ){
+                /** Okay Do nothing. **/
+            }else{  
+                /** **************************************** **/
+                /** You probably forgot to add new functions **/
+                /** to the jump table (JMP) @VID_IID[ 0128 ] **/
+                /** TIME[ 01:18:00 ] ----------------------- **/
+                /** **************************************** **/
+                ERR("[PROBABLY_FORGOT_TO_ADD_NEW_FUNCTIONS]");
+            };;
+            JMP[ 0 ]=(AAC2020_PHEXDUM_CMD_NothingFound        );
+            JMP[ 1 ]=(AAC2020_PHEXDUM_CMD_naktext_CTO_c99text );
+            JMP[ 2 ]=(AAC2020_PHEXDUM_CMD_c99text_CTO_naktext );
+            JMP[ 3 ]=(AAC2020_PHEXDUM_CMD_pngfile_CTO_c99text );
+            JMP[ 4 ]=(AAC2020_PHEXDUM_CMD_c99text_CTO_pngfile );
+            JMP[ 5 ]=(AAC2020_PHEXDUM_CMD_pngfile_CTO_naktext );
+            JMP[ 6 ]=(AAC2020_PHEXDUM_CMD_naktext_CTO_pngfile );
+      
+            /** Execute proper function **/
+            
+            if( 1
+            &&  cmdenum >= 0 //:LOWEST::COMMAND_ENUMERATION
+            &&  cmdenum <= 6 //:HIGHEST:COMMAND_ENUMERATION
+            ){
+                if( ((CMD*)0)==cmdfunc ){
+
+                    tex_out =("[ERR:NULL_CMDFUNC_POINTER]\0");
+
+                }else{
+                    
+                    LOG("[ABOUT_TO_ASSERT_JMP_cmdenum]",0);
+                    assert(       JMP[ cmdenum ] == cmdfunc );
+
+                    LOG("[ABOUT_TO_CALL_JMMP_cmdenum]",0);
+                    payload_has=( 1 );
+                    ( ( JMP[ cmdenum ] )( 
+
+                        fip_inn  //:ARG_001
+                    , &(payload) //:ARG_002
+                    ));;
+
+                    //:SET_tex_out_IF_printable:-------------://
+                    #define ANYTEXT AAC2020_PHEXDUM_P_T_ANYTEXT
+                    #define PNGFILE AAC2020_PHEXDUM_P_T_PNGFILE
+
+                        if( ANYTEXT == payload.bin_txt ){
+
+                            tex_out = payload.anytext ;
+                            tex_out_freeable=( 1 );
+
+                        }else
+                        if( PNGFILE == payload.bin_txt ){
+
+                            /** **************************** **/
+                            /** @VID_IID[ 0125 ]T[ 03:01:25 ]**/
+                            /** Binary data not suitable for **/
+                            /** console output. ------------ **/
+                            /** **************************** **/
+
+                            tex_out = "[WILL_SAVE_TO_DISK]\n\0";
+
+                        }else{
+        
+                            ERR("[BAD_PAYLOAD_FLAG:bin_txt]");
+                    
+                        };;
+                    #undef ANYTEXT
+                    #undef PNGFILE
+                    //:--------------SET_tex_out_IF_printable://
+                };;
+
+            }else{
+
+                tex_out = "[INVALID_ENUM_WHATEVER]\0\n" ;
+    
+            };;
+
+            #undef  JMP
+            //:================:call_function_from_jump_table://
+
+        }else{
+
+            //: AAC2020_PHEXDUM_DEFAULT_tex_out
+            tex_out =( "[IGNORED:TOO_MANY_CMDLINE_ARGUMENTS]" );
+
+        };;
+
+        //:save_text_to_output_file:=========================://
+        #define N_S ((CHR*)0)
+        LOG("[save_text_to_output_file:BEG]",0);
+
+            if( ((CHR*)0) == tex_out ){
+                ERR("[NULL_OUTPUT_TEXT_SHOULD_NEVER_HAPPEN]");
+            }else{
+            
+                //- str_len=( 0-777 ); -//
+                    fid_nob=( 0-242 ); 
+
+                if( N_S == fip_out ){ ERR("[NIL:fip_out]"); };
+                if( N_S == tex_out ){ ERR("[NIL:tex_out]"); };
+
+                //:figure_out_what_to_save_to_disk:----------://
+                if( 0 >= payload_has ){ //: NO  PAYLOAD
+
+                    fid_out=(         tex_out   );
+                    fid_nob=( strlen( tex_out ) );
+                    if( fid_nob <= 0 ){ ERR("[LEN:fid_nob]"); };
+
+                }else
+                if( 1 <= payload_has ){ //: HAS PAYLOAD
+                #define ANYTEXT AAC2020_PHEXDUM_P_T_ANYTEXT
+                #define PNGFILE AAC2020_PHEXDUM_P_T_PNGFILE
+    
+                    /** ************************************ **/
+                    /** fil_out can hold (U08*) or (CHR*)    **/
+                    /** I think that violates strict alias   **/
+                    /** rules. ***************************** **/
+                    /** ************************************ **/
+
+                    if( ANYTEXT == payload.bin_txt ){
+                        fid_out =(CHR*)( payload.anytext );
+                        fid_nob =      ( payload.arr_len );
+                    }else
+                    if( PNGFILE == payload.bin_txt ){
+                        fid_out =(CHR*)( payload.pngfile );
+                        fid_nob =      ( payload.arr_len );     
+                    }else{
+                        ERR("[UNKNOWN_PAYLOAD_DATA_TYPE]");
+                    };;
+
+                #undef  ANYTEXT
+                #undef  PNGFILE
+                }else{
+                    ERR("[WHAT_IS_THE_STATE_OF_THE_PAYLOAD?]");
+                };;
+                //:----------:figure_out_what_to_save_to_disk://
+                //:avoid_file_corruption:--------------------://
+
+                    /** @VID_IID[ 0125 ]TIME[ 03:11:50 ] *** **/
+                    /** Having the input file path and output**/
+                    /** file path the same will result in    **/
+                    /** overwritting your files. Which means **/
+                    /** PNG BINARY data will be saved into a **/
+                    /** text file and text file data will be **/
+                    /** stored into a PNG file binary.       **/
+                    /** ************************************ **/
+
+                    if( fip_out == fip_inn ){
+                        ERR("[AAC2020_PHEXDUM:INN_IS_OUT]");
+                    };;
+                    
+                //:--------------------:avoid_file_corruption://
+                //:save_file_to_disk_for_real:---------------://
+                #define H aac2020_phexdum_Halt //:-----------://
+                /** **************************************** **/
+                /** @VID_IID[ 0125 ]TIME[ 02:10:55 ]         **/
+                /** This is a bit hackish... Saves           **/
+                /** actual text or a png binary.             **/
+                /** This works because ascii text is         **/
+                /** basically a U08 array... But this        **/
+                /** is kind of hackish and not a best        **/
+                /** practice.                                **/
+                /** **************************************** **/
+                if( ((void*)0) == fip_out ){H("[N:fip_out]");};
+                if( ((void*)0) == fid_out ){H("[N:fid_out]");};
+                if( (       0) == fid_nob ){H("[N:fid_nob]");};
+                AAC2020_PHEXDUM_SaveFile_TXT( 
+                    fip_out //:<--[ NameOfFile( nof_wex )  ]
+                ,   fid_out //:<--[ Text To Save To File   ]
+                ,   fid_nob //:<--[ Length_Of_Text         ]
+                );;
+                #undef H //:---------------------------------://
+                //:---------------:save_file_to_disk_for_real://
+            };;
+            //:save__anytext_nol_u32:------------------------://
+            #define ANYTEXT AAC2020_PHEXDUM_P_T_ANYTEXT
+            if( ANYTEXT == payload.bin_txt ){
+
+                /** **************************************** **/
+                /** @VID_IID[ 0128 ]TIME[ 02:37:08 ]         **/
+                /** Added ability to save a file telling us  **/
+                /** how many hex literals are in the naked   **/
+                /** text array. Which is needed for using    **/
+                /** data embedded by our build system when   **/
+                /** build system is using PHEXDUM commands.  **/
+                /** **************************************** **/
+
+                I32   nol_u32 =(I32)( payload.anytext_nol_u32 );
+                char  buf[16]={ 0 }; //:16 character buffer
+                I32   rad    =(10 ); //:radix: base 10, decimal
+
+                /** Convert nol_u32 to ascii, save in[ buf ] **/
+                itoa( nol_u32 , buf , rad ) ;
+                
+                /** Setup arguments for function call. **/
+                fip_out=(   fip_004  );
+                fid_out=(       buf  );
+                fid_nob=(strlen(buf) );
+
+                AAC2020_PHEXDUM_SaveFile_TXT( 
+                    fip_out //:<--[ NameOfFile( nof_wex )  ]
+                ,   fid_out //:<--[ Text To Save To File   ]
+                ,   fid_nob //:<--[ Length_Of_Text         ]
+                );;
+                
+            };;
+            #undef  ANYTEXT
+            //:------------------------:save__anytext_nol_u32://
+        LOG("[save_text_to_output_file:END]",0);
+        #undef  N_S
+        //:=========================:save_text_to_output_file://
+        //:print_output_text_before_freeing_memory:----------://
+
+            printf( tex_out );
+            fflush( stdout  );
+
+        //:----------:print_output_text_before_freeing_memory://
+        //:free_memory:======================================://
+        /** ************************************************ ***
+        @VID_IID[ 0121 ]TIME[ 07:26:42 ]     
+        Hard coded strings are NOT freeable. 
+
+        @VID_IID[ 0125 ]TIME[ 02:50:20 ]
+        tex_out, when freeable, is pointing to memory in
+        our payload object. So DON'T free[ tex_out ].
+        Just free the payload memory. Otherwise we will
+        get a "double free".
+
+        @VID_IID[ 0126 ]TIME[ 04:04:04 ]
+        rbsrbs: double free is ok if you 0 out the pointer
+        *** ************************************************ **/
+        #define ANYTEXT AAC2020_PHEXDUM_P_T_ANYTEXT
+        #define PNGFILE AAC2020_PHEXDUM_P_T_PNGFILE
+
+        if( payload_has >= 1 ){
+            if( ANYTEXT == payload.bin_txt ){
+                     free( payload.anytext );
+                           payload.anytext=((void*)0);
+            }else
+            if( PNGFILE == payload.bin_txt ){
+                     free( payload.pngfile );
+                           payload.pngfile=((void*)0);
+            }else
+            {
+                ERR("[UNKNOWN_MEMORY_TYPE_CANNOT_FREE]");
+            };;
+        };;
+
+        /** @VID_IID[ 0125 ]TIME[ 02:57:42 ] *************** **/
+        /** Now that tex_out_freeable is kind of redundant,  **/
+        /** let's use it for error checking. If there is a   **/
+        /** payload, the text should be flagged as freeable. **/
+        /** ************************************************ **/
+        if( (payload_has >= 1) == (tex_out_freeable >= 1 ) 
+        ||  (payload_has >= 1) != (tex_out_freeable >= 1 ) 
+        ){
+            /** @VID_IID[ 0126 ]TIME[ 04:44:42 ] ****** **** **/
+            /** YOU ARE WRONG YOU CANT ASSERT SHIT HERE **** **/
+        };;
+
+        #undef ANYTEXT
+        #undef PNGFILE
+        //:======================================:free_memory://
+
+    LOG("[main:END]",0);
+    return( 0 );
+    }
+    
+#undef  CHR  //:----------------------------------------: 01 ://
+#undef  U32  //:----------------------------------------: 02 ://
+#undef  I32  //:----------------------------------------: 03 ://
+#undef  CMD  //:----------------------------------------: 04 ://
+#undef  ERR  //:----------------------------------------: 05 ://
+#undef  LOG  //:----------------------------------------: 06 ://
+#undef  PAY  //:----------------------------------------: 07 ://
+#undef  EXT  //:----------------------------------------: 08 ://
+//:=============================================:MAIN_SECTION://
+//:UNIT_TEST_SECTION:========================================://
+#define I32  int32_t  /** GCC: <stdint.h>     **/     //: 01 ://
+#define U32 uint32_t  /** GCC: <stdint.h>     **/     //: 02 ://
+#define U08  uint8_t  /** GCC: <stdint.h>     **/     //: 03 ://
+#define ERR aac2020_phexdum_Halt                      //: 04 ://
+#define A_4 ( 4 )     /** Arguments,4 of them **/     //: 05 ://
+#define E_U extern U32                                //: 06 ://
+
+    U32
+    AAC2020_PHEXDUM_UnitTest( U32 u32 )
+    {
+        if( aac2020_phexdum_UTC_ror >= 1 ){
+            /** Ignore Call. **/
+            printf("[IGNORED:AAC2020_PHEXDUM_UnitTest]\n");
+            fflush(stdout);
+        }else{
+            aac2020_phexdum_UTC_ror =( 1  );
+
+            E_U aac2020_phexdum_UnitTest( U32 );
+                aac2020_phexdum_UnitTest( u32 );
+        };;
+
+        return( 0x00 );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    U32
+    aac2020_phexdum_UnitTest( U32 u32 )
+    {
+    #define U32_ARR_LEN ( 187 )
+
+        if( u32 ){ /** NOOP **/ };
+
+        //: #error TODO____U32_DATA_CONVERT_TO_BYTE_ARRAY
+        
+        assert( 187 == ( ( 37 * 5 ) + 2 ) );
+        assert( 187 == U32_ARR_LEN );
+
+        I32 u32_len=(U32_ARR_LEN );
+        U32 u32_arr[ U32_ARR_LEN ]={ 
+          /** DEKTEN_LOGO_PNG_BINARY_AS_UINT32_ARRAY **/
+/* 01 */  0x89504E47,0x0D0A1A0A,0x0000000D,0x49484452,0x000000C8
+/* 02 */, 0x000000C8,0x08020000,0x00223A39,0xC9000002,0xB2494441
+/* 03 */, 0x5478DAED,0xDC216F53,0x511880E1,0x0F52C4B2,0x4D2C1535
+/* 04 */, 0x5C42DA04,0x8140D5CD,0xA12B972A,0xFE000916,0x4DD02049
+/* 05 */, 0xF607504D,0x65150257,0x57D30A04,0x496F168A,0xA9B8A968
+/* 06 */, 0x97090CCD,0x3CE29C6C,0x3777E579,0xA6BF7C3D,0xA76F7ACD
+/* 07 */, 0xCD220000,0x00000000,0x00000000,0xF8BF3CCA,0x1B1B0E87
+/* 08 */, 0xED76BBC9,0x075B3D5D,0x4D0693E4,0xB12AE275,0xD6BEEF11
+/* 09 */, 0xE9F73198,0x0C8ADF45,0x93AFB1AA,0xAAD16894,0x31D8CADB
+/* 10 */, 0xB7AFAAD3,0xE934F946,0x76CF76F1,0x2A7D6C9D,0xBBEF6544
+/* 11 */, 0xFA7D9C2D,0xCE3A7F1A,0x7D8DD91E,0xFBD14658,0x080B6181
+/* 12 */, 0xB01016C2,0x0261212C,0x8405C242,0x58080B84,0x85B01016
+/* 13 */, 0xDC89569D,0xCB66B3D9,0x6AB5AA67,0xD7F6641B,0xDFD2C76E
+/* 14 */, 0x72F7BD8B,0x384A1E9A,0x96D3C56E,0x51CF8514,0x45D1EFF7
+/* 15 */, 0x0F33AC7D,0x55F3F9BC,0xBE7DD31A,0xCF36CE19,0x2AF77F35
+/* 16 */, 0xAA332C8F,0x428485B0,0x1016080B,0x61212C10,0x16C24258
+/* 17 */, 0x202C8485,0xB0405808,0x0B61C1DD,0x681DECC9,0x9E475CA4
+/* 18 */, 0x4F5D475C,0x66AD7B1B,0x719C3E35,0x8EB812D6,0xC3F222E2
+/* 19 */, 0x53FAD43A,0x37AC0F39,0xFF833416,0x071B9647,0x21C24258
+/* 20 */, 0x080B8485,0xB0101608,0x0B61212C,0x1016C242,0x58202C84
+/* 21 */, 0x85B04058,0x080B6181,0xB01016C2,0x0261212C,0x8405C242
+/* 22 */, 0x58080B84,0x85B01016,0x080B6121,0x2C1016C2,0x4258202C
+/* 23 */, 0x8485B040,0x58080B61,0x81B01016,0xC2026121,0x2C8405C2
+/* 24 */, 0x4258080B,0x8485B010,0x16080B61,0x212C1016,0xC2425820
+/* 25 */, 0x2C8485B0,0x4058080B,0x6181B010,0x16C20261,0x212C8405
+/* 26 */, 0xC2425808,0x0B8485B0,0x1016080B,0x61212C10,0x16C24258
+/* 27 */, 0x202C8485,0xB01016DC,0x83D6C19E,0xEC67C4FB,0xF4A9EBDC
+/* 28 */, 0x751F238E,0xB33EA4B0,0x1E98AB88,0xCF35AEBB,0xF423E551
+/* 29 */, 0x88B01016,0x080B6121,0x2C1016C2,0x4258202C,0x8485B040
+/* 30 */, 0x58080B61,0x212CB807,0xB5BEE857,0x14456DBB,0xB627DBB2
+/* 31 */, 0x5B268FDD,0x448CB3F6,0x5D441C25,0x0F75CBEE,0xE9EEF4F0
+/* 32 */, 0x2EBFEEB0,0xFAB7EAD9,0xB5EC2DCB,0x37E961AD,0x73C3FA12
+/* 33 */, 0xD1491E3A,0xFF7ADE5B,0xF63C0A41,0x58080B61,0x81B01016
+/* 34 */, 0xC2026121,0x2C8405C2,0x4258080B,0x8485B010,0x16FC53E6
+/* 35 */, 0x8B7E5555,0x35FC609B,0x279B5864,0x1C2C77DF,0x8FDB9704
+/* 36 */, 0x533FE4AF,0xCD7ABD6E,0xF23536FF,0x8B060000,0x00000000
+/* 37 */, 0x000000A0,0x21FE027A,0x005E3A1C,0x53775400,0x00000049
+/* 38 */, 0x454E44AE,0x42608200
+        };;
+
+        //:save_hard_coded_data_as_png_file:-----------------://
+
+            //:001: Declare_PNG_Byte_Array:..................://
+
+            U08* u08_arr =((U08*)0); //:<-- pngfile 
+            I32  u08_len =(      0); //:<-- pngfile.length
+    
+            //:002: Unpack_Into_Byte_Array:..................://
+
+            AAC2020_PHEXDUM_u32_arr_CTO_u08_arr(
+                            u32_arr 
+            ,               u32_len
+            ,                         &(u08_arr)
+            ,                         &(u08_len)
+            );;
+
+            //:###:_Intermission:----------------------------://
+            /**///:make_sure_u32_to_u08_works:---------------://
+            /**/
+            /**/    U32* u32_arr_chk =((U32*)0);
+            /**/    I32  u32_len_chk =(      0);
+            /**/
+            /**/    AAC2020_PHEXDUM_u08_arr_CTO_u32_arr(
+            /**/                    u08_arr 
+            /**/    ,               u08_len
+            /**/    ,                         &(u32_arr_chk)
+            /**/    ,                         &(u32_len_chk)
+            /**/    );;
+            /**/
+            /**/    if( u32_len != u32_len_chk ){
+            /**/        ERR("[CONVERTER_FAIL[U32<==>U08]001]");
+            /**/    };;
+            /**/    for( I32 i = 0 ; i < u32_len ; i++ ){
+            /**/        if( u32_arr_chk[ i ]
+            /**/        !=  u32_arr[     i ]
+            /**/        ){
+            /**/            ERR("[FAIL:2021_02_05:1002PM]");
+            /**/        };;
+            /**/    };;
+            /**/
+            /**///:---------------:make_sure_u32_to_u08_works://
+            //:----------------------------:###:_Intermission://
+
+            //:003: Save_PNG_Bytes_To_Png_File:..............://
+
+            AAC2020_PHEXDUM_SaveFile_U08(
+                "001.PNG"    /** NameOfFile__WithEXtension   **/
+            ,    u08_arr     //:[  arr_u08  / u08_arr  ]://
+            ,    u08_len     //:[  arr_len  / len_arr  ]://
+            );;
+
+        //:-----------------:save_hard_coded_data_as_png_file://
+        //:convert_png_on_disk_to_text_hex_dump:-------------://
+
+            char* arg_arr_001[ A_4 ]={
+                "[IGNORE_FIRST_ARG_NOT_USER_SUPPLIED]"
+            ,   "png_cto_nak"
+            ,   "001.PNG"
+            ,   "001.TXT"
+            };;
+            AAC2020_PHEXDUM_StandAloneMain(
+                A_4 , arg_arr_001          );;
+
+        //:-------------:convert_png_on_disk_to_text_hex_dump://
+        //:convert_text_hex_dump_back_to_png_file:-----------://
+
+            char* arg_arr_002[ A_4 ]={
+                "[IGNORE_FIRST_ARG_NOT_USER_SUPPLIED]"
+            ,   "nak_cto_png"
+            ,   "001.TXT"
+            ,   "002.PNG"
+            };;
+            AAC2020_PHEXDUM_StandAloneMain(
+                A_4 , arg_arr_002          );;
+        
+        //:-----------:convert_text_hex_dump_back_to_png_file://
+        //:load_png_file_on_disk_into_ram:-------------------://
+
+            U08* got_arr =((U08*)0);
+            I32  got_len =(      0);
+
+            AAC2020_PHEXDUM_LoadFile_U08(
+                "002.PNG"    /** NameOfFile__WithEXtension   **/
+            ,  &(got_arr)    //:[  arr_u08  / u08_arr  ]://
+            ,  &(got_len)    //:[  arr_len  / len_arr  ]://
+            );;
+
+        //:-------------------:load_png_file_on_disk_into_ram://
+        //:both_arrays_should_be_identical:------------------://
+        for( I32 i = 0 ; i < u08_len ; i ++ ){
+
+            if( u08_arr[ i ] 
+            !=  got_arr[ i ]
+            ){
+                ERR("[FILE_ON_DISK_NO_MATCH_FILE_ON_RAM]");
+            };;
+        };;
+        //:-------------------both_arrays_should_be_identical://
+        //:overkill_check:-----------------------------------://
+
+            U32* got_arr_chk=((U32*)0);
+            I32  got_len_chk=(      0);
+
+            AAC2020_PHEXDUM_u08_arr_CTO_u32_arr(
+                            got_arr 
+            ,               got_len
+            ,                         &(got_arr_chk)
+            ,                         &(got_len_chk)
+            );;
+
+            if( U32_ARR_LEN != got_len_chk ){
+
+                ERR("[BAD_LENGTH_CHECK:2021_02_05]");
+        
+            };;
+
+            for( I32 i = 0 ; i < U32_ARR_LEN ; i++ ){
+
+                if( u32_arr[     i ]
+                !=  got_arr_chk[ i ]
+                ){
+                    ERR("[COPYRIGHT:JohnMarkMadison:2021]");
+                };;
+            };;
+
+        //:-----------------------------------:overkill_check://
+        //:memory_cleanup:-----------------------------------://
+
+            free( u32_arr_chk ); u32_arr_chk=((U32*)0);
+            free( u08_arr     ); u08_arr    =((U08*)0);
+            free( got_arr     ); got_arr    =((U08*)0);
+            free( got_arr_chk ); got_arr_chk=((U32*)0);
+
+        //:-----------------------------------:memory_cleanup://
+
+        return( 0x00 );
+
+    #undef  U32_ARR_LEN
+    }
+
+#undef  I32  //:----------------------------------------: 01 ://
+#undef  U32  //:----------------------------------------: 02 ://
+#undef  U08  //:----------------------------------------: 03 ://
+#undef  ERR  //:----------------------------------------: 04 ://
+#undef  A_4  //:----------------------------------------: 05 ://
+#undef  E_U  //:----------------------------------------: 06 ://
+//:========================================:UNIT_TEST_SECTION://

@@ -3,6 +3,42 @@
     ## TURN ON[ -Wconversion ]
     ## And start fixing where things break. 
 
+    ##:_CREATE_BUILD_SYSTEM_EXECUTABLES_:====================:##
+        ##----------------------------------------------------##
+        ## PNG_HEX_DUMPer Utility For Embedding PNG File Data ##
+        ##----------------------------------------------------##
+
+        fip_inn="./LIB/EXE/PHEXDUM.C11" ## FIlePath:INNput    ##
+        fip_out="./LIB/EXE/PHEXDUM.exe" ## FIlePath:OUTput    ##
+
+        ##----------------------------------------------------##
+        gcc -x c                                               \
+            -c $fip_inn                                        \
+            -o phexdum_object_file.obj                         \
+            -std=c11                                           \
+            -m64 ###############################################
+            gcc -o $fip_out phexdum_object_file.obj 
+            rm              phexdum_object_file.obj
+        ##----------------------------------------------------##
+    ##:====================:_CREATE_BUILD_SYSTEM_EXECUTABLES_:##
+    ##_GENERATE_HARDASS_PNG_ASSETS_#############################
+
+        original_directory=$PWD
+        cd ./LIB/ASS
+
+        ##:[ASS_001]:----------------------------------------:##
+        ## MAKE(S): I32 PAINT5D_DEFAULT_DATA_001_NOE ###########
+        ## MAKE(S): U32 PAINT5D_DEFAULT_DATA_001_PNG ###########
+        ../EXE/PHEXDUM.exe                                  \
+            pngfile_CTO_naktext                             \
+                PAINT5D_DEFAULT_DATA_001.PNG                \
+                PAINT5D_DEFAULT_DATA_001_NAK._              \
+                PAINT5D_DEFAULT_DATA_001_NOE._             ##
+        ##:----------------------------------------:[ASS_001]:##
+
+        cd $original_directory
+
+    #############################_GENERATE_HARDASS_PNG_ASSETS_##
     ##_GENERATE_GLSL_CODE_FROM_C99_CODE_########################
 
         ## @VID_IID[ 0114 ]TIME[ 03:07:50 ] ####################

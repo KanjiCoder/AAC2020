@@ -1,0 +1,103 @@
+        
+
+        U32 
+        AAC2020_PHEXDUM_LoadFileIfExists(
+            CHR*         fip_inn //:FILE <<< INN
+        ,   I32          bin_txt //:ASC=1  PNG=0
+        ,   U08*  *BYREF_fil_mem //:DEST >>> OUT
+        ,   I32   *BYREF_fil_nob //:SIZE >>> OUT
+        )
+
+    U_C* out_chr_buf =((U_C*)0);
+    I32  out_i32_siz =( 0 - 2 );
+    
+    U08* inn_u08_pix =((U08*)0);
+    U32  inn_i32_wid =(   0   );
+    U32  inn_i32_hig =(   0   );
+
+    naktext_CTO_pngfile
+
+    ABABABA --> 0101010
+    TEXT -----> IMAGE
+
+unsigned lodepng_encode32(
+    unsigned char** out, 
+    size_t* outsize, 
+    const unsigned char* image, 
+    unsigned w, 
+    unsigned h) 
+
+//:DESIGN_NOTES:=============================================://
+
+    //:DONT_DO_THIS:*****************************************://
+
+        //[ Don't create "define" and "undef" files          ]//
+        //[ Because too much indirection in source code      ]//
+        //[ when doing this way.                             ]//
+        //# "naked_array.txt.len.define._" <<<<<< NO!        #//
+        //# "naked_arary.txt.len.undef._"  <<<<<< NO!        #//
+
+    //:*****************************************:DONT_DO_THIS://
+    //:example_usage_of_naked_array_hex_dump:----------------://
+
+        //:command_line_command_to_run:----------------------://
+
+            ./PHEXDUM.exe                 \
+                    png_to_nak            \  ## command
+                    img.png               \  ## input image
+                    naked_array.txt       \  ## naked array text
+                    naked_array.txt.len._    ## num elements
+
+        //:----------------------:command_line_command_to_run://
+        //:embed_hex_dump_into_source_code:------------------://
+
+            I32 my_data_len=(
+                #include "naked_array.txt.len._"
+            );;
+            U32 my_data[
+                #include "naked_array.txt.len._"
+            ]={
+                #include "naked_array.txt"
+            };
+
+        //:------------------:embed_hex_dump_into_source_code://
+        //:contents_of:naked_array.txt:----------------------://
+
+            0xFFFFFFF
+        ,   0xFFFFFFF
+        ,   0xFFFFFFF
+        ,   0xFFFFFFF
+        ,   0xFFFFFFF
+        ,   0xFFFFFFF
+        ,   0xFFFFFFF
+        ,   0xFFFFFFF
+        ,   0xFFFFFFF
+        ,   0xFFFFFFF
+
+        //:----------------------:contents_of:naked_array.txt://
+
+    //:----------------:example_usage_of_naked_array_hex_dump://
+
+//:=============================================:DESIGN_NOTES://
+//:VARIABLE_NAMES:===========================================://
+
+    num_lit : NUMber of LITerals. EX: "0xFF,0xFF" == 2
+    nol_u32 : Number_Of_Literals: In U32 Format ("0xFF00FF00")
+    noe_u32 : DEPRECATED: Number_Of_Elements, use[ nol_u32 ]
+    nof_wex : NameOfFile____WithEXtension
+    fip_inn : FIlePath_INNput
+    pay_err : PAYLOAD.ERROR , an error payload.
+    err_pay : Backwards, you mean[ pay_err ].
+              Yes it reads as better english as 
+             "error payload" but it wrecks the regularness
+              of our "general to specific" rule.
+
+
+//:===========================================:VARIABLE_NAMES://
+//:SHORTHAND_NAMES:==========================================://
+
+    RET_OUT : RETurn value / OUTput
+    FUN_NAM : FUNction NAMe
+    ARG_INN : ARGument / INNput
+
+//:==========================================:SHORTHAND_NAMES://

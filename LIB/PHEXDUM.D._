@@ -1,0 +1,395 @@
+/** ******************************************************** ***
+    ------------------------------------------------------------
+    OVERVIEW:
+    ------------------------------------------------------------
+    CREATION:
+        1. Load a full color PNG file into UTILITY.
+        2. Convert to BLACK & WHITE should be optional.
+        3. Re-save processed PNG file to DISK.
+        4. Open PNG file we just saved for
+           BINARY READ. (Do not open with)
+           ( lodePNG)
+        5. Create U32 hex code dump that can
+           be pasted into c99 code.
+        6. Save that hex dump to file.
+
+    VERIFY:
+        1. Load a hex dump .TXT file.
+        2. Covnert TXT to BYTES
+        3. Interpret bytes as PNG file.
+        4. Save PNG file to disk.
+*** ******************************************************** **/
+/** ******************************************************** ***
+    ------------------------------------------------------------
+    TERMS:
+    ------------------------------------------------------------
+
+    !IMPORTANT!
+            : When[ c99text ]is embedded into an EXE
+            : it becomes a[ c99pixa ].
+
+    pngfile : A pngfile in binary format as it appears
+              on the hard disk.
+
+    c99text : A text file that represents a hex dump
+              of a PNG file. The hex dump is written
+              as valid C99 source code for an 
+              initialized U32 array.
+              This array contains the same binary
+              information as[ pngfile ].
+
+    naktext : Naked[ c99text ]
+              Just the comma seperated list of U32 hex codes
+              found in c99text. This exists so we can create
+              a built system similiar to our C99-to-GLSL
+              build system.
+
+    c99pixa : The actual binary data of c99text when
+              the executable source code has been
+              compiled. This is an array of U32, so
+              be careful about the endianness when
+              converting to[ pngpixa ].
+
+    pngpixa : Deflated[ pngfile ]into an u08 array.
+              Representing the un-compressed bitmap.
+
+    pngtext : NO SUCH THING. The pngfile is serialized as
+              a hex dump where each 4 bytes of the binary
+             [pngfile] is backed into a 32bit hexadecimal
+              string literal.
+
+//:Public to command line:
+
+    1. naktext_CTO_c99text   CMD$>> PHEXDUM nak-to-c99 c99.TXT
+    2. c99text_CTO_naktext   CMD$>> PHEXDUM c99-to-nak nak.TXT
+
+    3. pngfile_CTO_c99text   CMD$>> PHEXDUM png-to-c99 nak.PNG
+    4. c99text_CTO_pngfile   CMD$>> PHEXDUM c99-to-png c99.TXT
+
+    5. pngfile_CTO_naktext   CMD$>> PHEXDUM png-to-nak nak.PNG
+    6. naktext_CTO_pngfile   CMD$>> PHEXDUM nak-to-png c99.TXT
+
+//:Public to AAC2020 engine:
+
+    1. c99pixa_CTO_pngpixa  (U32 array -to- U08 array)
+       ( BE CAREFUL OF ENDIANNESS )
+
+*** ******************************************************** **/
+//:MISC_WHATEVER:============================================://
+#define CHR const    char                             //: 01 ://
+#define ASC          char                             //: 02 ://
+#define U08       uint8_t /** GCC: <stdint.h> **/     //: 03 ://
+#define C32 const int32_t /** GCC: <stdint.h> **/     //: 04 ://
+#define I32       int32_t /** GCC: <stdint.h> **/     //: 05 ://
+
+    /** ror : ran or running ? **/
+    /** Has unit test been ran before? **/
+    U08 aac2020_phexdum_UTC_ror =( 0 );
+
+    /** max number of synonyms **/
+    #define AAC2020_PHEXDUM_SYN_NOE ( 11 )
+
+    /** Default Length Variable Output.   - - - - - - - - - -**/
+    /** Example: "naked_array.txt.len._"  - - - - - - - - - -**/
+
+        CHR* AAC2020_PHEXDUM_DEFAULT_fip_004 =(
+            "anytext_nol_u32._\0"                );
+
+    /** Default [fi]le p[path] [out]put - - - - - - - - - - -**/
+
+        CHR* AAC2020_PHEXDUM_DEFAULT_fip_out =( 
+            "PNG_ORR_TXT.___\0"                );
+
+    /** Default Text Output - - - - - - - - - - - - - - - - -**/
+
+        CHR* AAC2020_PHEXDUM_DEFAULT_tex_out =( 
+           "[AAC2020_PHEXDUM_DEFAULT_tex_out]\n\0" );
+
+    /** Default [fi]le d[ata] [out]put  - - - - - - - - - - -**/
+
+        CHR* AAC2020_PHEXDUM_DEFAULT_fid_out =(
+           "[AAC2020_PHEXDUM_DEFAULT_fid_out]\n\0" );
+
+    /** @VID_IID[ 0126 ]TIME[ 03:30:00 ] **/
+    /** rbsrbs: bootleg enum LUL ******* **/
+    //- C32 AAC2020_PHEXDUM_PAYLOAD_ENU_anytext =( 0 + 1 );  -//
+    //- C32 AAC2020_PHEXDUM_PAYLOAD_ENU_pngfile =( 0 - 1 );  -//
+
+    enum 
+    AAC2020_PHEXDUM_payload_file_type /**( P_T )**/ {
+        /** ************************************************ ***
+        @VID_IID[ 0126 ]TIME[ 03:47:00 ]
+        rbsrbs: yeah, it's mainly to avoid magic 
+                values and mixing them
+        rbsrbs: the naming can be used as a 
+                documentation
+        *** ************************************************ **/
+        AAC2020_PHEXDUM_P_T_INVALID = 0
+    ,   AAC2020_PHEXDUM_P_T_ANYTEXT
+    ,   AAC2020_PHEXDUM_P_T_PNGFILE
+    };
+
+    struct AAC2020_PHEXDUM_payload{
+    #define P_T enum AAC2020_PHEXDUM_payload_file_type
+
+            P_T bin_txt ;  
+
+        /** Always Binary PNG File.             **/
+        /** NEVER de-compressed raw pixel data. **/
+
+            U08* pngfile ;  /** arr_png / u08_arr / arr_u08 **/
+            //:  png_wid ;  /** arr_wid **/
+            //:  png_hig ;  /** arr_hig **/
+
+        /** A character array that we will **/
+        /** save to a text file.           **/
+
+            ASC* anytext ;  /** arr_asc / asc_arr **/
+                            /** c99text | naktext **/
+
+        /** pngfile.length  ........................... **/
+        /** anytext.length  ........................... **/
+        /** If is[ anytext ]The[ arr_len ]does NOT      **/  
+        /** include the null terminator as part of it's **/
+        /** length.                                     **/
+
+            I32  arr_len ;
+
+        /** Number of uint32 elements encoded by the anytext **/
+        /** Variable only valid if[ bin_txt == ANYTEXT ] *** **/
+        /** AKA[ anytext_noe_u32 / anytext_num_lit ]     *** **/
+        /** nol_u32: Number Of Literals: Format: Uint32  *** **/
+
+            I32  anytext_nol_u32 ; /** AKA[ nof_hel ]*** *** **/
+
+    #undef PAY_TYP
+    };
+                                          
+#undef  CHR  //:----------------------------------------: 01 ://
+#undef  ASC  //:----------------------------------------: 02 ://
+#undef  U08  //:----------------------------------------: 03 ://
+#undef  C32  //:----------------------------------------: 04 ://
+#undef  I32  //:----------------------------------------: 05 ://
+//:============================================:MISC_WHATEVER://
+//:FUNCTION_POINTER_TYPES:===================================://
+#define CHR const char                                //: 01 ://
+#define PAY struct AAC2020_PHEXDUM_payload            //: 02 ://
+
+    typedef 
+        void                               //:<--- RET_OUT   ://
+        (PHEXDUM_CMDLINE_FUNCTION)         //:<--- FUN_NAM   ://
+        ( CHR* rel_str , PAY* payload );   //:<--- ARG_INN   ://
+
+    /** void FUNCTION pointer **/
+    typedef void (PHEXDUM___ANY___FUNCTION)(void);
+
+#undef  CHR  //:----------------------------------------: 01 ://
+#undef  PAY  //:----------------------------------------: 02 ://
+//:===================================:FUNCTION_POINTER_TYPES://
+//:COMMAND_JUMP_TABLE:=======================================://
+
+    //[ NOT ALLOWED! DATA CANNOT REFERENCE    ]//
+    //[ FUNCTIONS IN OUR CODE BASE DESIGN !!! ]//
+
+//:=======================================:COMMAND_JUMP_TABLE://
+//:NOT_FUNCTION_POINTERS:====================================://
+#define CMD PHEXDUM_CMDLINE_FUNCTION   //:--------------: 01 ://
+#define PAY struct AAC2020_PHEXDUM_payload  //:---------: 02 ://
+#define CHR const char                 //:--------------: 03 ://
+#define C_C const char                 //:--------------: 04 ://
+#define E_V extern void                //:--------------: 05 ://
+
+    E_V AAC2020_PHEXDUM_CMD_naktext_CTO_c99text( C_C* , PAY* );
+    E_V AAC2020_PHEXDUM_CMD_c99text_CTO_naktext( C_C* , PAY* );
+
+    E_V AAC2020_PHEXDUM_CMD_pngfile_CTO_c99text( C_C* , PAY* );
+    E_V AAC2020_PHEXDUM_CMD_c99text_CTO_pngfile( C_C* , PAY* );
+
+    E_V AAC2020_PHEXDUM_CMD_pngfile_CTO_naktext( C_C* , PAY* );
+    E_V AAC2020_PHEXDUM_CMD_naktext_CTO_pngfile( C_C* , PAY* );
+                                                 
+    E_V AAC2020_PHEXDUM_CMD_NothingFound(        C_C* , PAY* );
+
+#undef  CMD  //:----------------------------------------: 01 ://
+#undef  PAY  //:----------------------------------------: 02 ://
+#undef  CHR  //:----------------------------------------: 03 ://
+#undef  C_C  //:----------------------------------------: 04 ://
+#undef  E_V  //:----------------------------------------: 05 ://
+//:====================================:NOT_FUNCTION_POINTERS://
+//:COMMAND_ENUMERATIONS:=====================================://
+#define I32 int32_t /** GCC: <stdint.h> **/
+
+    //:BOGUS COMMANDS:
+    I32 aac2020_phexdum_ENU_naktext_CTO_c99text =( 1 );
+    I32 aac2020_phexdum_ENU_c99text_CTO_naktext =( 2 );
+
+    //:DECIDED NOT TO IMPLEMENT:
+    I32 aac2020_phexdum_ENU_pngfile_CTO_c99text =( 3 );
+    I32 aac2020_phexdum_ENU_c99text_CTO_pngfile =( 4 );
+
+    //:ONLY COMMANDS I CARE ABOUT:
+    I32 aac2020_phexdum_ENU_pngfile_CTO_naktext =( 5 );
+    I32 aac2020_phexdum_ENU_naktext_CTO_pngfile =( 6 );
+
+#undef  I32
+//:=====================================:COMMAND_ENUMERATIONS://
+//:COMMAND_NORMALIZATION_TABLE:==============================://
+//:SYN____FOR____SYNONYM_TABLE:==============================://
+#define CHR        const char                         //: 01 ://
+#define ECC extern const char                         //: 02 ://
+#define NOE AAC2020_PHEXDUM_SYN_NOE                   //: 03 ://
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    //: CHR**  type(s):--------------------------------------://
+
+    ECC*  aac2020_phexdum_SYN_naktext_CTO_c99text[ NOE + 1  ] ;
+    ECC*  aac2020_phexdum_SYN_c99text_CTO_naktext[ NOE + 1  ] ;
+
+    ECC*  aac2020_phexdum_SYN_pngfile_CTO_c99text[ NOE + 1  ] ;
+    ECC*  aac2020_phexdum_SYN_c99text_CTO_pngfile[ NOE + 1  ] ;
+
+    ECC*  aac2020_phexdum_SYN_pngfile_CTO_naktext[ NOE + 1  ] ;
+    ECC*  aac2020_phexdum_SYN_naktext_CTO_pngfile[ NOE + 1  ] ;
+
+    //: CHR*** type(s): -------------------------------------://
+    extern CHR** aac2020_phexdum_SYN_SYN[ 6 + 1 /** 7 **/ ];
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    CHR*            /** invalid_command **/
+    aac2020_phexdum_SYN_invalid_command[ NOE + 1 ]={
+    /**/"[AAC2020_ENGINE_BY_KANJICODER:INVALID_COMMAND_001]"
+    ,   "[AAC2020_ENGINE_BY_KANJICODER:INVALID_COMMAND_002]"
+    ,   "[AAC2020_ENGINE_BY_KANJICODER:INVALID_COMMAND_003]"
+    ,   "[AAC2020_ENGINE_BY_KANJICODER:INVALID_COMMAND_004]"
+    ,   "[AAC2020_ENGINE_BY_KANJICODER:INVALID_COMMAND_005]"
+    ,   "[AAC2020_ENGINE_BY_KANJICODER:INVALID_COMMAND_006]"
+    ,   "[AAC2020_ENGINE_BY_KANJICODER:INVALID_COMMAND_007]"
+    ,   "[AAC2020_ENGINE_BY_KANJICODER:INVALID_COMMAND_008]"
+    ,   "[AAC2020_ENGINE_BY_KANJICODER:INVALID_COMMAND_009]"
+    ,   "[AAC2020_ENGINE_BY_KANJICODER:INVALID_COMMAND_010]"
+    ,   "[AAC2020_ENGINE_BY_KANJICODER:INVALID_COMMAND_011]"
+    ,   ((CHR*)0)
+    };
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    CHR*            /** pngfile_CTO_c99text **/
+    aac2020_phexdum_SYN_pngfile_CTO_c99text[ NOE + 1  ]={
+    /**/"copyright_2021_atomic_alice_c_engine(AAC2020):001"
+    ,   "png-to-c99"  
+    ,   "png_to_c99" 
+    ,   "png-TO-c99"  
+    ,   "png_TO_c99" 
+    ,   "pngfile-cto-c99text"
+    ,   "pngfile_cto_c99text"
+    ,   "pngfile-CTO-c99text"
+    ,   "pngfile_CTO_c99text"
+    ,   "png_cto_c99"
+    ,   "png-cto-c99"
+    ,   ((CHR*)0)
+    };
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    CHR*            /** c99text_CTO_pngfile **/
+    aac2020_phexdum_SYN_c99text_CTO_pngfile[ NOE + 1  ]={
+    /**/"copyright_2021_atomic_alice_c_engine(AAC2020):002"
+    ,   "c99-to-png"  
+    ,   "c99_to_png" 
+    ,   "c99-TO-png"  
+    ,   "c99_TO_png" 
+    ,   "c99text-cto-pngfile"
+    ,   "c99text_cto_pngfile"
+    ,   "c99text-CTO-pngfile"
+    ,   "c99text_CTO_pngfile"
+    ,   "c99_cto_png"
+    ,   "c99-cto-png"
+    ,   ((CHR*)0)
+    };
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    CHR*            /** pngfile_CTO_naktext **/
+    aac2020_phexdum_SYN_pngfile_CTO_naktext[ NOE + 1  ]={
+    /**/"copyright_2021_atomic_alice_c_engine(AAC2020):003"
+    ,   "png-to-nak"  
+    ,   "png_to_nak" 
+    ,   "png-TO-nak"  
+    ,   "png_TO_nak" 
+    ,   "pngfile-cto-naktext"
+    ,   "pngfile_cto_naktext"
+    ,   "pngfile-CTO-naktext"
+    ,   "pngfile_CTO_naktext"
+    ,   "png_cto_nak"
+    ,   "png-cto-nak"
+    ,   ((CHR*)0)
+    };
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    CHR*            /** naktext_CTO_pngfile **/
+    aac2020_phexdum_SYN_naktext_CTO_pngfile[ NOE + 1  ]={
+    /**/"copyright_2021_atomic_alice_c_engine(AAC2020):004"
+    ,   "nak-to-png"  
+    ,   "nak_to_png" 
+    ,   "nak-TO-png"  
+    ,   "nak_TO_png" 
+    ,   "naktext-cto-pngfile"
+    ,   "naktext_cto_pngfile"
+    ,   "naktext-CTO-pngfile"
+    ,   "naktext_CTO_pngfile"
+    ,   "nak_cto_png"
+    ,   "nak-cto-png"
+    ,   ((CHR*)0) //:<--@VID_IID[ 0126 ]TIME[ 00:18:00 ]
+    };            //:           [Null_Terminated_List__]
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    //:COMMANDS_THAT_ARE_BOGUS:------------------------------://
+
+        CHR*            /** naktext_CTO_c99text **/
+        aac2020_phexdum_SYN_naktext_CTO_c99text[ NOE + 1  ]={
+        /**/"copyright_2021_atomic_alice_c_engine(AAC2020):005"
+        ,   "nak-to-c99"  
+        ,   "nak_to_c99" 
+        ,   "nak-TO-c99"  
+        ,   "nak_TO_c99" 
+        ,   "naktext-cto-c99text"
+        ,   "naktext_cto_c99text"
+        ,   "naktext-CTO-c99text"
+        ,   "naktext_CTO_c99text"
+        ,   "nak_cto_c99"
+        ,   "nak-cto-c99"
+        ,   ((CHR*)0)   //:<--[ NULL_TERMINATED_LIST ]
+        };   
+
+        CHR*            /** c99text_CTO_naktext **/
+        aac2020_phexdum_SYN_c99text_CTO_naktext[ NOE + 1  ]={
+        /**/"copyright_2021_atomic_alice_c_engine(AAC2020):006"
+        ,   "c99-to-nak"  
+        ,   "c99_to_nak" 
+        ,   "c99-TO-nak"  
+        ,   "c99_TO_nak" 
+        ,   "c99text-cto-naktext"
+        ,   "c99text_cto_naktext"
+        ,   "c99text-CTO-naktext"
+        ,   "c99text_CTO_naktext"
+        ,   "c99_cto_nak"
+        ,   "c99-cto-nak"
+        ,   ((CHR*)0)   //:<--[ NULL_TERMINATED_LIST ]
+        };             
+
+    //:------------------------------:COMMANDS_THAT_ARE_BOGUS://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    CHR**
+    aac2020_phexdum_SYN_SYN[ 6 + 1 ]={
+    /**/( aac2020_phexdum_SYN_invalid_command )     //: +1
+
+        //:EXPLICITLY INVALID COMMANDS:
+    ,   ( aac2020_phexdum_SYN_naktext_CTO_c99text ) //: 01
+    ,   ( aac2020_phexdum_SYN_c99text_CTO_naktext ) //: 02
+
+        //:COMMANDS_IAM_NOT_GOING_TO_EVER_WRITE:
+    ,   ( aac2020_phexdum_SYN_pngfile_CTO_c99text ) //: 03
+    ,   ( aac2020_phexdum_SYN_c99text_CTO_pngfile ) //: 04
+
+        //:COMMANDS_I_ACTUALLY_CARE_ABOUT:
+    ,   ( aac2020_phexdum_SYN_pngfile_CTO_naktext ) //: 05
+    ,   ( aac2020_phexdum_SYN_naktext_CTO_pngfile ) //: 06
+    };
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+#undef  CHR  //:----------------------------------------: 01 ://
+#undef  ECC  //:----------------------------------------: 02 ://
+#undef  NOE  //:----------------------------------------: 03 ://
+//:==============================:SYN____FOR____SYNONYM_TABLE://
+//:==============================:COMMAND_NORMALIZATION_TABLE://

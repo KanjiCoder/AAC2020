@@ -1,0 +1,74 @@
+
+//: PHEXDUM.C11 : Compile This File
+
+//:CONFIGURATION_SECTION:====================================://
+
+    /** @VID_IID[ 0121 ]TIME[ 00:53:44 ] ******************* **/
+    /** Ignored if PHEXDUM is part of AAC2020.   **********  **/
+    /** Only used when PHEXDUM is compiled as a  **********  **/
+    /** stand-alone command-line utility.        **********  **/
+    /** **************************************************** **/
+    #define AAC2020_PHEXDUM_STAND_ALONE_ONLY_LOGGING_ON ( 0 )
+
+//:====================================:CONFIGURATION_SECTION://
+//:INCLUDES_SECTION:=========================================://
+
+    //:aac2020_library_include:------------------------------://
+
+        /** AAC2020 library includes **/
+        #include <stdio.h>  //: printf(...)       ...........://
+        #include <stdlib.h> //: exit()            ...........://
+        #include <stdint.h> //: [u32,i32,u08,ETC] ...........://
+        #include <assert.h> //: define NDEBUG to turn off....://
+        #include <ctype.h>  //: toupper , tolower
+        
+
+    //:------------------------------:aac2020_library_include://
+    //:stuff_i_think_i_need_for_mkdir_command:---------------://
+
+        /** stackoverflow.com/questions/230062 **/
+        #include <fcntl.h> /** #SEE_IF_FILE_EXISTS_THEN_USE# **/
+        #include <errno.h> /** #SEE_IF_FILE_EXISTS_THEN_USE# **/
+
+        /** https://stackoverflow.com/questions/23427804/    **/
+        /** https://stackoverflow.com/questions/7430248/     **/
+        #include <sys/stat.h>   /** Create_Directory **/
+        #include <sys/types.h>  /** Create_Directory **/
+
+        /** https://stackoverflow.com/questions/5525668 **/
+        #include <unistd.h> /** Absolute Path Of Your Exe    **/
+        #include <limits.h> /** Absolute Path Of Your Exe    **/
+
+    //:---------------:stuff_i_think_i_need_for_mkdir_command://
+    //:lodepng_and_data_and_function_files:------------------://
+
+        /** lodev.org/lodepng/ **/
+        #define AAC2020_INCLUDE_LODEPNG ( 1 )
+        #include "../../DEP/lodepng.h"       
+        #include "../../DEP/lodepng.c"   
+
+        /** Our Library Files **/
+        #include "../PHEXDUM.D._"
+        #include "../PHEXDUM.F._"
+
+    //:------------------:lodepng_and_data_and_function_files://
+//:=========================================:INCLUDES_SECTION://
+//:MAIN_SECTION:=============================================://
+#define CHR    char                              //:----: 01 ://
+#define I32 int32_t /** GCC: <stdint.h> **/      //:----: 02 ://
+
+    I32 main(I32 arg_cou, CHR** arg_arr)
+    {
+        I32
+        result_of_calling_main=(
+        AAC2020_PHEXDUM_StandAloneMain(
+            arg_cou
+        ,   arg_arr
+        ));;
+
+        return( result_of_calling_main );
+    }
+    
+#undef  CHR  //:----------------------------------------: 01 ://
+#undef  I32  //:----------------------------------------: 02 ://
+//:=============================================:MAIN_SECTION://
