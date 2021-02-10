@@ -2863,10 +2863,11 @@
 //:=========================:DEFAULT_TILE_DESIGN_FILL_PATTERN://
 //:============================:functions_wired_into_keyboard://
 //:KEYBOARD_HANDLER:(KeyInn):================================://
-#define             I32 int32_t /**GCC: <stdint.h> **///: 01 ://
-#define DEX_EDI_paint5d ( 1 )                         //: 02 ://
-#define         KEY_P5D ( AAC2020_KEYBIND.PAINT5D )   //: 03 ://
-#define             LOG   aac2020_paint5d_Info_any    //: 04 ://
+#define             I32  int32_t /**GCC: <stdint.h>**///: 01 ://
+#define             U32 uint32_t /**GCC: <stdint.h>**///: 02 ://
+#define DEX_EDI_paint5d ( 1 )                         //: 03 ://
+#define         KEY_P5D ( AAC2020_KEYBIND.PAINT5D )   //: 04 ://
+#define             LOG   aac2020_paint5d_Info_any    //: 05 ://
     
     I32
     aac2020_paint5d_KeyInn( signed char chr_key )
@@ -2893,18 +2894,89 @@
 
         //:-----:SAVE_PAINT5D_SYSTEM_DATA_TO_DISK_AS_PNG_FILE://
         //:OVERWRITE_EDITOR_WITH_DEFAULT_AUSETS:-------------://
-
             if( chr_key == KEY_P5D.p5d_pat ){
 
             //: aac2020_paint5d_DrawDefaultAuset_001(  );
-                AAC2020_DUMPASS_png_001_RAM_paint5d( 0 );
+            //: AAC2020_DUMPASS_png_001_RAM_paint5d( 0 );
+            //: AAC2020_DUMPASS_png_002_RAM_paint5d( 0 );
+                AAC2020_GENTDOW_aya_RAM_paint5d( 0 );
+
                 AAC2020_PIXPUSH_t2d_PAINT5D(           );
 
                 printf("[CMD:p5d_pat]\n");
                 fflush( stdout );
             };;
-
         //:-------------:OVERWRITE_EDITOR_WITH_DEFAULT_AUSETS://
+        //:ACTIVE_AUSET_CONTROLS:----------------------------://
+            if( chr_key == KEY_P5D.p5d_a_n ){ //:AUSET:NEXT
+            /** @VID_IID[ 0129 ]TIME[ 04:40:13 ] *********** **/
+
+                U32 a_d; //: AUSET_DEX (in focus,being rendered)
+                U32 u_1; //: UNUSED #1
+                U32 u_2; //: UNUSED #2
+                U32 u_3; //: UNUSED #3
+
+                AAC2020_TAUDEPO_Get( 
+                    AAC2020_TAUDEPO.TAU_015
+                ,   AAC2020_TAUDEPO.PAINT5D
+                ,   AAC2020_TAUDEPO.P5D_A_D
+                , &(a_d) , &(u_1) , &(u_2) , &(u_3)
+                );;
+
+                //: rbsrbs: that would be: a_d++; a_d %= 16;
+                //: Me(approx):Capping is better than wrapping
+                //: rbsrbs: PepeHands
+                a_d++; if( a_d >= (16-1) ){ a_d = (16-1); };
+
+                AAC2020_TAUDEPO_Put( 
+                    AAC2020_TAUDEPO.TAU_015
+                ,   AAC2020_TAUDEPO.PAINT5D
+                ,   AAC2020_TAUDEPO.P5D_A_D
+                ,  (a_d) ,  (u_1) ,  (u_2) ,  (u_3)
+                );;
+
+                printf("[auset_index++:a_d]:%d\n", a_d );
+
+            }else
+            if( chr_key == KEY_P5D.p5d_a_s ){ //:AUSET:SNAP
+
+                printf("[TO_FUCKING_DO:AUSET_SNAP_TO_EXTENTS]");
+                fflush(stdout);
+
+            }else
+            if( chr_key == KEY_P5D.p5d_a_b ){ //:AUSET:BACK
+            /** @VID_IID[ 0129 ]TIME[ 04:43:52 ]CUT_AND_PASTE**/
+
+                U32 a_d; //: AUSET_DEX (in focus,being rendered)
+                U32 u_1; //: UNUSED #1
+                U32 u_2; //: UNUSED #2
+                U32 u_3; //: UNUSED #3
+
+                I32 A_D; //: Signed version of[ a_d ]
+
+                AAC2020_TAUDEPO_Get( 
+                    AAC2020_TAUDEPO.TAU_015
+                ,   AAC2020_TAUDEPO.PAINT5D
+                ,   AAC2020_TAUDEPO.P5D_A_D
+                , &(a_d) , &(u_1) , &(u_2) , &(u_3)
+                );;
+
+                //: rbsrbs: that would be: a_d++; a_d %= 16;
+                A_D=((I32)a_d);
+                A_D--; if( A_D <= 0 ){ A_D = 0; }; /**CAP_MIN**/
+                a_d=((U32)A_D);
+
+                AAC2020_TAUDEPO_Put( 
+                    AAC2020_TAUDEPO.TAU_015
+                ,   AAC2020_TAUDEPO.PAINT5D
+                ,   AAC2020_TAUDEPO.P5D_A_D
+                ,  (a_d) ,  (u_1) ,  (u_2) ,  (u_3)
+                );;
+
+                printf("[auset_index--:a_d]:%d\n", a_d );
+
+            };;
+        //:----------------------------:ACTIVE_AUSET_CONTROLS://
         //:CAMERA_CONTROL:-----------------------------------://
 
             //:MoveCamera_XY:--------------------------------://
@@ -3042,10 +3114,11 @@
         return( res_var );
     }
 
-#undef              I32                               //: 01 ://
-#undef  DEX_EDI_paint5d                               //: 02 ://
-#undef          KEY_P5D                               //: 03 ://
-#undef              LOG                               //: 04 ://
+#undef              I32  //:----------------------------: 01 ://
+#undef              U32  //:----------------------------: 02 ://
+#undef  DEX_EDI_paint5d  //:----------------------------: 03 ://
+#undef          KEY_P5D  //:----------------------------: 04 ://
+#undef              LOG  //:----------------------------: 05 ://
 //:================================:KEYBOARD_HANDLER:(KeyInn)://
 //:SUB_SYSTEM_BACKUP_CODE:===================================://
 #define U08 uint8_t /** GCC: <stdint.h> **/

@@ -29,12 +29,21 @@
         ##:[ASS_001]:----------------------------------------:##
         ## MAKE(S): I32 PAINT5D_DEFAULT_DATA_001_NOE ###########
         ## MAKE(S): U32 PAINT5D_DEFAULT_DATA_001_PNG ###########
-        ../EXE/PHEXDUM.exe                                  \
-            pngfile_CTO_naktext                             \
-                PAINT5D_DEFAULT_DATA_001.PNG                \
-                PAINT5D_DEFAULT_DATA_001_NAK._              \
-                PAINT5D_DEFAULT_DATA_001_NOE._             ##
+        ../EXE/PHEXDUM.exe                                     \
+            pngfile_CTO_naktext                                \
+                PAINT5D_DEFAULT_DATA_001.PNG                   \
+                PAINT5D_DEFAULT_DATA_001_NAK._                 \
+                PAINT5D_DEFAULT_DATA_001_NOE._ ##-------------##
         ##:----------------------------------------:[ASS_001]:##
+        ##:[ASS_002]:----------------------------------------:##
+        ## MAKE(S): I32 PAINT5D_DEFAULT_DATA_002_NOE ###########
+        ## MAKE(S): U32 PAINT5D_DEFAULT_DATA_002_PNG ###########
+        ../EXE/PHEXDUM.exe                                     \
+            pngfile_CTO_naktext                                \
+                PAINT5D_DEFAULT_DATA_002.PNG                   \
+                PAINT5D_DEFAULT_DATA_002_NAK._                 \
+                PAINT5D_DEFAULT_DATA_002_NOE._ ##-------------##
+        ##:----------------------------------------:[ASS_002]:##
 
         cd $original_directory
 

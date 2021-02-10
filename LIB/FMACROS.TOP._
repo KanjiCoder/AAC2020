@@ -37,7 +37,7 @@ _Static_assert( AAC2020_INCLUDE_GRAQUAD == 20 ,       "20");
 //:==================================================:GRAQUAD://
 //:TAUDEPO:==================================================://
 #if(            AAC2020_INCLUDE_TAUDEPO >=  1 )
-_Static_assert( AAC2020_INCLUDE_TAUDEPO == 32 ,       "32");
+_Static_assert( AAC2020_INCLUDE_TAUDEPO == 35 ,       "35");
 
     #define  FMACROS_TAUDEPO_LoopTick   AAC2020_TAUDEPO_LoopTick
 #endif
@@ -48,7 +48,7 @@ _Static_assert( AAC2020_INCLUDE_TAUDEPO == 32 ,       "32");
 //:==================================================:TAUDEPO://
 //:TAUSYNC:==================================================://
 #if(            AAC2020_INCLUDE_TAUSYNC >=  1 )
-_Static_assert( AAC2020_INCLUDE_TAUSYNC == 34 ,       "34");
+_Static_assert( AAC2020_INCLUDE_TAUSYNC == 37 ,       "37");
 
     #define  FMACROS_TAUSYNC_LoopTick   AAC2020_TAUSYNC_LoopTick
 #endif
@@ -92,6 +92,9 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 34 ,       "34");
     PIXPUSH
     PIXLOAD
     DUMPASS
+    GENTCOM
+    GENTDOW
+    GENTUPP
     POLYOGL
     TAUDIRT
     TAUTYPE
@@ -227,6 +230,30 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 34 ,       "34");
 #define      FMACROS_DUMPASS_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:DUMPASS://
+//:InitNone:GENTCOM:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_GENTCOM >=  1 )
+#define      FMACROS_GENTCOM_InitNone AAC2020_GENTCOM_InitNone
+#endif
+#if( AAC2020_INCLUDE_GENTCOM == 0 )
+#define      FMACROS_GENTCOM_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:GENTCOM://
+//:InitNone:GENTDOW:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_GENTDOW >=  1 )
+#define      FMACROS_GENTDOW_InitNone AAC2020_GENTDOW_InitNone
+#endif
+#if( AAC2020_INCLUDE_GENTDOW == 0 )
+#define      FMACROS_GENTDOW_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:GENTDOW://
+//:InitNone:GENTUPP:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_GENTUPP >=  1 )
+#define      FMACROS_GENTUPP_InitNone AAC2020_GENTUPP_InitNone
+#endif
+#if( AAC2020_INCLUDE_GENTUPP == 0 )
+#define      FMACROS_GENTUPP_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:GENTUPP://
 //:InitNone:POLYOGL:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_POLYOGL >=  1 )
 #define      FMACROS_POLYOGL_InitNone AAC2020_POLYOGL_InitNone

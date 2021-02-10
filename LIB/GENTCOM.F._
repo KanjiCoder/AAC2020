@@ -1,0 +1,543 @@
+//: GENTCOM: GENerate_Tile_COMmon
+
+//:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=====================://
+    void aac2020_gentcom_Halt( const char* msg_err )
+    {
+        printf("[FATAL_ERROR:aac2020_gentcom]:%s\n", msg_err );
+        fflush(stdout);
+        exit( 123 );
+    }
+//:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+//:LOG_AFTER_HALT:===========================================://
+    void aac2020_gentcom_Info_any(
+        const char* str_fmt
+    ,   void*       dat_any   
+    )
+    { if( AAC2020_SILENCE.GENTCOM <= 0 ){
+        /** Same Line As Next Printf **/
+        printf("[gentcom_log]....(   " ); fflush( stdout );
+        printf( str_fmt , dat_any      ); fflush( stdout );
+        printf(               "   )\n" ); fflush( stdout );
+    };; }
+//:===========================================:LOG_AFTER_HALT://
+//:INIT_NONE:================================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+    U32 AAC2020_GENTCOM_InitNone( U32 u32 ){
+        if( u32 ){ /** reserved for future use **/ };
+        return( 0x00 );
+    }
+#undef  U32
+//:================================================:INIT_NONE://
+//:RESIZE_IMAGE:=============================================://
+//:IMAGE_RESIZE:=============================================://
+#define U08   uint8_t /** GCC: <stdint.h> **/         //: 01 ://
+#define U32  uint32_t /** GCC: <stdint.h> **/         //: 02 ://
+#define I32   int32_t /** GCC: <stdint.h> **/         //: 03 ://
+#define U_P uintmax_t /** GCC: <stdint.h> **/         //: 04 ://
+#define ERR aac2020_gentcom_Halt                      //: 05 ://
+
+    void
+    AAC2020_GENTCOM_ResizeImage_size(
+        U08* inn_512 //:<-- source:img (SIZE_IS_SUGGESTION)  ://
+    ,   I32  inn_wid //:<-- source:wid                       ://
+    ,   I32  inn_hig //:<-- source:hig                       ://
+                     //:-------------------------------------://
+    ,   U08* out_064 //:<-- output:img (SIZE_IS_SUGGESTION)  ://
+    ,   I32  out_wid //:<-- output:wid                       ://
+    ,   I32  out_hig //:<-- output:hig                       ://
+    )
+    {
+        //:input_checks:-------------------------------------://
+
+            //:SUGGESTED_SIZE:512x512
+            if( ((U08*)0) != inn_512  //:<--WANT_THIS :::::::://
+            &&         0   < inn_wid  //:<--WANT_THIS :::::::://
+            &&         0   < inn_hig  //:<--WANT_THIS :::::::://
+            ){ 
+                /** GOOD! **/
+            }else{
+
+                U32 INN_512=(  (U32)((U_P)inn_512)  );
+                printf("[ResImg:INN_512]:%08x\n" ,INN_512);
+                printf("[ResImg:inn_wid]:%d\n  " ,inn_wid);
+                printf("[ResImg:inn_hig]:%d\n  " ,inn_hig);
+                ERR("[ResizeImage_size:BAD_INN]");
+            };;
+            //:SUGGESTED_SIZE:64x64
+            if( ((U08*)0) != out_064  //:<--WANT_THIS :::::::://
+            ||         0   < out_wid  //:<--WANT_THIS :::::::://
+            ||         0   < out_hig  //:<--WANT_THIS :::::::://
+            ){
+                /** GOOD **/
+            }else{
+                U32 OUT_064=(  (U32)((U_P)out_064)  );
+                printf("[ResImg:OUT_064]:%08x\n" ,OUT_064);
+                printf("[ResImg:out_wid]:%d\n"   ,out_wid);
+                printf("[ResImg:out_hig]:%d\n"   ,out_hig);
+                ERR("[ResizeImage_size:BAD_OUT]");
+            };;
+        //:-------------------------------------:input_checks://
+        //:variable_declarations:----------------------------://
+
+            I32  d64 ;
+            I32  d64_m_i =( (out_wid*out_hig)-1 );
+            I32  ska_wid =(  inn_wid / out_wid  );
+            I32  ska_hig =(  inn_hig / out_hig  );
+
+            /** mci : max_component_index **/
+            I32  inn_mci =(( inn_wid * inn_hig * 4 ) - 1);
+            I32  out_mci =(( out_wid * out_hig * 4 ) - 1);
+
+        //:----------------------------:variable_declarations://
+        //:nearest_neighbor_sampling:------------------------://
+        for( d64 = 0 ; d64 <= d64_m_i ; d64 ++ ){
+
+            /** XY OUTPUT(O) coordinate **/
+            I32 x_O =  d64       % out_wid ; //:XY:ON:64x64
+            I32 y_O = (d64 - x_O)/ out_wid ; //:XY:ON:64x64
+            if( x_O >= 0 && x_O <= (out_wid-1)  
+            &&  y_O >= 0 && y_O <= (out_hig-1)  
+            ){
+                /** DO NOTHING **/
+            }else{
+                ERR("[OOB:x_O:or:y_O]");
+            };;
+    
+            /** XY INNPUT(I) coordinate **/
+            I32 x_I =( x_O * ska_wid );      //:XY:ON:512x512
+            I32 y_I =( y_O * ska_hig );      //:XY:ON:512x512
+            if(     x_I >= 0 && x_I <= (inn_wid-1)  
+            &&      y_I >= 0 && y_I <= (inn_hig-1) 
+            ){
+                /** DO NOTHING **/
+            }else{
+                ERR("[OOB:x_I:or:y_I]");
+            };;
+
+            /** Convert input location to index. **/
+            I32 dex = x_I + ( y_I  *  inn_wid  );
+
+            /** @VID_IID[ 0130 ]TIME[ 02:06:06 ] **/
+            /** WE_NEED_COMPONENT_INDEXES!!!!!!  **/
+            I32 com_dex = ( dex * 4 ); //:<-- COMPONENT_INDEX
+            I32 com_d64 = ( d64 * 4 ); //:<-- COMPONENT_INDEX
+
+            if( d64+3 > out_mci ){ ERR("[OOB:d64+3]"); };
+            if( dex+3 > inn_mci ){ ERR("[OOB:dex+3]"); };
+            out_064[ com_d64 + 0 ] = inn_512[ com_dex + 0 ] ;
+            out_064[ com_d64 + 1 ] = inn_512[ com_dex + 1 ] ;
+            out_064[ com_d64 + 2 ] = inn_512[ com_dex + 2 ] ;
+            out_064[ com_d64 + 3 ] = inn_512[ com_dex + 3 ] ;
+
+        };;
+        //:------------------------:nearest_neighbor_sampling://
+    }
+
+#undef  U08  //:----------------------------------------: 01 ://
+#undef  U32  //:----------------------------------------: 02 ://
+#undef  I32  //:----------------------------------------: 03 ://
+#undef  U_P  //:----------------------------------------: 04 ://
+#undef  ERR  //:----------------------------------------: 05 ://
+//:=============================================:RESIZE_IMAGE://
+//:=============================================:IMAGE_RESIZE://
+//:ROTATE_IMAGE:=============================================://
+//:IMAGE_ROTATE:=============================================://
+#define U08 uint8_t /** GCC: <stdint.h> **/           //: 01 ://
+#define I32 int32_t /** GCC: <stdint.h> **/           //: 02 ://
+#define F32 float                                     //: 03 ://
+#define ERR aac2020_gentcom_Halt                      //: 04 ://
+
+    void
+    AAC2020_GENTCOM_Rotate90DegreesClockwiseInPlace(
+        U08*   pix_arr
+    ,   I32    pix_wid
+    ,   I32    pix_hig
+    )
+    {
+    /** **************************************************** ***
+        +-- 0 --+-- 1 --+     -0- -1- -2- -3-
+        |       |       |    |   |   |   |   |
+        V       V       V    V   V   V   V   V
+        +---|---+---|---+    +---+---+---+---+
+        |       |       |    |0.5|1.5|2.5|3.5|
+        -  0.5   + 1.5  -    +---+---+---+---+
+        |       |       |            ^
+        +---|---+---|---+            |
+        |       |       |            2
+        -       +       -
+        |       |       |   @VID_IID[ 0130 ]TIME[ 04:10:23 ]
+        +---|---+---|---+   Math Seems To Get Correct Pivot
+
+        +---|---+---|---+
+        |\      |      /|
+        -  \\   +   //  - Only wap if you are WITHIN the bowtie.
+        |     \ | /     |
+        +---|---+---|---+ UPDATE: ONLY ON LEFT BOW OF BOWTIE.
+        |      /|\      |         SEE[ DOC/IMG/BOW_TIE.PNG ]
+        -   //  +  \\   -         @VID_IID[ 0131 ]T[ 00:11:00 ]
+        | /     |     \ |
+        +---|---+---|---+
+    *** **************************************************** **/
+    //| @VID_IID[ 0131 ]T[ 00:29:00 ] |||||||||||||||||||||| |//
+
+        F32 p_X[ 5 ]={ 0.0  }; //:Pie Slice Pixel X
+        F32 p_Y[ 5 ]={ 0.0  }; //:Pie Slice Pixel Y
+        
+        U08 o_R[ 5 ]={ 0x00 }; //:[O]riginal:[R]ed
+        U08 o_G[ 5 ]={ 0x00 }; //:[O]riginal:[G]reen
+        U08 o_B[ 5 ]={ 0x00 }; //:[O]riginal:[B]blue
+        U08 o_A[ 5 ]={ 0x00 }; //:[O]riginal:[A]alpha
+
+        F32 r_x; //:ROTATED:x
+        F32 r_y; //:ROTATED:y
+
+        I32 n_x; //:NEW:x ( ROTATED:x as proper integer coord )
+        I32 n_y; //:NEW:y ( ROTATED:y as proper integer coord )
+        
+        I32 com; //: Component index of pixel
+
+    //| @VID_IID[ 0131 ]T[ 00:29:00 ] |||||||||||||||||||||| |//
+    /** **************************************************** ***
+    //+------------------------------------------------------+//
+    //+   +-------------------+ @VID_IID[ 0131 ]T[ 00:29:00 ]+//
+    //+   |\\               //|                              +//
+    //+   |  \\     1     //  |                              +//
+    //+   |    \\       //    |                              +//
+    //+   |      \\   //      |                              +//
+    //+   | 0 | 4  ( )     2  |                              +//
+    //+   |      //   \\      |                              +//
+    //+   |    //       \\    |                              +//
+    //+   |  //     3     \\  |                              +//
+    //+   |//               \\|                              +//
+    //+   +-------------------+ @VID_IID[ 0131 ]T[ 00:29:00 ]+//
+    //+------------------------------------------------------+//
+    *** **************************************************** **/
+
+        /** @VID_IID[ 0131 ]TIME[ 00:13:00 ]LEFT_MAX_INDEX   **/
+        I32 lef_m_i=(( pix_wid / 2 )-1);
+
+        F32 c_x =(  ((F32)pix_wid) / 2.0  ); //:CENTER:X
+        F32 c_y =(  ((F32)pix_hig) / 2.0  ); //:CENTER:Y
+
+        for( I32 i_x = 0 ; i_x <= (pix_wid-1) ; i_x ++ ){
+        for( I32 i_y = 0 ; i_y <= (pix_hig-1) ; i_y ++ ){
+
+            /** Convert Discrete Pixel Coords Into           **/
+            /** Frag Coords That Use Center Of Pixel Model.  **/
+            /** Also make center pixels map to [0,0]         **/
+            F32 f_x =(    ( ((F32)i_x) + 0.5 ) - c_x    );
+            F32 f_y =(    ( ((F32)i_y) + 0.5 ) - c_y    );
+
+            /** Magnitude / abs value of frag coord **/
+            F32 mag_f_x =( f_x );
+            if( mag_f_x < 0 ){ mag_f_x = 0 - f_x; };
+            F32 mag_f_y =( f_y );
+            if( mag_f_y < 0 ){ mag_f_y = 0 - f_y; };
+        
+            /** @VID_IID[ 0130 ]TIME[ 04:39:35 ] **/
+            /** DIAGONAL_DOWN_SLOPE_IS_THEY_KEY  **/
+            if( mag_f_x >= mag_f_y ){ //:InsideBowTie
+            if(     i_x !=     i_y ){ //:Not_On_Diag_DownSlope
+            if(     i_x <= lef_m_i ){ //:LEFT_HALF_OF_IMAGE
+
+                //:rotate_into_4_pie_slices:-----------------://
+                for( I32 c_o = 1 ; c_o <= 2 ; c_o++ ){
+
+                    p_X[ 0 ]=( f_x );
+                    p_Y[ 0 ]=( f_y );
+                    for( I32 i = 1 ; i <= 4 ; i++ ){
+                        
+                        /** If rotating in wrong direction,  **/
+                        /** swap the signs in formula.       **/
+                        p_X[ i ]=(  0.0 + p_Y[ i - 1 ]  );
+                        p_Y[ i ]=(  0.0 - p_X[ i - 1 ]  );
+
+                        //:cache_original_colors:------------://
+                        #define LOC ( i - 1 ) //:Original
+                        #define NEX (   i   ) //:NEXT_LOC
+
+                            r_x=( p_X[ LOC ] );
+                            r_y=( p_Y[ LOC ] );
+
+                            n_x =( (I32)( (r_x + c_x) - 0.5 ) );
+                            n_y =( (I32)( (r_y + c_y) - 0.5 ) );
+
+                            /** Component Index Of Pixel **/
+                            com =( n_x +( n_y * pix_wid ) )*4;
+
+                            switch( c_o ){
+                            case 1 :{
+
+                                /** RGBA: 1 of our 4 pixels **/
+                                o_R[ LOC ]=pix_arr[ com + 0 ] ;
+                                o_G[ LOC ]=pix_arr[ com + 1 ] ;
+                                o_B[ LOC ]=pix_arr[ com + 2 ] ;
+                                o_A[ LOC ]=pix_arr[ com + 3 ] ;
+            
+                            };;break;    
+                            case 2 :{
+                            #define N_4 ( NEX % 4 )
+
+                                /** RGBA: 1 of our 4 pixels **/
+                                
+                                pix_arr[ com + 0 ]=o_R[ N_4 ];
+                                pix_arr[ com + 1 ]=o_G[ N_4 ];
+                                pix_arr[ com + 2 ]=o_B[ N_4 ];
+                                pix_arr[ com + 3 ]=o_A[ N_4 ];
+
+                            #undef  N_4
+                            };;break;
+                            default:{ 
+                                ERR("[BAD_C_O]"); 
+                            };;};;
+
+                        #undef  LOC
+                        #undef  NEX
+                        //:------------:cache_original_colors://
+                    };;
+                    if( p_X[ 0 ] != p_X[ 4 ] 
+                    ||  p_Y[ 0 ] != p_Y[ 4 ]
+                    ){
+                        //:ROTALGO:ROTation_ALGOrithm
+                        ERR("[YOUR_ROTALGO_SUCKS_2021]");
+                    };;
+
+                };; //:NEXT[ c_o ]([ c:collect _ o:override ])
+                //:------------------rotate_into_4_pie_slices://
+
+            };;};;};; //:ARE_WE_IN_LEFT_BOW_OF_BOWTIE ?
+        };;};;
+    }
+
+#undef  U08  //:----------------------------------------: 01 ://
+#undef  I32  //:----------------------------------------: 02 ://
+#undef  F32  //:----------------------------------------: 03 ://
+#undef  ERR  //:----------------------------------------: 04 ://
+//:=============================================:ROTATE_IMAGE://
+//:=============================================:IMAGE_ROTATE://
+//:IMAGE_STAMP:==============================================://
+//:STAMP_IMAGE:==============================================://
+#define U08   uint8_t /** GCC: <stdint.h> **/         //: 01 ://
+#define U32  uint32_t /** GCC: <stdint.h> **/         //: 02 ://
+#define I32   int32_t /** GCC: <stdint.h> **/         //: 03 ://
+#define U_P uintmax_t /** GCC: <stdint.h> **/         //: 04 ://
+#define ERR aac2020_gentcom_Halt                      //: 05 ://
+
+    /** **************************************************** **/
+    /** Variable names for arrays are SUGGESTIONS based      **/
+    /** on the original use cases to make the code easier    **/
+    /** to reason about. @VID_IID[ 0130 ]TIME[ 01:15:23 ]    **/
+    /** **************************************************** **/
+
+    void
+    AAC2020_GENTCOM_StampImage(
+    /**/    U08*   pix_064 //:<--[ input  | UN_affected ]
+    ,       I32    pix_wid
+    ,       I32    pix_hig
+            
+    ,       I32    org_i_x //:<--[ origin_of_top_left_pixel ]
+    ,       I32    org_i_y //:   [ of_the_input_stamper_img ]             
+           
+    ,       U08*   aus_512 //:<--[ output | affected      ]
+    ,       I32    aus_wid //:<--SUGGESTED_USE[ auset_wid ]
+    ,       I32    aus_hig //:<--SUGGESTED_USE[ auset_hig ]
+    )
+    {
+        //:check_inputs:-------------------------------------://
+
+            assert( ((U08*)0) != pix_064 );
+            assert( ((I32 )0) != pix_wid );
+            assert( ((I32 )0) != pix_hig );
+
+            /** Assert Stamp Is Smaller Than What We Are     **/
+            /** Stamping Onto. @VID_IID[ 0130 ]T[ 01:30:50 ] **/
+            assert( pix_wid <= aus_wid );
+            assert( pix_hig <= aus_hig );
+
+            assert( org_i_x >= 0 );
+            assert( org_i_y >= 0 );
+
+            /** @VID_IID[ 0130 ]TIME[ 01:29:00 ]             **/
+            /** Last Valid Coord Is ZERO(0)PLUS(WIGGLE_ROOM) **/
+            assert( org_i_x <= ( 0 + (aus_wid - pix_wid) ) );
+            assert( org_i_y <= ( 0 + (aus_hig - pix_hig) ) );
+
+            assert( ((U08*)0) != aus_512 );
+            assert( ((I32 )0) != aus_wid );
+            assert( ((I32 )0) != aus_hig );
+
+        //:-------------------------------------:check_inputs://
+        //:map_stamp_pixels_to_dest:-------------------------://
+
+            /**[ s_x , s_y ]: Stamp XY Pixel          **/
+            /**[ a_x , a_y ]: Auset/Destination Pixel **/
+
+            I32 s_x ; I32 s_y ; I32 s_i ; //:S: XYI
+            I32 a_x ; I32 a_y ; I32 a_i ; //:A: XYI
+  
+        
+            for( s_x = 0 ; s_x <=(pix_wid-1) ; s_x++ ){
+            for( s_y = 0 ; s_y <=(pix_hig-1) ; s_y++ ){
+
+                a_x = org_i_x + s_x;
+                a_y = org_i_y + s_y;
+
+                assert( a_x >= 0 && a_x <=(aus_wid-1) );
+                assert( a_y >= 0 && a_y <=(aus_hig-1) );
+
+                /** @VID_IID[ 0130 ]TIME[ 01:59:32 ]  **/
+                /** com_dex ==( pix_dex * 4 )         **/
+                s_i = ( s_x + ( s_y  *  pix_wid ) ) * 4;
+                a_i = ( a_x + ( a_y  *  aus_wid ) ) * 4;
+
+                assert( s_i+3 <= ((pix_wid*pix_hig*4)-1) );
+                assert( a_i+3 <= ((aus_wid*aus_hig*4)-1) );
+
+                aus_512[ a_i + 0 ]=pix_064[ s_i + 0 ];
+                aus_512[ a_i + 1 ]=pix_064[ s_i + 1 ];
+                aus_512[ a_i + 2 ]=pix_064[ s_i + 2 ];
+                aus_512[ a_i + 3 ]=pix_064[ s_i + 3 ];
+    
+            };;};;
+
+        //:-------------------------:map_stamp_pixels_to_dest://
+
+    }
+
+    void
+    AAC2020_GENTCOM_StampImage_DLAYOUT_paint5d(
+    /**/    U08*   pix_arr //:<--[ input  |  UN_affected  ]
+    ,       I32    pix_wid //:[ 1, 2, 4, 8, 16, 32, 64... ]
+    ,       I32    pix_hig //:[ 1, 2, 4, 8, 16, 32, 64... ]
+            
+    ,       U08*   aus_512 //:<--[ output | affected      ]
+    ,       I32    aus_wid //:<--SUGGESTED_USE[ auset_wid ]
+    ,       I32    aus_hig //:<--SUGGESTED_USE[ auset_hig ]
+    )
+    {
+        //:check_inputs:-------------------------------------://
+
+            assert( ((U08*)0) !=    pix_arr );
+            assert( ((I32 )0) <=    pix_wid );
+            assert( ((I32 )0) <=    pix_hig );
+                                    
+            assert( ((U08*)0) !=    aus_512 );
+            assert( ((I32 )0) <=    aus_wid );
+            assert( ((I32 )0) <=    aus_hig );
+                                    
+            assert( pix_wid   ==    pix_hig );
+            assert( aus_wid   ==    aus_hig );
+                                    
+            assert( 512       ==    aus_wid );
+            assert( 512       ==    aus_hig );
+
+            I32 pix_san=( pix_wid | pix_hig );
+
+        //:--------------------------------------check_inputs://
+        //:declare_variables:--------------------------------://
+        //| @VID_IID[ 0130 ]TIME[ 02:34:44 ] *************** |//
+
+            I32 dia ; //:Diagonal Origin
+            I32 c_x ; //:Quadrant_CELL_X
+            I32 c_y ; //:Quadrant_CELL_Y
+            I32 qox ; //:Quadrant_Origin_X (top_left_pixel)
+            I32 qoy ; //:Quadrant_Origin_Y (top_left_pixel)
+            I32 q_d ; //:Quadrant_inDex:SCANLINE_________ORDER
+            I32 q_m ; //:Quadrant_inDex:RE_MAPPED_TO_CLOCKWISE
+            I32 lay ; //:Layer_Index
+            I32 l_x ; //:Layer_Cell_X
+            I32 l_y ; //:Layer_Cell_Y
+            I32 sox ; //:Stamp_Origin_X
+            I32 soy ; //:Stamp_Origin_Y
+
+        //:--------------------------------:declare_variables://
+        //:find_diagonal_origin:-----------------------------://
+
+            #define B break
+            switch( pix_san ){
+            case 128 :{ dia = 0                          ; } ;B;
+            case  64 :{ dia = 0 +128                     ; } ;B;
+            case  32 :{ dia = 0 +128 +64                 ; } ;B;
+            case  16 :{ dia = 0 +128 +64 +32             ; } ;B;
+            case   8 :{ dia = 0 +128 +64 +32 +16         ; } ;B;
+            case   4 :{ dia = 0 +128 +64 +32 +16 +8      ; } ;B;
+            case   2 :{ dia = 0 +128 +64 +32 +16 +8 +4   ; } ;B;
+            case   1 :{ dia = 0 +128 +64 +32 +16 +8 +4 +2; } ;B;
+            default:{
+                ERR("[BAD_PIXEL_SPAN:2021]");
+            };;};;
+            #undef  B
+
+        //:-----------------------------:find_diagonal_origin://
+        //:quadrant_re_mapper:-------------------------------://
+
+            I32 map[ 4 ]={ 0 };
+                map[ 0 ]=( 0 );
+                map[ 1 ]=( 1 );
+                map[ 2 ]=( 3 );
+                map[ 3 ]=( 2 );
+
+        //:-------------------------------:quadrant_re_mapper://
+        //:loop_through_quadrant_origins:--------------------://
+        for( q_d = 0 ; q_d <=(4-1) ; q_d ++ ){
+
+            /** @VID_IID[ 03:42:23 ] **/
+            q_m = map[ q_d ]; //:q_d re-mapped
+                              //:    from scanline order to
+                              //:    clockwise spiral order
+
+            /** Index To XY Formula **/
+            c_x =  q_m     % 2 ; 
+            c_y = (q_m-c_x)/ 2 ; 
+
+            qox =( c_x * 256 );
+            qoy =( c_y * 256 );
+
+            for( lay = 0 ; lay <=(3-1) ; lay++ ){
+
+                l_x =  lay     % ( 2 );
+                l_y = (lay-l_x)/ ( 2 );
+                assert( !( ( 1 == l_x)&&( 1 == l_y ) ) );
+                //: @VID_IID[ 0130 ]TIME[ 02:45:32 ] ://
+                //: [ 1,1 ]is_invalid_cell_location. ://
+
+                sox = qox + dia + ( l_x * pix_wid );
+                soy = qoy + dia + ( l_y * pix_hig );
+
+                AAC2020_GENTCOM_StampImage(
+                /**/    pix_arr //:<--[ THE_STAMP ]
+                ,       pix_wid //:   [ INPUT     ]
+                ,       pix_hig
+                        
+                ,           sox //: org_i_x (TOP_LEFT_CORNER)
+                ,           soy //: org_i_y (TOP_LEFT_CORNER)      
+                       
+                ,       aus_512 //:<--[ output | affected ]
+                ,       aus_wid //:<--[ auset_wid         ]
+                ,       aus_hig //:<--[ auset_hig         ]
+                );;       
+            };;
+
+            /** The last rotation will put the input    **/
+            /** graphic back into it's original config. **/
+            AAC2020_GENTCOM_Rotate90DegreesClockwiseInPlace(
+                pix_arr
+            ,   pix_wid
+            ,   pix_hig
+            );;
+
+        };; 
+        //:--------------------:loop_through_quadrant_origins://
+    }
+
+
+
+
+
+#undef  U08  //:----------------------------------------: 01 ://
+#undef  U32  //:----------------------------------------: 02 ://
+#undef  I32  //:----------------------------------------: 03 ://
+#undef  U_P  //:----------------------------------------: 04 ://
+#undef  ERR  //:----------------------------------------: 05 ://
+//:==============================================:IMAGE_STAMP://
+//:==============================================:STAMP_IMAGE://

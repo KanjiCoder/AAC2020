@@ -31,7 +31,123 @@
     }
 #undef  U32
 //:================================================:INIT_NONE://
-//:FUNCTIONS_CATEGORIZED_BY_ASSET_WORKED_WITH:===============://
+//:DUMPING_ASSETS_INTO_CALLOCED_MEMORY:======================://
+#define P_F   printf /** BeforeCrash_MSG **/          //: 01 ://
+#define U08  uint8_t /** GCC: <stdint.h> **/          //: 02 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 03 ://
+#define I32  int32_t /** GCC: <stdint.h> **/          //: 04 ://
+#define ERR aac2020_dumpass_Halt /**ERROR**/          //: 05 ://
+
+    //:PAINT5D_DEFAULT_DATA_001.PNG:=-=-=-=-=-=-=-=-=-=-=-=-=://
+
+        void  /** raw png data to pixel data **/
+        AAC2020_DUMPASS_png_001_CTO_pix_arr( 
+            U08* *BYREF_pix_arr  //:<-- ALL_OUTPUT_PARAMS
+        ,   I32  *BYREF_pix_wid  //:<-- ALL_OUTPUT_PARAMS
+        ,   I32  *BYREF_pix_hig  //:<-- ALL_OUTPUT_PARAMS
+        )
+        {
+            //:input_checks:---------------------------------://
+
+                /** references can never be null **/
+                assert( ((U08**)0) !=( BYREF_pix_arr ) );
+                assert( ((I32* )0) !=( BYREF_pix_wid ) );
+                assert( ((I32* )0) !=( BYREF_pix_hig ) );
+                  
+                /** dont override if already in use. **/
+                assert( ((U08* )0) ==(*BYREF_pix_arr ) );
+                assert( ((I32  )0) ==(*BYREF_pix_wid ) );
+                assert( ((I32  )0) ==(*BYREF_pix_hig ) );
+
+            //:---------------------------------:input_checks://
+
+            U08* pix_arr=((U08*)0); //:Pixel_Component_Array
+            I32  pix_wid=(      0); //:Length_Of_Said__Array
+            I32  pix_hig=(      0); //:Length_Of_Said__Array
+
+            AAC2020_PHEXDUM_u32_arr_CTO_pix_arr(
+            /**/    PAINT5D_DEFAULT_DATA_001_PNG //:  u32_arr
+            ,       PAINT5D_DEFAULT_DATA_001_NOE //:  u32_len
+            ,     &(pix_arr) //:DEFLATED:001_PNG //:@_OUT_PAR_@
+            ,     &(pix_wid) //:--------:001_PNG //:@_OUT_PAR_@
+            ,     &(pix_hig) //:--------:001_PNG //:@_OUT_PAR_@
+            );;
+
+            if( (512*512*4) != (pix_wid*pix_hig*4) ){
+                P_F("[YOU_DONE_FUCKED_UP_GO_TO_HELL]\n"       );
+                P_F("[FIX_ASS:PAINT5D_DEFAULT_DATA_001.PNG]\n");
+                ERR("[EMBEDDED_ASSET_NOT_512_x_512:png_001]!!");
+            };;
+
+            //:return_via_output_params:---------------------://
+
+                (*BYREF_pix_arr)=( pix_arr );
+                (*BYREF_pix_wid)=( pix_wid );
+                (*BYREF_pix_hig)=( pix_hig );
+               
+            //:---------------------:return_via_output_params://
+        }
+
+    //:=-=-=-=-=-=-=-=-=-=-=-=-=:PAINT5D_DEFAULT_DATA_001.PNG://
+    //:PAINT5D_DEFAULT_DATA_002.PNG:=-=-=-=-=-=-=-=-=-=-=-=-=://
+
+        void  /** raw png data to pixel data **/
+        AAC2020_DUMPASS_png_002_CTO_pix_arr( 
+            U08* *BYREF_pix_arr  //:<-- ALL_OUTPUT_PARAMS
+        ,   I32  *BYREF_pix_wid  //:<-- ALL_OUTPUT_PARAMS
+        ,   I32  *BYREF_pix_hig  //:<-- ALL_OUTPUT_PARAMS
+        )
+        {
+            //:input_checks:---------------------------------://
+
+                /** references can never be null **/
+                assert( ((U08**)0) !=( BYREF_pix_arr ) );
+                assert( ((I32* )0) !=( BYREF_pix_wid ) );
+                assert( ((I32* )0) !=( BYREF_pix_hig ) );
+                  
+                /** dont override if already in use. **/
+                assert( ((U08* )0) ==(*BYREF_pix_arr ) );
+                assert( ((I32  )0) ==(*BYREF_pix_wid ) );
+                assert( ((I32  )0) ==(*BYREF_pix_hig ) );
+
+            //:---------------------------------:input_checks://
+
+            U08* pix_arr=((U08*)0); //:Pixel_Component_Array
+            I32  pix_wid=(      0); //:Length_Of_Said__Array
+            I32  pix_hig=(      0); //:Length_Of_Said__Array
+
+            AAC2020_PHEXDUM_u32_arr_CTO_pix_arr(
+            /**/    PAINT5D_DEFAULT_DATA_002_PNG //:  u32_arr
+            ,       PAINT5D_DEFAULT_DATA_002_NOE //:  u32_len
+            ,     &(pix_arr) //:DEFLATED:002_PNG //:@_OUT_PAR_@
+            ,     &(pix_wid) //:--------:002_PNG //:@_OUT_PAR_@
+            ,     &(pix_hig) //:--------:002_PNG //:@_OUT_PAR_@
+            );;
+
+            if( (512*512*4) != (pix_wid*pix_hig*4) ){
+                P_F("[YOU_DONE_FUCKED_UP_GO_TO_HELL]\n"       );
+                P_F("[FIX_ASS:PAINT5D_DEFAULT_DATA_002.PNG]\n");
+                ERR("[EMBEDDED_ASSET_NOT_512_x_512:png_002]!!");
+            };;
+
+            //:return_via_output_params:---------------------://
+
+                (*BYREF_pix_arr)=( pix_arr );
+                (*BYREF_pix_wid)=( pix_wid );
+                (*BYREF_pix_hig)=( pix_hig );
+               
+            //:---------------------:return_via_output_params://
+        }
+
+    //:=-=-=-=-=-=-=-=-=-=-=-=-=:PAINT5D_DEFAULT_DATA_002.PNG://
+
+#undef  P_F  //:----------------------------------------: 01 ://
+#undef  U08  //:----------------------------------------: 02 ://
+#undef  U32  //:----------------------------------------: 03 ://
+#undef  I32  //:----------------------------------------: 04 ://
+#undef  ERR  //:----------------------------------------: 05 ://
+//:======================:DUMPING_ASSETS_INTO_CALLOCED_MEMORY://
+//:DUMPING_ASSETS_DIRECTLY_INTO_SUB_SYSTEM_RAM:==============://
 #define P_F   printf /** BeforeCrash_MSG **/          //: 01 ://
 #define U08  uint8_t /** GCC: <stdint.h> **/          //: 02 ://
 #define U32 uint32_t /** GCC: <stdint.h> **/          //: 03 ://
@@ -87,16 +203,56 @@
                 /**   makes us less likely to do inefficient **/
                 /**   things like spam texture pushes.       **/
                 /** **************************************** **/
-                ERR("[CMC:AAC2020_PIXPUSH_t2d_PAINT5D()]");
+                ERR("[CMC:PIXPUSH_t2d_PAINT5D():PNG_001]");
 
             };;
         }
 
     //:=-=-=-=-=-=-=-=-=-=-=-=-=:PAINT5D_DEFAULT_DATA_001.PNG://
+    //:PAINT5D_DEFAULT_DATA_002.PNG:=-=-=-=-=-=-=-=-=-=-=-=-=://
+
+        void
+        AAC2020_DUMPASS_png_002_RAM_paint5d( 
+            U08 update_gpu_memory_after_loading_into_cpu
+        )
+        {
+            U08* pix_arr=((U08*)0); //:Pixel_Component_Array
+            I32  pix_wid=(      0); //:Length_Of_Said__Array
+            I32  pix_hig=(      0); //:Length_Of_Said__Array
+
+            AAC2020_PHEXDUM_u32_arr_CTO_pix_arr(
+            /**/    PAINT5D_DEFAULT_DATA_002_PNG //:  u32_arr
+            ,       PAINT5D_DEFAULT_DATA_002_NOE //:  u32_len
+            ,     &(pix_arr) //:DEFLATED:002_PNG //:@_OUT_PAR_@
+            ,     &(pix_wid) //:--------:002_PNG //:@_OUT_PAR_@
+            ,     &(pix_hig) //:--------:002_PNG //:@_OUT_PAR_@
+            );;
+
+            if( (512*512*4) != (pix_wid*pix_hig*4) ){   
+                P_F("[FIX_ASS:PAINT5D_DEFAULT_DATA_002.PNG]\n");
+                ERR("[EMBEDDED_ASSET_NOT_512_x_512:png_002]!!");
+            };;
+
+            I32  com_dex;
+            I32      m_i =(( 512 * 512 * 4 ) - 1 );
+            for( com_dex = 0 ; com_dex <= m_i ; com_dex ++ ){
+                AAC2020_PIXNAME_paint5d_cpu_pix[ com_dex ]=(
+                                        pix_arr[ com_dex ]
+                );;
+            };;
+
+            free( pix_arr ); /** Free After Copying **/
+
+            if( update_gpu_memory_after_loading_into_cpu >= 1 ){
+                ERR("[CMC:PIXPUSH_t2d_PAINT5D():PNG_002]");
+            };;
+        }
+
+    //:=-=-=-=-=-=-=-=-=-=-=-=-=:PAINT5D_DEFAULT_DATA_002.PNG://
 
 #undef  P_F  //:----------------------------------------: 01 ://
 #undef  U08  //:----------------------------------------: 02 ://
 #undef  U32  //:----------------------------------------: 03 ://
 #undef  I32  //:----------------------------------------: 04 ://
 #undef  ERR  //:----------------------------------------: 05 ://
-//:===============:FUNCTIONS_CATEGORIZED_BY_ASSET_WORKED_WITH://
+//:==============:DUMPING_ASSETS_DIRECTLY_INTO_SUB_SYSTEM_RAM://

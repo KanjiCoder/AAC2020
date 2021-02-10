@@ -1,0 +1,217 @@
+//: GENTDOW: GENerate_Tile_DOWnsize(algorithms)
+
+//:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=====================://
+    void aac2020_gentdow_Halt( const char* msg_err )
+    {
+        printf("[FATAL_ERROR:aac2020_gentdow]:%s\n", msg_err );
+        fflush(stdout);
+        exit( 123 );
+    }
+//:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+//:LOG_AFTER_HALT:===========================================://
+    void aac2020_gentdow_Info_any(
+        const char* str_fmt
+    ,   void*       dat_any   
+    )
+    { if( AAC2020_SILENCE.GENTDOW <= 0 ){
+        /** Same Line As Next Printf **/
+        printf("[gentdow_log]....(   " ); fflush( stdout );
+        printf( str_fmt , dat_any      ); fflush( stdout );
+        printf(               "   )\n" ); fflush( stdout );
+    };; }
+//:===========================================:LOG_AFTER_HALT://
+//:INIT_NONE:================================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+    U32 AAC2020_GENTDOW_InitNone( U32 u32 ){
+        if( u32 ){ /** reserved for future use **/ };
+        return( 0x00 );
+    }
+#undef  U32
+//:================================================:INIT_NONE://
+//:MAIN_ALGORITHM:===========================================://
+#define U08 uint8_t /** GCC: <stdint.h> **/           //: 01 ://
+#define I32 int32_t /** GCC: <stdint.h> **/           //: 02 ://
+#define ERR aac2020_gentdow_Halt                      //: 03 ://
+
+    void
+    AAC2020_GENTDOW_pix_512_CTO_aus_512(
+        U08*        pix_512  //: <<< INN
+    ,   I32         pix_wid  //: <<< INN
+    ,   I32         pix_hig  //: <<< INN
+
+        /** Example_Output: AAC2020_PIXNAME_paint5d_cpu_pix **/
+    ,   U08*        aus_512  //: <<< OUT
+    ,   I32         aus_wid  //: <<< OUT
+    ,   I32         aus_hig  //: <<< OUT
+    )
+    {
+        //:input_checks:-------------------------------------://
+                //:input_checks:image__size:- - - - - - - - -://
+
+                    assert( 512 == pix_wid );
+                    assert( 512 == pix_hig );
+
+                //:- - - - - - - - -:input_checks:image__size://
+                //:input_checks:the__rest:- - - - - - - - - -://
+
+                    assert( ((U08* )0) !=(       pix_512 ) );
+                    assert( ((I32  )0) !=(       pix_wid ) );
+                    assert( ((I32  )0) !=(       pix_hig ) );
+                                                        
+                    assert( ((U08* )0) !=(       aus_512 ) );
+                    assert( ((I32  )0) !=(       aus_wid ) );
+                    assert( ((I32  )0) !=(       aus_hig ) );
+
+                //:- - - - - - - - - -:input_checks:the__rest://
+        //:-------------------------------------:input_checks://
+        //:temp_pixel_blocks:calloc:-------------------------://
+        #define SIZ sizeof( U08 )
+        #define COM       (  4  ) /** RGBA **/
+
+            U08*    pix_sta =calloc( 128 * 128 * COM ,SIZ );
+                     
+        /// U08*    tem_064 =calloc(  64 *  64 * COM ,SIZ );
+
+        /// U08*    pix_128 =calloc( 128 * 128 * COM ,SIZ );
+        /// U08*    pix_064 =calloc(  64 *  64 * COM ,SIZ );
+        /// U08*    pix_032 =calloc(  32 *  32 * COM ,SIZ );
+        /// U08*    pix_016 =calloc(  16 *  16 * COM ,SIZ );
+        /// U08*    pix_008 =calloc(   8 *   8 * COM ,SIZ );
+        /// U08*    pix_004 =calloc(   4 *   4 * COM ,SIZ );
+        /// U08*    pix_002 =calloc(   2 *   2 * COM ,SIZ );
+        /// U08*    pix_001 =calloc(   1 *   1 * COM ,SIZ );
+
+        #undef  SIZ
+        #undef  COM
+        //:-------------------------:temp_pixel_blocks:calloc://
+        //:lookup_table_for_loop_below:----------------------://
+        /** @VID_IID[ 0130 ]TIME[ 03:16:05 ]SPAN_ARRAY ***** **/
+
+            I32 san=( 0 );
+            I32 san_arr[ 8+1 ]={   0 };
+                san_arr[   1 ]=( 128 );
+                san_arr[   2 ]=(  64 );
+                san_arr[   3 ]=(  32 );
+                san_arr[   4 ]=(  16 );
+                san_arr[   5 ]=(   8 );
+                san_arr[   6 ]=(   4 );
+                san_arr[   7 ]=(   2 );
+                san_arr[   8 ]=(   1 );
+
+        //:----------------------:lookup_table_for_loop_below://
+        //:DO_SOME_MORE_STUFF:-------------------------------://
+        for( I32 cou = 1 ; cou <= 8 ; cou ++ ){
+
+            san = san_arr[ cou ];
+            if( san ){ /**NOOP**/ };
+
+            //:generate_clone_stamp:-------------------------://
+            
+                AAC2020_GENTCOM_ResizeImage_size(
+                    pix_512 //:<-- source
+                ,   pix_wid
+                ,   pix_hig
+                
+                ,   pix_sta //:<-- output
+                ,       san
+                ,       san
+                );;
+
+            //:-------------------------:generate_clone_stamp://
+            //:stamp_that_stamp:-----------------------------://
+
+                AAC2020_GENTCOM_StampImage_DLAYOUT_paint5d(
+                /**/    pix_sta //:<--[ input  |  UN_affected  ]
+                ,           san //:[ 1, 2, 4, 8, 16, 32, 64... ]
+                ,           san //:[ 1, 2, 4, 8, 16, 32, 64... ]
+                        
+                ,       aus_512 //:<--[ output | affected      ]
+                ,       aus_wid //:<--SUGGESTED_USE[ auset_wid ]
+                ,       aus_hig //:<--SUGGESTED_USE[ auset_hig ]
+                );;
+
+            //:-----------------------------:stamp_that_stamp://
+
+
+        };;
+        //:-------------------------------:DO_SOME_MORE_STUFF://
+        //:temp_pixel_blocks:free:---------------------------://
+
+            free(   pix_sta   ); //:<-- free_pixel_stamp
+                     
+        /// free(   tem_064   );
+
+        /// free(   pix_128   );
+        /// free(   pix_064   );
+        /// free(   pix_032   );
+        /// free(   pix_016   );
+        /// free(   pix_008   );
+        /// free(   pix_004   );
+        /// free(   pix_002   );
+        /// free(   pix_001   );
+
+        //:---------------------------:temp_pixel_blocks:free://
+        //:NO_RETURN_WE_PASSED_IN_ALLOCATED_MEMORY:----------://
+
+        //- (*BYREF_DONT_DO_THIS_512 )=( DONT_DO_THIS_512 ); -//
+        //- (*BYREF_DONT_DO_THIS_wid )=( DONT_DO_THIS_wid ); -//
+        //- (*BYREF_DONT_DO_THIS_hig )=( DONT_DO_THIS_hig ); -//
+
+        //:----------:NO_RETURN_WE_PASSED_IN_ALLOCATED_MEMORY://
+    }
+
+    void /** AYAYA RAM(into) paint5d **/
+    AAC2020_GENTDOW_aya_RAM_paint5d(
+
+        U08 update_gpu_memory_after_loading_into_cpu
+
+    )
+    {
+        //:updating_is_not_your_job:-------------------------://
+        if( update_gpu_memory_after_loading_into_cpu >= 1 ){
+
+            ERR("[DONT_DO_THIS:2020_02_09]");
+        };;
+        //:-------------------------:updating_is_not_your_job://
+        //:step_001:get_ayaya_source_image:------------------://
+
+            U08* aya_arr =((U08*)0);
+            I32  aya_wid =((I32 )0);
+            I32  aya_hig =((I32 )0);
+
+            AAC2020_DUMPASS_png_002_CTO_pix_arr(
+                &( aya_arr ) //:AYAYA pixel      array
+            ,   &( aya_wid ) //:AYAYA width  in pixels
+            ,   &( aya_hig ) //:AYAYA height in pixels
+            );;
+
+        //:------------------:step_001:get_ayaya_source_image://
+        //:step_002:apply_transformations:-------------------://
+
+            /** This also loads those transformations into **/
+            /** the PAINT5D subsystem memory. ............ **/
+
+            AAC2020_GENTDOW_pix_512_CTO_aus_512(
+                aya_arr  //:pix_512 : INN://
+            ,   aya_wid  //:pix_wid : INN://
+            ,   aya_hig  //:pix_hig : INN://
+
+            ,   AAC2020_PIXNAME_paint5d_cpu_pix
+            ,   512
+            ,   512
+            );;
+
+        //:-------------------:step_002:apply_transformations://
+        //:discard_memory:-----------------------------------://
+
+            free( aya_arr );
+                  aya_arr=((U08*)0);
+
+        //:-----------------------------------:discard_memory://
+    }
+
+
+#undef  U08  //:----------------------------------------: 01 ://
+#undef  I32  //:----------------------------------------: 02 ://
+#undef  ERR  //:----------------------------------------: 03 ://
+//:===========================================:MAIN_ALGORITHM://

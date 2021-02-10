@@ -97,6 +97,12 @@
             CHR p5d_out      ;  //: [OUTPUT/SAVE]:USES:PIXSAVE
             CHR p5d_pat      ;  //: PATTERN: DrawDefaultAuset
             //: - - - - - - - - - - - -- - - - - - - - - - - ://
+            //:@VID_IID[ 0129 ]TIME[ 04:07:13 ]ADDED
+            //:ADDED_FOR_SEEING[ AYAYA ]CROSS_SECTIONS
+            CHR p5d_a_n ;  //:Auset_NEXT (higher value)
+            CHR p5d_a_s ;  //:Auset_Snap_To_Viewport_Extent
+            CHR p5d_a_b ;  //:Auset_BACK (lower value )
+            //: - - - - - - - - - - - -- - - - - - - - - - - ://
             CHR p5d_vp1_lef  ;  //: CAMERA_CONTROL          LEFT
             CHR p5d_vp1_rig  ;  //: CAMERA_CONTROL         RIGHT
             CHR p5d_vp1_upp  ;  //: CAMERA_CONTROL            UP
@@ -129,16 +135,6 @@
             /** the paint5d editor.                          **/
             CHR p5d_a_key_not_used_but_i_want_to ;
             //: - - - - - - - - - - - -- - - - - - - - - - - ://
-
-
-
-
-
-
-
-
-
-
 
 
         }PAINT5D;
@@ -202,6 +198,18 @@
 
                 ,.p5d_pat = 'P' //:P for PATTERN
 
+                /** @VID_IID[ 0129 ]TIME[ 04:14:23 ]  ****** **/
+                /** If you give a renderer a pattern, ****** **/
+                /** it's going to ask to seek through the    **/
+                /** cross sections and snap the camera. **** **/
+                /** #_GIVE_A_MOOSE_A_MUFFIN_# ************** **/
+                /** https://i.imgur.com/gW87tl5.jpg ******** **/
+                /** **************************************** **/
+
+                ,.p5d_a_n = 'Y'
+                ,.p5d_a_s = 'H' //:Auset_Snap_To_Viewport_Extent
+                ,.p5d_a_b = 'N'
+
             /** ******************************************** ***
                 @VID_IID[ 0066 ]TIME[ 2H 51M 20S ] 
                 Made variables a bit longer so we can
@@ -246,7 +254,6 @@
                 ,.p5d_l_b = 'Z' /** lay_bak **/
 
                 ,.p5d_a_key_not_used_but_i_want_to = 'A'
-
         }
     ,   .TODO_02={
             .xxxxxxx =( 0 )
