@@ -48,6 +48,12 @@
         cd $original_directory
 
     #############################_GENERATE_HARDASS_PNG_ASSETS_##
+    ##_OPTIONAL_:DELETE_OLD_SHADERS_FROM_MOD_FOLDER:############
+
+        rm "./MOD/SHADER_000_GPUVIEW.FRAG"
+        rm "./MOD/SHADER_001_PAINT5D.FRAG"
+
+    #############_OPTIONAL_:DELETE_OLD_SHADERS_FROM_MOD_FOLDER##
     ##_GENERATE_GLSL_CODE_FROM_C99_CODE_########################
 
         ## @VID_IID[ 0114 ]TIME[ 03:07:50 ] ####################

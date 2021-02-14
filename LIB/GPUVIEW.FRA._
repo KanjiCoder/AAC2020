@@ -181,9 +181,19 @@
             if( cuv_i_y == 0 ){ /** NOPP **/ };
 
             //:Texel fetch whatever texture is in focus.
-            UV4 uv4_tex=(
-                T_F( TAU , MAK_IV2(cuv_i_x,cuv_i_y),0 ));;
+            UV4 uv4_tex;
 
+            if( cuv_i_x >= (512-1) || cuv_i_y >= (512-1) ){
+            
+                uv4_tex.x =MAK_U32( 255 ); //:RED
+                uv4_tex.y =MAK_U32(   0 ); //:GREEN
+                uv4_tex.z =MAK_U32( 128 ); //:BLUE
+                uv4_tex.w =MAK_U32( 255 ); //:ALPHA
+            }else{
+
+                uv4_tex=(
+                T_F( TAU , MAK_IV2(cuv_i_x,cuv_i_y),0 ));;
+            };;
 
             FragColor = MAK_FV4(
 

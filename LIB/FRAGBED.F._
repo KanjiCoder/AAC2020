@@ -933,10 +933,28 @@
             /** SEE[ DOC/WHY_FRAGBED_DEFAULT_COPY.TXT ] **/
 
             //:GPUVIEW:OVERRIDE:SLOT[ 0 ]:-------------------://
-
+            #if( AAC2020_INCLUDE_GPUVIEW <= 0 )
+                                        //:SLOT[ 0 ]://
                 AAC2020_FRAGBED_loaded_000_has=( 0 );
                 AAC2020_FRAGBED_loaded_000_ptr=COPY( 
                 AAC2020_FRAGBED_DEFAULT_000 );;
+            #endif
+            #if( AAC2020_INCLUDE_GPUVIEW >= 1 )
+            #define EDITOR_SHADER AAC2020_GPUVIEW_DEFAULT_001
+
+                /** **************************************** **/
+                /** @VID_IID[ 0133 ]TIME[ 05:29:32 ]         **/
+                /** Load default editor shader associated    **/
+                /** with[ editor#0 == gpuview == keypad#0 ]  **/
+                /** **************************************** **/
+
+                                        //:SLOT[ 0 ]://
+                AAC2020_FRAGBED_loaded_000_has=( 0 );
+                AAC2020_FRAGBED_loaded_000_ptr=COPY( 
+                                      EDITOR_SHADER );;
+
+            #undef EDITOR_SHADER
+            #endif
 
             //:-------------------:GPUVIEW:OVERRIDE:SLOT[ 0 ]://
             //:PAINT5D:OVERRIDE:SLOT[ 1 ]:-------------------://
@@ -1047,7 +1065,7 @@
 
                     /** YES, 2nd param is DOUBLE_POINTER(**) **/
 
-                        LOD( "MOD/SHADER_000_PAINT5D.FRAG"  ,
+                        LOD( "MOD/SHADER_000_GPUVIEW.FRAG"  ,
                       &(AAC2020_FRAGBED_loaded_000_ptr ));;
     
                         LOD( "MOD/SHADER_001_PAINT5D.FRAG"  ,
@@ -1087,7 +1105,7 @@
 
                 #define SAV  AAC2020_FRAGBED_SaveTextFileToDisk
 
-                        SAV( "MOD/SHADER_000_PAINT5D.FRAG"  ,
+                        SAV( "MOD/SHADER_000_GPUVIEW.FRAG"  ,
                         AAC2020_FRAGBED_loaded_000_ptr  );;
     
                         SAV( "MOD/SHADER_001_PAINT5D.FRAG"  ,
