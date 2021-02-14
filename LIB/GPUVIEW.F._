@@ -1,0 +1,43 @@
+//: 123_123                   
+//: GPUVIEW : GPU_(texture)_VIEW
+//: GTEXVEW : Gpu_TEXture_ViEW  
+
+//:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=====================://
+    void 
+    aac2020_gpuview_Halt( const char* msg_err )
+    {
+        printf("[FATAL_ERROR:aac2020_gpuview]:%s\n", msg_err );
+        fflush(stdout);
+        exit( 123 );
+    }
+//:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+//:LOG_AFTER_HALT:===========================================://
+    void
+    aac2020_gpuview_Info_any(
+        const char* str_fmt
+    ,   void*       dat_any   
+    )
+    { if( AAC2020_SILENCE.GPUVIEW <= 0 ){
+
+        /** Same Line As Next Printf **/
+        printf("[gpuview_log]....(   " ); fflush( stdout );
+        printf( str_fmt , dat_any      ); fflush( stdout );
+        printf(               "   )\n" ); fflush( stdout );
+
+    };; }
+//:===========================================:LOG_AFTER_HALT://
+//:INIT_THE_SUB_SYSTEM:======================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+
+    U32
+    AAC2020_GPUVIEW_Init( U32 u32 ){
+        if( u32 ){ /** reserved for future use **/ };
+
+
+        //:TODO: Init code..
+
+        return( 0x00 );
+    }
+
+#undef  U32
+//:======================================:INIT_THE_SUB_SYSTEM://

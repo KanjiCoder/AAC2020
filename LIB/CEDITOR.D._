@@ -2,16 +2,20 @@
 //: CEDITOR: Current_EDITOR                                  ://
 //: -------------------------------------------------------- ://
 //:ITS_JUST_ONE_VARIABLE:====================================://
-#define U32 uint32_t /** GCC: <stdint.h> **/
+#define U32 "DONT_USE_UNSIGNED_32_BIT_USE_SIGNED_32_BIT"
+#define I32 int32_t /** GCC: <stdint.h> **/
+#define I_I AAC2020_CEDITOR_MACRO_invalid
+
+    #define AAC2020_CEDITOR_MACRO_invalid  ( 0 - 1 )
 
     /** dex_edi (AAC2020.C11) === edi_mod (A2_JC.JS) **/
 
-        U32 AAC2020_CEDITOR_dex_edi =( 0 );
+        I32 AAC2020_CEDITOR_dex_edi =( I_I );
 
     /** nex_edi: The "next" editor. The one currently being  **/
     /**          loaded to replace AAC2020_CEDITOR_dex_edi   **/
 
-        U32 AAC2020_CEDITOR_nex_edi =( 0 ); 
+        I32 AAC2020_CEDITOR_nex_edi =( I_I ); 
 
     /** Index of the last editor that was INITIALIZED.    ...**/
     /** Use this to prevent the editor initialization     ...**/
@@ -21,22 +25,28 @@
     /** a shit tonne of times. .......................... ...**/
 
                 /** last initialized editor index **/
-                U32 AAC2020_CEDITOR_dex_ini =( 0xFFFFFFFF );
+                I32 AAC2020_CEDITOR_dex_ini =( I_I );
 
                 /** currently being initialized edtior index **/
-                U32 AAC2020_CEDITOR_dex_ing =( 0xFFFFFFFF );
+                I32 AAC2020_CEDITOR_dex_ing =( I_I );
 
-        const   U32 AAC2020_CEDITOR_paint5d =( 1 );
-        const   U32 AAC2020_CEDITOR_todo_02 =( 2 );
-        const   U32 AAC2020_CEDITOR_todo_03 =( 3 );
-        const   U32 AAC2020_CEDITOR_todo_04 =( 4 );
-        const   U32 AAC2020_CEDITOR_todo_05 =( 5 );
-        const   U32 AAC2020_CEDITOR_todo_06 =( 6 );
-        const   U32 AAC2020_CEDITOR_todo_07 =( 7 );
-        const   U32 AAC2020_CEDITOR_todo_08 =( 8 );
-        const   U32 AAC2020_CEDITOR_todo_09 =( 9 );
+        //[@VID_IID[ 0133 ]TIME[ 04:32:23 ]     ]//
+        //[         AAC2020_CEDITOR_taudepo     ]//
+        const   I32 AAC2020_CEDITOR_gpuview =( 0 );
 
-#undef  U32
+        const   I32 AAC2020_CEDITOR_paint5d =( 1 );
+        const   I32 AAC2020_CEDITOR_todo_02 =( 2 );
+        const   I32 AAC2020_CEDITOR_todo_03 =( 3 );
+        const   I32 AAC2020_CEDITOR_todo_04 =( 4 );
+        const   I32 AAC2020_CEDITOR_todo_05 =( 5 );
+        const   I32 AAC2020_CEDITOR_todo_06 =( 6 );
+        const   I32 AAC2020_CEDITOR_todo_07 =( 7 );
+        const   I32 AAC2020_CEDITOR_todo_08 =( 8 );
+        const   I32 AAC2020_CEDITOR_todo_09 =( 9 );
+
+#undef  U32  //:----------------------------------------: 01 ://
+#undef  I32  //:----------------------------------------: 02 ://
+#undef  I_I  //:----------------------------------------: 03 ://
 //:====================================:ITS_JUST_ONE_VARIABLE://
 
 

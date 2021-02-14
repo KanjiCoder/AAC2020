@@ -1,0 +1,257 @@
+
+    //:TODO: REWORK THIS CODE INTO NEW SHADER
+
+    //[CUT_AND_PASTE_THIS_INTO_GLSL_SOURCE:==============]//
+    //[AAC2020_PAINT5D_DEFAULT_001:======================]//
+    //[PASTE_INTO_FILE[ P5D_001._ ]:=====================]//
+    //:P5D_001____AAC2020_PAINT5D_DEFAULT_001:===========://
+    //|SIM:Shim_Ifdef_Macros:|||||||||||||||||||||||||||||//
+    //:glsl_file_scope_stuff:----------------------------://
+    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL           //| # |//
+                                                   //| # |//
+        //:#_KEEP_USAMPLER_HIGH_#          ://     //| # |//
+        //:#_SAM_PRECISION_BEFORE_SAM_VAR_#://     //| # |//
+        precision highp usampler2D;                //| # |//
+                                                   //| # |//
+        //|(( UNI ))____________________________|////| # |//
+        //[:::::::SHADERTOY_COMPATIBILITY:::::::]////| # |//
+        #define fragCoord gl_FragCoord             //| # |//
+        #define       F_C gl_FragCoord             //| # |//
+        uniform vec3 iResolution;                  //| # |//
+        uniform usampler2D taudepo;                //| # |//
+        uniform usampler2D paint5d;                //| # |//
+                                                   //| # |//
+        //|(( INN ))____________________________|////| # |//
+        //:     fag_tec:FrAGshaderTExtureCoord  :////| # |//
+        in vec2 fag_tec;                           //| # |//
+                                                   //| # |//
+        //|(( OUT ))____________________________|////| # |//
+        out vec4 FragColor;                        //| # |//
+                                                   //| # |//
+    #endif                                         //| # |//
+    //:----------------------------:glsl_file_scope_stuff://
+    //:always_exists_error_string_macros:----------------://
+                                                   //| # |//
+        /** ******************************** ***   //| # |//
+        @VID_IID[ 0112 ]TIME[ 00:56:50 ]           //| # |//
+        Get rid of quote marks in the source       //| # |//
+        So we can wrap entire thing into a         //| # |//
+        very large multi-line string.              //| # |//
+        *** ******************************** **/   //| # |//
+                                                   //| # |//
+        #define            E_S_private( e_m ) #e_m //| # |//
+        #define E_S( e_m ) E_S_private( e_m )      //| # |//
+                                                   //| # |//
+    //:----------------:always_exists_error_string_macros://
+    //:type_macros:--------------------------------------://
+    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL           //| # |//
+                                                   //| # |//
+        /** When Running As GLSL Code. **/         //| # |//
+                                                   //| # |//
+        #define F32        float    //:  01  ://   //| # |//
+        #define U32         uint    //:  02  ://   //| # |//
+        #define I32          int    //:  03  ://   //| # |//
+        #define IV2        ivec2    //:  04  ://   //| # |//
+        #define UV4        uvec4    //:  05  ://   //| # |//
+        #define T_F   texelFetch    //:  06  ://   //| # |//
+        #define TAU      taudepo    //:  07  ://   //| # |//
+        #define P5D      paint5d    //:  08  ://   //| # |//
+        #define SAM   usampler2D    //:  09  ://   //| # |//
+        #define UFF    uint(0xFF)   //:  10  ://   //| # |//
+        #define U00    uint( 0  )   //:  11  ://   //| # |//
+        #define I00     int( 0  )   //:  12  ://   //| # |//
+        #define U03    uint( 3  )   //:  13  ://   //| # |//
+        #define B_3    uint( 3  )   //:  14  ://   //| # |//
+        #define B11    uint( 3  )   //:  15  ://   //| # |//
+        #define H55    uint(0x55)   //:  16  ://   //| # |//
+        #define V_A                 //:  17  ://   //| # |//
+        #define FV4         vec4    //:  18  ://   //| # |//
+        #define ASS  /**NOTHING**/  //:  19  ://   //| # |//
+        #define ERR  /**NOTHING**/  //:  20  ://   //| # |//
+        #define TRU  trunc          //:  21  ://   //| # |//
+    #else                                          //| # |//
+                                                   //| # |//
+        /** When Running As C99/C11 Code. **/      //| # |//
+                                                   //| # |//
+        #define F32      float      //:  01  ://   //| # |//
+        #define U32   uint32_t      //:  02  ://   //| # |//
+        #define I32    int32_t      //:  03  ://   //| # |//
+        #define IV2   struct AAC2020_POLYOGL_IV2   //| # |//
+        #define UV4   struct AAC2020_POLYOGL_UV4   //| # |//
+        #define T_F   AAC2020_POLYOGL_tex_fet      //| # |//
+        #define TAU   ( 0 )         //:  07  ://   //| # |//
+        #define P5D   ( 1 )         //:  08  ://   //| # |//
+        #define SAM    int          //:  09  ://   //| # |//
+        #define UFF    0xFF         //:  10  ://   //| # |//
+        #define U00    0x00         //:  11  ://   //| # |//
+        #define I00   ( 0 )         //:  12  ://   //| # |//
+        #define U03   ( 3 )         //:  13  ://   //| # |//
+        #define B_3   ( 3 )         //:  14  ://   //| # |//
+        #define B11   ( 3 )         //:  15  ://   //| # |//
+        #define H55    0x55         //:  16  ://   //| # |//
+        #define V_A   void          //:  17  ://   //| # |//
+        #define FV4   struct AAC2020_POLYOGL_FV4   //| # |//
+        #define ASS   assert        //:  19  ://   //| # |//
+        #define ERR   aac2020_p5d1ogl_Halt         //| # |//
+        #define TRU   AAC2020_POLYOGL_Trunc        //| # |//
+    #endif                                         //| # |//
+    //:--------------------------------------:type_macros://
+    //:seven_letter_macros:------------------------------://
+    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL           //| # |//
+                                                   //|---|//
+        #define MAK_FV4      vec4                  //| 1 |//
+        #define MAK_IV2     ivec2                  //| 2 |//
+        #define MAK_U32      uint                  //| 3 |//
+        #define MAK_I32       int                  //| 4 |//
+        #define MAK_F32     float                  //| 5 |//
+        #define BIN_011 uint( 3 )                  //| 6 |//
+        #define TYP_F_C /** nothing **/            //| 7 |//
+        #define INN_F_C /** nothing **/            //| 8 |//
+    #else                                          //|---|//
+        #define MAK_FV4 AAC2020_POLYOGL_MAK_FV4    //| 1 |//
+        #define MAK_IV2 AAC2020_POLYOGL_MAK_IV2    //| 2 |//
+        #define MAK_U32 AAC2020_POLYOGL_MAK_U32    //| 3 |//
+        #define MAK_I32 AAC2020_POLYOGL_MAK_I32    //| 4 |//
+        #define MAK_F32 AAC2020_POLYOGL_MAK_F32    //| 5 |//
+        #define BIN_011 ((U32)3 )                  //| 6 |//
+        #define TYP_F_C struct AAC2020_POLYOGL_FV4 //| 7 |//
+        #define INN_F_C F_C                        //| 8 |//
+    #endif                                         //|---|//
+    //:------------------------------:seven_letter_macros://
+    //:main_shim_macros:---------------------------------://
+    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL           //| # |//
+                                                   //| # |//
+        #define RET_MAIN void /** <-- GLSL**/      //| # |//
+        #define FUN_MAIN main /** <-- GLSL**/      //| # |//
+                                                   //| # |//
+    #else                                          //| # |//
+                                                   //| # |//
+        #define RET_MAIN FV4 /** <-- [C99/C11]**/  //| # |//
+        #define FUN_MAIN AAC2020_GPUWIRE_Main      //| # |//
+                                                   //| # |//
+    #endif                                         //| # |//
+    //:---------------------------------:main_shim_macros://
+    //||||||||||||||||||||||||||||||SIM:Shim_Ifdef_Macros|//
+
+        //:- - - - - - - - - - - -- - - - - - - - - - - -://
+        F32
+        GPUVIEW_GET_res_wid( void )
+        {
+            #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL
+                return( iResolution.x );
+            #else
+                return( AAC2020_CPUNIFO_iResolution_wid );
+            #endif
+        }
+        F32
+        GPUVIEW_GET_res_hig( void )
+        {
+            #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL
+                return( iResolution.y );
+            #else
+                return( AAC2020_CPUNIFO_iResolution_hig );
+            #endif
+        }
+        //:- - - - - - - - - - - -- - - - - - - - - - - -://   
+        RET_MAIN
+        FUN_MAIN( 
+                       TYP_F_C          INN_F_C
+        //[ GLSL:|     NOTHING     |    NOTHING   - - - -]//
+        //[  C99:|  struct FV4     |    F_C       - - - -]//
+        ){
+             
+            /** @VID_IID[ 0093 ]TIME[ 00:21:10 ] **/
+            #ifndef AAC2020_MACRO_THIS_IS_OPEN_GL
+                FV4 FragColor; /** <-- C99 Code  **/
+            //: R_Y AAC2020_POLYOGL_R_Y_Get()
+                #define R_Y 512.0
+            #else
+                #define R_Y iResolution.y
+                /** HELLO_WORLD **/
+            #endif
+
+            I32 cuv_i_x =MAK_I32( F_C.x - 0.5 );
+            I32 cuv_i_y =MAK_I32( 
+                (
+                    (GPUVIEW_GET_res_hig()   - 1.0 )
+                   -(                F_C.y         ) 
+                )-0.5 
+            );;
+            if( cuv_i_x == 0 ){ /** NOOP **/ };
+            if( cuv_i_y == 0 ){ /** NOPP **/ };
+
+            //:Texel fetch whatever texture is in focus.
+            UV4 uv4_tex=(
+                T_F( TAU , MAK_IV2(cuv_i_x,cuv_i_y),0 ));;
+
+
+            FragColor = MAK_FV4(
+
+                MAK_F32( uv4_tex.x ) / 255.0 //:RED
+            ,   MAK_F32( uv4_tex.y ) / 255.0 //:GREEN
+            ,   MAK_F32( uv4_tex.z ) / 255.0 //:BLUE
+            ,   MAK_F32( uv4_tex.w ) / 255.0 //:ALPHA
+            );;
+
+            
+            #ifndef AAC2020_MACRO_THIS_IS_OPEN_GL
+                return( FragColor ); /**<-- C99**/
+            #endif
+
+        }
+        //:- - - - - - - - - - - -- - - - - - - - - - - -://
+    //:always_exists_error_string_macros:----------------://
+                                                   //[ x ]//
+        #undef  E_S_private                        //[ x ]//
+        #undef  E_S                                //[ x ]//
+                                                   //[ x ]//
+    //:----------------:always_exists_error_string_macros://
+    //:type_macros:--------------------------------------://
+                                                   //[ x ]//
+        #undef  F32      //:  01  ://              //[ x ]//
+        #undef  U32      //:  02  ://              //[ x ]//
+        #undef  I32      //:  03  ://              //[ x ]//
+        #undef  IV2      //:  04  ://              //[ x ]//
+        #undef  UV4      //:  05  ://              //[ x ]//
+        #undef  T_F      //:  06  ://              //[ x ]//
+        #undef  TAU      //:  07  ://              //[ x ]//
+        #undef  P5D      //:  08  ://              //[ x ]//
+        #undef  SAM      //:  09  ://              //[ x ]//
+        #undef  UFF      //:  10  ://              //[ x ]//
+        #undef  U00      //:  11  ://              //[ x ]//
+        #undef  I00      //:  12  ://              //[ x ]//
+        #undef  U03      //:  13  ://              //[ x ]//
+        #undef  B_3      //:  14  ://              //[ x ]//
+        #undef  B11      //:  15  ://              //[ x ]//
+        #undef  H55      //:  16  ://              //[ x ]//
+        #undef  V_A      //:  17  ://              //[ x ]//
+        #undef  FV4      //:  18  ://              //[ x ]//
+        #undef  ASS      //:  19  ://              //[ x ]//
+        #undef  ERR      //:  20  ://              //[ x ]//
+                                                   //[ x ]//
+    //:--------------------------------------:type_macros://
+    //:seven_letter_macros:------------------------------://
+    /** @VID_IID[ 0093 ]TIME{ 00:31:40 ] *************** **/
+    /** Decided on [MAK] for [MAKE] as our constructor   **/
+    /** postfix ........................................ **/
+                                                   //[ x ]//
+        #undef  MAK_FV4                            //[ 1 ]//
+        #undef  MAK_IV2                            //[ 2 ]//
+        #undef  MAK_I32                            //[ 3 ]//
+        #undef  MAK_F32                            //[ 4 ]//
+        #undef  BIN_011                            //[ 5 ]//
+        #undef  CUVIPIX                            //[ 6 ]//
+        #undef  TYP_F_C                            //[ 7 ]//
+        #undef  INN_F_C                            //[ 8 ]//
+                                                   //[ x ]//
+    //:------------------------------:seven_letter_macros://
+    //:main_shim_macros:---------------------------------://
+                                                   //[ x ]//
+        #undef  RET_MAIN                           //[ x ]//
+        #undef  FUN_MAIN                           //[ x ]//
+                                                   //[ x ]//
+    //:---------------------------------:main_shim_macros://
+    //:===========:P5D_001____AAC2020_PAINT5D_DEFAULT_001://  
+    //[=====================:PASTE_INTO_FILE[ P5D_001._ ]]//
+    //[======================:AAC2020_PAINT5D_DEFAULT_001]//
+    //[==============:CUT_AND_PASTE_THIS_INTO_GLSL_SOURCE]//

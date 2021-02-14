@@ -555,7 +555,7 @@
             INFO(    "[AAC2020_FRAGBED_KeyInn_Simple]...\n");
             INFO_CHR("[FRAGBED:KEY]:%c\n" , chr_key );
 
-            #define P_0 ((void*)0)
+            #define P_0 AAC2020_FRAGBED_loaded_000_ptr //:###://
             #define P_1 AAC2020_FRAGBED_loaded_001_ptr //:###://
             #define P_2 AAC2020_FRAGBED_loaded_002_ptr //:###://
             #define P_3 AAC2020_FRAGBED_loaded_003_ptr //:###://
@@ -642,10 +642,14 @@
        //: #_FRAGBED_CODE_SHOULD___NOT___USE_CALLBACKS_#
         /** #_404_SHADER_NOT_FOUND_# ................ **/
         int   shader_index_loaded=( 0 - 404 ); 
+        I32   HAS_GPUVIEW=( AAC2020_INCLUDE_GPUVIEW );
 
             int should_re_load_the_shader_uniforms=( 0 );
             
-            if( dex_fou > 0 ){
+            if( 0
+            ||  (  (dex_fou >  0 ) && (!HAS_GPUVIEW ) )
+            ||  (  (dex_fou >= 0 ) && ( HAS_GPUVIEW ) )
+            ){
 
                 //: These shaders can be user edited and     ://
                 //: loaded from disk. So use the more fault  ://
@@ -660,7 +664,8 @@
                 should_re_load_the_shader_uniforms = ( 1 );
                 shader_index_loaded = ( dex_fou );
             }else
-            if( dex_fou <= 0 ){
+            if( dex_fou <= 0 ){/**@VID_IID[ 0133 ]T[03:10:32]**/
+                               /**OH_NOO...REFACTOR_MISTAKE? **/
 
                 //:------------------------------------------://
                 //:@VID_IID[ 0117 ]TIME[ 02:39:00 ] ---------://
@@ -695,6 +700,18 @@
                     shader_index_loaded=( 0 );
                 };;
 
+            }else
+            if( 0 == dex_fou ){
+                /** @VID_IID[ 0133 ]TIME[ 03:04:42 ]         **/
+                /** If we hit this error, it is probably     **/
+                /** because we need to refactor code         **/
+                /** generating[ dex_fou ]to return           **/
+                /** NEGATIVE if invalid index.               **/
+                FUCK_YOU("[SHOULD_RET_NEG_FOR_INVALID:001]");
+            }else{
+                /** @VID_IID[ 0133 ]TIME[ 03:04:42 ]         **/
+                /** DITTO. SEE COMMENT WITH SAME TIMESTAMP.  **/
+                FUCK_YOU("[NO_VALID_dex_fou_CASE_FOUND]");
             };;
 
             if( should_re_load_the_shader_uniforms >= 1 ){
@@ -915,9 +932,16 @@
 
             /** SEE[ DOC/WHY_FRAGBED_DEFAULT_COPY.TXT ] **/
 
-            //:PAINT5D:OVERRIDE?:----------------------------://
-            #if( AAC2020_INCLUDE_PAINT5D <= 0 )
+            //:GPUVIEW:OVERRIDE:SLOT[ 0 ]:-------------------://
 
+                AAC2020_FRAGBED_loaded_000_has=( 0 );
+                AAC2020_FRAGBED_loaded_000_ptr=COPY( 
+                AAC2020_FRAGBED_DEFAULT_000 );;
+
+            //:-------------------:GPUVIEW:OVERRIDE:SLOT[ 0 ]://
+            //:PAINT5D:OVERRIDE:SLOT[ 1 ]:-------------------://
+            #if( AAC2020_INCLUDE_PAINT5D <= 0 )
+                                        //:SLOT[ 1 ]://
                 AAC2020_FRAGBED_loaded_001_has=( 1 );
                 AAC2020_FRAGBED_loaded_001_ptr=COPY( 
                 AAC2020_FRAGBED_DEFAULT_001 );;
@@ -928,13 +952,13 @@
                 /** #_PULL_GLSL_SHADER_DATA_FROM_FUTURE_# **/
             
                 /** #_WHY_CANT_I_SEE_PAINT5D_IN_MY_EXE_#  **/
-
+                                        //:SLOT[ 1 ]://
                 AAC2020_FRAGBED_loaded_001_has=( 1 );
                 AAC2020_FRAGBED_loaded_001_ptr=COPY( 
                 AAC2020_PAINT5D_DEFAULT_001 );;
 
             #endif
-            //:----------------------------:PAINT5D:OVERRIDE?://
+            //:-------------------:PAINT5D:OVERRIDE:SLOT[ 1 ]://
             //:Remaining_Non_Overridden_Shaders:-------------://
 
                 AAC2020_FRAGBED_loaded_002_has=( 2 );
@@ -979,6 +1003,7 @@
                 #define LEN strlen
                 #define  A  assert
 
+                A( LEN( AAC2020_FRAGBED_loaded_000_ptr ) > 0 );
                 A( LEN( AAC2020_FRAGBED_loaded_001_ptr ) > 0 );
                 A( LEN( AAC2020_FRAGBED_loaded_002_ptr ) > 0 );
                 A( LEN( AAC2020_FRAGBED_loaded_003_ptr ) > 0 );
@@ -1021,6 +1046,9 @@
                 #define LOD  AAC2020_FRAGBED_LoadFileIfExists
 
                     /** YES, 2nd param is DOUBLE_POINTER(**) **/
+
+                        LOD( "MOD/SHADER_000_PAINT5D.FRAG"  ,
+                      &(AAC2020_FRAGBED_loaded_000_ptr ));;
     
                         LOD( "MOD/SHADER_001_PAINT5D.FRAG"  ,
                       &(AAC2020_FRAGBED_loaded_001_ptr ));;
@@ -1058,6 +1086,9 @@
                 /** will be re-serialized to hard disk memory**/
 
                 #define SAV  AAC2020_FRAGBED_SaveTextFileToDisk
+
+                        SAV( "MOD/SHADER_000_PAINT5D.FRAG"  ,
+                        AAC2020_FRAGBED_loaded_000_ptr  );;
     
                         SAV( "MOD/SHADER_001_PAINT5D.FRAG"  ,
                         AAC2020_FRAGBED_loaded_001_ptr  );;

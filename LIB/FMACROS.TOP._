@@ -37,7 +37,7 @@ _Static_assert( AAC2020_INCLUDE_GRAQUAD == 20 ,       "20");
 //:==================================================:GRAQUAD://
 //:TAUDEPO:==================================================://
 #if(            AAC2020_INCLUDE_TAUDEPO >=  1 )
-_Static_assert( AAC2020_INCLUDE_TAUDEPO == 35 ,       "35");
+_Static_assert( AAC2020_INCLUDE_TAUDEPO == 37 ,       "37");
 
     #define  FMACROS_TAUDEPO_LoopTick   AAC2020_TAUDEPO_LoopTick
 #endif
@@ -48,7 +48,7 @@ _Static_assert( AAC2020_INCLUDE_TAUDEPO == 35 ,       "35");
 //:==================================================:TAUDEPO://
 //:TAUSYNC:==================================================://
 #if(            AAC2020_INCLUDE_TAUSYNC >=  1 )
-_Static_assert( AAC2020_INCLUDE_TAUSYNC == 37 ,       "37");
+_Static_assert( AAC2020_INCLUDE_TAUSYNC == 39 ,       "39");
 
     #define  FMACROS_TAUSYNC_LoopTick   AAC2020_TAUSYNC_LoopTick
 #endif
@@ -96,6 +96,7 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 37 ,       "37");
     GENTDOW
     GENTUPP
     POLYOGL
+    GPUWIRE
     TAUDIRT
     TAUTYPE
     TAUSYNC
@@ -262,6 +263,14 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 37 ,       "37");
 #define      FMACROS_POLYOGL_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:POLYOGL://
+//:InitNone:GPUWIRE:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_GPUWIRE >=  1 )
+#define      FMACROS_GPUWIRE_InitNone AAC2020_GPUWIRE_InitNone
+#endif
+#if( AAC2020_INCLUDE_GPUWIRE == 0 )
+#define      FMACROS_GPUWIRE_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:GPUWIRE://
 //:InitNone:TAUDIRT:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_TAUDIRT >=  1 )
 #define      FMACROS_TAUDIRT_InitNone AAC2020_TAUDIRT_InitNone
@@ -300,15 +309,11 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 37 ,       "37");
 /** ******************************************************** ***
 [SOURCE]
     //:INIT:1234567:=========================================://
-    #if(            AAC2020_INCLUDE_1234567 >=  1 )
-
+    #if( AAC2020_INCLUDE_1234567 >=  1 )
         #define  FMACROS_1234567_Init       AAC2020_1234567_Init
-
     #endif
-    #if(    AAC2020_INCLUDE_1234567 == 0 )
-
+    #if( AAC2020_INCLUDE_1234567 == 0 )
         #define  FMACROS_1234567_Init(  DISCARDED_ARGUMENT )       
-
     #endif
     //:=========================================:INIT:1234567://
 
@@ -321,12 +326,13 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 37 ,       "37");
     GLCONST
     GRAQUAD
     FRAGBED
-    GPUDATA
     PIXNAME
+    GPUDATA
+    GPUVIEW
     TAUDEPO
     PAINT5D
 *** ******************************************************** **/
-
+//[AUTO_GENERATED_INIT_FUNCTIONS::- - - - - - - - - - - - - -]//
     //:INIT:GINAWIN:=========================================://
     #if(            AAC2020_INCLUDE_GINAWIN >=  1 )
 
@@ -387,18 +393,6 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 37 ,       "37");
 
     #endif
     //:=========================================:INIT:FRAGBED://
-    //:INIT:GPUDATA:=========================================://
-    #if(            AAC2020_INCLUDE_GPUDATA >=  1 )
-
-        #define  FMACROS_GPUDATA_Init       AAC2020_GPUDATA_Init
-
-    #endif
-    #if(    AAC2020_INCLUDE_GPUDATA == 0 )
-
-        #define  FMACROS_GPUDATA_Init(  DISCARDED_ARGUMENT )       
-
-    #endif
-    //:=========================================:INIT:GPUDATA://
     //:INIT:PIXNAME:=========================================://
     #if(            AAC2020_INCLUDE_PIXNAME >=  1 )
 
@@ -411,6 +405,30 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 37 ,       "37");
 
     #endif
     //:=========================================:INIT:PIXNAME://
+    //:INIT:GPUDATA:=========================================://
+    #if(            AAC2020_INCLUDE_GPUDATA >=  1 )
+
+        #define  FMACROS_GPUDATA_Init       AAC2020_GPUDATA_Init
+
+    #endif
+    #if(    AAC2020_INCLUDE_GPUDATA == 0 )
+
+        #define  FMACROS_GPUDATA_Init(  DISCARDED_ARGUMENT )       
+
+    #endif
+    //:=========================================:INIT:GPUDATA://
+    //:INIT:GPUVIEW:=========================================://
+    #if(            AAC2020_INCLUDE_GPUVIEW >=  1 )
+
+        #define  FMACROS_GPUVIEW_Init       AAC2020_GPUVIEW_Init
+
+    #endif
+    #if(    AAC2020_INCLUDE_GPUVIEW == 0 )
+
+        #define  FMACROS_GPUVIEW_Init(  DISCARDED_ARGUMENT )       
+
+    #endif
+    //:=========================================:INIT:GPUVIEW://
     //:INIT:TAUDEPO:=========================================://
     #if(            AAC2020_INCLUDE_TAUDEPO >=  1 )
 
@@ -435,7 +453,7 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 37 ,       "37");
 
     #endif
     //:=========================================:INIT:PAINT5D://
-
+//[- - - - - - - - - - - - - -::AUTO_GENERATED_INIT_FUNCTIONS]//
 //:============================:AUTO_GENERATED_INIT_FUNCTIONS://
 /** REFERENCE ********************************************** ***
 

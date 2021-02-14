@@ -68,16 +68,133 @@
 
 *** ******************************************************** **/
 //:===============================:RECTANGLE_HELPER_FUNCTIONS://
-//:TEXTURE_UPDATE_SUBSECTION:================================://
+//:CRASH_IF_GL_HAS_ERROR:====================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
-#define REC struct AAC2020_TAUSYNC_rec_inc 
-#define PBR pixel_bounding_rect
 #define ERR aac2020_tausync_Halt
+
+    void 
+    aac2020_tausync_CrashOnGetError( 
+        const char* msg_err
+    )
+    {
+        U32 err;
+            err =( AAC2020_GLEBIND.glGetError() );
+        if( err != 0 ){ 
+            printf("[CrashOnGetError:msg_err]:%s\n"
+                                    ,msg_err );;
+            ERR("[SEE_MESSAGE_ABOVE_FOR_REASON]");
+        };;
+    }
+  
+#undef  U32
+#undef  ERR
+//:====================================:CRASH_IF_GL_HAS_ERROR://
+//:TEXTURE_UPDATE_SUBSECTION:================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 01 ://
+#define I32  int32_t /** GCC: <stdint.h> **/          //: 02 ://
+#define REC struct AAC2020_TAUSYNC_rec_inc            //: 03 ://
+#define PBR pixel_bounding_rect                       //: 04 ://
+#define ERR aac2020_tausync_Halt                      //: 05 ://
+#define COE aac2020_tausync_CrashOnGetError           //: 06 ://
+
+    void
+    aac2020_tausync_glTexSubImage2D(
+        REC* pixel_bounding_rect //:AKA[ PBR ]://
+    )
+    {
+        printf("[PBR -> x_0]:%d\n", PBR -> x_0 );
+        printf("[PBR -> x_1]:%d\n", PBR -> x_1 );
+        printf("[PBR -> y_0]:%d\n", PBR -> y_0 );
+        printf("[PBR -> y_1]:%d\n", PBR -> y_1 );
+
+        //:ACTUAL_SUBTEX2D_PUSH_HERE:========================://
+            //:TEX_SUB_IMAGE_2D:PREP:========================://
+            #define G_B AAC2020_GLEBIND               //: 01 ://
+            #define U_A ( 0x0CF5 )//:UNPACK_ALIGNMENT //: 02 ://
+            #define URL ( 0x0CF2 )//:UNPACK_ROW_LENGTH//: 03 ://
+            #define T_0 ( 0x84C0 )//:GL_TEXTURE0      //: 04 ://
+            #define T2D ( 0x0DE1 )//:GL_TEXTURE_2D    //: 05 ://
+            #define P_W ( 512    )//:PIX_WID          //: 06 ://
+
+                    COE("[BADTIMES:2021:001]"); 
+            
+                #define TEX_LOT AAC2020_PIXNAME_taudepo_tex_lot
+                #define TEX_HAN AAC2020_PIXNAME_taudepo_tex_han
+
+                    G_B.glActiveTexture( T_0 + TEX_LOT );
+
+                    COE("[BADTIMES:2021:002]"); 
+
+                    G_B.glBindTexture(   T2D , TEX_HAN );
+
+                #undef  TEX_LOT //:---------------------: -- ://
+                #undef  TEX_HAN //:---------------------: -- ://
+
+                    COE("[BADTIMES:2021:003]"); 
+
+                //:a_l_n:"Alignment" GUESS?
+                I32 a_l_n = 4; 
+                G_B.glPixelStorei( U_A, a_l_n);
+
+                    COE("[BADTIMES:2021:004]"); 
+ 
+                //:SEE[ DOC/TEXSUBIMAGE2D_STRIDE.TXT ]
+                G_B.glPixelStorei( URL , P_W );
+
+            #undef  G_B  //:----------------------------: 01 ://
+            #undef  U_A  //:----------------------------: 02 ://
+            #undef  URL  //:----------------------------: 03 ://
+            #undef  T_0  //:----------------------------: 04 ://
+            #undef  T2D  //:----------------------------: 05 ://
+            #undef  P_W  //:----------------------------: 06 ://
+            //:========================:TEX_SUB_IMAGE_2D:PREP://
+            //:TEX_SUB_IMAGE_2D:=============================://
+            //:STOLEN_FROM[ R:\G\A2_JC\_.02._ ]==============://
+            #define    TEXTURE_2D  ( 0x0DE1 )         //: 01 ://
+            #define  RGBA_INTEGER  ( 0x8D99 )         //: 02 ://
+            #define UNSIGNED_BYTE  ( 0x1401 )         //: 03 ://
+            //[        /\                                    ]//
+            //[       /  \                                   ]//
+            //[        ||                                    ]//
+            //#rbsrbs: you shouldn't use such internal stuff #//
+        
+                    COE("[BADTIMES:2021:005]"); 
+
+                AAC2020_GLEBIND.glTexSubImage2D(
+                /**/  TEXTURE_2D   //:TARGET
+                ,     0            //:LEVEL (LOD/LevelOfDetail)
+                
+                //:DIRTY_SUB_SELECTION_RECTANGLE:- - - - - -:://
+                , ( (*PBR).x_0 ) //: <---------------:org_lef://
+                , ( (*PBR).y_0 ) //: <---------------:org_top://
+                , ( (*PBR).x_1 - (*PBR).x_0 + 1 )  //:rec_wid://
+                , ( (*PBR).y_1 - (*PBR).y_0 + 1 )  //:rec_hig://
+                //:- - - - - -:DIRTY_SUB_SELECTION_RECTANGLE:://
+                
+                    //:--------------------------------------://
+                    //:FORMAT_OF_CPU_DATA:SEE[#TSI2D_FORMAT#]
+                ,   RGBA_INTEGER       //:SOURCE_FORMAT
+                ,   UNSIGNED_BYTE      //:SOURCE_TYPE 
+                    //:--------------------------------------://
+                
+                ,   AAC2020_PIXNAME_taudepo_cpu_pix //:pix_arr          
+                );;
+
+                    COE("[BADTIMES:2021:006]"); 
+
+            #undef     TEXTURE_2D  //:------------------: 01 ://
+            #undef   RGBA_INTEGER  //:------------------: 02 ://
+            #undef  UNSIGNED_BYTE  //:------------------: 03 ://
+            //:=============================:TEX_SUB_IMAGE_2D://
+        //:========================:ACTUAL_SUBTEX2D_PUSH_HERE://
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
     U32 //:<-- return[ number_of_pixels_pushed ]
     aac2020_tausync_TexturePush_32x32_Region_Max(
 
-        REC* pixel_bounding_rect
+        REC* pixel_bounding_rect //:AKA[ PBR ]://
 
     )
     {
@@ -120,19 +237,41 @@
         #undef  M_S
         #undef  L_D
         //:-----------------------------:is_rect_correct_size://
+        //:ACTUAL_SUBTEX2D_PUSH_HERE:========================://
 
-        AAC2020_TODOMAN_Vital( "[ACTUAL_SUBTEX2D_PUSH_HERE]" );
+            printf("[xxxxxxxxxxxxxx_bla_xxxxxxxxxxxxx]\n");
 
-        U32 wid = ( (*PBR).x_1  -  (*PBR).x_0    +    1 );
-        U32 hig = ( (*PBR).y_1  -  (*PBR).y_0    +    1 );
-                  number_of_pixels_pushed = ( wid * hig ); 
-        return(   number_of_pixels_pushed  );
+            //: rbsrbs: calling that textsub but selecting the 
+            //: entire thing to be the same as using the entire image?
+            //# DEBUG IDEA:                                  #//
+            //# use aac2020_tausync_glTexSubImage2D partial  #//
+            //# update command but give it a rectangle the   #//
+            //# size of the entire texture. If that WORKS    #//
+            //# then it is a sign that[ PBR ]is wrong.       #//
+            
+            AAC2020_TODOMAN_Vital("[GET:glTexSubImage2D:WORKING]");
+
+            //: aac2020_tausync_glTexSubImage2D( PBR ); //:<<<<<<<<<<<<<<<<< COMMENT BACK IN ONCE WORKING
+
+            AAC2020_PIXPUSH_t2d_TAUDEPO(); //:<<<<<<<<<<<<<<<<<<<<<<<<<<<<< REMOVE ONCE WORKING
+
+        //:========================:ACTUAL_SUBTEX2D_PUSH_HERE://
+        //:return_num_pixels_pushed:-------------------------://
+
+            U32 wid = ( (*PBR).x_1  -  (*PBR).x_0    +    1 );
+            U32 hig = ( (*PBR).y_1  -  (*PBR).y_0    +    1 );
+                      number_of_pixels_pushed = ( wid * hig ); 
+            return(   number_of_pixels_pushed  );
+
+        //:-------------------------:return_num_pixels_pushed://
     }
 
-#undef  PBR
-#undef  U32  
-#undef  REC  
-#undef  ERR
+#undef  U32  //:----------------------------------------: 01 ://
+#undef  I32  //:----------------------------------------: 02 ://
+#undef  REC  //:----------------------------------------: 03 ://
+#undef  PBR  //:----------------------------------------: 04 ://
+#undef  ERR  //:----------------------------------------: 05 ://
+#undef  COE  //:----------------------------------------: 06 ://
 //:================================:TEXTURE_UPDATE_SUBSECTION://
 //:GPU_SYNC:=================================================://
 #define U08        uint8_t /** GCC: <stdint.h> **/    //: 01 ://

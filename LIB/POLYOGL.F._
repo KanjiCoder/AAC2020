@@ -32,6 +32,22 @@
 #define F32   float                                   //: 09 ://
 #define ERR   aac2020_polyogl_Halt                    //: 10 ://
 
+    //:GLSL_POLYFILL_trunc:==================================://
+    
+        F32
+        AAC2020_POLYOGL_Trunc(
+            F32 f32_inn
+        ){
+            F32 f32_out; //:Float32_OUTPUT         
+            I32 i32_out; //:INT32___OUTPUT
+        
+            i32_out=( (I32)f32_inn );
+            f32_out=( (F32)i32_out );
+
+            return( f32_out );
+        }
+
+    //:==================================:GLSL_POLYFILL_trunc://
     //:GLSL_POLYFILL_Get_IResolution:========================://
     
         //:@VID_IID[ 0116 ]TIME[ 00:12:32 ] **************** ://

@@ -8,14 +8,18 @@
     #define AAC2020_FRAGBED_BUGHUNT_FileOnDiskNotify   ( 1 )
 
 //:============================================:CONFIGURATION://
+//:SHADER_STRING_VARS:=======================================://
+#define U08 uint8_t /** GCC: <stdint.h> **/
+#define I32 int32_t /** GCC: <stdint.h> **/
+ 
 
-    #define U08 unsigned char
 
     U08 AAC2020_FRAGBED_inited = ( 0 ); //:Initialized?
 
-    #undef  U08
+ 
 
     //:DEFINED_IN[ FRAGBED_DEFAULT_SHADERS/FDS_###._ ]
+    extern const char* AAC2020_FRAGBED_DEFAULT_000; //:FDS_000._
     extern const char* AAC2020_FRAGBED_DEFAULT_001; //:FDS_001._
     extern const char* AAC2020_FRAGBED_DEFAULT_002; //:FDS_002._
     extern const char* AAC2020_FRAGBED_DEFAULT_003; //:FDS_003._
@@ -28,6 +32,7 @@
 
     //:Shaders_Loaded_Into_Ram:------------------------------://
 
+    const char* AAC2020_FRAGBED_loaded_000_ptr = ((void*)0);
     const char* AAC2020_FRAGBED_loaded_001_ptr = ((void*)0);
     const char* AAC2020_FRAGBED_loaded_002_ptr = ((void*)0);
     const char* AAC2020_FRAGBED_loaded_003_ptr = ((void*)0);
@@ -46,19 +51,24 @@
 
     //:-------------:SHADE_LOAD_FLAGS:Probably_Only_Need_This://
     //:SHADE_LOAD_FLAGS:Probably_A_Bit_Excessive:------------://
+    /** @VID_IID[ 0133 ]TIME[ 03:36:05 ]ZERO_IS_NOW_TRUE *** **/
 
-    int         AAC2020_FRAGBED_loaded_001_has = (   0    );
-    int         AAC2020_FRAGBED_loaded_002_has = (   0    );
-    int         AAC2020_FRAGBED_loaded_003_has = (   0    );
-    int         AAC2020_FRAGBED_loaded_004_has = (   0    );
-    int         AAC2020_FRAGBED_loaded_005_has = (   0    );
-    int         AAC2020_FRAGBED_loaded_006_has = (   0    );
-    int         AAC2020_FRAGBED_loaded_007_has = (   0    );
-    int         AAC2020_FRAGBED_loaded_008_has = (   0    );
-    int         AAC2020_FRAGBED_loaded_009_has = (   0    );
+    I32         AAC2020_FRAGBED_loaded_000_has = (  0 - 404 );
+    I32         AAC2020_FRAGBED_loaded_001_has = (  0 -   1 );
+    I32         AAC2020_FRAGBED_loaded_002_has = (  0 -   2 );
+    I32         AAC2020_FRAGBED_loaded_003_has = (  0 -   3 );
+    I32         AAC2020_FRAGBED_loaded_004_has = (  0 -   4 );
+    I32         AAC2020_FRAGBED_loaded_005_has = (  0 -   5 );
+    I32         AAC2020_FRAGBED_loaded_006_has = (  0 -   6 );
+    I32         AAC2020_FRAGBED_loaded_007_has = (  0 -   7 );
+    I32         AAC2020_FRAGBED_loaded_008_has = (  0 -   8 );
+    I32         AAC2020_FRAGBED_loaded_009_has = (  0 -   9 );
 
     //:------------:SHADE_LOAD_FLAGS:Probably_A_Bit_Excessive://
 
+#undef  U08
+#undef  I32
+//:=======================================:SHADER_STRING_VARS://
 /** ******************************************************** ***
 
     We are going to NOT do the below. This makes things a
@@ -77,20 +87,30 @@
     (AAC2020_FRAGBED_loaded_001_ptr   
                         -to- AAC2020_FRAGBED_loaded_009_ptr )
 
-    //: imm: Is_Malloced_Memory ?                            ://
-    //: If we are loading from files, but also sometimes     ://
-    //: reference hard coded strings, we are going to need   ://
-    //: to know what kind of memory is in the pointer to     ://
-    //: avoid problems.                                      ://
-    int         AAC2020_FRAGBED_loaded_001_imm = (   0    );
-    int         AAC2020_FRAGBED_loaded_002_imm = (   0    );
-    int         AAC2020_FRAGBED_loaded_003_imm = (   0    );
-    int         AAC2020_FRAGBED_loaded_004_imm = (   0    );
-    int         AAC2020_FRAGBED_loaded_005_imm = (   0    );
-    int         AAC2020_FRAGBED_loaded_006_imm = (   0    );
-    int         AAC2020_FRAGBED_loaded_007_imm = (   0    );
-    int         AAC2020_FRAGBED_loaded_008_imm = (   0    );
-    int         AAC2020_FRAGBED_loaded_009_imm = (   0    );
+    //|======================================================|//
+    //+ @VID_IID[ 0133 ]TIME[ 03:16:42 ]                     +//
+    //+ Best to just make sure ALL pointers are              +//
+    //+ [malloced/freeable]memory. We do that by copying     +//
+    //+ hard coded strings into malloced memory when needed. +//
+    //+ this makes the execution paths of our code base      +//
+    //+ more uniform and less error prone.                   +//
+    //+                                                      +//
+    //+ imm: Is_Malloced_Memory ?                            +//
+    //+ If we are loading from files, but also sometimes     +//
+    //+ reference hard coded strings, we are going to need   +//
+    //+ to know what kind of memory is in the pointer to     +//
+    //+ avoid problems.                                      +//
+    //-  I32 AAC2020_FRAGBED_loaded_000_imm = (   0    );    -//
+    //-  I32 AAC2020_FRAGBED_loaded_001_imm = (   0    );    -//
+    //-  I32 AAC2020_FRAGBED_loaded_002_imm = (   0    );    -//
+    //-  I32 AAC2020_FRAGBED_loaded_003_imm = (   0    );    -//
+    //-  I32 AAC2020_FRAGBED_loaded_004_imm = (   0    );    -//
+    //-  I32 AAC2020_FRAGBED_loaded_005_imm = (   0    );    -//
+    //-  I32 AAC2020_FRAGBED_loaded_006_imm = (   0    );    -//
+    //-  I32 AAC2020_FRAGBED_loaded_007_imm = (   0    );    -//
+    //-  I32 AAC2020_FRAGBED_loaded_008_imm = (   0    );    -//
+    //-  I32 AAC2020_FRAGBED_loaded_009_imm = (   0    );    -//
+    //|======================================================|//
                                           
 ** ********************************************************* **/
 

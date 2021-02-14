@@ -60,6 +60,10 @@
         ## code from C99 code.                                ##
         ########################################################
 
+        INN="./LIB/GPUVIEW.FRA._"
+        OUT="./LIB/GPUVIEW.FRA.STRING._"
+        awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT
+
         INN="./LIB/P5D1OGL.FRA._"
         OUT="./LIB/P5D1OGL.FRA.STRING._"
         awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT

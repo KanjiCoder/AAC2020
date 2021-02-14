@@ -1436,7 +1436,75 @@ AAC2020_GLEBIND_GetAnyGLFuncAddress(
 
 //[][][][][][][][][][][][][][][][][][][][][][][]//
 
+//:glTexSubImage2D:==========================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 01 ://
+#define I32  int32_t /** GCC: <stdint.h> **/          //: 02 ://
+#define C_V const void                                //: 03 ://
+    typedef  
+        void                                      
+        (*AAC2020_GLEBIND_PFN_glTexSubImage2D)                        
+        (                                         
+            U32       target /** GLenum  **/
+        ,   I32        level /** GLint   **/
+        ,   I32      xoffset /** GLint   **/
+        ,   I32      yoffset /** GLint   **/
+        ,   I32        width /** GLsizei **/
+        ,   I32       height /** GLsizei **/
+        ,   U32       format /** GLenum  **/
+        ,   U32         type /** GLenum  **/
+        ,   C_V*        data /** ------- **/
+        );  
+                         
+        //:Declare_Function_Pointer_To_Be_Loaded_From_OPENGL:
+        AAC2020_GLEBIND_PFN_glTexSubImage2D  //: TYPE                      
+        aac2020_glebind_pfn_glTexSubImage2D; //: INST                  
+                 
+        //:Wrapper_Function_That_Invokes_Function_Pointer:
+        void                                      
+        AAC2020_GLEBIND_glTexSubImage2D                               
+        (                                         
+            U32       target /** GLenum  **/
+        ,   I32        level /** GLint   **/
+        ,   I32      xoffset /** GLint   **/
+        ,   I32      yoffset /** GLint   **/
+        ,   I32        width /** GLsizei **/
+        ,   I32       height /** GLsizei **/
+        ,   U32       format /** GLenum  **/
+        ,   U32         type /** GLenum  **/
+        ,   C_V*        data /** ------- **/
+        ){                                        
+                //:IS_FUNCTION_POINTER_LOADED:---------------://
 
+                #define PFN AAC2020_GLEBIND_FUNC
+                AAC2020_GLEBIND_FuncPointerSated(
+                      "[aac2020_glebind_pfn_glTexSubImage2D]"
+                , (PFN) aac2020_glebind_pfn_glTexSubImage2D );;
+                #undef  PFN
+
+                //:---------------:IS_FUNCTION_POINTER_LOADED://
+                //:CALL_WRAPPED_FUNCTION_POINTER:------------://
+
+                aac2020_glebind_pfn_glTexSubImage2D(              
+
+                      target /** GLenum  **/
+                ,      level /** GLint   **/
+                ,    xoffset /** GLint   **/
+                ,    yoffset /** GLint   **/
+                ,      width /** GLsizei **/
+                ,     height /** GLsizei **/
+                ,     format /** GLenum  **/
+                ,       type /** GLenum  **/
+                ,       data /** ------- **/
+
+                );;                                  
+
+                //:------------:CALL_WRAPPED_FUNCTION_POINTER://                                                                              
+        }  
+
+#undef  U32  //:----------------------------------------: 01 ://
+#undef  I32  //:----------------------------------------: 02 ://
+#undef  C_V  //:----------------------------------------: 03 ://
+//:==========================================:glTexSubImage2D://
 //:glGetUniformiv:===========================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
 #define I32  int32_t /** GCC: <stdint.h> **/
@@ -3263,6 +3331,14 @@ aac2020_glebind_library_container{
 
     }CAPABILITY; //:<--SINGULAR plurality!
 
+
+        //:NEW_MEMBER_FUNC_PTRS:2021_02_10:==================://
+
+            //: AAC2020_GLEBIND.glTexSubImage2D
+            AAC2020_GLEBIND_PFN_glTexSubImage2D                           
+                                glTexSubImage2D;  
+
+        //:==================:NEW_MEMBER_FUNC_PTRS:2021_02_10://
         //:NEW_MEMBER_FUNC_PTRS:2020_12_06:==================://
 
             //: AAC2020_GLEBIND.glGetUniformiv
@@ -3485,6 +3561,11 @@ aac2020_glebind_library_container{
    ,.TEXTURE.QUERY.gl_texture_binding_2d=0x8069
    ,.TEXTURE.QUERY.gl_active_texture    =0x84E0
 
+    //:NEW_LOADED_FUNCTION_POINTERS:2021_02_10:==============://
+
+    ,. glTexSubImage2D=&( AAC2020_GLEBIND_glTexSubImage2D )
+
+    //:==============:NEW_LOADED_FUNCTION_POINTERS:2021_02_10://
     //:NEW_LOADED_FUNCTION_POINTERS:2020_12_06:==============://
 
     ,. glGetUniformiv=&( AAC2020_GLEBIND_glGetUniformiv )
@@ -3832,7 +3913,17 @@ void AAC2020_GLEBIND_GetFuncsFromDLL(){
     );;
     
 
+    //:NEW_FUNCTION_POINTER_LOADING:2021_02_10:==============://
 
+        //:TexSubImage2D:------------------------------------://
+        #define TYPE AAC2020_GLEBIND_PFN_glTexSubImage2D
+        #define INST aac2020_glebind_pfn_glTexSubImage2D
+        INST=(  TYPE )g(                "glTexSubImage2D" );
+        #undef  TYPE
+        #undef  INST
+        //:------------------------------------:TexSubImage2D://
+
+    //:==============:NEW_FUNCTION_POINTER_LOADING:2021_02_10://
     //:NEW_FUNCTION_POINTER_LOADING:2020_12_06:==============://
 
     /** Lets be more condensed about it.        **/

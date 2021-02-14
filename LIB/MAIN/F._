@@ -6,6 +6,8 @@
     #include "./AAC2020_AFTER__WINDOW_OPENS_TASKS._" 
     #include "./AAC2020_BEFORE_WINDOW_OPENS_TASKS._"
 
+    #include "./AAC2020_Sync_With_GPU._"
+
 //:==============================:REDUCE_CLUTTER_IN_MAIN_FILE://
 //:DONT_YOU_FUCKING_DARE_DO_THIS:============================://
 
@@ -277,12 +279,14 @@
                 AAC2020_GENTDOW_InitNone   //:  31  # LIBCHAN://
                 AAC2020_GENTUPP_InitNone   //:  32  # LIBCHAN://
                 AAC2020_POLYOGL_InitNone   //:  33  # LIBCHAN://
-                AAC2020_TAUDIRT_InitNone   //:  34  # LIBCHAN://
-                AAC2020_TAUDEPO_Init       //:  35  # LIBCHAN://
-                AAC2020_TAUTYPE_InitNone   //:  36  # LIBCHAN://
-                AAC2020_TAUSYNC_InitNone   //:  37  # LIBCHAN://
-                AAC2020_PAINT5D_Init       //:  38  # LIBCHAN://
-                AAC2020_P5D1OGL_Init       //:  39  # LIBCHAN://
+                AAC2020_GPUWIRE_InitNone   //:  34  # LIBCHAN://
+                AAC2020_GPUVIEW_Init       //:  35  # LIBCHAN://
+                AAC2020_TAUDIRT_InitNone   //:  36  # LIBCHAN://
+                AAC2020_TAUDEPO_Init       //:  37  # LIBCHAN://
+                AAC2020_TAUTYPE_InitNone   //:  38  # LIBCHAN://
+                AAC2020_TAUSYNC_InitNone   //:  39  # LIBCHAN://
+                AAC2020_PAINT5D_Init       //:  40  # LIBCHAN://
+                AAC2020_P5D1OGL_Init       //:  41  # LIBCHAN://
                 
             ################################# #_DO_NOT_EXTRACT_#
             *** ******************************************** **/
@@ -304,12 +308,14 @@
             FMACROS_GENTDOW_InitNone( 0 ); //:  31  # LIBCHAN://
             FMACROS_GENTUPP_InitNone( 0 ); //:  32  # LIBCHAN://
             FMACROS_POLYOGL_InitNone( 0 ); //:  33  # LIBCHAN://
-            FMACROS_TAUDIRT_InitNone( 0 ); //:  34  # LIBCHAN://
-            FMACROS_TAUDEPO_Init(     X ); //:  35  # LIBCHAN://
-            FMACROS_TAUTYPE_InitNone( 0 ); //:  36  # LIBCHAN://
-            FMACROS_TAUSYNC_InitNone( 0 ); //:  37  # LIBCHAN://
-            FMACROS_PAINT5D_Init(     X ); //:  38  # LIBCHAN://
-            FMACROS_P5D1OGL_InitNone( 0 ); //:  39  # LIBCHAN://
+            FMACROS_GPUWIRE_InitNone( 0 ); //:  34  # LIBCHAN://
+            FMACROS_GPUVIEW_Init(     X ); //:  35  # LIBCHAN://
+            FMACROS_TAUDIRT_InitNone( 0 ); //:  36  # LIBCHAN://
+            FMACROS_TAUDEPO_Init(     X ); //:  37  # LIBCHAN://
+            FMACROS_TAUTYPE_InitNone( 0 ); //:  38  # LIBCHAN://
+            FMACROS_TAUSYNC_InitNone( 0 ); //:  39  # LIBCHAN://
+            FMACROS_PAINT5D_Init(     X ); //:  40  # LIBCHAN://
+            FMACROS_P5D1OGL_InitNone( 0 ); //:  41  # LIBCHAN://
             #undef  X
         #endif //:- - - - - - - - - - - - - - - - - - - - - -://
         #if( AAC2020_INCLUDE_GINAWIN >= 1 )  //:- - - - - - -://
@@ -351,6 +357,7 @@
                     *** ************************************ **/
 
                         AAC2020_HandleInput( 0x00 ); 
+                        AAC2020_Sync_With_GPU();
                         AAC2020_GameLoop();
 
                     /** ************************************ **/

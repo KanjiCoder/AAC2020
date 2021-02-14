@@ -166,6 +166,16 @@
               #error "[OUT_OF_ORDER:AAC2020_INCLUDE_POLYOGL]"
 #endif
 #endif
+#if( 0                           != AAC2020_INCLUDE_GPUWIRE )
+#if( macro_libchan_order_GPUWIRE != AAC2020_INCLUDE_GPUWIRE )
+              #error "[OUT_OF_ORDER:AAC2020_INCLUDE_GPUWIRE]"
+#endif
+#endif
+#if( 0                           != AAC2020_INCLUDE_GPUVIEW )
+#if( macro_libchan_order_GPUVIEW != AAC2020_INCLUDE_GPUVIEW )
+              #error "[OUT_OF_ORDER:AAC2020_INCLUDE_GPUVIEW]"
+#endif
+#endif
 #if( 0                           != AAC2020_INCLUDE_TAUDIRT )
 #if( macro_libchan_order_TAUDIRT != AAC2020_INCLUDE_TAUDIRT )
               #error "[OUT_OF_ORDER:AAC2020_INCLUDE_TAUDIRT]"
@@ -298,22 +308,28 @@
     #if( macro_libchan_order_POLYOGL !=     33   )
     #error "[TAIL_ORDER_FAIL:POLYOGL]"  //: -- ://
     #endif                              //: -- ://
-    #if( macro_libchan_order_TAUDIRT !=     34   )
+    #if( macro_libchan_order_GPUWIRE !=     34   )
+    #error "[TAIL_ORDER_FAIL:GPUWIRE]"  //: -- ://
+    #endif                              //: -- ://
+    #if( macro_libchan_order_GPUVIEW !=     35   )
+    #error "[TAIL_ORDER_FAIL:GPUVIEW]"  //: -- ://
+    #endif                              //: -- ://
+    #if( macro_libchan_order_TAUDIRT !=     36   )
     #error "[TAIL_ORDER_FAIL:TAUDIRT]"  //: -- ://
     #endif                              //: -- ://
-    #if( macro_libchan_order_TAUDEPO !=     35   )
-    #error "[TAIL_ORDER_FAIL:TAUDEPO]"  //:    ://
-    #endif                              //:    ://
-    #if( macro_libchan_order_TAUTYPE !=     36   )
-    #error "[TAIL_ORDER_FAIL:TAUTYPE]"  //: xx ://
-    #endif                              //: xx ://
-    #if( macro_libchan_order_TAUSYNC !=     37   )
-    #error "[TAIL_ORDER_FAIL:TAUSYNC]"  //: xx ://
-    #endif                              //: xx ://
-    #if( macro_libchan_order_PAINT5D !=     38   )
-    #error "[TAIL_ORDER_FAIL:PAINT5D]"  //: xx ://
-    #endif                              //: xx ://
-    #if( macro_libchan_order_P5D1OGL !=     39   )
+    #if( macro_libchan_order_TAUDEPO !=     37   )
+    #error "[TAIL_ORDER_FAIL:TAUDEPO]"  //: -- ://
+    #endif                              //: -- ://
+    #if( macro_libchan_order_TAUTYPE !=     38   )
+    #error "[TAIL_ORDER_FAIL:TAUTYPE]"  //: -- ://
+    #endif                              //: -- ://
+    #if( macro_libchan_order_TAUSYNC !=     39   )
+    #error "[TAIL_ORDER_FAIL:TAUSYNC]"  //: -- ://
+    #endif                              //: -- ://
+    #if( macro_libchan_order_PAINT5D !=     40   )
+    #error "[TAIL_ORDER_FAIL:PAINT5D]"  //: -- ://
+    #endif                              //: -- ://
+    #if( macro_libchan_order_P5D1OGL !=     41   )
     #error "[TAIL_ORDER_FAIL:P5D1OGL]"
     #endif
 
@@ -359,12 +375,13 @@
     #undef  macro_libchan_order_GENTDOW   //:----## 31 ##----://
     #undef  macro_libchan_order_GENTUPP   //:----## 32 ##----://
     #undef  macro_libchan_order_POLYOGL   //:----## 33 ##----://
-    #undef  macro_libchan_order_TAUDIRT   //:----## 34 ##----://
-    #undef  macro_libchan_order_TAUDEPO   //:----## 35 ##----://
-    #undef  macro_libchan_order_TAUTYPE   //:----## 36 ##----://
-    #undef  macro_libchan_order_TAUSYNC   //:----## 37 ##----://
-    #undef  macro_libchan_order_PAINT5D   //:----## 38 ##----://
-    #undef  macro_libchan_order_P5D1OGL   //:----## 39 ##----://
+    #undef  macro_libchan_order_GPUVIEW   //:----## 34 ##----://
+    #undef  macro_libchan_order_TAUDIRT   //:----## 35 ##----://
+    #undef  macro_libchan_order_TAUDEPO   //:----## 36 ##----://
+    #undef  macro_libchan_order_TAUTYPE   //:----## 37 ##----://
+    #undef  macro_libchan_order_TAUSYNC   //:----## 38 ##----://
+    #undef  macro_libchan_order_PAINT5D   //:----## 39 ##----://
+    #undef  macro_libchan_order_P5D1OGL   //:----## 40 ##----://
  
     //:==========:DONT_POLLUTE_OTHER_PEOPLES_CODE_WITH_MACROS://
 
