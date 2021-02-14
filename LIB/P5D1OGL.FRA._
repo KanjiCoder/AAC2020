@@ -1303,10 +1303,19 @@
                 
 
             UV4 uv4_pix;
-            uv4_pix.x = ( u32_pix >> 24 ) & UFF ;
-            uv4_pix.y = ( u32_pix >> 16 ) & UFF ;
-            uv4_pix.z = ( u32_pix >>  8 ) & UFF ;
-            uv4_pix.w = ( u32_pix >>  0 ) & UFF ;
+
+            if( cuv_i_x >= (256-1) || cuv_i_y >= (256-1) ){
+            
+                uv4_pix.x =MAK_U32( 128 ); //:RED
+                uv4_pix.y =MAK_U32( 128 ); //:GREEN
+                uv4_pix.z =MAK_U32( 128 ); //:BLUE
+                uv4_pix.w =MAK_U32( 255 ); //:ALPHA
+            }else{
+                uv4_pix.x = ( u32_pix >> 24 ) & UFF ;
+                uv4_pix.y = ( u32_pix >> 16 ) & UFF ;
+                uv4_pix.z = ( u32_pix >>  8 ) & UFF ;
+                uv4_pix.w = ( u32_pix >>  0 ) & UFF ;
+            };;
 
 
             /** @VID_IID[ 0116 ]TIME[ 01:33:00 ] ******* **/
