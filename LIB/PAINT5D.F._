@@ -2868,12 +2868,67 @@
 #define DEX_EDI_paint5d ( 1 )                         //: 03 ://
 #define         KEY_P5D ( AAC2020_KEYBIND.PAINT5D )   //: 04 ://
 #define             LOG   aac2020_paint5d_Info_any    //: 05 ://
+#define             ERR   aac2020_paint5d_Halt        //: 06 ://
     
     I32
     aac2020_paint5d_KeyInn( signed char chr_key )
     {
         I32 res_var =( 0 );
 
+        //:DEBUG_VARIABLE_TEST:------------------------------://
+        #define PUT AAC2020_TAUDEPO_Put
+        #define TAU AAC2020_TAUDEPO.TAU_015
+        #define SUB AAC2020_TAUDEPO.PAINT5D
+        #define D_1 AAC2020_TAUDEPO.P5D_D_1
+        #define D_2 AAC2020_TAUDEPO.P5D_D_2
+        #define D_3 AAC2020_TAUDEPO.P5D_D_3
+        #define D_4 AAC2020_TAUDEPO.P5D_D_4
+        #define INN x_0,x_1,y_0,y_1
+
+            if( (0+chr_key) == KEY_P5D.p5d_bug ){
+
+                /** @VID_IID[ 0135 ]TIME[ 01:33:50 ]         **/
+                /** Hope to see colored pixels in corners    **/
+                /** when debugging paint5d taudepo memory.   **/
+            
+                U32 x_0; U32 y_0;
+                U32 x_1; U32 y_1;
+
+                x_0 =( 0xFF0000FF ); //:RED
+                x_1 =( 0x00FF00FF ); //:GREEN
+                y_0 =( 0x0000FFFF ); //:BLUE
+                y_1 =( 0xFFFFFFFF ); //:ALPHA
+                PUT( TAU,SUB,D_1,INN );
+
+                x_0 =( 0xFF00FFFF ); //:MAGENTA
+                x_1 =( 0xFFFF00FF ); //:YELLOW
+                y_0 =( 0x00FFFFFF ); //:CYAN
+                y_1 =( 0xFFFFFFFF ); //:WHITE
+                PUT( TAU,SUB,D_2,INN );
+
+                x_0 =( 0x880000FF ); //:RED     : DARK
+                x_1 =( 0x008800FF ); //:GREEN   : DARK
+                y_0 =( 0x000088FF ); //:BLUE    : DARK
+                y_1 =( 0x888888FF ); //:ALPHA   : DARK
+                PUT( TAU,SUB,D_3,INN );
+
+                x_0 =( 0x880088FF ); //:MAGENTA : DARK
+                x_1 =( 0x888800FF ); //:YELLOW  : DARK
+                y_0 =( 0x008888FF ); //:CYAN    : DARK
+                y_1 =( 0x888888FF ); //:WHITE   : DARK
+                PUT( TAU,SUB,D_4,INN );
+
+            };;
+
+        #undef  PUT  //:--------------------------------: 01 ://
+        #undef  TAU  //:--------------------------------: 02 ://
+        #undef  SUB  //:--------------------------------: 03 ://
+        #undef  D_1  //:--------------------------------: 04 ://
+        #undef  D_2  //:--------------------------------: 05 ://
+        #undef  D_3  //:--------------------------------: 06 ://
+        #undef  D_4  //:--------------------------------: 07 ://
+        #undef  INN  //:--------------------------------: 08 ://
+        //:------------------------------:DEBUG_VARIABLE_TEST://
         //:SAVE_PAINT5D_SYSTEM_DATA_TO_DISK_AS_PNG_FILE:-----://
 
             if( chr_key == KEY_P5D.p5d_out ){
@@ -2895,11 +2950,26 @@
         //:-----:SAVE_PAINT5D_SYSTEM_DATA_TO_DISK_AS_PNG_FILE://
         //:OVERWRITE_EDITOR_WITH_DEFAULT_AUSETS:-------------://
             if( chr_key == KEY_P5D.p5d_pat ){
+                /** **************************************** ***
+                @VID_IID[ 0135 ]TIME[ 00:26:23 ]
+                This is where data sets for paint5d are
+                loaded into the rendering engine.
+                Paint5D is responsible for creating the
+                "Terminal Tile Designs". Meaning these
+                designs are NOT fractal as once you get
+                down to this depth you cannot dive any
+                deeper. Hower. These tiles do have different
+                layers and tile sizes that give them a
+                fractal look dispite not being fractal.
+
+                @TILE_LOADING@
+                @DATA_LOADING@
+                *** **************************************** **/
 
             //: aac2020_paint5d_DrawDefaultAuset_001(  );
-            //: AAC2020_DUMPASS_png_001_RAM_paint5d( 0 );
+                AAC2020_DUMPASS_png_001_RAM_paint5d( 0 );
             //: AAC2020_DUMPASS_png_002_RAM_paint5d( 0 );
-                AAC2020_GENTDOW_aya_RAM_paint5d( 0 );
+            //: AAC2020_GENTDOW_aya_RAM_paint5d( 0 );
 
                 AAC2020_PIXPUSH_t2d_PAINT5D(           );
 
@@ -2921,7 +2991,16 @@
                 /** via shader code.                         **/
                 assert( 15 == AAC2020_TAUDEPO.TAU_015 );
                 assert(  1 == AAC2020_TAUDEPO.PAINT5D );
-                assert(  8 == AAC2020_TAUDEPO.P5D_A_D );
+                    if(  9 != AAC2020_TAUDEPO.P5D_A_D ){
+                    /** ************************************ ***
+                        If this gets tripped make sure
+                        To refactor the GLSL shader code in:
+                        FILE[     P5D1OGL.FRA._          ]
+                        CTRL_F[ @_HARDCODED[ P5D_A_D ]_@ ]
+                    ** ************************************* **/
+                        ERR("[REFACTORED:P5D_A_D:VALUE?]");
+
+                    };;
 
                 AAC2020_TAUDEPO_Get( 
                     AAC2020_TAUDEPO.TAU_015
@@ -3126,6 +3205,7 @@
 #undef  DEX_EDI_paint5d  //:----------------------------: 03 ://
 #undef          KEY_P5D  //:----------------------------: 04 ://
 #undef              LOG  //:----------------------------: 05 ://
+#undef              ERR  //:----------------------------: 06 ://
 //:================================:KEYBOARD_HANDLER:(KeyInn)://
 //:SUB_SYSTEM_BACKUP_CODE:===================================://
 #define U08 uint8_t /** GCC: <stdint.h> **/

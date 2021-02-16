@@ -66,6 +66,10 @@
         ## code from C99 code.                                ##
         ########################################################
 
+        INN="./LIB/FRAGCOM.FRA._"
+        OUT="./LIB/FRAGCOM.FRA.STRING._"
+        awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT
+
         INN="./LIB/GPUVIEW.FRA._"
         OUT="./LIB/GPUVIEW.FRA.STRING._"
         awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT

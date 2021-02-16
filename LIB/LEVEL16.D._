@@ -3,6 +3,15 @@
     LONG__NAME: LEVEL16  (16 levels packed into memory system)
     SHORT_NAME:     L16
 
+    PROBLEM... This system does NOT account for tile
+    sizes larger than the UNIT game level map tile size.
+    We should have both COARSER and FINER details in the
+    design to make things interesting.
+    WAIT... Larger tile values could just be a rendering 
+    feature...
+    Just... Make something... And if it doesn't work...
+    you at least have something to build upon.
+
     |<------------ 512 ------------>|   
     |<---- 256 ---->|               |
     |<-128->|       |               |
@@ -259,6 +268,9 @@
     BOT : BOT Mid Room # 8 #
     B_R : Bot Rig Room # 9 #
 
+    HOR : Hor Con Room #10 #
+    VER : Ver Con Room #11 #
+
     000 : Un-allocated. Not sure what to use for yet.
 
     |<------------ 512 ------------>|
@@ -314,3 +326,26 @@
     but in game there are always multiple level
     maps packed into a 512x512 allocation called
     AAC2020_PIXNAME_level16
+
+
+
+
+
+
+    @VID_IID[ 0135 ]TIME[ 00:13:42 ]
+    Sub tile features allow for things like railings
+    and other fine details that make the level
+    design look less childish.
+    +...+==---+---===---+---===---+---===---+---==+...+
+    |   | +-------| +-------| +-------| +-------+ |   |
+    |   | |       | |       | |       | |       | |   |
+    =   | |       | |       | |       | |       | |   =
+    |   | |       | |       | |       | |       | |   |
+    |   | |       | |       | |       | |       | |   |
+    +---===---+---===---+---===---+---===---+---===---+
+    |         |         |         |         |         |
+    |         |         |         |         |         |
+    =         =         =         =         =         =
+    |         |         |         |         |         |
+    |         |         |         |         |         |
+    +---===---+---===---+---===---+---===---+---===---+

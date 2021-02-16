@@ -9,6 +9,141 @@
     //[   VIDEO COMMENT TIMESTAMP EXAMPLE   ]//
 *** ******************************************************** ***
 
+
+@_PAIRED_COMMENT_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@PAIRED_COMMENT@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @_PAIRED_COMMENT_@    :
+    @_PAR_COM_@ @PAR_COM@ :
+    @_PARCOM_@   @PARCOM@ :
+    
+        A comment that is supposed to be paired with
+        another comment in another block of code somewhere.
+        This OTHER block of code may be in a seperate file
+        or it may be in the same file.
+
+        But the point is that.... There is ANOTHER
+        block of code somewhere and you really need to
+        look at that other block of code to fully
+        understand the comment you are looking at.
+
+        @VID_IID[ 0136 ]TIME[ 00:56:42 ]
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@_PAIRED_COMMENT_@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@PAIRED_COMMENT@ 
+#_FUCK_THIS_REMAPPING_FORMULA_REMOVED_##########################
+
+        /** ******************************************** ***
+            1. Convert s_x to local within [ s[x|y][0|1] ]
+            2. Apply correct scalefactor to make local
+            to SOURCE a local to DEST.
+            3. Re-add the orgin we took away to make
+            local to the DEST block.
+            
+            DST / SRC == SCALE_FACTOR
+            DST       == SCALE_FACTOR * SRC
+            ( SCALE_FACTOR == [ f_x , f_y ] )
+            
+            sx0              dx0  
+            sy0              dy0  
+            +---------+      +---------+
+            |(REC_SRC)|      |(REC_DST)|
+            |   s_x >>>>>>>>>>>> d_x   |
+            |   s_y   |      |   d_y   |
+            +---------+      +---------+
+                    sx1              dx1
+                    sy1              dy1
+
+                        [s_x,s_y]
+                           |||          
+            REC_SRC: [ 0 ][ 1 ][ 2 ]       
+            REC_DST: [ 0 ][ 1 ][ 2 ]   [ 3 ]  [ 4 ][ 5 ][ 6 ]
+                      SX0       SX1     |||             [DX1]
+                      SY0       SY1  [d_x,d_y]          [DY1]
+                      |||
+                      DX0
+                      DY0
+
+    
+            @VID_IID[ 0135 ]TIME[ 06:46:00 ]FILLING_OUT_FORMULA
+
+                Offset yeids off by 1, but if we
+                remove the[ +1.0 ]we get exactly 2 
+                instead of 2.333
+
+                f_x =( (  6  -  0  + 1.0) / (  2  -  0 + 1.0) );
+                f_y =( (  6  -  0  + 1.0) / (  2  -  0 + 1.0) );
+
+                f_x =( 2.333 );
+                f_y =( 2.333 );
+
+            @VID_IID[ 0135 ]TIME[ 06:54:23 ]FILLING_OUT_FORMULA
+            
+                d_x = floor(  0 + ((  1  -  0 ) * 2.333 ));
+                d_y = floor(  0 + ((  1  -  0 ) * 2.333 ));
+
+        *** ******************************************** **/
+        //: F32 f_x; /**Scale Factor SRC-to-DST x-axis **/
+        //: F32 f_y; /**Scale Factor SRC-to-DST y-axis **/
+
+        #define O_O ( 1.0 ) //:WAS_WRONG@VID_IID[ 0134 ] ://
+        #define Z_Z ( 0.0 ) //:NO_OFFSET@VID_IID[ 0135 ] ://
+                            //:         TIME[ 07:00:00 ] ://
+                            //:         TIME[ 07:08:23 ] ://
+        
+        //:ORIGINAL ATTEMPT WITH ORIGINAL DIAGRAM:
+        f_x =( ( DX1 - DX0 + O_O) / ( SX1 - SX0 + O_O) );
+        f_y =( ( DY1 - DY0 + O_O) / ( SY1 - SY0 + O_O) );
+        d_x = MAK_I32( DX0 + (( S_X - SX0 ) * f_x ) );
+        d_y = MAK_I32( DY0 + (( S_Y - SY0 ) * f_y ) );
+
+        #undef  Z_Z
+        #undef  O_O
+
+##########################_FUCK_THIS_REMAPPING_FORMULA_REMOVED_#
+@SQUARE_RECTANGLE_PROBLEM@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    #_SQUARE_RECTANGLE_PROBLEM_#  << WRONG___TAG
+    #SQUARE_RECTANGLE_PROBLEM#    << WRONG___TAG
+
+    @_SQUARE_RECTANGLE_PROBLEM_@  << CORRECT_TAG
+    @SQUARE_RECTANGLE_PROBLEM@    << CORRECT_TAG
+
+        A square is a always a rectangle. But a rectangle
+        may or may not be a square.
+
+        I tend to use this comparison a lot, so making a
+        hashtag for this analogy.
+
+        Uncertain if this comment tag fits more under
+        "@" or "#" so put it under both.
+
+        Hmm... makes more sense as a "@" because it
+        can apply to a varied array of comments not
+        just a specific extracted comment.
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@SQUARE_RECTANGLE_PROBLEM@
+@DATA_LOADING@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @_DATA_LOADING_@ :
+        Like @_TILE_LOADING_@ but more generic.
+        @_TILE_LOADING_@  __IS__ @_DATA_LOADING_@
+
+        BUT...
+
+        @_DATA_LOADING_@  may or may not be @_TILE_LOADING_@
+
+        EXAMPLE_OF[ @SQUARE_RECTANGLE_PROBLEM@ ]
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@DATA_LOADING@
+@TILE_LOADING@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @_TILE_LOADING_@ :
+        A section of code responsible for loading the
+        data for a tile set of some sort. Using this tag
+        so I can easily find things in the future hopefully.
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@TILE_LOADING@
 @NOT_IMP@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @_NOT_IMP_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 

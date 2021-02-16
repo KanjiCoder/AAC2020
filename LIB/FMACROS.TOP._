@@ -37,7 +37,7 @@ _Static_assert( AAC2020_INCLUDE_GRAQUAD == 20 ,       "20");
 //:==================================================:GRAQUAD://
 //:TAUDEPO:==================================================://
 #if(            AAC2020_INCLUDE_TAUDEPO >=  1 )
-_Static_assert( AAC2020_INCLUDE_TAUDEPO == 37 ,       "37");
+_Static_assert( AAC2020_INCLUDE_TAUDEPO == 38 ,       "38");
 
     #define  FMACROS_TAUDEPO_LoopTick   AAC2020_TAUDEPO_LoopTick
 #endif
@@ -48,7 +48,7 @@ _Static_assert( AAC2020_INCLUDE_TAUDEPO == 37 ,       "37");
 //:==================================================:TAUDEPO://
 //:TAUSYNC:==================================================://
 #if(            AAC2020_INCLUDE_TAUSYNC >=  1 )
-_Static_assert( AAC2020_INCLUDE_TAUSYNC == 39 ,       "39");
+_Static_assert( AAC2020_INCLUDE_TAUSYNC == 40 ,       "40");
 
     #define  FMACROS_TAUSYNC_LoopTick   AAC2020_TAUSYNC_LoopTick
 #endif
@@ -96,6 +96,7 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 39 ,       "39");
     GENTDOW
     GENTUPP
     POLYOGL
+    FRAGCOM
     GPUWIRE
     TAUDIRT
     TAUTYPE
@@ -263,6 +264,14 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 39 ,       "39");
 #define      FMACROS_POLYOGL_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:POLYOGL://
+//:InitNone:FRAGCOM:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_FRAGCOM >=  1 )
+#define      FMACROS_FRAGCOM_InitNone AAC2020_FRAGCOM_InitNone
+#endif
+#if( AAC2020_INCLUDE_FRAGCOM == 0 )
+#define      FMACROS_FRAGCOM_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:FRAGCOM://
 //:InitNone:GPUWIRE:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_GPUWIRE >=  1 )
 #define      FMACROS_GPUWIRE_InitNone AAC2020_GPUWIRE_InitNone

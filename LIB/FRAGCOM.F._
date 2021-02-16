@@ -1,0 +1,414 @@
+//:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=====================://
+    void 
+    aac2020_fragcom_Halt( const char* msg_err )
+    {
+        printf("[FATAL_ERROR:aac2020_fragcom]:%s\n", msg_err );
+        fflush(stdout);
+        exit( 123 );
+    }
+//:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+//:LOG_AFTER_HALT:===========================================://
+    void
+    aac2020_fragcom_Info_any(
+        const char* str_fmt
+    ,   void*       dat_any   
+    )
+    { if( AAC2020_SILENCE.FRAGCOM <= 0 ){
+
+        /** Same Line As Next Printf **/
+        printf("[fragcom_log]....(   " ); fflush( stdout );
+        printf( str_fmt , dat_any      ); fflush( stdout );
+        printf(               "   )\n" ); fflush( stdout );
+
+    };; }
+//:===========================================:LOG_AFTER_HALT://
+//:INIT_NONE:================================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+    U32
+    AAC2020_FRAGCOM_InitNone( U32 u32 ){
+        if( u32 ){ /** reserved for future use **/ };
+
+        if(     aac2020_fragcom_unit_test_ran_or_running <= 0 ){
+            U32 AAC2020_FRAGCOM_UnitTest( U32 );
+                AAC2020_FRAGCOM_UnitTest( 0x0 );
+        };;
+        return( 0x00 );
+    }
+#undef  U32
+//:================================================:INIT_NONE://
+//:UNIT_TEST_SECTION:========================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/  //:-------: 01 ://
+#define I32  int32_t /** GCC: <stdint.h> **/  //:-------: 02 ://
+#define F32 float                             //:-------: 03 ://
+#define ERR aac2020_fragcom_Halt              //:-------: 04 ://
+#define E_V extern void                       //:-------: 05 ://
+#define LOG aac2020_fragcom_Info_any          //:-------: 06 ://
+#define IV2 struct AAC2020_POLYOGL_IV2        //:-------: 07 ://
+#define FV4 struct AAC2020_POLYOGL_FV4        //:-------: 08 ://
+
+    U32
+    AAC2020_FRAGCOM_UnitTest( U32 u32 ){
+        LOG("[AAC2020_FRAGCOM_UnitTest:BEG]",((void*)0));
+
+        if( u32 ){ /**Reserved_For_Future_Use**/ };
+        aac2020_fragcom_unit_test_ran_or_running=( 1 );
+
+        E_V aac2020_fragcom_UTC_rec_src_MAP_rec_dst( void );
+            aac2020_fragcom_UTC_rec_src_MAP_rec_dst( );
+
+        //+ NO SUCH THING. @VID_IID[ 0136 ]TIME[ 03:44:23 ]  +//
+        //- AAC2020_FRAGCOM_Main( fv4 );-------------------- -//
+
+        LOG("[AAC2020_FRAGCOM_UnitTest:END]",((void*)0));
+        return( 0x00 );
+    }
+
+    E_V 
+    aac2020_fragcom_UTC_rec_src_MAP_rec_dst( void )
+    {
+    #define NUM_TES (53 ) /** Number Of Tests            **/
+    #define NUM_COL (12 ) /** Number Of Columns Per Test **/
+         
+        //:OUTPUT_VARIABLE_FOR_EACH_TEST:
+        IV2     dst; //:<-- DESTINATION.
+
+        //:SOURCE:          DEST:
+        I32     s_x;        I32     d_x; //:<--COORD:X
+        I32     s_y;        I32     d_y; //:<--COORD:Y
+
+        I32     sx0;        I32     dx0; //:RECT_BOUNDS:LEF
+        I32     sx1;        I32     dx1; //:RECT_BOUNDS:RIG
+        I32     sy0;        I32     dy0; //:RECT_BOUNDS:TOP
+        I32     sy1;        I32     dy1; //:RECT_BOUNDS:BOT
+
+        I32 t_i; //:Test index
+        I32 mti; //:Max_Test_Index
+        I32 bas; //:Base address of current test data.
+
+        I32 tab_utc[ NUM_TES * NUM_COL ]={
+    //: 001 002   003 004 005 006   007 008 009 010   011 012    
+    //: 000 001   002 003 004 005   006 007 008 009   010 011 
+    //: s_x,s_y   sx0,sy0,sx1,sy1   dx0,dy0,dx1,dy1   d_x d_y
+        0x0,0x0 , 0x0,0x0,0x0,0x0 , 0x0,0x0,0x0,0x0 , 0x0,0x0
+               //:LOW|LOW|UPP|UPP | LOW|LOW|UPP|UPP ://
+
+        //:2_Basic_Cases:X_AND_Y_IDENTICAL:   t_i==[ 1, 2   ]://
+    ,   0x0,0x0 , 0x0,0x0,511,511 , 0x0,0x0,511,511 , 0x0,0x0
+    ,   256,256 , 0x0,0x0,511,511 , 0x0,0x0,511,511 , 256,256
+
+        //:2_Basic_Cases:ISOLATE_X:           t_i==[ 3, 4   ]://
+    ,   0x0,0x0 , 0x0,0x0,511,0x0 , 0x0,0x0,511,0x0 , 0x0,0x0
+    ,   256,0x0 , 0x0,0x0,511,222 , 0x0,0x0,511,222 , 256,0x0
+
+        //:2_Basic_Cases:ISOLATE_Y:           t_i==[ 5, 6   ]://
+    ,   0x0,0x0 , 0x0,0x0,511,511 , 0x0,0x0,0x0,511 , 0x0,0x0
+    ,   0x0,256 , 0x0,0x0,222,511 , 0x0,0x0,222,511 , 0x0,256
+
+        //:ORG_ZER:ORiGin_is_ZERo:
+        //:Remap_Using_1X1_Rectangles:ORG_ZER:t_i==[ 7, 8, 9]://
+    ,   0x0,0x0 , 0x0,0x0,0x0,0x0 , 511,511,511,511 , 511,511
+    ,   0x0,0x0 , 0x0,0x0,0x0,0x0 , 511,0x0,511,0x0 , 511,0x0
+    ,   0x0,0x0 , 0x0,0x0,0x0,0x0 , 0x0,511,0x0,511 , 0x0,511
+
+        //:NOZ_REC:NOnZero_RECts:
+        //:Remap_Using_1X1_Rectangles:NOZ_REC:t_i==[10,11,12]://
+    ,   111,222 , 111,111,222,222 , 333,333,444,444 , 333,444
+    ,   222,333 , 222,222,333,333 , 444,444,555,555 , 444,555
+    ,   333,444 , 333,333,444,444 , 555,555,666,666 , 555,666
+
+        //:Squash_Stretch_But_Both_Rects_At_Zero_Comma_Zero:
+        //:      INN
+        //:[ 0 ][ 1 ][ 2 ]           
+        //:[ 0 ][ 1 ][ 2 ]   [ 3 ]  [ 4 ][ 5 ][ 6 ]
+        //:                   OUT             t_i==[13,14,15]://
+        //:       sx0,sy0,sx1,sy1   dx0,dy0,dx1,dy1   d_x,d_y
+    ,     1,  1 , 0x0,0x0,  2,  2 , 0x0,0x0,  6,  6 ,   3,  3
+    ,     1,  1 , 0x0,0x0,  2,  2 , 0x0,0x0,  6,  6 ,   3,  3
+    ,     1,  1 , 0x0,0x0,  2,  2 , 0x0,0x0,  6,  6 ,   3,  3
+
+        //:Final_Test_Using_Current_Use_Case:(2020_02_15):
+        //:@VID_IID[ 0136 ]TIME[ 00:26:00 ] 
+        //:                                         t_i==[16]://
+    ,   0x0,0x0 , 0x0,0x0,511,511 , 416,384,447,415 , 416,384
+     
+        /** @_PAIRED_COMMENT_@ ............. **/
+        /** @VID_IID[ 0136 ]TIME[ 00:53:23 ] **/    
+        /** #_PARCOM_2021_GPUVIEW_ASSERTS_#  **/
+        //:TESTS[ T_L , T_R , B_R , B_L ]  t_i==[17,18,19,20]://
+    ,   0x0,0x0 , 0x0,0x0,511,511 , 416,384,447,415 , 416,384
+    ,   511,0x0 , 0x0,0x0,511,511 , 416,384,447,415 , 447,384
+    ,   0x0,511 , 0x0,0x0,511,511 , 416,384,447,415 , 416,415
+    ,   511,511 , 0x0,0x0,511,511 , 416,384,447,415 , 447,415
+
+        /** ************************************************ **/
+        /** @VID_IID[ 0136 ]TIME[ 06:11:42 ]FIGURE_IT_OUT!   **/
+        /** Need to make sure that:                          **/
+        /** 1: MAP : SMALL range to LARGE range.( STRETCH)   **/
+        /** 2: MAP : LARGE range to SMALL range.(   SQUASH)  **/
+        /** 3: MAP :  SAME range to  SAME range.(TRANSLATE)  **/
+        /** ************************************************ **/
+
+        #error INSERT_ABOVE_3_TEST_CASES_BELOW 
+
+        #define X_X 0x0 /** FILL OUT THESE WITH CORRECT VALS **/
+        #define Y_Y 0x0 /** FILL OUT THESE WITH CORRECT VALS **/
+
+
+
+        /** ************************************************ ***
+        //+ @VID_IID[ 0136 ]TIME[ 05:00:32 ]                 +//
+        //+ Try our ACTUAL scenario with easy to comprehend  +//
+        //+ numbers first.                                   +//
+        //+                                                  +//
+        //+ SCREEN_SIZE ==> 900 x 900 pixels                 +//
+        //+ MAPPING__TO ==> A 100x100 block in dead center   +//
+        //+ ------------------------------------------------ +//
+        //| We want to sample each pixel of the 900x900      |//
+        //| screen and figure out what pixel of the          |//
+        //| 100x100 texture memory subsection at             |//
+        //| [400,400]-to-[499,499]to render at that pixel    |//
+        //| coordinate.                                      |//    
+        //|                                                  |//
+        //| Trying to create a zoom-in effect.               |//
+        //+ ------------------------------------------------ +//
+        //+       [1][2][3]   [ 4 ][ 5 ][ 6 ]   [7][8][9]    +//
+        //+                         ^^^                      +//
+        //+                          |                       +//
+        //+ |<------- 100 -------->| |  <-- TEXTURE:WID      +//
+        //+ |<-- 50 -->|           | |                       +//
+        //+ |   ____   |    ____   |_|                       +//
+        //+ [21]    [22][25]    [26] |                       +//
+        //+ |          ||          | |                       +//
+        //+ |   T__L   ||   T__R   | |                       +//
+        //+ |          ||          | |                       +//
+        //+ [23]____[24][27]____[28]  [ 5 ]starts at: 400    +//
+        //+ [29]    [30][33]    [34]  [ 5 ]ends   at: 499    +//
+        //+ |          ||          | |                       +//
+        //+ |   B__L   ||   B__R   | |                       +//
+        //+ |          ||          | |                       +//
+        //+ [31]____[32][35]____[36]_|                       +//
+        //+ |<--450--->|             |                       +//
+        //+ |<---------900---------->|  <-- STRETCHED:WID    +//
+        *** ************************************************ **/
+
+        //+     ____    :::::::::::::::::::::::::::::::::::::+//
+        //+ [21]    [22]                                     +//
+        //+ |          |                                     +//
+        //+ |   T__L   | TOP_LEF:          t_i[ 21,22,23,24 ]+//
+        //+ |          |                                     +//
+        //+ [23]____[24]                                     +//
+        //+::::::::::::::::::::::::::::::::::::::::::::::::::+//
+    ,     0,  0 , 0x0,0x0,899,899 , 400,400,499,499 , 400,400
+    ,   449,  0 , 0x0,0x0,899,899 , 400,400,499,499 , 449,400
+    ,     0,449 , 0x0,0x0,899,899 , 400,400,499,499 , 400,449
+    ,   449,449 , 0x0,0x0,899,899 , 400,400,499,499 , 449,449
+
+        //+     ____    :::::::::::::::::::::::::::::::::::::+//
+        //+ [25]    [26]                                     +//
+        //+ |          |                                     +//
+        //+ |   T__R   | TOP_RIG:          t_i[ 25,26,27,28 ]+//
+        //+ |          |                                     +//
+        //+ [27]____[28]                                     +//
+        //+::::::::::::::::::::::::::::::::::::::::::::::::::+//
+    ,   450,  0 , 0x0,0x0,899,899 , 400,400,499,499 , 450,400
+    ,   899,  0 , 0x0,0x0,899,899 , 400,400,499,499 , 499,400
+    ,   500,449 , 0x0,0x0,899,899 , 400,400,499,499 , 401,449
+    ,   899,449 , 0x0,0x0,899,899 , 400,400,499,499 , 499,449
+
+        //+     ____    :::::::::::::::::::::::::::::::::::::+//
+        //+ [29]    [30]                                     +//
+        //+ |          |                                     +//
+        //+ |   B__L   | BOT_LEF:          t_i[ 29,30,31,32 ]+//
+        //+ |          |                                     +//
+        //+ [31]____[32]                                     +//
+        //+::::::::::::::::::::::::::::::::::::::::::::::::::+//
+    ,   X_X,Y_Y , 0x0,0x0,899,899 , 400,400,499,499 , X_X,Y_Y
+    ,   X_X,Y_Y , 0x0,0x0,899,899 , 400,400,499,499 , X_X,Y_Y
+    ,   X_X,Y_Y , 0x0,0x0,899,899 , 400,400,499,499 , X_X,Y_Y
+    ,   X_X,Y_Y , 0x0,0x0,899,899 , 400,400,499,499 , X_X,Y_Y
+
+        //+     ____    :::::::::::::::::::::::::::::::::::::+//
+        //+ [33]    [34]                                     +//
+        //+ |          |                                     +//
+        //+ |   B__R   | BOT_RIG:          t_i[ 33,34,35,36 ]+//
+        //+ |          |                                     +//
+        //+ [35]____[36]                                     +//
+        //+::::::::::::::::::::::::::::::::::::::::::::::::::+//
+    ,   X_X,Y_Y , 0x0,0x0,899,899 , 400,400,499,499 , X_X,Y_Y
+    ,   X_X,Y_Y , 0x0,0x0,899,899 , 400,400,499,499 , X_X,Y_Y
+    ,   X_X,Y_Y , 0x0,0x0,899,899 , 400,400,499,499 , X_X,Y_Y
+    ,   X_X,Y_Y , 0x0,0x0,899,899 , 400,400,499,499 , X_X,Y_Y
+
+        /** ************************************************ ***
+        //[ @VID_IID[ 0136 ]TIME[ 04:35:42 ]                 ]//
+        //[ TRANSCRIBING_FROM:SOMETHING_TO_WORK_WITH.PNG     ]//
+        //[                                                  ]//
+        //[ |<-------- 32 -------->|                         ]//
+        //[ |<-- 16 -->|           |                         ]//
+        //[ |   ____   |    ____   |                         ]//
+        //[ [37]    [38][41]    [42] Mapping In Direction:   ]//
+        //[ |          ||          | SCREEN/FRAG ==> TEXTURE ]//
+        //[ |   T__L   ||   T__R   |                         ]//
+        //[ |          ||          |                         ]//
+        //[ [39]____[40][43]____[44]                         ]//
+        //[ [45]    [46][49]    [50]                         ]//
+        //[ |          ||          |                         ]//
+        //[ |   B__L   ||   B__R   |                         ]//
+        //[ |          ||          |                         ]//
+        //[ [47]____[48][51]____[52]                         ]//
+        *** ************************************************ **/
+        //[     ____    :::::::::::::::::::::::::::::::::::::]//
+        //[ [37]    [38]                                     ]//
+        //[ |          |                                     ]//
+        //[ |   T__L   | TOP_LEF:          t_i[ 37,38,39,40 ]]//
+        //[ |          |                                     ]//
+        //[ [39]____[40]                                     ]//
+        //[::::::::::::::::::::::::::::::::::::::::::::::::::]//
+    ,     0,  0 , 0x0,0x0,511,511 , 416,384,447,415 , 416,384
+    ,    15,  0 , 0x0,0x0,511,511 , 416,384,447,415 , 431,384
+    ,   X_X,Y_Y , 0x0,0x0,511,511 , 416,384,447,415 , X_X,Y_Y
+    ,   X_X,Y_Y , 0x0,0x0,511,511 , 416,384,447,415 , X_X,Y_Y
+
+        //[     ____    :::::::::::::::::::::::::::::::::::::]//
+        //[ [41]    [42]                                     ]//
+        //[ |          |                                     ]//
+        //[ |   T__R   | TOP_RIG:          t_i[ 41,42,43,44 ]]//
+        //[ |          |                                     ]//
+        //[ [43]____[44]                                     ]//
+        //[::::::::::::::::::::::::::::::::::::::::::::::::::]//
+    ,   X_X,Y_Y , 0x0,0x0,511,511 , 416,384,447,415 , X_X,Y_Y
+    ,   X_X,Y_Y , 0x0,0x0,511,511 , 416,384,447,415 , X_X,Y_Y
+    ,   X_X,Y_Y , 0x0,0x0,511,511 , 416,384,447,415 , X_X,Y_Y
+    ,   X_X,Y_Y , 0x0,0x0,511,511 , 416,384,447,415 , X_X,Y_Y
+
+        //[     ____    :::::::::::::::::::::::::::::::::::::]//
+        //[ [45]    [46]                                     ]//
+        //[ |          |                                     ]//
+        //[ |   B__L   | BOT_LEF:          t_i[ 45,46,47,48 ]]//
+        //[ |          |                                     ]//
+        //[ [47]____[48]                                     ]//
+        //[::::::::::::::::::::::::::::::::::::::::::::::::::]//
+    ,   X_X,Y_Y , 0x0,0x0,511,511 , 416,384,447,415 , X_X,Y_Y
+    ,   X_X,Y_Y , 0x0,0x0,511,511 , 416,384,447,415 , X_X,Y_Y
+    ,   X_X,Y_Y , 0x0,0x0,511,511 , 416,384,447,415 , X_X,Y_Y
+    ,   X_X,Y_Y , 0x0,0x0,511,511 , 416,384,447,415 , X_X,Y_Y
+
+        //[     ____    :::::::::::::::::::::::::::::::::::::]//
+        //[ [49]    [50]                                     ]//
+        //[ |          |                                     ]//
+        //[ |   B__R   | BOT_RIG:          t_i[ 49,50,51,52 ]]//
+        //[ |          |                                     ]//
+        //[ [51]____[52]                                     ]//
+        //[::::::::::::::::::::::::::::::::::::::::::::::::::]//
+    ,   X_X,Y_Y , 0x0,0x0,511,511 , 416,384,447,415 , X_X,Y_Y
+    ,   X_X,Y_Y , 0x0,0x0,511,511 , 416,384,447,415 , X_X,Y_Y
+    ,   X_X,Y_Y , 0x0,0x0,511,511 , 416,384,447,415 , X_X,Y_Y
+    ,   X_X,Y_Y , 0x0,0x0,511,511 , 416,384,447,415 , X_X,Y_Y
+
+
+        #undef  X_X
+        #undef  Y_Y
+        };;
+        /** ************************************************ ***
+        rbsrbs: happy little diagrams widepeepoHappy
+        rbsrbs: uff prime sizes
+        rbsrbs: oh ok, it's a test
+        kanjicoder: Odd Sizes Are For Tests, 
+                    Not Final Rendering Logic.
+        rbsrbs: good good
+
+        I : input  XY coordinate on REC_SRC bounds
+        O : output XY coordinate on REC_DST bounds
+
+        REC_SRC:      REC_DST:
+        [ ][ ][ ]     [ ][ ][ ][ ][ ][ ][ ] 
+        [ ][I][ ]     [ ][ ][ ][ ][ ][ ][ ] 
+        [ ][ ][ ]     [ ][ ][ ][ ][ ][ ][ ] 
+                      [ ][ ][ ][O][ ][ ][ ] 
+                      [ ][ ][ ][ ][ ][ ][ ]
+                      [ ][ ][ ][ ][ ][ ][ ]
+                      [ ][ ][ ][ ][ ][ ][ ]
+    
+        *** ************************************************ **/
+        mti=( (NUM_TES - 1) );
+        for( t_i = 0 ; t_i <= mti ; t_i++ ){
+
+            bas=( t_i * NUM_COL );
+
+            s_x=tab_utc[ bas + 0 ];
+            s_y=tab_utc[ bas + 1 ];
+
+            sx0=tab_utc[ bas + 2 ]; //: SRC : LOW : XXX
+            sy0=tab_utc[ bas + 3 ]; //: SRC : LOW : YYY
+            sx1=tab_utc[ bas + 4 ]; //: SRC : UPP : XXX
+            sy1=tab_utc[ bas + 5 ]; //: SRC : UPP : YYY
+
+            dx0=tab_utc[ bas + 6 ]; //: DST : LOW : XXX
+            dy0=tab_utc[ bas + 7 ]; //: DST : LOW : YYY
+            dx1=tab_utc[ bas + 8 ]; //: DST : UPP : XXX
+            dy1=tab_utc[ bas + 9 ]; //: DST : UPP : YYY
+
+            d_x=tab_utc[ bas +10 ];
+            d_y=tab_utc[ bas +11 ];
+
+            dst=(
+            AAC2020_FRAGCOM_rec_src_MAP_rec_dst(
+            /**/    s_x
+            ,       s_y
+            /**/       
+            ,       sx0
+            ,       sy0
+            ,       sx1
+            ,       sy1
+            /**/       
+            ,       dx0
+            ,       dy0
+            ,       dx1
+            ,       dy1
+            ));;
+
+            if( dst.x != d_x
+            ||  dst.y != d_y 
+            ){
+                printf("[*******************************]\n\n");
+
+                printf("[::t_i]:%d\n",   t_i); printf("\n");
+                                         
+                printf("[::s_x]:%d\n",   s_x);  
+                printf("[::s_y]:%d\n",   s_y); printf("\n");
+                                         
+                printf("[::sx0]:%d\n",   sx0);  
+                printf("[::sy0]:%d\n",   sy0);  
+                printf("[::sx1]:%d\n",   sx1);  
+                printf("[::sy1]:%d\n",   sy1); printf("\n");
+                                         
+                printf("[::dx0]:%d\n",   dx0);  
+                printf("[::dy0]:%d\n",   dy0);  
+                printf("[::dx1]:%d\n",   dx1);  
+                printf("[::dy1]:%d\n",   dy1); printf("\n");
+                                         
+                printf("[::d_x]:%d\n",   d_x);  
+                printf("[::d_y]:%d\n",   d_y); printf("\n");
+
+                printf("[dst.x]:%d\n", dst.x);  
+                printf("[dst.y]:%d\n", dst.y); printf("\n");
+
+                printf("[*******************************]\n\n");
+                ERR("[TEST_FAIL:FRAGCOM_rec_src_MAP_rec_dst]");
+            };;
+
+        };;
+                                                    
+    #undef  NUM_TES
+    #undef  NUM_COL
+    }
+
+#undef  U32  //:----------------------------------------: 01 ://
+#undef  I32  //:----------------------------------------: 02 ://
+#undef  F32  //:----------------------------------------: 03 ://
+#undef  ERR  //:----------------------------------------: 04 ://
+#undef  E_V  //:----------------------------------------: 05 ://
+#undef  LOG  //:----------------------------------------: 06 ://
+#undef  IV2  //:----------------------------------------: 07 ://
+#undef  FV4  //:----------------------------------------: 08 ://
+//:========================================:UNIT_TEST_SECTION://

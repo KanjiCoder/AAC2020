@@ -36,8 +36,50 @@
 
         //:TODO: Init code..
 
+        if( aac2020_gpuview_unit_test_ran_or_running <= 0 ){
+            U32 AAC2020_GPUVIEW_UnitTest( U32 );
+                AAC2020_GPUVIEW_UnitTest( 0x0 );
+        };;
+
         return( 0x00 );
     }
 
 #undef  U32
 //:======================================:INIT_THE_SUB_SYSTEM://
+//:UNIT_TEST_SECTION:========================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/  //:-------: 01 ://
+#define I32  int32_t /** GCC: <stdint.h> **/  //:-------: 02 ://
+#define F32 float                             //:-------: 03 ://
+#define ERR aac2020_gpuview_Halt              //:-------: 04 ://
+#define E_V extern void                       //:-------: 05 ://
+#define LOG aac2020_gpuview_Info_any          //:-------: 06 ://
+#define IV2 struct AAC2020_POLYOGL_IV2        //:-------: 07 ://
+#define FV4 struct AAC2020_POLYOGL_FV4        //:-------: 08 ://
+
+    U32
+    AAC2020_GPUVIEW_UnitTest( U32 u32 ){
+        LOG("[AAC2020_GPUVIEW_UnitTest:BEG]",((void*)0));
+
+        if( u32 ){ /**Reserved_For_Future_Use**/ };
+        aac2020_gpuview_unit_test_ran_or_running=( 1 );
+
+        /** @VID_IID[ 0136 ]TIME[ 01:10:32 ]           ** ** **/
+        /** Call the fragment shader MAIN from         ** ** **/
+        /** CPU side ONCE so that c99 asserts for      ** ** **/
+        /** main function are checked at least once.   ** ** **/
+        FV4 fv4 ={ 0 };
+        AAC2020_GPUVIEW_Main( fv4 );
+
+        LOG("[AAC2020_GPUVIEW_UnitTest:END]",((void*)0));
+        return( 0x00 );
+    }
+
+#undef  U32  //:----------------------------------------: 01 ://
+#undef  I32  //:----------------------------------------: 02 ://
+#undef  F32  //:----------------------------------------: 03 ://
+#undef  ERR  //:----------------------------------------: 04 ://
+#undef  E_V  //:----------------------------------------: 05 ://
+#undef  LOG  //:----------------------------------------: 06 ://
+#undef  IV2  //:----------------------------------------: 07 ://
+#undef  FV4  //:----------------------------------------: 08 ://
+//:========================================:UNIT_TEST_SECTION://

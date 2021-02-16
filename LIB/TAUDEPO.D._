@@ -144,6 +144,16 @@ END: NO_DEEPER_NESTING :- - - - - - - - - - - - - - - - - - -://
     /** #_VARS_ARE_CLUSTERS_OF_4_PIXELS_#          ......... **/
     /** #_VAR_ENUMS_SHOULD_COUNT_UP_WITH_NO_GAPS_# ......... **/
 
+    //:FOUR_DEBUG_VARIABLES_IN_THE_CORNERS:------------------://
+    /** @VID_IID[ 0135 ]TIME[ 01:05:00 ]CORNER_DEBUG_VARS ** **/
+    /** Help us visualize tausync texture pushes correct. ** **/
+        
+        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_D_1 ( 0 ) //:T_L
+        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_D_2 (15 ) //:T_R
+        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_D_3 (240) //:B_L
+        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_D_4 (255) //:B_R
+
+    //:------------------:FOUR_DEBUG_VARIABLES_IN_THE_CORNERS://
     //:VIEWPORT_RECTANGLES:----------------------------------://
         /** ************************************************ ***
             @VID_IID[ 0075 ]TIME[ 2H 29M 8S ]
@@ -154,9 +164,10 @@ END: NO_DEEPER_NESTING :- - - - - - - - - - - - - - - - - - -://
             3. vpc: Viewport_Canvas (Or: Window/OpenGL)
 
         *** ************************************************ **/
-        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vp0  ( 0 )
-        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vp1  ( 1 )
-        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vpc  ( 2 )
+        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_D_1  ( 0 )
+        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vp0  ( 1 )
+        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vp1  ( 2 )
+        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vpc  ( 3 )
         /** ************************************************ **/
     //:----------------------------------:VIEWPORT_RECTANGLES://
     //:ORDER_OF:AAC2020_PAINT5D_Put:-------------------------://
@@ -165,13 +176,13 @@ END: NO_DEEPER_NESTING :- - - - - - - - - - - - - - - - - - -://
             AAC2020_PAINT5D_Put                         
             @VID_IID[ 0075 ]TIME[ 02H 26M 23S ]         
         *** ************************************************ **/
-        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_T_Q  ( 3 )
-        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_T_E  ( 4 )
-        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_T_L  ( 5 )
-        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_B_X  ( 6 )
-        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_B_Y  ( 7 )
-        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_A_D  ( 8 )
-        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_T_V  ( 9 )
+        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_T_Q  ( 4 )
+        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_T_E  ( 5 )
+        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_T_L  ( 6 )
+        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_B_X  ( 7 )
+        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_B_Y  ( 8 )
+        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_A_D  ( 9 )
+        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_T_V  (10 )
         /** ************************************************ **/
     //:-------------------------:ORDER_OF:AAC2020_PAINT5D_Put://
 
@@ -229,6 +240,11 @@ END: NO_DEEPER_NESTING :- - - - - - - - - - - - - - - - - - -://
 
                 //:- - - - - - - - - - - - - - -:TAUDEPO(TAU)://
                 //:PAINT5D(P5D):- - - - - - - - - - - - - - -://
+
+                    const U08 P5D_D_1 ; //:VISUAL_DEBUG_VAR #1
+                    const U08 P5D_D_2 ; //:VISUAL_DEBUG_VAR #2
+                    const U08 P5D_D_3 ; //:VISUAL_DEBUG_VAR #3
+                    const U08 P5D_D_4 ; //:VISUAL_DEBUG_VAR #4
 
                     //:p5d_cam == p5d_vp1 == P5D_VP1
 
@@ -296,6 +312,11 @@ END: NO_DEEPER_NESTING :- - - - - - - - - - - - - - - - - - -://
     ,       .TODO_03 = ( AAC2020_TAUDEPO_SUB_TODO_03 )
 
         //:DEX_VAR_000_255 : Sub System Variable Locations:
+
+    ,       .P5D_D_1 = ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_D_1 )
+    ,       .P5D_D_2 = ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_D_2 )
+    ,       .P5D_D_3 = ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_D_3 )
+    ,       .P5D_D_4 = ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_D_4 )
 
     ,       .P5D_VPC = ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vpc )
     ,       .P5D_VP0 = ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vp0 )

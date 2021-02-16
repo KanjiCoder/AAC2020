@@ -1,35 +1,12 @@
 
+
     //:TODO: REWORK THIS CODE INTO NEW SHADER
 
     //[CUT_AND_PASTE_THIS_INTO_GLSL_SOURCE:==============]//
-    //[AAC2020_PAINT5D_DEFAULT_001:======================]//
-    //[PASTE_INTO_FILE[ P5D_001._ ]:=====================]//
-    //:P5D_001____AAC2020_PAINT5D_DEFAULT_001:===========://
+    //[AAC2020_FRAGCOM_DEFAULT_001:======================]//
+    //[PASTE_INTO_FILE[ COM_001._ ]:=====================]//
+    //:COM_001____AAC2020_FRAGCOM_DEFAULT_001:===========://
     //|SIM:Shim_Ifdef_Macros:|||||||||||||||||||||||||||||//
-    //:glsl_file_scope_stuff:----------------------------://
-    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL           //| # |//
-                                                   //| # |//
-        //:#_KEEP_USAMPLER_HIGH_#          ://     //| # |//
-        //:#_SAM_PRECISION_BEFORE_SAM_VAR_#://     //| # |//
-        precision highp usampler2D;                //| # |//
-                                                   //| # |//
-        //|(( UNI ))____________________________|////| # |//
-        //[:::::::SHADERTOY_COMPATIBILITY:::::::]////| # |//
-        #define fragCoord gl_FragCoord             //| # |//
-        #define       F_C gl_FragCoord             //| # |//
-        uniform vec3 iResolution;                  //| # |//
-        uniform usampler2D taudepo;                //| # |//
-        uniform usampler2D paint5d;                //| # |//
-                                                   //| # |//
-        //|(( INN ))____________________________|////| # |//
-        //:     fag_tec:FrAGshaderTExtureCoord  :////| # |//
-        in vec2 fag_tec;                           //| # |//
-                                                   //| # |//
-        //|(( OUT ))____________________________|////| # |//
-        out vec4 FragColor;                        //| # |//
-                                                   //| # |//
-    #endif                                         //| # |//
-    //:----------------------------:glsl_file_scope_stuff://
     //:always_exists_error_string_macros:----------------://
                                                    //| # |//
         /** ******************************** ***   //| # |//
@@ -118,23 +95,10 @@
         #define INN_F_C F_C                        //| 8 |//
     #endif                                         //|---|//
     //:------------------------------:seven_letter_macros://
-    //:main_shim_macros:---------------------------------://
-    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL           //| # |//
-                                                   //| # |//
-        #define RET_MAIN void /** <-- GLSL**/      //| # |//
-        #define FUN_MAIN main /** <-- GLSL**/      //| # |//
-                                                   //| # |//
-    #else                                          //| # |//
-                                                   //| # |//
-        #define RET_MAIN FV4 /** <-- [C99/C11]**/  //| # |//
-        #define FUN_MAIN AAC2020_GPUVIEW_Main      //| # |//
-                                                   //| # |//
-    #endif                                         //| # |//
-    //:---------------------------------:main_shim_macros://
     //||||||||||||||||||||||||||||||SIM:Shim_Ifdef_Macros|//
 
         IV2 //:<-- OUT[ d_x , d_y ]                //: m ://
-        GPUVIEW_rec_src_MAP_rec_dst(               //: m ://
+        AAC2020_FRAGCOM_rec_src_MAP_rec_dst(       //: m ://
             I32 s_x                                //: m ://
         ,   I32 s_y                                //: m ://
                                                    //: m ://
@@ -222,141 +186,7 @@
             return( rec_dst );
         }
 
-        //:- - - - - - - - - - - -- - - - - - - - - - - -://
-        F32
-        GPUVIEW_GET_res_wid( void )
-        {
-            #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL
-                return( iResolution.x );
-            #else
-                return( AAC2020_CPUNIFO_iResolution_wid );
-            #endif
-        }
-        F32
-        GPUVIEW_GET_res_hig( void )
-        {
-            #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL
-                return( iResolution.y );
-            #else
-                return( AAC2020_CPUNIFO_iResolution_hig );
-            #endif
-        }
-        //:- - - - - - - - - - - -- - - - - - - - - - - -://   
-        RET_MAIN
-        FUN_MAIN( 
-                       TYP_F_C          INN_F_C
-        //[ GLSL:|     NOTHING     |    NOTHING   - - - -]//
-        //[  C99:|  struct FV4     |    F_C       - - - -]//
-        ){
-             
-            /** @VID_IID[ 0093 ]TIME[ 00:21:10 ] **/
-            #ifndef AAC2020_MACRO_THIS_IS_OPEN_GL
-                FV4 FragColor; /** <-- C99 Code  **/
-            //: R_Y AAC2020_POLYOGL_R_Y_Get()
-                #define R_Y 512.0
-            #else
-                #define R_Y iResolution.y
-                /** HELLO_WORLD **/
-            #endif
-
-            I32 cuv_i_x =MAK_I32( F_C.x - 0.5 );
-            I32 cuv_i_y =MAK_I32( 
-                (
-                    (GPUVIEW_GET_res_hig()   - 1.0 )
-                   -(                F_C.y   - 0.5 ) 
-                ) 
-            );;
-            if( cuv_i_x == 0 ){ /** NOOP **/ };
-            if( cuv_i_y == 0 ){ /** NOPP **/ };
-
-            //:Texel fetch whatever texture is in focus.
-            UV4 uv4_tex;
-
-            if( cuv_i_x > (512-1) || cuv_i_y > (512-1) ){
-                /** Out Of Bounds **/
-
-                uv4_tex.x =MAK_U32( 255 ); //:RED
-                uv4_tex.y =MAK_U32(   0 ); //:GREEN
-                uv4_tex.z =MAK_U32( 128 ); //:BLUE
-                uv4_tex.w =MAK_U32( 255 ); //:ALPHA
-            }else{
-                /** Inside 512x512 user view area. **/
-
-                /** Global coordinate space selection **/
-                /** rectangle to zoom into.           **/
-                I32 x_0 =( 0
-                         +( 128 * 3 )
-                         +(  32 * 1 )
-                         +(       0 )
-                );;
-                I32 x_1 =( 0
-                         +( 128 * 3 )
-                         +(  32 * 1 )
-                         +(      31 )
-                );;
-                             
-                I32 y_0 =( 0
-                         +( 128 * 3 )
-                         +(  32 * 0 )
-                         +(       0 )
-                );;
-                I32 y_1 =( 0
-                         +( 128 * 3 )
-                         +(  32 * 0 )
-                         +(      31 )
-                );;
-
-                /** @_PAIRED_COMMENT_@ ............. **/
-                /** @VID_IID[ 0136 ]TIME[ 00:53:23 ] **/    
-                /** #_PARCOM_2021_GPUVIEW_ASSERTS_#  **/
-                ASS( 416 == x_0 );
-                ASS( 384 == y_0 );
-                ASS( 447 == x_1 );
-                ASS( 415 == y_1 );
-                ASS( 32  == ( x_1 - x_0 + 1 ) );
-                ASS( 32  == ( y_1 - y_0 + 1 ) );
-
-                IV2 glo; /** glo is for global. **/
-        
-                #define MAX ( 512 - 1) 
-                glo =(
-                AAC2020_FRAGCOM_rec_src_MAP_rec_dst(
-                        cuv_i_x
-                       ,cuv_i_y
-                       ,  0,  0,MAX,MAX //:BOUNDS:SRC_PIXEL
-                       ,x_0,y_0,x_1,y_1 //:BOUNDS:DST_PIXEL
-                     //:LOW_LOW|HIG_HIG://
-                ));;
-                #undef  MAX
-
-                /// glo.x =( cuv_i_x );  //:<------TEMP
-                /// glo.y =( cuv_i_y );  //:<------TEMP
-
-                I32 g_x = glo.x;
-                I32 g_y = glo.y;
-
-                uv4_tex=( /** Zoom in on Paint5D Variables **/
-                T_F( TAU , MAK_IV2( g_x , g_y ),0 ));;
-               
-                //: uv4_tex=( /** No Zoom, Full Texture **/
-                //: T_F( TAU , MAK_IV2(cuv_i_x,cuv_i_y),0 ));;
-            };;
-
-            FragColor = MAK_FV4(
-
-                MAK_F32( uv4_tex.x ) / 255.0 //:RED
-            ,   MAK_F32( uv4_tex.y ) / 255.0 //:GREEN
-            ,   MAK_F32( uv4_tex.z ) / 255.0 //:BLUE
-            ,   MAK_F32( uv4_tex.w ) / 255.0 //:ALPHA
-            );;
-
-            
-            #ifndef AAC2020_MACRO_THIS_IS_OPEN_GL
-                return( FragColor ); /**<-- C99**/
-            #endif
-
-        }
-        //:- - - - - - - - - - - -- - - - - - - - - - - -://
+        //:- - - - - - - - - - - -- - - - - - - - - - - -://  
     //:always_exists_error_string_macros:----------------://
                                                    //[ x ]//
         #undef  E_S_private                        //[ x ]//
@@ -402,13 +232,7 @@
         #undef  INN_F_C                            //[ 8 ]//
                                                    //[ x ]//
     //:------------------------------:seven_letter_macros://
-    //:main_shim_macros:---------------------------------://
-                                                   //[ x ]//
-        #undef  RET_MAIN                           //[ x ]//
-        #undef  FUN_MAIN                           //[ x ]//
-                                                   //[ x ]//
-    //:---------------------------------:main_shim_macros://
-    //:===========:P5D_001____AAC2020_PAINT5D_DEFAULT_001://  
-    //[=====================:PASTE_INTO_FILE[ P5D_001._ ]]//
-    //[======================:AAC2020_PAINT5D_DEFAULT_001]//
+    //:===========:COM_001____AAC2020_FRAGCOM_DEFAULT_001://  
+    //[=====================:PASTE_INTO_FILE[ COM_001._ ]]//
+    //[======================:AAC2020_FRAGCOM_DEFAULT_001]//
     //[==============:CUT_AND_PASTE_THIS_INTO_GLSL_SOURCE]//
