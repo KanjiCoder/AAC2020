@@ -145,16 +145,16 @@
         |<-------- 32 -------->|
         |<-- 16 -->|           |
         |   ____   |    ____   |
-        [  ]    [  ][  ]    [  ]
+        [IG]    [IG][IG]    [IG]
         |          ||          |
         |   T__L   ||   T__R   |
         |          ||          |
-        [  ]____[01][  ]____[  ]
-        [  ]    [  ][02]    [  ]
+        [IG]____[01][IG]____[IG]  IG:IGnored_corner
+        [IG]    [IG][02]    [IG]
         |          ||          |
         |   B__L   ||   B__R   |
         |          ||          |
-        [  ]____[  ][  ]____[  ]
+        [IG]____[IG][IG]____[IG]
     *** **************************************************** **/
         IV2 dst;
 
@@ -392,8 +392,134 @@
     E_V
     aac2020_fragcom_UTC_res_src_MAP_rec_dst_SC4( void )
     {
+    /** **************************************************** ***
+    
+        |<--- SOURCE / FRAG --->|         @VID_IID[ 0140 ]
+        |<-------- 512 -------->|         TIME[ 00:11:11 ]
+    -=- +---+---+  ...  +---+---+         
+     |  | 0 |   |       | A |   |         |<---- 32 ----->|
+     |  +---+---+  ...  +---+---+         +---------------+
+     |  |   |31 |       |   | B |         [0][ ]     [A][ ]
+     |  +---+---+  ...  +---+---+         [ ][1]     [ ][B]
+     |                                    |               |
+    512 |   |   |  ...  |   |   | >>>>>>  |               |
+     |                                    |               |
+     |  +---+---+  ...  +---+---+         [C][ ]   [30][  ]
+     |  | C |   |       |480|   |         [ ][D]   [  ][31]
+     |  +---+---+  ...  +---+---+         +---------------+ 
+     |  |   | D |       |   |511|          
+    -=- +---+---+  ...  +---+---+          
+        
+    MAPING_OF[ https://i.imgur.com/NBzWjgd.png ]
+    *** **************************************************** **/
+    #define NUM_TES ( 16 )
+    #define NUM_COL (  6 )
 
-        ERR("[TODO:MOCK_UP:https://i.imgur.com/NBzWjgd.png]");
+        I32 tab_utc[ NUM_TES * NUM_COL ]={
+
+        //:<------- SOURCE ---->|<-- DEST -->|
+        //: x_0,y_0  | x_1,y_1  | d_x,d_y    |
+        /**/  0,  0  ,  15, 15  ,   0,  0 //:  T_L:CELL[ 0 ]
+        ,    16,  0  ,  31, 15  ,   1,  0 //:  T_L:CELL[ 1 ]
+        ,     0, 16  ,  15, 31  ,   0,  1 //:  T_L:CELL[ 2 ]
+        ,    16, 16  ,  31, 31  ,   1,  1 //:  T_L:CELL[ 3 ]
+
+        //:<------- SOURCE ---->|<-- DEST -->|
+        //: x_0,y_0  | x_1,y_1  | d_x,d_y    | T_L+480==>T_R
+        ,   480,  0  , 495, 15  ,  30,  0 //:  T_R:CELL[ 0 ]
+        ,   496,  0  , 511, 15  ,  31,  0 //:  T_R:CELL[ 1 ]
+        ,   480, 16  , 495, 31  ,  30,  1 //:  T_R:CELL[ 2 ]
+        ,   496, 16  , 511, 31  ,  31,  1 //:  T_R:CELL[ 3 ]
+
+        //:<------- SOURCE ---->|<-- DEST -->|
+        //: x_0,y_0  | x_1,y_1  | d_x,d_y    | T_L+480==>B_L
+        ,     0,480  ,  15,495  ,   0, 30 //:  B_L:CELL[ 0 ]
+        ,    16,480  ,  31,495  ,   1, 30 //:  B_L:CELL[ 1 ]
+        ,     0,496  ,  15,511  ,   0, 31 //:  B_L:CELL[ 2 ]
+        ,    16,496  ,  31,511  ,   1, 31 //:  B_L:CELL[ 3 ]
+
+        //:<------- SOURCE ---->|<-- DEST -->|
+        //: x_0,y_0  | x_1,y_1  | d_x,d_y    | T_L+480==>B_R
+        ,   480,480  , 495,495  ,  30, 30 //:  B_R:CELL[ 0 ]
+        ,   496,480  , 511,495  ,  31, 30 //:  B_R:CELL[ 1 ]
+        ,   480,496  , 495,511  ,  30, 31 //:  B_R:CELL[ 2 ]
+        ,   496,496  , 511,511  ,  31, 31 //:  B_R:CELL[ 3 ]
+        };;
+
+
+        I32 x_0 ; //:TEST_TABLE_DATA: INPUT_RANGE: LOW_BOU:X
+        I32 y_0 ; //:TEST_TABLE_DATA: INPUT_RANGE: LOW_BOU:Y
+          
+        I32 x_1 ; //:TEST_TABLE_DATA: INPUT_RANGE: HIG_BOU:X
+        I32 y_1 ; //:TEST_TABLE_DATA: INPUT_RANGE: HIG_BOU:Y
+          
+        I32 d_x ; //:TEST_TABLE_DATA:    ONE_OUTPUT_COORD: X
+        I32 d_y ; //:TEST_TABLE_DATA:    ONE_OUTPUT_COORD: Y
+
+        I32 s_x ; //:SOURCE_X:
+        I32 s_y ; //:SOURCE_Y:
+
+        IV2 dst ; //:DESTINATION: X & Y
+
+        I32 bas ; /** Base offset to first element of test. **/
+        I32 t_i ; /** Test Index **/
+        I32 m_i =( (NUM_TES)-1 );
+        for( t_i = 0 ; t_i <= m_i ; t_i ++ ){
+
+            bas =( t_i * ( NUM_COL ) );
+
+            x_0 = tab_utc[ bas + 0 ]; //:INPUT_RANGE: LOW_BOU:X
+            y_0 = tab_utc[ bas + 1 ]; //:INPUT_RANGE: LOW_BOU:Y
+
+            x_1 = tab_utc[ bas + 2 ]; //:INPUT_RANGE: HIG_BOU:X
+            y_1 = tab_utc[ bas + 3 ]; //:INPUT_RANGE: HIG_BOU:Y
+
+            d_x = tab_utc[ bas + 4 ]; //:   ONE_OUTPUT_COORD: X
+            d_y = tab_utc[ bas + 5 ]; //:   ONE_OUTPUT_COORD: Y
+
+            
+            for( s_y = y_0 ; s_y <= y_1 ; s_y ++ ){
+            for( s_x = x_0 ; s_x <= x_1 ; s_x ++ ){
+
+                //: 0 - 511 for: 512x512
+                //: 0 -  32 for:  32x32
+                dst=(
+                AAC2020_FRAGCOM_rec_src_MAP_rec_dst( 
+                    s_x,s_y //:<--Source XY Location To Map
+                    //:INN__RANGE    OUT___RANGE
+                ,   0x0,0x0,511,511,   0x0,0x0,31,31
+                ));;
+
+                if( dst.x != d_x
+                ||  dst.y != d_y
+                ){
+                #define PAD printf("\n");
+
+                    printf("[************************]\n");
+                    PAD
+                    printf("[::inn:t_i]:%d\n",   t_i );
+                    PAD                                      
+                    printf("[::inn:s_x]:%d\n",   s_x );
+                    printf("[::inn:s_y]:%d\n",   s_y );
+                    PAD                         
+                    printf("[::exp:d_x]:%d\n",   d_x );
+                    printf("[::exp:d_y]:%d\n",   d_y );
+                    PAD
+                    printf("[got:dst.x]:%d\n", dst.x );
+                    printf("[got:dst.y]:%d\n", dst.y );
+                    PAD   
+                    printf("[************************]\n");
+
+                    ERR("[IMGUR_GETTING_CLOSER:FAIL:2021]");
+                #undef  PAD
+                };;
+
+            };;};;
+
+        };;
+
+    #undef  NUM_TES 
+    #undef  NUM_COL 
     }
 
     E_V 
