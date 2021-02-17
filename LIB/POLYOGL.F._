@@ -32,6 +32,62 @@
 #define F32   float                                   //: 09 ://
 #define ERR   aac2020_polyogl_Halt                    //: 10 ://
 
+    //:GLSL_POLYFILL:CEIL_AND_ROUND:=========================://
+    /** If we create a "floor" later. Put that code here.    **/
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+            //:GLSL_POLYFILL:CEIL:===========================://
+                //:GLSL_POLYFILL:Ceil_Native:----------------://
+                    F32
+                    AAC2020_POLYOGL_CEL_NAT(
+                        F32 f32
+                    )
+                    {
+                        /**     ceil: found in <math.h> **/
+                        return( ceil( f32 ) );
+                    }
+                //:----------------:GLSL_POLYFILL:Ceil_Native://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+                //:GLSL_POLYFILL:Ceil_Float32:---------------://
+                    I32
+                    AAC2020_POLYOGL_CEL_F32(
+                        F32 f32
+                    )
+                    {
+                        I32 i32=((I32)(  
+                            AAC2020_POLYOGL_CEL_NAT( f32 ) 
+                        ));;
+                        return( i32 );
+                    }
+                //:---------------:GLSL_POLYFILL:Ceil_Float32://
+            //:===========================:GLSL_POLYFILL:CEIL://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+            //:GLSL_POLYFILL:ROUND:==========================://
+                //:GLSL_POLYFILL:Round_Native:---------------://
+                    F32
+                    AAC2020_POLYOGL_ROU_NAT(
+                        F32 f32
+                    )
+                    {
+                        /**     round: found in <math.h> **/
+                        return( round( f32 ) );
+                    }
+                //:---------------:GLSL_POLYFILL:Round_Native://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+                //:GLSL_POLYFILL:Round_Float32:--------------://
+                    I32
+                    AAC2020_POLYOGL_ROU_F32(
+                        F32 f32
+                    )
+                    {
+                        I32 i32=((I32)(  
+                            AAC2020_POLYOGL_ROU_NAT( f32 ) 
+                        ));;
+                        return( i32 );
+                    }
+                //:--------------:GLSL_POLYFILL:Round_Float32://
+            //:==========================:GLSL_POLYFILL:ROUND://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    //:=========================:GLSL_POLYFILL:CEIL_AND_ROUND://
     //:GLSL_POLYFILL_trunc:==================================://
     
         F32

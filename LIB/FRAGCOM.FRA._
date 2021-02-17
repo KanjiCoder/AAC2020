@@ -84,6 +84,10 @@
         #define BIN_011 uint( 3 )                  //| 6 |//
         #define TYP_F_C /** nothing **/            //| 7 |//
         #define INN_F_C /** nothing **/            //| 8 |//
+        #define ROU_NAT round /** round NATIVE **/ //| 9 |//
+        #define ROU_F32 AAC2020_FRAGCOM_ROU_F32    //|10 |//
+        #define CEL_NAT ceil                       //|11 |//
+        #define CEL_F32 AAC2020_FRAGCOM_CEL_F32    //|12 |//
     #else                                          //|---|//
         #define MAK_FV4 AAC2020_POLYOGL_MAK_FV4    //| 1 |//
         #define MAK_IV2 AAC2020_POLYOGL_MAK_IV2    //| 2 |//
@@ -93,9 +97,29 @@
         #define BIN_011 ((U32)3 )                  //| 6 |//
         #define TYP_F_C struct AAC2020_POLYOGL_FV4 //| 7 |//
         #define INN_F_C F_C                        //| 8 |//
+        #define ROU_NAT AAC2020_POLYOGL_ROU_NAT    //| 9 |//
+        #define ROU_F32 AAC2020_POLYOGL_ROU_F32    //|10 |//
+        #define CEL_NAT AAC2020_POLYOGL_CEL_NAT    //| 9 |//
+        #define CEL_F32 AAC2020_POLYOGL_CEL_F32    //|10 |//
     #endif                                         //|---|//
     //:------------------------------:seven_letter_macros://
     //||||||||||||||||||||||||||||||SIM:Shim_Ifdef_Macros|//
+
+        I32
+        AAC2020_FRAGCOM_CEL_F32(
+            F32 f32
+        )  
+        {   
+            return( MAK_I32( CEL_NAT( f32 ) ) );
+        }
+
+        I32
+        AAC2020_FRAGCOM_ROU_F32(
+            F32 f32
+        )
+        {
+            return( MAK_I32( ROU_NAT( f32 ) ) );
+        }
 
         IV2 //:<-- OUT[ d_x , d_y ]                //: m ://
         AAC2020_FRAGCOM_rec_src_MAP_rec_dst(       //: m ://
@@ -142,13 +166,13 @@
                 if( 0.0 == (SX1-SX0) ){            //: m ://
                     //: [0][1]  [2]   [3][4]       //: m ://
                     //:|<------- 5 -------->|      //: m ://
-                    d_x = MAK_I32( DX0 + ((DX1-DX0)/2.0 ) );
+                    d_x = ROU_F32( DX0 + ((DX1-DX0)/2.0 ) );
                     //:Arbitrarily pick center because   ://
                     //:cannot figure out where you are   ://
                     //:relatively when viewport is 1x1   ://
                     //: pixel in size.                   ://
                 }else{                             //: m ://
-                    d_x=MAK_I32(                   //: m ://
+                    d_x=ROU_F32(                   //: m ://
                     DX0 +                          //: m ://
                     (                              //: m ://
                         ( //:Input % along path:   //: m ://
@@ -163,9 +187,9 @@
                                                        //://
                 };;                                    //://
                 if( 0.0 == (SY1-SY0) ){                //://
-                    d_y = MAK_I32( DY0 + ((DY1-DY0)/2.0) );
+                    d_y = ROU_F32( DY0 + ((DY1-DY0)/2.0) );
                 }else{                                 //://
-                    d_y=MAK_I32(                       //://
+                    d_y=ROU_F32(                       //://
                     DY0 +                              //://
                     (                                  //://
                         ( //:Input percent along path:   ://
@@ -230,6 +254,10 @@
         #undef  CUVIPIX                            //[ 6 ]//
         #undef  TYP_F_C                            //[ 7 ]//
         #undef  INN_F_C                            //[ 8 ]//
+        #undef  ROU_NAT                            //[ 9 ]//
+        #undef  ROU_F32                            //[10 ]//
+        #undef  CEL_NAT                            //[11 ]//
+        #undef  CEL_F32                            //[12 ]//
                                                    //[ x ]//
     //:------------------------------:seven_letter_macros://
     //:===========:COM_001____AAC2020_FRAGCOM_DEFAULT_001://  
