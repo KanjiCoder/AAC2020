@@ -56,23 +56,40 @@
         //:RECT_MAPPING:-------------------------------------://
     
             /** RECTANGLE_COORD_REMAPPING_TESTS:BEGIN **/
-        
-        //:SC1: Specific Case #1 ://
-        E_V aac2020_fragcom_UTC_res_src_MAP_rec_dst_SC1( void );
-            aac2020_fragcom_UTC_res_src_MAP_rec_dst_SC1(      );
-    
-        //:SC2: Specific Case #2 ://
-        E_V aac2020_fragcom_UTC_res_src_MAP_rec_dst_SC2( void );
-            aac2020_fragcom_UTC_res_src_MAP_rec_dst_SC2(      );
-    
-        //:SC3: Specific Case #3:                            ://
-        //|                https://i.imgur.com/NBzWjgd.png   |//
-        E_V aac2020_fragcom_UTC_res_src_MAP_rec_dst_SC3( void );
-            aac2020_fragcom_UTC_res_src_MAP_rec_dst_SC3(      );
 
-        //:SC4: Specific Case #4: (More Accurate SC3 test)
+        E_V aac2020_fragcom_BUG_WorkItOut_001( void );
+            aac2020_fragcom_BUG_WorkItOut_001(      );
+        
+////    //:SC1: Specific Case #1 ://
+////    E_V aac2020_fragcom_UTC_res_src_MAP_rec_dst_SC1( void );
+////        aac2020_fragcom_UTC_res_src_MAP_rec_dst_SC1(      );
+////
+////    //:SC2: Specific Case #2 ://
+////    E_V aac2020_fragcom_UTC_res_src_MAP_rec_dst_SC2( void );
+////        aac2020_fragcom_UTC_res_src_MAP_rec_dst_SC2(      );
+////
+////    //:SC3: Specific Case #3:                            ://
+////    //|                https://i.imgur.com/NBzWjgd.png   |//
+////    E_V aac2020_fragcom_UTC_res_src_MAP_rec_dst_SC3( void );
+////        aac2020_fragcom_UTC_res_src_MAP_rec_dst_SC3(      );
+
+        //:@VID_IID[ 0142 ]TIME[ 00:25:50                   ]://
+        //:THIS_TEST_IS[ @_ATTEMPT_TTR_DISTILL_001_@        ]://
+        //:Attempt_To_Distill[ @_TRUE_TO_RENDER_TEST_CASE_@ ]://
         E_V aac2020_fragcom_UTC_res_src_MAP_rec_dst_SC4( void );
             aac2020_fragcom_UTC_res_src_MAP_rec_dst_SC4(      );
+
+        //:@_TRUE_TO_RENDER_TEST_CASE_@:---------------------://
+        //:SC5: Specific Case #5: (More Accurate SC5 test)   ://
+        //:@VID_IID[ 0142 ]TIME[ 00:22:42 ]                  ://
+        //:We got this test case to fail, which is great     ://
+        //:because it accurately mocks up what we are seeing ://
+        //:in renderer. But now we want to make a test BEFORE://
+        //:this test that is a DISTILLATION of the           ://
+        //:scenario. A distillation we can plot out on       ://
+        //:graph paper.                                      ://
+        E_V aac2020_fragcom_UTC_res_src_MAP_rec_dst_SC5( void );
+            aac2020_fragcom_UTC_res_src_MAP_rec_dst_SC5(      );
     
         //:BIG: Big Test for:   rec_src_MAP_rec_dst:
         E_V aac2020_fragcom_UTC_rec_src_MAP_rec_dst(     void );
@@ -86,6 +103,142 @@
         LOG("[AAC2020_FRAGCOM_UnitTest:END]",((void*)0));
         return( 0x00 );
     }
+
+    E_V
+    aac2020_fragcom_BUG_WorkItOut_001( void )
+    {
+       //:  I32 row[ 12 ]={
+       //:  333 , 333,444 , 555,666 , 555
+       //:  };;
+
+        I32 row[ 24 ]={
+
+
+              1 , 0x0,  2 , 0x0,  5 ,   2 //:CEIL_EVEN_DISTRO
+        ,     1 , 0x0,  2 , 0x0,  6 ,   3 //:CEIL_IS_IMPORTANT   
+
+       
+        ,   444 , 333,444 , 555,666 , 666 //:ZERO_OUT_YOUR_RANGE
+        ,     1 , 0x0, 11 , 0x0,  5 ,   0 //:SIMPLIST_CASE_FAIL
+        };;
+
+            //:CEIL_EVEN_DISTRO::
+            //: [0]      [1]      [2]  ://
+            //: / \      / \      / \  ://
+            //:[0][1]   [2][3]  [4][5] ://
+
+            //:CEIL_IS_IMPORTANT::
+            //:[0]       [1]       [2]://
+            //:|   \   /     \    /
+            //:[0][1] [2][3][4] [5][6]://
+            
+            
+            //:SIMPLIST_CASE_FAIL:
+            //:[0][1][2][3]  [4][5][6][7]  [8][9][A][B]
+            //: \   ||   /    \   ||   /    \   ||  /
+            //:   [0][1]        [2][3]        [4][5]
+
+            
+
+        for( I32 t_i = 0 ; t_i <=(4-1) ; t_i ++ ){
+
+        I32 s_i=row[ (t_i*6)  +  0 ];
+                              
+        I32 s_0=row[ (t_i*6)  +  1 ];
+        I32 s_1=row[ (t_i*6)  +  2 ];
+                              
+        I32 d_0=row[ (t_i*6)  +  3 ];
+        I32 d_1=row[ (t_i*6)  +  4 ];
+                              
+        I32 d_i=row[ (t_i*6)  +  5 ];
+
+
+        //:SPECIFIC_FORMULA_FOR_SPECIFIC_CASE:===============://
+        #define  MAK_U32  AAC2020_POLYOGL_MAK_U32 //:////////://
+        #define        F  AAC2020_POLYOGL_MAK_F32 //:////////://
+
+            I32 d_o;  //:Destination_Output (aka: d_i)
+                  
+            I32 upscaling =( (d_1-d_0)>(s_1-s_0) );
+
+            if( upscaling ){
+                d_o =MAK_U32(ceilf((                     
+                F(s_i-s_0)
+                    /
+                    (   //:<-- cluster_size                       
+                        F( (s_1-s_0) +1 )            
+                    /   F( (d_1-d_0) +1 )            
+                    )                                
+                )+F(d_0)));
+            }else{
+                d_o =MAK_U32(floorf((                     
+                F(s_i-s_0)
+                    /
+                    (   //:<-- cluster_size                       
+                        F( (s_1-s_0) +1 )            
+                    /   F( (d_1-d_0) +1 )            
+                    )                                
+                )+F(d_0)));
+            };;
+                                                
+        #undef   MAK_U32  //:////////////////////////////////://
+        #undef         F  //:////////////////////////////////://
+        //:===============:SPECIFIC_FORMULA_FOR_SPECIFIC_CASE://
+        //:CHECK_YOUR_MATH:==================================://
+        #define F AAC2020_POLYOGL_MAK_F32
+
+            if( d_o != d_i ){
+
+                printf("[...t_i]:%d\n" , t_i );
+
+                printf("[...s_i]:%d\n" , s_i );
+                            
+                printf("[...s_0]:%d\n" , s_0 );
+                printf("[...s_1]:%d\n" , s_1 );
+                            
+                printf("[...d_0]:%d\n" , d_0 );
+                printf("[...d_1]:%d\n" , d_1 );
+                            
+                printf("[EXPECTED:d_i]:%d\n" , d_i );
+                printf("[::GOTTEN:d_o]:%d\n" , d_o );
+
+                
+                printf("[  F( (s_1-s_0) +1 )  ]==( %f )\n" 
+                        ,  F( (s_1-s_0) +1 )  );;
+
+                printf("[  F( (d_1-d_0) +1 )  ]==( %f )\n" 
+                        ,  F( (d_1-d_0) +1 )  );;
+
+                printf("[--cluster_size--]:%f\n",
+                    (   //:<-- cluster_size                       
+                        F( (s_1-s_0) +1 )            
+                    /   F( (d_1-d_0) +1 )            
+                    )   
+                );;
+
+                printf("[--before_make_integer--]==( %f )\n"
+                ,
+                ((                     
+                F(s_i-s_0)
+                    /
+                    (   //:<-- cluster_size                       
+                        F( (s_1-s_0) +1 )            
+                    /   F( (d_1-d_0) +1 )            
+                    )                                
+                )+F(d_0))
+                );;
+
+                ERR("[GODIEINAFIREWITHABOTTLEOFWATER:2021]");
+            }else{
+                printf("[YOUVE_GOT_SOME_GOOD_MATH:YEAR_2021]\n");
+            };;
+
+        #undef  F //:----------------------------------------://
+        //:==================================:CHECK_YOUR_MATH://
+
+        };; //:NEXT[ t_i ]
+    }
+    
 
     E_V /** SC1: Specific Case #1 **/
     aac2020_fragcom_UTC_res_src_MAP_rec_dst_SC1( void )
@@ -388,11 +541,238 @@
     #undef  NUM_TES 
     #undef  NUM_COL 
     }
-    
+
     E_V
     aac2020_fragcom_UTC_res_src_MAP_rec_dst_SC4( void )
     {
     /** **************************************************** ***
+    @VID_IID[ 0142 ]TIME[ 00:07:32 ]
+    Simple Version of SC5 that hopefully will fail when
+    we write it so we can solve problem on graph paper.
+    
+    @VID_IID[ 0142 ]TIME[ 00:21:23 ]DONE_DRAWING_DIAGRAM
+    
+    //|//////////////////////////////////////////////////////|//
+    //|                                                      |//
+    //|      |<--- SOURCE / FRAG --->|   |<--   DEST   -->|  |//
+    //|      |<-------- 012 -------->|   |<-- SMALLTEX -->|  |//
+    //|  -=- +---+---+  ...  +---+---+   |<----- 06 ----->|  |//
+    //|   |  |0-1|   |       | A |   |   +----------------+  |//
+    //|   |  +---+---+  ...  +---+---+   [0][ ]      [A][ ]  |//
+    //|   |  |   |2-3|       |   | B |   [ ][1]      [ ][B]  |//
+    //|   |  +---+---+  ...  +---+---+   |     [ ][ ]     |  |//
+    //|   |                              |     [ ][ ]     |  |//
+    //|  012 |   |   |  ...  |   |   |   [C][ ]      [4][ ]  |//
+    //|   |                              [ ][D]      [ ][5]  |//
+    //|   |  +---+---+  ...  +---+---+   +----------------+  |//
+    //|   |  | C |   |       |8-9|   |   [1][2][3][4][5][6]  |//
+    //|   |  +---+---+  ...  +---+---+                       |//
+    //|   |  |   | D |       |   |A-B|                       |//
+    //|  -=- +---+---+  ...  +---+---+                       |//
+    //|               [A-B]==[ 10-11 ]                       |//
+    //|                                                      |//
+    //|______________________________________________________|//
+
+    @VID_IID[ 0142 ]TIME[ 00:47:23 ]EXPLAINING_RANGE_BELOW
+
+    |<---------------  12  --------------->| <-- R_0 :INN  :RNG
+    [0][1][2][3]  [4][5][6][7]  [8][9][A][B] <-- V_0 :INN  :VAL
+
+    
+       [0][1]        [2][3]        [4][5]    <-- V_1 :OUT  :VAL
+       |<------------- 06 ------------->|    <-- R_1 :OUT  :RNG
+
+    SIMPLIFIED_VERSION_OF[ https://i.imgur.com/NBzWjgd.png ]
+    *** **************************************************** **/
+    #define NUM_TES ( 16 )
+    #define NUM_COL (  6 )
+
+        I32 tab_utc[ NUM_TES * NUM_COL ]={
+
+        //:<------- SOURCE ---->|<-- DEST -->|
+        //: x_0,y_0  | x_1,y_1  | d_x,d_y    |
+        /**/  0,  0  ,   1,  1  ,   0,  0 //:  T_L:CELL[ 0 ]
+        ,     2,  0  ,   3,  1  ,   1,  0 //:  T_L:CELL[ 1 ]
+        ,     0,  2  ,   1,  3  ,   0,  1 //:  T_L:CELL[ 2 ]
+        ,     2,  2  ,   3,  3  ,   1,  1 //:  T_L:CELL[ 3 ]
+
+        //:<------- SOURCE ---->|<-- DEST -->|
+        //: x_0,y_0  | x_1,y_1  | d_x,d_y    | T_L+480==>T_R
+        ,     8,  0  ,   9,  1  ,   4,  0 //:  T_R:CELL[ 0 ]
+        ,    10,  0  ,  11,  1  ,   5,  0 //:  T_R:CELL[ 1 ]
+        ,     8,  2  ,   9,  3  ,   4,  1 //:  T_R:CELL[ 2 ]
+        ,    10,  2  ,  11,  3  ,   5,  1 //:  T_R:CELL[ 3 ]
+
+        //:<------- SOURCE ---->|<-- DEST -->|
+        //: x_0,y_0  | x_1,y_1  | d_x,d_y    | T_L+480==>B_L
+        ,     0,  8  ,   1,  9  ,   0,  4 //:  B_L:CELL[ 0 ]
+        ,     2,  8  ,   3,  9  ,   1,  4 //:  B_L:CELL[ 1 ]
+        ,     0, 10  ,   1, 11  ,   0,  5 //:  B_L:CELL[ 2 ]
+        ,     2, 10  ,   3, 11  ,   1,  5 //:  B_L:CELL[ 3 ]
+
+        //:<------- SOURCE ---->|<-- DEST -->|
+        //: x_0,y_0  | x_1,y_1  | d_x,d_y    | T_L+480==>B_R
+        ,     8,  8  ,   9,  9  ,   4,  4 //:  B_R:CELL[ 0 ]
+        ,    10,  8  ,  11,  9  ,   5,  4 //:  B_R:CELL[ 1 ]
+        ,     8, 10  ,   9, 11  ,   4,  5 //:  B_R:CELL[ 2 ]
+        ,    10, 10  ,  11, 11  ,   5,  5 //:  B_R:CELL[ 3 ]
+        };;
+
+        I32 x_0 ; //:TEST_TABLE_DATA: INPUT_RANGE: LOW_BOU:X
+        I32 y_0 ; //:TEST_TABLE_DATA: INPUT_RANGE: LOW_BOU:Y
+          
+        I32 x_1 ; //:TEST_TABLE_DATA: INPUT_RANGE: HIG_BOU:X
+        I32 y_1 ; //:TEST_TABLE_DATA: INPUT_RANGE: HIG_BOU:Y
+          
+        I32 d_x ; //:TEST_TABLE_DATA:    ONE_OUTPUT_COORD: X
+        I32 d_y ; //:TEST_TABLE_DATA:    ONE_OUTPUT_COORD: Y
+
+        I32 s_x ; //:SOURCE_X:
+        I32 s_y ; //:SOURCE_Y:
+
+        IV2 dst ; //:DESTINATION: X & Y
+
+        I32 bas ; /** Base offset to first element of test. **/
+        I32 t_i ; /** Test Index             **/
+        I32 m_g ; /** [Meta/Mega](test)Group **/
+        I32 m_i =( (NUM_TES)-1 );
+        for( m_g = 1 ; m_g <= (4) ; m_g ++ ){ //:mega_test_group
+        for( t_i = 0 ; t_i <= m_i ; t_i ++ ){ //:<-- Test_Index
+
+            bas =( t_i * ( NUM_COL ) );
+
+            x_0 = tab_utc[ bas + 0 ]; //:INPUT_RANGE: LOW_BOU:X
+            y_0 = tab_utc[ bas + 1 ]; //:INPUT_RANGE: LOW_BOU:Y
+
+            x_1 = tab_utc[ bas + 2 ]; //:INPUT_RANGE: HIG_BOU:X
+            y_1 = tab_utc[ bas + 3 ]; //:INPUT_RANGE: HIG_BOU:Y
+
+            d_x = tab_utc[ bas + 4 ]; //:   ONE_OUTPUT_COORD: X
+            d_y = tab_utc[ bas + 5 ]; //:   ONE_OUTPUT_COORD: Y
+
+            
+            for( s_y = y_0 ; s_y <= y_1 ; s_y ++ ){
+            for( s_x = x_0 ; s_x <= x_1 ; s_x ++ ){
+
+                if( 1 == m_g /** mega_test_group **/ ){
+
+                    /** @VID_IID[ 0142 ]TIME[ 01:23:23 ]     **/
+                    /** See if this new 1-axis version of    **/
+                    /** Function can output correct values.  **/
+                    
+                    dst.x=(
+                    AAC2020_FRAGCOM_rv0_CTO_rv1(
+                        ( (11-0x0) +1 ) //:RANGE:INN
+                    ,   (         s_x ) //:VALUE:INN
+                    ,   ( ( 5-0x0) +1 ) //:range:out
+                    ));;
+
+                    dst.y=(
+                    AAC2020_FRAGCOM_rv0_CTO_rv1(
+                        ( (11-0x0) +1 ) //:RANGE:INN
+                    ,   (         s_y ) //:VALUE:INN
+                    ,   ( ( 5-0x0) +1 ) //:range:out
+                    ));;
+
+                }else
+                if( 2 == m_g /** mega_test_group **/ ){
+
+                    /** @VID_IID[ 0142 ]TIME[ 01:36:42 ] *** **/
+                    /** A re-write of:                       **/
+                    /** AAC2020_FRAGCOM_rec_src_MAP_rec_dst  **/
+                    /** I hope is more correct.              **/
+                    /** ************************************ **/
+        
+                    dst=( /** @_SAME_SIGS_2021_02_18_@ **/
+                    AAC2020_FRAGCOM_big_MAP_lit( 
+                        s_x,s_y //:<--Source XY Location To Map
+                        //:INN__RANGE     OUT____RANGE        
+                    ,   0x0,0x0,11,11  ,  0x0,0x0, 5,5       
+                        //:<-- 12 -->|   |<--- 6 --->|
+                    ));;
+
+                }else
+                if( 3 == m_g /** mega_test_group **/ ){
+
+                    //: 0 - 511 for: 512x512
+                    //: 0 -  32 for:  32x32
+                    dst=( /** @_SAME_SIGS_2021_02_18_@ **/
+                    AAC2020_FRAGCOM_rec_src_MAP_rec_dst( 
+                        s_x,s_y //:<--Source XY Location To Map
+                        //:INN__RANGE     OUT____RANGE        
+                    ,   0x0,0x0,11,11  ,  0x0,0x0, 5,5       
+                        //:<-- 12 -->|   |<--- 6 --->|
+                    ));;
+
+                }else
+                if( 4 == m_g /** mega_test_group **/ ){
+
+                    dst.x=(
+                    AAC2020_FRAGCOM_big_MAP_lit_ONE_AXE(
+                    /**/(         s_x ) //:VALUE:INN
+                    ,   (         0x0 ) //:INNPUT_RANGE:LOW
+                    ,   (          11 ) //:INNPUT_RANGE:HIG
+                    ,   (         0x0 ) //:OUTPUT_RANGE:LOW
+                    ,   (           5 ) //:OUTPUT_RANGE:HIG
+                    ));;
+
+                    dst.y=(
+                    AAC2020_FRAGCOM_big_MAP_lit_ONE_AXE(
+                    /**/(         s_y ) //:VALUE:INN
+                    ,   (         0x0 ) //:INNPUT_RANGE:LOW
+                    ,   (          11 ) //:INNPUT_RANGE:HIG
+                    ,   (         0x0 ) //:OUTPUT_RANGE:LOW
+                    ,   (           5 ) //:OUTPUT_RANGE:HIG
+                    ));;
+
+                };;
+
+                if( dst.x != d_x
+                ||  dst.y != d_y
+                ){
+                #define PAD printf("\n");
+
+                    printf("[************************]\n");
+                    PAD
+                    printf("[-----:m_g]:%d\n",   m_g );
+                    printf("[::inn:t_i]:%d\n",   t_i );
+                    PAD                                      
+                    printf("[::inn:s_x]:%d\n",   s_x );
+                    printf("[::inn:s_y]:%d\n",   s_y );
+                    PAD                         
+                    printf("[::exp:d_x]:%d\n",   d_x );
+                    printf("[::exp:d_y]:%d\n",   d_y );
+                    PAD
+                    printf("[got:dst.x]:%d\n", dst.x );
+                    printf("[got:dst.y]:%d\n", dst.y );
+                    PAD   
+                    printf("[************************]\n");
+
+                    /** @VID_IID[ 0142 ]TIME[ 00:40:23 ] *** **/
+                    //:Simplified version of:                ://
+                    //:IMGUR_GETTING_CLOSER test. Number 001 ://
+                    //:IGC=="Imgur_Getting_Closer(test)"     ://
+                    ERR("[SIMPLIFIED:IGC_001:FAIL:2021]");
+                #undef  PAD
+                };;
+
+            };;};; //:NEXT[ s_x , s_y ]
+        };;};; //:///:NEXT[ m_g , t_i ]
+
+    #undef  NUM_TES 
+    #undef  NUM_COL 
+    }
+    
+    E_V
+    aac2020_fragcom_UTC_res_src_MAP_rec_dst_SC5( void )
+    {
+    /** **************************************************** ***
+    @VID_IID[ 0142 ]TIME[ 00:06:06 ]RENAMED_TO[ SC5 ]
+    We need a simpler test that is written in the same manner
+    as this test to come BEFORE this test. Something with
+    a small enough range of values that we can graph it out
+    on paper.
+
     
         |<--- SOURCE / FRAG --->|         @VID_IID[ 0140 ]
         |<-------- 512 -------->|         TIME[ 00:11:11 ]
@@ -464,6 +844,9 @@
         I32 bas ; /** Base offset to first element of test. **/
         I32 t_i ; /** Test Index **/
         I32 m_i =( (NUM_TES)-1 );
+        I32 m_g ;
+
+        for( m_g = 1 ; m_g <= (2) ; m_g ++ ){
         for( t_i = 0 ; t_i <= m_i ; t_i ++ ){
 
             bas =( t_i * ( NUM_COL ) );
@@ -481,14 +864,29 @@
             for( s_y = y_0 ; s_y <= y_1 ; s_y ++ ){
             for( s_x = x_0 ; s_x <= x_1 ; s_x ++ ){
 
-                //: 0 - 511 for: 512x512
-                //: 0 -  32 for:  32x32
-                dst=(
-                AAC2020_FRAGCOM_rec_src_MAP_rec_dst( 
-                    s_x,s_y //:<--Source XY Location To Map
-                    //:INN__RANGE    OUT___RANGE
-                ,   0x0,0x0,511,511,   0x0,0x0,31,31
-                ));;
+
+                if( 1 == m_g ){
+
+                    dst=(
+                    AAC2020_FRAGCOM_big_MAP_lit( 
+                        s_x,s_y //:<--Source XY Location To Map
+                        //:INN__RANGE    OUT___RANGE
+                    ,   0x0,0x0,511,511,   0x0,0x0,31,31
+                    ));;
+                }else
+                if( 2 == m_g ){
+
+                    //: 0 - 511 for: 512x512
+                    //: 0 -  32 for:  32x32
+                    dst=( /** BAD MATH **/
+                    AAC2020_FRAGCOM_rec_src_MAP_rec_dst( 
+                        s_x,s_y //:<--Source XY Location To Map
+                        //:INN__RANGE    OUT___RANGE
+                    ,   0x0,0x0,511,511,   0x0,0x0,31,31
+                    ));;
+
+                };;
+
 
                 if( dst.x != d_x
                 ||  dst.y != d_y
@@ -514,9 +912,8 @@
                 #undef  PAD
                 };;
 
-            };;};;
-
-        };;
+            };;};; //:NEXT[ s_x , s_y ]::::::::::::::::::::::://
+        };;};; //:::::NEXT[ m_g , t_i ](MetaGroup,TestIndex):://
 
     #undef  NUM_TES 
     #undef  NUM_COL 
@@ -540,6 +937,7 @@
         I32     sy0;        I32     dy0; //:RECT_BOUNDS:TOP
         I32     sy1;        I32     dy1; //:RECT_BOUNDS:BOT
 
+        I32 m_g; //:Meta_Group/Mega_Group of tests
         I32 t_i; //:Test index
         I32 mti; //:Max_Test_Index
         I32 bas; //:Base address of current test data.
@@ -571,8 +969,8 @@
 
         //:NOZ_REC:NOnZero_RECts:
         //:Remap_Using_1X1_Rectangles:NOZ_REC:t_i==[10,11,12]://
-    ,   111,222 , 111,111,222,222 , 333,333,444,444 , 333,444
-    ,   222,333 , 222,222,333,333 , 444,444,555,555 , 444,555
+    ,     0 , 6 ,   0,  0,  6,  6 ,   0,  0,  3,  3 ,   0,  3
+    ,     0 ,20 ,   0,  0, 20, 20 ,   0,  0, 10, 10 ,   0, 10
     ,   333,444 , 333,333,444,444 , 555,555,666,666 , 555,666
 
         //:Squash_Stretch_But_Both_Rects_At_Zero_Comma_Zero:
@@ -771,6 +1169,8 @@
     
         *** ************************************************ **/
         mti=( (NUM_TES - 1) );
+
+        for( m_g = 1 ; m_g <= (2) ; m_g++ ){
         for( t_i = 0 ; t_i <= mti ; t_i++ ){
 
             bas=( t_i * NUM_COL );
@@ -791,27 +1191,27 @@
             d_x=tab_utc[ bas +10 ];
             d_y=tab_utc[ bas +11 ];
 
-            dst=(
-            AAC2020_FRAGCOM_rec_src_MAP_rec_dst(
-            /**/    s_x
-            ,       s_y
-            /**/       
-            ,       sx0
-            ,       sy0
-            ,       sx1
-            ,       sy1
-            /**/       
-            ,       dx0
-            ,       dy0
-            ,       dx1
-            ,       dy1
-            ));;
+            if( 1 == m_g ){
+                dst=(
+                AAC2020_FRAGCOM_rec_src_MAP_rec_dst(
+                s_x,s_y   ,sx0,sy0,sx1,sy1,   dx0,dy0,dx1,dy1   
+                ));;
+            }else
+            if( 2 == m_g ){
+                dst=(
+                AAC2020_FRAGCOM_big_MAP_lit(
+                s_x,s_y   ,sx0,sy0,sx1,sy1,   dx0,dy0,dx1,dy1   
+                ));;
+            }else
+
+            { ERR("[INVALID_META_GROUP_PICKED:2021]"); };;
 
             if( dst.x != d_x
             ||  dst.y != d_y 
             ){
                 printf("[*******************************]\n\n");
 
+                printf("[::m_g]:%d\n",   m_g); 
                 printf("[::t_i]:%d\n",   t_i); printf("\n");
                                          
                 printf("[::s_x]:%d\n",   s_x);  
@@ -837,7 +1237,7 @@
                 ERR("[TEST_FAIL:FRAGCOM_rec_src_MAP_rec_dst]");
             };;
 
-        };;
+        };;};; //:NEXT[ m_g , t_i ]://
                                                     
     #undef  NUM_TES
     #undef  NUM_COL

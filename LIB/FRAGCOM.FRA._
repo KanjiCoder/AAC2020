@@ -121,6 +121,118 @@
             return( MAK_I32( ROU_NAT( f32 ) ) );
         }
 
+        I32 
+        AAC2020_FRAGCOM_rv0_CTO_rv1(
+            I32 r_0 //:X-or-Y axis: INNPUT: range ( LARGER)
+        ,   I32 v_0 //:X-or-Y axis: INNPUT: value
+        ,   I32 r_1 //:X-or-Y axis: OUTPUT: range (SMALLER)
+        //: RET v_1 <-- Return output value
+        )
+        {
+            /** **************************************** **/
+            /** This mapping is designed for mapping     **/
+            /** from large range of values to a          **/
+            /** smaller range of values.                 **/
+            /** **************************************** **/
+            ASS( r_1 <= r_0 );
+
+        //| |<---------------  12  --------------->|<-R_0|//    
+        //| [0][1][2][3]  [4][5][6][7]  [8][9][A][B]<-V_0|//
+        //| |<-- c_s ->|                            <-   |//
+        //|                                         <-   |//
+        //|     [00]          [01]          [02]    <-V_1|//
+        //|     |<------------ 03 ------------>|    <-R_1|//
+
+            I32 c_s =( r_0 / r_1 ); //:Cluster_Size
+            I32 d_p =( v_0 / c_s ); //:Destination_Pixel
+            return( d_p /** v_1 == d_p **/ );
+        }
+
+        /** One axis version of:         **/
+        /** AAC2020_FRAGCOM_big_MAP_lit  **/
+        /** ONE_AXE == One Axis          **/
+        I32
+        AAC2020_FRAGCOM_big_MAP_lit_ONE_AXE(
+            I32 s_i
+
+        ,   I32 s_0
+        ,   I32 s_1
+
+        ,   I32 d_0
+        ,   I32 d_1
+        )
+        {
+            I32 d_p =(
+                ( //:<---------------- d_p : dest_pixel
+                    s_i //:<------------------- v_0 : input_val
+                    / 
+                    (   //:<------------------- c_s : cluster_size
+                        ( (s_1-s_0) +1 ) //:<-- r_0 : RANGE_SOURCE
+                    /   ( (d_1-d_0) +1 ) //:<-- r_1 : RANGE_DEST
+                    )
+                )
+                +d_0 //:Add_New_Origin
+            );;
+            return( d_p );
+        }
+    
+
+        IV2
+        AAC2020_FRAGCOM_big_MAP_lit(
+            I32 big_s_x  //: BIG: source(value)x
+        ,   I32 big_s_y  //: BIG: source(value)y
+                                                   //: m ://
+        ,   I32 big_sx0  //:rec_src: BOUND_LEF     //: m ://
+        ,   I32 big_sy0  //:rec_src: BOUND_RIG     //: m ://
+        ,   I32 big_sx1  //:rec_src: BOUND_TOP     //: m ://
+        ,   I32 big_sy1  //:rec_src: BOUND_BOT     //: m ://
+                                                   //: m ://
+        ,   I32 lit_dx0  //:rec_dst: BOUND_LEF     //: m ://
+        ,   I32 lit_dy0  //:rec_dst: BOUND_RIG     //: m ://
+        ,   I32 lit_dx1  //:rec_dst: BOUND_TOP     //: m ://
+        ,   I32 lit_dy1  //:rec_dst: BOUND_BOT     //: m ://
+        )                                          //: m ://
+        {
+            /** FUNCTION_SUMMARY[ big_MAP_lit ] ******** **/
+            /** @VID_IID[ 0142 ]TIME[ 01:34:32 ] ******* **/
+            /** Map a value on one range to a value on   **/
+            /** another range. Written assuming the      **/
+            /** destination range is same size or smaller**/
+            /** than the input range. Have no clue how   **/
+            /** this will work if that logic is flipped. **/
+            /** **************************************** **/
+            //:output_xy_coord_var:----------------------://
+            
+                IV2 dst;
+
+            //:----------------------:output_xy_coord_var://
+            //:No_Concept_Of_Offset_In_Here:-------------://
+                dst.x=(
+                AAC2020_FRAGCOM_rv0_CTO_rv1(
+                    ( (big_sx1-big_sx0) +1 ) //:RANGE:INN
+                ,   (          big_s_x     ) //:VALUE:INN
+                ,   ( (lit_dx1-lit_dx0) +1 ) //:range:out
+                ));;
+                
+                dst.y=(
+                AAC2020_FRAGCOM_rv0_CTO_rv1(
+                    ( (big_sy1-big_sy0) +1 ) //:RANGE:INN
+                ,   (          big_s_y     ) //:VALUE:INN
+                ,   ( (lit_dy1-lit_dy0) +1 ) //:range:out
+                ));;
+            //:-------------:No_Concept_Of_Offset_In_Here://
+
+            /** Un-Zero out the output coordinate **/
+            dst.x =( dst.x + lit_dx0 );
+            dst.y =( dst.y + lit_dy0 );
+
+            return( dst );
+        }
+
+         
+        /** USE[ AAC2020_FRAGCOM_big_MAP_lit ]           **/
+        /** FIXED:Broken_Version_In[ DOC/TRASH/002._ ]   **/
+        /** FIXED:@VID_IID[ 0142 ]TIME[ 02:22:42     ]   **/
         IV2 //:<-- OUT[ d_x , d_y ]                //: m ://
         AAC2020_FRAGCOM_rec_src_MAP_rec_dst(       //: m ://
             I32 s_x                                //: m ://
@@ -137,77 +249,34 @@
         ,   I32 dy1  //:rec_dst: BOUND_BOT         //: m ://
         )                                          //: m ://
         {                                          //: m ://
+        #define F MAK_F32 //:<<<<<<<<<:HACKISH_FLOAT_CAST://
             //:#_FUCK_THIS_REMAPPING_FORMULA_REMOVED_# m ://
-                                                   //: m ://
-            F32 SX0 = MAK_F32( sx0 );              //: m ://
-            F32 SX1 = MAK_F32( sx1 );              //: m ://
-            F32 SY0 = MAK_F32( sy0 );              //: m ://
-            F32 SY1 = MAK_F32( sy1 );              //: m ://
-                                                   //: m ://
-            F32 DX0 = MAK_F32( dx0 );              //: m ://
-            F32 DX1 = MAK_F32( dx1 );              //: m ://
-            F32 DY0 = MAK_F32( dy0 );              //: m ://
-            F32 DY1 = MAK_F32( dy1 );              //: m ://
-                                                   //: m ://
-            F32 S_X = MAK_F32( s_x );              //: m ://
-            F32 S_Y = MAK_F32( s_y );              //: m ://
-                                                   //: m ://
-            I32 d_x ; //:DEST:X                    //: m ://
-            I32 d_y ; //:DEST:Y                    //: m ://
-                                                   //: m ://
-                                                   //: m ://
-            //:Use_Percent_Along_Path_Remapping:---------://
-                                                   //: m ://
-                //: 3 == number of[ iths ]         //: m ://
-                //: 0/3  1/3   2/3  3/3            //: m ://
-                //: [0][1][2][3]                   //: m ://
-                //: |<-- 4 --->|                   //: m ://
-                                                   //: m ://
-                if( 0.0 == (SX1-SX0) ){            //: m ://
-                    //: [0][1]  [2]   [3][4]       //: m ://
-                    //:|<------- 5 -------->|      //: m ://
-                    d_x = ROU_F32( DX0 + ((DX1-DX0)/2.0 ) );
-                    //:Arbitrarily pick center because   ://
-                    //:cannot figure out where you are   ://
-                    //:relatively when viewport is 1x1   ://
-                    //: pixel in size.                   ://
-                }else{                             //: m ://
-                    d_x=ROU_F32(                   //: m ://
-                    DX0 +                          //: m ://
-                    (                              //: m ://
-                        ( //:Input % along path:   //: m ://
-                            (S_X-SX0) / (SX1-SX0)  //: m ://
-                        )                          //: m ://
-                        *                          //: m ://
-                        ( //:Max possible zeroed out   //://
-                          //:coord in the destination. //://
-                            1.0 * ( DX1 - DX0 )        //://
-                        )                              //://
-                    ));;                               //://
-                                                       //://
-                };;                                    //://
-                if( 0.0 == (SY1-SY0) ){                //://
-                    d_y = ROU_F32( DY0 + ((DY1-DY0)/2.0) );
-                }else{                                 //://
-                    d_y=ROU_F32(                       //://
-                    DY0 +                              //://
-                    (                                  //://
-                        ( //:Input percent along path:   ://
-                            (S_Y-SY0) / (SY1-SY0)      //://
-                        )                              //://
-                        *                              //://
-                        ( //:Max possible zeroed out   //://
-                          //:coord in the destination. //://
-                            1.0 * ( DY1 - DY0 )        //://
-                        )                              //://
-                    ));;                               //://
-                };;                                    //://
-            //:---------:Use_Percent_Along_Path_Remapping://
 
-            IV2     rec_dst;
-                    rec_dst.x =( d_x );
-                    rec_dst.y =( d_y );
-            return( rec_dst );
+            #error TODO:MAKE_FLOOR_OR_CEIL_DEPEND_ON_UPSCALE_OR_DOWNSCALE
+
+
+            IV2 dst; //:OUTPUT_DESTINATION---------------://
+                                                   //:   ://
+            dst.x =CEL_F32(( //:<----------- d_p : dst_pix://
+            F(s_x-sx0)   //:<------------------- v_0 : inn_val://
+                /                                  //:   ://
+                (   //:<------------------- c_s : clu_siz://
+                    F( (sx1-sx0) +1 ) //:<-- r_0 : rng_src://
+                /   F( (dx1-dx0) +1 ) //:<-- r_1 : rng_dst://
+                )                                  //:   ://
+            )+F(dx0)); //:<-- Add_New_Origin
+                                                   //:   ://
+            dst.y =CEL_F32(( //:<------------------ d_p : dst_pix://
+            F(s_y-sy0)//:<------------------- v_0 : inn_val://
+                /                                  //:   ://
+                (   //:<------------------- c_s : clu_siz://
+                    F( (sy1-sy0) +1 ) //:<-- r_0 : rng_src://
+                /   F( (dy1-dy0) +1 ) //:<-- r_1 : rng_dst://
+                )                                  //:   ://
+            )+F(dy0)); //:<-- Add_New_Origin
+            return( dst );
+
+        #undef  F //:<<<<<<<<<<<<<<<<<:HACKISH_FLOAT_CAST://
         }
 
         //:- - - - - - - - - - - -- - - - - - - - - - - -://  

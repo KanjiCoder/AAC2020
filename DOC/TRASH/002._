@@ -1,0 +1,94 @@
+
+    We suck at math. Here is my original version of
+    this function.
+
+        /** THIS MATH IS WRONG AT THE MOMENT... **/
+        /** USE[ AAC2020_FRAGCOM_big_MAP_lit ]  **/
+        IV2 //:<-- OUT[ d_x , d_y ]                //: m ://
+        AAC2020_FRAGCOM_rec_src_MAP_rec_dst(       //: m ://
+            I32 s_x                                //: m ://
+        ,   I32 s_y                                //: m ://
+                                                   //: m ://
+        ,   I32 sx0  //:rec_src: BOUND_LEF         //: m ://
+        ,   I32 sy0  //:rec_src: BOUND_RIG         //: m ://
+        ,   I32 sx1  //:rec_src: BOUND_TOP         //: m ://
+        ,   I32 sy1  //:rec_src: BOUND_BOT         //: m ://
+                                                   //: m ://
+        ,   I32 dx0  //:rec_dst: BOUND_LEF         //: m ://
+        ,   I32 dy0  //:rec_dst: BOUND_RIG         //: m ://
+        ,   I32 dx1  //:rec_dst: BOUND_TOP         //: m ://
+        ,   I32 dy1  //:rec_dst: BOUND_BOT         //: m ://
+        )                                          //: m ://
+        {                                          //: m ://
+            //:#_FUCK_THIS_REMAPPING_FORMULA_REMOVED_# m ://
+                                                   //: m ://
+            F32 SX0 = MAK_F32( sx0 );              //: m ://
+            F32 SX1 = MAK_F32( sx1 );              //: m ://
+            F32 SY0 = MAK_F32( sy0 );              //: m ://
+            F32 SY1 = MAK_F32( sy1 );              //: m ://
+                                                   //: m ://
+            F32 DX0 = MAK_F32( dx0 );              //: m ://
+            F32 DX1 = MAK_F32( dx1 );              //: m ://
+            F32 DY0 = MAK_F32( dy0 );              //: m ://
+            F32 DY1 = MAK_F32( dy1 );              //: m ://
+                                                   //: m ://
+            F32 S_X = MAK_F32( s_x );              //: m ://
+            F32 S_Y = MAK_F32( s_y );              //: m ://
+                                                   //: m ://
+            I32 d_x ; //:DEST:X                    //: m ://
+            I32 d_y ; //:DEST:Y                    //: m ://
+                                                   //: m ://
+                                                   //: m ://
+            //:Use_Percent_Along_Path_Remapping:---------://
+                                                   //: m ://
+                //: 3 == number of[ iths ]         //: m ://
+                //: 0/3  1/3   2/3  3/3            //: m ://
+                //: [0][1][2][3]                   //: m ://
+                //: |<-- 4 --->|                   //: m ://
+                                                   //: m ://
+                if( 0.0 == (SX1-SX0) ){            //: m ://
+                    //: [0][1]  [2]   [3][4]       //: m ://
+                    //:|<------- 5 -------->|      //: m ://
+                    d_x = ROU_F32( DX0 + ((DX1-DX0)/2.0 ) );
+                    //:Arbitrarily pick center because   ://
+                    //:cannot figure out where you are   ://
+                    //:relatively when viewport is 1x1   ://
+                    //: pixel in size.                   ://
+                }else{                             //: m ://
+                    d_x=ROU_F32(                   //: m ://
+                    DX0 +                          //: m ://
+                    (                              //: m ://
+                        ( //:Input % along path:   //: m ://
+                            (S_X-SX0) / (SX1-SX0)  //: m ://
+                        )                          //: m ://
+                        *                          //: m ://
+                        ( //:Max possible zeroed out   //://
+                          //:coord in the destination. //://
+                            1.0 * ( DX1 - DX0 )        //://
+                        )                              //://
+                    ));;                               //://
+                                                       //://
+                };;                                    //://
+                if( 0.0 == (SY1-SY0) ){                //://
+                    d_y = ROU_F32( DY0 + ((DY1-DY0)/2.0) );
+                }else{                                 //://
+                    d_y=ROU_F32(                       //://
+                    DY0 +                              //://
+                    (                                  //://
+                        ( //:Input percent along path:   ://
+                            (S_Y-SY0) / (SY1-SY0)      //://
+                        )                              //://
+                        *                              //://
+                        ( //:Max possible zeroed out   //://
+                          //:coord in the destination. //://
+                            1.0 * ( DY1 - DY0 )        //://
+                        )                              //://
+                    ));;                               //://
+                };;                                    //://
+            //:---------:Use_Percent_Along_Path_Remapping://
+
+            IV2     rec_dst;
+                    rec_dst.x =( d_x );
+                    rec_dst.y =( d_y );
+            return( rec_dst );
+        }
