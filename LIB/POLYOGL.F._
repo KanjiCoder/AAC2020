@@ -32,34 +32,34 @@
 #define F32   float                                   //: 09 ://
 #define ERR   aac2020_polyogl_Halt                    //: 10 ://
 
-    //:GLSL_POLYFILL:CEIL_AND_ROUND:=========================://
-    /** If we create a "floor" later. Put that code here.    **/
+    //:GLSL_POLYFILL:FLOOR_ROUND_CEIL:=======================://
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-            //:GLSL_POLYFILL:CEIL:===========================://
-                //:GLSL_POLYFILL:Ceil_Native:----------------://
+            //:GLSL_POLYFILL:FLOOR:==========================://
+                //:GLSL_POLYFILL:FLOOR_Native:---------------://
                     F32
-                    AAC2020_POLYOGL_CEL_NAT(
+                    AAC2020_POLYOGL_FLO_NAT(
                         F32 f32
                     )
                     {
-                        /**     ceil: found in <math.h> **/
-                        return( ceilf( f32 ) );
+                        /**     floor: found in <math.h> **/
+                        return( floorf( f32 ) );
                     }
-                //:----------------:GLSL_POLYFILL:Ceil_Native://
+                //:---------------:GLSL_POLYFILL:FLOOR_Native://
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-                //:GLSL_POLYFILL:Ceil_Float32:---------------://
+                //:GLSL_POLYFILL:FLOOR_Float32:--------------://
                     I32
-                    AAC2020_POLYOGL_CEL_F32(
+                    AAC2020_POLYOGL_FLO_F32(
                         F32 f32
                     )
                     {
                         I32 i32=((I32)(  
-                            AAC2020_POLYOGL_CEL_NAT( f32 ) 
+                            AAC2020_POLYOGL_FLO_NAT( f32 ) 
                         ));;
                         return( i32 );
                     }
-                //:---------------:GLSL_POLYFILL:Ceil_Float32://
-            //:===========================:GLSL_POLYFILL:CEIL://
+                //:--------------:GLSL_POLYFILL:FLOOR_Float32://
+            //:==========================:GLSL_POLYFILL:FLOOR://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
             //:GLSL_POLYFILL:ROUND:==========================://
                 //:GLSL_POLYFILL:Round_Native:---------------://
@@ -87,7 +87,58 @@
                 //:--------------:GLSL_POLYFILL:Round_Float32://
             //:==========================:GLSL_POLYFILL:ROUND://
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-    //:=========================:GLSL_POLYFILL:CEIL_AND_ROUND://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+            //:GLSL_POLYFILL:CEIL:===========================://
+                //:GLSL_POLYFILL:Ceil_Native:----------------://
+                    F32
+                    AAC2020_POLYOGL_CEL_NAT(
+                        F32 f32
+                    )
+                    {
+                        /**     ceil: found in <math.h> **/
+                        return( ceilf( f32 ) );
+                    }
+                //:----------------:GLSL_POLYFILL:Ceil_Native://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+                //:GLSL_POLYFILL:Ceil_Float32:---------------://
+                    I32
+                    AAC2020_POLYOGL_CEL_F32(
+                        F32 f32
+                    )
+                    {
+                        I32 i32=((I32)(  
+                            AAC2020_POLYOGL_CEL_NAT( f32 ) 
+                        ));;
+                        return( i32 );
+                    }
+                //:---------------:GLSL_POLYFILL:Ceil_Float32://
+            //:===========================:GLSL_POLYFILL:CEIL://
+
+    //:=======================:GLSL_POLYFILL:FLOOR_ROUND_CEIL://
+    //:HACKISH_CEIL_OR_FLOOR_DEPENDING:======================://
+    #define CEL_F32  AAC2020_POLYOGL_CEL_F32  //:-------: 01 ://
+    #define FLO_F32  AAC2020_POLYOGL_FLO_F32  //:-------: 01 ://
+
+        I32                                           //:://
+        AAC2020_POLYOGL_COF_F32(                      //:://
+        /**/I32 i32 //:<--  upscaling?                //:://
+        ,   F32 f32 //:<--[ value ].                  //:://
+        )                                             //:://
+        {                                             //:://
+            /** i32 ==  ((d_1-d_0)>(s_1-s_0)) **/     //:://
+            I32 cof_res; //:Ceil_Or_Floor:RESult      //:://
+                                                      //:://
+            if( i32 >= 1 ){                           //:://
+                cof_res = CEL_F32( f32 );             //:://
+            }else{                                    //:://
+                cof_res = FLO_F32( f32 );             //:://
+            };;                                       //:://
+            return( cof_res );                        //:://
+        }                                             //:://
+
+    #undef  CEL_F32  //:--------------------------------: 01 :// 
+    #undef  FLO_F32  //:--------------------------------: 02 :// 
+    //:======================:HACKISH_CEIL_OR_FLOOR_DEPENDING://
     //:GLSL_POLYFILL_trunc:==================================://
     
         F32

@@ -343,14 +343,50 @@
                 //: T_F( TAU , MAK_IV2(cuv_i_x,cuv_i_y),0 ));;
             };;
 
-            FragColor = MAK_FV4(
+            
 
-                MAK_F32( uv4_tex.x ) / 255.0 //:RED
-            ,   MAK_F32( uv4_tex.y ) / 255.0 //:GREEN
-            ,   MAK_F32( uv4_tex.z ) / 255.0 //:BLUE
-            ,   MAK_F32( uv4_tex.w ) / 255.0 //:ALPHA
-            );;
+            if( ( 1==1 )
+                && uv4_tex.x == MAK_U32(   0 )
+                && uv4_tex.y == MAK_U32(   0 )
+                && uv4_tex.z == MAK_U32(   0 )
+                && uv4_tex.w == MAK_U32(16-1 )
+            ){
+            #define M 255.0
 
+                FragColor = MAK_FV4(
+
+                    MAK_F32( uv4_tex.w ) /M * 0.0//:RED
+                ,   MAK_F32( uv4_tex.w ) /M *16.0//:GREEN
+                ,   MAK_F32( uv4_tex.w ) /M * 0.0//:BLUE
+                ,                             1.0 //:ALPHA
+                );;
+            #undef  M
+            }else
+            if( ( 1==1 )
+                && uv4_tex.x == MAK_U32( 0 )
+                && uv4_tex.y == MAK_U32( 0 )
+                && uv4_tex.z == MAK_U32( 0 )
+                && uv4_tex.w != MAK_U32( 0 )
+            ){
+            #define M 255.0
+
+                FragColor = MAK_FV4(
+
+                    MAK_F32( uv4_tex.w ) /M * 4.0//:RED
+                ,   MAK_F32( uv4_tex.w ) /M * 8.0//:GREEN
+                ,   MAK_F32( uv4_tex.w ) /M *16.0//:BLUE
+                ,                             1.0 //:ALPHA
+                );;
+            #undef  M
+            }else{
+                FragColor = MAK_FV4(
+
+                    MAK_F32( uv4_tex.x ) / 255.0 //:RED
+                ,   MAK_F32( uv4_tex.y ) / 255.0 //:GREEN
+                ,   MAK_F32( uv4_tex.z ) / 255.0 //:BLUE
+                ,   MAK_F32( uv4_tex.w ) / 255.0 //:ALPHA
+                );;
+            };;
             
             #ifndef AAC2020_MACRO_THIS_IS_OPEN_GL
                 return( FragColor ); /**<-- C99**/

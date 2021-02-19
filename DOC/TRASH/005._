@@ -1,0 +1,75 @@
+        /** USE[ AAC2020_FRAGCOM_big_MAP_lit ]           **/
+        /** FIXED:Broken_Version_In[ DOC/TRASH/002._ ]   **/
+        /** FIXED:@VID_IID[ 0142 ]TIME[ 02:22:42     ]   **/
+        IV2 //:<-- OUT[ d_x , d_y ]                //: m ://
+        AAC2020_FRAGCOM_rec_src_MAP_rec_dst(       //: m ://
+            I32 s_x                                //: m ://
+        ,   I32 s_y                                //: m ://
+                                                   //: m ://
+        ,   I32 sx0  //:rec_src: BOUND_LEF         //: m ://
+        ,   I32 sy0  //:rec_src: BOUND_RIG         //: m ://
+        ,   I32 sx1  //:rec_src: BOUND_TOP         //: m ://
+        ,   I32 sy1  //:rec_src: BOUND_BOT         //: m ://
+                                                   //: m ://
+        ,   I32 dx0  //:rec_dst: BOUND_LEF         //: m ://
+        ,   I32 dy0  //:rec_dst: BOUND_RIG         //: m ://
+        ,   I32 dx1  //:rec_dst: BOUND_TOP         //: m ://
+        ,   I32 dy1  //:rec_dst: BOUND_BOT         //: m ://
+        )                                          //: m ://
+        {                                          //: m ://
+        #define F MAK_F32 //:<<<<<<<<<:HACKISH_FLOAT_CAST://
+            //:#_FUCK_THIS_REMAPPING_FORMULA_REMOVED_# m ://
+
+            IV2 dst; //:OUTPUT_DESTINATION---------------://
+                                                   //:   ://
+
+            I32 upscaling_x=( (dx1-dx0)>(sx1-sx0) );;
+            I32 upscaling_y=( (dy1-dy0)>(sy1-sy0) );;
+
+            dst.x =COF_F32( 
+
+                //:Upscaling?
+                upscaling_x
+
+                ,
+                
+                //:Mostly_Working_Formula:
+                ( //:<<<<<<<<<<<<<<<<<<<<<<<<<<< d_p :          
+                ( //:<-------------------------- v_1 :
+                    F(s_x-sx0)   //:<----------- v_0 :
+                    /            //:................ :  
+                    (   //:<-------------------- c_s :  
+                        F( (sx1-sx0) +1 ) //:<-- r_0 :  
+                    /   F( (dx1-dx0) +1 ) //:<-- r_1 :  
+                    )                        //: --- : 
+                )                            //: --- :
+                +F(dx0) //:<-- Add_New_Origin//: --- :
+                ) //:<<<<<<<<<<<<<<<<<<<<<<<<<<< d_p :
+            );;
+
+            dst.y =COF_F32( 
+
+                //:Upscaling?
+                upscaling_y
+
+                ,
+                
+                //:@VID_IID[ 0145 ]TIME[ 00:35:42 ]://
+                ( //:<<<<<<<<<<<<<<<<<<<<<<<<<<< d_p :          
+                ( //:<-------------------------- v_1 :
+                    F(s_y-sy0)   //:<----------- v_0 :
+                    /            //:................ :  
+                    (   //:<-------------------- c_s :  
+                        F( (sy1-sy0) +1 ) //:<-- r_0 :  
+                    /   F( (dy1-dy0) +1 ) //:<-- r_1 :  
+                    )                        //: --- : 
+                )                            //: --- :
+                +F(dy0) //:<-- Add_New_Origin//: --- :
+                ) //:<<<<<<<<<<<<<<<<<<<<<<<<<<< d_p :
+            );;
+
+
+            return( dst );
+
+        #undef  F //:<<<<<<<<<<<<<<<<<:HACKISH_FLOAT_CAST://
+        }

@@ -1,0 +1,54 @@
+I32 
+        AAC2020_FRAGCOM_rv0_CTO_rv1(
+            I32 r_0 //:X-or-Y axis: INNPUT: range ( LARGER)
+        ,   I32 v_0 //:X-or-Y axis: INNPUT: value
+        ,   I32 r_1 //:X-or-Y axis: OUTPUT: range (SMALLER)
+        //: RET v_1 <-- Return output value
+        )
+        {
+            /** **************************************** **/
+            /** This mapping is designed for mapping     **/
+            /** from large range of values to a          **/
+            /** smaller range of values.                 **/
+            /** **************************************** **/
+            ASS( r_1 <= r_0 );
+
+        //| |<---------------  12  --------------->|<-R_0|//    
+        //| [0][1][2][3]  [4][5][6][7]  [8][9][A][B]<-V_0|//
+        //| |<-- c_s ->|                            <-   |//
+        //|                                         <-   |//
+        //|     [00]          [01]          [02]    <-V_1|//
+        //|     |<------------ 03 ------------>|    <-R_1|//
+
+            I32 c_s =( r_0 / r_1 ); //:Cluster_Size
+            I32 d_p =( v_0 / c_s ); //:Destination_Pixel
+            return( d_p /** v_1 == d_p **/ );
+        }
+
+        /** One axis version of:         **/
+        /** AAC2020_FRAGCOM_big_MAP_lit  **/
+        /** ONE_AXE == One Axis          **/
+        I32
+        AAC2020_FRAGCOM_big_MAP_lit_ONE_AXE(
+            I32 s_i
+
+        ,   I32 s_0
+        ,   I32 s_1
+
+        ,   I32 d_0
+        ,   I32 d_1
+        )
+        {
+            I32 d_p =(
+                ( //:<---------------- d_p : dest_pixel
+                    s_i //:<------------------- v_0 : input_val
+                    / 
+                    (   //:<------------------- c_s : cluster_size
+                        ( (s_1-s_0) +1 ) //:<-- r_0 : RANGE_SOURCE
+                    /   ( (d_1-d_0) +1 ) //:<-- r_1 : RANGE_DEST
+                    )
+                )
+                +d_0 //:Add_New_Origin
+            );;
+            return( d_p );
+        }

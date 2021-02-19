@@ -309,6 +309,64 @@ USAGE: GET:
 #undef  U08                                           //: 04 ://
 #undef  PIX                                           //: 05 ://
 //:======================================================:GET://
+//:CLEAR_UNUSED_VARIABLES:===================================://
+#define VAR_MAX AAC2020_TAUDEPO_SUB_PAINT5D_VAR_MAX
+#define     D_1 AAC2020_TAUDEPO_SUB_PAINT5D_VAR_D_1
+#define     D_2 AAC2020_TAUDEPO_SUB_PAINT5D_VAR_D_2
+#define     D_3 AAC2020_TAUDEPO_SUB_PAINT5D_VAR_D_3
+#define     D_4 AAC2020_TAUDEPO_SUB_PAINT5D_VAR_D_4
+#define     I32 int32_t /** GCC: <stdint.h> **/
+#define     ERR aac2020_taudepo_Halt
+
+    void
+    AAC2020_TAUDEPO_ClearUnused_Paint5D( void )
+    {
+
+        /** 16x16 NOT 32x32 because each variable takes up   **/
+        /**  2x2  pixels. @VID_IID[ 0145 ]T[ 04:05:42 ] **** **/
+
+        I32 d_0 =(     ( VAR_MAX ) + 1    );
+        I32 d_1 =(     (  16*16  ) - 1    );
+        for( I32 dex_var  =     d_0 ; 
+                 dex_var <=     d_1 ; 
+                 dex_var++ 
+        ){
+            if( dex_var < 0 || dex_var >= (256) ){
+                ERR("[DEX_VAR:OOB:2021]");
+            };;
+
+            /** ******************************************** **/
+            /** Skip over debug variables because they are   **/
+            /** Not ordered linearlly by index like other    **/
+            /** variables. ********************************* **/
+            /** Also.. Don't want to erase debug vars.       **/
+            /** @VID_IID[ 0145 ]TIME[ 03:58:00 ]             **/
+            /** ******************************************** **/
+
+            if( D_1 == dex_var ){ continue; };
+            if( D_2 == dex_var ){ continue; };
+            if( D_3 == dex_var ){ continue; };
+            if( D_4 == dex_var ){ continue; };
+
+            AAC2020_TAUDEPO_Put( 
+                AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+            ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+            ,                   dex_var //:P5D_VP1  
+            ,   0x0,0x0,0x0,0x0 //:<--ZeroItAllOut
+            );;
+
+        };;
+    
+    }
+
+#undef  VAR_MAX  //:------------------------------------: 01 ://
+#undef      D_1  //:------------------------------------: 02 ://
+#undef      D_2  //:------------------------------------: 03 ://
+#undef      D_3  //:------------------------------------: 04 ://
+#undef      D_4  //:------------------------------------: 05 ://
+#undef      I32  //:------------------------------------: 06 ://
+#undef      ERR  //:------------------------------------: 07 ://
+//:===================================:CLEAR_UNUSED_VARIABLES://
 //:INIT:=====================================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
 #define I32  int32_t /** GCC: <stdint.h> **/
