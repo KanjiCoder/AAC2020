@@ -110,11 +110,17 @@
         //:ACTUAL_SUBTEX2D_PUSH_HERE:========================://
             //:TEX_SUB_IMAGE_2D:PREP:========================://
             #define G_B AAC2020_GLEBIND               //: 01 ://
-            #define U_A ( 0x0CF5 )//:UNPACK_ALIGNMENT //: 02 ://
-            #define URL ( 0x0CF2 )//:UNPACK_ROW_LENGTH//: 03 ://
-            #define T_0 ( 0x84C0 )//:GL_TEXTURE0      //: 04 ://
-            #define T2D ( 0x0DE1 )//:GL_TEXTURE_2D    //: 05 ://
-            #define P_W ( 512    )//:PIX_WID          //: 06 ://
+            #define G_C AAC2020_GLCONST               //: 02 ://
+            #define U_A ( 0x0CF5 )//:UNPACK_ALIGNMENT //: 03 ://
+            #define URL ( 0x0CF2 )//:UNPACK_ROW_LENGTH//: 04 ://
+            #define T_0 ( 0x84C0 )//:GL_TEXTURE0      //: 05 ://
+            #define T2D ( 0x0DE1 )//:GL_TEXTURE_2D    //: 06 ://
+            #define P_W ( 512    )//:PIX_WID          //: 07 ://
+
+            assert( U_A == G_C.UNPACK_ALIGNMENT    );
+            assert( URL == G_C.UNPACK_ROW_LENGTH   );
+            assert( T_0 == G_C.TEXTURE0            );
+            assert( T2D == G_C.TEXTURE_2D          );
 
                     COE("[BADTIMES:2021:001]"); 
             
@@ -142,11 +148,12 @@
                 G_B.glPixelStorei( URL , P_W );
 
             #undef  G_B  //:----------------------------: 01 ://
-            #undef  U_A  //:----------------------------: 02 ://
-            #undef  URL  //:----------------------------: 03 ://
-            #undef  T_0  //:----------------------------: 04 ://
-            #undef  T2D  //:----------------------------: 05 ://
-            #undef  P_W  //:----------------------------: 06 ://
+            #undef  G_C  //:----------------------------: 02 ://
+            #undef  U_A  //:----------------------------: 03 ://
+            #undef  URL  //:----------------------------: 04 ://
+            #undef  T_0  //:----------------------------: 05 ://
+            #undef  T2D  //:----------------------------: 06 ://
+            #undef  P_W  //:----------------------------: 07 ://
             //:========================:TEX_SUB_IMAGE_2D:PREP://
             //:TEX_SUB_IMAGE_2D:=============================://
             //:STOLEN_FROM[ R:\G\A2_JC\_.02._ ]==============://

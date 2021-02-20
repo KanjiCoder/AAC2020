@@ -1,0 +1,43 @@
+
+#include "../DEP/ERROR_CHECKING/glcorearb.h"
+
+//:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=====================://
+    void 
+    aac2020_cherror_Halt( const char* msg_err )
+    {
+        printf("[FATAL_ERROR:aac2020_cherror]:%s\n", msg_err );
+        fflush(stdout);
+        exit( 123 );
+    }
+//:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+//:BEFORE_ENTER_MAIN_ERROR_CHECKS:===========================://
+#define GLC AAC2020_GLCONST
+#define ERR aac2020_cherror_Halt
+
+    void
+    AAC2020_CHERROR_CrossCheckHeaders( void )
+    {
+
+        if(   GL_UNPACK_ALIGNMENT 
+        !=   GLC.UNPACK_ALIGNMENT  ){ 
+        ERR("[GL_UNPACK_ALIGNMENT]");};;
+
+        if(   GL_UNPACK_ROW_LENGTH 
+        !=   GLC.UNPACK_ROW_LENGTH ){ 
+        ERR("[GL_UNPACK_ROW_LENGTH]");};;
+
+        if(   GL_TEXTURE0 
+        !=   GLC.TEXTURE0 ){ 
+        ERR("[GL_TEXTURE0]");};;
+
+        if(   GL_TEXTURE_2D 
+        !=   GLC.TEXTURE_2D ){ 
+        ERR("[GL_TEXTURE_2D]");};;
+       
+
+
+    }
+
+#undef  GLC
+#undef  ERR
+//:===========================:BEFORE_ENTER_MAIN_ERROR_CHECKS://
