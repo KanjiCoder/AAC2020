@@ -121,6 +121,10 @@
             assert( URL == G_C.UNPACK_ROW_LENGTH   );
             assert( T_0 == G_C.TEXTURE0            );
             assert( T2D == G_C.TEXTURE_2D          );
+    
+            if( 0 == AAC2020_PIXNAME_taudepo_tex_han ){
+                ERR("[INVALID_TEXTURE_HANDLE:ZERO:YEAR_2021]");
+            };;
 
                     COE("[BADTIMES:2021:001]"); 
             
@@ -138,7 +142,25 @@
 
                     COE("[BADTIMES:2021:003]"); 
 
-                //:a_l_n:"Alignment" GUESS?
+                //+ [CLUE]!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! +//
+                //: ---------------------------------------- ://
+                //| https://forums.developer.nvidia.com/t/   |//
+                //| how-does-gl-unpack-alignment-work/39432/3|//
+                //: Allowed values are 1, 2, 4, 8 as listed  ://
+                //: in the OpenGL 4.5 core spec chapter 8.4  ://
+                //: table 8.1 on page 178.                   ://
+                //:                                          ://
+                //: For GL_RGB only 1 will work for all      ://
+                //: cases,  including odd row widths,        ://
+                //: so simply use that  for this             ://
+                //: user data layout.                        ://
+                //: a_l_n:"Alignment" GUESS?                 ://
+                //: ---------------------------------------- ://
+                //| CLUE_UPDATE[ 2021_02_22 ]                |//
+                //| @VID_IID[ 0149 ]TIME[ 01:07:23 ]         |//
+                //| a_l_n == 4 is correct because we have    |//
+                //| 4 bytes per pixel with RGBA format.      |//
+                //:----------------------------------------- ://
                 I32 a_l_n = 4; 
                 G_B.glPixelStorei( U_A, a_l_n);
 
@@ -146,6 +168,21 @@
  
                 //:SEE[ DOC/TEXSUBIMAGE2D_STRIDE.TXT ]
                 G_B.glPixelStorei( URL , P_W );
+
+                //+ CLUE!                                    +//
+                //+ https://www.khronos.org/registry/        +//
+                //+ OpenGL-Refpages/gl4/html/                +//
+                //+ glTexSubImage2D.xhtml                    +//
+                //: If a non-zero named buffer object is     ://
+                //: bound to the GL_PIXEL_UNPACK_BUFFER      ://
+                //: target (see glBindBuffer) while a        ://
+                //: texture image is  specified, pixels is   ://
+                //: treated as  a byte offset into the       ://
+                //: buffer object's data store.              ://
+                //| @VID_IID[ 0149 ]TIME[ 01:09:42 ]         |//
+                //| Don't think I am doing this... But       |//
+                //| we got the code working. And the working |//
+                //| solution suggests we are doing this.     |//
 
             #undef  G_B  //:----------------------------: 01 ://
             #undef  G_C  //:----------------------------: 02 ://
@@ -167,10 +204,34 @@
         
                     COE("[BADTIMES:2021:005]"); 
 
+                //|FIXED! @VID_IID[ 0149 ]TIME[ 01:12:12 ]   |//
+                //|Getting This offset into memory was the   |//
+                //|solution.                                 |//
+                I32 offset_in_bytes_to_first_byte=(
+                    (
+                    //:XY_TO_INDEX_FORMULA:
+                      (  1  * ( (*PBR).x_0 ) ) //:X is remainder
+                    + ( 512 * ( (*PBR).y_0 ) ) //:Y times stride
+                    )
+                    *
+                    4 //:Multiply By 4 because 4 bytes in 
+                      //:one pixel. And we want a BYTE offset       
+                      //:and __NOT__ a pixel offset.
+                      //:( 4 == RGBA == 4bytes_per_pixel)
+                );;
+
                 AAC2020_GLEBIND.glTexSubImage2D(
                 /**/  TEXTURE_2D   //:TARGET
                 ,     0            //:LEVEL (LOD/LevelOfDetail)
                 
+                //[ @VID_IID[ 0149 ]TIME[ 00:57:23 ]         ]//
+                //[ I THINK THIS ONLY COVERS THE DESTINATION ]//
+                //[ RECTANGLE (gpu texture rectangle)        ]//
+                //[ AND NOT THE SOURCE( cpu bitmap )RECTANGLE]//
+                //[                                          ]//
+                //[ Source is specified by a[ STRIDE ] and   ]//
+                //[ the first valid byte of the memory strip ]//
+                //[ to be read.                              ]//
                 //:DIRTY_SUB_SELECTION_RECTANGLE:- - - - - -:://
                 , ( (*PBR).x_0 ) //: <---------------:org_lef://
                 , ( (*PBR).y_0 ) //: <---------------:org_top://
@@ -184,7 +245,12 @@
                 ,   UNSIGNED_BYTE      //:SOURCE_TYPE 
                     //:--------------------------------------://
                 
-                ,   AAC2020_PIXNAME_taudepo_cpu_pix //:pix_arr          
+                    //:pix_arr   
+                ,  &( 
+                        AAC2020_PIXNAME_taudepo_cpu_pix[
+                            0 + offset_in_bytes_to_first_byte
+                        ]
+                    )
                 );;
 
                     COE("[BADTIMES:2021:006]"); 
@@ -248,19 +314,33 @@
 
             printf("[xxxxxxxxxxxxxx_bla_xxxxxxxxxxxxx]\n");
 
-            //: rbsrbs: calling that textsub but selecting the 
-            //: entire thing to be the same as using the entire image?
+            //: rbsrbs: calling that textsub but selecting   ://
+            //: the entire thing to be the same as using     ://
+            //: the entire  image?                           ://
             //# DEBUG IDEA:                                  #//
             //# use aac2020_tausync_glTexSubImage2D partial  #//
             //# update command but give it a rectangle the   #//
             //# size of the entire texture. If that WORKS    #//
             //# then it is a sign that[ PBR ]is wrong.       #//
+            //[ UPDATE[ DATE[2021_02_22]  ]                  ]//
+            //[ @VID_IID[ 0149 ]T[01:17:42]                  ]//
+            //[ Good idea. Never had to go this far to fix.  ]//
             
-            AAC2020_TODOMAN_Vital("[GET:glTexSubImage2D:WORKING]");
+            //: -------------------------------------------- ://
+            //: aac2020_tausync_glTexSubImage2D :            ://
+            //: Partial texture push. This is what we WANT   ://
+            //: to be doing. And we got it working today.    ://
+            //: DATE[ 2021_02_22 ]                           ://
+            //: @VID_IID[ 0149 ]TIME[ 01:15:42 ]             ://
+            //: -------------------------------------------- ://
+            aac2020_tausync_glTexSubImage2D( PBR );  
 
-            //: aac2020_tausync_glTexSubImage2D( PBR ); //:<<<<<<<<<<<<<<<<< COMMENT BACK IN ONCE WORKING
-
-            AAC2020_PIXPUSH_t2d_TAUDEPO(); //:<<<<<<<<<<<<<<<<<<<<<<<<<<<<< REMOVE ONCE WORKING
+        //: :::::::::::::::::::::::::::::::::::::::::::::::: ://
+        //: Full Texture Push:             ::::::::::::::::: ://
+        //: Use this if the partial texture push ends up ::: ://
+        //: failing you in the future.                   ::: ://
+        //| AAC2020_PIXPUSH_t2d_TAUDEPO(); ::::::::::::::::: |//
+        //: :::::::::::::::::::::::::::::::::::::::::::::::: ://
 
         //:========================:ACTUAL_SUBTEX2D_PUSH_HERE://
         //:return_num_pixels_pushed:-------------------------://
