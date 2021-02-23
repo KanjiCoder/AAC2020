@@ -306,14 +306,35 @@
 #####################################PAINT5D_INDEX_LIST_COMMENT#
 *** ******************************************************** **/
 //:PAINT5D_DATA:=============================================://
-#define U08 uint8_t /** GCC: <stdint.h> **/
+#define U08  uint8_t /** GCC: <stdint.h> **/  //:-------: 01 ://
+#define I32  int32_t /** GCC: <stdint.h> **/  //:-------: 02 ://
 
-    //: FOR PAINT5D DATA, CHECK THESE PLACES:
+    //+------------------------------------------------------+//
+    //+                                                      +//
+    //+ FOR PAINT5D DATA, CHECK THESE PLACES:                +//
+    //+                                                      +//
+    //+ CPU_SIDE_BITMAP::: AAC2020_PIXNAME_paint5d_cpu_pix   +//
+    //+                                                      +//
+    //+ TEXTURE_LOCATIONS: AAC2020_TAUDEPO.P5D.**********    +//
+    //+------------------------------------------------------+//
 
-    //: CPU_SIDE_BITMAP:::    AAC2020_PIXNAME_paint5d_cpu_pix
+    //:CLIENT_AREA_CACHE:------------------------------------://
+    /** **************************************************** **/
+    /** @VID_IID[ 0151 ]TIME[ 03:30:00 ]             ******* **/
+    /** Last known size of viewport to paint5d.      ******* **/
+    /** We can use this to know if PAINT5D's         ******* **/
+    /** viewport rectangles ( P5D_VPC & P5D_VP1 )    ******* **/
+    /** are dirty or not.                            ******* **/
+    /**                                              ******* **/
+    /** VPC : CANVAS/CLIENT area.                    ******* **/
+    /** VP1 : DESTINATION/VIEWPORT sub region of VPC ******* **/
+    /** **************************************************** **/
 
-    //: TEXTURE_LOCATIONS:    AAC2020_TAUDEPO.P5D.**********
+        I32 aac2020_paint5d_cli_wid ; //:CLIENT_WIDTH
+        I32 aac2020_paint5d_cli_hig ; //:CLIENT_HEIGHT
 
+    /** **************************************************** **/
+    //:------------------------------------:CLIENT_AREA_CACHE://
     //:VP1:User_Camera:BOUNDS:-------------------------------://
     /** **************************************************** ***
         @VID_IID[ 0076 ]TIME[ 1H 40M 25S ]
@@ -399,7 +420,8 @@
     , 128  //: til_exp( 7 ) ==> [ 128 == til_peb ] ://
     };
 
-#undef  U08
+#undef  U08  //:----------------------------------------: 01 ://
+#undef  I32  //:----------------------------------------: 02 ://
 //:=============================================:PAINT5D_DATA://
 //:DEBUG_VARIABLES:==========================================://
 #define I32 int32_t /** GCC: <stdint.h> **/

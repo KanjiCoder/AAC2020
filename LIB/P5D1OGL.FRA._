@@ -68,6 +68,7 @@
         #define ASS  /**NOTHING**/  //:  19  ://   //| # |//
         #define ERR  /**NOTHING**/  //:  20  ://   //| # |//
         #define TRU  trunc          //:  21  ://   //| # |//
+        #define REC  struct AAC2020_FRAGCOM_REC
     #else                                          //| # |//
                                                    //| # |//
         /** When Running As C99/C11 Code. **/      //| # |//
@@ -93,6 +94,7 @@
         #define ASS   assert        //:  19  ://   //| # |//
         #define ERR   aac2020_p5d1ogl_Halt         //| # |//
         #define TRU   AAC2020_POLYOGL_Trunc        //| # |//
+        #define REC   struct AAC2020_POLYOGL_REC
     #endif                                         //| # |//
     //:--------------------------------------:type_macros://
     //:seven_letter_macros:------------------------------://
@@ -206,6 +208,28 @@
             return( u32_var );                     //[ x ]//
         }                                          //[ x ]//
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
+        U32                                        //[ x ]//
+        AAC2020_P5D1OGL_TexelFetch_U32XY(          //[ x ]//
+            SAM u32_sam //:<--[C99/C11]AND[GLSL]:////[ x ]//
+        ,   I32 g_x                                //[ x ]//
+        ,   I32 g_y                                //[ x ]//
+        ,   I32 levodet_ALWAYS_ZERO                //[ x ]//
+        )                                          //[ x ]//
+        {                                          //[ x ]//
+            /** FUNC[  TexelFetch_U32XY ]      **/ //[ x ]//
+            /** ADDED[ DATE[ 2021_02_22 ]     ]**/ //[ x ]//
+            /** VID_IID[ 0151 ]TIME[ 01:14:32 ]**/ //[ x ]//
+            return(
+            AAC2020_P5D1OGL_TexelFetch_U32(
+                u32_sam
+            ,   MAK_IV2( g_x , g_y )
+            ,   levodet_ALWAYS_ZERO
+            ));;
+        }
+
+
+
+
         //:NEW_FEATURE_TAUDEPO_ACCESS:-------------------://
         //:DATE[ 2021_02_10 ]VID_IID[ 0131 ]T[ 04:35:23 ]://
     ////////////////////////////////////////////////////////
@@ -217,7 +241,7 @@
         aac2020_p5d1ogl_taudepo_pix_dex(   //:<<<<<<<<<<<<<<<<<<<<<<<<<<<< TODO: UNIT TEST THIS FUNCTION          
             I32 dex_tau //:EX: AAC2020_TAUDEPO.TAU_015                         
         ,   I32 dex_sub //:EX: AAC2020_TAUDEPO.PAINT5D                                                  
-        ,   I32 dex_var //:EX: AAC2020_TAUDEPO.P5D_VP0  
+        ,   I32 dex_var //:EX: AAC2020_TAUDEPO.P5D_A_D  
         )
         {
             I32 pix_dex; //:<--[ output/return ]variable
@@ -283,7 +307,7 @@
         AAC2020_P5D1OGL_TAUDEPO_Get_U32(                 
             I32 dex_tau //:EX: AAC2020_TAUDEPO.TAU_015                         
         ,   I32 dex_sub //:EX: AAC2020_TAUDEPO.PAINT5D                                                  
-        ,   I32 dex_var //:EX: AAC2020_TAUDEPO.P5D_VP0  
+        ,   I32 dex_var //:EX: AAC2020_TAUDEPO.P5D_A_D  
         )
         {
             ASS( dex_tau <= ( 16-1) );
@@ -297,7 +321,7 @@
                 aac2020_p5d1ogl_taudepo_pix_dex(
                     dex_tau //: EX: AAC2020_TAUDEPO.TAU_015
                 ,   dex_sub //: EX: AAC2020_TAUDEPO.PAINT5D        
-                ,   dex_var //: EX: AAC2020_TAUDEPO.P5D_VP0    
+                ,   dex_var //: EX: AAC2020_TAUDEPO.P5D_A_D    
                 ));;
 
             
@@ -323,8 +347,67 @@
             /** Return Value Encoded In Taudepo Memory ..**/
             /** TAU: Texture_As_Uniform .............. ..**/
             return( u32_var );                       
-        }         
+        }       
+        //:- - - - - - - - - - - -- - - - - - - - - - - -://
+        REC                                          
+        AAC2020_P5D1OGL_TAUDEPO_Get_REC(                 
+            I32 dex_tau //:EX: AAC2020_TAUDEPO.TAU_015                         
+        ,   I32 dex_sub //:EX: AAC2020_TAUDEPO.PAINT5D                                                  
+        ,   I32 dex_var //:EX: AAC2020_TAUDEPO.P5D_VP0  
+        )
+        {  
+            ASS( dex_tau <= ( 16-1) );
+            ASS( dex_sub <= ( 16-1) );
+            ASS( dex_var <= (256-1) );
+                    
+            I32 pix_dex; //:GLOBAL_PIXEL_LOCATION: AS_INDEX
+            I32     g_x; //:GLOBAL_PIXEL_LOCATION: X-coord
+            I32     g_y; //:GLOBAL_PIXEL_LOCATION: Y-coord
 
+            pix_dex=( /**#TOP_LEFT_PIXEL_OF_2X2_CLUSTER#**/
+                aac2020_p5d1ogl_taudepo_pix_dex(
+                    dex_tau //: EX: AAC2020_TAUDEPO.TAU_015
+                ,   dex_sub //: EX: AAC2020_TAUDEPO.PAINT5D        
+                ,   dex_var //: EX: AAC2020_TAUDEPO.P5D_A_D    
+                ));;
+
+            
+            //:INDEX_TO_XY_GLSL:-------------------------://                          
+            #define D pix_dex  //:GLOBAL:DEX             ://
+            g_y  =MAK_I32( TRU( MAK_F32(D) / MAK_F32(512)));   
+            g_x  =(           (         D  -   (g_y *512)));                                   
+            #undef  D                 //:----------------://             
+            //:-------------------------:INDEX_TO_XY_GLSL://    
+
+                                                     
+            REC rec; /** I32 Rectangle **/                         
+                               
+      
+            #define TEMP MAK_I32
+            #define GET_U32 AAC2020_P5D1OGL_TexelFetch_U32XY        
+            #define GET_I32(a,b,c,d)  TEMP(GET_U32(a,b,c,d))        
+
+            //:  LOCATION     DATA_STORED_AT_LOCATION
+            //:  +---+---+    +---+---+  //:T_L ==> x_0
+            //:  |T_L|T_R|    |x_0|x_1|  //:T_R ==> x_1
+            //:  +---+---+    +---+---+  //:B_L ==> y_0
+            //:  |B_L|B_R|    |y_0|y_1|  //:B_R ==> y_1
+            //:  +---+---+    +---+---+
+            rec.x_0 =(GET_I32(TAU,g_x+0,g_y+0,I00)); //T_L//     
+            rec.x_1 =(GET_I32(TAU,g_x+1,g_y+0,I00)); //T_R//
+            rec.y_0 =(GET_I32(TAU,g_x+0,g_y+1,I00)); //B_L//
+            rec.y_1 =(GET_I32(TAU,g_x+1,g_y+1,I00)); //B_R//
+
+            #undef  TEMP
+            #undef  GET_U32
+            #undef  GET_I32
+            
+           
+            /** Return Value Encoded In Taudepo Memory ..**/
+            /** TAU: Texture_As_Uniform .............. ..**/
+            return( rec );      
+        }
+        //:- - - - - - - - - - - -- - - - - - - - - - - -://
     ////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////
@@ -1196,127 +1279,233 @@
         //[ GLSL:|     NOTHING     |    NOTHING   - - - -]//
         //[  C99:|  struct FV4     |    F_C       - - - -]//
         ){
-             
-            /** @VID_IID[ 0093 ]TIME[ 00:21:10 ] **/
-            #ifndef AAC2020_MACRO_THIS_IS_OPEN_GL
-                FV4 FragColor; /** <-- C99 Code  **/
-            //: R_Y AAC2020_POLYOGL_R_Y_Get()
-                #define R_Y 512.0
-            #else
-                #define R_Y iResolution.y
-                /** HELLO_WORLD **/
-            #endif
 
-            I32 cuv_i_x =MAK_I32( F_C.x - 0.5 );
-            I32 cuv_i_y =MAK_I32( 
+            //:DECLARE_VARIABLES:------------------------://
+             
+                /** @VID_IID[ 0093 ]TIME[ 00:21:10 ] **/
+                #ifndef AAC2020_MACRO_THIS_IS_OPEN_GL
+                    FV4 FragColor; /** <-- C99 Code  **/
+                //: R_Y AAC2020_POLYOGL_R_Y_Get()
+                    #define R_Y 512.0
+                #else
+                    #define R_Y iResolution.y
+                    /** HELLO_WORLD **/
+                #endif
+
+                I32 cuv_i_x; //:Canvas_User_View:Integer_X
+                I32 cuv_i_y; //:Canvas_User_View:Integer_Y
+
+            //:------------------------:DECLARE_VARIABLES://
+            //:GET_VARS_STORED_IN_TEXTURE:---------------://
+
+                //: @HARDCODED@[ P5D_VP0 ]
+                REC p5d_vp0; /**AKA[ P5D_REC_VP0 ]**/
+                p5d_vp0 =(
+                AAC2020_P5D1OGL_TAUDEPO_Get_REC(
+                    15 //:tau: TAU_015 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< THESE HARD CODED DEFINE VALUES
+                ,    1 //:sub: PAINT5D <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< THESE HARD CODED DEFINE VALUES
+                ,    1 //:var: P5D_VP0 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< THESE HARD CODED DEFINE VALUES
+                ));;
+
+                //: @HARDCODED@[ P5D_VP1 ]
+                REC p5d_vp1; /**AKA[ P5D_REC_VP1 ]**/
+                p5d_vp1 =(
+                AAC2020_P5D1OGL_TAUDEPO_Get_REC(
+                    15 //:tau: TAU_015 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< THESE HARD CODED DEFINE VALUES
+                ,    1 //:sub: PAINT5D <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< THESE HARD CODED DEFINE VALUES
+                ,    2 //:var: P5D_VP1 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< THESE HARD CODED DEFINE VALUES
+                ));;
+            
+
+                //: @HARDCODED@[ P5D_A_D ]
+                U32 aus_dex_u32;
+                I32 aus_dex; //:<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< GET RID OF DEFINE HARD CODES
+                aus_dex_u32 =(
+                AAC2020_P5D1OGL_TAUDEPO_Get_U32(
+                    15 //:tau: TAU_015 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< THESE HARD CODED DEFINE VALUES
+                ,    1 //:sub: PAINT5D <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< THESE HARD CODED DEFINE VALUES
+                ,    9 //:var: P5D_A_D <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< THESE HARD CODED DEFINE VALUES
+                ));;
+                aus_dex=( MAK_I32( aus_dex_u32 ) );
+
+            //:---------------:GET_VARS_STORED_IN_TEXTURE://    
+            //:GET:canvas_user_view:---------------------://
+
+            IV2 fic; /** fic:Frag_INTEGER_coordinate **/
+            fic.x =( MAK_I32( F_C.x - 0.5 ) );
+            fic.y =( MAK_I32( 
                 (
                     (P5D1OGL_GET_res_hig()   - 1.0 )
                    -(                F_C.y         ) 
                 )-0.5 
-            );;
-            if( cuv_i_x == 0 ){ /** NOOP **/ };
-            if( cuv_i_y == 0 ){ /** NOPP **/ };
+            ));;
+
+            //: I32 cuv_i_x = fic.x;
+            //: I32 cuv_i_y = fic.y;
+            //: if( cuv_i_x == 0 ){ /** NOOP **/ };
+            //: if( cuv_i_y == 0 ){ /** NOPP **/ };
+
+
+
+            //:---------------------:GET:canvas_user_view://
 
     ////    UV4 uv4_p5d=(
     ////        T_F( P5D , MAK_IV2(cuv_i_x,cuv_i_y),0 ));;
 
-            //: @_HARDCODED[ P5D_A_D ]_@
-            U32 aus_dex_u32;
-            I32 aus_dex; //:<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< GET RID OF DEFINE HARD CODES
-            aus_dex_u32 = AAC2020_P5D1OGL_TAUDEPO_Get_U32(
-                15 //:tau: TAU_015 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< THESE HARD CODED DEFINE VALUES
-            ,    1 //:sub: PAINT5D <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< THESE HARD CODED DEFINE VALUES
-            ,    9 //:var: P5D_A_D <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< THESE HARD CODED DEFINE VALUES
-            );;
-            aus_dex=( MAK_I32( aus_dex_u32 ) );
 
-            U32 u32_l_0=(
-            AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Get( 
-                cuv_i_x  //:AKA[ cuvipix.i_x ]   ///
-            ,   cuv_i_y  //:AKA[ cuvipix.i_y ]   ///
-            ,         0  //:AKA[ lay_dex ]       ///
-            ,   aus_dex  //:AKA[ aus_dex ]       ///   
-            ));;////////////////////////////////////
-            U32 u32_l_1=(
-            AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Get( 
-                cuv_i_x  //:AKA[ cuvipix.i_x ]   ///
-            ,   cuv_i_y  //:AKA[ cuvipix.i_y ]   ///
-            ,         1  //:AKA[ lay_dex ]       ///
-            ,   aus_dex  //:AKA[ aus_dex ]       ///   
-            ));;////////////////////////////////////
-            U32 u32_l_2=(
-            AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Get( 
-                cuv_i_x  //:AKA[ cuvipix.i_x ]   ///
-            ,   cuv_i_y  //:AKA[ cuvipix.i_y ]   ///
-            ,         2  //:AKA[ lay_dex ]       ///
-            ,   aus_dex  //:AKA[ aus_dex ]       ///   
-            ));;////////////////////////////////////
 
-            /** @VID_IID[ 0118 ]TIME[ 00:18:23 ]    **/
-            /** This operation is nonsense. Just a  **/
-            /** placeholder piece of logic for now. **/
-    ////    U32 u32_pix=( U00  
-    ////    |   ( u32_l_0 << 24 )
-    ////    |   ( u32_l_1 << 16 )
-    ////    |   ( u32_l_2 <<  8 )
-    ////    |   (     UFF <<  0 )
-    ////    );;
-
-            U32 u32_pix =( U00 |
-                ((( U00 
-                  + ((( u32_l_0 >> 0 ) & B11) * H55)
-                  + ((( u32_l_0 >> 2 ) & B11) * H55)
-                  + ((( u32_l_0 >> 4 ) & B11) * H55)
-                  + ((( u32_l_0 >> 6 ) & B11) * H55)
-                  + ((( u32_l_0 >> 8 ) & B11) * H55)
-                  + ((( u32_l_0 >>10 ) & B11) * H55)
-                  + ((( u32_l_0 >>12 ) & B11) * H55)
-                  + ((( u32_l_0 >>14 ) & B11) * H55)
-                ) / MAK_U32( 8 ) ) 
-                << 24 )
-            |
-                ((( U00 
-                  + ((( u32_l_1 >> 0 ) & B11) * H55)
-                  + ((( u32_l_1 >> 2 ) & B11) * H55)
-                  + ((( u32_l_1 >> 4 ) & B11) * H55)
-                  + ((( u32_l_1 >> 6 ) & B11) * H55)
-                  + ((( u32_l_1 >> 8 ) & B11) * H55)
-                  + ((( u32_l_1 >>10 ) & B11) * H55)
-                  + ((( u32_l_1 >>12 ) & B11) * H55)
-                  + ((( u32_l_1 >>14 ) & B11) * H55)
-                ) / MAK_U32( 8 ) )
-                << 16 )
-            |
-                ((( U00 
-                  + ((( u32_l_2 >> 0 ) & B11) * H55)
-                  + ((( u32_l_2 >> 2 ) & B11) * H55)
-                  + ((( u32_l_2 >> 4 ) & B11) * H55)
-                  + ((( u32_l_2 >> 6 ) & B11) * H55)
-                  + ((( u32_l_2 >> 8 ) & B11) * H55)
-                  + ((( u32_l_2 >>10 ) & B11) * H55)
-                  + ((( u32_l_2 >>12 ) & B11) * H55)
-                  + ((( u32_l_2 >>14 ) & B11) * H55)
-                ) / MAK_U32( 8 ) )
-                << 8 )
-            |
-                ( UFF << 0 )
-            );;
-                
 
             UV4 uv4_pix;
 
-            if( cuv_i_x >= (256-1) || cuv_i_y >= (256-1) ){
-            
-                uv4_pix.x =MAK_U32( 128 ); //:RED
-                uv4_pix.y =MAK_U32( 128 ); //:GREEN
-                uv4_pix.z =MAK_U32( 128 ); //:BLUE
-                uv4_pix.w =MAK_U32( 255 ); //:ALPHA
-            }else{
+            if( (1==1)
+            &&  fic.x >= p5d_vp0.x_0
+            &&  fic.x <= p5d_vp0.x_1
+            &&  fic.y >= p5d_vp0.y_0
+            &&  fic.y <= p5d_vp0.y_1
+            ){  //:IN_BOUNDS:
+
+                //:IN_BOUNDS ==> GREEN
+                //: uv4_pix.x =MAK_U32(   0 ); //:RED
+                //: uv4_pix.y =MAK_U32( 128 ); //:GREEN
+                //: uv4_pix.z =MAK_U32(   0 ); //:BLUE
+                //: uv4_pix.w =MAK_U32( 255 ); //:ALPHA
+
+                //:@_TEMP_HACK_@
+                //: p5d_vp1.x_0 =( 0 );
+                //: p5d_vp1.y_0 =( 0 );
+                //: p5d_vp1.x_1 =( 255 );           
+                //: p5d_vp1.y_1 =( 255 );
+
+                //:Scanning Rectangle:
+                //: I32 big_s_x =( fic.x - p5d_vp0.x_0 );
+                //: I32 big_s_y =( fic.y - p5d_vp0.y_0 );
+
+                /** BETS ARE OFF WHEN MAPPING FROM **/
+                /** small range to larger range.   **/
+                IV2 cuv;
+
+                cuv=(AAC2020_FRAGCOM_fic_MAP_cuv(
+                    fic , p5d_vp0 , p5d_vp1
+                ));;
+
+        ////    cuv=(
+        ////    AAC2020_FRAGCOM_big_MAP_lit(
+        ////        fic.x        //:big_s_x: SCANPOINT://   
+        ////    ,   fic.y        //:big_s_y: SCANPOINT://   
+        ////
+        ////    ,   p5d_vp0.x_0  //:big_sx0: BOUND_MIN://
+        ////    ,   p5d_vp0.y_0  //:big_sy0: BOUND_MIN://
+        ////    ,   p5d_vp0.x_1  //:big_sx1: BOUND_MAX://
+        ////    ,   p5d_vp0.y_1  //:big_sy1: BOUND_MAX://
+        ////                                       
+        ////    ,   p5d_vp1.x_0  //:lit_dx0: BOUND_MIN://
+        ////    ,   p5d_vp1.y_0  //:lit_dy0: BOUND_MIN://
+        ////    ,   p5d_vp1.x_1  //:lit_dx1: BOUND_MAX://
+        ////    ,   p5d_vp1.y_1  //:lit_dy1: BOUND_MAX://
+        ////    ));;
+
+                /** [ cuv_i_x , cuv_i_y ] should always **/
+                /** be within bounds for this code.     **/
+                cuv_i_x=( cuv.x );
+                cuv_i_y=( cuv.y );
+                ASS( cuv_i_x >= (    0) );
+                ASS( cuv_i_y >= (    0) );
+                ASS( cuv_i_x <= (256-1) );
+                ASS( cuv_i_y <= (256-1) );
+
+                //:CORE_RENDERING_ALGORITHM:-------------://
+
+                    U32 u32_l_0=(
+                    AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Get( 
+                        cuv_i_x  //:AKA[ cuvipix.i_x ]   ///
+                    ,   cuv_i_y  //:AKA[ cuvipix.i_y ]   ///
+                    ,         0  //:AKA[ lay_dex ]       ///
+                    ,   aus_dex  //:AKA[ aus_dex ]       ///   
+                    ));;////////////////////////////////////
+                    U32 u32_l_1=(
+                    AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Get( 
+                        cuv_i_x  //:AKA[ cuvipix.i_x ]   ///
+                    ,   cuv_i_y  //:AKA[ cuvipix.i_y ]   ///
+                    ,         1  //:AKA[ lay_dex ]       ///
+                    ,   aus_dex  //:AKA[ aus_dex ]       ///   
+                    ));;////////////////////////////////////
+                    U32 u32_l_2=(
+                    AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Get( 
+                        cuv_i_x  //:AKA[ cuvipix.i_x ]   ///
+                    ,   cuv_i_y  //:AKA[ cuvipix.i_y ]   ///
+                    ,         2  //:AKA[ lay_dex ]       ///
+                    ,   aus_dex  //:AKA[ aus_dex ]       ///   
+                    ));;////////////////////////////////////
+                
+                    U32 u32_pix =( U00 |
+                        ((( U00 
+                        + ((( u32_l_0 >> 0 ) & B11) * H55)
+                        + ((( u32_l_0 >> 2 ) & B11) * H55)
+                        + ((( u32_l_0 >> 4 ) & B11) * H55)
+                        + ((( u32_l_0 >> 6 ) & B11) * H55)
+                        + ((( u32_l_0 >> 8 ) & B11) * H55)
+                        + ((( u32_l_0 >>10 ) & B11) * H55)
+                        + ((( u32_l_0 >>12 ) & B11) * H55)
+                        + ((( u32_l_0 >>14 ) & B11) * H55)
+                        ) / MAK_U32( 8 ) ) 
+                        << 24 )
+                    |
+                        ((( U00 
+                        + ((( u32_l_1 >> 0 ) & B11) * H55)
+                        + ((( u32_l_1 >> 2 ) & B11) * H55)
+                        + ((( u32_l_1 >> 4 ) & B11) * H55)
+                        + ((( u32_l_1 >> 6 ) & B11) * H55)
+                        + ((( u32_l_1 >> 8 ) & B11) * H55)
+                        + ((( u32_l_1 >>10 ) & B11) * H55)
+                        + ((( u32_l_1 >>12 ) & B11) * H55)
+                        + ((( u32_l_1 >>14 ) & B11) * H55)
+                        ) / MAK_U32( 8 ) )
+                        << 16 )
+                    |
+                        ((( U00 
+                        + ((( u32_l_2 >> 0 ) & B11) * H55)
+                        + ((( u32_l_2 >> 2 ) & B11) * H55)
+                        + ((( u32_l_2 >> 4 ) & B11) * H55)
+                        + ((( u32_l_2 >> 6 ) & B11) * H55)
+                        + ((( u32_l_2 >> 8 ) & B11) * H55)
+                        + ((( u32_l_2 >>10 ) & B11) * H55)
+                        + ((( u32_l_2 >>12 ) & B11) * H55)
+                        + ((( u32_l_2 >>14 ) & B11) * H55)
+                        ) / MAK_U32( 8 ) )
+                        << 8 )
+                    |
+                        ( UFF << 0 )
+                    );;
+                    
+                //:-------------:CORE_RENDERING_ALGORITHM://
+
+                //:INSIDE_VIEWPORT_BOUNDS ==> UNPACK_PIXEL:
                 uv4_pix.x = ( u32_pix >> 24 ) & UFF ;
                 uv4_pix.y = ( u32_pix >> 16 ) & UFF ;
                 uv4_pix.z = ( u32_pix >>  8 ) & UFF ;
                 uv4_pix.w = ( u32_pix >>  0 ) & UFF ;
+            }else{
+                //:OUT_OF_BOUNDS ==> YELLOW
+                uv4_pix.x =MAK_U32( 128 ); //:RED
+                uv4_pix.y =MAK_U32( 128 ); //:GREEN
+                uv4_pix.z =MAK_U32(   0 ); //:BLUE
+                uv4_pix.w =MAK_U32( 255 ); //:ALPHA
             };;
+
+            /// if( u32_pix > MAK_U32(0) ){ /** NOOP **/ };
+
+    ////    if( cuv_i_x >= (256-1) || cuv_i_y >= (256-1) ){
+    ////    
+    ////        uv4_pix.x =MAK_U32( 128 ); //:RED
+    ////        uv4_pix.y =MAK_U32( 128 ); //:GREEN
+    ////        uv4_pix.z =MAK_U32( 128 ); //:BLUE
+    ////        uv4_pix.w =MAK_U32( 255 ); //:ALPHA
+    ////    }else{
+    ////        uv4_pix.x = ( u32_pix >> 24 ) & UFF ;
+    ////        uv4_pix.y = ( u32_pix >> 16 ) & UFF ;
+    ////        uv4_pix.z = ( u32_pix >>  8 ) & UFF ;
+    ////        uv4_pix.w = ( u32_pix >>  0 ) & UFF ;
+    ////    };;
 
 
             /** @VID_IID[ 0116 ]TIME[ 01:33:00 ] ******* **/

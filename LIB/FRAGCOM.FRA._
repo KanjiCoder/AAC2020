@@ -46,6 +46,7 @@
         #define ASS  /**NOTHING**/  //:  19  ://   //| # |//
         #define ERR  /**NOTHING**/  //:  20  ://   //| # |//
         #define TRU  trunc          //:  21  ://   //| # |//
+        #define REC  struct AAC2020_FRAGCOM_REC   //| 22 |//
     #else                                          //| # |//
                                                    //| # |//
         /** When Running As C99/C11 Code. **/      //| # |//
@@ -71,6 +72,7 @@
         #define ASS   assert        //:  19  ://   //| # |//
         #define ERR   aac2020_p5d1ogl_Halt         //| # |//
         #define TRU   AAC2020_POLYOGL_Trunc        //| # |//
+        #define REC  struct AAC2020_POLYOGL_REC   //| 22 |//
     #endif                                         //| # |//
     //:--------------------------------------:type_macros://
     //:seven_letter_macros:------------------------------://
@@ -113,6 +115,29 @@
     //:------------------------------:seven_letter_macros://
     //||||||||||||||||||||||||||||||SIM:Shim_Ifdef_Macros|//
 
+    //:COMMON_DATA_TYPES_USED_IN_SHADERS:================://
+
+        //:INTEGER_RECTANGLE:----------------------------://
+
+            struct AAC2020_FRAGCOM_REC{
+                //:X_BOUNDS:
+                I32 x_0 ; //:<--@_NEVER_NEGATIVE_@.
+                I32 x_1 ; //:   But use signed for ease of
+                          //:   use as well as underflow
+                          //:   detection.
+                          //:   @_SHOULD_NOT_BE_NEGATIVE_@
+        
+                //:Y_BOUNDS:
+                I32 y_0 ; //:<--@_NEVER_NEGATIVE_@.
+                I32 y_1 ; //:   But use signed for ease of
+                          //:   use as well as underflow
+                          //:   detection.
+                          //:   @_SHOULD_NOT_BE_NEGATIVE_@
+            };
+
+        //:----------------------------:INTEGER_RECTANGLE://
+
+    //:================:COMMON_DATA_TYPES_USED_IN_SHADERS://
     //:Floor_Round_Ceil:---------------------------------://
         I32                                           //:://
         AAC2020_FRAGCOM_FLO_F32(                      //:://
@@ -150,21 +175,21 @@
         /** TRASHED: AAC2020_FRAGCOM_big_MAP_lit_ONE_AXE **/
         /** SEE[ DOC/TRASH/007._ ]                       **/
         /** VID_IID[ 0145 ]T[ 03:07:44 ]                 **/
-
-        IV2
-        AAC2020_FRAGCOM_big_MAP_lit(
-            I32 big_s_x  //: BIG: source(value)x
-        ,   I32 big_s_y  //: BIG: source(value)y
                                                    //: m ://
-        ,   I32 big_sx0  //:rec_src: BOUND_LEF     //: m ://
-        ,   I32 big_sy0  //:rec_src: BOUND_RIG     //: m ://
-        ,   I32 big_sx1  //:rec_src: BOUND_TOP     //: m ://
-        ,   I32 big_sy1  //:rec_src: BOUND_BOT     //: m ://
+        IV2                                        //: m ://
+        AAC2020_FRAGCOM_big_MAP_lit(               //: m ://
+            I32 big_s_x  //:BIG:source(value)x     //: m ://
+        ,   I32 big_s_y  //:BIG:source(value)y     //: m ://
                                                    //: m ://
-        ,   I32 lit_dx0  //:rec_dst: BOUND_LEF     //: m ://
-        ,   I32 lit_dy0  //:rec_dst: BOUND_RIG     //: m ://
-        ,   I32 lit_dx1  //:rec_dst: BOUND_TOP     //: m ://
-        ,   I32 lit_dy1  //:rec_dst: BOUND_BOT     //: m ://
+        ,   I32 big_sx0  //:rec_src: BOUND_MIN     //: m ://
+        ,   I32 big_sy0  //:rec_src: BOUND_MIN     //: m ://
+        ,   I32 big_sx1  //:rec_src: BOUND_MAX     //: m ://
+        ,   I32 big_sy1  //:rec_src: BOUND_MAX     //: m ://
+                                                   //: m ://
+        ,   I32 lit_dx0  //:rec_dst: BOUND_MIN     //: m ://
+        ,   I32 lit_dy0  //:rec_dst: BOUND_MIN     //: m ://
+        ,   I32 lit_dx1  //:rec_dst: BOUND_MAX     //: m ://
+        ,   I32 lit_dy1  //:rec_dst: BOUND_MAX     //: m ://
         )                                          //: m ://
         {
             /** FUNCTION_SUMMARY[ big_MAP_lit ] ******** **/
@@ -182,6 +207,7 @@
             //:----------------------:output_xy_coord_var://
             //:INTEGER_DOWNSCALE_FORMULA:----------------://
             #define NOT_CTF /** NOT_Convert_To_Float **/
+            #define NO_CAST /** No casting logic needed **/
 
                 #define S_I big_s_x
                 #define S_0 big_sx0
@@ -189,7 +215,7 @@
                 #define D_0 lit_dx0
                 #define D_1 lit_dx1
                 #define D_P dst.x
-                D_P =(
+                D_P =NO_CAST(
                     (  
                         NOT_CTF(S_I - S_0)
                         / 
@@ -198,7 +224,7 @@
                         /   NOT_CTF( (D_1 - D_0) +1 )  
                         )
                     )
-                    +D_0 //:Add_New_Origin
+                    +NOT_CTF( D_0 ) //:Add_New_Origin
                 );;
                 #undef  S_I 
                 #undef  S_0 
@@ -213,7 +239,7 @@
                 #define D_0 lit_dy0
                 #define D_1 lit_dy1
                 #define D_P dst.y
-                D_P =(
+                D_P =NO_CAST(
                     (  
                         NOT_CTF(S_I - S_0)
                         / 
@@ -222,7 +248,7 @@
                         /   NOT_CTF( (D_1 - D_0) +1 )  
                         )
                     )
-                    +D_0 //:Add_New_Origin
+                    +NOT_CTF( D_0 ) //:Add_New_Origin
                 );;
                 #undef  S_I 
                 #undef  S_0 
@@ -232,6 +258,93 @@
                 #undef  D_P 
                 
             #undef  NOT_CTF
+            #undef  NO_CAST
+            //:----------------:INTEGER_DOWNSCALE_FORMULA://        
+
+            return( dst );
+        }
+
+        IV2                                         
+        AAC2020_FRAGCOM_fic_MAP_cuv(       
+
+            IV2 fic      //:fic:Fragment_Integer_Coord       
+        ,   REC p5d_vp0  //:BOUNDS_OF_INPUT[ fic ]
+        ,   REC p5d_vp1  //:BOUNDS_OF_FETCH[ cuv ]
+
+        )                                           
+        {
+            /** **************************************** ***
+                @VID_IID[ 0151 ]TIME[ 04:51:23 ]
+
+                Designed to scan over the on-screen
+                viewport (p5d_vp0) and map to the
+                offscreen data (p5d_vp1).
+
+                p5d_vp0 == ON SCREEN SUB AREA OF CLIENT
+                p5d_vp1 == OFF SCREEN DATA TO SAMPLE
+
+                fic: Fragment_Integer_Coordinate  
+                cuv: Canvas_User_View             
+            *** **************************************** **/
+            //:output_xy_coord_var:----------------------://
+            
+                IV2 dst;
+
+            //:----------------------:output_xy_coord_var://
+            //:INTEGER_DOWNSCALE_FORMULA:----------------://
+            #define NOT_CTF /** NOT_Convert_To_Float **/
+            #define YES_CTF MAK_F32
+
+                #define S_I     fic.x   //: big_s_x
+                #define S_0 p5d_vp0.x_0 //: big_sx0
+                #define S_1 p5d_vp0.x_1 //: big_sx1
+                #define D_0 p5d_vp1.x_0 //: lit_dx0
+                #define D_1 p5d_vp1.x_1 //: lit_dx1
+                #define D_P dst.x
+                D_P =MAK_I32(
+                    (  
+                        YES_CTF(S_I - S_0)
+                        / 
+                        (   
+                            YES_CTF( (S_1 - S_0) +1 )  
+                        /   YES_CTF( (D_1 - D_0) +1 )  
+                        )
+                    )
+                    +YES_CTF( D_0 )//:Add_New_Origin
+                );;
+                #undef  S_I 
+                #undef  S_0 
+                #undef  S_1 
+                #undef  D_0 
+                #undef  D_1 
+                #undef  D_P 
+
+                #define S_I     fic.y   //: big_s_y
+                #define S_0 p5d_vp0.y_0 //: big_sy0
+                #define S_1 p5d_vp0.y_1 //: big_sy1
+                #define D_0 p5d_vp1.y_0 //: lit_dy0
+                #define D_1 p5d_vp1.y_1 //: lit_dy1
+                #define D_P dst.y
+                D_P =MAK_I32(
+                    (  
+                        YES_CTF(S_I - S_0)
+                        / 
+                        (   
+                            YES_CTF( (S_1 - S_0) +1 )  
+                        /   YES_CTF( (D_1 - D_0) +1 )  
+                        )
+                    )
+                    +YES_CTF( D_0 )//:Add_New_Origin
+                );;
+                #undef  S_I 
+                #undef  S_0 
+                #undef  S_1 
+                #undef  D_0 
+                #undef  D_1 
+                #undef  D_P 
+                
+            #undef  NOT_CTF
+            #undef  YES_CTF
             //:----------------:INTEGER_DOWNSCALE_FORMULA://        
 
             return( dst );
@@ -272,6 +385,8 @@
         #undef  FV4      //:  18  ://              //[ x ]//
         #undef  ASS      //:  19  ://              //[ x ]//
         #undef  ERR      //:  20  ://              //[ x ]//
+        #undef  TRU      //:  21  ://              //[ x ]//
+        #undef  REC      //:  22  ://              //[ x ]//
                                                    //[ x ]//
     //:--------------------------------------:type_macros://
     //:seven_letter_macros:------------------------------://

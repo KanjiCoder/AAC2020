@@ -6,7 +6,37 @@ TODOS:
     Will need to adjust the fragment shader code to
     get this feature working.
 
+        |<--- Canvas/Client --->|
+        |<-------- vpc -------->|
+        +-----------------------+   |<-- DATA/GPU ->|
+        |       +-------+       |   +------+-------+
+        |       |       |       |   |       |       |
+        |       |  vp0  |       |   |       |       |
+        |       |       |       |   |       |       |
+        |       +-------+       |   +----[ vp1 ]----+
+        +-----------------------+   |       |       |
+                            +--------->[]   |       |
+                            |       |       |       |
+                            |       +-------+-------+
+                 [ cuv_i_x ]+       |<-- 256x256 -->|   
+                 [ cuv_i_y ]+       |CanvasUserView |
+                 ( Cavnas_User_View.x )
+                 ( Canvas_User_View.y )
 
+        VP0:Viewport_Zero(0): (Destination/Screen Viewport)
+        VP1:Viewport_One(1) : (Offscreen/Source)
+
+        VP0 === SCREEN
+        VP1 === CAMERA
+
+        p5d_cam_lef ===> p5d_vp1_lef  ( ''J'' )
+        p5d_cam_rig ===> p5d_vp1_rig  ( ''L'' )
+        p5d_cam_upp ===> p5d_vp1_upp  ( ''I'' )
+        p5d_cam_dow ===> p5d_vp1_dow  ( ''K'' )
+                                
+        p5d_cam_z_o ===> p5d_vp1_z_o  ( ''R'' )
+        p5d_cam_z_i ===> p5d_vp1_z_i  ( ''V'' )
+ 
     2:
     Josh should be able to set tiles within the design
     by clicking inside the editor.

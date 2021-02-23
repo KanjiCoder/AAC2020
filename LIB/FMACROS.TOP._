@@ -57,6 +57,17 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 40 ,       "40");
     #define  FMACROS_TAUSYNC_LoopTick( DISCARDED_ARGUMENT )    
 #endif
 //:==================================================:TAUSYNC://
+//:PAINT5D:==================================================://
+#if(            AAC2020_INCLUDE_PAINT5D >=  1 )
+_Static_assert( AAC2020_INCLUDE_PAINT5D == 41 ,       "41");
+
+    #define  FMACROS_PAINT5D_LoopTick   AAC2020_PAINT5D_LoopTick
+#endif
+#if(    AAC2020_INCLUDE_PAINT5D == 0 )
+
+    #define  FMACROS_PAINT5D_LoopTick( DISCARDED_ARGUMENT )    
+#endif
+//:==================================================:PAINT5D://
 
 //:||||||||||||||||||||||||||||||||||||||:LOOP_TICK__LoopTick://
 

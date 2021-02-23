@@ -9,6 +9,30 @@
 #define U08 uint8_t /** GCC: <stdint.h> **/
 #define F32 float
 
+        /** ************************************************ **/
+        /** @VID_IID[ 0151 ]TIME[ 00:48:10 ] * * * * * * * * **/
+        /** Decided that even though rectangle is stored as  **/
+        /** uint32 values, it makes more sense for functions **/
+        /** returning rectangles to return SIGNED I32.       **/
+        /** ************************************************ **/
+
+            struct AAC2020_POLYOGL_REC{
+                //:X_BOUNDS:
+                I32 x_0 ; //:<--@_NEVER_NEGATIVE_@.
+                I32 x_1 ; //:   But use signed for ease of
+                          //:   use as well as underflow
+                          //:   detection.
+                          //:   @_SHOULD_NOT_BE_NEGATIVE_@
+        
+                //:Y_BOUNDS:
+                I32 y_0 ; //:<--@_NEVER_NEGATIVE_@.
+                I32 y_1 ; //:   But use signed for ease of
+                          //:   use as well as underflow
+                          //:   detection.
+                          //:   @_SHOULD_NOT_BE_NEGATIVE_@
+            };
+
+
         /** Mocked up "ivec2" to store global [x,y] * * * *  **/
         /** coordinates.                            * * * *  **/
         /** @VID_IID[ 0092 ]TIME[ 00:27:55 ]        * * * *  **/

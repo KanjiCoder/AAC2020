@@ -22,8 +22,10 @@
     AAC2020_GraphicsUpdateTick()
     { //:FUNCTION_BODY
 
-        //:Flat is better than nested. 
-        //:Let's pull this stuff out of here.
+        //####################################################//
+        //[ ****** Flat is better than nested.        ****** ]//
+        //[ ****** Let's pull this stuff out of here. ****** ]//
+        //####################################################//
 
         printf("[DONT_CALL_ME_I_WONT_ANSWER]\n");
         fflush(stdout);
@@ -340,12 +342,27 @@
 
                 while( AAC2020_GINAWIN_IsWindowStillOpen() ){
 
+                
+            /** ******************************************** ***
+            @_CTRL_F_HELP_@@CTRL_F_HELP@
+            DO_NOT_REMOVE_THIS_COMMENT
+            @VID_IID[ 0151 ]TIME[ 03:50:00 ]
+            "AAC2020_*******_LoopTick( 0x000)" <-- DIRECT_CALL
+            "FMACROS_*******_LoopTick( 0x00 )" <-- IS__WRAPPED
+                    AAC2020_CPUNIFO_LoopTick( 0x00 );
+                    AAC2020_GRAQUAD_LoopTick( 0x00 );
+            //-     AAC2020_BASUNIF_LoopTick( 0x00 );  - - - -//
+                    AAC2020_TAUDEPO_LoopTick( 0x00 );
+                    AAC2020_TAUSYNC_LoopTick( 0x00 );
+                    AAC2020_PAINT5D_LoopTick( 0x00 );
+            *** ******************************************** **/
                     //:AAC2020_GraphicsUpdateTick:-----------://
                     FMACROS_CPUNIFO_LoopTick( 0x00 );
                     FMACROS_GRAQUAD_LoopTick( 0x00 );
-               //-  FMACROS_BASUNIF_LoopTick( 0x00 );  - - - -//
+            //-     FMACROS_BASUNIF_LoopTick( 0x00 );  - - - -//
                     FMACROS_TAUDEPO_LoopTick( 0x00 );
                     FMACROS_TAUSYNC_LoopTick( 0x00 );
+                    FMACROS_PAINT5D_LoopTick( 0x00 );
                     //:-----------:AAC2020_GraphicsUpdateTick:// 
 
                     /** AAC2020_GINAWIN_LoopTick(); **/

@@ -25,7 +25,9 @@
 
 //:=================================:OKAY_STATUS_INFO_MESSAGE://
 //:INFO_STATUS_INFO_MESSAGE:=================================://
-#define I32 int32_t /** GCC: <stdint.h> **/
+#define I32  int32_t /** GCC: <stdint.h> **/
+#define U32 uint32_t /** GCC: <stdint.h> **/
+
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     void
     aac2020_paint5d_Info( const char* msg_inf )
@@ -60,7 +62,85 @@
 
     };; }
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    aac2020_paint5d_Info_VPC( void ) //:MACRO[LOG_VPC]
+    {
+
+        U32 x_0 ;
+        U32 x_1 ;
+        U32 y_0 ;
+        U32 y_1 ;
+
+        AAC2020_TAUDEPO_Get( 
+            AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+        ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+        ,   AAC2020_TAUDEPO.P5D_VPC //:DEX_VAR
+        ,  &(x_0),&(x_1),&(y_0),&(y_1)
+        );;
+
+        printf("\n");
+        printf("[aac2020_paint5d_Info_VPC(CANVAS/CLIENT)]\n");
+        printf("[AAC2020_TAUDEPO.P5D_VPC.x_0]:%d\n", x_0 );
+        printf("[AAC2020_TAUDEPO.P5D_VPC.x_1]:%d\n", x_1 );
+        printf("[AAC2020_TAUDEPO.P5D_VPC.y_0]:%d\n", y_0 );
+        printf("[AAC2020_TAUDEPO.P5D_VPC.y_1]:%d\n", y_1 );
+        printf("\n");
+
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    aac2020_paint5d_Info_VP0( void ) //:MACRO[LOG_VP0]
+    {
+        U32 x_0 ;
+        U32 x_1 ;
+        U32 y_0 ;
+        U32 y_1 ;
+
+        AAC2020_TAUDEPO_Get( 
+            AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+        ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+        ,   AAC2020_TAUDEPO.P5D_VP0 //:DEX_VAR
+        ,  &(x_0),&(x_1),&(y_0),&(y_1)
+        );;
+
+        printf("\n");
+        printf("[aac2020_paint5d_Info_VP0(SCREEN/VIEWPORT)]\n");
+        printf("[AAC2020_TAUDEPO.P5D_VP0.x_0]:%d\n", x_0 );
+        printf("[AAC2020_TAUDEPO.P5D_VP0.x_1]:%d\n", x_1 );
+        printf("[AAC2020_TAUDEPO.P5D_VP0.y_0]:%d\n", y_0 );
+        printf("[AAC2020_TAUDEPO.P5D_VP0.y_1]:%d\n", y_1 );
+        printf("\n");
+
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    aac2020_paint5d_Info_VP1( void ) //:MACRO[LOG_VP1]
+    {
+        U32 x_0 ;
+        U32 x_1 ;
+        U32 y_0 ;
+        U32 y_1 ;
+
+        AAC2020_TAUDEPO_Get( 
+            AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+        ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+        ,   AAC2020_TAUDEPO.P5D_VP1 //:DEX_VAR
+        ,  &(x_0),&(x_1),&(y_0),&(y_1)
+        );;
+
+        printf("\n");
+        printf("[aac2020_paint5d_Info_VP1(CAMERA/DATA)]\n");
+        printf("[AAC2020_TAUDEPO.P5D_VP1.x_0]:%d\n", x_0 );
+        printf("[AAC2020_TAUDEPO.P5D_VP1.x_1]:%d\n", x_1 );
+        printf("[AAC2020_TAUDEPO.P5D_VP1.y_0]:%d\n", y_0 );
+        printf("[AAC2020_TAUDEPO.P5D_VP1.y_1]:%d\n", y_1 );
+        printf("\n");
+
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
 #undef  I32
+#undef  U32
 //:=================================:INFO_STATUS_INFO_MESSAGE://
 //:HELPER_FUNCTIONS_BINARY_PRINT:============================://
 #define I32  int32_t /** GCC: <stdint.h> **/
@@ -2869,6 +2949,9 @@
 #define         KEY_P5D ( AAC2020_KEYBIND.PAINT5D )   //: 04 ://
 #define             LOG   aac2020_paint5d_Info_any    //: 05 ://
 #define             ERR   aac2020_paint5d_Halt        //: 06 ://
+#define         LOG_VPC   aac2020_paint5d_Info_VPC    //: 07 ://
+#define         LOG_VP0   aac2020_paint5d_Info_VP0    //: 08 ://
+#define         LOG_VP1   aac2020_paint5d_Info_VP1    //: 09 ://
     
     I32
     aac2020_paint5d_KeyInn( signed char chr_key )
@@ -3072,27 +3155,47 @@
 
                 #_CTRL_F_HELP_#
 
-                p5d_cam_lef ===> p5d_vp1_lef  
-                p5d_cam_rig ===> p5d_vp1_rig  
-                p5d_cam_upp ===> p5d_vp1_upp  
-                p5d_cam_dow ===> p5d_vp1_dow  
-                                              
-                p5d_cam_z_o ===> p5d_vp1_z_o  
-                p5d_cam_z_i ===> p5d_vp1_z_i  
+                p5d_cam_lef ===> p5d_vp1_lef  ( ''J'' )
+                p5d_cam_rig ===> p5d_vp1_rig  ( ''L'' )
+                p5d_cam_upp ===> p5d_vp1_upp  ( ''I'' )
+                p5d_cam_dow ===> p5d_vp1_dow  ( ''K'' )
+                                           
+                p5d_cam_z_o ===> p5d_vp1_z_o  ( ''R'' )
+                p5d_cam_z_i ===> p5d_vp1_z_i  ( ''V'' )
 
             *** ******************************************** **/
 
             if( chr_key == KEY_P5D.p5d_vp1_lef ){
+                     LOG("[KEY_P5D.p5d_vp1_lef]\n",0);
+                     LOG_VPC();
+                     LOG_VP0();
+                     LOG_VP1();
                 aac2020_paint5d_MoveCamera_XY( 0 - 1 , 0 * 0 );
+                     LOG_VP1();
             }else
             if( chr_key == KEY_P5D.p5d_vp1_rig ){
+                     LOG("[KEY_P5D.p5d_vp1_rig]\n",0);
+                     LOG_VPC();
+                     LOG_VP0();
+                     LOG_VP1();
                 aac2020_paint5d_MoveCamera_XY( 0 + 1 , 0 * 0 );
+                     LOG_VP1();
             }else
             if( chr_key == KEY_P5D.p5d_vp1_upp ){
+                     LOG("[KEY_P5D.p5d_vp1_upp]\n",0);
+                     LOG_VPC();
+                     LOG_VP0();
+                     LOG_VP1();
                 aac2020_paint5d_MoveCamera_XY( 0 * 0 , 0 - 1 );
+                     LOG_VP1();
             }else                                     
-            if( chr_key == KEY_P5D.p5d_vp1_dow ){         
+            if( chr_key == KEY_P5D.p5d_vp1_dow ){   
+                     LOG("[KEY_P5D.p5d_vp1_dow]\n",0);
+                     LOG_VPC();
+                     LOG_VP0();
+                     LOG_VP1();
                 aac2020_paint5d_MoveCamera_XY( 0 * 0 , 0 + 1 );
+                     LOG_VP1();
             };;
 
             //:--------------------------------:MoveCamera_XY://
@@ -3208,6 +3311,9 @@
 #undef          KEY_P5D  //:----------------------------: 04 ://
 #undef              LOG  //:----------------------------: 05 ://
 #undef              ERR  //:----------------------------: 06 ://
+#undef          LOG_VPC  //:----------------------------: 07 ://
+#undef          LOG_VP0  //:----------------------------: 08 ://
+#undef          LOG_VP1  //:----------------------------: 09 ://
 //:================================:KEYBOARD_HANDLER:(KeyInn)://
 //:SUB_SYSTEM_BACKUP_CODE:===================================://
 #define U08 uint8_t /** GCC: <stdint.h> **/
@@ -3321,6 +3427,7 @@
 //:=================================:VIEWPORT_HELPER_FUNCTION://
 //:IOU:INIT_OR_UPDATE:=======================================://
 #define I32 int32_t /** GCC: <stdint.h> **/
+#define ERR aac2020_paint5d_Halt
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     void        /** IOU:Initialize_Or_Update **/
@@ -3380,7 +3487,12 @@
         I32 vp0_x_1 = ( cli_wid - 1 ) - (lover_x/2);
         I32 vp0_y_0 = (    0        ) + (lover_y/2);
         I32 vp0_y_1 = ( cli_hig - 1 ) - (lover_y/2);
-         
+
+
+
+        //: @POSSIBLE_PROBLEM@ - - - - - - - - - - - - - - - ://
+        //: If we are manipulating this with user controls,  ://
+        //: does this create a problem for us?               ://
         /** Set the data viewport. Start zoomed all the way  **/
         /** out so that we can see EVERYTHING.               **/
         I32 vp1_x_0 =(     0   );
@@ -3388,6 +3500,45 @@
         I32 vp1_y_0 =(     0   );
         I32 vp1_y_1 =( 256 - 1 );
 
+        //:Assert_VP0_Is_Square:-----------------------------://
+
+            //:@VID_IID[ 0151 ]TIME[ 00:25:05 ]
+            //:Extra assert because we are paranoid.
+            if(   ( vp0_x_1 - vp0_x_0 + 1 )
+               != ( vp0_y_1 - vp0_y_0 + 1 )
+            ){
+                
+                I32 vp0_wid =( ( vp0_x_1 - vp0_x_0 + 1 ) );
+                I32 vp0_hig =( ( vp0_y_1 - vp0_y_0 + 1 ) );
+
+                //: Allow off by 1. Because weird client     ://
+                //: areas could mean width of client is      ://
+                //: odd number of pixels and height of       ://
+                //: client is even num pixels. Leading to    ://
+                //: off by 1 math.                           ://
+                //: @VID_IID[ 0151 ]TIME[ 01:56:23 ]         ://
+                if( vp0_wid - vp0_hig > 1
+                ||  vp0_hig - vp0_wid > 1  
+                ){
+                    printf("\n\n");
+                    printf("[vp0_wid]:%d\n" , rec_wid );
+                    printf("[vp0_hig]:%d\n" , rec_hig );
+
+                    printf("\n\n");
+
+                    printf("[vp0_x_0]:%d\n" , vp0_x_0 );
+                    printf("[vp0_x_1]:%d\n" , vp0_x_1 );
+                    printf("[vp0_y_0]:%d\n" , vp0_y_0 );
+                    printf("[vp0_y_1]:%d\n" , vp0_y_1 );
+
+                    printf("\n\n");
+
+                    ERR("[EXPECT_DEST_VP0_TO_BE_SQUARE:2021]");
+                };;
+
+            };;
+              
+        //:-----------------------------:Assert_VP0_Is_Square://
         //:Make_Sure_Nothing_Went_Negative:------------------://
         
             /** @VID_IID[ 0084 ]TIME[ 05:14:30 ] *********** **/
@@ -3435,11 +3586,21 @@
         //: VPC:Viewport_Canvas : (Or: Window/OpenGL)        ://
         //:--------------------------------------------------://
 
+        //:TEMP_HACK:
+        //: vp0_x_0 = vpc_x_0 ;
+        //: vp0_x_1 = vpc_x_1 ;
+        //: vp0_y_0 = vpc_y_0 ;
+        //: vp0_y_1 = vpc_y_1 ;
+         
+
         AAC2020_PAINT5D_PUT_rec_inc_ALL(
             vpc_x_0 , vpc_x_1 , vpc_y_0 , vpc_y_1  //:P5D_VPC://
         ,   vp0_x_0 , vp0_x_1 , vp0_y_0 , vp0_y_1  //:P5D_VP0://
         ,   vp1_x_0 , vp1_x_1 , vp1_y_0 , vp1_y_1  //:P5D_VP1://
         );;
+
+        aac2020_paint5d_cli_wid = cli_wid;
+        aac2020_paint5d_cli_hig = cli_hig;
 
     }
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
@@ -3494,6 +3655,7 @@
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
 #undef  I32
+#undef  ERR
 //:=======================================:IOU:INIT_OR_UPDATE://
 //:INITIALIZE_PAINT5D:=======================================://
 #define U32  uint32_t /** GCC: <stdint.h> **/         //: 01 ://
@@ -3757,6 +3919,77 @@
 #undef  INF                                           //: 07 ://
 #undef  LOG                                           //: 08 ://
 //:=======================================:INITIALIZE_PAINT5D://
+//:LOOP_TICK:================================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/  //:-------: 01 ://
+#define I32  int32_t /** GCC: <stdint.h> **/  //:-------: 02 ://
+
+    /** **************************************************** ***
+
+        @VID_IID[ 0151 ]TIME[ 03:17:32 ]
+        @VID_IID[ 0151 ]TIME[ 03:19:42 ]DONE_WRITING_SUMMARY
+
+        We use a "LoopTick" function rather than a callback
+        to avoid memory coherency issues when multi threading.
+        For example if game logic is supposed to be on
+        a different thread than window logic, invoking
+        a resize-window callback function from our win32
+        code will cause us to unwittingly invoke game
+        logic from the window thread.
+
+        @_CALLBACKS_ARE_EVIL_@
+
+    *** **************************************************** **/
+
+    U32
+    aac2020_paint5d_LoopTick( U32 u32 )
+    {
+        if( u32 ){ /**RESERVED_FOR_FUTURE_USE**/ };
+
+        //:ALWAYS_UPDATE_EVERY_FRAME:------------------------://
+
+            /** DONT KNOW WHAT GOES HERE BUT I HAVE A HUNTCH **/
+            /** SOMETHING WILL GO HERE EVENTUALLY.           **/
+            /** @VID_IID[ 0151 ]TIME[ 03:35:13 ]             **/
+
+        //:------------------------:ALWAYS_UPDATE_EVERY_FRAME://
+        //:ONLY_UPDATE_IF_WINDOW_WAS_RESIZED:----------------://
+
+            /** @VID_IID[ 0151 ]TIME[ 03:35:32 ]FIRST_DRAFT  **/
+
+            I32 cli_wid = AAC2020_GINAWIN_GetClient_WID() ;
+            I32 cli_hig = AAC2020_GINAWIN_GetClient_HIG() ;
+
+            if( cli_wid != aac2020_paint5d_cli_wid
+            ||  cli_hig != aac2020_paint5d_cli_hig
+            ){
+
+                AAC2020_PAINT5D_IOU_ViewportRectangles();
+
+            };;
+
+        //:----------------:ONLY_UPDATE_IF_WINDOW_WAS_RESIZED://
+
+
+        return( 0x00 );
+    }
+
+    U32
+    AAC2020_PAINT5D_LoopTick( U32 u32 )
+    {
+        if(    AAC2020_CEDITOR_paint5d
+            != AAC2020_CEDITOR_dex_edi
+        ){
+            /** DO NOTHING. NOT OUR ACTIVE EDITOR. **/
+        }else{
+            aac2020_paint5d_LoopTick( u32 );
+        };;
+
+        return( 0x00 );
+    }
+
+#undef  U32  //:----------------------------------------: 01 ://
+#undef  I32  //:----------------------------------------: 02 ://
+//:================================================:LOOP_TICK://
 //:SECTION_UNIT_TEST:========================================://
 //:UNIT_TEST_SECTION:========================================://
 #define MAX_EXP AAC2020_PAINT5D_MAX_til_exp           //: 01 ://

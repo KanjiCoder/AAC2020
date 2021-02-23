@@ -9,6 +9,68 @@
     //[   VIDEO COMMENT TIMESTAMP EXAMPLE   ]//
 *** ******************************************************** ***
 
+@_CALLBACKS_ARE_EVIL_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @VID_IID[ 0151 ]TIME[ 03:23:23 ]
+
+    @CALLBACKS_ARE_EVIL@:
+
+        EVIL REASON #1:
+
+            Callbacks can make it so you accidentially
+            execute code on the wrong thread.
+
+        EVIL REASON #2:
+
+            Callbacks make the code hard to READ.
+            (1 more layer of indirection minimum)
+
+        EVIL REASON #3:
+
+            Callbacks make the code hard to DEBUG.
+
+        EVIL REASON #4:
+
+            Callbacks add lots of extra code:
+
+            1. Will need a function pointer typedef
+               for the callback function.
+
+            2. Will need a "WireUpCallback" function.
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@_CALLBACKS_ARE_EVIL_@
+#TOP_LEFT_PIXEL_OF_2X2_CLUSTER##################################
+    
+    @VID_IID[ 00:59:00 ]
+
+    Every variable on taudepo texture is stored in a 2x2
+    cluster of 4 pixels. When trying to get ONE XY coordinate
+    representing this cluster, we get the coord of the
+    TOP_LEF (top-left) pixel. Because graphical origin.
+
+##################################TOP_LEFT_PIXEL_OF_2X2_CLUSTER#
+@_SHOULD_NOT_BE_NEGATIVE_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @SHOULD_NOT_BE_NEGATIVE:
+
+        Means same thing as @NEVER_NEGATIVE
+        but emphasizes the idea that it "CAN" be negative
+        but for PROPER/CORRECT code it SHOULD_NOT be
+        negative.
+
+        @VID_IID[ 0151 ]TIME[ 00:53:50 ]
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@_SHOULD_NOT_BE_NEGATIVE_@
+@POSSIBLE_PROBLEM@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @_POSSIBLE_PROBLEM_@:
+        It __MIGHT__ be a problem. But not necessarily.
+        More understanding of code would let you know
+        for sure.
+
+        @VID_IID[ 0151 ]TIME[ 00:27:23 ]
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@POSSIBLE_PROBLEM@
 #_PONG_HALLWAY_2021_############################################
 
     @VID_IID[ 0140 ]TIME[ 01:18:32 ]
@@ -566,12 +628,16 @@ design to encode into the engine.
 @_NEVER_NEGATIVE_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
     @NEVER_NEGATIVE:
-        Means the number value can never be
-        negative. However, it might be zero.
+        Means the number value SHOULD_NOT be
+        negative. However, it is ALLOWED to be ZERO.
 
         For example, a pixel coordinate.
 
+        SHOULD_NOT , rather than CAN_NOT because sometimes
+        I used signed integers to easily detect underflow.
+
         @VID_IID[ 0106 ]TIME[ 01:22:15 ]
+        @VID_IID[ 0151 ]TIME[ 00:51:00 ]UPDATED
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@_NEVER_NEGATIVE_@
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@NEVER_NEGATIVE@
