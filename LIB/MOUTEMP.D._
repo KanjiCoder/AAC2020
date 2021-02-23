@@ -1,0 +1,41 @@
+
+
+
+//:TEMPORARY_MOUSE_STATE_CONTAINER_STRUCT:===================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+
+    //[ ************************************************ ]//
+    //[ LOOKING FOR GLOBAL STATE AND NOT TEMP CONTAINER? ]//
+    //[ YOU_WANT[ IMOUBOX ]( Input_MOUse_BOX )           ]//
+    //[ ************************************************ ]//
+
+    struct 
+    AAC2020_MOUTEMP{
+
+        /** ************************************** **/
+        /** Temporary container for values of same **/
+        /** name in AAC2020_IMOUBOX                **/
+        /** Temp container so we can progmatically **/
+        /** call mouse input functions in future.  **/
+        /** ************************************** **/
+
+        U32 pix_m_x ;     //:m_x: Mouse_X       :IMOUBOX_m_x ://
+        U32 pix_m_y ;     //:m_y: Mouse_Y       :IMOUBOX_m_y ://
+                          //:                                ://
+        U32 clk_c_x ;     //:c_x: Click_X       :IMOUBOX_c_x ://
+        U32 clk_c_y ;     //:c_y: Click_Y       :IMOUBOX_c_y ://
+                          //:                                ://
+        U32 upp_u_x ;     //:u_x:Mouse_Up_X     :IMOUBOX_u_x ://
+        U32 upp_u_y ;     //:u_y:Mouse_Up_Y     :IMOUBOX_u_y ://
+                          //:                                ://
+        U32 dow_d_x ;     //:d_x:Mouse_Down_X   :IMOUBOX_d_x ://
+        U32 dow_d_y ;     //:d_y:Mouse_Down_Y   :IMOUBOX_d_y ://
+                          //:                                ://
+        U32 iss_m_d ;     //:m_d:Mouse_Is_Down? :IMOUBOX_m_d ://
+        U32 iss_m_u ;     //:m_u:Mouse_Is_Up  ? :IMOUBOX_m_u ://
+        U32 iss_m_c ;     //:m_c:Mouse_Clicking?:IMOUBOX_m_c ://
+
+    };
+
+#undef  U32
+//:===================:TEMPORARY_MOUSE_STATE_CONTAINER_STRUCT://

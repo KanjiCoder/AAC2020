@@ -1364,22 +1364,6 @@
             &&  fic.y <= p5d_vp0.y_1
             ){  //:IN_BOUNDS:
 
-                //:IN_BOUNDS ==> GREEN
-                //: uv4_pix.x =MAK_U32(   0 ); //:RED
-                //: uv4_pix.y =MAK_U32( 128 ); //:GREEN
-                //: uv4_pix.z =MAK_U32(   0 ); //:BLUE
-                //: uv4_pix.w =MAK_U32( 255 ); //:ALPHA
-
-                //:@_TEMP_HACK_@
-                //: p5d_vp1.x_0 =( 0 );
-                //: p5d_vp1.y_0 =( 0 );
-                //: p5d_vp1.x_1 =( 255 );           
-                //: p5d_vp1.y_1 =( 255 );
-
-                //:Scanning Rectangle:
-                //: I32 big_s_x =( fic.x - p5d_vp0.x_0 );
-                //: I32 big_s_y =( fic.y - p5d_vp0.y_0 );
-
                 /** BETS ARE OFF WHEN MAPPING FROM **/
                 /** small range to larger range.   **/
                 IV2 cuv;
@@ -1387,22 +1371,6 @@
                 cuv=(AAC2020_FRAGCOM_fic_MAP_cuv(
                     fic , p5d_vp0 , p5d_vp1
                 ));;
-
-        ////    cuv=(
-        ////    AAC2020_FRAGCOM_big_MAP_lit(
-        ////        fic.x        //:big_s_x: SCANPOINT://   
-        ////    ,   fic.y        //:big_s_y: SCANPOINT://   
-        ////
-        ////    ,   p5d_vp0.x_0  //:big_sx0: BOUND_MIN://
-        ////    ,   p5d_vp0.y_0  //:big_sy0: BOUND_MIN://
-        ////    ,   p5d_vp0.x_1  //:big_sx1: BOUND_MAX://
-        ////    ,   p5d_vp0.y_1  //:big_sy1: BOUND_MAX://
-        ////                                       
-        ////    ,   p5d_vp1.x_0  //:lit_dx0: BOUND_MIN://
-        ////    ,   p5d_vp1.y_0  //:lit_dy0: BOUND_MIN://
-        ////    ,   p5d_vp1.x_1  //:lit_dx1: BOUND_MAX://
-        ////    ,   p5d_vp1.y_1  //:lit_dy1: BOUND_MAX://
-        ////    ));;
 
                 /** [ cuv_i_x , cuv_i_y ] should always **/
                 /** be within bounds for this code.     **/

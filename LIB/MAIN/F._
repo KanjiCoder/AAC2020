@@ -53,7 +53,59 @@
     } //:FUNCTION_BODY
 //:==========================:MAIN_ENTRY_POINT.FUNC.GAME_LOOP://
 //:MAIN_ENTRY_POINT.INPUT_HANDLER:===========================://
-#define U32 uint32_t /** GCC: <stdint.h> **/
+#define U32      uint32_t /** GCC: <stdint.h> **/     //: 01 ://
+#define DEX_EDI  (AAC2020_CEDITOR_dex_edi+0)          //: 02 ://
+#define DEX_INI  (AAC2020_CEDITOR_dex_ini+0)          //: 03 ://
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    U32 
+    AAC2020_HandleInput_Mouse( U32 u32 )
+    {
+
+        if( u32 ){ /** RESERVED FOR FUTURE USE **/ };
+
+        //:If MOUTEMP does not exist yet, then no systems
+        //:that take mouse input should exist either.
+        #if( AAC2020_INCLUDE_MOUTEMP >= 1 ) //:##############://
+        #define MOU struct AAC2020_MOUTEMP
+
+            MOU mou ={ 0 };
+
+            mou.pix_m_x  =  AAC2020_IMOUBOX_m_x ;
+            mou.pix_m_y  =  AAC2020_IMOUBOX_m_y ;
+                                                ;
+            mou.clk_c_x  =  AAC2020_IMOUBOX_c_x ;
+            mou.clk_c_y  =  AAC2020_IMOUBOX_c_y ;
+                                                ;
+            mou.upp_u_x  =  AAC2020_IMOUBOX_u_x ;
+            mou.upp_u_y  =  AAC2020_IMOUBOX_u_y ;
+                                                ;
+            mou.dow_d_x  =  AAC2020_IMOUBOX_d_x ;
+            mou.dow_d_y  =  AAC2020_IMOUBOX_d_y ;
+                                                ;
+            mou.iss_m_d  =  AAC2020_IMOUBOX_m_d ;
+            mou.iss_m_u  =  AAC2020_IMOUBOX_m_u ;
+            mou.iss_m_c  =  AAC2020_IMOUBOX_m_c ;
+
+            #if( AAC2020_INCLUDE_PAINT5D ) //:#-#-#-#-#-#-#-#://
+            if( DEX_EDI == AAC2020_CEDITOR_paint5d ){
+            if( DEX_INI == AAC2020_CEDITOR_paint5d ){
+
+                //:IS_BEING_CALLED. CONFIRMED! GOOD!
+                aac2020_paint5d_MouInn( &( mou ) );
+
+            };;};;
+            #endif //:#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#://
+
+
+        #undef  MOU
+        #endif //:###########################################://
+
+        return( 0x00 );
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
     U32
     AAC2020_HandleInput( U32 u32 ){
@@ -181,11 +233,35 @@
             //:================:DO__IT:MARK_CURRENT_KEY_DIRTY://
 
         //:========================:BATCHED_KEYBOARD_HANDLERS://
+        //:MOUSE_INPUT:======================================://
+        /** ************************************************ ***
+        @VID_IID[ 0152 ]TIME[ 00:51:55 ]DATE[ 2021_02_23 ]
+
+        Because keys pressed can change the editor
+        in focus. The safest thing for mouse handler
+        is to be AFTER the keyboard handler in case
+        we invoke a click handler on an EDITOR that
+        is in the middle of being initialized and
+        still in and invalid state.
+        
+        For example.... If your brush has an invalid
+        tile exponent ( til_exp ) loaded into it, this
+        could be the problem.
+        *** ************************************************ **/
+
+            AAC2020_HandleInput_Mouse( u32 );
+
+
+        //:======================================:MOUSE_INPUT://
 
         return( 0x00 );
     }
 
-#undef  U32
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+#undef      U32  //:------------------------------------: 01 ://
+#undef  DEX_EDI  //:------------------------------------: 02 ://
+#undef  DEX_INI  //:------------------------------------: 03 ://
 //:===========================:MAIN_ENTRY_POINT.INPUT_HANDLER://
 //:MAIN_ENTRY_POINT.FUNC:====================================://
 
@@ -270,7 +346,7 @@
                 AAC2020_GLCONST_Init       //:  18  # LIBCHAN://
                 AAC2020_CPUNIFO_InitNone   //:  19  # LIBCHAN://
                 AAC2020_GRAQUAD_Init       //:  20  # LIBCHAN://
-            //:         FREE_01     ://    //:  21  # LIBCHAN://
+                AAC2020_MOUTEMP_InitNone   //:  21  # LIBCHAN://
                 AAC2020_FRAGBED_Init       //:  22  # LIBCHAN://
                 AAC2020_PIXNAME_Init       //:  23  # LIBCHAN://
                 AAC2020_PIXSAVE_InitNone   //:  24  # LIBCHAN://
@@ -300,7 +376,7 @@
             FMACROS_GLCONST_Init(     X ); //:  18  # LIBCHAN://
             FMACROS_CPUNIFO_InitNone( 0 ); //:  19  # LIBCHAN://
             FMACROS_GRAQUAD_Init(     X ); //:  20  # LIBCHAN://
-        //:         FREE_01                //:  21  # LIBCHAN://
+            FMACROS_MOUTEMP_InitNone( 0 ); //:  21  # LIBCHAN://
             FMACROS_FRAGBED_Init(     X ); //:  22  # LIBCHAN://
             FMACROS_PIXNAME_Init(     X ); //:  23  # LIBCHAN://
             FMACROS_PIXSAVE_InitNone( 0 ); //:  24  # LIBCHAN://

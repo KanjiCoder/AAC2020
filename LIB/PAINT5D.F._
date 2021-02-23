@@ -433,775 +433,15 @@
 #undef  U16 
 #undef  I16
 //:=================================:HELPER_FUNCTIONS:GENERIC://
-//:HELPER_FUNCTIONS:CONVERSION:==============================://
-#define POT aac2020_paint5d_POT_diagpix               //: 01 ://
-#define T_E til_exp /** Tilesize_Exponent **/         //: 02 ://
-#define BRK break                                     //: 03 ://
-#define CAS case                                      //: 04 ://
-#define DEF default                                   //: 05 ://
-#define S_A _Static_assert                            //: 06 ://
-#define U08 uint8_t /** GCC: <stdint.h> **/           //: 07 ://
-#define I32 int32_t /** GCC: <stdint.h> **/           //: 08 ://
-#define ERR aac2020_paint5d_Halt                      //: 09 ://
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+//[CONVERSION_FUNCTIONS:COORDINATE_TRANSFORMING:=============]//
 
-    U08
-    aac2020_paint5d_til_exp_CTO_til_peb(
-                U08 til_exp
-    )
-    {
-        assert( til_exp <=( 8 - 1 ) );
 
-        U08 til_peb=(
-        aac2020_paint5d_LUT_til_exp_CTO_til_peb[ til_exp ] );;
 
-        return( til_peb );
-    }
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-    U08
-    aac2020_paint5d_til_exp_CTO_bip_sip(
-                U08 til_exp
-    )
-    {
-        /** [bip_sip]:BItmap_Partition____Span_In_Pixels **/
+    #include "./PAINT5D.F.CTO._" //:<--[ CTO == ConvertTO ] 
 
-        if( til_exp >= 8 ){
 
-        //    printf("[til_exp]:%d\n" , til_exp );
-        //
-        //    /** By trying to support the edge-case **/
-        //    /** of tile exponent 8 , we have found **/
-        //    /** ourselves in a bad place. Remove   **/
-        //    /** Uses of [ til_exp == 8 ] ********* **/
-        //    ERR("[8_IS_INVALID_DO_NOT_SUPPORT]");
-        };;
 
-        #if( AAC2020_CRASH_ON_NIAVE_CODE >= 1 ) //:##########://
-
-            #error "[CODE_BELOW_COULD_USE_A_JUMP_TABLE]"
-
-        #endif //:###########################################://
-
-        U08 bip_sip; /** m_c : Max_Coordinate ( x | y ) **/
-        if( 0 == til_exp ){ bip_sip = ( 128 + 0 ); };  //: 1 ://
-        if( 1 == til_exp ){ bip_sip = (  64 + 0 ); };  //: 2 ://
-        if( 2 == til_exp ){ bip_sip = (  32 + 0 ); };  //: 3 ://
-        if( 3 == til_exp ){ bip_sip = (  16 + 0 ); };  //: 4 ://
-        if( 4 == til_exp ){ bip_sip = (   8 + 0 ); };  //: 5 ://
-        if( 5 == til_exp ){ bip_sip = (   4 + 0 ); };  //: 6 ://
-        if( 6 == til_exp ){ bip_sip = (   2 + 0 ); };  //: 7 ://
-        if( 7 == til_exp ){ bip_sip = (   1 + 0 ); };  //: 8 ://
-        if( 8 == til_exp ){ bip_sip = (     1   ); };  //: 9 ://
-
-        /** @VID_IID[ 0078 ]TIME[ 1H 52M 55S ] ************* **/
-        /** This could be a bad idea, but we will allow 8    **/
-        /** to be used in some calculations. Hopefully it    **/
-        /** does not waterfall out of control in a chain     **/
-        /** reaction of edge cases that I will soon regret.  **/
-        assert(  til_exp <= AAC2020_PAINT5D_MAX_til_exp + 1);
-        assert(   7 + 1  == AAC2020_PAINT5D_MAX_til_exp + 1);
-    
-        return( bip_sip );
-    }
-
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-
-    U08
-    aac2020_paint5d_til_exp_CTO_max_cor(
-                U08 til_exp
-    )
-    {
-        /** Why is output U08 ?                **/
-        /** @VID_IID[ 0067 ]TIME[ 4H 15M 40S ] **/
-
-        U08 max_cor; /** m_c : Max_Coordinate ( x | y ) **/
-        if( 0 == til_exp ){ max_cor = ( 128 - 1 ); };  //: 1 ://
-        if( 1 == til_exp ){ max_cor = (  64 - 1 ); };  //: 2 ://
-        if( 2 == til_exp ){ max_cor = (  32 - 1 ); };  //: 3 ://
-        if( 3 == til_exp ){ max_cor = (  16 - 1 ); };  //: 4 ://
-        if( 4 == til_exp ){ max_cor = (   8 - 1 ); };  //: 5 ://
-        if( 5 == til_exp ){ max_cor = (   4 - 1 ); };  //: 6 ://
-        if( 6 == til_exp ){ max_cor = (   2 - 1 ); };  //: 7 ://
-        if( 7 == til_exp ){ max_cor = (   1 - 1 ); };  //: 8 ://
-
-        if( 8 == til_exp ){ max_cor = (     0   ); };  //: 9 ://
-        assert(  til_exp <= AAC2020_PAINT5D_MAX_til_exp + 1);
-        assert(   7 + 1  == AAC2020_PAINT5D_MAX_til_exp + 1);
-    
-        return( max_cor );
-    }
-
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-
-    U08
-    aac2020_paint5d_til_exp_CTO_diagpix(
-            U08     til_exp
-    )
-    {
-        if( til_exp <= 7 ){
-            /** Okay. Do nothing. Valid Range. **/
-        }else
-        if( 8 == til_exp ){
-            /** @VID_IID[ 0078 ]TIME[ 00H 24M 22S ] ******** **/
-            /** Okay. This tile exponent is outside of our   **/
-            /** valid range, but for some reason supporting  **/
-            /** it in our lookup table. Returns coordinate   **/
-            /** of the bottom-right-most pixel in quarkmap.  **/
-            /** ******************************************** **/
-        }else{
-            ERR("[OOB:til_exp:til_exp_CTO_diagpix]");
-        };;
-
-        U08     diagpix =aac2020_paint5d_POT_diagpix[ til_exp ];
-        return( diagpix );
-    }
-
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-
-    U08
-    aac2020_paint5d_diagpix_CTO_til_exp(
-            U08     diagpix
-    )
-    {
-
-        I32       dex = 0;
-        I32 found_dex =( 0 - 1 );
-
-        for( dex = 0 ; dex <= 8 ; dex++ ){
-
-            if( diagpix == aac2020_paint5d_POT_diagpix[ dex ] ){
-                found_dex =( dex );
-            };;
-        };;
-
-        /** Pretty sure function needs the EXACT diagonal **/
-        /** value. No snapping to nearest is performed.   **/
-        if( found_dex < 0 ){
-            ERR("[BAD_DIAGPIX_INPUT_MAYBE?]");
-        };;
-
-        /** @VID_IID[ 00H 32M 13S ] ************************ **/
-        /** For example, if found_dex is 1 , then got   .... **/
-        /** 128 for the diagpix. 128 is the origin for  .... **/
-        /** the til_exp value AFTER 0, thus til_exp 1.  .... **/
-        assert( found_dex >= 0 );     /** ****************** **/
-        assert( found_dex <= 8 );     /** ****************** **/
-        return( (U08)found_dex     ); /** ****************** **/
-
-//:WTF!? This is the wrong formula. It is the inverse.
-//:Delete this sometime. Preferably after PAINT5D is working
-////////////////////////////////////////////////////////////////
-////    /** In case type signature changes **/
-////    assert(  (((I32)diagpix)+0) < 255  );
-////
-////    /**   T_E  **/
-////    U08 til_exp =( 222 /** Invalid Trap Value **/ );
-////    /**   T_E  **/
-////
-////    switch( diagpix ){  
-////    //:pyramid_not_of_doom:------------------------------://
-////    CAS 0: T_E = ( 0                              );BRK;
-////    CAS 1: T_E = ( 0 +128                         );BRK;
-////    CAS 2: T_E = ( 0 +128 +64                     );BRK;
-////    CAS 3: T_E = ( 0 +128 +64 +32                 );BRK;
-////    CAS 4: T_E = ( 0 +128 +64 +32 +16             );BRK;
-////    CAS 5: T_E = ( 0 +128 +64 +32 +16 +8          );BRK;
-////    CAS 6: T_E = ( 0 +128 +64 +32 +16 +8 +4       );BRK;
-////    CAS 7: T_E = ( 0 +128 +64 +32 +16 +8 +4 +2    );BRK;
-////    CAS 8: T_E = ( 0 +128 +64 +32 +16 +8 +4 +2 +1 );BRK;
-////    //:------------------------------:pyramid_not_of_doom://
-////    DEF: 
-////        
-////        printf("[DP_TO_TE:diagpix]:%d\n" ,  diagpix );
-////        ERR("[INVALID_DIAGPIX_INPUT_CANNOT_CONVERT]");
-////
-////    };; assert( til_exp <= 7 && (((I32)til_exp)+0) >= 0 );
-////    S_A( AAC2020_PAINT5D_MAX_til_exp == 7 , "[ERR_MSG]" );
-////
-////    /** 8 is only 1 pixel, and thus not useful. **/
-////    /** @VID_IID[ 0068 ]TIME[ 3H 13M 15S ]      **/
-////
-////    assert( (&T_E)==(&til_exp)/**@SAME_VAR_SAME_ADDR@**/ );
-////    assert(   T_E ==  til_exp /**@SAME_VAR@**/           );
-////    return(   T_E /** til_exp **/                        );
-////////////////////////////////////////////////////////////////
-    }
-
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-
-    U08
-    aac2020_paint5d_diagpix_CTO_astipix(
-            U08     diagpix
-    )
-    {
-        if( diagpix ){ /** @NOOP@ **/ };
-        /** ************************************************ ***
-
-            @VID_IID[ 0066 -to- 0071 ]TIME[ 00H 26M 24S ]
-            @VID_IID[ 0071           ]TIME[ 03H 32M 30S ]
-
-            Cannot make this function because
-            aac2020_paint5d_astipix_CTO_diagpix(...)
-            is a one-way conversion.
-
-            BECAUSE WE HAVE INFORMATION LOSS WHEN
-            [FUNNELING / CONVERTING] DOWN TO[ diagpix ]
-            WE CANNOT DO A @BACK_AND_FORTH_CONVERSION_TEST@
-
-        *** ************************************************ **/
-        ERR("[CANNOT_MAKE_SUCH_FUNCTION:diagpix_CTO_astipix]");
-
-        return( 0x00 );
-    }
-
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-
-    U08
-    aac2020_paint5d_astipix_CTO_diagpix(
-            U08     astipix
-    )
-    {
-        U08 diagpix=( 0 );
-
-        /** ************************************************ **/
-        /** @VID_IID[ 0071 ]TIME[ 03H 47M 50S ]              **/
-        /** SEE:FILE[ PAINT5D.D._]SECTION[ PAINT5D_DATA ]    **/
-        /**      VAR[ aac2020_paint5d_POT_diagpix       ]    **/
-        /**  DIAGRAM[ #_DIA_SELECTED_TIL_QUA_#          ]    **/
-        /**                                                  **/
-        /** astipix : Auset_Sub_TIle: PIXel (location:[X|Y]) **/
-        /** diagpix : DIAGonal_PIXels .......................**/
-        /**                                                  **/
-        /** @VID_IID[ 0078 ]TIME[ 00H 49M 03S ]              **/
-        /** In retrospect.. You don't know what the hell     **/
-        /** you are doing. "lil" (last index less than )     **/
-        /** should probably be "fil" (first index less than).**/
-        /** ************************************************ **/
-
-        U08 fil  =( 0 ); //: fil == "First_Index_Lessthan"
-        U08 found=( 0 ); //: has fil been found yet?
-
-                         
-        #if( AAC2020_CRASH_ON_NIAVE_CODE >= 1 ) //:##########://
-
-            #error REWRITE_THIS_WITHOUT_GUESS_AND_CHECK
-
-        #endif //:###########################################://
-
-        for( I32 i = 0 ; i <= 9 ; i++ ){
-            if( 0 == found ){
-            if( astipix < aac2020_paint5d_POT_diagpix[ i ] ){ 
-                fil   =   i    ; 
-                found =( 0xFF );
-            };;};;
-        };;
-           
-        if( fil >= 1 ){
-            /** OKAY! ---------------------- **/
-            /** First Comparison Should      **/
-            /** never be true, so we should  **/
-            /** always have an "fil" of      **/
-            /** at least one( 1 )            **/
-            /** ---------------------------- **/    
-
-            diagpix=( aac2020_paint5d_POT_diagpix[ fil - 1 ] );
-        }else{
-
-            if( 255 == astipix ){
-
-                /** @UGLY_HACK@ ******************* **/
-                /** Edge case. Exponent 8 Locates   **/
-                /** The config pixel at bottom left **/
-                /** ONLY ONE POSSIBLE LOCATION FOR  **/
-                /** THIS SINGLE PIXEL... 255        **/
-                diagpix = 255; /** **************** **/
-
-            }else{
-
-                printf("[astipix]:%d\n",astipix);
-                printf("[::found]:%d\n",  found);
-                printf("[::::fil]:%d\n",    fil);
-                ERR("[ASSERT_FAIL:fil>=1]");
-
-            };;
-        };;
-
-        return( diagpix );
-    }
-
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-
-#undef  POT                                           //: 01 ://
-#undef  T_E                                           //: 02 ://
-#undef  BRK                                           //: 03 ://
-#undef  CAS                                           //: 04 ://
-#undef  DEF                                           //: 05 ://
-#undef  S_A                                           //: 06 ://
-#undef  U08                                           //: 07 ://
-#undef  I32                                           //: 08 ://
-#undef  ERR                                           //: 09 ://
-//:==============================:HELPER_FUNCTIONS:CONVERSION://
-//:QUARKMAP_COORD_CONVERSIONS:===============================://
-#define U08   uint8_t /** GCC: <stdint.h> **/         //: 01 ://
-#define U16  uint16_t /** GCC: <stdint.h> **/         //: 02 ://
-#define I16   int16_t /** GCC: <stdint.h> **/         //: 03 ://
-#define RES  restrict                                 //: 04 ://
-#define MIN  aac2020_paint5d_Min_I16                  //: 05 ://
-#define ERR  aac2020_paint5d_Halt                     //: 06 ://
-
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-    //: INDEX:                                               ://
-    //:      001: aac2020_paint5d_glocpix_CTO_painpix        ://
-    //:      002: aac2020_paint5d_painpix_CTO_glocpix        ://
-    //:      ----------------------------------------        ://
-    //:      003: aac2020_paint5d_glocpix_CTO_cuvipix        ://
-    //:      004: aac2020_paint5d_cuvipix_CTO_glocpix        ://
-    //:                                                      ://
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-    void
-    aac2020_paint5d_glocpix_CTO_painpix(
-        U08*  RES  til_qua /** Auset Tile Sub Quadrant Index **/
-    ,   U08*  RES  til_exp /** TileExponent (TileSizeEnum)   **/
-    ,   U08*  RES  til_lay /** TileLayer .................   **/
-    ,   U08*  RES  loc_t_x /** Local  Tile X Coord / b_x     **/
-    ,   U08*  RES  loc_t_y /** Local  Tile Y Coord / b_y     **/
-    ,   I16        glo_t_x /** Global Tile X Coord           **/
-    ,   I16        glo_t_y /** Global Tile X Coord           **/
-    )
-    {
-        /** Why output parameters at the start of signature? **/
-        /** @VID_IID[ 0067]TIME[ 3H 56M 45S ] .............. **/
-
-        //:references_can_never_be_null:---------------------://
-
-            assert( ((void*)0) != til_qua ); /** ! OUTPUTS ! **/
-            assert( ((void*)0) != til_exp ); /** ! OUTPUTS ! **/
-            assert( ((void*)0) != til_lay ); /** ! OUTPUTS ! **/
-            assert( ((void*)0) != loc_t_x ); /** ! OUTPUTS ! **/
-            assert( ((void*)0) != loc_t_y ); /** ! OUTPUTS ! **/
-
-        //:---------------------:references_can_never_be_null://
-        //:bounds_check_inputs:------------------------------://
-
-            assert( AAC2020_PAINT5D_MAX_glo_t_x >= glo_t_x );
-            assert( AAC2020_PAINT5D_MAX_glo_t_y >= glo_t_y );
-            assert(                0            <= glo_t_x );
-            assert(                0            <= glo_t_y );
-  
-        //:------------------------------:bounds_check_inputs://
-        //:configuration_pixel_coords_are_invalid:-----------://
-        #define NOW aac2020_paint5d_unit_test_is_running_now
-
-            U08 ocp =( 0 ); /** On_Configuration_Pixel? **/
-            if( 255 == glo_t_x && 255 == glo_t_y ){ ocp=( 1 );};
-            if( 511 == glo_t_x && 255 == glo_t_y ){ ocp=( 1 );};
-            if( 255 == glo_t_x && 511 == glo_t_y ){ ocp=( 1 );};
-            if( 511 == glo_t_x && 511 == glo_t_y ){ ocp=( 1 );};
-            if( ocp >= 1 ){
-            
-                if( NOW >= 1 ){
-                    printf("[aac2020_paint5d_CTF]%s\n"
-                            ,aac2020_paint5d_CTF );;
-
-                    printf("[aac2020_paint5d_CTS]%s\n"
-                            ,aac2020_paint5d_CTS );;
-                };;
-
-                ERR("[YOU_ARE_ON_A_CONFIGURATION_PIXEL_2021]");
-            };;
-
-        #undef NOW
-        //:-----------:configuration_pixel_coords_are_invalid://
-        //:Get_Variables_Ready_To_Work_With:-----------------://
-
-            I16 i16_til_qua =( 0 - 1001 );
-            I16 i16_til_exp =( 0 - 1001 );
-            I16 i16_til_lay =( 0 - 1001 );
-            I16 i16_loc_t_x =( 0 - 1001 );
-            I16 i16_loc_t_y =( 0 - 1001 );
-
-            I16 i16_gtx =( (I16)( glo_t_x ) );
-            I16 i16_gty =( (I16)( glo_t_y ) );
-
-            I16 rem_i_x =( 0 - 2002 ); /** Remainder: X      **/
-            I16 rem_i_y =( 0 - 2002 ); /** Remainder: Y      **/
-
-            I16 o_x_qua =( 0 - 2002 ); /** XY Location Of    **/
-            I16 o_y_qua =( 0 - 2002 ); /** til_qua           **/
-
-            I16 diagp_x =( 0 - 2002 ); /** diagpix.x         **/
-            I16 diagp_y =( 0 - 2002 ); /** diagpix.y         **/
-            I16 diagpix =( 0 - 2002 ); /** diagonal_pixels   **/
-
-            I16 o_x_lay =( 0 - 2002 ); /** XY Location of    **/
-            I16 o_y_lay =( 0 - 2002 ); /** til_lay           **/
-
-            I16 bip_sip =( 0 - 2002 ); /** BItmap_Partition  **/
-                                       /** Span_In_Pixels    **/
-
-            I16 max_cor =( 0 - 2002 ); /** Bounds Checking   **/
-        
-        //:-----------------:Get_Variables_Ready_To_Work_With://
-        //:Calculate:2D_XY_LOCATIONS:------------------------://
-        #define AST_CTO_DIA  aac2020_paint5d_astipix_CTO_diagpix
-
-            //:CALC_AND_REBASE_LOCAL:til_qua:----------------://
-            //:                      o_x_qua                 ://
-            //:                      o_y_qua                 ://
-
-                /** @CALC@ **/
-                o_x_qua = ( i16_gtx / 256 );
-                o_y_qua = ( i16_gty / 256 ); //:<<<<<<<<<<<<<<<<<<<<< REFACTOR_TO[ qua_c_x , qua_c_y ]
-
-                /** @REBASE_LOCAL@ **/
-                rem_i_x = i16_gtx - ( o_x_qua * 256 );
-                rem_i_y = i16_gty - ( o_y_qua * 256 );
-
-                assert( rem_i_x >=   0 );
-                assert( rem_i_y >=   0 );
-                assert( rem_i_x <= 255 );
-                assert( rem_i_y <= 255 );
-
-                /** **************************************** ***
-
-                [ rem_i_x , rem_i_y ] is now LOCAL to
-                #_DIA_SELECTED_TIL_QUA_#
-                @VID_IID[ 0068 ]TIME[ 2H 32M 10S ]
-
-                [ rem_i_x , rem_i_y ] == ( astipix )
-                At this PLACE in the code.
-                @VID_IID[ 0068 ]TIME[ 2H 40M 00S ]
-
-                *** **************************************** **/
-
-            //:                                       o_x_qua://
-            //:                                       o_y_qua://
-            //:----------------:CALC_AND_REBASE_LOCAL:til_qua://
-            //:CALC_AND_REBASE_LOCAL:til_exp:----------------://
-            //:                  i16_til_exp                 ://
-
-                /** astipix : Auset_Sub_TIle:PIXel(loc:[X|Y])**/
-                /** diagpix : DIAGonal_PIXels ...............**/
-
-                diagp_x = AST_CTO_DIA( rem_i_x ); //:diagpix.x
-                diagp_y = AST_CTO_DIA( rem_i_y ); //:diagpix.y
-                diagpix = MIN( diagp_x , diagp_y );
-
-                /** @CALC@ **/
-                                        i16_til_exp=((U16)(
-                aac2020_paint5d_diagpix_CTO_til_exp(
-                        (  (U08)diagpix  )        
-                )));;
-
-                /** @REBASE_LOCAL@ **/
-                rem_i_x =( rem_i_x - diagpix );
-                rem_i_y =( rem_i_y - diagpix );
-
-            //:                                   i16_til_exp://
-            //:----------------:CALC_AND_REBASE_LOCAL:til_exp://
-            //:CALC_AND_REBASE_LOCAL:til_lay:----------------://
-
-                //:  @VID_IID[ 0072 ]TIME[ 01H 00M 15S ]     ://
-                //:  1D: [      til_lay      ]   ............://
-                //:  2D: [ o_x_lay , o_y_lay ]   ............://
-
-                bip_sip =( 
-                    aac2020_paint5d_til_exp_CTO_bip_sip(
-                                i16_til_exp             ));;
-                
-                assert( rem_i_x <= 255 );
-                assert( rem_i_y <= 255 );
-                
-                /** @CALC@ **/
-                o_x_lay =( rem_i_x / bip_sip );
-                o_y_lay =( rem_i_y / bip_sip );
-                
-                assert( o_x_lay >= 0 && o_x_lay <= 1 );
-                assert( o_y_lay >= 0 && o_y_lay <= 1 );
-                
-                if( 1
-                &&  1 == o_x_lay
-                &&  1 == o_y_lay
-                ){
-                    ERR("[DIAGONAL_QUAD_IS_FOR_NESTING]");
-                };;
-
-                /** @REBASE_LOCAL@ **/
-                rem_i_x = ( rem_i_x - ( o_x_lay * bip_sip ) );
-                rem_i_y = ( rem_i_y - ( o_y_lay * bip_sip ) );
-
-            //:----------------:CALC_AND_REBASE_LOCAL:til_lay://
-            //:CALC_AND_REBASE_LOCAL:[loc_t_x,loc_t_y]:------://
-
-                max_cor =(
-                    aac2020_paint5d_til_exp_CTO_max_cor(
-                        (  (U08)i16_til_exp  )          ));;
-                
-                assert( rem_i_x >= 0 );
-                assert( rem_i_y >= 0 );
-                assert( rem_i_x <= max_cor );
-                assert( rem_i_y <= max_cor );
-
-                i16_loc_t_x = ( rem_i_x );
-                i16_loc_t_y = ( rem_i_y );
-
-            //:------:CALC_AND_REBASE_LOCAL:[loc_t_x,loc_t_y]://
-
-        #undef  AST_CTO_DIA
-        //:------------------------:Calculate:2D_XY_LOCATIONS://
-        //:Calculate:1D_INDEX_LOCATIONS:---------------------://
-        #define TIL_QUA_SAN ( 2 ) /** 2x2 cells( WID == HIG )**/
-        #define TIL_LAY_SAN ( 2 ) /** 2x2 cells( WID == HIG )**/
-
-            /** ******************************************** ***
-                @VID_IID[ 0072 ]TIME[ 00H 08M 40S ] 
-                SAN == SPAN , means WID == HIG
-                Use this variable to preserve the
-                balance of tokens in our code.
-            *** ******************************************** **/
-        
-            i16_til_qua = o_x_qua + ( TIL_QUA_SAN * o_y_qua);
-        //: i16_til_exp =( ALREADY_CALCULATED_MY_FRIEND     );
-            i16_til_lay = o_x_lay + ( TIL_LAY_SAN * o_y_lay);
-        //: i16_loc_t_x =( ALREADY_CALCULATED_MY_FRIEND     );
-        //: i16_loc_t_y =( ALREADY_CALCULATED_MY_FRIEND     );
-
-        #undef  TIL_QUA_SAN  
-        #undef  TIL_LAY_SAN  
-        //:---------------------:Calculate:1D_INDEX_LOCATIONS://
-        //:RETURN_VIA_OUTPUT_PARAMETERS:---------------------://
-
-            assert(             i16_til_qua >=   0 ); //: 01 ://
-            assert(             i16_til_exp >=   0 ); //: 02 ://
-            assert(             i16_til_lay >=   0 ); //: 03 ://
-            assert(             i16_loc_t_x >=   0 ); //: 04 ://
-            assert(             i16_loc_t_y >=   0 ); //: 05 ://
-
-            assert(             i16_til_qua <= 255 ); //: 01 ://
-            assert(             i16_til_exp <= 255 ); //: 02 ://
-            assert(             i16_til_lay <= 255 ); //: 03 ://
-            assert(             i16_loc_t_x <= 255 ); //: 04 ://
-            assert(             i16_loc_t_y <= 255 ); //: 05 ://
-
-            (*til_qua)=(  (U08) i16_til_qua        ); //: 01 ://
-            (*til_exp)=(  (U08) i16_til_exp        ); //: 02 ://
-            (*til_lay)=(  (U08) i16_til_lay        ); //: 03 ://
-            (*loc_t_x)=(  (U08) i16_loc_t_x        ); //: 04 ://
-            (*loc_t_y)=(  (U08) i16_loc_t_y        ); //: 05 ://
-
-        //:---------------------:RETURN_VIA_OUTPUT_PARAMETERS://
-        return;
-    }
-
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-
-    void
-    aac2020_paint5d_painpix_CTO_glocpix(
-        U08        til_qua /** Auset Tile Sub Quadrant Index **/
-    ,   U08        til_exp /** TileExponent (TileSizeEnum)   **/
-    ,   U08        til_lay /** TileLayer .................   **/
-    ,   U08        loc_t_x /** Local  Tile X Coord / b_x     **/
-    ,   U08        loc_t_y /** Local  Tile Y Coord / b_y     **/
-    ,   I16*  RES  glo_t_x /** Global Tile X Coord           **/
-    ,   I16*  RES  glo_t_y /** Global Tile X Coord           **/
-    )
-    {
-        //:references_can_never_be_null:---------------------://
-
-            assert( ((void*)0) != glo_t_x );
-            assert( ((void*)0) != glo_t_y );
-
-        //:---------------------:references_can_never_be_null://
-        //:bounds_check_inputs:------------------------------://
-        #define ASS assert 
-
-            if( 8 == til_exp ){
-
-                //:TODO: Enumeration to tell us what unit
-                //:      test is currently being ran.
-                printf("[UTS]:%s\n", aac2020_paint5d_CTS );
-                printf("[UTF]:%s\n", aac2020_paint5d_CTF );
-                printf("[BAD:T_E:painpix_CTO_glocpix]\n");
-                ERR("[NOW_CRASHING_2021]");
-            };;
-
-            ASS( AAC2020_PAINT5D_MAX_til_qua ==    3    );
-            ASS( AAC2020_PAINT5D_MAX_til_exp ==    7    );
-            ASS( AAC2020_PAINT5D_MAX_til_lay ==    2    );
-
-            ASS( AAC2020_PAINT5D_MAX_til_qua     >= til_qua );
-            ASS( AAC2020_PAINT5D_MAX_til_exp     >= til_exp );
-            ASS( AAC2020_PAINT5D_MAX_til_lay     >= til_lay );
-
-            U08  /* max_cor */                max_cor =(
-                ( aac2020_paint5d_til_exp_CTO_max_cor( 
-                                  til_exp )));;
-
-            ASS( max_cor >=        loc_t_x          );
-            ASS( max_cor >=        loc_t_y          );
-            ASS(    0    <= (((I16)loc_t_x)+0)      );
-            ASS(    0    <= (((I16)loc_t_y)+0)      );
-
-        #undef  ASS   
-        //:------------------------------:bounds_check_inputs://
-        //:declare_all_variables:----------------------------://
-
-            I16 tempi_x =( 0 - 1001 ); /** temp_integer: x   **/
-            I16 tempi_y =( 0 - 1001 ); /** temp_integer: y   **/
-
-            I16 o_x_qua =( 0 - 2002 ); /** til_qua.x **/
-            I16 o_y_qua =( 0 - 2002 ); /** til_qua.y **/
-
-            I16 diagpix =( 0 - 3003 );
-
-            I16 o_x_lay =( 0 - 4004 ); /** til_lay.x **/
-            I16 o_y_lay =( 0 - 4004 ); /** til_lay.y **/
-
-            I16 i16_gtx =( 0 - 5005 ); /** glo_t_x  AS  I16 **/
-            I16 i16_gty =( 0 - 5005 ); /** glo_t_y  AS  I16 **/
-
-            /** @VID_IID[ 0067 ]TIME[ 4H 25M 20S ]       **/
-            /** I16 is         ENOUGH addressing space.  **/
-            /** U08 is __NOT__ ENOUGH addressing space.  **/
-    
-        //:----------------------------:declare_all_variables://
-        //:CALCULATE:painpix_CTO_glocpix:--------------------://
-
-            tempi_x =  til_qua         % ( 2 /** @WID@ **/ ) ;
-            tempi_y = (til_qua-tempi_x)/ ( 2 /** @WID@ **/ ) ;
-            o_x_qua = ( tempi_x * 256 ); /** offset_x_QUA **/
-            o_y_qua = ( tempi_y * 256 ); /** offset_y_QUA **/
-            
-            /** diagpix: DIAgonal_PIXels (offset) **/
-            diagpix =(I16)( aac2020_paint5d_til_exp_CTO_diagpix( 
-                                            til_exp ) );;
-
-            tempi_x =  til_lay         % ( 2 /** @WID@ **/ ) ;
-            tempi_y = (til_lay-tempi_x)/ ( 2 /** @WID@ **/ ) ;
-            o_x_lay = ( tempi_x * ( max_cor + 1 ) );
-            o_y_lay = ( tempi_y * ( max_cor + 1 ) );
-
-                //:error_check_range_of_temp:----------------://
-                assert( tempi_x >= 0 && tempi_x <= 1 );
-                assert( tempi_y >= 0 && tempi_y <= 1 );
-                if( 1
-                &&  1 == tempi_x
-                &&  1 == tempi_y
-                ){
-                    ERR("[BOTH_CELL_COORDS_CANNOT_BE_ONE]");
-                };;
-                //:----------------:error_check_range_of_temp://
-
-            i16_gtx=( o_x_qua + diagpix + o_x_lay + loc_t_x );
-            i16_gty=( o_y_qua + diagpix + o_y_lay + loc_t_y );
-            assert( i16_gtx >= 0 && i16_gtx <= ( 512 - 1 ) );
-            assert( i16_gty >= 0 && i16_gty <= ( 512 - 1 ) );
-            (*glo_t_x)=(  (U16)( i16_gtx )  );
-            (*glo_t_y)=(  (U16)( i16_gty )  );
-
-        //:--------------------:CALCULATE:painpix_CTO_glocpix://
-
-    }
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-    void
-    aac2020_paint5d_glocpix_CTO_cuvipix(
-    /**/U08*  RES  til_exp /** TileExponent (TileSizeEnum)   **/
-    ,   U08*  RES  til_lay /** TileLayer .................   **/
-    ,   U08*  RES  cuv_i_x /** CanvasUserView_(coord)_X      **/
-    ,   U08*  RES  cuv_i_y /** CanvasUserView_(coord)_Y      **/
-    ,   I16        glo_t_x /** Global Tile X Coord           **/
-    ,   I16        glo_t_y /** Global Tile X Coord           **/
-    )
-    {
-        if( til_exp ){ /** NOOP **/ };
-        if( til_lay ){ /** NOOP **/ };
-        if( cuv_i_x ){ /** NOOP **/ };
-        if( cuv_i_y ){ /** NOOP **/ };
-        if( glo_t_x ){ /** NOOP **/ };
-        if( glo_t_y ){ /** NOOP **/ };
-
-        ERR("[YAGNI:DONT_WRITE_IT_UNITL_YOU_NEED_IT]");
-    }
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-    void
-    aac2020_paint5d_cuvipix_CTO_glocpix(
-    /**/U08        til_exp /** TileExponent (TileSizeEnum)   **/
-    ,   U08        til_lay /** TileLayer .................   **/
-    ,   U08        cuv_i_x /** CanvasUserView_(coord)_X      **/
-    ,   U08        cuv_i_y /** CanvasUserView_(coord)_Y      **/
-    ,   I16*  RES  glo_t_x /** Global Tile X Coord           **/
-    ,   I16*  RES  glo_t_y /** Global Tile X Coord           **/
-    )
-    {
-        //:error_check_inputs:-------------------------------://
-
-            if( til_exp > (  8-1) ){ ERR("[til_exp_2021]" ); };
-            if( til_lay > (  3-1) ){ ERR("[til_lay_2021]" ); };
-            /// cuv_i_x > (256-1) )  ERR("[cuv_i_x_2021]" );////
-            /// cuv_i_y > (256-1) )  ERR("[cuv_i_y_2021]" );////
-
-            /** References can never be null **/
-            if( ((I16*)0) ==glo_t_x ){ ERR("[glo_t_x_2021]" );};
-            if( ((I16*)0) ==glo_t_y ){ ERR("[glo_t_y_2021]" );};
-
-        //:-------------------------------:error_check_inputs://
-
-        /** What quadrant are you in on the bitmap ? **/
-        U08 til_qua_q_x =( cuv_i_x / 128 );
-        U08 til_qua_q_y =( cuv_i_y / 128 );
-        assert( til_qua_q_x <= 1 );
-        assert( til_qua_q_y <= 1 );
-
-        /** ************************************************ **/
-        /** Origin of quadrant in terms of pebble coords.    **/
-        /** @VID_IID[ 0106 ]TIME[ 02:11:52 ] .............   **/
-        U08 til_qua_o_x =( til_qua_q_x * 128 ); /** ******** **/
-        U08 til_qua_o_y =( til_qua_q_y * 128 ); /** ******** **/
-        assert( til_qua_o_x <= (128 + 0) );
-        assert( til_qua_o_y <= (128 + 0) );
-
-        /** xy to index formula for 2x2 cells **/
-        U08 til_qua = til_qua_q_x + ( til_qua_q_y  * 2 );
-        assert( til_qua <=(4-1) );
-
-        U08 til_peb=(
-        aac2020_paint5d_til_exp_CTO_til_peb(
-                        til_exp ));;
-  
-
-        /** ********************************* **/
-        /** @VID_IID[ 0106 ]TIME[ 03:05:00 ]  **/
-        /** locuv_x: LocalCanvasUserView_X    **/
-        /** locuv_y: LocalCanvasUserView_Y    **/
-        U08 locuv_x = ( cuv_i_x - til_qua_o_x );
-        U08 locuv_y = ( cuv_i_y - til_qua_o_y );
-        assert( locuv_x <= (128-1) );     /** **/
-        assert( locuv_y <= (128-1) );     /** **/
-        /** ********************************* **/
-
-        U08 loc_t_x=( locuv_x / til_peb );
-        U08 loc_t_y=( locuv_y / til_peb );
-        assert( loc_t_x <= ( 128-1) );
-        assert( loc_t_y <= ( 128-1) );
-
-        aac2020_paint5d_painpix_CTO_glocpix(
-            til_qua /** Auset Tile Sub Quadrant Index **/
-        ,   til_exp /** TileExponent (TileSizeEnum)   **/
-        ,   til_lay /** TileLayer .................   **/
-        ,   loc_t_x /** Local  Tile X Coord / b_x     **/
-        ,   loc_t_y /** Local  Tile Y Coord / b_y     **/
-        ,   glo_t_x /** Global Tile X Coord           **/
-        ,   glo_t_y /** Global Tile X Coord           **/
-        );;
-    }
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-#undef  U08                                           //: 01 ://
-#undef  U16                                           //: 02 ://
-#undef  I16                                           //: 03 ://
-#undef  RES                                           //: 04 ://
-#undef  MIN                                           //: 05 ://
-#undef  ERR                                           //: 06 ://
-//:===============================:QUARKMAP_COORD_CONVERSIONS://
+//[=============:CONVERSION_FUNCTIONS:COORDINATE_TRANSFORMING]//
 //:PIXEL_BIT_PACKING:========================================://
 //:@VID_IID[ 0080 ]TIME[ 01:02:20 ]==========================://
 #define U08 uint8_t /** GCC: <stdint.h> **/           //: 01 ://
@@ -2519,6 +1759,12 @@
     void
     aac2020_paint5d_ToggleTile( void )
     {
+        //:ADDED_DATE[ 2021_02_23 ]//////////////////////////://
+
+            //:dirty flag.
+            aac2020_paint5d_needs_to_sync_to_gpu=( 1 );
+
+        //://////////////////////////ADDED_DATE[ 2021_02_23 ]://
         //:variable_declarations:----------------------------://
 
             /// t_x =  ENDED_UP_USING[ loc_t_x ]INSTEAD ////////
@@ -2942,6 +2188,278 @@
 #undef      LOG                                       //: 07 ://
 //:=========================:DEFAULT_TILE_DESIGN_FILL_PATTERN://
 //:============================:functions_wired_into_keyboard://
+//:MOUSE_INPUT_HANDLER:(MouInn):=============================://
+#define U08  uint8_t /** GCC: <stdint.h> **/          //: 01 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 02 ://
+#define I32  int32_t /** GCC: <stdint.h> **/          //: 03 ://
+#define MOU struct AAC2020_MOUTEMP                    //: 04 ://
+#define REC struct AAC2020_POLYOGL_REC                //: 05 ://
+#define IV2 struct AAC2020_POLYOGL_IV2                //: 06 ://
+#define ASS assert                                    //: 07 ://
+#define LOG aac2020_paint5d_Info_any                  //: 08 :// 
+#define ERR aac2020_paint5d_Halt                      //: 09 ://        
+
+    //:OMC: On_Mouse_Click / OnMouseClick
+
+    I32
+    aac2020_paint5d_MouInn_OMC_InBoundCheck(
+        MOU* mou
+    )
+    {
+    #define CLK_C_X ( mou -> clk_c_x )
+    #define CLK_C_Y ( mou -> clk_c_y )
+
+        I32 is_click_within_canvas_user_view_bounds=( 0 );
+
+        U32 x_0 ;
+        U32 x_1 ;
+        U32 y_0 ;
+        U32 y_1 ;
+
+        AAC2020_TAUDEPO_Get( 
+            AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+        ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+        ,   AAC2020_TAUDEPO.P5D_VP0 //:DEX_VAR
+        ,  &(x_0),&(x_1),&(y_0),&(y_1)
+        );;
+
+        if( 1==1
+        &&  CLK_C_X >= x_0 && CLK_C_X <= x_1
+        &&  CLK_C_Y >= y_0 && CLK_C_Y <= y_1
+        ){
+            is_click_within_canvas_user_view_bounds =( 1 );
+        }else{
+            is_click_within_canvas_user_view_bounds =( 0 );
+
+            printf("[mou->clk_c_x]:%d\n",mou->clk_c_x);
+            printf("[mou->clk_c_y]:%d\n",mou->clk_c_y);
+            LOG("[CLICK_NOT_IN_CANVAS_USER_VIEW_BOUNDS]",0);
+        };;
+         
+        return( 
+            is_click_within_canvas_user_view_bounds
+        );;
+    #undef CLK_C_X
+    #undef CLK_C_Y
+    }
+
+    I32
+    aac2020_paint5d_MouInn_OMC_InBoundActions(
+        MOU* mou
+    )
+    {
+        //:toggle_tile_at_mouse_position:--------------------://
+         
+        LOG("[PAINT5D:IN_BOUND_MOUSE_CLICK]" , ((void*)0) );
+                
+            //:Declare_Variables:----------------------------://
+
+                U32 u_1 ; //:UNUSED_1                ://
+                U32 u_2 ; //:UNUSED_2                ://
+                U32 u_3 ; //:UNUSED_3                ://
+
+                U32 x_0 ;
+                U32 x_1 ;
+                U32 y_0 ;
+                U32 y_1 ;
+
+                REC p5d_vp0;
+                REC p5d_vp1;
+
+                U32 til_exp; //:AKA[ p5d_exp | t_e ]
+                             //:[ til_exp == TileSizeExponent ]
+
+                U08 u08_t_q ;  //: TILE_QUADRANT_1D_LOCATION ://
+                U08 u08_b_x ;  //: BRUSH_PIXEL_LOCATION: X   ://
+                U08 u08_b_y ;  //: BRUSH_PIXEL_LOCATION: Y   ://
+
+                U32 p5d_t_q ;  //: TILE_QUADRANT_1D_LOCATION ://
+                U32 p5d_b_x ;  //: BRUSH_PIXEL_LOCATION: X   ://
+                U32 p5d_b_y ;  //: BRUSH_PIXEL_LOCATION: Y   ://
+
+                IV2 fic ; //:Fragment_Integer_Coordinate
+                IV2 cuv ; //:cuv: Canvas_User_View://
+                        //:SEE_FILE[ PAINT5D.D._           ]
+                        //:SEE_DIAGRAM[ #CANVAS_USER_VIEW# ]
+                
+                U32 cuv_i_x; //:cuvipix.x
+                U32 cuv_i_y; //:cuvipix.y
+
+            //:----------------------------:Declare_Variables://
+            //:Get_RECTANGLE_Vars_From_CPU_Bitmap:-----------://
+
+                //:- - - - - - - - - - -- - - - - - - - - - -://
+                AAC2020_TAUDEPO_Get( 
+                    AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+                ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+                ,   AAC2020_TAUDEPO.P5D_VP0 //:DEX_VAR
+                ,  &(x_0),&(x_1),&(y_0),&(y_1)
+                );;
+                p5d_vp0.x_0 = ( x_0 );
+                p5d_vp0.x_1 = ( x_1 );
+                p5d_vp0.y_0 = ( y_0 );
+                p5d_vp0.y_1 = ( y_1 );
+                //:- - - - - - - - - - -- - - - - - - - - - -://
+                AAC2020_TAUDEPO_Get( 
+                    AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+                ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+                ,   AAC2020_TAUDEPO.P5D_VP1 //:DEX_VAR
+                ,  &(x_0),&(x_1),&(y_0),&(y_1)
+                );;
+                p5d_vp1.x_0 = ( x_0 );
+                p5d_vp1.x_1 = ( x_1 );
+                p5d_vp1.y_0 = ( y_0 );
+                p5d_vp1.y_1 = ( y_1 );
+                //:- - - - - - - - - - -- - - - - - - - - - -://
+
+            //:-----------:Get_RECTANGLE_Vars_From_CPU_Bitmap://
+            //:Get_Brush_til_exp:----------------------------://
+
+                AAC2020_TAUDEPO_Get( 
+                    AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+                ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+                ,   AAC2020_TAUDEPO.P5D_T_E //:DEX_VAR
+                ,  &(til_exp),&(u_1),&(u_2),&(u_3)
+                );;
+
+            //:----------------------------:Get_Brush_til_exp://
+            //:MouseFrag_CTO_CanvasUserView:-----------------://
+
+                fic.x =( mou -> clk_c_x );
+                fic.y =( mou -> clk_c_y );
+
+                cuv=(AAC2020_FRAGCOM_fic_MAP_cuv(
+                    fic , p5d_vp0 , p5d_vp1
+                ));;
+                if(  1==1
+                &&   cuv.x >=0 && cuv.x <= (256-1)     
+                &&   cuv.y >=0 && cuv.y <= (256-1)  
+                ){
+                    /** Do nothing. Valid Range. **/
+                }else{
+                    printf("[*******************]\n\n");
+                    printf("[fic.x]:%d\n", fic.x );
+                    printf("[fic.y]:%d\n", fic.y );
+                    printf("[cuv.x]:%d\n", cuv.x );
+                    printf("[cuv.y]:%d\n", cuv.y );
+                    printf("[*******************]\n\n");
+                    ERR("[CANVAS_USER_VIEW_OOB:YEAR_2021]");
+                };;
+                cuv_i_x=( (U08)( cuv.x ) );
+                cuv_i_y=( (U08)( cuv.y ) );
+          
+            //:-----------------:MouseFrag_CTO_CanvasUserView://
+            //:CanvasUserView_CTO_BrushPixelCoord:-----------://
+
+                //:[ loc_t_x ===( b_x | brushpix.x ) ]
+                //:[ loc_t_y ===( b_y | brushpix.y ) ]
+
+                AAC2020_PAINT5D_cuvipix_CTO_bruspix(
+                    cuv_i_x  //:Canvas_User_View:cuvipix: X 
+                ,   cuv_i_y  //:Canvas_User_View:cuvipix: Y 
+                ,   til_exp  //:TileSizeExponent:til_exp
+
+                , &(u08_t_q) //:TileQuadrant/til_qua/P5D_T_Q
+                , &(u08_b_x) //:Brush_X:OUTPUT_PARAM/P5D_B_X
+                , &(u08_b_y) //:BRUSH_Y:OUTPUT_PARAM/P5D_B_Y
+                );;
+                p5d_t_q=( (U32)u08_t_q );
+                p5d_b_x=( (U32)u08_b_x );
+                p5d_b_y=( (U32)u08_b_y );
+
+                //:Pretty sure this is wrong...
+                //:Because it is not local to tile quadrant.
+                printf("[p5d_b_x]:%d\n", p5d_b_x);
+                printf("[p5d_b_y]:%d\n", p5d_b_y);
+
+            //:-----------:CanvasUserView_CTO_BrushPixelCoord://
+            //:Store_Brush_Coord_In_Texture:-----------------://
+            /** ******************************************** ***
+            @VID_IID[ 0153 ]TIME[ 01:36:32 ]
+            The [ p5d_b_x , p5d_b_y ] coordinate is LOCAL
+            to the TileQuadrant( t_q / til_qua ) so we
+            MUST SET the[ p5d_t_q ]as well here for the
+            toggle tile to function properly.
+            *** ******************************************** **/
+
+                AAC2020_TAUDEPO_Put( 
+                    AAC2020_TAUDEPO.TAU_015        //:DEX_TAU
+                ,   AAC2020_TAUDEPO.PAINT5D        //:DEX_SUB
+                ,   AAC2020_TAUDEPO.P5D_T_Q        //:DEX_VAR
+                ,   (p5d_t_q), (u_1), (u_2), (u_3) //:<-- OUT
+                );;
+
+                AAC2020_TAUDEPO_Put( 
+                    AAC2020_TAUDEPO.TAU_015        //:DEX_TAU
+                ,   AAC2020_TAUDEPO.PAINT5D        //:DEX_SUB
+                ,   AAC2020_TAUDEPO.P5D_B_X        //:DEX_VAR
+                ,   (p5d_b_x), (u_1), (u_2), (u_3) //:<-- OUT
+                );;
+        
+                AAC2020_TAUDEPO_Put( 
+                    AAC2020_TAUDEPO.TAU_015        //:DEX_TAU
+                ,   AAC2020_TAUDEPO.PAINT5D        //:DEX_SUB
+                ,   AAC2020_TAUDEPO.P5D_B_Y        //:DEX_VAR
+                ,   (p5d_b_y), (u_1), (u_2), (u_3) //:<-- OUT
+                );;
+
+            //:-----------------:Store_Brush_Coord_In_Texture://
+            //:Statefull_Toggle_Tile_Function:---------------://
+
+                aac2020_paint5d_ToggleTile();
+
+            //:---------------:Statefull_Toggle_Tile_Function://
+    
+        //:--------------------:toggle_tile_at_mouse_position://
+
+        return( 0 );
+    }
+
+    I32
+    aac2020_paint5d_MouInn_OMC_OuterMain(
+        MOU* mou
+    )
+    {
+        //:::::::::::::::::::::::::OMC:OnMouseClick::::::::::://
+        if( aac2020_paint5d_MouInn_OMC_InBoundCheck(   mou )>0){
+            aac2020_paint5d_MouInn_OMC_InBoundActions( mou );
+        };;
+
+        return( 0x00 );
+    }
+
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    I32
+    aac2020_paint5d_MouInn(
+        MOU* mou
+    )
+    {
+
+        if( mou ){ /** NOOP **/ };
+        
+        if( mou -> iss_m_c ){ //: ISS_Mouse_Clicking?
+
+            //:                    OMC:OnMouseClick
+            aac2020_paint5d_MouInn_OMC_OuterMain( mou );
+
+        };;
+    
+
+        return( 0 );
+    }
+
+#undef  U08  //:----------------------------------------: 01 ://
+#undef  U32  //:----------------------------------------: 02 ://
+#undef  I32  //:----------------------------------------: 03 ://
+#undef  MOU  //:----------------------------------------: 04 ://
+#undef  REC  //:----------------------------------------: 05 ://
+#undef  IV2  //:----------------------------------------: 06 ://
+#undef  ASS  //:----------------------------------------: 07 ://
+#undef  LOG  //:----------------------------------------: 08 ://
+#undef  ERR  //:----------------------------------------: 09 ://
+//:=============================:MOUSE_INPUT_HANDLER:(MouInn)://
 //:KEYBOARD_HANDLER:(KeyInn):================================://
 #define             I32  int32_t /**GCC: <stdint.h>**///: 01 ://
 #define             U32 uint32_t /**GCC: <stdint.h>**///: 02 ://
@@ -3968,6 +3486,14 @@
             };;
 
         //:----------------:ONLY_UPDATE_IF_WINDOW_WAS_RESIZED://
+        //:Sync_CPU_Bitmap_With_GPU_Texture:-----------------://
+        if( aac2020_paint5d_needs_to_sync_to_gpu >= 1 ){
+            aac2020_paint5d_needs_to_sync_to_gpu=( 0 );
+
+            AAC2020_PIXPUSH_t2d_PAINT5D();
+
+        };;
+        //:-----------------:Sync_CPU_Bitmap_With_GPU_Texture://
 
 
         return( 0x00 );

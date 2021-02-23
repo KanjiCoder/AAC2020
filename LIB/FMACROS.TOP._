@@ -98,6 +98,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 41 ,       "41");
     IKEYLIS
     IKEYCMD
     CPUNIFO
+    MOUTEMP
     PIXSAVE
     PIXBACK
     PIXPUSH
@@ -203,6 +204,14 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 41 ,       "41");
 #define      FMACROS_CPUNIFO_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:CPUNIFO://
+//:InitNone:MOUTEMP:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_MOUTEMP >=  1 )
+#define      FMACROS_MOUTEMP_InitNone AAC2020_MOUTEMP_InitNone
+#endif
+#if( AAC2020_INCLUDE_MOUTEMP == 0 )
+#define      FMACROS_MOUTEMP_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:MOUTEMP://
 //:InitNone:PIXSAVE:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_PIXSAVE >=  1 )
 #define      FMACROS_PIXSAVE_InitNone AAC2020_PIXSAVE_InitNone
