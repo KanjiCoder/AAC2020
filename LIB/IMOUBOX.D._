@@ -1,27 +1,52 @@
 //:MOUSE_STATE:==============================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
+#define I32  int32_t /** GCC: <stdint.h> **/
 
     //:#_LIKE_glo_eve_OBJECT_in_A2_JC_#://
 
     //[ LOOKING FOR STRUCT VERSION OF THIS?       ]//
     //[ SEE[ IMOUTEMP ]Temp_Mouse_State_Container ]//
 
-    U32 AAC2020_IMOUBOX_m_x = 0 ; //:m_x: Mouse_X
-    U32 AAC2020_IMOUBOX_m_y = 0 ; //:m_y: Mouse_Y
+    //:GAME_TICK:--------------------------------------------://
 
-    U32 AAC2020_IMOUBOX_c_x = 0 ; //:c_x: Click_X
-    U32 AAC2020_IMOUBOX_c_y = 0 ; //:c_y: Click_Y
-
-    U32 AAC2020_IMOUBOX_u_x = 0 ; //:u_x:Mouse_Up_X
-    U32 AAC2020_IMOUBOX_u_y = 0 ; //:u_y:Mouse_Up_Y
-                            
-    U32 AAC2020_IMOUBOX_d_x = 0 ; //:d_x:Mouse_Down_X
-    U32 AAC2020_IMOUBOX_d_y = 0 ; //:d_y:Mouse_Down_Y
+        //: AAC2020_IMOUBOX_gam_tik === AAC2020_GAMTIME_gam_tik
+        U32 AAC2020_IMOUBOX_gam_tik =( 0 );
+        //: So that we know when this object has expired and
+        //: is no longer valid.
     
-    U32 AAC2020_IMOUBOX_m_d = 0 ; //:m_d:MouseCurrentlyDown?
-    U32 AAC2020_IMOUBOX_m_u = 0 ; //:m_u:MouseCurrentlyUp  ?
-    U32 AAC2020_IMOUBOX_m_c = 0 ; //:m_c:Mouse_Is_Clicking ?
+    //:--------------------------------------------:GAME_TICK://
+    //:MISC_MOUSE_VARS:--------------------------------------://
+
+        U32 AAC2020_IMOUBOX_exp = 0 ; //:exp: EXPired?
+
+        U32 AAC2020_IMOUBOX_m_x = 0 ; //:m_x: Mouse_X
+        U32 AAC2020_IMOUBOX_m_y = 0 ; //:m_y: Mouse_Y
+
+        U32 AAC2020_IMOUBOX_c_x = 0 ; //:c_x: Click_X
+        U32 AAC2020_IMOUBOX_c_y = 0 ; //:c_y: Click_Y
+
+        U32 AAC2020_IMOUBOX_u_x = 0 ; //:u_x:Mouse_Up_X
+        U32 AAC2020_IMOUBOX_u_y = 0 ; //:u_y:Mouse_Up_Y
+                                
+        U32 AAC2020_IMOUBOX_d_x = 0 ; //:d_x:Mouse_Down_X
+        U32 AAC2020_IMOUBOX_d_y = 0 ; //:d_y:Mouse_Down_Y
+        
+        U32 AAC2020_IMOUBOX_m_d = 0 ; //:m_d:MouseCurrentlyDown?
+        U32 AAC2020_IMOUBOX_m_u = 0 ; //:m_u:MouseCurrentlyUp  ?
+        U32 AAC2020_IMOUBOX_m_c = 0 ; //:m_c:Mouse_Is_Clicking ?
+        U32 AAC2020_IMOUBOX_m_s = 0 ; //:m_s:Mouse_Is_Scrolling?
+
+    //:--------------------------------------:MISC_MOUSE_VARS://
+    //:MOUSE_WHEEL:------------------------------------------://
+
+
+    I32 AAC2020_IMOUBOX_mwn = 0 ; //:mwn:Mouse_Wheel_Notches
+                                  //:Whatever smallest increment
+                                  //:works for zoom controls.
+
+    //:------------------------------------------:MOUSE_WHEEL://
 
 #undef  U32
+#undef  I32
 //:==============================================:MOUSE_STATE://
 

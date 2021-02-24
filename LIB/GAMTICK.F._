@@ -1,0 +1,41 @@
+
+//:GAMTICK.F._:
+//:This is a data-only sub-library. 
+
+//:CTRL_F_HELP:==============================================://
+/** ******************************************************** ***
+
+    @VID_IID[ 0155 ]TIME[ 01:43:42 ]
+    Not the library you were looking for, 
+    but the library you needed.
+
+    GAMETICK ===> GAMTICK 
+    GAMETIK  ===> GAMTICK 
+    GAMTIK   ===> GAMTICK 
+
+*** ******************************************************** **/
+//:==============================================:CTRL_F_HELP://
+//:INIT_NONE:================================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+    U32
+    AAC2020_GAMTICK_InitNone( U32 u32 ){
+        if( u32 ){ /** reserved for future use **/ };
+        return( 0x00 );
+    }
+#undef  U32
+//:================================================:INIT_NONE://
+//:UPDATE_GAME_TIME_LOOP_TICKER:=============================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+    U32
+    AAC2020_GAMTICK_LoopTick( U32 u32 )
+    {
+        if( u32 ){ /**RESERVED_FOR_FUTURE_USE**/ };
+
+        //- ((AAC2020_GAMTIME_gam_tik)++); -//
+            ((AAC2020_GAMTICK_gam_tik)++);  
+         
+
+        return( 0x00 );
+    }
+#undef  U32
+//:=============================:UPDATE_GAME_TIME_LOOP_TICKER://

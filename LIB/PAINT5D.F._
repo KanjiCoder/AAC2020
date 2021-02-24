@@ -2415,6 +2415,43 @@
         return( 0 );
     }
 
+    //:
+    I32                //: OMS:On_Mouse_Scroll
+    aac2020_paint5d_MouInn_OMS_OuterMain( 
+        MOU* mou 
+    )
+    {
+        //:@CTRL_F_HELP@: aac2020_paint5d_MouInn_OnMouseScroll
+
+        //:ZoomCamera:---------------------------------------://
+        #define MWN AAC2020_IMOUBOX_mwn  /**MouseWheelNotches**/
+
+        //[ ME: TWARD:           ]//
+        //[ luuncho: towards lol ]//
+
+            //: mou -> whe_mwn <===> AAC2020_IMOUBOX_mwn
+        
+            if( 
+                //: chr_key == KEY_P5D.p5d_vp1_z_o 
+                mou -> whe_mwn < 0 //:NEG/TWARD_USER
+            ){
+            //: aac2020_paint5d_ZoomCamera( 0 - 1 );
+                aac2020_paint5d_ZoomCamera(  MWN  );
+            }else                                     
+            if( 
+                //: chr_key == KEY_P5D.p5d_vp1_z_i 
+                mou -> whe_mwn > 0 //:POS/AWAY_USER
+            ){         
+            //: aac2020_paint5d_ZoomCamera( 0 + 1 );
+                aac2020_paint5d_ZoomCamera(  MWN  );
+            };;
+        
+        #undef MWN
+        //:---------------------------------------:ZoomCamera://
+
+        return( 0 );
+    }
+
     I32
     aac2020_paint5d_MouInn_OMC_OuterMain(
         MOU* mou
@@ -2436,16 +2473,40 @@
         MOU* mou
     )
     {
+        if( ((mou -> gam_tik)+0) != AAC2020_GAMTICK_gam_tik ){
 
-        if( mou ){ /** NOOP **/ };
+            /** @VID_IID[ 0155 ]TIME[ 02:27:13 ] ******** **/
+            /** Window code might not sync with events... **/
+            /**                                           **/
+            /** Don't do this way... Object can easily be **/
+            /** out of lock step with window code.        **/
+            /** Do nothing. Object Is Expired.            **/
+            /** ***************************************** **/
+        }
+
+        if( 
+            mou -> iss_exp >= 1 
+        //- mou -> expired >= 1 -//
+        ){
+
+            /** Object Flagged As Expired. **/
+            /** Do not use it.             **/
         
-        if( mou -> iss_m_c ){ //: ISS_Mouse_Clicking?
+        }else{
+            
+            if( mou -> iss_m_c ){ //: ISS_Mouse_Clicking?
 
-            //:                    OMC:OnMouseClick
-            aac2020_paint5d_MouInn_OMC_OuterMain( mou );
+                //:                    OMC:OnMouseClick
+                aac2020_paint5d_MouInn_OMC_OuterMain( mou );
 
-        };;
+            };;
+            if( mou -> iss_m_s ){ //: ISS_Mouse_Scrolling?
+
+                aac2020_paint5d_MouInn_OMS_OuterMain( mou );
+
+            };;
     
+        };;
 
         return( 0 );
     }

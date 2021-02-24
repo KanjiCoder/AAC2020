@@ -1,4 +1,5 @@
 //:LOOP_TICK:================================================://
+#define F32 float                                          //://
 #define U32 uint32_t /** GCC: <stdint.h> **/               //://
                                                            //://
 #define POS_X           AAC2020_CPUNIFO_iMouse_vec4_x      //://
@@ -29,7 +30,10 @@
         IMOUSE_Z = AAC2020_IMOUBOX_m_x ;
         IMOUSE_W = AAC2020_IMOUBOX_m_y ;
 
-        ITIME += ( 1.0 / 256.0 );
+        //:@VID_IID[ 0155 ]TIME[ 01:29:13 ]NEW_FORMULA
+        //: ITIME += ( 1.0 / 256.0 ); <----OLD_FORMULA
+        ITIME = (((F32)(AAC2020_GAMTICK_gam_tik)) / 256.0);
+            //- (((F32)(AAC2020_GAMTIME.gam_tik)) / 256.0 ); -//
 
         IRESOLU_WID = AAC2020_GINAWIN_GetClient_WID();
         IRESOLU_HIG = AAC2020_GINAWIN_GetClient_HIG();
@@ -38,6 +42,7 @@
         return( 0x00 );
     } 
 
+#undef  F32             //: -------------------------------- ://
 #undef  U32             //: -------------------------------- ://
                         //: -------------------------------- ://
 #undef  POS_X           //: -------------------------------- ://

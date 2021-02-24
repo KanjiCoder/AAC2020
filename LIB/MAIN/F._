@@ -65,6 +65,16 @@
 
         if( u32 ){ /** RESERVED FOR FUTURE USE **/ };
 
+        if( AAC2020_IMOUBOX_exp >= 1 ){
+            //- return                                       -//
+            //+ Dont do this. There may be reasons an update +//
+            //+ function does not care that the object is    +//
+            //+ expired. Like using the last known valid     +//
+            //+ state of the mouse cursor to keep rendering  +//
+            //+ an icon in a given position.                 +//
+            //+ @VID_IID[ 0155 ]TIME[ 02:37:32 ] +++++++++++ +//
+        };;
+
         //:If MOUTEMP does not exist yet, then no systems
         //:that take mouse input should exist either.
         #if( AAC2020_INCLUDE_MOUTEMP >= 1 ) //:##############://
@@ -72,21 +82,33 @@
 
             MOU mou ={ 0 };
 
-            mou.pix_m_x  =  AAC2020_IMOUBOX_m_x ;
-            mou.pix_m_y  =  AAC2020_IMOUBOX_m_y ;
-                                                ;
-            mou.clk_c_x  =  AAC2020_IMOUBOX_c_x ;
-            mou.clk_c_y  =  AAC2020_IMOUBOX_c_y ;
-                                                ;
-            mou.upp_u_x  =  AAC2020_IMOUBOX_u_x ;
-            mou.upp_u_y  =  AAC2020_IMOUBOX_u_y ;
-                                                ;
-            mou.dow_d_x  =  AAC2020_IMOUBOX_d_x ;
-            mou.dow_d_y  =  AAC2020_IMOUBOX_d_y ;
-                                                ;
-            mou.iss_m_d  =  AAC2020_IMOUBOX_m_d ;
-            mou.iss_m_u  =  AAC2020_IMOUBOX_m_u ;
-            mou.iss_m_c  =  AAC2020_IMOUBOX_m_c ;
+            //: mou.exp: Mouse.EXPired ?
+                mou.iss_exp  =  AAC2020_IMOUBOX_exp ;
+
+            //: mou.pix: Mouse.PIXel
+                mou.pix_m_x  =  AAC2020_IMOUBOX_m_x ;
+                mou.pix_m_y  =  AAC2020_IMOUBOX_m_y ;
+            
+            //: mou.clk: Mouse.CLicK
+                mou.clk_c_x  =  AAC2020_IMOUBOX_c_x ;
+                mou.clk_c_y  =  AAC2020_IMOUBOX_c_y ;
+                       
+            //: mou.upp: Mouse.UPP
+                mou.upp_u_x  =  AAC2020_IMOUBOX_u_x ;
+                mou.upp_u_y  =  AAC2020_IMOUBOX_u_y ;
+                              
+            //: mou.dow: Mouse.DOWn
+                mou.dow_d_x  =  AAC2020_IMOUBOX_d_x ;
+                mou.dow_d_y  =  AAC2020_IMOUBOX_d_y ;
+          
+            //: mou.iss: Mouse.ISS ( is in certain state? )
+                mou.iss_m_d  =  AAC2020_IMOUBOX_m_d ;
+                mou.iss_m_u  =  AAC2020_IMOUBOX_m_u ;
+                mou.iss_m_c  =  AAC2020_IMOUBOX_m_c ;
+                mou.iss_m_s  =  AAC2020_IMOUBOX_m_s ;
+
+            //: mou.whe: Mouse.WHEel
+                mou.whe_mwn  =  AAC2020_IMOUBOX_mwn ;
 
             #if( AAC2020_INCLUDE_PAINT5D ) //:#-#-#-#-#-#-#-#://
             if( DEX_EDI == AAC2020_CEDITOR_paint5d ){
@@ -100,6 +122,13 @@
 
 
         #undef  MOU
+        #endif //:###########################################://
+        #if( AAC2020_INCLUDE_IMOUBOX >= 1 ) //:##############://
+
+            //:EXPIRE OBJECT AFTER USE TO AVOID RE_USE
+            //:OF_THE_SAME_STATE:
+            AAC2020_IMOUBOX_exp=( 1 );
+
         #endif //:###########################################://
 
         return( 0x00 );
@@ -279,10 +308,11 @@
             AAC2020_KILTEST_InitNone(0);   //:  02  # LIBCHAN://
             AAC2020_REENUTR_InitNone(0);   //:  03  # LIBCHAN://
             AAC2020_TODOMAN_InitNone(0);   //:  04  # LIBCHAN://
-            AAC2020_FILEBOI_InitNone(0);   //:  05  # LIBCHAN://
-            AAC2020_PHEXDUM_InitNone(0);   //:  06  # LIBCHAN://
-            AAC2020_HARDASS_InitNone(0);   //:  07  # LIBCHAN://
-            AAC2020_NATIKEY_InitNone(0);   //:  08  # LIBCHAN://
+            AAC2020_GAMTICK_InitNone(0);   //:  05  # LIBCHAN://
+            AAC2020_FILEBOI_InitNone(0);   //:  06  # LIBCHAN://
+            AAC2020_PHEXDUM_InitNone(0);   //:  07  # LIBCHAN://
+            AAC2020_HARDASS_InitNone(0);   //:  08  # LIBCHAN://
+            AAC2020_NATIKEY_InitNone(0);   //:  09  # LIBCHAN://
 
             //: Missing.....InitNone( s ) ://
 
@@ -295,10 +325,11 @@
         FMACROS_KILTEST_InitNone( 0 );     //:  02  # LIBCHAN://
         FMACROS_REENUTR_InitNone( 0 );     //:  03  # LIBCHAN://
         FMACROS_TODOMAN_InitNone( 0 );     //:  04  # LIBCHAN://
-        FMACROS_FILEBOI_InitNone( 0 );     //:  05  # LIBCHAN://
-        FMACROS_PHEXDUM_InitNone( 0 );     //:  06  # LIBCHAN://
-        FMACROS_HARDASS_InitNone( 0 );     //:  07  # LIBCHAN://
-        FMACROS_NATIKEY_InitNone( 0 );     //:  08  # LIBCHAN://
+        FMACROS_GAMTICK_InitNone( 0 );     //:  05  # LIBCHAN://
+        FMACROS_FILEBOI_InitNone( 0 );     //:  06  # LIBCHAN://
+        FMACROS_PHEXDUM_InitNone( 0 );     //:  07  # LIBCHAN://
+        FMACROS_HARDASS_InitNone( 0 );     //:  08  # LIBCHAN://
+        FMACROS_NATIKEY_InitNone( 0 );     //:  09  # LIBCHAN://
 
         //: Missing.....InitNone( s ) ://
 
@@ -418,6 +449,8 @@
 
                 while( AAC2020_GINAWIN_IsWindowStillOpen() ){
 
+                    //: Called in looptick function.
+                    //: ((AAC2020_GAMTIME_gam_tik)++);
                 
             /** ******************************************** ***
             @_CTRL_F_HELP_@@CTRL_F_HELP@
@@ -425,6 +458,7 @@
             @VID_IID[ 0151 ]TIME[ 03:50:00 ]
             "AAC2020_*******_LoopTick( 0x000)" <-- DIRECT_CALL
             "FMACROS_*******_LoopTick( 0x00 )" <-- IS__WRAPPED
+                    AAC2020_GAMTICK_LoopTick( 0x00 );
                     AAC2020_CPUNIFO_LoopTick( 0x00 );
                     AAC2020_GRAQUAD_LoopTick( 0x00 );
             //-     AAC2020_BASUNIF_LoopTick( 0x00 );  - - - -//
@@ -433,6 +467,7 @@
                     AAC2020_PAINT5D_LoopTick( 0x00 );
             *** ******************************************** **/
                     //:AAC2020_GraphicsUpdateTick:-----------://
+                    FMACROS_GAMTICK_LoopTick( 0x00 );//:gam_tik
                     FMACROS_CPUNIFO_LoopTick( 0x00 );
                     FMACROS_GRAQUAD_LoopTick( 0x00 );
             //-     FMACROS_BASUNIF_LoopTick( 0x00 );  - - - -//

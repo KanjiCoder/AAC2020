@@ -13,9 +13,20 @@
 
 //:LOOP_TICK__LoopTick:||||||||||||||||||||||||||||||||||||||://
 
+//:GAMTICK:==================================================://
+#if(            AAC2020_INCLUDE_GAMTICK >=  1 )
+_Static_assert( AAC2020_INCLUDE_GAMTICK ==  5 ,        "5");
+
+    #define  FMACROS_GAMTICK_LoopTick   AAC2020_GAMTICK_LoopTick
+#endif
+#if(     AAC2020_INCLUDE_GAMTICK == 0 )
+
+    #define  FMACROS_GAMTICK_LoopTick( DISCARDED_ARGUMENT )
+#endif
+//:==================================================:GAMTICK://
 //:CPUNIFO:==================================================://
 #if(            AAC2020_INCLUDE_CPUNIFO >=  1 )
-_Static_assert( AAC2020_INCLUDE_CPUNIFO == 19 ,        "19");
+_Static_assert( AAC2020_INCLUDE_CPUNIFO == 20 ,        "20");
 
     #define  FMACROS_CPUNIFO_LoopTick   AAC2020_CPUNIFO_LoopTick
 #endif
@@ -26,7 +37,7 @@ _Static_assert( AAC2020_INCLUDE_CPUNIFO == 19 ,        "19");
 //:==================================================:CPUNIFO://
 //:GRAQUAD:==================================================://
 #if(            AAC2020_INCLUDE_GRAQUAD >=  1 )
-_Static_assert( AAC2020_INCLUDE_GRAQUAD == 20 ,       "20");
+_Static_assert( AAC2020_INCLUDE_GRAQUAD == 21 ,       "21");
 
     #define  FMACROS_GRAQUAD_LoopTick   AAC2020_GRAQUAD_LoopTick
 #endif
@@ -37,7 +48,7 @@ _Static_assert( AAC2020_INCLUDE_GRAQUAD == 20 ,       "20");
 //:==================================================:GRAQUAD://
 //:TAUDEPO:==================================================://
 #if(            AAC2020_INCLUDE_TAUDEPO >=  1 )
-_Static_assert( AAC2020_INCLUDE_TAUDEPO == 38 ,       "38");
+_Static_assert( AAC2020_INCLUDE_TAUDEPO == 39 ,       "39");
 
     #define  FMACROS_TAUDEPO_LoopTick   AAC2020_TAUDEPO_LoopTick
 #endif
@@ -48,7 +59,7 @@ _Static_assert( AAC2020_INCLUDE_TAUDEPO == 38 ,       "38");
 //:==================================================:TAUDEPO://
 //:TAUSYNC:==================================================://
 #if(            AAC2020_INCLUDE_TAUSYNC >=  1 )
-_Static_assert( AAC2020_INCLUDE_TAUSYNC == 40 ,       "40");
+_Static_assert( AAC2020_INCLUDE_TAUSYNC == 41 ,       "41");
 
     #define  FMACROS_TAUSYNC_LoopTick   AAC2020_TAUSYNC_LoopTick
 #endif
@@ -59,7 +70,7 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 40 ,       "40");
 //:==================================================:TAUSYNC://
 //:PAINT5D:==================================================://
 #if(            AAC2020_INCLUDE_PAINT5D >=  1 )
-_Static_assert( AAC2020_INCLUDE_PAINT5D == 41 ,       "41");
+_Static_assert( AAC2020_INCLUDE_PAINT5D == 42 ,       "42");
 
     #define  FMACROS_PAINT5D_LoopTick   AAC2020_PAINT5D_LoopTick
 #endif
@@ -91,6 +102,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 41 ,       "41");
     KILTEST
     REENUTR  
     TODOMAN
+    GAMTICK
     FILEBOI
     PHEXDUM
     HARDASS
@@ -148,6 +160,14 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 41 ,       "41");
 #define      FMACROS_TODOMAN_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:TODOMAN://
+//:InitNone:GAMTICK:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_GAMTICK >=  1 )
+#define      FMACROS_GAMTICK_InitNone AAC2020_GAMTICK_InitNone
+#endif
+#if( AAC2020_INCLUDE_GAMTICK == 0 )
+#define      FMACROS_GAMTICK_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:GAMTICK://
 //:InitNone:FILEBOI:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_FILEBOI >=  1 )
 #define      FMACROS_FILEBOI_InitNone AAC2020_FILEBOI_InitNone

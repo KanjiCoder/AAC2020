@@ -437,10 +437,11 @@
 
 //:window_code.WIN_MSG_HAN_WND_POC:==========================://
 //:window_code.WindowMessageHander,WindowProc:===============://
-#define HALT aac2020_ginawin_Halt
-#define INFO aac2020_ginawin_Info
-#define FPTR aac2020_ginawin_function_pointers
-#define U32  uint32_t /** GCC: <stdint.h> **/
+#define HALT aac2020_ginawin_Halt                     //: 01 ://
+#define INFO aac2020_ginawin_Info                     //: 02 ://
+#define FPTR aac2020_ginawin_function_pointers        //: 03 ://
+#define U32  uint32_t /** GCC: <stdint.h> **/         //: 04 ://
+#define I32   int32_t /** GCC: <stdint.h> **/         //: 05 ://
 
     void
     aac2020_ginawin_lParam_CTO_c_x_c_y(
@@ -515,11 +516,45 @@
         #undef  F
         #undef  H
         //:===================:ASSERT_SATED_FUNCTION_POINTERS://
+        //:MUST_BE_BEFORE_SWITCH:============================://
+
+            
+            AAC2020_IMOUBOX_gam_tik =( 
+                AAC2020_GAMTICK_gam_tik    //+ YES: GAMETICK +//
+            //- AAC2020_GAMTIME_gam_tik -////- NOT: GAMETIME -//
+            );
+
+            AAC2020_IMOUBOX_m_s =( 0 ); //:Mouse_not_Scrolling
+            AAC2020_IMOUBOX_exp =( 0 ); //:Mouse_Object_Valid
+
+        //:============================:MUST_BE_BEFORE_SWITCH://
         //:SWITCH:===========================================://
         switch(Msg){ //:=====================================://
 
-        case 0x0201 /** WM_LBUTTONDOWN **/:
-        {
+        case 0x020A /** WM_MOUSEWHEEL  **/:{
+
+            //:GET_WHEEL_DELTA
+            I32 wheel_delta_curren=((I32)
+                ((short)(wParam>>16))
+            );;
+
+            I32 WHEEL_DELTA_DETENT=( 120 );
+
+            AAC2020_IMOUBOX_mwn=(
+               //:wheel_delta_detent
+                (
+                      WHEEL_DELTA_DETENT //:DETENT
+                    / wheel_delta_curren //:CURRENT
+                )
+                /
+                1  //:Dont_Dampen_Mouse_Wheel_Like_This
+               //:wheel_delta_current
+            );;
+
+            AAC2020_IMOUBOX_m_s=( 1 );
+
+        };break;
+        case 0x0201 /** WM_LBUTTONDOWN **/:{
 
             AAC2020_IMOUBOX_m_c =( 1 ); //:@HACK@
 
@@ -530,14 +565,12 @@
             );;
 
         };break;
-        case 0x0202 /** WM_LBUTTONUP **/:
-        {
+        case 0x0202 /** WM_LBUTTONUP **/:{
 
             AAC2020_IMOUBOX_m_c =( 0 ); //:@HACK@
 
         };break;
-        case 0x0200 /** WM_MOUSEMOVE **/:
-        {
+        case 0x0200 /** WM_MOUSEMOVE **/:{
 
             //:MOUSE_COORDS:CALCULATE:-----------------------://
 
@@ -792,10 +825,11 @@
         return( return_this_result );
     } 
 
-#undef HALT
-#undef INFO
-#undef FPTR
-#undef  U32
+#undef HALT  //:----------------------------------------: 01 ://
+#undef INFO  //:----------------------------------------: 02 ://
+#undef FPTR  //:----------------------------------------: 03 ://
+#undef  U32  //:----------------------------------------: 04 ://
+#undef  I32  //:----------------------------------------: 05 ://
 //:==========================:window_code.WIN_MSG_HAN_WND_POC://
 //:===============:window_code.WindowMessageHander,WindowProc://
 
