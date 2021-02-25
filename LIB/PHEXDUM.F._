@@ -36,10 +36,14 @@
                 ERR("[WTF_ARE_YOU_DOING?]");
             };;
 
-            /** @VID_IID[ 0128 ]TIME[ 03:33:33 ] *********** **/
+            /** @VID_IID[ 0128 ]TIME[ 03:33:33 ]ORIGINAL *** **/
+            /** @VID_IID[ 0156 ]TIME[ 02:36:13 ]UPDATED **** **/
             /** Override turns of logging for ALL SYSTEMS.   **/
-            if( AAC2020_SILENCE.SILENCE >= 1 ){
-                logging_is_on=( 0 );
+            if( AAC2020_SILENCE.SILENCE >=( 0+1 ) ){
+                logging_is_on=( 0 ); //:EVERYONE_SHUT_UP
+            }else
+            if( AAC2020_SILENCE.SILENCE <=( 0-1 ) ){
+                logging_is_on=( 1 ); //:EVERYBODY_SCREAM
             };;
 
         #else

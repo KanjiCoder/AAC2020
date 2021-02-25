@@ -50,11 +50,12 @@
 //:INCLUSIVE_RECTANGLE:aac2020_tautype_rec_inc:==============://
 //:inclusive_rectangle:AAC2020_TAUTYPE_REC_INC:==============://
 //:INCLUSIVE_RECTANGLE_AAC2020_TAUTYPE_REC_INC:==============://
-#define I32  int32_t /** GCC: <stdint.h> **/          //: 01 ://
-#define U32 uint32_t /** GCC: <stdint.h> **/          //: 02 ://
-#define U08 uint8_t  /** GCC: <stdint.h> **/          //: 03 ://
-#define ERR aac2020_tautype_Halt                      //: 04 ://
-#define R_B rec_bou                                   //: 05 ://
+#define F32    float                                  //: 01 ://
+#define I32  int32_t /** GCC: <stdint.h> **/          //: 02 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 03 ://
+#define U08 uint8_t  /** GCC: <stdint.h> **/          //: 04 ://
+#define ERR aac2020_tautype_Halt                      //: 05 ://
+#define R_B rec_bou                                   //: 06 ://
 
     /** **************************************************** ***
     @VID_IID[ 0060 ]TIME[ 1H 57M 30S ]
@@ -98,12 +99,116 @@
             I32 y_1_i32 = (*INPUT_OUTPUT_PARAM_y_1_i32);
 
         //:------------------------:extract_or_restore_values://
+        //:Debugging_Variables:------------------------------://
 
+            /** Only checking [ x_0 & y_0 ]against lower     **/
+            /** Only checking [ x_1 & y_1 ]against higher    **/
+            /** might mistake! @VID_IID[ 0156 ]T[ 00:32:30 ] **/
+            U08 x_0_oob =( 0 ); //:Was[ x_0_i32 ]out of bounds?
+            U08 x_1_oob =( 0 ); //:Was[ x_1_i32 ]out of bounds?
+            U08 y_0_oob =( 0 ); //:Was[ y_0_i32 ]out of bounds?
+            U08 y_1_oob =( 0 ); //:Was[ y_1_i32 ]out of bounds?
+
+            /** original inputs for debug. **/
+            I32 x_0_bug = (*INPUT_OUTPUT_PARAM_x_0_i32);
+            I32 x_1_bug = (*INPUT_OUTPUT_PARAM_x_1_i32);
+            I32 y_0_bug = (*INPUT_OUTPUT_PARAM_y_0_i32);
+            I32 y_1_bug = (*INPUT_OUTPUT_PARAM_y_1_i32);
+
+        //:------------------------------:Debugging_Variables://
+
+                //:SHRINK_FIRST_BEHAVIOR_FIX:----------------://
+
+                    //:Swap_If_Bad_Order:--------------------://
+                    //:@VID_IID[ 0156 ]TIME[ 00:55:23 ]======://
+
+                        if( x_1_i32 < x_0_i32 ){
+
+                            I32 x_0_old =( x_0_i32 );
+                            I32 x_1_old =( x_1_i32 );
+
+                                x_0_i32 =( x_1_old );
+                                x_1_i32 =( x_0_old );
+
+                            ERR("FIXING_HAPPENING:REMOVE_ME]");
+                        };;
+                        if( y_1_i32 < y_0_i32 ){
+
+                            I32 y_0_old =( y_0_i32 );
+                            I32 y_1_old =( y_1_i32 );
+
+                                y_0_i32 =( y_1_old );
+                                y_1_i32 =( y_0_old );
+                        
+                            ERR("FIXING_HAPPENING:REMOVE_ME]");
+                        };;
+
+                        if( x_1_i32 < x_0_i32 ){ 
+                            ERR("[NOTFIXED:2021:X_ORDER]");
+                        };;
+                        if( y_1_i32 < y_0_i32 ){ 
+                            ERR("[NOTFIXED:2021:Y_ORDER]");
+                        };;
+
+                    //:=======@VID_IID[ 0156 ]TIME[ 00:55:23 ]:/
+                    //:--------------------:Swap_If_Bad_Order://
+                    //:shrink_without_moving_center:---------://
+                    //:@VID_IID[ 0156 ]T[ 01:01:42 ]:--------://
+                    { //:SCOPE
+
+                        I32 wid =( x_1_i32 - x_0_i32 + 1 );
+                        I32 hig =( y_1_i32 - y_0_i32 + 1 );
+
+                        if( wid > rec_bou ){
+
+                            F32 overflow_x =( wid - rec_bou );
+                            I32 insetamt_x =(
+                                (I32) (ceilf(overflow_x/2.0))
+                            );;
+                            x_0_i32 +=( insetamt_x ); //:PULLIN
+                            x_1_i32 -=( insetamt_x ); //:PULLIN
+                        };;
+                        if( hig > rec_bou ){
+
+                            F32 overflow_y =( hig - rec_bou );
+                            I32 insetamt_y =(
+                                (I32) (ceilf(overflow_y/2.0))
+                            );;
+                            y_0_i32 +=( insetamt_y ); //:PULLIN
+                            y_1_i32 -=( insetamt_y ); //:PULLIN
+                        };;
+
+                        //:make_sure_fixed:------------------://
+                            wid =( x_1_i32 - x_0_i32 + 1 );
+                            hig =( y_1_i32 - y_0_i32 + 1 );
+
+                            if( wid < 0 || wid > rec_bou 
+                            ||  hig < 0 || hig > rec_bou
+                            ){
+                                ERR("[WID|HIG|NOFIXED|2021]");
+                            };;
+                        //:------------------:make_sure_fixed://
+
+                    } //:SCOPE
+                    //:--------:@VID_IID[ 0156 ]T[ 01:01:42 ]://
+                    //:---------:shrink_without_moving_center://
+                //:----------------:SHRINK_FIRST_BEHAVIOR_FIX://
                 //:back_off_the_boarders:--------------------://
+                /** **************************************** ***
+                This code shifts around the rectangle without
+                changing it's size. That was by design so our
+                camera code can easily[[[ STOP ]]]at boarders
+                of the world[[[ WITHOUT ]]]the camera being
+                un-intentionally[[[ SQUASHED ]]]
+
+                @VID_IID[ 0156 ]TIME[ 01:12:42 ]
+                *** **************************************** **/
+                //:back_off_the_boarders:- - - - ---- - - - -://
 
                     //:back_off:lower_bound:-----------------://
 
                         if( x_0_i32 < 0 ){ 
+                           (x_0_oob++);
 
                             I32 delta_x = ( 0 - x_0_i32 );
                             
@@ -111,6 +216,7 @@
                             x_1_i32 += ( delta_x );
                         };;
                         if( y_0_i32 < 0 ){ 
+                           (y_0_oob++);
 
                             I32 delta_y = ( 0 - y_0_i32 );
 
@@ -122,6 +228,7 @@
                     //:back_off:upper_bound:-----------------://
 
                         if( x_1_i32 > ( R_B-1 ) ){
+                           (x_1_oob++);
 
                             //: @_MINUS_FIVE_ELEVEN_@
                             I32 delta_x = ( x_1_i32 - (R_B-1) );
@@ -130,6 +237,7 @@
                             x_1_i32 -= ( delta_x );
                         };;
                         if( y_1_i32 > ( R_B-1 ) ){
+                           (y_1_oob++);
 
                             //: @_MINUS_FIVE_ELEVEN_@
                             I32 delta_y = ( y_1_i32 - (R_B-1) );
@@ -141,7 +249,48 @@
                     //:-----------------:back_off:upper_bound://
 
                 //:--------------------:back_off_the_boarders://
+                //:CHECK_FOR_OVER_CORRECTION:================://
+                //:@VID_IID[ 0156 ]TIME[ 00:28:23 ]==========://
 
+                    if( (0==1)
+                    || x_0_i32 < 0 || x_0_i32 >= R_B 
+                    || x_1_i32 < 0 || x_1_i32 >= R_B 
+                    || y_0_i32 < 0 || y_0_i32 >= R_B 
+                    || y_1_i32 < 0 || y_1_i32 >= R_B
+                    ){
+                        printf("\n\n");
+                        printf("[rec_bou]:%d\n",rec_bou);
+                        printf("\n");
+                        
+                        printf("\n\n");
+                        printf("[WAS_out_of_bounds]:\n\n");
+                        printf("[WOOB:x_0_oob]:%d\n",x_0_oob);
+                        printf("[WOOB:x_1_oob]:%d\n",x_1_oob);
+                        printf("[WOOB:y_0_oob]:%d\n",y_0_oob);
+                        printf("[WOOB:y_1_oob]:%d\n",y_1_oob);
+                        printf("\n");
+
+                        printf("\n\n");
+                        printf("[WAS_out_of_bounds]:\n\n");
+                        printf("[DBUG:x_0_bug]:%d\n",x_0_bug);
+                        printf("[DBUG:x_1_bug]:%d\n",x_1_bug);
+                        printf("[DBUG:y_0_bug]:%d\n",y_0_bug);
+                        printf("[DBUG:y_1_bug]:%d\n",y_1_bug);
+                        printf("\n");
+
+                        printf("\n\n");
+                        printf("[ISS_out_of_bounds]:\n\n");
+                        printf("[MAOC:x_0_i32]:%d\n",x_0_i32);
+                        printf("[MAOC:x_1_i32]:%d\n",x_1_i32);
+                        printf("[MAOC:y_0_i32]:%d\n",y_0_i32);
+                        printf("[MAOC:y_1_i32]:%d\n",y_1_i32);
+                        printf("\n");
+
+                        ERR("[MAOC:MAYBE_AN_OVER_CORRECTION?]");
+                    };;
+
+                //:=========:@VID_IID[ 0156 ]TIME[ 00:28:23 ]://
+                //:================:CHECK_FOR_OVER_CORRECTION://
         //:extract_or_restore_values:------------------------://
 
             (*INPUT_OUTPUT_PARAM_x_0_i32) = x_0_i32 ;
@@ -223,6 +372,30 @@
                 ,   R_B
                 );;
             };;
+
+            //:DID_ENFORCE_BOUNDS_WORK:======================://
+            //:@VID_IID[ 0156 ]TIME[ 00:09:00 ]//////////////://
+            
+                //:IF: R_B == 256 , means 256x256 where valid
+                //:                 range of [X|Y] == [0 - 255]
+                if( ( 0 == 1 )
+                || x_0_i32 < 0 || x_0_i32 >= R_B 
+                || x_1_i32 < 0 || x_1_i32 >= R_B 
+                || y_0_i32 < 0 || y_0_i32 >= R_B 
+                || y_1_i32 < 0 || y_1_i32 >= R_B 
+                ){
+                    /** The "EnforceBounds" function from **/
+                    /** earlier has failed us. .......... **/
+                    printf("[BIOLUM:x_0_i32]:%d\n",x_0_i32);
+                    printf("[BIOLUM:x_1_i32]:%d\n",x_1_i32);
+                    printf("[BIOLUM:y_0_i32]:%d\n",y_0_i32);
+                    printf("[BIOLUM:y_1_i32]:%d\n",y_1_i32);
+                    ERR("[BIO_LUM.MP4--YEAR:2021]");
+                    /** https://imgur.com/8sbhumq **/
+                };;
+               
+            //://///////////:@VID_IID[ 0156 ]TIME[ 00:09:00 ]://
+            //:======================:DID_ENFORCE_BOUNDS_WORK://
 
             //:did_we_wreck_our_rect:------------------------://
             //:did_we_wreck_our_rect:INVERTED:---------------://
@@ -647,11 +820,12 @@
         //:- - - - - - - - - - - - - - -:Translate__Overloads://
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
-#undef  I32                                           //: 01 ://
-#undef  U32                                           //: 02 ://
-#undef  U08                                           //: 03 ://
-#undef  ERR                                           //: 04 ://
-#undef  R_B                                           //: 05 ://
+#undef  F32                                           //: 01 ://
+#undef  I32                                           //: 02 ://
+#undef  U32                                           //: 03 ://
+#undef  U08                                           //: 04 ://
+#undef  ERR                                           //: 05 ://
+#undef  R_B                                           //: 06 ://
 //:==============:INCLUSIVE_RECTANGLE_AAC2020_TAUTYPE_REC_INC://
 //:==============:AAC2020_TAUTYPE_REC_INC:inclusive_rectangle://
 //:==============:aac2020_tautype_rec_inc:INCLUSIVE_RECTANGLE://

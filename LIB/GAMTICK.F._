@@ -15,6 +15,23 @@
 
 *** ******************************************************** **/
 //:==============================================:CTRL_F_HELP://
+//:LOG_AFTER_HALT:===========================================://
+    void
+    aac2020_gamtick_Info_any( //:FUNC:::Info , OVERLOAD:any
+        const char* str_fmt   //:GENERAL:str , SPECIFIC:fmt
+    ,   void*       dat_any   //:GENERAL:dat , SPECIFIC:any
+    )
+    {                                        int say=( 0 ); 
+        if( AAC2020_SILENCE.GAMTICK <=(  0  ) ){ say=( 1 ); };
+        if( AAC2020_SILENCE.SILENCE <=( 0-1 ) ){ say=( 1 ); };
+        if( AAC2020_SILENCE.SILENCE >=( 0+1 ) ){ say=( 0 ); };
+        if( say >= 1 ){
+            printf("[gamtick_log]....(   " ); fflush( stdout );
+            printf( str_fmt , dat_any      ); fflush( stdout );
+            printf(               "   )\n" ); fflush( stdout );
+        };;
+    }
+//:===========================================:LOG_AFTER_HALT://
 //:INIT_NONE:================================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
     U32

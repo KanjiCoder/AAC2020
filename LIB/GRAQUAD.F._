@@ -182,12 +182,25 @@
     }
 
 //:===========================================:ALERT_FUNCTION://
+//:ARE_WE_ALLOWED_TO_SPEAK:==================================://
+#define U08 uint8_t /** GCC: <stdint.h> **/
+    U08
+    aac2020_graquad_AllowedToSpeak( void ){
+                                             U08 say=( 0 ); 
+        if( AAC2020_SILENCE.GRAQUAD <=(  0  ) ){ say=( 1 ); };
+        if( AAC2020_SILENCE.SILENCE <=( 0-1 ) ){ say=( 1 ); };
+        if( AAC2020_SILENCE.SILENCE >=( 0+1 ) ){ say=( 0 ); };
+
+        return( say );
+    }
+#undef  U08
+//:==================================:ARE_WE_ALLOWED_TO_SPEAK://
 //:INFO_FUNCTION:============================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
 
     void
     aac2020_graquad_Info( const char* msg_inf ){
-    if( AAC2020_SILENCE.GRAQUAD <= 0 ){
+    if( aac2020_graquad_AllowedToSpeak()>=(1) ){
         printf("[aac2020_graquad_Info]:%s\n",msg_inf);
         fflush(stdout);
     };;}
@@ -196,7 +209,7 @@
     aac2020_graquad_Info_dec( 
         const char* msg_inf 
     ,   U32         val_dec
-    ){if( AAC2020_SILENCE.GRAQUAD <= 0 ){
+    ){if( aac2020_graquad_AllowedToSpeak()>=(1) ){
         printf("[aac2020_graquad_Info_dec]...\n");
         fflush(stdout);
         printf( msg_inf , val_dec );

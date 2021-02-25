@@ -8,10 +8,11 @@
 
 //:LIBRARY_STRUCT:===========================================://
 #define U08 uint8_t /** GCC: <stdint.h> **/
+#define I08  int8_t /** GCC: <stdint.h> **/
 
         struct AAC2020_SILENCE_LIBRARY_STRUCT{
         
-        U08   SILENCE ; //:SPECIAL: Silences ALL if turned on.
+        I08   SILENCE ; //:SPECIAL: Silences ALL if turned on.
         U08   AACMAIN ; //:SPECIAL: #WHAT_IS_AAC_MAIN#
             
         U08   TODOMAN ; //:[ Y ]://
@@ -25,7 +26,7 @@
         U08   KEYBIND ; //:[ * ]://     _ == NO
         U08   CEDITOR ; //:[ * ]://     * == Doesn't Talk
         U08   GINAWIN ; //:[ Y ]://          No Code We Can Add
-        U08   DUI     ; //:[ Y ]://     ? == I don't know.
+        U08   NATIDUI ; //:[ Y ]://     ? == I don't know.
         U08   GLEBIND ; //:[ Y ]://          Read the code.
         U08   GLCONST ; //:[ * ]://
         U08   CPUNIFO ; //:[ * ]://
@@ -57,7 +58,10 @@
         #define off ( 1 ) //:Dont show me messages
         #define O_N ( 0 ) //:Yes, show me messages.
 
-            .SILENCE =  0  //: #_SILENCEALL_NOTIMPLEMENTED_# ://
+            .SILENCE =( 0 ) //: ( 0-1 ):NO_ONE_IS_SILENCED
+                            //: (  0  ):NO_EFFECT/NO_OVERRID
+                            //: ( 0+1 ):EVERYONE_IS_SILENCED
+
         ,   .AACMAIN = off //: #_WHAT_IS_AACMAIN_#           ://
         
         ,   .TODOMAN = off //:Todo_Manager:VITAL_TODO,MAYBE_TODO
@@ -71,7 +75,7 @@
         ,   .KEYBIND = off
         ,   .CEDITOR = off
         ,   .GINAWIN = off
-        ,   .DUI     = off
+        ,   .NATIDUI = off
         ,   .GLEBIND = off   
         ,   .GLCONST = off   
         ,   .CPUNIFO = off   
@@ -94,7 +98,7 @@
         ,   .GPUVIEW = O_N       //:[         / PIXWIRE  ]
         ,   .TAUDIRT = off   
         ,   .TAUDEPO = off   
-        ,   .TAUTYPE = off   
+        ,   .TAUTYPE = O_N   
         ,   .TAUSYNC = off   
         ,   .PAINT5D = O_N   
         ,   .P5D1OGL = O_N
@@ -113,6 +117,7 @@
         #endif
         
 #undef  U08
+#undef  I08
 //:===========================================:LIBRARY_STRUCT://
 
 

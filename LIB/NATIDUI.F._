@@ -1,26 +1,38 @@
-//:DUI.F._
+//:NATIDUI.F._
 
 //:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=====================://
     void 
-    aac2020_dui_Halt( const char* msg_err )
+    aac2020_natidui_Halt( const char* msg_err )
     {
-        printf("[FATAL_ERROR:aac2020_dui]:%s\n", msg_err );
+        printf("[FATAL_ERROR:aac2020_natidui]:%s\n", msg_err );
         fflush(stdout);
         exit( 10  /** 420 / 42 **/  );
     }
 //:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+//:ARE_WE_ALLOWED_TO_SPEAK:==================================://
+#define U08 uint8_t /** GCC: <stdint.h> **/
+
+    U08
+    aac2020_natidui_AllowedToSpeak( void ){
+    /** @VID_IID[ 0156 ]TIME[ 02:46:23 ] **/
+                                             U08 say=( 0 ); 
+        if( AAC2020_SILENCE.NATIDUI <=(  0  ) ){ say=( 1 ); };
+        if( AAC2020_SILENCE.SILENCE <=( 0-1 ) ){ say=( 1 ); };
+        if( AAC2020_SILENCE.SILENCE >=( 0+1 ) ){ say=( 0 ); };
+
+        return( say );
+    }
+
+#undef  U08
+//:==================================:ARE_WE_ALLOWED_TO_SPEAK://
 //:OKAY_NEAR_TOP_BUT_BELOW_HALT:=============================://
 
     void
-    aac2020_dui_Okay( const char* msg_o_k ){
+    aac2020_natidui_Okay( const char* msg_o_k ){
 
-        if( AAC2020_SILENCE.DUI >= 1 ){
+        if( aac2020_natidui_AllowedToSpeak()>=1 ){
 
-            /** DO NOTHING. Non errors Silenced. **/
-
-        }else{
-
-            printf( "[aac2020_dui:Okay]:%s\n" ,  msg_o_k);
+            printf( "[aac2020_natidui:Okay]:%s\n" ,  msg_o_k);
             fflush(stdout);
 
         };;
@@ -30,15 +42,11 @@
 //:INFO_NEAR_TOP_BUT_BELOW_HALT:=============================://
 
     void
-    aac2020_dui_Info( const char* msg_o_k ){
+    aac2020_natidui_Info( const char* msg_o_k ){
 
-        if( AAC2020_SILENCE.DUI >= 1 ){
+        if( aac2020_natidui_AllowedToSpeak()>=1 ){
 
-            /** DO NOTHING. Non errors Silenced. **/
-
-        }else{
-
-            printf( "[aac2020_dui:Info]:%s\n" ,  msg_o_k);
+            printf( "[aac2020_natidui:Info]:%s\n" ,  msg_o_k);
             fflush(stdout);
 
         };;
@@ -46,21 +54,23 @@
 
 //:=============================:INFO_NEAR_TOP_BUT_BELOW_HALT://
 //:ERROR_CHECK_SIZE_OF_TYPES:================================://
-
+#define ERR aac2020_natidui_Halt                        //:00://
+#define S01 AAC2020_NATIDUI_CHOOSECOLORA /**STRUCT#01**///:01://
+ 
     int
-    AAC2020_DUI_ErrorCheckSizeOfTypes_WIN_10_64BIT()
+    AAC2020_NATIDUI_ErrorCheckSizeOfTypes_WIN_10_64BIT()
     {
 
         /** This function is platform specific. **/
         /** For Platform: Windows 10, 64 bit    **/
 
-        if( 71 != sizeof( struct AAC2020_DUI_CHOOSECOLORA ) ){
-            assert("[FAIL:SIZEOF]");
-        };;
+        if( 71 != sizeof( struct S01 ) ){ERR("[S01_NOT_071]");};
 
         return( 0 );
     }
 
+#undef  ERR  //:------------------------------------------:00://
+#undef  S01  //:------------------------------------------:01://
 //:================================:ERROR_CHECK_SIZE_OF_TYPES://
 //:MESSAGE_BOX_FOR_HEX_VALUE:================================://
 #define DLL PEB2020_DLIB           //:------------------: 01 ://
@@ -69,7 +79,7 @@
 #define GPA PEB2020_GetProcAddress //:------------------: 04 ://
 
     int
-    AAC2020_DUI_MessageBoxForHexValue(
+    AAC2020_NATIDUI_MessageBoxForHexValue(
         const char*   msg
     ,   unsigned long hex
     ){
@@ -104,11 +114,11 @@
 #undef  GPA //: 04 :-----------------------------------------://
 //:================================:MESSAGE_BOX_FOR_HEX_VALUE://
 //:ASK_USER_TO_PICK_COLOR:BWO:===============================://
-#define OKAY aac2020_dui_Okay
-#define INFO aac2020_dui_Info
+#define OKAY aac2020_natidui_Okay
+#define INFO aac2020_natidui_Info
 
     unsigned long
-    AAC2020_DUI_AskUserToPickColor_BWO()
+    AAC2020_NATIDUI_AskUserToPickColor_BWO()
     {
 
         /** BWO: BEFORE_main_WINDOW_OPENS .................. **/
@@ -162,17 +172,17 @@
         //:STUFF_I_DONT_FEEL_LIKE_ORGANIZING:----------------://
 
             /** Common dialog box structure **/
-            struct AAC2020_DUI_CHOOSECOLORA cc ={0}; 
+            struct AAC2020_NATIDUI_CHOOSECOLORA cc ={0}; 
             
             /** array of custom colors **/
-            static AAC2020_DUI_COLORREF acrCustClr[16]; 
+            static AAC2020_NATIDUI_COLORREF acrCustClr[16]; 
             
             void*  hbrush; // brush handle
             
             // initial color selection
             static unsigned long  rgbCurrent = 0x808080;   
                                                 
-            // Initialize AAC2020_DUI_CHOOSECOLORA 
+            // Initialize AAC2020_NATIDUI_CHOOSECOLORA 
             cc.lStructSize  = sizeof(cc);
             cc.hwndOwner    = hwnd;
             cc.lpCustColors = ( unsigned long *) acrCustClr;
@@ -208,10 +218,10 @@
 #undef  INFO
 //:===============================:ASK_USER_TO_PICK_COLOR:BWO://
 //:ASK_USER_TO_PICK_COLOR:___:===============================://
-#define INFO aac2020_dui_Info
+#define INFO aac2020_natidui_Info
 
     unsigned long
-    AAC2020_DUI_AskUserToPickColor()
+    AAC2020_NATIDUI_AskUserToPickColor()
     {
         //:#_DUI_PICKCOLOR_KEPT_FOR_REFERENCE_#://
 
@@ -276,17 +286,17 @@
         //:STUFF_I_DONT_FEEL_LIKE_ORGANIZING:----------------://
 
             /** Common dialog box structure **/
-            struct AAC2020_DUI_CHOOSECOLORA cc ={0}; 
+            struct AAC2020_NATIDUI_CHOOSECOLORA cc ={0}; 
             
             /** array of custom colors **/
-            static AAC2020_DUI_COLORREF acrCustClr[16]; 
+            static AAC2020_NATIDUI_COLORREF acrCustClr[16]; 
             
             void*  hbrush; // brush handle
             
             // initial color selection
             static unsigned long rgbCurrent = 0x808080;   
                                                 
-            // Initialize AAC2020_DUI_CHOOSECOLORA 
+            // Initialize AAC2020_NATIDUI_CHOOSECOLORA 
             cc.lStructSize  = sizeof(cc);
             cc.hwndOwner    = hwnd;
             cc.lpCustColors = ( unsigned long *) acrCustClr;

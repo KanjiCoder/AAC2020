@@ -16,31 +16,38 @@
     {
         printf("[FATAL_ERROR:AAC2020_fileboi]:%s\n", msg_err );
         fflush(stdout);
-        exit( 489 /** 69 + 420 == 489 , NICE! **/ );
+        exit( 202 );
     }
 //:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+//:LOG_AFTER_HALT:===========================================://
+    void
+    aac2020_fileboi_Info_any( //:FUNC:::Info , OVERLOAD:any
+        const char* str_fmt   //:GENERAL:str , SPECIFIC:fmt
+    ,   void*       dat_any   //:GENERAL:dat , SPECIFIC:any
+    )
+    {                                        int say=( 0 );
+        if( AAC2020_SILENCE.FILEBOI <=(  0  ) ){ say=( 1 ); };
+        if( AAC2020_SILENCE.SILENCE <=( 0-1 ) ){ say=( 1 ); };
+        if( AAC2020_SILENCE.SILENCE >=( 0+1 ) ){ say=( 0 ); };
+        if( say >= 1 ){
+            printf("[fileboi_log]....(   " ); fflush( stdout );
+            printf( str_fmt , dat_any      ); fflush( stdout );
+            printf(               "   )\n" ); fflush( stdout );
+        };;
+    }
+//:===========================================:LOG_AFTER_HALT://
 //:INFO_PRINT_STRING:========================================://
-
     void
     aac2020_fileboi_Info_str( 
         const char* msg_fmt /** Format String **/
     ,   const char* msg_inf /** Information String **/
     )
     {
-        if( AAC2020_SILENCE.FILEBOI >= 1 ){
-
-            /** Do nothing. Silenced. **/
-
-        }else{
-
-            printf("[FILEBOI_INFO_STR_BELOW]:\n");
-            printf( msg_fmt , msg_inf );
-            fflush(stdout);
-
-        };;
-
+        aac2020_fileboi_Info_any( 
+                   msg_fmt 
+           ,(void*)msg_inf 
+        );;
     }
-
 //:========================================:INFO_PRINT_STRING://
 //:INIT_NONE:================================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/

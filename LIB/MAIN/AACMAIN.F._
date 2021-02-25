@@ -1,0 +1,30 @@
+//:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=====================://
+    void 
+    aac2020_aacmain_Halt( const char* msg_err )
+    {
+        printf("[FATAL_ERROR:aac2020_aacmain]:%s\n", msg_err );
+        fflush(stdout);
+        exit( 222 );
+    }
+//:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+//:LOG_AFTER_HALT:===========================================://
+
+    void
+    aac2020_aacmain_Info_any(
+        const char* str_fmt
+    ,   void*       dat_any   
+    )
+    { 
+        if( AAC2020_SILENCE.AACMAIN <=( 0 ) //:SILENCE__OFF
+        ||  AAC2020_SILENCE.SILENCE <=(0-1) //:EVERYONE_OFF
+        ){
+
+            /** Same Line As Next Printf **/
+            printf("[aacmain_log]....(   " ); fflush( stdout );
+            printf( str_fmt , dat_any      ); fflush( stdout );
+            printf(               "   )\n" ); fflush( stdout );
+
+        };;
+    }
+
+//:===========================================:LOG_AFTER_HALT://

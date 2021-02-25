@@ -1,3 +1,20 @@
+//:ARE_WE_ALLOWED_TO_SPEAK:==================================://
+#define U08 uint8_t /** GCC: <stdint.h> **/
+
+    U08
+    aac2020_glebind_AllowedToSpeak( void ){
+    /** @VID_IID[ 0156 ]TIME[ 02:46:23 ] **/
+                                             U08 say=( 0 ); 
+        if( AAC2020_SILENCE.GLEBIND <=(  0  ) ){ say=( 1 ); };
+        if( AAC2020_SILENCE.SILENCE <=( 0-1 ) ){ say=( 1 ); };
+        if( AAC2020_SILENCE.SILENCE >=( 0+1 ) ){ say=( 0 ); };
+
+        return( say );
+    }
+
+#undef  U08
+//:==================================:ARE_WE_ALLOWED_TO_SPEAK://
+//:TOUCH_OPEN_GL_SEARCH_PATHS:===============================://
 
     int
     AAC2020_GLEBIND_TouchFile_OPEN_GL_SEARCH_PATHS(
@@ -60,7 +77,7 @@
         //:REPORT_BACK_SUCCESS_OR_FAILURE:-------------------://
         #define P_F printf
 
-            ;;;if( AAC2020_SILENCE.GLEBIND <= 0 ){ //:@LOUD@://
+            ;;;if(aac2020_glebind_AllowedToSpeak()){//:@LOUD@://
 
                 if( 1 == ok ){ P_F("[File_Access_OK]\n"); };
 
@@ -77,13 +94,12 @@
     return( 0 );
     //:======================================================://
     }
-
-
+//:===============================:TOUCH_OPEN_GL_SEARCH_PATHS://
 //:HFN:HELPER_FUNCTIONS:=====================================:// 
                                                                  
     void
     aac2020_glebind_Hunt( const char* msg_hun ){
-    if( AAC2020_SILENCE.GLEBIND <= 0 ){ //:@LOUD@://
+    if( aac2020_glebind_AllowedToSpeak() ){ //:@LOUD@://
 
         /** hunt: bug hunting print statements. **/
         printf("[glebind_Hunt]:%s\n", msg_hun );
@@ -100,7 +116,7 @@ aac2020_glebind_Info(                                      //[ HFN ]//
     /** Like AAC2020_GLEBIND_DebugPrint but NOT used for **/    //[ HFN ]//
     /** [trouble shooting/searching for] bugs.           **/    //[ HFN ]//
                                                                 //[ HFN ]//
-    if( AAC2020_SILENCE.GLEBIND <= 0 ){ //:@LOUD@://            //[ HFN ]//
+    if( aac2020_glebind_AllowedToSpeak() ){ //:@LOUD@://            //[ HFN ]//
                                                                 //[ HFN ]//
         printf(                                                 //[ HFN ]//
         /**/"[AAC2020_GLEBIND_IP........]:%s\n"                 //[ HFN ]//
@@ -122,7 +138,7 @@ aac2020_glebind_Info(                                      //[ HFN ]//
         /**/const char* str_msg  /** Message          **/                         
         ,   const char* str_val  /** Associated Value **/                   
         ){                                                               
-            if( AAC2020_SILENCE.GLEBIND <= 0 ){ //:@LOUD@://             
+            if( aac2020_glebind_AllowedToSpeak() ){ //:@LOUD@://             
                                                                          
                 P_F( "[glebind_info_str:msg]:%s\n"  , str_msg );                                         
                 P_F( "[glebind_info_str.val]:%s\n"  , str_val );                                                    
@@ -144,7 +160,7 @@ aac2020_glebind_Info(                                      //[ HFN ]//
         /**/const char* str_msg  /** Message          **/                         
         ,   I32         dec_val  /** Associated Value **/                   
         ){                                                               
-            if( AAC2020_SILENCE.GLEBIND <= 0 ){ //:@LOUD@://             
+            if( aac2020_glebind_AllowedToSpeak() ){ //:@LOUD@://             
                                                                          
                 P_F( "[glebind_info_dec:msg]:%s\n"  , str_msg );                                         
                 P_F( "[glebind_info_dec.val]:%d\n"  , dec_val );                                                    
@@ -222,7 +238,7 @@ aac2020_glebind_Info(                                      //[ HFN ]//
                                                                  
 void                                                             
 aac2020_glebind_Okay( const char* okay_message ){           
-    if( AAC2020_SILENCE.GLEBIND <= 0 ){ //:@LOUD@://
+    if( aac2020_glebind_AllowedToSpeak() ){ //:@LOUD@://
     printf( "[aac2020_glebind_Okay]:%s\n", okay_message );   
     fflush(stdout);
     };;
@@ -1114,7 +1130,7 @@ AAC2020_GLEBIND_TryOpenDLL( void ){
             ATE("[Of_Your_Paths_Pointed_To_OpenGL32.dll]\n");
             ERR("[YOU_DONE_FUCKED_UP_2020_12_11::1209AM]\n");
         }else{
-            if( AAC2020_SILENCE.GLEBIND <= 0 ){ //:@LOUD@://
+            if( aac2020_glebind_AllowedToSpeak() ){ //:@LOUD@://
                 I_P("[OK:DLL_HANDLE_IS_SATED]\n");
             };;
         };;
@@ -4564,7 +4580,7 @@ void AAC2020_GLEBIND_Wait(){
         aac2020_glebind_is_initing = ( 1 );
 
         //:Console_Message_Help:-----------------------------://
-            if( AAC2020_SILENCE.GLEBIND     <= 0 ){
+            if( aac2020_glebind_AllowedToSpeak() ){
             if( DEB <= 0 && INF <= 0 && V_E <= 0 ){
 
                 /** SILENCE configured to show console       **/

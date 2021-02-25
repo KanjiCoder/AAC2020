@@ -1,5 +1,7 @@
 //:MAIN_ENTRY_POINT.LAUNCH_COLOR_PICKER:=====================://
 #define PICKCOLOR_BWO  AAC2020_DUI_AskUserToPickColor_BWO
+#define           LOG  aac2020_aacmain_Info_any
+
     int
     AAC2020_MAYBEE_LaunchColorPickerOnStartup(){
 
@@ -10,10 +12,8 @@
         #if( AAC2020_LAUNCH_COLOR_PICKER_ON_STARTUP >= 1 ) 
         #define G(a,b,c) a##_##b##_##c
             
-            if( AAC2020_SILENCE.AACMAIN <= 0 ){ //:@LOUD@://
-                printf("[AACMAIN:Ask_User_To_Pick_Color]"); 
-            };;
-            
+            LOG("[AACMAIN:Ask_User_To_Pick_Color:YEAR_2021]",0); 
+
             //:  //: Doing it this way will be impossible
             //:  //: to easily GREP search for.
             //:  unsigned long hex =(
@@ -49,5 +49,7 @@
 
         return( return_status );
     }
+
 #undef PICKCOLOR_BWO
+#undef           LOG
 //:=====================:MAIN_ENTRY_POINT.LAUNCH_COLOR_PICKER://
