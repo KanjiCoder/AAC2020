@@ -69,6 +69,27 @@
         }
 
     //:==========================:HALT_WITH_TRACEBACK_MESSAGE://
+    //:LOG_AFTER_HALT:=======================================://
+    #define     F_F  fflush( stdout )
+    #define LOG_SYS  AAC2020_SILENCE
+        void
+        aac2020_gpudata_Info_any( //:FUNC:::Info , OVERLOAD:any
+            const char* str_fmt   //:GENERAL:str , SPECIFIC:fmt
+        ,   void*       dat_any   //:GENERAL:dat , SPECIFIC:any
+        )
+        {                                int say=( 0 );
+            if( LOG_SYS.GPUDATA <=(  0  ) ){ say=( 1 ); };
+            if( LOG_SYS.SILENCE <=( 0-1 ) ){ say=( 1 ); };
+            if( LOG_SYS.SILENCE >=( 0+1 ) ){ say=( 0 ); };
+            if( say >= 1 ){
+                printf("[gpudata_log]....(   " ); F_F ;
+                printf( str_fmt , dat_any      ); F_F ;
+                printf(               "   )\n" ); F_F ;
+            };;
+        }
+    #undef      F_F
+    #undef  LOG_SYS
+    //:=======================================:LOG_AFTER_HALT://
     //:GOALS_ARE_NEVER_ERRORS:===============================://
 
         void

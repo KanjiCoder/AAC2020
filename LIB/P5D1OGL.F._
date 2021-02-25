@@ -6,7 +6,9 @@
 
 #endif //:###################################################://
 //:ONLY_TWO_TYPES_OF_MESSAGES:===============================://
-#define P_F printf
+#define LOG_SYS   AAC2020_SILENCE  //:------------------: 01 ://
+#define     P_F            printf  //:------------------: 02 ://
+#define     F_F  fflush( stdout )  //:------------------: 03 ://
 
     //:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:- - - - - - - - -://
         void 
@@ -18,24 +20,26 @@
         }
     //:- - - - - - - - -:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
     //:LOG_AFTER_HALT:- - - - - - - - - - - - - - - - - - - -://
-
         void
-        aac2020_p5d1ogl_Info_any(
-            const char* str_fmt
-        ,   void*       dat_any   
+        aac2020_p5d1ogl_Info_any( //:FUNC:::Info , OVERLOAD:any
+            const char* str_fmt   //:GENERAL:str , SPECIFIC:fmt
+        ,   void*       dat_any   //:GENERAL:dat , SPECIFIC:any
         )
-        { if( AAC2020_SILENCE.P5D1OGL <= 0 ){
-
-            /** Same Line As Next Printf **/
-            P_F("[p5d1ogl_log]....(   " ); fflush( stdout );
-            P_F( str_fmt , dat_any      ); fflush( stdout );
-            P_F(               "   )\n" ); fflush( stdout );
-
-        };; }
-
+        {                                        int say=( 0 );
+            if( LOG_SYS.P5D1OGL <=(  0  ) ){ say=( 1 ); };
+            if( LOG_SYS.SILENCE <=( 0-1 ) ){ say=( 1 ); };
+            if( LOG_SYS.SILENCE >=( 0+1 ) ){ say=( 0 ); };
+            if( say >= 1 ){
+                printf("[p5d1ogl_log]....(   " ); F_F ;
+                printf( str_fmt , dat_any      ); F_F ;
+                printf(               "   )\n" ); F_F ;
+            };;
+        }
     //:- - - - - - - - - - - - - - - - - - - -:LOG_AFTER_HALT://
 
-#undef  P_F
+#undef  LOG_SYS  //:------------------------------------: 01 ://
+#undef      P_F  //:------------------------------------: 02 ://
+#undef      F_F  //:------------------------------------: 03 ://
 //:===============================:ONLY_TWO_TYPES_OF_MESSAGES://
 //:INIT_NONE:================================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/

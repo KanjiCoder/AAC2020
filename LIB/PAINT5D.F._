@@ -14,15 +14,43 @@
     }
 
 //:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
-//:OKAY_STATUS_INFO_MESSAGE:=================================://
+//:LOG_AFTER_HALT:===========================================://
+    void
+    aac2020_paint5d_Info_any( //:FUNC:::Info , OVERLOAD:any
+        const char* str_fmt   //:GENERAL:str , SPECIFIC:fmt
+    ,   void*       dat_any   //:GENERAL:dat , SPECIFIC:any
+    )
+    {                                        int say=( 0 );
+        if( AAC2020_SILENCE.PAINT5D <=(  0  ) ){ say=( 1 ); };
+        if( AAC2020_SILENCE.SILENCE <=( 0-1 ) ){ say=( 1 ); };
+        if( AAC2020_SILENCE.SILENCE >=( 0+1 ) ){ say=( 0 ); };
+        if( say >= 1 ){
+            printf("[paint5d_log]....(   " ); fflush( stdout );
+            printf( str_fmt , dat_any      ); fflush( stdout );
+            printf(               "   )\n" ); fflush( stdout );
+        };;
+    }
+//:===========================================:LOG_AFTER_HALT://
+//:ARE_WE_ALLOWED_TO_SPEAK:==================================://
+#define U08 uint8_t /** GCC: <stdint.h> **/
+    U08
+    aac2020_paint5d_AllowedToSpeak( void ){
+                                             U08 say=( 0 ); 
+        if( AAC2020_SILENCE.PAINT5D <=(  0  ) ){ say=( 1 ); };
+        if( AAC2020_SILENCE.SILENCE <=( 0-1 ) ){ say=( 1 ); };
+        if( AAC2020_SILENCE.SILENCE >=( 0+1 ) ){ say=( 0 ); };
 
+        return( say );
+    }
+#undef  U08
+//:==================================:ARE_WE_ALLOWED_TO_SPEAK://
+//:OKAY_STATUS_INFO_MESSAGE:=================================://
     void
     aac2020_paint5d_Okay( const char* msg_o_k )
-    {   if( AAC2020_SILENCE.PAINT5D <= 0 ){
-        printf("[aac2020_paint5d_Okay]:%s\n", msg_o_k );
-        fflush(stdout);    
-    };;}
-
+    {   
+        aac2020_paint5d_Info_any(
+        "[aac2020_paint5d_Okay:...]" , (void*)msg_o_k );;
+    }
 //:=================================:OKAY_STATUS_INFO_MESSAGE://
 //:INFO_STATUS_INFO_MESSAGE:=================================://
 #define I32  int32_t /** GCC: <stdint.h> **/
@@ -31,111 +59,104 @@
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     void
     aac2020_paint5d_Info( const char* msg_inf )
-    {   if( AAC2020_SILENCE.PAINT5D <= 0 ){
-        printf("[aac2020_paint5d_Info]:%s\n", msg_inf );
-        fflush(stdout);    
-    };;}
+    {   
+        if( aac2020_paint5d_AllowedToSpeak() ){
+            printf("[aac2020_paint5d_Info]:%s\n", msg_inf );
+            fflush(stdout);  
+        };;
+    }
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     void
     aac2020_paint5d_Info_dec( 
         const char* str_fmt
     ,   I32         val_dec
     )
-    {   if( AAC2020_SILENCE.PAINT5D <= 0 ){
-        printf( "[aac2020_paint5d_Info_dec]...\n");
-        fflush( stdout            ); //:@SAFETY_DOUBLE_FLUSH@://
-        printf( str_fmt , val_dec );
-        fflush( stdout            );    
-    };;}
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-    void
-    aac2020_paint5d_Info_any(
-        const char* str_fmt
-    ,   void*       dat_any   
-    )
-    { if( AAC2020_SILENCE.PAINT5D <= 0 ){
-
-        /** Same Line As Next Printf **/
-        printf("[paint5d_log]....(   " ); fflush( stdout );
-        printf( str_fmt , dat_any      ); fflush( stdout );
-        printf(               "   )\n" ); fflush( stdout );
-
-    };; }
+    {   
+        if( aac2020_paint5d_AllowedToSpeak() ){
+            printf( "[aac2020_paint5d_Info_dec]...\n");
+            fflush( stdout            ); //:@DOUBLE_FLUSH@://
+            printf( str_fmt , val_dec );
+            fflush( stdout            );    
+        };;
+    }
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     void
     aac2020_paint5d_Info_VPC( void ) //:MACRO[LOG_VPC]
     {
+        if( aac2020_paint5d_AllowedToSpeak() ){
+            U32 x_0 ;
+            U32 x_1 ;
+            U32 y_0 ;
+            U32 y_1 ;
 
-        U32 x_0 ;
-        U32 x_1 ;
-        U32 y_0 ;
-        U32 y_1 ;
+            AAC2020_TAUDEPO_Get( 
+                AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+            ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+            ,   AAC2020_TAUDEPO.P5D_VPC //:DEX_VAR
+            ,  &(x_0),&(x_1),&(y_0),&(y_1)
+            );;
 
-        AAC2020_TAUDEPO_Get( 
-            AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
-        ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
-        ,   AAC2020_TAUDEPO.P5D_VPC //:DEX_VAR
-        ,  &(x_0),&(x_1),&(y_0),&(y_1)
-        );;
-
-        printf("\n");
-        printf("[aac2020_paint5d_Info_VPC(CANVAS/CLIENT)]\n");
-        printf("[AAC2020_TAUDEPO.P5D_VPC.x_0]:%d\n", x_0 );
-        printf("[AAC2020_TAUDEPO.P5D_VPC.x_1]:%d\n", x_1 );
-        printf("[AAC2020_TAUDEPO.P5D_VPC.y_0]:%d\n", y_0 );
-        printf("[AAC2020_TAUDEPO.P5D_VPC.y_1]:%d\n", y_1 );
-        printf("\n");
+            printf("\n");
+            printf("[aac2020_paint5d_Info_VPC(CANVAS/CLIENT)]\n");
+            printf("[AAC2020_TAUDEPO.P5D_VPC.x_0]:%d\n", x_0 );
+            printf("[AAC2020_TAUDEPO.P5D_VPC.x_1]:%d\n", x_1 );
+            printf("[AAC2020_TAUDEPO.P5D_VPC.y_0]:%d\n", y_0 );
+            printf("[AAC2020_TAUDEPO.P5D_VPC.y_1]:%d\n", y_1 );
+            printf("\n");
+        };;
 
     }
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     void
     aac2020_paint5d_Info_VP0( void ) //:MACRO[LOG_VP0]
     {
-        U32 x_0 ;
-        U32 x_1 ;
-        U32 y_0 ;
-        U32 y_1 ;
+        if( aac2020_paint5d_AllowedToSpeak() ){
+            U32 x_0 ;
+            U32 x_1 ;
+            U32 y_0 ;
+            U32 y_1 ;
 
-        AAC2020_TAUDEPO_Get( 
-            AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
-        ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
-        ,   AAC2020_TAUDEPO.P5D_VP0 //:DEX_VAR
-        ,  &(x_0),&(x_1),&(y_0),&(y_1)
-        );;
+            AAC2020_TAUDEPO_Get( 
+                AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+            ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+            ,   AAC2020_TAUDEPO.P5D_VP0 //:DEX_VAR
+            ,  &(x_0),&(x_1),&(y_0),&(y_1)
+            );;
 
-        printf("\n");
-        printf("[aac2020_paint5d_Info_VP0(SCREEN/VIEWPORT)]\n");
-        printf("[AAC2020_TAUDEPO.P5D_VP0.x_0]:%d\n", x_0 );
-        printf("[AAC2020_TAUDEPO.P5D_VP0.x_1]:%d\n", x_1 );
-        printf("[AAC2020_TAUDEPO.P5D_VP0.y_0]:%d\n", y_0 );
-        printf("[AAC2020_TAUDEPO.P5D_VP0.y_1]:%d\n", y_1 );
-        printf("\n");
-
+            printf("\n");
+            printf("[aac2020_paint5d_Info_VP0(SCREEN/VIEWPORT)]\n");
+            printf("[AAC2020_TAUDEPO.P5D_VP0.x_0]:%d\n", x_0 );
+            printf("[AAC2020_TAUDEPO.P5D_VP0.x_1]:%d\n", x_1 );
+            printf("[AAC2020_TAUDEPO.P5D_VP0.y_0]:%d\n", y_0 );
+            printf("[AAC2020_TAUDEPO.P5D_VP0.y_1]:%d\n", y_1 );
+            printf("\n");
+        };;
     }
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     void
     aac2020_paint5d_Info_VP1( void ) //:MACRO[LOG_VP1]
     {
-        U32 x_0 ;
-        U32 x_1 ;
-        U32 y_0 ;
-        U32 y_1 ;
+        if( aac2020_paint5d_AllowedToSpeak() ){
+            U32 x_0 ;
+            U32 x_1 ;
+            U32 y_0 ;
+            U32 y_1 ;
 
-        AAC2020_TAUDEPO_Get( 
-            AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
-        ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
-        ,   AAC2020_TAUDEPO.P5D_VP1 //:DEX_VAR
-        ,  &(x_0),&(x_1),&(y_0),&(y_1)
-        );;
+            AAC2020_TAUDEPO_Get( 
+                AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+            ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+            ,   AAC2020_TAUDEPO.P5D_VP1 //:DEX_VAR
+            ,  &(x_0),&(x_1),&(y_0),&(y_1)
+            );;
 
-        printf("\n");
-        printf("[aac2020_paint5d_Info_VP1(CAMERA/DATA)]\n");
-        printf("[AAC2020_TAUDEPO.P5D_VP1.x_0]:%d\n", x_0 );
-        printf("[AAC2020_TAUDEPO.P5D_VP1.x_1]:%d\n", x_1 );
-        printf("[AAC2020_TAUDEPO.P5D_VP1.y_0]:%d\n", y_0 );
-        printf("[AAC2020_TAUDEPO.P5D_VP1.y_1]:%d\n", y_1 );
-        printf("\n");
-
+            printf("\n");
+            printf("[aac2020_paint5d_Info_VP1(CAMERA/DATA)]\n");
+            printf("[AAC2020_TAUDEPO.P5D_VP1.x_0]:%d\n", x_0 );
+            printf("[AAC2020_TAUDEPO.P5D_VP1.x_1]:%d\n", x_1 );
+            printf("[AAC2020_TAUDEPO.P5D_VP1.y_0]:%d\n", y_0 );
+            printf("[AAC2020_TAUDEPO.P5D_VP1.y_1]:%d\n", y_1 );
+            printf("\n");
+        };;
     }
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 

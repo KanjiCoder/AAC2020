@@ -20,34 +20,40 @@ USAGE: GET:
 
 *** ******************************************************** **/
 //:LOGGING_AND_HALTING:======================================://
+#define LOG_SYS  AAC2020_SILENCE   //:------------------: 01 ://
+#define     F_F  fflush( stdout )  //:------------------: 02 ://
+#define     P_F  printf            //:------------------: 03 ://
 
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    //:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=================://
+        void 
+        aac2020_taudepo_Halt( const char* msg_err )
+        {
+            P_F("[FATAL_ERROR:aac2020_*******]:%s\n", msg_err );
+            fflush(stdout);
+            exit( 39 );
+        }
+    //:=================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+    //:LOG_AFTER_HALT:=======================================://
+        void
+        aac2020_taudepo_Info_any( //:FUNC:::Info , OVERLOAD:any
+            const char* str_fmt   //:GENERAL:str , SPECIFIC:fmt
+        ,   void*       dat_any   //:GENERAL:dat , SPECIFIC:any
+        )
+        {                                int say=( 0 );
+            if( LOG_SYS.TAUDEPO <=(  0  ) ){ say=( 1 ); };
+            if( LOG_SYS.SILENCE <=( 0-1 ) ){ say=( 1 ); };
+            if( LOG_SYS.SILENCE >=( 0+1 ) ){ say=( 0 ); };
+            if( say >= 1 ){
+                P_F("[taudepo_log]....(   " ); F_F ;
+                P_F( str_fmt , dat_any      ); F_F ;
+                P_F(               "   )\n" ); F_F ;
+            };;
+        }
+    //:=======================================:LOG_AFTER_HALT://
 
-    void
-    aac2020_taudepo_Info_any(
-        const char* str_fmt
-    ,   void*       poi_dat
-    ){ if( AAC2020_SILENCE.TAUDEPO <= 0 ){
-    
-        printf("[AAC2020_TAUDEPO_Info_any]...\n");
-        fflush(stdout);
-        printf( str_fmt , poi_dat );
-        printf("\n");
-        fflush(stdout);
-
-    };;}
-
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-
-    void 
-    aac2020_taudepo_Halt( const char* msg_err ){
-        printf("[AAC2020_TAUDEPO_Halt:msg_err]:%s\n",msg_err);
-        fflush(stdout);
-        exit( 123 );
-    }
-
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-
+#undef  LOG_SYS  //:------------------------------------: 01 ://
+#undef      F_F  //:------------------------------------: 02 ://
+#undef      P_F  //:------------------------------------: 03 ://
 //:======================================:LOGGING_AND_HALTING://
 //:COM:======================================================://
 #define I32  int32_t      /** GCC: <stdint.h> **/     //: 01 ://

@@ -14,20 +14,25 @@
 //:LOG_AFTER_HALT:===========================================://
 #define I32  int32_t /** GCC: <stdint.h> **/
 #define U64 uint64_t /** GCC: <stdint.h> **/
-
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    
+    //:LOG_AFTER_HALT:=======================================://
     void
-    aac2020_tausync_Info_any(
-        const char* str_fmt
-    ,   void*       dat_any   
+    aac2020_tausync_Info_any( //:FUNC:::Info , OVERLOAD:any
+        const char* str_fmt   //:GENERAL:str , SPECIFIC:fmt
+    ,   void*       dat_any   //:GENERAL:dat , SPECIFIC:any
     )
-    { if( AAC2020_SILENCE.TAUSYNC <= 0 ){
-
-        /** Same Line As Next Printf **/
-        printf("[tausync_log]....(   " ); fflush( stdout );
-        printf( str_fmt , dat_any      ); fflush( stdout );
-        printf(               "   )\n" ); fflush( stdout );
-
-    };; }
+    {                                        int say=( 0 );
+        if( AAC2020_SILENCE.TAUSYNC <=(  0  ) ){ say=( 1 ); };
+        if( AAC2020_SILENCE.SILENCE <=( 0-1 ) ){ say=( 1 ); };
+        if( AAC2020_SILENCE.SILENCE >=( 0+1 ) ){ say=( 0 ); };
+        if( say >= 1 ){
+            printf("[tausync_log]....(   " ); fflush( stdout );
+            printf( str_fmt , dat_any      ); fflush( stdout );
+            printf(               "   )\n" ); fflush( stdout );
+        };;
+    }
+    //:=======================================:LOG_AFTER_HALT://
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
@@ -42,7 +47,7 @@
         ,   ( void* )( (U64)dat_dec )
         );;
     }
-
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 #undef  I32
 #undef  U64
 //:===========================================:LOG_AFTER_HALT://

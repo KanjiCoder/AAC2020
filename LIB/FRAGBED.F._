@@ -11,57 +11,68 @@
         exit(666);
     }
 //:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+//:LOG_AFTER_HALT:===========================================://
+
+    /** **************************************************** **/
+    /** In the future. Try to only use this style of  ****** **/
+    /** non-fatal logging message.                    ****** **/
+    /** **************************************************** **/
+
+    void
+    aac2020_fragbed_Info_any( //:FUNC:::Info , OVERLOAD:any
+        const char* str_fmt   //:GENERAL:str , SPECIFIC:fmt
+    ,   void*       dat_any   //:GENERAL:dat , SPECIFIC:any
+    )
+    {                                        int say=( 0 );
+        if( AAC2020_SILENCE.FRAGBED <=(  0  ) ){ say=( 1 ); };
+        if( AAC2020_SILENCE.SILENCE <=( 0-1 ) ){ say=( 1 ); };
+        if( AAC2020_SILENCE.SILENCE >=( 0+1 ) ){ say=( 0 ); };
+        if( say >= 1 ){
+            printf("[fragbed_log]....(   " ); fflush( stdout );
+            printf( str_fmt , dat_any      ); fflush( stdout );
+            printf(               "   )\n" ); fflush( stdout );
+        };;
+    }
+//:===========================================:LOG_AFTER_HALT://
 //:#INFO_MESSAGES_SDC#:======================================://
-#define U32  uint32_t  /** <stdint.h> **/
-#define P_F  printf
-#define F_F  fflush( stdout );
+#define U32  uint32_t  /** <stdint.h> **/             //: 01 ://
+#define P_F  printf                                   //: 02 ://
+#define F_F  fflush( stdout );                        //: 03 ://
+#define U_P  uintmax_t /** GCC: <stdint.h> **/        //: 04 ://
+#define I_P   intmax_t /** GCC: <stdint.h> **/        //: 05 ://
+#define V_P  void* //:<-- Void Pointer Cast           //: 06 ://
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     void aac2020_fragbed_Info( const char* msg_inf ){
-        if( AAC2020_SILENCE.FRAGBED <= 0 ){ //:@LOUD@://
-            P_F( "[aac2020_fragbed:Info]:%s\n" ,  msg_inf);
-            F_F;
-        };;
+        aac2020_fragbed_Info_any( msg_inf , ((void*)0) );
     }  
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     void aac2020_fragbed_Info_str( 
         const char* str_fmt /** Format String  (with:%s) **/
     ,   const char* str_msg /** String:Message           **/
     ){
-        if( AAC2020_SILENCE.FRAGBED <= 0 ){ //:@LOUD@://
-            P_F( "[aac2020_fragbed:Info_str:BELOW]" );
-            F_F;//:@ECHOFUNC_EXTRAFLUSH@://
-            P_F( str_fmt , str_msg );
-            F_F;(stdout);
-        };;
+        aac2020_fragbed_Info_any( str_fmt , (V_P)(I_P)str_msg );
     }  
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     void aac2020_fragbed_Info_dec( 
         const char* str_fmt /** Format String (with: %d)  **/
     ,   U32         dec_msg /** Message:DECIMAL_VALUE     **/
     ){
-        if( AAC2020_SILENCE.FRAGBED <= 0 ){ //:@LOUD@://
-            P_F( "[aac2020_fragbed:Info_dec:BELOW]" );
-            F_F; //:@ECHOFUNC_EXTRAFLUSH@://
-            P_F( str_fmt , dec_msg );
-            F_F;
-        };;
+        aac2020_fragbed_Info_any( str_fmt , (V_P)(U_P)dec_msg );
     }  
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     void aac2020_fragbed_Info_chr( 
         const char* str_fmt /** Format String (with: %c)  **/
     ,   char        chr_msg /** Message:Char_Value        **/
     ){
-        if( AAC2020_SILENCE.FRAGBED <= 0 ){ //:@LOUD@://
-            P_F( "[aac2020_fragbed:Info_chr:BELOW]" );
-            F_F; //:@ECHOFUNC_EXTRAFLUSH@://
-            P_F( str_fmt , chr_msg );
-            F_F;
-        };;
+        aac2020_fragbed_Info_any( str_fmt , (V_P)(I_P)chr_msg );
     }  
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-#undef  U32
-#undef  P_F
-#undef  F_F
+#undef  U32  //:----------------------------------------: 01 ://
+#undef  P_F  //:----------------------------------------: 02 ://
+#undef  F_F  //:----------------------------------------: 03 ://
+#undef  U_P  //:----------------------------------------: 04 ://
+#undef  I_P  //:----------------------------------------: 05 ://
+#undef  V_P  //:----------------------------------------: 06 ://
 //:======================================:#INFO_MESSAGES_SDC#://
 //:COPY_HARD_CODED_SHADER_STRINGS:===========================://
 #define INFO     aac2020_fragbed_Info
@@ -303,7 +314,8 @@
            
             
             #if( AAC2020_FRAGBED_BUGHUNT_FileOnDiskNotify >= 1 )
-            INFO_STR("[file_YES_on_disk]:%s\n",frag_shader_nam);
+            INFO_STR("[_____yes____disk]:%s",frag_shader_nam);
+            //[------ [file_yes_on_disk] --------------------]//
             #endif 
          
             file_exists=( 0 + 4 );
@@ -311,7 +323,7 @@
             file_exists=( 0 - 4 );
    
             #if( AAC2020_FRAGBED_BUGHUNT_FileOnDiskNotify >= 1 )
-            INFO_STR("[file_NOT_on_disk]:%s\n",frag_shader_nam);
+            INFO_STR("[file_NOT_on_disk]:%s",frag_shader_nam);
             #endif
           
         };;

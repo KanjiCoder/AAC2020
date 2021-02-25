@@ -11,15 +11,32 @@
         exit( 489 /** 69 + 420 == 489 , NICE! **/ );
     }
 //:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+//:LOG_AFTER_HALT:===========================================://
+    void
+    aac2020_pixpush_Info_any( //:FUNC:::Info , OVERLOAD:any
+        const char* str_fmt   //:GENERAL:str , SPECIFIC:fmt
+    ,   void*       dat_any   //:GENERAL:dat , SPECIFIC:any
+    )
+    {                                        int say=( 0 );
+        if( AAC2020_SILENCE.PIXPUSH <=(  0  ) ){ say=( 1 ); };
+        if( AAC2020_SILENCE.SILENCE <=( 0-1 ) ){ say=( 1 ); };
+        if( AAC2020_SILENCE.SILENCE >=( 0+1 ) ){ say=( 0 ); };
+        if( say >= 1 ){
+            printf("[pixpush_log]....(   " ); fflush( stdout );
+            printf( str_fmt , dat_any      ); fflush( stdout );
+            printf(               "   )\n" ); fflush( stdout );
+        };;
+    }
+//:===========================================:LOG_AFTER_HALT://
 //:OKAY_MESSAGE_FOR_POOR_MANS_DEBUG:=========================://
-
     void
     aac2020_PIXPUSH_Okay( const char* msg_o_k )
-    {if(AAC2020_SILENCE.PIXPUSH <= 0 ){
-        printf("[AAC2020_PIXPUSH.Okay]:%s\n", msg_o_k );
-        fflush( stdout );
-    };;}
-
+    {
+        aac2020_pixpush_Info_any(
+            "[AAC2020_PIXPUSH.Okay]:%s"
+        ,   (void*)msg_o_k 
+        );;
+    }
 //:=========================:OKAY_MESSAGE_FOR_POOR_MANS_DEBUG://
 //:ABOUT_TO_ERROR_MESSAGE:===================================://
 #define I32 int32_t /** GCC: <stdint.h> **/

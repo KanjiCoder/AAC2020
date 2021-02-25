@@ -11,16 +11,20 @@
 //:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
 //:LOG_AFTER_HALT:===========================================://
     void
-    aac2020_gentupp_Info_any(
-        const char* str_fmt
-    ,   void*       dat_any   
+    aac2020_gentupp_Info_any( //:FUNC:::Info , OVERLOAD:any
+        const char* str_fmt   //:GENERAL:str , SPECIFIC:fmt
+    ,   void*       dat_any   //:GENERAL:dat , SPECIFIC:any
     )
-    { if( AAC2020_SILENCE.GENTUPP <= 0 ){
-        /** Same Line As Next Printf **/
-        printf("[gentupp_log]....(   " ); fflush( stdout );
-        printf( str_fmt , dat_any      ); fflush( stdout );
-        printf(               "   )\n" ); fflush( stdout );
-    };; }
+    {                                        int say=( 0 );
+        if( AAC2020_SILENCE.GENTUPP <=(  0  ) ){ say=( 1 ); };
+        if( AAC2020_SILENCE.SILENCE <=( 0-1 ) ){ say=( 1 ); };
+        if( AAC2020_SILENCE.SILENCE >=( 0+1 ) ){ say=( 0 ); };
+        if( say >= 1 ){
+            printf("[gentupp_log]....(   " ); fflush( stdout );
+            printf( str_fmt , dat_any      ); fflush( stdout );
+            printf(               "   )\n" ); fflush( stdout );
+        };;
+    }
 //:===========================================:LOG_AFTER_HALT://
 //:INIT_NONE:================================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
