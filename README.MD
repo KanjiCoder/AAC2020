@@ -5,6 +5,9 @@
 ### 2: DEVELOPER_TIME_COSTS
 ### 3: CONCEPTUAL_TYPES
 ### 4: DIAGRAMS
+### 5: VARIABLE_NAME_INDEX
+### 6: FUNCTION_NAME_INDEX
+### 7: ITS_WRONG
 
     //:ABOUT:================================================://
 
@@ -990,4 +993,358 @@
     A 11 11 11 11
 
     //:||||||||||||||:DIAGRAMS:FRACT16_FRACTAL_AUTO_TILE_SETS://
+    //:DIAGRAMS:AUTO_TILE_EXPANSION:|||||||||||||||||||||||||://
+    
+        Summary: All 16 sub-tiles of auset(auto_tile_set)
+                 can be created by selecting FOUR(4) of
+                 the CANVAS_USER_VIEW partitions and merging
+                 them together.
+                 
+                 The Obvious ones need no shuffling:
+                 
+                 TOP_LEF  |  TOP_RIG
+                [00] [01] | [02] [03]
+                [04] [05] | [06] [07]
+                ----------|----------         
+                [08] [09] | [10] [11]
+                [12] [03] | [14] [15]
+                 BOT_LEF  |  BOT_RIG
+                
+    
+        +------------------------------------------------------+
+        |<---- CANVAS_USER_VIEW --->|      | NEIGHBOR_BITTABLE |
+        +--==--+--==--+--==--+--==--+ ---  +---------+---------+
+        |      |      |      |      |  ^   |   _X_   |  _Y_    |
+        |  00  |  01  |  02  |  03  |  |   |         |         |
+        |      |      |      |      |  |   | _A_ _B_ | _C_ _D_ |
+        +--==--+--==--+--==--+--==--+  |   | Min Max | Min Max |
+        |      |      |      |      |  |   | LEF RIG | TOP BOT |
+        |  04  |  05  |  06  |  07  |  |   +---------+---------|
+        |      |      |      |      | 256  | EXAMPLE:          |
+        +--==--+--==--+--==--+--==--+  |   | _0_ _1_ | _0_ _1_ |
+        |      |      |      |      | PEB  |       (TOP)       |
+        |  08  |  09  |  10  |  11  |  |   |        [0]        |
+        |      |      |      |      |  |   |(RIG)[0][T][1](LEF)|
+        +--==--+--==--+--==--+--==--+  |   |        [1]        |
+        |      |      |      |      |  |   |       (BOT)       |
+        |  12  |  13  |  14  |  15  |  |   |  T==( 0101 )==(5 )|
+        |      |      |      |      |  V   |  t==( T_L Corner )|
+        +--==--+--==--+--==--+--==--+ ---  +-------------------+
+                         _T_ : Tile        |       (TOP)       |
+          _____________  _A_ : 1000        |        [C]        |
+         |    [_C_]    | _B_ : 0100        |(RIG)[A][T][B](LEF)|
+         [_A_][_T_][_B_] _C_ : 0010        |        [D]        |
+         |____[_D_]____| _D_ : 0001        |_______(BOT)_______|
+          _____________       _______       _____________
+         |    [   ]    |_00_ |       | _01_|    [   ]    |    
+         [   ][_T_][   ]0000 [NON|T_C] 0001[   ][_T_][   ]    
+         |____[___]____|ABCD |_______| ABCD|____[///]____|    
+          _____________       _______       _____________
+         |    [///]    |_02_ |       | _03_|    [///]    |    
+         [   ][_T_][   ]0010 [B_C|V_P] 0011[   ][_T_][   ]    
+         |____[___]____|ABCD |_______| ABCD|____[///]____|    
+          _____________       _______       _____________
+         |    [   ]    |_04_ |       | _05_|    [   ]    |    
+         [   ][_T_][///]0100 [L_C|T_L] 0101[   ][_T_][///]    
+         |____[___]____|ABCD |_______| ABCD|____[///]____|    
+          _____________       _______       _____________
+         |    [///]    |_06_ |       | _07_|    [///]    |    
+         [   ][_T_][///]0110 [B_L|3_L] 0111[   ][_T_][///]    
+         |____[___]____|ABCD |_______| ABCD|____[///]____|    
+          _____________       _______       _____________
+         |    [   ]    |_08_ |       | _09_|    [   ]    |    
+         [///][_T_][   ]1000 [R_C|T_R] 1001[///][_T_][   ]    
+         |____[___]____|ABCD |_______| ABCD|____[///]____|    
+          _____________       _______       _____________
+         |    [///]    |_10_ |       | _11_|    [///]    |    
+         [///][_T_][   ]1010 [B_R|3_R] 1011[///][_T_][   ]    
+         |____[___]____|ABCD |_______| ABCD|____[///]____|    
+          _____________       _______       _____________
+         |    [   ]    |_12_ |       | _13_|    [   ]    |    
+         [///][_T_][///]1100 [H_P|3_T] 1101[///][_T_][///]    
+         |____[___]____|ABCD |_______| ABCD|____[///]____|    
+          _____________       _______       _____________
+         |    [///]    |_14_ |       | _15_|    [///]    |    
+         [///][_T_][///]1110 [3_B|ALL] 1111[///][_T_][///]    
+         |____[___]____|ABCD |_______| ABCD|____[///]____|    
+         
+         NON: Non_Way (NONe Touching Tile     ) [00]
+         T_C: Top_Cap (Top_Cap                ) [01]
+         B_C: Bot_Cap (Bottom_Cap             ) [02]
+         V_P: Ver_Pip (Vertical_Pipe          ) [03]
+         L_C: Lef_Cap (Left_Cap               ) [04]
+         T_L: Top_Lef (Top_Left(Corner)       ) [05]
+         B_L: Bot_Lef (Bottom_Left(Corner)    ) [06]
+         3_L: W_3_Lef ([3]way: [L]eft-edged   ) [07]
+         R_C: Rig_Cap (Right_Cap              ) [08]
+         T_R: Top_Rig (Top_Right(Corner)      ) [09]
+         B_R: Bot_Rig (Bottom_Right(Corner)   ) [10]
+         3_R: W_3_Rig ([3]way: [R]ight-edged  ) [11]
+         H_P: Hor_Pip (Horizontal_Pipe        ) [12]
+         3_T: W_3_Top ([3]way: [T]op-edged    ) [13]
+         3_B: W_3_Bot ([3]way: [B]ottom-edged ) [14]
+         ALL: All_Way (All_Ways(Touching)     ) [15]
+         
+    +---------------------------------------------------------+
+    | How all 16 sub-tiles of auset(auto_tile_set) are        |
+    | generated by merging sub-blocks of the                  |
+    | CANVAS_USER_VIEW diagram                                |
+    +----------------------------+----------------------------+
+    |#00              +--+--+    |#01              +--+--+    |
+    |           NON   |00|03|    |           T_C   |00|03|    |
+    |   [T]    =0000= +--+--+    |   [T]    =0001= +--+--+    |
+    |                 |12|15|    |   [ ]           |04|07|    |
+    |                 +--+--+    |                 +--+--+    |
+    +----------------------------+----------------------------+
+    |#02              +--+--+    |#03              +--+--+    |
+    |   [ ]     B_C   |08|11|    |   [ ]     V_P   |04|07|    |
+    |   [T]    =0010= +--+--+    |   [T]    =0011= +--+--+    |
+    |                 |12|15|    |   [ ]           |08|11|    |
+    |                 +--+--+    |                 +--+--+    |
+    +----------------------------+----------------------------+
+    |#04              +--+--+    |#05              +--+--+    |
+    |           L_C   |00|01|    |           T_L   |00|01|    |
+    |   [T][ ] =0100= +--+--+    |   [T][ ] =0101= +--+--+    |
+    |                 |12|13|    |   [ ]           |04|05|    |
+    |                 +--+--+    |                 +--+--+    |
+    +----------------------------+----------------------------+
+    |#06              +--+--+    |#07              +--+--+    |
+    |   [ ]     B_L   |08|09|    |   [ ]     3_L   |04|06|    |
+    |   [T][ ] =0110= +--+--+    |   [T][ ] =0111= +--+--+    |
+    |                 |12|13|    |   [ ]           |08|10|    |
+    |                 +--+--+    |                 +--+--+    |
+    +----------------------------+----------------------------+
+    |#08              +--+--+    |#09              +--+--+    |
+    |           R_C   |02|03|    |           T_R   |02|03|    |
+    |[ ][T]    =1000= +--+--+    |[ ][T]    =1001= +--+--+    |
+    |                 |14|15|    |   [ ]           |06|07|    |
+    |                 +--+--+    |                 +--+--+    |
+    +----------------------------+----------------------------+
+    |#10              +--+--+    |#11              +--+--+    |
+    |   [ ]     B_R   |10|11|    |   [ ]     3_R   |05|07|    |
+    |[ ][T]    =1010= +--+--+    |[ ][T]    =1011= +--+--+    |
+    |                 |14|15|    |   [ ]           |09|11|    |
+    |                 +--+--+    |                 +--+--+    |
+    +----------------------------+----------------------------+
+    |#12              +--+--+    |#13              +--+--+    |
+    |           H_P   |01|02|    |           3_T   |01|02|    |
+    |[ ][T][ ] =1100= +--+--+    |[ ][T][ ] =1101= +--+--+    |
+    |                 |13|14|    |   [ ]           |09|10|    |
+    |                 +--+--+    |                 +--+--+    |
+    +----------------------------+----------------------------+
+    |#14              +--+--+    |#15              +--+--+    |
+    |   [ ]     3_B   |05|06|    |   [ ]     ALL   |05|06|    |
+    |[ ][T][ ] =1110= +--+--+    |[ ][T][ ] =1111= +--+--+    |
+    |                 |13|14|    |   [ ]           |09|10|    |
+    |                 +--+--+    |                 +--+--+    |
+    +----------------------------+----------------------------+ 
+    
+    //:|||||||||||||||||||||||||:DIAGRAMS:AUTO_TILE_EXPANSION://
+    //:DIAGRAMS:ATE_Subtile_User_View:|||||||||||||||||||||||://
+    
+            ATE: AUTO_TILE_EXPANSION (Auto_Tile_Expansion)
+            SUV: SUBTILE_USER_VIEW   (Subtile_User_View  )
+            CUV:  CANVAS_USER_VIEW   ( Canvas_User_View  )
+        DIA_SEC: Diagram_Section
+        DIA_ONE: Diagram_One (One diagram)
+        
+        This section expands upon DIA_SEC[ AUTO_TILE_EXPANSION ]
+        and DIA_ONE[ #CANVAS_USER_VIEW# ]. In order to render
+        a single sub-tile in PAINT5D editor, this is how you
+        would do it.
+                                      |<---- 256 ---->|
+        |<-- CUV -->|  |<SUV>|        |<---- CUV ---->|
+        +--+--+--+--+  +--+--+        +-=-+-=-+-=-+-=-+<--=-->
+        |__|__|__|__|  |__|__|        | 0 | 1 | 2 | 3 |   |   
+        |  |  |  |  |  |  |  |        +-=-+-=-+-=-+-=-+<  |  >
+        +--+--+--+--+  +--+--+        | 4 | 5 | 6 | 7 |  HEX  
+        |__|__|__|__|  .     .        +-=-+-=-+-=-+-=-+< SUB >
+        |  |  |  |  |  .     .     +--> 8 | 9 | A | B |  CEL  
+        +-----=-----+  .     .     |  +-=-+-=-+-=-+-=-+<  |  >
+        |<-- 256 -->|  |<128>|     +--> C | D | E | F |   |   
+                                   |  +-=-+-=-+-=-+-=-+<--=-->
+                                   |      .   .   .
+                 [ C16_Cell ](S)---+      +-=-+-=-+
+                 [ cuvcell  ]             | 5 | 6 |
+                                          +-=-+-=-+
+                                          | 9 | A |
+                                          +-=-+-=-+
+                                          |<-SUV->|
+                                          |<-128->|
+                                          
+        suvquad_CTO_cuvcell
+                          
+        cuv_CTO_suv (cuvipix_CTO_suvipix)  :
+            
+            Converts  Canvas_User_View pixel coord
+            into a   Subtile_User_View pixel coord.
+            
+            I32
+            cuv_i_x_CTO_suv_i_x(
+                        cuv_i_x //:Canvas_User_View:i_x
+                       ,suv_dex //:Subtil_User_View:DEX
+            )
+            {
+            
+            }
+            
+            I32
+            cuv_i_y_CTO_suv_i_y(
+                        cuv_i_y //:Canvas_User_View:i_y
+                       ,suv_dex //:Subtil_User_View:DEX
+            )
+            {
+            
+            }
+            
+            IV2
+            cuv_CTO_suv_YFC( /**Yes_Function_Calls**/
+            ,   cuv_i_x
+            ,   cuv_i_y
+            ,   suv_dex
+            ){
+            /** ******************************************** ***
+                  IDENTICAL_TRANSFORMS[ cuv_CTO_suv_NFC ]
+                  IDENTICAL_TRANSFORMS[ cuv_CTO_suv_YFC ]
+                  
+                  DIFFERENT_IMPLEMENTS[ cuv_CTO_suv_NFC ]
+                  DIFFERENT_IMPLEMENTS[ cuv_CTO_suv_YFC ]
+            *** ******************************************** **/
+                //:GET_SUV:----------------------------------://
+                //: Broken into TWO function calls.          ://
+                //: One(1) for each axis because it makes    ://
+                //: calling the function "resursively" .     ://
+                //: easier. Though I don't plan on using this://
+                //: function recursively, writing it this way://
+                //: will give me insight I will need a few   ://
+                //: months from now when working on the      ://
+                //: fractal aspects of engine.               ://
+                //: Written_On[ DATE[ 2021_02_26 ] ]         ://
+                //:GET_SUV:- - - - - - - - - - - - - - - - - ://
+                
+                    //:SUV: Subtile_User_View( Pixel Coord ).
+                    //:A[ SUV ]Is really just a re-mapped[ CUV ].
+                    //:Any[ SUV ]value is a valid[ CUV ]value.
+                    //: 
+                    //:   Something fractalish like this would be
+                    //:   a meaningful transform. And by chaning 
+                    //:   the "dex" value we could
+                    //:
+                    //:   cuv_CTO_suv_YFC( 
+                    //:      (cuv_CTO_suv_YFC( x,y,dex )).x
+                    //:     ,(cuv_CTO_suv_YFC( x,y,dex )).y
+                    //:     , dex
+                    //:   );;
+                    IV2 suv; 
+                    suv.x =( cuv_i_x_CTO_suv_i_x(
+                             cuv_i_x  ,  suv_dex );;
+                    suv.y =( cuv_i_y_CTO_suv_i_y(
+                             cuv_i_y  ,  suv_dex );;
+                //:----------------------------------:GET_SUV://
+            
+            };;
+            
+            IV2
+            cuv_CTO_suv_NFC( /**No_Function_Calls**/
+                cuv_i_x
+            ,   cuv_i_y
+            ,   suv_dex //:SUV's subtile inDEX to render.
+                        //:A "suv_dex" is a "sub_dex" but a
+                        //:"sub_dex" is not always a "suv_dex".
+                        //:"suv_dex" >>> Auto_Tile_Sub_Tile_DEX
+            )           //:"sub_dex" === Auto_Tile_Sub_Tile_DEX
+            {
+            /** ******************************************** ***
+                  IDENTICAL_TRANSFORMS[ cuv_CTO_suv_NFC ]
+                  IDENTICAL_TRANSFORMS[ cuv_CTO_suv_YFC ]
+                  
+                  DIFFERENT_IMPLEMENTS[ cuv_CTO_suv_NFC ]
+                  DIFFERENT_IMPLEMENTS[ cuv_CTO_suv_YFC ]
+            *** ******************************************** **/
+            
+                I32 suv_q_x ; //:SubtileUserView: Quad_X
+                I32 suv_q_y ; //:SubtileUserView: Quad_Y
+                suv_q_x =( cuv_i_x / 128 ); //:SubQuad:X
+                suv_q_y =( cuv_i_y / 128 ); //:SubQuad:Y
+                
+                I32 suvquad ; //:[ suv_q_x , suv_q_y ]As_1D_Dex
+                suvquad =( suv_q_x + ( suv_q_y * 4 ) );
+                
+                I32 cuvcell; //:Canvas_User_View CELL (C16_Cell)
+                cuvcell=(
+                suvquad_AND_suv_dex_CTO_cuvcell(
+                suvquad  ,  suv_dex ));;
+                
+                I32 cuv_c_x ; //:cuvcell as 2D XY , cell_x
+                I32 cuv_c_y ; //:cuvcell as 2D XY , cell y
+                cuv_c_x =( INDEX_TO_XY_FORMULA_ON[ cuvcell ] );
+                cuv_c_y =( INDEX_TO_XY_FORMULA_ON[ cuvcell ] );
+                
+                //: cuvloc: Canvas_User_View_Local(ToCell)Pixel:
+                I32 cuvlocx = xxxxxxxxxxxx;
+                I32 cuvlocy = xxxxxxxxxxxx;
+                
+                //: cuv_bas: Canvas_User_View base address of
+                //:          the[ cuvcell ]you are inside of.
+                //:          measured in pixels.
+                I32 cuvbasx = xxxxxxxxxxxxxx;
+                I32 cuvbasy = xxxxxxxxxxxxx;
+                
+                suv.x =( cuvbasx + cuvlocx );
+                suv.y =( cuvbasy + cuvlocy );
+                
+          
+                
+                IV2 suv
+            }
+                                      
+    //:|||||||||||||||||||||||:DIAGRAMS:ATE_Subtile_User_View://
     //:=============================================:DIAGRAMS://
+    //:VARIABLE_NAME_INDEX:==================================://
+    
+        sub_dex : Ambgious, choose[ suv_dex | ast_dex ]
+        aus_sub : Ambigious, USE[ ast_dex ]
+        ast_dex : Auset_Sub_Tile:inDEX
+        suv_dex : Subtile_User_View:DEX (DEX==ast_dex)
+        
+        suv_q_y : Subtile_User_View_QUAD: Y ( 2D Coord )
+        suv_q_y : Subtile_User_View_QUAD: X ( 2D Coord )
+        suvquad : Subtile_User_View_QUAD    ( 1D Index )
+    
+        cuvcell : Canvas_User_View CELL (C16_Cell)( 1D Index )
+        
+        cuv_c_x : CUVcell_Cell_X (cuvcell(1D) as 2D Coord)
+        cuv_c_y : CUVcell_Cell_Y (cuvcell(1D) as 2D Coord)
+        
+        cuv_bas : Canvas_User_View:BASe(address/pixelcoord)
+        cuvbasx : Canvas_User_View:BASe(address/pixelcoord)X
+        cuvbasy : Canvas_User_View:BASe(address/pixelcoord)Y
+        
+          suv.x : Subtile_User_View:[ pixel/integer]:X
+          suv.y : Subtile_User_View:[ pixel/integer]:Y
+    
+    //:==================================:VARIABLE_NAME_INDEX://
+    //:FUNCTION_NAME_INDEX:==================================://
+    
+    
+    //:==================================:FUNCTION_NAME_INDEX://
+    //:IT_WRONG:=============================================://
+    
+        BAD[ dex_sub ]USE[ sub_dex ]
+        BAD[ sub_aus ]USE[ aus_sub ]
+        BAD[ dex_ast ]USE[ ast_dex ]
+        BAD[ dex_suv ]USE[ suv_dex ]
+        BAD[ cellcuv ]USE[ cuvcell ]
+        BAD[ bascuvx ]USE[ cuvbasx ]
+        BAD[ bascuvy ]USE[ cuvbasy ]
+    
+    //:============================================:ITS_WRONG://
+    
+    
+    
+    
+    
+    
+    
+    
+    
