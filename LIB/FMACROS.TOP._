@@ -70,7 +70,7 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 41 ,       "41");
 //:==================================================:TAUSYNC://
 //:PAINT5D:==================================================://
 #if(            AAC2020_INCLUDE_PAINT5D >=  1 )
-_Static_assert( AAC2020_INCLUDE_PAINT5D == 42 ,       "42");
+_Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 
     #define  FMACROS_PAINT5D_LoopTick   AAC2020_PAINT5D_LoopTick
 #endif
@@ -107,8 +107,13 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 42 ,       "42");
     PHEXDUM
     HARDASS
     NATIKEY
+    IKEYBOX
+    IMOUBOX
+    KEYBIND
     IKEYLIS
     IKEYCMD
+    CEDITOR
+    NATIDUI
     CPUNIFO
     MOUTEMP
     PIXSAVE
@@ -125,6 +130,8 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 42 ,       "42");
     TAUDIRT
     TAUTYPE
     TAUSYNC
+    EDITCAM
+    GAMECAM
     P5D1OGL
 *** ******************************************************** **/
 //[| InitNone:BEG |]=========================================]//
@@ -200,6 +207,30 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 42 ,       "42");
 #define      FMACROS_NATIKEY_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:NATIKEY://
+//:InitNone:IKEYBOX:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_IKEYBOX >=  1 )
+#define      FMACROS_IKEYBOX_InitNone AAC2020_IKEYBOX_InitNone
+#endif
+#if( AAC2020_INCLUDE_IKEYBOX == 0 )
+#define      FMACROS_IKEYBOX_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:IKEYBOX://
+//:InitNone:IMOUBOX:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_IMOUBOX >=  1 )
+#define      FMACROS_IMOUBOX_InitNone AAC2020_IMOUBOX_InitNone
+#endif
+#if( AAC2020_INCLUDE_IMOUBOX == 0 )
+#define      FMACROS_IMOUBOX_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:IMOUBOX://
+//:InitNone:KEYBIND:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_KEYBIND >=  1 )
+#define      FMACROS_KEYBIND_InitNone AAC2020_KEYBIND_InitNone
+#endif
+#if( AAC2020_INCLUDE_KEYBIND == 0 )
+#define      FMACROS_KEYBIND_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:KEYBIND://
 //:InitNone:IKEYLIS:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_IKEYLIS >=  1 )
 #define      FMACROS_IKEYLIS_InitNone AAC2020_IKEYLIS_InitNone
@@ -216,6 +247,22 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 42 ,       "42");
 #define      FMACROS_IKEYCMD_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:IKEYCMD://
+//:InitNone:CEDITOR:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_CEDITOR >=  1 )
+#define      FMACROS_CEDITOR_InitNone AAC2020_CEDITOR_InitNone
+#endif
+#if( AAC2020_INCLUDE_CEDITOR == 0 )
+#define      FMACROS_CEDITOR_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:CEDITOR://
+//:InitNone:NATIDUI:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_NATIDUI >=  1 )
+#define      FMACROS_NATIDUI_InitNone AAC2020_NATIDUI_InitNone
+#endif
+#if( AAC2020_INCLUDE_NATIDUI == 0 )
+#define      FMACROS_NATIDUI_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:NATIDUI://
 //:InitNone:CPUNIFO:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_CPUNIFO >=  1 )
 #define      FMACROS_CPUNIFO_InitNone AAC2020_CPUNIFO_InitNone
@@ -344,6 +391,22 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 42 ,       "42");
 #define      FMACROS_TAUSYNC_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:TAUSYNC://
+//:InitNone:EDITCAM:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_EDITCAM >=  1 )
+#define      FMACROS_EDITCAM_InitNone AAC2020_EDITCAM_InitNone
+#endif
+#if( AAC2020_INCLUDE_EDITCAM == 0 )
+#define      FMACROS_EDITCAM_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:EDITCAM://
+//:InitNone:GAMECAM:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_GAMECAM >=  1 )
+#define      FMACROS_GAMECAM_InitNone AAC2020_GAMECAM_InitNone
+#endif
+#if( AAC2020_INCLUDE_GAMECAM == 0 )
+#define      FMACROS_GAMECAM_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:GAMECAM://
 //:InitNone:P5D1OGL:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_P5D1OGL >=  1 )
 #define      FMACROS_P5D1OGL_InitNone AAC2020_P5D1OGL_InitNone
@@ -506,7 +569,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 42 ,       "42");
 //:============================:AUTO_GENERATED_INIT_FUNCTIONS://
 /** REFERENCE ********************************************** ***
 
-    ( Not gauranteed to be up to date.                )
+    //# __NOT__gauranteed_to_be_up_to_date. <<< __NOT__ !#//
     ( SEE: AAC2020.C11   )  <--[ Likely Locations For ]
     ( SEE: LIBCHAN.TOP._ )  <--[ Official List        ]
 
