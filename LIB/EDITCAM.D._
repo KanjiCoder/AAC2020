@@ -1,0 +1,199 @@
+//|//////////////////////////////////////////////////////////|//
+//|                                                          |//
+//| UPDATE:DATE[ 2021_02_26 ]                                |//
+//| @VID_IID[ 0158 ]T[ 00:51:32 ]STARTED_WRITING             |//
+//| @VID_IID[ 0158 ]T[ 00:56:42 ]DONE_WRITING_NOW_EXPLAINING |//
+//|                                                          |//
+//| What constitutes a "NICECAM"era behavior differs         |//
+//| depending on if we are EDITING a level or if we are      |//
+//| PLAYING a game. So instead of "NICECAM" we need:         |//
+//|                                                          |//
+//|     1: EDITCAM: Camera Editor Math Polish                |//
+//|     2: GAMECAM: Camera InGame Math Polish                |//
+//|                                                          |//
+//[     @VID_IID[ 0158 ]TIME[ 00:58:23 ]                     ]//
+//[     __NOT__ OOP(object oriented programming)!!!!!!!!!!!! ]//
+//[     There is no "EDITCAM" object.                        ]//
+//[     There is no "GAMECAM" object.                        ]//
+//[     There may be multiple editors that need to behave    ]//
+//[     using EDITCAM FUNCTIONS. There may be multiple       ]//
+//[     GAME_MODE_EDITORS that may need GAMECAM functions.   ]//
+//|                                                          |//
+//|     Both libraries build upon the TAUTYPE                |//
+//|     rectangle manipulations that directly edit           |//
+//|     the camera data rectangles. ( VP1's )                |//
+//|                                                          |//
+//|     VP1:Viewport_One(1):                                 |//
+//|     (Offscreen/Source/TileMapDataBitmap Viewport)        |//
+//|                                                          |//
+//|     @VID_IID[ 0158 ]TIME[ 01:00:50 ]                     |//
+//|     VP0:Is NOT relevant here. VP0 is the destination     |//
+//|        [on_screen/client/canvas] rectangle that we       |//
+//|         map VP1 data to.                                 |//
+//|__________________________________________________________|//
+//: +------------------------------------------------------+ ://
+//: |  EDITCAM: EDITor CAMera ( NICECAM.EDITOR_CAMERA )    | ://
+//: |           @VID_IID[ 0158 ]TIME[ 00:03:13 ]BEG_SUMMARY| ://
+//: |           @VID_IID[ 0158 ]TIME[ 00:06:42 ]END_SUMMARY| ://
+//: |                                                      | ://
+//: |           Camera Zoom+Pan polishing code.            | ://
+//: |           One abstraction removed from basic         | ://
+//: |           camera transformations.                    | ://
+//: |                                                      | ://
+//: |          ( One abstraction ON_TOP_OF    )            | ://
+//: |          ( basic camera transformations )            | ://
+//: +------------------------------------------------------+ ://
+//: |   HELPS __POLISH__ (make nice) THESE BEHAVIORS:      | ://
+//: +------------------------------------------------------+ ://
+//: |                                                      | ://
+//: |   1. More user friendly zoom by adjusting zoom speed | ://
+//: |      as you zoom in and out. To make zooming less    | ://
+//: |      painstakenly slow when zoomed all the way out.  | ://
+//: |                                                      | ://
+//: |   2. Camera [ Drag/Pan ] math and functions to       | ://
+//: |      enable MOUSE to move camera rather than         | ://
+//: |      using keyboard shortcuts.                       | ://
+//: +------------------------------------------------------+ ://
+//:CAMERA_ZOOM_POLISH_DATA:==================================://
+#define I32 int32_t /** GCC: <stdint.h> **/           //: 01 ://
+
+    //:Just_Feels_Right_Table:-------------------------------://
+    /** **************************************************** ***
+    @VID_IID[ 0158 ]TIME[ 00:12:00 ]DATE[ 2021_02_26 ]
+
+    This table might not be useful in the actual code for
+    anything. But it is VITAL to me figuring out what
+    tables:
+        1: AAC2020_EDITCAM_cam_exp_LUT_pixstep_UPP
+        1: AAC2020_EDITCAM_cam_exp_LUT_pixstep_DOW
+    
+    Should look like.
+
+    The lookup table here is just a listing of camera
+    selection rectangle sizes. 
+    EXAMPLE: 512 means: 512x512 pixel camera rectangle size.
+    *** **************************************************** **/
+    //:Just_Feels_Right_Table:- - - - - - - - - - - - - - - -://
+
+        I32         /** tab_zom_san:TABle_ZOoM_SpAN **/
+        AAC2020_EDITCAM_tab_zom_san[ 27 ]={  
+            /**/512 //:step by 064 until 512x512
+            ,   448 //|      064+ till 512x512     |////: ^^ ://
+            ,   384 //|      064+ till 512x512     |////: ^^ ://
+            ,   320 //|      064+ till 512x512     |////: ^^ ://
+            //:- - - - - - - - - - - -- - - - - - - - - - - -://
+            ,   256 //:step by 032 until 256x256      //: ^^ ://
+            ,   224 //|        032+ till 256x256   |////: ^^ ://
+            ,   192 //|        032+ till 256x256   |////: ^^ ://
+            ,   160 //|        032+ till 256x256   |////: ^^ ://
+            //:- - - - - - - - - - - -- - - - - - - - - - - -://           
+            ,   128 //:step by 016 until 128x128      //: ^^ ://
+            ,   112 //|        016+ till 128x128   |////: ^^ ://
+            ,    96 //|        016+ till 128x128   |////: ^^ ://
+            ,    80 //|        016+ till 128x128   |////: ^^ ://
+            //:- - - - - - - - - - - -- - - - - - - - - - - -://
+            ,    64 //:Step by 008 until 064x064      //: ^^ ://
+            ,    56 //|        008+ till 064x064   |////: ^^ ://
+            ,    48 //|        008+ till 064x064   |////: ^^ ://
+            ,    40 //|        008+ till 064x064   |////: ^^ ://
+            //:- - - - - - - - - - - -- - - - - - - - - - - -://
+            ,    32 //:Step by 004 until 032x032      //: ^^ ://
+            ,    28 //|        004+ till 032x032   |////: ^^ ://
+            ,    24 //|        004+ till 032x032   |////: ^^ ://
+            ,    20 //|        004+ till 032x032   |////: ^^ ://
+            ,    16 //|        004+ till 032x032   |////: ^^ ://
+            ,    12 //|        004+ till 032x032   |////: ^^ ://
+            //:- - - - - - - - - - - -- - - - - - - - - - - -://
+            ,     8 //:Step by 002 until 008x008      //: ^^ ://
+            ,     6 //|        002+ till 008x008   |////: ^^ ://
+            ,     4 //|        002+ till 008x008   |////: ^^ ://
+            ,     2 //|        002+ till 008x008   |////: ^^ ://
+    
+            ,   0x0 //:NULL_TERMINATED_LIST
+        };
+ 
+    //:-------------------------------:Just_Feels_Right_Table://
+    //:CameraExponent_TO_PixelStep:--------------------------://
+    /** **************************************************** ***
+    cam_exp : Camera Size In Pixels specified using an 
+              exponent. Same math as[ til_exp ].(TileExponent)
+              EXAMPLE: (cam_exp==4)==>( 2^4 )==>( 16 )
+
+    pixstep : PIXel_STEP:
+              Amount to shrink of squash camera width and
+              height by. Measured in pixels.
+              EXAMPLE: (pixstep==2) ==> Push Or Pull Each
+                       edge of camera by ONE(1) pixel.
+
+              EXAMPLE: (pixstep==1) ==> INVALID!!! Because
+                        camera must be [pushed|pulled] on
+                        appossing edges at same time and
+                       (pixstep==1) implies a 0.5 [push|pull]
+                        on each edge of camera rectangle.
+
+    Tables below are extrapolated 
+    from[ AAC2020_EDITCAM_tab_zom_san ]
+    *** **************************************************** **/
+    //:CameraExponent_TO_PixelStep:- - - - - - - - - - - - - ://
+    #define TOP ( 0 )                                 //: 01 ://
+    #define BOT ( 0 ) //:<--BottomedOut Cant Move     //: 02 ://
+    #define BAD ( 1 ) //:<--MUST NOT BE ZERO!         //: 03 ://
+
+        I32
+        AAC2020_EDITCAM_cam_exp_LUT_pixstep_UPP[ 11 ]={ 
+       
+                //:1x1 camera should yeild a 1-pixel step,   ://
+                //:but problems:                             ://
+                //:     1: Camera should NEVER be ODD    SIZE://
+                //:     2: Camera should NEVER be 1x1 in SIZE://
+                //:     3: Step of 1 implied edges are       ://
+                //:        pushed or pulled by 0.5 which is  ://
+                //:        NOT a discrete number of pixels.  ://
+            BAD //:cam_exp[ 0 ] ==> 001x001 ==> pixstep[ 1 ] ://
+                //:                                          ://
+        ,     2 //:cam_exp[ 1 ] ==> 002x002 ==> pixstep[ 2 ] ://
+        ,     2 //:cam_exp[ 2 ] ==> 004x004 ==> pixstep[ 2 ] ://
+                //:                                          ://
+        ,     4 //:cam_exp[ 3 ] ==> 008x008 ==> pixstep[ 4 ] ://
+        ,     4 //:cam_exp[ 4 ] ==> 016x016 ==> pixstep[ 4 ] ://
+                //:                                          ://
+        ,     8 //:cam_exp[ 5 ] ==> 032x032 ==> pixstep[ 8 ] ://
+        ,    16 //:cam_exp[ 6 ] ==> 064x064 ==> pixstep[16 ] ://
+        ,    32 //:cam_exp[ 7 ] ==> 128x128 ==> pixstep[32 ] ://
+        ,    64 //:cam_exp[ 8 ] ==> 256x256 ==> pixstep[64 ] ://
+                //:                                          ://
+        ,   TOP //:cam_Exp[ 9 ] ==> 512x512 ==> pixstep[128] ://
+                //:If we were to zoom past this, we would    ://
+                //:use 128 probably, but have not filled out ://
+                //:tables to support camera getting bigger   ://
+                //:than 512x512 pixels, so TOP==( 0 ) to     ://
+                //:prevent camera from growing more.         ://
+                //:@VID_IID[ 0158 ]TIME[ 00:43:32 ]          ://
+                //:                                          ://
+        ,   0x0 //:<--- NULL TERMINATED LIST                 ://
+        };
+
+        I32
+        AAC2020_EDITCAM_cam_exp_LUT_pixstep_DOW[ 11 ]={ 
+       
+            BAD
+        ,   BOT //:cam_exp[ 1 ] ==> 002x002 ==> 0
+
+        ,     2 //:cam_exp[ 2 ] ==> 004x004 ==> 2
+        ,     2 //:
+ 
+        };
+
+        #if( AAC2020_CRASH_ON_VITAL_TODO >= 1 ) //:##########://
+
+            #error FINISH:AAC2020_EDITCAM_cam_exp_LUT_pixstep_DOW!!!!!!!!!!!
+
+        #endif //:###########################################://
+
+    #undef  TOP  //:------------------------------------: 01 ://
+    #undef  BOT  //:------------------------------------: 02 ://
+    #undef  BAD  //:------------------------------------: 03 ://
+    //:--------------------------:CameraExponent_TO_PixelStep://
+        
+#undef  I32                                           //: 01 ://
+//:==================================:CAMERA_ZOOM_POLISH_DATA://

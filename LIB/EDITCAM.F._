@@ -1,0 +1,215 @@
+//:AAC2020_SUBLIBRARY_BOILERPLATE:===========================://
+#define SIL AAC2020_SILENCE                           //: 01 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 02 ://
+#define P_F printf                                    //: 03 ://
+    //:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=================://
+        void 
+        aac2020_editcam_Halt( const char* msg_err )
+        {
+            P_F("[FATAL_ERROR:aac2020_editcam]:%s\n", msg_err );
+            fflush(stdout);
+            exit( 123 );
+        }
+    //:=================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+    //:LOG_AFTER_HALT:=======================================://
+        void
+        aac2020_editcam_Info_any( //:FUNC:::Info , OVERLOAD:any
+            const char* str_fmt   //:GENERAL:str , SPECIFIC:fmt
+        ,   void*       dat_any   //:GENERAL:dat , SPECIFIC:any
+        )
+        {                            int say=( 0 );
+            if( SIL.EDITCAM <=(  0  ) ){ say=( 1 ); };
+            if( SIL.SILENCE <=( 0-1 ) ){ say=( 1 ); };
+            if( SIL.SILENCE >=( 0+1 ) ){ say=( 0 ); };
+            if( say >= 1 ){
+                P_F("[editcam_log]....(   " ); fflush( stdout );
+                P_F( str_fmt , dat_any      ); fflush( stdout );
+                P_F(               "   )\n" ); fflush( stdout );
+            };;
+        }
+    //:=======================================:LOG_AFTER_HALT://
+    //:INIT_NONE:============================================://
+        U32
+        AAC2020_EDITCAM_InitNone( U32 u32 ){
+            if( u32 ){ /** reserved for future use **/ };
+            return( 0x00 );
+        }
+    //:============================================:INIT_NONE://
+#undef  SIL  //:----------------------------------------: 01 ://
+#undef  U32  //:----------------------------------------: 02 ://
+#undef  P_F  //:----------------------------------------: 03 ://
+//:===========================:AAC2020_SUBLIBRARY_BOILERPLATE://
+//:Snap_CameraSpan_To_Nearest_Power_Of_2:====================://
+
+    //[ ************************************************ ]//
+    //[WRONG: Snap To Nearest Value In:                  ]//
+    //[       AAC2020_EDITCAM_tab_zom_san                ]//
+    //[ ************************************************ ]//
+
+//:====================:Snap_CameraSpan_To_Nearest_Power_Of_2://
+//:CAMERA_SNAP_HELPER_FUNCS:=================================://
+#define I32 int32_t /** GCC: <stdint.h> **/           //: 01 ://
+
+    I32
+    aac2020_editcam_cam_san_SNA_min_san_max_san(
+                I32 cam_san
+    ,           I32             min_san
+    ,           I32                     max_san
+    )
+    {
+        I32 out_san; /** output_span **/
+
+        assert( min_san >= max_san );
+        assert( cam_san >= min_san );
+        assert( cam_san <= max_san );
+
+        I32 min_del=( cam_san - min_san );
+        I32 max_del=( max_san - cam_san );
+
+        assert( min_del >= 0 );
+        assert( max_del >= 0 );
+
+        /** Snap to whatever you are closest to. **/
+        if( min_del < max_del ){ 
+            out_san = min_del; 
+        }else{
+            out_san = max_del;
+        };;
+
+        return( out_san );
+    }
+
+#undef  I32  //:----------------------------------------: 01 ://
+//:=================================:CAMERA_SNAP_HELPER_FUNCS://
+//:Snap_Camera_To_PresetValues:==============================://
+#define TAB AAC2020_EDITCAM_tab_zom_san               //: 01 ://
+#define I32 int32_t /** GCC: <stdint.h> **/           //: 02 ://
+#define I08  int8_t /** GCC: <stdint.h> **/           //: 03 ://
+
+    I32
+    aac2020_editcam_Snap_cam_san(
+                    I32  cam_san
+    )
+    {
+        I32 out_san =( 0 - 666 ); //:output span.
+
+        if( cam_san >= TAB[ 0 ]  //:EXAMPLE: 512
+        &&  cam_san >  TAB[ 1 ]  //:EXAMPLE: 448
+        ){
+            //:Way too high, take largest value we allow
+            //:for the camera span. (cam_san/out_san).
+            out_san=( TAB[ 0 ] );
+        }else{
+
+            I08   found =(    0   ); //:value_found?
+            I32     dex =(  0 - 1 ); //:TAB[ dex ]
+
+            while( 1==1 ){
+                dex++ ; //:<===[ First_Used_Value == 0 ]
+
+                /** hit null terminator in list. **/
+                if( 0x0 == TAB[ dex+1 ] ){ break; };
+
+                if( cam_san <= TAB[ dex+0 ]  //: UPPER_BOUND ://
+                &&  cam_san >= TAB[ dex+1 ]  //: LOWER_BOUND ://
+                ){
+                    found =( 1 );
+                    I32 max_san = TAB[ dex+0 ];
+                    I32 min_san = TAB[ dex+1 ];
+                    out_san=(
+                    aac2020_editcam_cam_san_SNA_min_san_max_san(
+                                    cam_san  ,  min_san,max_san
+                    ));;
+                };;
+
+            };;
+
+            if( found <= 0 ){
+                /** Take last entry before the null **/
+                /** terminator in the list.         **/
+                out_san=( TAB[ dex - 1 ] );
+            };;
+
+        };;
+
+        assert( out_san <= 512 && out_san >= 2 );
+        return( out_san );
+
+    }
+
+#undef  TAB  //:----------------------------------------: 01 ://
+#undef  I32  //:----------------------------------------: 02 ://
+#undef  I08  //:----------------------------------------: 03 ://
+//:==============================:Snap_Camera_To_PresetValues://
+//:CameraSizeExponent_TO_PixelStep_ForPushPull:==============://
+#define I32 int32_t /** GCC: <stdint.h> **/ //:---------: 01 ://
+#define ERR aac2020_editcam_Halt            //:---------: 02 ://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    I32
+    aac2020_editcam_cam_exp_CTO_pixstep_UPP(
+                I32 cam_exp
+    )
+    { 
+        /** Current Lookup Table Supports: [ 0 -to- 8 ] **/
+        assert( cam_exp >= 0 && cam_exp <= 8 );
+
+        I32 pixstep=(
+        AAC2020_EDITCAM_cam_exp_LUT_pixstep_UPP[ cam_exp ] );;
+    
+        return( pixstep );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    I32
+    aac2020_editcam_cam_exp_CTO_pixstep_DOW(
+                I32 cam_exp
+    )
+    {
+        /** Current Lookup Table Supports: [ 0 -to- 8 ] **/
+        assert( cam_exp >= 0 && cam_exp <= 8 );
+
+        I32 pixstep=(
+        AAC2020_EDITCAM_cam_exp_LUT_pixstep_DOW[ cam_exp ] );;
+    
+        return( pixstep );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+#undef  I32  //:----------------------------------------: 01 ://
+#undef  ERR  //:----------------------------------------: 02 ://
+//:==============:CameraSizeExponent_TO_PixelStep_ForPushPull://
+//:CameraSpan_TO_PixelStep_ForPushPull:======================://
+#define I32 int32_t /** GCC: <stdint.h> **/ //:---------: 01 ://
+#define ERR aac2020_editcam_Halt            //:---------: 02 ://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    I32
+    aac2020_editcam_cam_san_CTO_pixstep_UPP(
+                I32 cam_san
+    )
+    {
+        if( cam_san ){ /** NOOP **/ };
+        /** ************************************************ **/
+        /** First snap the camera to an acceptable power of  **/
+        /** two, and then figure out the pixel step needed   **/
+        /** for that camera size.                            **/
+        /** ************************************************ **/
+        ERR("[DONT_DO_THIS_USE:cam_exp_CTO_pixstep_UPP");
+        return( 0 - 666 );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    I32
+    aac2020_editcam_cam_san_CTO_pixstep_DOW(
+                I32 cam_san
+    )
+    {
+        if( cam_san ){ /** NOOP **/ };
+        /** ************************************************ **/
+        /** First snap the camera to an acceptable power of  **/
+        /** two, and then figure out the pixel step needed   **/
+        /** for that camera size.                            **/
+        /** ************************************************ **/
+        ERR("[DONT_DO_THIS_USE:cam_exp_CTO_pixstep_DOW");
+        return( 0 - 666 );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+#undef  I32  //:----------------------------------------: 01 ://
+#undef  ERR  //:----------------------------------------: 02 ://
+//:======================:CameraSpan_TO_PixelStep_ForPushPull://
