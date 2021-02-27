@@ -49,6 +49,7 @@
 //:====================:Snap_CameraSpan_To_Nearest_Power_Of_2://
 //:CAMERA_SNAP_HELPER_FUNCS:=================================://
 #define I32 int32_t /** GCC: <stdint.h> **/           //: 01 ://
+#define ERR aac2020_editcam_Halt
 
     I32
     aac2020_editcam_cam_san_SNA_min_san_max_san(
@@ -59,9 +60,20 @@
     {
         I32 out_san; /** output_span **/
 
-        assert( min_san >= max_san );
-        assert( cam_san >= min_san );
-        assert( cam_san <= max_san );
+        #error ASSERT_CODE_BELOW_IS_BROKEN_FIX_IT
+        if( 0
+        || ( max_san >= min_san )
+        || ( min_san <= max_san )
+
+        || ( cam_san >= min_san )
+        || ( cam_san <= max_san )
+        ){
+            printf("\n\n");
+            printf("[cam_san]:%d\n", cam_san );
+            printf("[min_san]:%d\n", min_san );
+            printf("[max_san]:%d\n", max_san );
+            ERR("[EDITCAM_BAD_INPUTS:YEAR_2021]");
+        };;
 
         I32 min_del=( cam_san - min_san );
         I32 max_del=( max_san - cam_san );
@@ -80,25 +92,36 @@
     }
 
 #undef  I32  //:----------------------------------------: 01 ://
+#undef  ERR  //:----------------------------------------: 02 ://
 //:=================================:CAMERA_SNAP_HELPER_FUNCS://
 //:Snap_Camera_To_PresetValues:==============================://
 #define TAB AAC2020_EDITCAM_tab_zom_san               //: 01 ://
 #define I32 int32_t /** GCC: <stdint.h> **/           //: 02 ://
 #define I08  int8_t /** GCC: <stdint.h> **/           //: 03 ://
+#define ERR aac2020_editcam_Halt
 
-    I32
+    void
     aac2020_editcam_Snap_cam_san(
-                    I32  cam_san
+            I32          cam_san //:<--[ inn_san / old_san ]
+    ,       I32   *BYREF_out_san //:<--OUTPUT_PARAM:SPAN
+    ,       I32   *BYREF_out_dex //:<--OUTPUT_PARAM:inDEX
     )
     {
-        I32 out_san =( 0 - 666 ); //:output span.
+        //:declare_variables:--------------------------------://
 
+            I32 out_san =( 0 - 666 ); //:output span.
+            I32 out_dex =( 0 - 777 ); //:output index accessor
+                                      //:to table[ TAB ].
+
+        //:--------------------------------:declare_variables://
+        //:MAIN_FUNCTION_LOGIC:==============================://
         if( cam_san >= TAB[ 0 ]  //:EXAMPLE: 512
         &&  cam_san >  TAB[ 1 ]  //:EXAMPLE: 448
         ){
             //:Way too high, take largest value we allow
             //:for the camera span. (cam_san/out_san).
             out_san=( TAB[ 0 ] );
+            out_dex=(      0   );
         }else{
 
             I08   found =(    0   ); //:value_found?
@@ -120,6 +143,15 @@
                     aac2020_editcam_cam_san_SNA_min_san_max_san(
                                     cam_san  ,  min_san,max_san
                     ));;
+
+                    if( (out_san+0) == (max_san+0) ){
+                         out_dex=( dex+0 );
+                    }else
+                    if( (out_san+0) == (min_san+0) ){
+                         out_dex=( dex+1 );
+                    }else{
+                        ERR("[NEITHER_MAX_NOR_MIN_MATCH:2021]");
+                    };;
                 };;
 
             };;
@@ -128,18 +160,35 @@
                 /** Take last entry before the null **/
                 /** terminator in the list.         **/
                 out_san=( TAB[ dex - 1 ] );
+                out_dex=(    ( dex - 1 ) );
             };;
 
         };;
+        //:==============================:MAIN_FUNCTION_LOGIC://
+        //:return_via_output_param:--------------------------://
 
-        assert( out_san <= 512 && out_san >= 2 );
-        return( out_san );
+            assert( out_san <= 512 && out_san >= 2 );
+            assert( out_dex >=( 0 )&& out_dex <=( 26-1 ) );
 
+            //: Make absolutely sure the value we fetched    ://
+            //: can be retrieved using the index output.     ://
+            assert( 
+                (AAC2020_EDITCAM_tab_zom_san[ out_dex ]+0)
+                ==
+                (out_san+0)
+            );;
+
+            (*BYREF_out_san)=( out_san );
+            (*BYREF_out_dex)=( out_dex );
+
+        //:--------------------------:return_via_output_param://
+      
     }
 
 #undef  TAB  //:----------------------------------------: 01 ://
 #undef  I32  //:----------------------------------------: 02 ://
 #undef  I08  //:----------------------------------------: 03 ://
+#undef  ERR
 //:==============================:Snap_Camera_To_PresetValues://
 //:CameraSizeExponent_TO_PixelStep_ForPushPull:==============://
 #define I32 int32_t /** GCC: <stdint.h> **/ //:---------: 01 ://
