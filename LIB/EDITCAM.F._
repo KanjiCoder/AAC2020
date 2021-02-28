@@ -53,21 +53,24 @@
 
     I32
     aac2020_editcam_cam_san_SNA_min_san_max_san(
-                I32 cam_san
+    /**/I32 zom_i32 //:<--[ ZOOM_DIRECTION_TIE_BREAKER ]
+    ,           I32 cam_san
     ,           I32             min_san
     ,           I32                     max_san
     )
     {
-        I32 out_san; /** output_span **/
+        /** OLD_PHONE_NUMBER: 586-214-3958 **/
+        I32 out_san =( 0 - 586214 /** output_span **/ );
 
-        #error ASSERT_CODE_BELOW_IS_BROKEN_FIX_IT
-        if( 0
-        || ( max_san >= min_san )
-        || ( min_san <= max_san )
-
-        || ( cam_san >= min_san )
-        || ( cam_san <= max_san )
+        if( 1
+        && ( max_san >= min_san )
+        && ( min_san <= max_san )
+        && (       1 == 1       )
+        && ( cam_san >= min_san )
+        && ( cam_san <= max_san )
         ){
+            /** OKAY. Valid Values. **/
+        }else{
             printf("\n\n");
             printf("[cam_san]:%d\n", cam_san );
             printf("[min_san]:%d\n", min_san );
@@ -83,9 +86,44 @@
 
         /** Snap to whatever you are closest to. **/
         if( min_del < max_del ){ 
-            out_san = min_del; 
+            //:SUBTRACT_DOWN_TO[ min_san ]:
+            out_san = ( cam_san - min_del ); 
+            assert( out_san == min_san );
+        }else
+        if( max_del < min_del ){
+            //:ADDITION_UPPP_TO[ max_san ]:
+            out_san = ( cam_san + max_del ); 
+            assert( out_san == max_san );
         }else{
-            out_san = max_del;
+            /** ******************************************** ***
+            @VID_IID[ 0160 ]TIME[ 00:19:32 ]BEGIN_EXPLAINING
+            @VID_IID[ 0160 ]TIME[ 00:22:23 ]DONE__EXPLAINING
+            There is a rare case that when we are exactly
+            between the values to snap between that the
+            camera may appear to do[ TWO(2)ZOOMS:INN ]or
+            [ TWO(2)ZOOMS:OUT ]in a row. For now I don't care
+            about this. It is a RARE thing to happen and
+            doesn't seem like something that will detract
+            from the user expierence that much.
+    
+            Possible Fix: SWAP THE SNAPPING CHOICES TO
+                          CANCEL OUT THE DOUBLE ZOOM EFFECT.
+            *** ******************************************** **/
+
+            //:Use tie breaker to select correct camera size:
+            if( zom_i32 < 0 ){ //:NEG==OUT (ZoomOut,BiggerRect)
+    
+                out_san =( max_san /**BIGGER==ZOOM_OUT **/ );
+
+            }else
+            if( zom_i32 > 0 ){ //:POS==INN (ZoomInn,SmallerRect)
+
+                out_san =( min_san /**SMALLER==ZOOM_INN**/ );
+
+            }else{
+                ERR("[BAD_TIE_BREAKER_FLAG:YEAR_2021]");
+            };;
+
         };;
 
         return( out_san );
@@ -102,7 +140,8 @@
 
     void
     aac2020_editcam_Snap_cam_san(
-            I32          cam_san //:<--[ inn_san / old_san ]
+    /**/    I32          zom_i32 //:<--[ZOOM_DIR_TIE_BREAKER ]
+    ,       I32          cam_san //:<--[ inn_san / old_san ]
     ,       I32   *BYREF_out_san //:<--OUTPUT_PARAM:SPAN
     ,       I32   *BYREF_out_dex //:<--OUTPUT_PARAM:inDEX
     )
@@ -141,7 +180,7 @@
                     I32 min_san = TAB[ dex+1 ];
                     out_san=(
                     aac2020_editcam_cam_san_SNA_min_san_max_san(
-                                    cam_san  ,  min_san,max_san
+                            zom_i32,cam_san  ,  min_san,max_san
                     ));;
 
                     if( (out_san+0) == (max_san+0) ){
@@ -150,6 +189,11 @@
                     if( (out_san+0) == (min_san+0) ){
                          out_dex=( dex+1 );
                     }else{
+                        printf("\n\n");
+                        printf("[INN:cam_san]:%d\n", cam_san  );
+                        printf("[INN:min_san]:%d\n", min_san  );
+                        printf("[INN:max_san]:%d\n", max_san  );
+                        printf("[OUT:out_san]:%d\n", out_san  );
                         ERR("[NEITHER_MAX_NOR_MIN_MATCH:2021]");
                     };;
                 };;

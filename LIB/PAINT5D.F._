@@ -1465,11 +1465,13 @@
 //:functions_wired_into_keyboard:============================://
 //:TAU:UNIFORM_CONTROLLER_FUNCTIONS:=========================://
 #define CAP aac2020_paint5d_i32_Cap_u32               //: 01 ://
-#define I32  int32_t /** GCC: <stdint.h> **/          //: 02 ://
-#define U32 uint32_t /** GCC: <stdint.h> **/          //: 03 ://
-#define U16 uint16_t /** GCC: <stdint.h> **/          //: 04 ://
-#define U08  uint8_t /** GCC: <stdint.h> **/          //: 05 ://
-#define ERR aac2020_paint5d_Halt                      //: 06 ://
+#define I_P intmax_t /** GCC: <stdint.h> **/          //: 02 ://
+#define I32  int32_t /** GCC: <stdint.h> **/          //: 03 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 04 ://
+#define U16 uint16_t /** GCC: <stdint.h> **/          //: 05 ://
+#define U08  uint8_t /** GCC: <stdint.h> **/          //: 06 ://
+#define ERR aac2020_paint5d_Halt                      //: 07 ://
+#define LOG aac2020_paint5d_Info_any                  //: 08 ://
 
     void
     aac2020_paint5d_MoveCamera_XY(
@@ -1580,15 +1582,31 @@
                     ERR("[ERR:CAM__NOT__PERFECT_SQUARE:2021]");
                 };;
 
-                san_old=( (I32)( wid|hig ) );
+                san_old=( (I32)( wid|hig )     );
+                if( 1
+                && (   ((U32)san_old) == wid   ) 
+                && (   ((U32)san_old) == hig   ) 
+                && (         san_old   >   0   ) 
+                ){
+                    /**OKAY DO NOTHING**/
+                }else{
+                    ERR("[SOMETHING_WRONG:2021_02_27:802PM]");
+                };;
                 
                 //:Snap camera size to a pre-approved size:
                 aac2020_editcam_Snap_cam_san( 
-                    san_old  //:<--- Old Input Span
+                    zom_i32  //:<---[ ZOOM_DIR_TIE_BREAKER ]
+                ,   san_old  //:<--- Old Input Span
                 , &(san_new) //:<--- New Input Span
                 , &(san_dex) //:USAGE: 
                 );;          //:EDITCAM_tab_zom_san[ san_dex ]
                  
+                /** @VID_IID[ 0160 ]TIME[ 00:32:13 ]******** **/
+                /** Asserts Explained.              ******** **/
+                assert( san_new >= 2 && san_new <= 512 );
+                assert( san_dex >= 0 && san_dex <=  25 );
+                assert( san_new ==
+                AAC2020_EDITCAM_tab_zom_san[ san_dex ] );;
 
             //:---------------------:SnapCameraToFriendlySize://
             //:GetNextCameraSizeAfterSnap:-------------------://
@@ -1606,7 +1624,7 @@
                     /** Larger Camera Sizes are Near TOP **/
                     /** of the array. .................. **/
 
-                    nex_dex = (san_dex--);
+                    nex_dex =(san_dex - 1 );
 
                     if( (0-1) == nex_dex ){
                         nex_dex=( 0 ); //:Stop At 0
@@ -1617,7 +1635,7 @@
                 }else
                 if( zom_i32 > 0 ){ //:POS==INN (ZOOM_INN)
 
-                    nex_dex = (san_dex++);
+                    nex_dex =( san_dex + 1);
                     if( 0x0 == TAB[ nex_dex ] ){
                         /** Null terminator hit.       **/
                         /** At bottom of list. Backup. **/
@@ -1630,6 +1648,31 @@
 
                 nex_san=(
                 AAC2020_EDITCAM_tab_zom_san[ nex_dex ]);;
+
+                //:DEBUG:====================================://
+                #if( AAC2020_PAINT5D_MISC_INLINED_TESTS > 0 ) 
+
+                    /** @VID_IID[ 0160 ]TIME[ 01:58:42 ]     **/  
+                    /** If the zoom we snapped to is 256 and **/
+                    /** we are zooming in, then make sure    **/
+                    /** the[ nex_san ](final zoom size) is   **/
+                    /** __NOT__ 256x256 ...................  **/
+
+                    if( (256 == san_new) && (zom_i32 > 0) ){
+
+                        if( 256 == nex_san ){
+                            printf("[san_dex]:%d\n",san_dex);
+                            printf("[nex_dex]:%d\n",nex_dex);
+
+                            printf("[zom_i32]:%d\n",zom_i32);
+                            printf("[san_new]:%d\n",san_new);
+                            printf("[nex_san]:%d\n",nex_san);
+                            ERR("[I_EXPECTED_LESS:YEAR_2021]");
+                        };;
+                    };;
+
+                #endif
+                //:====================================:DEBUG://
         
             #undef  TAB
             //:-------------------:GetNextCameraSizeAfterSnap://
@@ -1643,43 +1686,52 @@
 
                 //:Get absolute value between original
                 //:camera size and the snapped camera size:
-                I32 old_CTO_new =( san_old - san_new );
-                if( old_CTO_new <= 0 ){
-                    old_CTO_new = ( 0 - old_CTO_new );
-                };;
-                assert( old_CTO_new >=0 );
+                //: old_ADDTO_new (Vector[ old ]--->[ new ])
+                I32 old_ATO_new =( san_new - san_old  );
+        ////    if( old_ATO_new <= 0 ){
+        ////        old_ATO_new = ( 0 - old_ATO_new );
+        ////    };;
+        ////    assert( old_ATO_new >=0 );
     
                 /** Delta should always be divisible by 2    **/
                 /** because must [push|pull] both sides of   **/
                 /** the rectangle.                           **/
-                assert( old_CTO_new % 2 == 0 );
-                I32 d_x =( old_CTO_new / 2 ); //:Delta_X
-                I32 d_y =( old_CTO_new / 2 ); //:Delta_Y
+                assert( old_ATO_new % 2 == 0 );
+                I32 d_x =( old_ATO_new / 2 ); //:Delta_X
+                I32 d_y =( old_ATO_new / 2 ); //:Delta_Y
 
-                if( zom_i32 < 0 ){ //:ZOOMING_OUT:(GROW___RECT)
+                /** @VID_IID[ 0160 ]TIME[ 00:50:42 ]     *** **/
+                /** I don't think the snap needs to know *** **/
+                /** about the zooming direction.         *** **/
+                snapped_x_0 =( ((I32)x_0) - ((I32)d_x) ); 
+                snapped_x_1 =( ((I32)x_1) + ((I32)d_x) ); 
+                snapped_y_0 =( ((I32)y_0) - ((I32)d_y) );
+                snapped_y_1 =( ((I32)y_1) + ((I32)d_y) );
 
-                    //:<<<<<<[ x_0 ]---CEN---[ x_1 ]>>>>>>
-                    //:<<<<<<[ y_0 ]---CEN---[ y_1 ]>>>>>>
-                    //:PULLING_RECTANGLE_APART:
-                    snapped_x_0 =( ((I32)x_0) - ((I32)d_x) );  
-                    snapped_x_1 =( ((I32)x_1) + ((I32)d_x) );  
-                    snapped_y_0 =( ((I32)y_0) - ((I32)d_y) );
-                    snapped_y_1 =( ((I32)y_1) + ((I32)d_y) );
-                    
-                }else
-                if( zom_i32 > 0 ){ //:ZOOMING_INN:(SHRINK_RECT)
-
-                    //:[ x_0 ]>>>>>>>>>CEN<<<<<<<<<[ x_1 ] 
-                    //:[ y_0 ]>>>>>>>>>CEN<<<<<<<<<[ y_1 ] 
-                    //:PUSH_RECTANGLE_IN_ON_ITSELF:
-                    snapped_x_0 =( ((I32)x_0) + ((I32)d_x) );
-                    snapped_x_1 =( ((I32)x_1) - ((I32)d_x) );
-                    snapped_y_0 =( ((I32)y_0) + ((I32)d_y) );
-                    snapped_y_1 =( ((I32)y_1) - ((I32)d_y) );
-
-                }else{
-                    ERR("[WTFMAN:2020_02_27:5PM]");
-                };;
+        ////    if( zom_i32 < 0 ){ //:ZOOMING_OUT:(GROW___RECT)
+        ////
+        ////        //:<<<<<<[ x_0 ]---CEN---[ x_1 ]>>>>>>
+        ////        //:<<<<<<[ y_0 ]---CEN---[ y_1 ]>>>>>>
+        ////        //:PULLING_RECTANGLE_APART:
+        ////        snapped_x_0 =( ((I32)x_0) - ((I32)d_x) );  
+        ////        snapped_x_1 =( ((I32)x_1) + ((I32)d_x) );  
+        ////        snapped_y_0 =( ((I32)y_0) - ((I32)d_y) );
+        ////        snapped_y_1 =( ((I32)y_1) + ((I32)d_y) );
+        ////        
+        ////    }else
+        ////    if( zom_i32 > 0 ){ //:ZOOMING_INN:(SHRINK_RECT)
+        ////
+        ////        //:[ x_0 ]>>>>>>>>>CEN<<<<<<<<<[ x_1 ] 
+        ////        //:[ y_0 ]>>>>>>>>>CEN<<<<<<<<<[ y_1 ] 
+        ////        //:PUSH_RECTANGLE_IN_ON_ITSELF:
+        ////        snapped_x_0 =( ((I32)x_0) + ((I32)d_x) );
+        ////        snapped_x_1 =( ((I32)x_1) - ((I32)d_x) );
+        ////        snapped_y_0 =( ((I32)y_0) + ((I32)d_y) );
+        ////        snapped_y_1 =( ((I32)y_1) - ((I32)d_y) );
+        ////
+        ////    }else{
+        ////        ERR("[WTFMAN:2020_02_27:5PM]");
+        ////    };;
 
                 if( snapped_x_0 < 0
                 ||  snapped_x_1 < 0
@@ -1707,11 +1759,53 @@
                 if( span_check_x != san_new
                 ||  span_check_y != san_new
                 ){
-                    ERR("[YOUR_MATH_IS_OFF:2021_02_27:527PM]");
+        
+                    printf("[***************************]\n\n");
+
+                    printf("[x_0]:%d\n", x_0 );
+                    printf("[x_1]:%d\n", x_1 );
+                    printf("[y_0]:%d\n", y_0 );
+                    printf("[y_1]:%d\n", y_1 );
+
+                    printf("[san_new]:%d\n" , san_new );
+
+                    printf("[span_check_x]:%d\n",span_check_x);
+                    printf("[span_check_y]:%d\n",span_check_y);
+
+                    printf("[***************************]\n\n");
+                    ERR("[I_ONLY_PLAY_DOOM_ETERNAL_2021]");
                 };;
 
             //:----------------------------:APPLY_CAMERA_SNAP://
             //:APPLY_ZOOM_TO_FINAL_SIZE:---------------------://
+
+                //:Error_Check_Next_Span:--------------------://
+                /** **************************************** ***
+                @VID_IID[ 0160 ]TIME[ 01:06:32 ]
+                The FINAL camera rectangle size (san_nex)
+                should be different than whatever camera
+                rectangle size we snapped to. (san_new)
+                *** **************************************** **/
+
+                    if( (san_new+0) == (nex_san+0) ){
+
+                        if( zom_i32 < 0 &&  256 == san_new ){
+                            /** OK: Can't Zoom OUT Further.  **/
+                            /** 256 == PAINT5D Camera Limit. **/
+                        }else
+                        if( zom_i32 > 0 &&    2 == san_new ){
+                            /** OK: Can't Zoom INN Further.  **/
+                        }else{
+
+                            printf("[zom_i32]:%d\n", zom_i32  );
+                            printf("[san_new]:%d\n", san_new  );
+                            printf("[nex_san]:%d\n", nex_san  );
+                            ERR("[WTF_RAWER_2021_02_27_830PM]");
+
+                        };;
+                    };;
+
+                //:--------------------:Error_Check_Next_Span://
 
                 /** **************************************** **/
                 /** Must use helper function rather than  ** **/
@@ -1723,11 +1817,19 @@
                 //: ATO: Add_TO 
                 //: Make vector pointing from[ new ]TO[ nex ]
                 I32 new_ATO_nex =( nex_san - san_new );
+
+                
+                LOG(          "[nex_san]:%d\n"
+                ,   (void*)(I_P)nex_san       );;
+                LOG(          "[new_ATO_nex]:%d\n"
+                ,   (void*)(I_P)new_ATO_nex       );;
+                
                
+                /** @VID_IID[ 0160 ]TIME[ 02:22:00 ]******** **/
                 /** NEGATIVE: Zooms Out. (ENLARGES_RECTANGLE)**/
                 /** POSITIVE: Zooms In . (SHRINKS__RECTANGLE)**/
                 aac2020_paint5d_ZoomCamera(
-                    ( 0 - new_ATO_nex )
+                    ( 0 - (new_ATO_nex/2) )
                 );;
 
             //:---------------------:APPLY_ZOOM_TO_FINAL_SIZE://
@@ -2268,11 +2370,13 @@
     }
 
 #undef  CAP                                           //: 01 ://
-#undef  I32                                           //: 02 ://
-#undef  U32                                           //: 03 ://
-#undef  U16                                           //: 04 ://
-#undef  U08                                           //: 05 ://
-#undef  ERR                                           //: 06 ://
+#undef  I_P                                           //: 02 ://
+#undef  I32                                           //: 03 ://
+#undef  U32                                           //: 04 ://
+#undef  U16                                           //: 05 ://
+#undef  U08                                           //: 06 ://
+#undef  ERR                                           //: 07 ://
+#undef  LOG                                           //: 08 ://
 //:=========================:TAU:UNIFORM_CONTROLLER_FUNCTIONS://
 //:============================:functions_wired_into_keyboard://
 //:functions_wired_into_keyboard:============================://
