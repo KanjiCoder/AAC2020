@@ -1,0 +1,83 @@
+
+
+    //:CameraExponent_TO_PixelStep:--------------------------://
+    /** **************************************************** ***
+    cam_exp : Camera Size In Pixels specified using an 
+              exponent. Same math as[ til_exp ].(TileExponent)
+              EXAMPLE: (cam_exp==4)==>( 2^4 )==>( 16 )
+
+    pixstep : PIXel_STEP:
+              Amount to shrink of squash camera width and
+              height by. Measured in pixels.
+              EXAMPLE: (pixstep==2) ==> Push Or Pull Each
+                       edge of camera by ONE(1) pixel.
+
+              EXAMPLE: (pixstep==1) ==> INVALID!!! Because
+                        camera must be [pushed|pulled] on
+                        appossing edges at same time and
+                       (pixstep==1) implies a 0.5 [push|pull]
+                        on each edge of camera rectangle.
+
+    Tables below are extrapolated 
+    from[ AAC2020_EDITCAM_tab_zom_san ]
+    *** **************************************************** **/
+    //:CameraExponent_TO_PixelStep:- - - - - - - - - - - - - ://
+    #define TOP ( 0 )                                 //: 01 ://
+    #define BOT ( 0 ) //:<--BottomedOut Cant Move     //: 02 ://
+    #define BAD ( 1 ) //:<--MUST NOT BE ZERO!         //: 03 ://
+
+        I32
+        AAC2020_EDITCAM_cam_exp_LUT_pixstep_UPP[ 11 ]={ 
+       
+                //:1x1 camera should yeild a 1-pixel step,   ://
+                //:but problems:                             ://
+                //:     1: Camera should NEVER be ODD    SIZE://
+                //:     2: Camera should NEVER be 1x1 in SIZE://
+                //:     3: Step of 1 implied edges are       ://
+                //:        pushed or pulled by 0.5 which is  ://
+                //:        NOT a discrete number of pixels.  ://
+            BAD //:cam_exp[ 0 ] ==> 001x001 ==> pixstep[ 1 ] ://
+                //:                                          ://
+        ,     2 //:cam_exp[ 1 ] ==> 002x002 ==> pixstep[ 2 ] ://
+        ,     2 //:cam_exp[ 2 ] ==> 004x004 ==> pixstep[ 2 ] ://
+                //:                                          ://
+        ,     4 //:cam_exp[ 3 ] ==> 008x008 ==> pixstep[ 4 ] ://
+        ,     4 //:cam_exp[ 4 ] ==> 016x016 ==> pixstep[ 4 ] ://
+                //:                                          ://
+        ,     8 //:cam_exp[ 5 ] ==> 032x032 ==> pixstep[ 8 ] ://
+        ,    16 //:cam_exp[ 6 ] ==> 064x064 ==> pixstep[16 ] ://
+        ,    32 //:cam_exp[ 7 ] ==> 128x128 ==> pixstep[32 ] ://
+        ,    64 //:cam_exp[ 8 ] ==> 256x256 ==> pixstep[64 ] ://
+                //:                                          ://
+        ,   TOP //:cam_Exp[ 9 ] ==> 512x512 ==> pixstep[128] ://
+                //:If we were to zoom past this, we would    ://
+                //:use 128 probably, but have not filled out ://
+                //:tables to support camera getting bigger   ://
+                //:than 512x512 pixels, so TOP==( 0 ) to     ://
+                //:prevent camera from growing more.         ://
+                //:@VID_IID[ 0158 ]TIME[ 00:43:32 ]          ://
+                //:                                          ://
+        ,   0x0 //:<--- NULL TERMINATED LIST                 ://
+        };
+
+        I32
+        AAC2020_EDITCAM_cam_exp_LUT_pixstep_DOW[ 11 ]={ 
+       
+            BAD
+        ,   BOT //:cam_exp[ 1 ] ==> 002x002 ==> 0
+
+        ,     2 //:cam_exp[ 2 ] ==> 004x004 ==> 2
+        ,     2 //:
+ 
+        };
+
+        #if( AAC2020_CRASH_ON_VITAL_TODO >= 1 ) //:##########://
+
+            #error FINISH:AAC2020_EDITCAM_cam_exp_LUT_pixstep_DOW!!!!!!!!!!!
+
+        #endif //:###########################################://
+
+    #undef  TOP  //:------------------------------------: 01 ://
+    #undef  BOT  //:------------------------------------: 02 ://
+    #undef  BAD  //:------------------------------------: 03 ://
+    //:--------------------------:CameraExponent_TO_PixelStep://

@@ -1,0 +1,37 @@
+//:CameraSizeExponent_TO_PixelStep_ForPushPull:==============://
+#define I32 int32_t /** GCC: <stdint.h> **/ //:---------: 01 ://
+#define ERR aac2020_editcam_Halt            //:---------: 02 ://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    I32
+    aac2020_editcam_cam_exp_CTO_pixstep_UPP(
+                I32 cam_exp
+    )
+    { 
+        /** Current Lookup Table Supports: [ 0 -to- 8 ] **/
+        assert( cam_exp >= 0 && cam_exp <= 8 );
+
+        I32 pixstep=(
+        AAC2020_EDITCAM_cam_exp_LUT_pixstep_UPP[ 
+                        cam_exp ] );;
+    
+        return( pixstep );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    I32
+    aac2020_editcam_cam_exp_CTO_pixstep_DOW(
+                I32 cam_exp
+    )
+    {
+        /** Current Lookup Table Supports: [ 0 -to- 8 ] **/
+        assert( cam_exp >= 0 && cam_exp <= 8 );
+
+        I32 pixstep=(
+        AAC2020_EDITCAM_cam_exp_LUT_pixstep_DOW[ 
+                        cam_exp ] );;
+    
+        return( pixstep );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+#undef  I32  //:----------------------------------------: 01 ://
+#undef  ERR  //:----------------------------------------: 02 ://
+//:==============:CameraSizeExponent_TO_PixelStep_ForPushPull://
