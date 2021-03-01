@@ -446,45 +446,9 @@
 #define FPTR aac2020_ginawin_function_pointers        //: 03 ://
 #define U32  uint32_t /** GCC: <stdint.h> **/         //: 04 ://
 #define I32   int32_t /** GCC: <stdint.h> **/         //: 05 ://
+#define ERR  aac2020_ginawin_Halt                     //: 06 ://
 
-    void
-    aac2020_ginawin_lParam_CTO_c_x_c_y(
-        LPARAM_i64_8B     lParam
-    ,   U32           *BYREF_c_x //:AKA[ low_word_is_x_axis ]
-    ,   U32           *BYREF_c_y //:AKA[ hig_word_is_y_axis ]
-    )
-    {
 
-        //:LOW_AND_HIGH_WORDS:...............................://
-        
-            U32 low_word_is_x_axis=( 0 );
-            U32 hig_word_is_y_axis=( 0 );
-        
-            /** Get X and Y Coordinates in **/
-            /** WM_MOUSEMOVE case          **/
-        
-            low_word_is_x_axis=
-            ((unsigned short)(((unsigned __int64)(
-        
-                lParam /** INPUT_VALUE **/
-        
-            )) & 0xffff));;
-        
-            hig_word_is_y_axis=
-            ((unsigned short)((((unsigned __int64)( 
-        
-                lParam /** INPUT_VALUE **/
-        
-            )) >> 16) & 0xffff));;
-        
-        //:...............................:LOW_AND_HIGH_WORDS://
-        //:return_via_output_param:--------------------------://
-
-            (*BYREF_c_x)=( low_word_is_x_axis );
-            (*BYREF_c_y)=( hig_word_is_y_axis );
-
-        //:--------------------------:return_via_output_param://
-    }
 
     //:WINDOW_MESSAGE_HANDLER_WNDPROC
     //:WIN:WINDOW
@@ -534,231 +498,35 @@
         //:============================:MUST_BE_BEFORE_SWITCH://
         //:SWITCH:===========================================://
         switch(Msg){ //:=====================================://
+        //:FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF://
 
-        case 0x020A /** WM_MOUSEWHEEL  **/:{
+            //:GINAMOU_FALLTHROUGH:--------------------------://
 
-            //:GET_WHEEL_DELTA
-            I32 wheel_delta_curren=((I32)
-                ((short)(wParam>>16))
-            );;
+            case 0x0201 /** WM_LBUTTONDOWN **/:
+            case 0x0202 /** WM_LBUTTONUP   **/: 
 
-            I32 WHEEL_DELTA_DETENT=( 120 );
+            case 0x0204 /** WM_RBUTTONDOWN **/:
+            case 0x0205 /** WM_RBUTTONUP   **/: 
 
-            AAC2020_IMOUBOX_mwn=(
-               //:wheel_delta_detent
-                (
-                      WHEEL_DELTA_DETENT //:DETENT
-                    / wheel_delta_curren //:CURRENT
-                )
-                /
-                1  //:Dont_Dampen_Mouse_Wheel_Like_This
-               //:wheel_delta_current
-            );;
+            case 0x0200 /** WM_MOUSEMOVE   **/:
 
-            AAC2020_IMOUBOX_m_s=( 1 );
+            case 0x020A /** WM_MOUSEWHEEL  **/:
 
-        };break;
-        //:RIGHT_mouse_up_or_down:---------------------------://
-        case 0x0204 /** WM_RBUTTONDOWN **/:{
+                {
 
-            U32 low_word_is_x_axis=( 0 );
-            U32 hig_word_is_y_axis=( 0 );
-            
-            aac2020_ginawin_lParam_CTO_c_x_c_y(
-                lParam
-            ,  &( low_word_is_x_axis )
-            ,  &( hig_word_is_y_axis )
-            );;
-
-            AAC2020_IMOUBOX_d2x=((I32)low_word_is_x_axis);
-            AAC2020_IMOUBOX_d2y=((I32)hig_word_is_y_axis);
-
-            AAC2020_IMOUBOX_m2d=( 1 );
-
-        };;break;
-        case 0x0205 /** WM_RBUTTONUP   **/:{
-
-            AAC2020_IMOUBOX_m2d=( 0 );
-
-        };;break;
-        //:---------------------------:RIGHT_mouse_up_or_down://
-        //:LEFT_mouse_up_or_down:----------------------------://
-        case 0x0201 /** WM_LBUTTONDOWN **/:{
-
-            AAC2020_IMOUBOX_m_c =( 1 ); //:@HACK@
-
-            aac2020_ginawin_lParam_CTO_c_x_c_y(
-                lParam
-            ,   &( AAC2020_IMOUBOX_c_x )
-            ,   &( AAC2020_IMOUBOX_c_y )
-            );;
-
-        };break;
-        case 0x0202 /** WM_LBUTTONUP **/:{
-
-            AAC2020_IMOUBOX_m_c =( 0 ); //:@HACK@
-
-        };break;
-        //:----------------------------:LEFT_mouse_up_or_down://
-        case 0x0200 /** WM_MOUSEMOVE **/:{
-
-        //:    aac2020_ginamou_HandleMouseMove_MB2(
-        //:    /**/    wParam  
-        //:            lParam
-        //:    );;
-                
-            //:MOUSE_COORDS:CALCULATE:-----------------------://
-
-                //:LOW_AND_HIGH_WORDS:.......................://
-
-                    U32 low_word_is_x_axis=( 0 );
-                    U32 hig_word_is_y_axis=( 0 );
-
-                    aac2020_ginawin_lParam_CTO_c_x_c_y(
-                        lParam
-                    ,  &( low_word_is_x_axis )
-                    ,  &( hig_word_is_y_axis )
+                    AAC2020_GINAMOU_ReadNativeMouseEvent(
+                           Msg //: nat_msg //:Native: Message  
+                    ,   wParam //: nat_w_p //:Native: WParam
+                    ,   lParam //: nat_l_p //:Native: LParam
                     );;
+                }
+            break;
+            //:--------------------------:GINAMOU_FALLTHROUGH://
 
-                //:.......................:LOW_AND_HIGH_WORDS://
-                //:TODO:IMPLEMENT_DRAG_COORDS:...............://
-
-                    AAC2020_VITAL_TODO("[ShaderToyDragCoords]");
-
-                //:...............:TODO:IMPLEMENT_DRAG_COORDS://
-
-            //:-----------------------:MOUSE_COORDS:CALCULATE://
-            //:MOUSE_COORDS:STORE:---------------------------://
-
-                int decide_if_we_have_made_a_click = ( 0 );
-
-                /** [m_x,m_y]: always the current mouse pos. **/
-                AAC2020_IMOUBOX_m_x = low_word_is_x_axis ;
-                AAC2020_IMOUBOX_m_y = hig_word_is_y_axis ;
-        
-                /** Is left or right mouse button down? **/
-                int dow_lef = wParam & 0x0001 ; //:MK_LBUTTON://
-                int dow_rig = wParam & 0x0002 ; //:MK_RBUTTON://
-
-                if( dow_rig ){ /** NOT USED AT THIS TIME **/ };
-
-                int is_mouse_currently_down = ( dow_lef >= 1 );
-                int is_mouse_currently_up   = ( dow_lef <= 0 );
-                assert( 1 == is_mouse_currently_down
-                            +is_mouse_currently_up );;
+        //:FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF://
 
 
-                //:SET_MOUSE_DOWN:...........................://
-                if( is_mouse_currently_down ){
 
-                    //:IF::: Mouse was previously up 
-                    //:THEN: set DOWN position.
-                    if( AAC2020_IMOUBOX_m_u >= 1 ){
-
-                        AAC2020_IMOUBOX_d_x =   //:  X-AXIS  ://
-                        AAC2020_IMOUBOX_m_x ;   //:  X-AXIS  ://
-                                                             
-                        AAC2020_IMOUBOX_d_y =   //:  Y-AXIS  ://
-                        AAC2020_IMOUBOX_m_y ;   //:  Y-AXIS  ://
-
-                    };;
-                }else
-                //:...........................:SET_MOUSE_DOWN://
-                //:SET_MOUSE_UP:.............................://
-                if( is_mouse_currently_up ){
-
-                    //:IF::: Mouse was previously DOWN 
-                    //:THEN: set UP position.
-                    if( AAC2020_IMOUBOX_m_d >= 1 ){
-
-                        AAC2020_IMOUBOX_u_x =   //:  X-AXIS  ://
-                        AAC2020_IMOUBOX_m_x ;   //:  X-AXIS  ://
-                                                             
-                        AAC2020_IMOUBOX_u_y =   //:  Y-AXIS  ://
-                        AAC2020_IMOUBOX_m_y ;   //:  Y-AXIS  ://
-
-                        decide_if_we_have_made_a_click =( 1 );
-
-                    };;
-                }else{
-                    aac2020_ginawin_Halt("[EDCL:2020_11_17]");
-                };;
-                //:.............................:SET_MOUSE_UP://
-                //:HAVE_WE_CLICKED?..........................://
-                if( decide_if_we_have_made_a_click >= 1 ){
-
-                    //:If delta between [u_x,u_y] & [d_x,d_y]
-                    //:is small enough, record as a click
-                    //:position.
-                    
-                    #define X1 AAC2020_IMOUBOX_u_x  //:######://
-                    #define X2 AAC2020_IMOUBOX_u_y  //:######://
-                    #define Y1 AAC2020_IMOUBOX_d_x  //:######://
-                    #define Y2 AAC2020_IMOUBOX_d_y  //:######://
-                    
-                    int min_click_distance =( 7 );
-                    
-                    //:Distance Squared:::: ( dist *  dist )
-                    int d_2 = (X1-X2)*(X1-X2) 
-                            + (Y1-Y2)*(Y1-Y2);
-                    
-                    //:Thresh-hold Squared: (tdist * tdist )
-                    int t_2 = ( min_click_distance
-                              * min_click_distance );;
-                    
-                    if( d_2 <= t_2 ){
-                    
-                        AAC2020_IMOUBOX_c_x =   //:  X-AXIS  ://
-                        AAC2020_IMOUBOX_m_x ;   //:  X-AXIS  ://
-                                                             
-                        AAC2020_IMOUBOX_c_y =   //:  Y-AXIS  ://
-                        AAC2020_IMOUBOX_m_y ;   //:  Y-AXIS  ://
-                    
-                        AAC2020_IMOUBOX_m_c =( 1 ); 
-                    }else{
-
-                        AAC2020_IMOUBOX_m_c =( 0 );
-
-                    };;
-                    
-                    #undef  X1  //:##########################://
-                    #undef  X2  //:##########################://
-                    #undef  Y1  //:##########################://
-                    #undef  Y2  //:##########################://
-
-                };;
-                //:.........................:HAVE_WE_CLICKED?://
-                //:UPDATE_LAST:..............................://
-
-                    /** Update LAST so we can use  values  **/
-                    /**  as PREVIOUS values in code above. **/
-
-                    if( is_mouse_currently_down /**PRIMARY**/ ){
-                        AAC2020_IMOUBOX_m_d = ( 1 );
-                        AAC2020_IMOUBOX_m_u = ( 0 );
-                    }else
-                    if( is_mouse_currently_up   /**PRIMARY**/ ){
-                        AAC2020_IMOUBOX_m_d = ( 0 );
-                        AAC2020_IMOUBOX_m_u = ( 1 );
-                    };;
-
-                //:..............................:UPDATE_LAST://
-
-            //:---------------------------:MOUSE_COORDS:STORE://
-
-            /** ********************************************* **
-
-                @REFERENCE@
-
-                // Check to see if the left button is held down:
-                int lef_dow = wParam & 0x0001 ; //:MK_LBUTTON://
-
-                // Check if right button down:
-                int rig_dow = wParam & 0x0002 ; //:MK_RBUTTON://
-
-            *** ******************************************** **/
-
-        }break;
 
 
         case 0x0005 /** WM_SIZE **/:{ 
@@ -865,6 +633,7 @@
 #undef FPTR  //:----------------------------------------: 03 ://
 #undef  U32  //:----------------------------------------: 04 ://
 #undef  I32  //:----------------------------------------: 05 ://
+#undef  ERR  //:----------------------------------------: 06 ://
 //:==========================:window_code.WIN_MSG_HAN_WND_POC://
 //:===============:window_code.WindowMessageHander,WindowProc://
 
