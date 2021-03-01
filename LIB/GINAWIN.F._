@@ -558,6 +558,31 @@
             AAC2020_IMOUBOX_m_s=( 1 );
 
         };break;
+        //:RIGHT_mouse_up_or_down:---------------------------://
+        case 0x0204 /** WM_RBUTTONDOWN **/:{
+
+            U32 low_word_is_x_axis=( 0 );
+            U32 hig_word_is_y_axis=( 0 );
+            
+            aac2020_ginawin_lParam_CTO_c_x_c_y(
+                lParam
+            ,  &( low_word_is_x_axis )
+            ,  &( hig_word_is_y_axis )
+            );;
+
+            AAC2020_IMOUBOX_d2x=((I32)low_word_is_x_axis);
+            AAC2020_IMOUBOX_d2y=((I32)hig_word_is_y_axis);
+
+            AAC2020_IMOUBOX_m2d=( 1 );
+
+        };;break;
+        case 0x0205 /** WM_RBUTTONUP   **/:{
+
+            AAC2020_IMOUBOX_m2d=( 0 );
+
+        };;break;
+        //:---------------------------:RIGHT_mouse_up_or_down://
+        //:LEFT_mouse_up_or_down:----------------------------://
         case 0x0201 /** WM_LBUTTONDOWN **/:{
 
             AAC2020_IMOUBOX_m_c =( 1 ); //:@HACK@
@@ -574,8 +599,14 @@
             AAC2020_IMOUBOX_m_c =( 0 ); //:@HACK@
 
         };break;
+        //:----------------------------:LEFT_mouse_up_or_down://
         case 0x0200 /** WM_MOUSEMOVE **/:{
 
+        //:    aac2020_ginamou_HandleMouseMove_MB2(
+        //:    /**/    wParam  
+        //:            lParam
+        //:    );;
+                
             //:MOUSE_COORDS:CALCULATE:-----------------------://
 
                 //:LOW_AND_HIGH_WORDS:.......................://
@@ -702,11 +733,11 @@
                     /** Update LAST so we can use  values  **/
                     /**  as PREVIOUS values in code above. **/
 
-                    if( is_mouse_currently_down  ){
+                    if( is_mouse_currently_down /**PRIMARY**/ ){
                         AAC2020_IMOUBOX_m_d = ( 1 );
                         AAC2020_IMOUBOX_m_u = ( 0 );
                     }else
-                    if( is_mouse_currently_up    ){
+                    if( is_mouse_currently_up   /**PRIMARY**/ ){
                         AAC2020_IMOUBOX_m_d = ( 0 );
                         AAC2020_IMOUBOX_m_u = ( 1 );
                     };;

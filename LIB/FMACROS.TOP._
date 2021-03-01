@@ -26,7 +26,7 @@ _Static_assert( AAC2020_INCLUDE_GAMTICK ==  5 ,        "5");
 //:==================================================:GAMTICK://
 //:CPUNIFO:==================================================://
 #if(            AAC2020_INCLUDE_CPUNIFO >=  1 )
-_Static_assert( AAC2020_INCLUDE_CPUNIFO == 20 ,        "20");
+_Static_assert( AAC2020_INCLUDE_CPUNIFO == 22 ,        "22");
 
     #define  FMACROS_CPUNIFO_LoopTick   AAC2020_CPUNIFO_LoopTick
 #endif
@@ -37,7 +37,7 @@ _Static_assert( AAC2020_INCLUDE_CPUNIFO == 20 ,        "20");
 //:==================================================:CPUNIFO://
 //:GRAQUAD:==================================================://
 #if(            AAC2020_INCLUDE_GRAQUAD >=  1 )
-_Static_assert( AAC2020_INCLUDE_GRAQUAD == 21 ,       "21");
+_Static_assert( AAC2020_INCLUDE_GRAQUAD == 23 ,       "23");
 
     #define  FMACROS_GRAQUAD_LoopTick   AAC2020_GRAQUAD_LoopTick
 #endif
@@ -48,7 +48,7 @@ _Static_assert( AAC2020_INCLUDE_GRAQUAD == 21 ,       "21");
 //:==================================================:GRAQUAD://
 //:TAUDEPO:==================================================://
 #if(            AAC2020_INCLUDE_TAUDEPO >=  1 )
-_Static_assert( AAC2020_INCLUDE_TAUDEPO == 39 ,       "39");
+_Static_assert( AAC2020_INCLUDE_TAUDEPO == 41 ,       "41");
 
     #define  FMACROS_TAUDEPO_LoopTick   AAC2020_TAUDEPO_LoopTick
 #endif
@@ -59,7 +59,7 @@ _Static_assert( AAC2020_INCLUDE_TAUDEPO == 39 ,       "39");
 //:==================================================:TAUDEPO://
 //:TAUSYNC:==================================================://
 #if(            AAC2020_INCLUDE_TAUSYNC >=  1 )
-_Static_assert( AAC2020_INCLUDE_TAUSYNC == 41 ,       "41");
+_Static_assert( AAC2020_INCLUDE_TAUSYNC == 43 ,       "43");
 
     #define  FMACROS_TAUSYNC_LoopTick   AAC2020_TAUSYNC_LoopTick
 #endif
@@ -70,7 +70,7 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 41 ,       "41");
 //:==================================================:TAUSYNC://
 //:PAINT5D:==================================================://
 #if(            AAC2020_INCLUDE_PAINT5D >=  1 )
-_Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
+_Static_assert( AAC2020_INCLUDE_PAINT5D == 49 ,       "49");
 
     #define  FMACROS_PAINT5D_LoopTick   AAC2020_PAINT5D_LoopTick
 #endif
@@ -107,12 +107,14 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
     PHEXDUM
     HARDASS
     NATIKEY
+    NATIMOU
     IKEYBOX
     IMOUBOX
     KEYBIND
     IKEYLIS
     IKEYCMD
     CEDITOR
+    GINAMOU
     NATIDUI
     CPUNIFO
     MOUTEMP
@@ -130,11 +132,15 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
     TAUDIRT
     TAUTYPE
     TAUSYNC
+    ZOOMCOM
+    DRAGCOM
+    CLICKOM
     EDITCAM
     GAMECAM
     P5D1OGL
 *** ******************************************************** **/
 //[| InitNone:BEG |]=========================================]//
+
 //:InitNone:SILENCE:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_SILENCE >=  1 )
 #define      FMACROS_SILENCE_InitNone AAC2020_SILENCE_InitNone
@@ -143,6 +149,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_SILENCE_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:SILENCE://
+
 //:InitNone:KILTEST:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_KILTEST >=  1 )
 #define      FMACROS_KILTEST_InitNone AAC2020_KILTEST_InitNone
@@ -151,6 +158,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_KILTEST_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:KILTEST://
+
 //:InitNone:REENUTR:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_REENUTR >=  1 )
 #define      FMACROS_REENUTR_InitNone AAC2020_REENUTR_InitNone
@@ -159,6 +167,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_REENUTR_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:REENUTR://
+
 //:InitNone:TODOMAN:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_TODOMAN >=  1 )
 #define      FMACROS_TODOMAN_InitNone AAC2020_TODOMAN_InitNone
@@ -167,6 +176,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_TODOMAN_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:TODOMAN://
+
 //:InitNone:GAMTICK:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_GAMTICK >=  1 )
 #define      FMACROS_GAMTICK_InitNone AAC2020_GAMTICK_InitNone
@@ -175,6 +185,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_GAMTICK_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:GAMTICK://
+
 //:InitNone:FILEBOI:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_FILEBOI >=  1 )
 #define      FMACROS_FILEBOI_InitNone AAC2020_FILEBOI_InitNone
@@ -183,6 +194,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_FILEBOI_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:FILEBOI://
+
 //:InitNone:PHEXDUM:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_PHEXDUM >=  1 )
 #define      FMACROS_PHEXDUM_InitNone AAC2020_PHEXDUM_InitNone
@@ -191,6 +203,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_PHEXDUM_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:PHEXDUM://
+
 //:InitNone:HARDASS:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_HARDASS >=  1 )
 #define      FMACROS_HARDASS_InitNone AAC2020_HARDASS_InitNone
@@ -199,6 +212,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_HARDASS_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:HARDASS://
+
 //:InitNone:NATIKEY:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_NATIKEY >=  1 )
 #define      FMACROS_NATIKEY_InitNone AAC2020_NATIKEY_InitNone
@@ -207,6 +221,16 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_NATIKEY_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:NATIKEY://
+
+//:InitNone:NATIMOU:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_NATIMOU >=  1 )
+#define      FMACROS_NATIMOU_InitNone AAC2020_NATIMOU_InitNone
+#endif
+#if( AAC2020_INCLUDE_NATIMOU == 0 )
+#define      FMACROS_NATIMOU_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:NATIMOU://
+
 //:InitNone:IKEYBOX:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_IKEYBOX >=  1 )
 #define      FMACROS_IKEYBOX_InitNone AAC2020_IKEYBOX_InitNone
@@ -215,6 +239,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_IKEYBOX_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:IKEYBOX://
+
 //:InitNone:IMOUBOX:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_IMOUBOX >=  1 )
 #define      FMACROS_IMOUBOX_InitNone AAC2020_IMOUBOX_InitNone
@@ -223,6 +248,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_IMOUBOX_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:IMOUBOX://
+
 //:InitNone:KEYBIND:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_KEYBIND >=  1 )
 #define      FMACROS_KEYBIND_InitNone AAC2020_KEYBIND_InitNone
@@ -231,6 +257,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_KEYBIND_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:KEYBIND://
+
 //:InitNone:IKEYLIS:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_IKEYLIS >=  1 )
 #define      FMACROS_IKEYLIS_InitNone AAC2020_IKEYLIS_InitNone
@@ -239,6 +266,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_IKEYLIS_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:IKEYLIS://
+
 //:InitNone:IKEYCMD:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_IKEYCMD >=  1 )
 #define      FMACROS_IKEYCMD_InitNone AAC2020_IKEYCMD_InitNone
@@ -247,6 +275,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_IKEYCMD_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:IKEYCMD://
+
 //:InitNone:CEDITOR:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_CEDITOR >=  1 )
 #define      FMACROS_CEDITOR_InitNone AAC2020_CEDITOR_InitNone
@@ -255,6 +284,16 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_CEDITOR_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:CEDITOR://
+
+//:InitNone:GINAMOU:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_GINAMOU >=  1 )
+#define      FMACROS_GINAMOU_InitNone AAC2020_GINAMOU_InitNone
+#endif
+#if( AAC2020_INCLUDE_GINAMOU == 0 )
+#define      FMACROS_GINAMOU_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:GINAMOU://
+
 //:InitNone:NATIDUI:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_NATIDUI >=  1 )
 #define      FMACROS_NATIDUI_InitNone AAC2020_NATIDUI_InitNone
@@ -263,6 +302,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_NATIDUI_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:NATIDUI://
+
 //:InitNone:CPUNIFO:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_CPUNIFO >=  1 )
 #define      FMACROS_CPUNIFO_InitNone AAC2020_CPUNIFO_InitNone
@@ -271,6 +311,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_CPUNIFO_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:CPUNIFO://
+
 //:InitNone:MOUTEMP:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_MOUTEMP >=  1 )
 #define      FMACROS_MOUTEMP_InitNone AAC2020_MOUTEMP_InitNone
@@ -279,6 +320,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_MOUTEMP_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:MOUTEMP://
+
 //:InitNone:PIXSAVE:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_PIXSAVE >=  1 )
 #define      FMACROS_PIXSAVE_InitNone AAC2020_PIXSAVE_InitNone
@@ -287,6 +329,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_PIXSAVE_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:PIXSAVE://
+
 //:InitNone:PIXBACK:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_PIXBACK >=  1 )
 #define      FMACROS_PIXBACK_InitNone AAC2020_PIXBACK_InitNone
@@ -295,6 +338,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_PIXBACK_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:PIXBACK://
+
 //:InitNone:PIXPUSH:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_PIXPUSH >=  1 )
 #define      FMACROS_PIXPUSH_InitNone AAC2020_PIXPUSH_InitNone
@@ -303,6 +347,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_PIXPUSH_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:PIXPUSH://
+
 //:InitNone:PIXLOAD:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_PIXLOAD >=  1 )
 #define      FMACROS_PIXLOAD_InitNone AAC2020_PIXLOAD_InitNone
@@ -311,6 +356,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_PIXLOAD_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:PIXLOAD://
+
 //:InitNone:DUMPASS:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_DUMPASS >=  1 )
 #define      FMACROS_DUMPASS_InitNone AAC2020_DUMPASS_InitNone
@@ -319,6 +365,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_DUMPASS_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:DUMPASS://
+
 //:InitNone:GENTCOM:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_GENTCOM >=  1 )
 #define      FMACROS_GENTCOM_InitNone AAC2020_GENTCOM_InitNone
@@ -327,6 +374,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_GENTCOM_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:GENTCOM://
+
 //:InitNone:GENTDOW:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_GENTDOW >=  1 )
 #define      FMACROS_GENTDOW_InitNone AAC2020_GENTDOW_InitNone
@@ -335,6 +383,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_GENTDOW_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:GENTDOW://
+
 //:InitNone:GENTUPP:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_GENTUPP >=  1 )
 #define      FMACROS_GENTUPP_InitNone AAC2020_GENTUPP_InitNone
@@ -343,6 +392,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_GENTUPP_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:GENTUPP://
+
 //:InitNone:POLYOGL:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_POLYOGL >=  1 )
 #define      FMACROS_POLYOGL_InitNone AAC2020_POLYOGL_InitNone
@@ -351,6 +401,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_POLYOGL_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:POLYOGL://
+
 //:InitNone:FRAGCOM:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_FRAGCOM >=  1 )
 #define      FMACROS_FRAGCOM_InitNone AAC2020_FRAGCOM_InitNone
@@ -359,6 +410,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_FRAGCOM_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:FRAGCOM://
+
 //:InitNone:GPUWIRE:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_GPUWIRE >=  1 )
 #define      FMACROS_GPUWIRE_InitNone AAC2020_GPUWIRE_InitNone
@@ -367,6 +419,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_GPUWIRE_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:GPUWIRE://
+
 //:InitNone:TAUDIRT:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_TAUDIRT >=  1 )
 #define      FMACROS_TAUDIRT_InitNone AAC2020_TAUDIRT_InitNone
@@ -375,6 +428,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_TAUDIRT_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:TAUDIRT://
+
 //:InitNone:TAUTYPE:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_TAUTYPE >=  1 )
 #define      FMACROS_TAUTYPE_InitNone AAC2020_TAUTYPE_InitNone
@@ -383,6 +437,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_TAUTYPE_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:TAUTYPE://
+
 //:InitNone:TAUSYNC:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_TAUSYNC >=  1 )
 #define      FMACROS_TAUSYNC_InitNone AAC2020_TAUSYNC_InitNone
@@ -391,6 +446,34 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_TAUSYNC_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:TAUSYNC://
+
+//:InitNone:ZOOMCOM:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_ZOOMCOM >=  1 )
+#define      FMACROS_ZOOMCOM_InitNone AAC2020_ZOOMCOM_InitNone
+#endif
+#if( AAC2020_INCLUDE_ZOOMCOM == 0 )
+#define      FMACROS_ZOOMCOM_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:ZOOMCOM://
+
+//:InitNone:DRAGCOM:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_DRAGCOM >=  1 )
+#define      FMACROS_DRAGCOM_InitNone AAC2020_DRAGCOM_InitNone
+#endif
+#if( AAC2020_INCLUDE_DRAGCOM == 0 )
+#define      FMACROS_DRAGCOM_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:DRAGCOM://
+
+//:InitNone:CLICKOM:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_CLICKOM >=  1 )
+#define      FMACROS_CLICKOM_InitNone AAC2020_CLICKOM_InitNone
+#endif
+#if( AAC2020_INCLUDE_CLICKOM == 0 )
+#define      FMACROS_CLICKOM_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:CLICKOM://
+
 //:InitNone:EDITCAM:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_EDITCAM >=  1 )
 #define      FMACROS_EDITCAM_InitNone AAC2020_EDITCAM_InitNone
@@ -399,6 +482,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_EDITCAM_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:EDITCAM://
+
 //:InitNone:GAMECAM:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_GAMECAM >=  1 )
 #define      FMACROS_GAMECAM_InitNone AAC2020_GAMECAM_InitNone
@@ -407,6 +491,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_GAMECAM_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:GAMECAM://
+
 //:InitNone:P5D1OGL:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_P5D1OGL >=  1 )
 #define      FMACROS_P5D1OGL_InitNone AAC2020_P5D1OGL_InitNone
@@ -415,6 +500,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 44 ,       "44");
 #define      FMACROS_P5D1OGL_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:P5D1OGL://
+
 //[=========================================[| InitNone:END |]//
 //:AUTO_GENERATED_INIT_FUNCTIONS:============================://
 //:INITS: Auto Generated From Keyboard Shortcuts

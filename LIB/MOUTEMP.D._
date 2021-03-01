@@ -2,8 +2,9 @@
 
 
 //:TEMPORARY_MOUSE_STATE_CONTAINER_STRUCT:===================://
-#define U32 uint32_t /** GCC: <stdint.h> **/
-#define I32  int32_t /** GCC: <stdint.h> **/
+#define I08   int8_t /** GCC: <stdint.h> **/          //: 01 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 02 ://
+#define I32  int32_t /** GCC: <stdint.h> **/          //: 03 ://
 
     //[ ************************************************ ]//
     //[ LOOKING FOR GLOBAL STATE AND NOT TEMP CONTAINER? ]//
@@ -47,6 +48,25 @@
             U32 iss_m_s ; //:m_s:Mouse_Scrollin?:IMOUBOX_m_s ://
 
         //:----------------------------------:MISC_MOUSE_VARS://
+        //:2NDARY_MOUSE_BUTTON_VARS:-------------------------://
+        //:AKA:RIGHT_MOUSE_BUTTON:::-------------------------://
+            
+            /** @VID_IID[ 0162 ]TIME[ 01:23:50 ] *********** **/
+            /** Just enough variables to PAN the CANVAS      **/
+            /** using NON-PRIMARY MOUSE BUTTON.              **/
+            /** (NON_PRIMARY == MOUSE_BUTTON_2 / RIGHT_CLICK)**/
+            /** ******************************************** **/
+
+            I32 pix_m2x ; //: pix_m_x , but RIGHT_BUTTON(#2) ://
+            I32 pix_m2y ; //: pix_m_y , but RIGHT_BUTTON(#2) ://
+
+            I32 dow_d2x ; //: dow_d_x , but RIGHT_BUTTON(#2) ://
+            I32 dow_d2y ; //: dow_d_y , but RIGHT_BUTTON(#2) ://
+
+            I08 iss_m2d ; //: iss_m_d , but RIGHT_BUTTON(#2) ://
+
+        //:-------------------------:::AKA:RIGHT_MOUSE_BUTTON://
+        //:-------------------------:2NDARY_MOUSE_BUTTON_VARS://
         //:MOUSE_WHEEL:--------------------------------------://
 
 
@@ -56,6 +76,7 @@
 
     };
 
-#undef  U32
-#undef  I32
+#undef  I08  //:----------------------------------------: 01 ://
+#undef  U32  //:----------------------------------------: 02 ://
+#undef  I32  //:----------------------------------------: 03 ://
 //:===================:TEMPORARY_MOUSE_STATE_CONTAINER_STRUCT://

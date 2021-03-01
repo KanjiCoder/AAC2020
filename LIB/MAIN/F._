@@ -56,11 +56,54 @@
 //:==========================:MAIN_ENTRY_POINT.FUNC.GAME_LOOP://
 //:MAIN_ENTRY_POINT.INPUT_HANDLER:===========================://
 #define U32      uint32_t /** GCC: <stdint.h> **/     //: 01 ://
-#define DEX_EDI  (AAC2020_CEDITOR_dex_edi+0)          //: 02 ://
-#define DEX_INI  (AAC2020_CEDITOR_dex_ini+0)          //: 03 ://
+#define ERR      aac2020_aacmain_Halt                 //: 02 ://
+#define DEX_EDI  (AAC2020_CEDITOR_dex_edi+0)          //: 03 ://
+#define DEX_INI  (AAC2020_CEDITOR_dex_ini+0)          //: 04 ://
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    //:FUNC:ActiveEditorReadMouse:- - - - - - - - - - - - - -://
+    #if( AAC2020_INCLUDE_MOUTEMP >= 1 ) //:##################://
+    #define MOU struct AAC2020_MOUTEMP  //:111111111111111111://
 
+        U32
+        AAC2020_HandleInput_Mouse_ActiveEditorReadMouse(
+            MOU* mou
+        )
+        {
+            if( ((MOU*)0) == mou ){
+                ERR("[NULL_MOUSE_TEMP_OBJECT_GIVEN_YEAR_2021]");
+            };;
+            
+            #if( AAC2020_INCLUDE_PAINT5D <= 0 ) //:##########://
+            
+                /** @VID_IID[ 0162 ]TIME[ 00:49:13 ] ******* **/
+                /** PAINT5D is the first[ EDITOR ]that uses  **/
+                /** mouse input. Thus if NOT INCLUDED....... **/
+                /**                                          **/
+                /** No System exists that uses our temporary **/
+                /** mouse input struct. .................... **/
+                /** **************************************** **/
+            
+                if( mou != ((void*)0) ){ /** NOOP **/ };
+            
+            #endif //:#######################################://
+            #if( AAC2020_INCLUDE_PAINT5D ) //:#-#-#-#-#-#-#-#://
+            if( DEX_EDI == AAC2020_CEDITOR_paint5d ){
+            if( DEX_INI == AAC2020_CEDITOR_paint5d ){
+            
+                //:IS_BEING_CALLED. CONFIRMED! GOOD!
+                aac2020_paint5d_MouInn( mou );
+            
+            };;};;
+            #endif //:#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#://
+
+            return( 0x00 );
+        }
+
+    #undef MOU  //:------------------:////:111111111111111111://
+    #endif //: AAC2020_INCLUDE_MOUTEMP  //:##################://
+    //:- - - - - - - - - - - - - -:FUNC:ActiveEditorReadMouse://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     U32 
     AAC2020_HandleInput_Mouse( U32 u32 )
     {
@@ -112,15 +155,10 @@
             //: mou.whe: Mouse.WHEel
                 mou.whe_mwn  =  AAC2020_IMOUBOX_mwn ;
 
-            #if( AAC2020_INCLUDE_PAINT5D ) //:#-#-#-#-#-#-#-#://
-            if( DEX_EDI == AAC2020_CEDITOR_paint5d ){
-            if( DEX_INI == AAC2020_CEDITOR_paint5d ){
-
-                //:IS_BEING_CALLED. CONFIRMED! GOOD!
-                aac2020_paint5d_MouInn( &( mou ) );
-
-            };;};;
-            #endif //:#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#://
+            /** Only Active Editor Will Look At Mouse. **/
+            AAC2020_HandleInput_Mouse_ActiveEditorReadMouse(
+                &( mou )
+            );;
 
 
         #undef  MOU
@@ -291,8 +329,9 @@
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
 #undef      U32  //:------------------------------------: 01 ://
-#undef  DEX_EDI  //:------------------------------------: 02 ://
-#undef  DEX_INI  //:------------------------------------: 03 ://
+#undef      ERR  //:------------------------------------: 02 ://
+#undef  DEX_EDI  //:------------------------------------: 03 ://
+#undef  DEX_INI  //:------------------------------------: 04 ://
 //:===========================:MAIN_ENTRY_POINT.INPUT_HANDLER://
 //:MAIN_ENTRY_POINT.FUNC:====================================://
 
@@ -315,12 +354,14 @@
             AAC2020_PHEXDUM_InitNone(0);   //:  07  # LIBCHAN://
             AAC2020_HARDASS_InitNone(0);   //:  08  # LIBCHAN://
             AAC2020_NATIKEY_InitNone(0);   //:  09  # LIBCHAN://
-            AAC2020_IKEYBOX_InitNone(0);   //:  10  # LIBCHAN://
-            AAC2020_IMOUBOX_InitNone(0);   //:  11  # LIBCHAN://
-            AAC2020_KEYBIND_InitNone(0);   //:  12  # LIBCHAN://
-            AAC2020_IKEYLIS_InitNone(0);   //:  13  # LIBCHAN://
-            AAC2020_IKEYCMD_InitNone(0);   //:  14  # LIBCHAN://
-            AAC2020_CEDITOR_InitNone(0);   //:  15  # LIBCHAN://
+            AAC2020_NATIMOU_InitNone(0);   //:  10  # LIBCHAN://
+            AAC2020_IKEYBOX_InitNone(0);   //:  11  # LIBCHAN://
+            AAC2020_IMOUBOX_InitNone(0);   //:  12  # LIBCHAN://
+            AAC2020_KEYBIND_InitNone(0);   //:  13  # LIBCHAN://
+            AAC2020_IKEYLIS_InitNone(0);   //:  14  # LIBCHAN://
+            AAC2020_IKEYCMD_InitNone(0);   //:  15  # LIBCHAN://
+            AAC2020_CEDITOR_InitNone(0);   //:  16  # LIBCHAN://
+            AAC2020_GINAMOU_InitNone(0);   //:  17  # LIBCHAN://
  
         ##################################### #_DO_NOT_EXTRACT_#
         *** ************************************************ **/
@@ -333,12 +374,14 @@
         FMACROS_PHEXDUM_InitNone( 0 );     //:  07  # LIBCHAN://
         FMACROS_HARDASS_InitNone( 0 );     //:  08  # LIBCHAN://
         FMACROS_NATIKEY_InitNone( 0 );     //:  09  # LIBCHAN://
-        FMACROS_IKEYBOX_InitNone( 0 );     //:  10  # LIBCHAN://
-        FMACROS_IMOUBOX_InitNone( 0 );     //:  11  # LIBCHAN://
-        FMACROS_KEYBIND_InitNone( 0 );     //:  12  # LIBCHAN://
-        FMACROS_IKEYLIS_InitNone( 0 );     //:  13  # LIBCHAN://
-        FMACROS_IKEYCMD_InitNone( 0 );     //:  14  # LIBCHAN://
-        FMACROS_CEDITOR_InitNone( 0 );     //:  15  # LIBCHAN://
+        FMACROS_NATIMOU_InitNone( 0 );     //:  10  # LIBCHAN://
+        FMACROS_IKEYBOX_InitNone( 0 );     //:  11  # LIBCHAN://
+        FMACROS_IMOUBOX_InitNone( 0 );     //:  12  # LIBCHAN://
+        FMACROS_KEYBIND_InitNone( 0 );     //:  13  # LIBCHAN://
+        FMACROS_IKEYLIS_InitNone( 0 );     //:  14  # LIBCHAN://
+        FMACROS_IKEYCMD_InitNone( 0 );     //:  15  # LIBCHAN://
+        FMACROS_CEDITOR_InitNone( 0 );     //:  16  # LIBCHAN://
+        FMACROS_GINAMOU_InitNone( 0 );     //:  17  # LIBCHAN://
         
         //:MAIN_SECTION:001:=================================://
         //:##################################################://
@@ -402,10 +445,13 @@
                 AAC2020_TAUDEPO_Init       //:  39  # LIBCHAN://
                 AAC2020_TAUTYPE_InitNone   //:  40  # LIBCHAN://
                 AAC2020_TAUSYNC_InitNone   //:  41  # LIBCHAN://
-                AAC2020_EDITCAM_InitNone   //:  42  # LIBCHAN://
-                AAC2020_GAMECAM_InitNone   //:  43  # LIBCHAN://
-                AAC2020_PAINT5D_Init       //:  44  # LIBCHAN://
-                AAC2020_P5D1OGL_Init       //:  45  # LIBCHAN://
+                AAC2020_ZOOMCOM_InitNone   //:  42  # LIBCHAN://
+                AAC2020_DRAGCOM_InitNone   //:  43  # LIBCHAN://
+                AAC2020_CLICKOM_InitNone   //:  44  # LIBCHAN://
+                AAC2020_EDITCAM_InitNone   //:  45  # LIBCHAN://
+                AAC2020_GAMECAM_InitNone   //:  46  # LIBCHAN://
+                AAC2020_PAINT5D_Init       //:  47  # LIBCHAN://
+                AAC2020_P5D1OGL_Init       //:  48  # LIBCHAN://
                 
             ################################# #_DO_NOT_EXTRACT_#
             *** ******************************************** **/
@@ -435,10 +481,13 @@
             FMACROS_TAUDEPO_Init(     X ); //:  39  # LIBCHAN://
             FMACROS_TAUTYPE_InitNone( 0 ); //:  40  # LIBCHAN://
             FMACROS_TAUSYNC_InitNone( 0 ); //:  41  # LIBCHAN://
-            FMACROS_EDITCAM_InitNone( 0 ); //:  42  # LIBCHAN://
-            FMACROS_GAMECAM_InitNone( 0 ); //:  43  # LIBCHAN://
-            FMACROS_PAINT5D_Init(     X ); //:  44  # LIBCHAN://
-            FMACROS_P5D1OGL_InitNone( 0 ); //:  45  # LIBCHAN://
+            FMACROS_ZOOMCOM_InitNone( 0 ); //:  42  # LIBCHAN://
+            FMACROS_DRAGCOM_InitNone( 0 ); //:  43  # LIBCHAN://
+            FMACROS_CLICKOM_InitNone( 0 ); //:  44  # LIBCHAN://
+            FMACROS_EDITCAM_InitNone( 0 ); //:  45  # LIBCHAN://
+            FMACROS_GAMECAM_InitNone( 0 ); //:  46  # LIBCHAN://
+            FMACROS_PAINT5D_Init(     X ); //:  47  # LIBCHAN://
+            FMACROS_P5D1OGL_InitNone( 0 ); //:  48  # LIBCHAN://
             #undef  X
         #endif //:- - - - - - - - - - - - - - - - - - - - - -://
         #if( AAC2020_INCLUDE_GINAWIN >= 1 )  //:- - - - - - -://

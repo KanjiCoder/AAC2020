@@ -8,6 +8,7 @@
 ### 5: VARIABLE_NAME_INDEX
 ### 6: FUNCTION_NAME_INDEX
 ### 7: ITS_WRONG
+### 8: LIBCHAN_AND_LIBCHAN_DIAGRAM
 
     //:ABOUT:================================================://
 
@@ -1326,6 +1327,7 @@
     //:==================================:VARIABLE_NAME_INDEX://
     //:FUNCTION_NAME_INDEX:==================================://
     
+        //:TODO: Function Names Here and what they mean.
     
     //:==================================:FUNCTION_NAME_INDEX://
     //:IT_WRONG:=============================================://
@@ -1339,7 +1341,36 @@
         BAD[ bascuvy ]USE[ cuvbasy ]
     
     //:============================================:ITS_WRONG://
-    
+    //:LIBCHAN_AND_LIBCHAN_DIAGRAM:==========================://
+
+        +-----------------------------------------------+
+        | Native functions  (NATIKEY,NATIMOU) included  |
+        | BEFORE containers (IKEYBOX,IMOUBOX) so that   |
+        | native functions CANNOT directly put their    |
+        | results into containers. Forcing code to      |
+        | be more flat where these two objects          |
+        | interact.                                     |
+        +-----------------+-----------------------------+
+        | +-------------+ |
+        | | * : NATIKEY | |
+        | | * : NATIMOU | |
+        | +-^-----------+ |
+        |   ^             |
+        | +-^-----------+ |
+        | | * : IKEYBOX | |
+        | | * : IMOUBOX | |
+        | +-------------+ |
+        +-----------------+
+
+        +-------------+
+        | 1 : GINAMOU | GINAWIN's [MOU]se handler code.
+        +-------------+
+        | 2 : GINAWIN | Graphics_Init_And_WINdow
+        +-------------+
+
+
+
+    //:==========================:LIBCHAN_AND_LIBCHAN_DIAGRAM://
     
     
     
