@@ -212,13 +212,27 @@
                 int dow_rig = nat_w_p & 0x0002 ;//:MK_RBUTTON://
 
                 if( dow_rig ){ 
-                    AAC2020_IMOUBOX_m2x =( 
-                    AAC2020_IMOUBOX_m_x   );;
+                //: @VID_IID[ 0165 ]TIME[ 00:57:57 ]         ://
+                //: I think problems happen if the mousedown ://
+                //: and mousemove events are fired at        ://
+                //: "exactly" the same time, but report      ://
+                //: back slightly different XY locations.    ://
+                //:                                          ://
+                //: This gaurd fixes that.                   ://
+                //:                                          ://
+                //: Gaurd: Don't collect mouse2 position if  ://
+                //: flagged as the FIRST mouse-down. Because ://
+                //: we end up slightly out of sync by about  ://
+                //: 1 pixel when doing this.                 ://
+                if(1 != AAC2020_IMOUBOX_m2d /** iss_m2d **/ ){
 
-                    AAC2020_IMOUBOX_m2y =( 
-                    AAC2020_IMOUBOX_m_y   );;
+                        AAC2020_IMOUBOX_m2x =( 
+                        AAC2020_IMOUBOX_m_x   );;
+    
+                        AAC2020_IMOUBOX_m2y =( 
+                        AAC2020_IMOUBOX_m_y   );;
 
-                };;
+                };;};;
 
                 int is_mouse_currently_down = ( dow_lef >= 1 );
                 int is_mouse_currently_up   = ( dow_lef <= 0 );

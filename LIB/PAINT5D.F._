@@ -2323,6 +2323,7 @@
                 assert( val_put <= 3 ); //:[  0 |  1 |  2 |  3 ]
                                         //:[ 00 | 01 | 10 | 11 ]
 
+                LOG("[ToggleTile:ADD]",((void*)0));
             }else
             if( val_bru == val_cur ){  /** [ERASE/UNSET] **/
 
@@ -2347,7 +2348,7 @@
                 val_put = ( 0 ); 
                 assert( val_put <= 3 ); //:[  0 |  1 |  2 |  3 ]
                                         //:[ 00 | 01 | 10 | 11 ]
-
+                LOG("[ToggleTile:REM]",((void*)0));
             }else{
                 ERR("[EDCL:2021_01_02:PAINT5D]");
             };;
@@ -2876,9 +2877,11 @@
                 /** the mouse-down state being entered. **/
                 /** *********************************** **/
 
-                /** TEST ONLY VALID IF IT IS DRAGSTART **/
-                /** @VID_IID[ 0163 ]TIME[ 06:41:52 ]   **/
-                if( mou -> iss_ds2 ){
+                /** TEST ONLY VALID IF IT IS DRAGSTART ***** **/
+                /** @VID_IID[ 0163 ]TIME[ 06:41:52 ]   ***** **/
+                /** @VID_IID[ 0165 ]TIME[ 00:41:23 ]DS2_BUGGY**/
+            /// if(      mou -> iss_ds2 ){ //:DRAG_START_2
+                if( 1 == mou -> iss_m2d ){ //:FIRST_MOUSE_DOWN
                 #define P_F printf
 
                     if( mou -> dow_d2x != mou -> pix_m2x
@@ -2893,11 +2896,13 @@
                         P_F("[pix_m2y]:%d\n", mou -> pix_m2y);
                         
                         P_F("\n\n");
-                        ERR("[DOWNSTATE_!_SYNCED_WITH_CURPOS]");
+                        //:"[DOWNSTATE_!_SYNCED_WITH_CURPOS]"://
+                        ERR("[pix_NOT_dow_YEAR_2021]");
                     };;
 
                 #undef  P_F
-                };;
+                };; //:FIRST_MOUSE_DOWN
+            /// };; //:DRAG_START_2
 
             //:======================:STORE_MOUSE_DOWN_COORDS://
 
@@ -4114,6 +4119,7 @@
     aac2020_paint5d_UnitTest( U32 u32 )
     {
         if( u32 ){  /** Reserved For Future Use **/  };
+        LOG("[BEG:aac2020_paint5d_UnitTest...]",((void*)0));
 
         /** ************************************************ ***
             ProgControls: 
@@ -4207,6 +4213,7 @@
             //:----------------:more_asserts_and_data_restore://
         //:------------------------------:SYSTEM_DATA:RESTORE://
 
+        LOG("[END:aac2020_paint5d_UnitTest...]",((void*)0));
         return( 0x00 );
     }
     //:******************************************************://
@@ -5957,7 +5964,7 @@
         void
         aac2020_paint5d_UTC_ToggleTile( void )
         {
-        #define NUMBER_OF_TESTS (         3 ) /**  THREE(3)  **/
+        #define NUMBER_OF_TESTS (         6 ) /**    SIX(6)  **/
         #define NUMBER_OF_TEST_ELEMENTS ( 9 ) /**   NINE(9)  **/
             //:variable_declare:-----------------------------://
 
@@ -6024,6 +6031,13 @@
             0x0 , 0x0 , 0x0 , 0x0 , 0x0 , 0x0 , 0x0 , 0x0 , 0x0
         ,   0x0 , 0x0 , 0x0 , 0x0 , 0x0 , 0x0 ,   1 ,   1 ,   0
         ,   0x0 , 0x0 , 0x0 , 0x0 , 0x0 , 0x0 ,   1 ,   0 ,   0
+
+        //: t_q | t_e | t_l | l_x | l_y | a_d | t_v | b_v | exp
+        ,   0x0 , 0x0 , 0x0 , 0x0 , 0x0 , 0x0 ,   0 ,   1 ,   1
+        ,   0x0 , 0x0 , 0x0 , 0x0 , 0x0 , 0x0 ,   0 ,   2 ,   2
+        ,   0x0 , 0x0 , 0x0 , 0x0 , 0x0 , 0x0 ,   0 ,   3 ,   3
+
+
             };;   //:THREE_ARE_TILE_VALUES: >>> ___ , ___ , ___
         //: 001   002   003   004   005   006   007   008   009
 
@@ -6135,7 +6149,9 @@
                     /** Fail because does not match the .....**/
                     /** Values in our test table.       .....**/
                     /** ************************************ **/
-                    if( 0 != failed_unit_test ){
+                    if( 0 != failed_unit_test 
+                    ||       failed_unit_test > 0
+                    ){
 
                         /** Print Test Index **/
                         printf("[t_i]:%d\n", t_i );
@@ -6143,7 +6159,7 @@
                         printf("[act:exp]:(%d):(%d)\n"
                         , act , exp );;
 
-                        ERR("[TILE_TOGGLE_TEST_FAIL:2021]");
+                        ERR("[TILE_TOGGLE_TEST_FAIL_2021]");
                     };;
                 #undef  MIN_T_V                       //: 01 ://
                 #undef  MAX_T_V                       //: 02 ://
