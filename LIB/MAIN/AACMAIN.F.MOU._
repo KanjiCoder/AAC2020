@@ -1,0 +1,146 @@
+
+
+//: MOUSE CODE FOR AACMAIN:
+
+//:MOUSE_HANDLER_CODE:=======================================://
+#if( AAC2020_INCLUDE_MOUTEMP >= 1 ) //:#################: _A ://
+#if( AAC2020_INCLUDE_IMOUBOX >= 1 ) //:#################: _B ://
+#define MOU      struct AAC2020_MOUTEMP               //: 01 ://
+#define U08       uint8_t /** GCC: <stdint.h> **/     //: 02 ://
+#define U32      uint32_t /** GCC: <stdint.h> **/     //: 03 ://
+#define ERR      aac2020_aacmain_Halt                 //: 04 ://
+#define DEX_EDI  (AAC2020_CEDITOR_dex_edi+0)          //: 05 ://
+#define DEX_INI  (AAC2020_CEDITOR_dex_ini+0)          //: 06 ://
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    AAC2020_AACMAIN_CopyGlobals_Mouse( 
+        MOU* mou
+    )
+    {
+        if( ((MOU*)0) == mou ){
+            ERR("[NULL_MOUSE_INPUTTED_TO_COPY_GLOBALS:2021]");
+        };;
+        AAC2020_MOUTEMP_CopyIfTrue_LoadIfFalse(
+            mou //:<-- COPY_INTO_THIS_OBJECT
+        ,    1  //:<-- TRUE==>COPY
+        );;
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    AAC2020_AACMAIN_LoadGlobals_Mouse(
+        MOU* mou
+    )
+    {
+        if( ((MOU*)0) == mou ){
+            ERR("[NULL_MOUSE_INPUTTED_TO_LOAD_GLOBALS:2021]");
+        };;
+        AAC2020_MOUTEMP_CopyIfTrue_LoadIfFalse(
+            mou //:<-- COPY_INTO_THIS_OBJECT
+        ,    0  //:<-- FALSE==>LOAD
+        );;
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    U32
+    AAC2020_AACMAIN_HandleInput_Mouse_ActiveEditorReadMouse(
+        MOU* mou
+    )
+    {
+        if( ((MOU*)0) == mou ){
+            ERR("[NULL_MOUSE_TEMP_OBJECT_GIVEN_YEAR_2021]");
+        };;
+        
+        #if( AAC2020_INCLUDE_PAINT5D <= 0 ) //:##############://
+        
+            /** @VID_IID[ 0162 ]TIME[ 00:49:13 ] ******* **/
+            /** PAINT5D is the first[ EDITOR ]that uses  **/
+            /** mouse input. Thus if NOT INCLUDED....... **/
+            /**                                          **/
+            /** No System exists that uses our temporary **/
+            /** mouse input struct. .................... **/
+            /** **************************************** **/
+        
+            if( mou != ((void*)0) ){ /** NOOP **/ };
+        
+        #endif //:###########################################://
+        #if( AAC2020_INCLUDE_PAINT5D ) //:#-#-#-#-#-#-#-#-#-#://
+        if( DEX_EDI == AAC2020_CEDITOR_paint5d ){
+        if( DEX_INI == AAC2020_CEDITOR_paint5d ){
+        
+            //:IS_BEING_CALLED. CONFIRMED! GOOD!
+            aac2020_paint5d_MouInn( mou );
+        
+        };;};;
+        #endif //:#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#://
+
+        return( 0x00 );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    U32 
+    AAC2020_AACMAIN_HandleInput_Mouse( MOU* mou )
+    {
+
+        if( ((MOU*)0) == mou ){
+            ERR("[NULL_INPUT:JMIM_2021_03_02_354AM]");
+        };;
+
+        if( ( mou -> iss_exp ) >= 1 ){
+            /** iss_exp <==> AAC2020_IMOUBOX_exp **/
+            //- return                                       -//
+            //+ Dont do this. There may be reasons an update +//
+            //+ function does not care that the object is    +//
+            //+ expired. Like using the last known valid     +//
+            //+ state of the mouse cursor to keep rendering  +//
+            //+ an icon in a given position.                 +//
+            //+ @VID_IID[ 0155 ]TIME[ 02:37:32 ] +++++++++++ +//
+        };;
+
+
+        /** Only Active Editor Will Look At Mouse. **/
+        AAC2020_AACMAIN_HandleInput_Mouse_ActiveEditorReadMouse(
+            mou //:<-- COPY_OF[ AAC2020_IMOUBOX ]
+        );;
+
+        return( 0x00 );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    U32
+    AAC2020_AACMAIN_UnspamInput_Mouse( MOU* mou )
+    {
+    /** **************************************************** ***
+    Portions of mouse input object need to be invalidated
+    each frame of the game. Not necessarily everything.
+    But for example... "DRAG START" only happens on
+    exactly one frame.
+    @VID_IID[ 0163 ]TIME[ 05:39:42 ]
+    *** **************************************************** **/
+        //:EXPIRE_THE_OBJECT:--------------------------------://
+
+            //:EXPIRE OBJECT AFTER USE TO AVOID RE_USE
+            //:OF_THE_SAME_STATE:
+            //- AAC2020_IMOUBOX_exp=( 1 ); -//
+                     mou -> iss_exp=( 1 );
+ 
+        //:--------------------------------:EXPIRE_THE_OBJECT://
+        //:RESET_CERTAIN_ONE_TIME_MOUSE_FLAGS:---------------://
+        /** @VID_IID[ 0163 ]TIME[ 02:34:52 ]**************** **/
+        
+                mou ->      iss_ds2=( 0 ); //:DRAG_START_2(RMB) 
+            //- AAC2020_IMOUBOX_ds2=( 0 ); -//
+        
+        //:---------------:RESET_CERTAIN_ONE_TIME_MOUSE_FLAGS://
+        return( 0x0 );
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+
+#undef  MOU      //:------------------------------------: 01 ://
+#undef  U08      //:------------------------------------: 02 ://
+#undef  U32      //:------------------------------------: 03 ://
+#undef  ERR      //:------------------------------------: 04 ://
+#undef  DEX_EDI  //:------------------------------------: 05 ://
+#undef  DEX_INI  //:------------------------------------: 06 ://
+#endif  //:--------:( AAC2020_INCLUDE_MOUTEMP >= 1 ):---: _A ://
+#endif  //:--------:( AAC2020_INCLUDE_IMOUBOX >= 1 ):---: _B ://
+//:=======================================:MOUSE_HANDLER_CODE://

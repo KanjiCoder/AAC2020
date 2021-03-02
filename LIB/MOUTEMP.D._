@@ -3,8 +3,11 @@
 
 //:TEMPORARY_MOUSE_STATE_CONTAINER_STRUCT:===================://
 #define I08   int8_t /** GCC: <stdint.h> **/          //: 01 ://
-#define U32 uint32_t /** GCC: <stdint.h> **/          //: 02 ://
-#define I32  int32_t /** GCC: <stdint.h> **/          //: 03 ://
+#define U08  uint8_t /** GCC: <stdint.h> **/          //: 02 ://
+#define I16  int16_t /** GCC: <stdint.h> **/          //: 03 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 04 ://
+#define I32  int32_t /** GCC: <stdint.h> **/          //: 05 ://
+#define U64 uint64_t /** GCC: <stdint.h> **/          //: 06 ://
 
     //[ ************************************************ ]//
     //[ LOOKING FOR GLOBAL STATE AND NOT TEMP CONTAINER? ]//
@@ -56,27 +59,39 @@
             /** using NON-PRIMARY MOUSE BUTTON.              **/
             /** (NON_PRIMARY == MOUSE_BUTTON_2 / RIGHT_CLICK)**/
             /** ******************************************** **/
-
+    
+            //:DRAG_CURRENT_POSITION:
             I32 pix_m2x ; //: pix_m_x , but RIGHT_BUTTON(#2) ://
             I32 pix_m2y ; //: pix_m_y , but RIGHT_BUTTON(#2) ://
 
+            //:DRAG_START_POSITION:
             I32 dow_d2x ; //: dow_d_x , but RIGHT_BUTTON(#2) ://
             I32 dow_d2y ; //: dow_d_y , but RIGHT_BUTTON(#2) ://
 
-            I08 iss_m2d ; //: iss_m_d , but RIGHT_BUTTON(#2) ://
+            //# !!!!! @VID_IID[ 0163 ]TIME[ 02:09:13 ] !!!!! #//
+            //[ iss_m2d != ( !iss_m2u ) NOT_INVERSES!!!      ]//
+            //[ iss_m2u != ( !iss_m2d ) NOT_INVERSES!!!      ]//
+            I32 iss_m2d ; //: iss_m_d , but RIGHT_BUTTON(#2) ://
+            I32 iss_m2u ; //: iss_m_u , but RIGHT_BUTTON(#2) ://
+
+            I32 iss_ds2 ; //: DRAG_START_2(MouseButton#2)    ://
 
         //:-------------------------:::AKA:RIGHT_MOUSE_BUTTON://
         //:-------------------------:2NDARY_MOUSE_BUTTON_VARS://
         //:MOUSE_WHEEL:--------------------------------------://
 
-
             I32 whe_mwn ; //:mwn:Mouse_Wheel_Notches                                
                                        
         //:--------------------------------------:MOUSE_WHEEL://
 
+            U64 hak_aln ; //:<<<@VID_IID[ 0163 ]T[ 06:06:13 ]://
+
     };
 
 #undef  I08  //:----------------------------------------: 01 ://
-#undef  U32  //:----------------------------------------: 02 ://
-#undef  I32  //:----------------------------------------: 03 ://
+#undef  U08  //:----------------------------------------: 02 ://
+#undef  I16  //:----------------------------------------: 03 ://
+#undef  U32  //:----------------------------------------: 04 ://
+#undef  I32  //:----------------------------------------: 05 ://
+#undef  U64  //:----------------------------------------: 06 ://
 //:===================:TEMPORARY_MOUSE_STATE_CONTAINER_STRUCT://

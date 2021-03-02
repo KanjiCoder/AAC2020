@@ -185,10 +185,20 @@ END: NO_DEEPER_NESTING :- - - - - - - - - - - - - - - - - - -://
         #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_T_V  (10 )
         /** ************************************************ **/
     //:-------------------------:ORDER_OF:AAC2020_PAINT5D_Put://
+    //:MOUSE_DOWN_VIEWPORT_VP1:------------------------------://
+
+        //:vd1: Viewport_Down_1: (VP1's state during mousedown)
+        //:vd0: No Such thing as VP0 downstate
+        //:vdc: No Such thing as VPC downstate
+        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vd1  (11 )
+        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vd0 "[VD0:NOT]"
+        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vdc "[VDC:NOT]"
+
+    //:------------------------------:MOUSE_DOWN_VIEWPORT_VP1://
 
         /** Max valid variable index for sequential PAINT5D  **/
         /** variables. NOT including the debug variables.    **/
-        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_MAX  (10 )
+        #define AAC2020_TAUDEPO_SUB_PAINT5D_VAR_MAX  (11 )
 
     /** YOU CANNOT EXCEED 255, WE ONLY HAVE 255 VAR CELLS!  **/
     /** @VID_IID[ 0066 ]TIME[ 03H 27M 19S ] ................ **/
@@ -251,9 +261,10 @@ END: NO_DEEPER_NESTING :- - - - - - - - - - - - - - - - - - -://
 
                     //:p5d_cam == p5d_vp1 == P5D_VP1
 
-                    const U08 P5D_VPC ; //:TODO:WireUp
-                    const U08 P5D_VP0 ; //:TODO:WireUp
-                    const U08 P5D_VP1 ; //:TODO:WireUp
+                    const U08 P5D_VPC ; //:Viewport:CANVAS
+                    const U08 P5D_VP0 ; //:Viewport:DEST
+                    const U08 P5D_VP1 ; //:Viewport:OFFSCREEN
+                    const U08 P5D_VD1 ; //:Viewport:VP1 - DOWN
 
                     /** @VID_IID[ 0071 ]TIME[ 03H 18M 32S ]  **/
                     /** SEE_DIAGRAM[ #DIA_P5D_MAIN# ]* * * * **/
@@ -324,6 +335,7 @@ END: NO_DEEPER_NESTING :- - - - - - - - - - - - - - - - - - -://
     ,       .P5D_VPC = ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vpc )
     ,       .P5D_VP0 = ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vp0 )
     ,       .P5D_VP1 = ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vp1 )
+    ,       .P5D_VD1 = ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_vd1 )
 
             /** ******************************************** ***
 

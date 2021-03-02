@@ -28,3 +28,59 @@
     }
 
 //:===========================================:LOG_AFTER_HALT://
+//:MOUSE_INPUT_HANDLER_STUFF:================================://
+
+    //:IN_HERE[ AAC2020_AACMAIN_CopyGlobals_Mouse ]
+    #include "./AACMAIN.F.MOU._"
+
+//:================================:MOUSE_INPUT_HANDLER_STUFF://
+//:INIT_FINAL:===============================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+
+    U32
+    AAC2020_AACMAIN_InitFinal( U32 u32 )
+    {
+        if( u32 ){ /**Reserved For Future Use **/ };
+
+
+        extern U32 AAC2020_AACMAIN_UnitTest( U32 );
+                   AAC2020_AACMAIN_UnitTest( 0x0 );
+
+        return( 0x00 );
+    }
+
+#undef  U32
+//:===============================================:INIT_FINAL://
+//:KEEP_UNIT_TEST_CODE_AT_BOTTOM_OF_FILE:====================://
+//:UNIT_TEST_SECTION:========================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+
+    U32
+    AAC2020_AACMAIN_UnitTest( U32 u32 )
+    {
+        if( u32 ){ /** Reserved For Future Use **/ };
+
+        //[ ********************************************* ]//
+        //[ NOTHING HERE YET. MAKE SURE UNIT TEST CODE IN ]//
+        //[ THIS SECTION DOESN'T BELONG IN A SUB LIBRARY. ]//
+        //[ ********************************************* ]//
+
+        return( 0x00 );
+    }
+
+    //:MOUTEMP_TEST:-----------------------------------------://
+    #if( AAC2020_INCLUDE_MOUTEMP <= 0 )
+
+        //+ SEE[ AAC2020_MOUTEMP_UnitTest() ] +//
+
+    #endif
+    #if( AAC2020_INCLUDE_MOUTEMP >= 1 )
+
+        //+ SEE[ AAC2020_MOUTEMP_UnitTest() ] +//
+
+    #endif
+    
+    //:-----------------------------------------:MOUTEMP_TEST://
+
+//:====================:KEEP_UNIT_TEST_CODE_AT_BOTTOM_OF_FILE://
+//:========================================:UNIT_TEST_SECTION://

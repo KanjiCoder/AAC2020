@@ -110,6 +110,10 @@
         /** We will eventually use this. But not now. **/
         if( nat_l_p ){ /** NOOP **/ };
 
+        /** DRAG_START_FLAG: VID_IID[ 0163 ]TIME[ 02:22:32 ]**/
+        //- I08 first_time_m2d=( 0 ); ---------------------- -//
+        //+ USE: AAC2020_IMOUBOX_ds2(ds2:DragStart-MouseBtn2)+//
+
         switch( nat_msg ){
         //:LEFT_mouse_up_or_down:----------------------------://
         case 0x0201 /** WM_LBUTTONDOWN **/:{
@@ -141,15 +145,29 @@
             ,  &( hig_word_is_y_axis )
             );;
 
+            //:RIGHT_MOUSE_DRAG:INITIAL 
             AAC2020_IMOUBOX_d2x=((I32)low_word_is_x_axis);
             AAC2020_IMOUBOX_d2y=((I32)hig_word_is_y_axis);
 
-            AAC2020_IMOUBOX_m2d=( 1 );
+            //:RIGHT_MOUSE_DRAG:CURRENT
+            AAC2020_IMOUBOX_m2x=((I32)low_word_is_x_axis);
+            AAC2020_IMOUBOX_m2y=((I32)hig_word_is_y_axis);
 
+            /** @VID_IID[ 0163 ]TIME[ 02:13:23 ] *********** **/
+            /** Mouse Up flag is __NOT__ inverse of the **** **/
+            /** mouse down flag. It is fired once upon  **** **/
+            /** release of our dragging state so we can **** **/
+            /** resolve a "click+drag"                  **** **/
+            AAC2020_IMOUBOX_ds2=( 1 );
+            AAC2020_IMOUBOX_m2d=( 1 );
+            AAC2020_IMOUBOX_m2u=( AAC2020_IMOUBOX_m2u );
+                            
         };;break;
         case 0x0205 /** WM_RBUTTONUP   **/:{
 
+            AAC2020_IMOUBOX_ds2=( 0 ); //:DEFINITELYNOTDRAGSTART
             AAC2020_IMOUBOX_m2d=( 0 );
+            AAC2020_IMOUBOX_m2u=( 1 );
 
         };;break;
         //:---------------------------:RIGHT_mouse_up_or_down://
@@ -193,7 +211,14 @@
                 int dow_lef = nat_w_p & 0x0001 ;//:MK_LBUTTON://
                 int dow_rig = nat_w_p & 0x0002 ;//:MK_RBUTTON://
 
-                if( dow_rig ){ /** NOT USED AT THIS TIME **/ };
+                if( dow_rig ){ 
+                    AAC2020_IMOUBOX_m2x =( 
+                    AAC2020_IMOUBOX_m_x   );;
+
+                    AAC2020_IMOUBOX_m2y =( 
+                    AAC2020_IMOUBOX_m_y   );;
+
+                };;
 
                 int is_mouse_currently_down = ( dow_lef >= 1 );
                 int is_mouse_currently_up   = ( dow_lef <= 0 );
@@ -340,6 +365,10 @@
             ERR("[SHOULD_BE_A_HANDLED_MOUSE_CASE:YEAR_2021]");
 
         };;break;};;
+
+        
+
+                       
     }
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://

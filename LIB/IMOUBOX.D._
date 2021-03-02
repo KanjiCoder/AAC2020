@@ -1,7 +1,9 @@
 //:MOUSE_STATE:==============================================://
 #define I08   int8_t /** GCC: <stdint.h> **/ //:--------: 01 ://
-#define U32 uint32_t /** GCC: <stdint.h> **/ //:--------: 02 ://
-#define I32  int32_t /** GCC: <stdint.h> **/ //:--------: 03 ://
+#define U08  uint8_t /** GCC: <stdint.h> **/ //:--------: 02 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/ //:--------: 03 ://
+#define I32  int32_t /** GCC: <stdint.h> **/ //:--------: 04 ://
+#define U64 uint64_t /** GCC: <stdint.h> **/ //:--------: 05 ://
 
     //:#_LIKE_glo_eve_OBJECT_in_A2_JC_#://
 
@@ -11,7 +13,7 @@
     //:GAME_TICK:--------------------------------------------://
 
         //: AAC2020_IMOUBOX_gam_tik === AAC2020_GAMTIME_gam_tik
-        U32 AAC2020_IMOUBOX_gam_tik =( 0 );
+        U32 AAC2020_IMOUBOX_tik =( 0 );
         //: So that we know when this object has expired and
         //: is no longer valid.
     
@@ -47,13 +49,18 @@
         /** (NON_PRIMARY == MOUSE_BUTTON_2 / RIGHT_CLICK)**/
         /** ******************************************** **/
     
+        //:DRAG_POS:CURRENT:
         I32 AAC2020_IMOUBOX_m2x ; //:m_x:NON_PRIMARY(#2):::::://
         I32 AAC2020_IMOUBOX_m2y ; //:m_y:NON_PRIMARY(#2):::::://
                                   //:                   :::::://
+        //:DRAG_POS:START
         I32 AAC2020_IMOUBOX_d2x ; //:d_x:NON_PRIMARY(#2):::::://
         I32 AAC2020_IMOUBOX_d2y ; //:d_y:NON_PRIMARY(#2):::::://
                                   //:                   :::::://
-        I08 AAC2020_IMOUBOX_m2d ; //:m_d:NON_PRIMARY(#2):::::://
+        I32 AAC2020_IMOUBOX_m2d ; //:m_d:NON_PRIMARY(#2):::::://
+        I32 AAC2020_IMOUBOX_m2u ; //:m_u:NON_PRIMARY(#2):::::://
+
+        I32 AAC2020_IMOUBOX_ds2 ; //:DRAG_START_2::::::::::::://
     
     //:-----------------------------:::AKA:RIGHT_MOUSE_BUTTON://
     //:-----------------------------:2NDARY_MOUSE_BUTTON_VARS://
@@ -64,10 +71,17 @@
                                   //:Whatever smallest increment
                                   //:works for zoom controls.
 
+    /** @VID_IID[ 0163 ]TIME[ 05:56:23 ]                  ** **/
+    /** This variable needs to be whatever bit-width will ** **/
+    /** make the IMOUTEMP struct align to 64 bits.        ** **/
+    U64 AAC2020_IMOUBOX_aln = 0 ; //:DATA_ALIGNMENT_HACK
+
     //:------------------------------------------:MOUSE_WHEEL://
 
 #undef  I08  //:----------------------------------------: 01 ://
-#undef  U32  //:----------------------------------------: 02 ://
-#undef  I32  //:----------------------------------------: 03 ://
+#undef  U08  //:----------------------------------------: 02 ://
+#undef  U32  //:----------------------------------------: 03 ://
+#undef  I32  //:----------------------------------------: 04 ://
+#undef  U64  //:----------------------------------------: 05 ://
 //:==============================================:MOUSE_STATE://
 

@@ -25,9 +25,9 @@
         if( AAC2020_SILENCE.SILENCE <=( 0-1 ) ){ say=( 1 ); };
         if( AAC2020_SILENCE.SILENCE >=( 0+1 ) ){ say=( 0 ); };
         if( say >= 1 ){
-            printf("[paint5d_log]....(   " ); fflush( stdout );
+            printf("[paint5d_log]....("    ); fflush( stdout );
             printf( str_fmt , dat_any      ); fflush( stdout );
-            printf(               "   )\n" ); fflush( stdout );
+            printf(                  ")\n" ); fflush( stdout );
         };;
     }
 //:===========================================:LOG_AFTER_HALT://
@@ -2816,10 +2816,144 @@
 
         return( 0x00 );
     }
-
-
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
+    I32                 //:OD2:On_Down_2 (2 == RIGHT_MOUSE_BTN)
+    aac2020_paint5d_MouInn_OD2_OuterMain(
+        MOU* mou
+    )
+    {
+        //:printf("[OD2...]\n"); fflush(stdout);
+
+        if( ( (mou -> iss_m2d)+0 ) <= 0 ){
+            /**This function should only be called when **/
+            /**the non-primary mouse button is down.    **/
+            ERR("[OD2==OnDown2==OnMouseLeftButtonDown]");
+        };;
+
+        U32 x_0;
+        U32 x_1;
+        U32 y_0;
+        U32 y_1;
+
+        //:STORE_DRAGSTART_STATE:============================://
+        if( 1 == mou -> iss_m2d  /** FIRST MOUSE DOWN **/ ){
+
+            LOG("[FIRST_MOUSE_DOWN]",0);
+
+            //:OFFSCREEN_DATA_VIEWPORT:======================://
+            //:AKA:CAMERA_____VIEWPORT:======================://
+        
+
+                //:[ P5D_VP1 ]>>>>>>>[ P5D_VD1 ]://
+
+                //: VP1:Viewport_One(1): 
+                //:(Offscreen/Source/TileMapDataBitmap Viewport)
+                AAC2020_TAUDEPO_Get( 
+                    AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+                ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+                ,   AAC2020_TAUDEPO.P5D_VP1 //:DEX_VAR
+                ,  &(x_0),&(x_1),&(y_0),&(y_1)
+                );;
+
+                AAC2020_TAUDEPO_Put( 
+                    AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+                ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+                ,   AAC2020_TAUDEPO.P5D_VD1 //:DEX_VAR
+                ,   (x_0), (x_1), (y_0), (y_1)
+                );;
+
+            //:======================:OFFSCREEN_DATA_VIEWPORT://
+            //:======================:AKA:CAMERA_____VIEWPORT://
+            //:STORE_MOUSE_DOWN_COORDS:======================://
+
+                //[ GINAMOU: Should have already done this.  ]//
+                //[ MOU* mou , should already have this.     ]//
+            
+                /** *********************************** **/
+                /** @VID_IID[ 0163 ]TIME[ 02:03:13 ]    **/
+                /** Assert Valid Configuration upon     **/
+                /** the mouse-down state being entered. **/
+                /** *********************************** **/
+
+                /** TEST ONLY VALID IF IT IS DRAGSTART **/
+                /** @VID_IID[ 0163 ]TIME[ 06:41:52 ]   **/
+                if( mou -> iss_ds2 ){
+                #define P_F printf
+
+                    if( mou -> dow_d2x != mou -> pix_m2x
+                    ||  mou -> dow_d2y != mou -> pix_m2y
+                    ){
+                        P_F("\n\n");
+                        P_F("[dow_d2x]:%d\n", mou -> dow_d2x);
+                        P_F("[pix_m2x]:%d\n", mou -> pix_m2x);
+                        
+                        P_F("\n\n");
+                        P_F("[dow_d2y]:%d\n", mou -> dow_d2y);
+                        P_F("[pix_m2y]:%d\n", mou -> pix_m2y);
+                        
+                        P_F("\n\n");
+                        ERR("[DOWNSTATE_!_SYNCED_WITH_CURPOS]");
+                    };;
+
+                #undef  P_F
+                };;
+
+            //:======================:STORE_MOUSE_DOWN_COORDS://
+
+        };; /** Is_Drag_Start ? **/
+        //:============================:STORE_DRAGSTART_STATE://
+        //:PERFORM_DRAGGING_PANNING_OF_CAMERA:===============://
+        if( mou -> iss_m2d >= 2 ){
+
+            LOG("[DRAGGIN]",0);
+
+            AAC2020_DRAGCOM_Drag(
+
+                //:LOCATE_YOUR_CAMERA_RECTANGLES:
+            /**/AAC2020_TAUDEPO.TAU_015
+            ,   AAC2020_TAUDEPO.PAINT5D
+            ,   AAC2020_TAUDEPO.P5D_VD1 //:DOWNSTATE:CAMERA
+            ,   AAC2020_TAUDEPO.P5D_VP1 //:  CURRENT:CAMERA
+            ,   AAC2020_TAUDEPO.P5D_VP0 //:   SCREEN:RECT
+
+            ,   mou -> dow_d2x  //:INITIAL_MOUSE_DOWN_COORD
+            ,   mou -> dow_d2y  //:INITIAL_MOUSE_DOWN_COORD
+
+            ,   mou -> pix_m2x  //:CURRENT_MOUSE______COORD
+            ,   mou -> pix_m2y  //:CURRENT_MOUSE______COORD
+
+            ,   256 //:<-- MAX_WINDOWS_SIZE 
+            );;
+
+        };;
+        //:===============:PERFORM_DRAGGING_PANNING_OF_CAMERA://
+
+        return( 0 );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    I32                //: OU2:On_Upp_2 (2==RIGHT_MOUSE_BUTTON)
+    aac2020_paint5d_MouInn_OU2_OuterMain(
+        MOU* mou
+    )
+    {
+        if( ((MOU*)0) == mou ){ /** NOOP **/ };
+
+        //:RESOLVE_DRAG_STATE:===============================://
+
+            //[ -------------------------------------------- ]//
+            //[ Do nothing because click+drag should have    ]//
+            //[ been continually updating the whole time     ]//
+            //[ the RIGHT( Non-primary )MOUSE button was     ]//
+            //[ down.                                        ]//
+            //[ -------------------------------------------- ]//
+
+        //:===============================:RESOLVE_DRAG_STATE://
+             
+
+        return( 0 );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     I32
     aac2020_paint5d_MouInn(
         MOU* mou
@@ -2856,6 +2990,22 @@
 
                 aac2020_paint5d_MouInn_OMS_OuterMain( mou );
 
+            };;
+            if( mou -> iss_m2d ){ //:NON-PRIMARY_MOUSE_DOWN
+
+                //:STORE_DRAG_START_VARIABLES_HERE:
+
+                //:                           Down_2:RIG_MOU_BTN
+                //:                    OD2:On_Down_2
+                aac2020_paint5d_MouInn_OD2_OuterMain( mou );
+            };;
+            if( mou -> iss_m2u ){ //:NON-PRIMARY_MOUSE_UPP
+
+                //: Resolve Dragging Code If Needed.
+
+                //:                           Uppp_2:RIG_MOU_BTN
+                //:                    OU2:On_Uppp_2
+                aac2020_paint5d_MouInn_OU2_OuterMain( mou );
             };;
     
         };;

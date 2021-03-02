@@ -1,19 +1,462 @@
-//[  ******************************************************  ]//
-//[  MOUTEMP.F._ : (Functions File)                          ]//
-//[                                                          ]//
-//[  THERE ARE NO FUNCTIONS. THIS IS A DATA/ONLY             ]//
-//[  [ SubLibrary / SubSystem ].                             ]//
-//[  I retain the right to change my mind on this            ]//
-//[  in the future.                                          ]//
-//[  ******************************************************  ]//
-//:INIT_NONE:================================================://
-#define U32 uint32_t /** GCC: <stdint.h> **/
+//|  ******************************************************  |//
+//|  MOUTEMP.F._ : (Functions File)                          |//
+//|                                                          |//
+//-  THERE ARE NO FUNCTIONS. THIS IS A DATA/ONLY             -//
+//-  [ SubLibrary / SubSystem ].                             -//
+//-  I retain the right to change #MY_MIND#                  -//
+//-  on this in the future.                                  -//
+//+  UPDATE[ @VID_IID[ 0163 ]TIME[ 03:59:32 ]                +//
+//+  Changed #MY_MIND#. We have a data [copy/load] now.      +//
+//|  ******************************************************  |//
+//:AAC2020_SUBLIBRARY_BOILERPLATE:===========================://
+#define SIL AAC2020_SILENCE                           //: 01 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 02 ://
+#define P_F printf                                    //: 03 ://
+    //:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=================://
+        void 
+        aac2020_moutemp_Halt( const char* msg_err )
+        {
+            P_F("[FATAL_ERROR:aac2020_moutemp]:%s\n", msg_err );
+            fflush(stdout);
+            exit( 123 );
+        }
+    //:=================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+    //:LOG_AFTER_HALT:=======================================://
+        void
+        aac2020_moutemp_Info_any( //:FUNC:::Info , OVERLOAD:any
+            const char* str_fmt   //:GENERAL:str , SPECIFIC:fmt
+        ,   void*       dat_any   //:GENERAL:dat , SPECIFIC:any
+        )
+        {                            int say=( 0 );
+            if( SIL.MOUTEMP <=(  0  ) ){ say=( 1 ); };
+            if( SIL.SILENCE <=( 0-1 ) ){ say=( 1 ); };
+            if( SIL.SILENCE >=( 0+1 ) ){ say=( 0 ); };
+            if( say >= 1 ){
+                P_F("[moutemp_log]....(   " ); fflush( stdout );
+                P_F( str_fmt , dat_any      ); fflush( stdout );
+                P_F(               "   )\n" ); fflush( stdout );
+            };;
+        }
+    //:=======================================:LOG_AFTER_HALT://
+    //:INIT_NONE:============================================://
+        U32
+        AAC2020_MOUTEMP_InitNone( U32 u32 ){
+            if( u32 ){ /** reserved for future use **/ };
+    
+            extern U32 AAC2020_MOUTEMP_UnitTest( U32 );
+                    AAC2020_MOUTEMP_UnitTest( 0x0 );
+    
+            return( 0x00 );
+        }
+    //:============================================:INIT_NONE://
+#undef  SIL  //:----------------------------------------: 01 ://
+#undef  U32  //:----------------------------------------: 02 ://
+#undef  P_F  //:----------------------------------------: 03 ://
+//:===========================:AAC2020_SUBLIBRARY_BOILERPLATE://
+//:MOUSE_STATE_COPY_LOAD:====================================://
+#define ERR      aac2020_moutemp_Halt                 //: 01 ://
+#define MOU      struct AAC2020_MOUTEMP               //: 02 ://
+#define U08       uint8_t /** GCC: <stdint.h> **/     //: 03 ://
+#define U32      uint32_t /** GCC: <stdint.h> **/     //: 04 ://
+#define DEX_EDI  (AAC2020_CEDITOR_dex_edi+0)          //: 05 ://
+#define DEX_INI  (AAC2020_CEDITOR_dex_ini+0)          //: 06 ://
+
+    void
+    AAC2020_MOUTEMP_CopyIfTrue_LoadIfFalse(
+        MOU* mou //:<-- Mouse Object
+    ,   U08  bol //:<-- Boolean Variable, TRUE|FALSE
+    )
+    {
+        if( ((MOU*)0) == mou ){
+            ERR("[NIL_MOUSE_OBJECT:2021_03_02:335AM]");
+        };;
+
+        //:BEG:INTERLACE_YOUR_DEFINES_TO_REDUCE_ERRORS:======://
+
+            //: GAME TICKER:
+                #define COPY_gam_tik (      mou -> gam_tik )
+                #define FILE_gam_tik ( AAC2020_IMOUBOX_tik )
+
+            //: EXPIRED ?
+                #define COPY_iss_exp (      mou -> iss_exp )
+                #define FILE_iss_exp ( AAC2020_IMOUBOX_exp )
+
+            //: MOU_XY: (Mouse XY)
+
+                #define COPY_pix_m_x (      mou -> pix_m_x )
+                #define FILE_pix_m_x ( AAC2020_IMOUBOX_m_x )
+
+                #define COPY_pix_m_y (      mou -> pix_m_y )
+                #define FILE_pix_m_y ( AAC2020_IMOUBOX_m_y )
+
+            //: CLK_XY: (Click XY)
+
+                #define COPY_clk_c_x (      mou -> clk_c_x )
+                #define FILE_clk_c_x ( AAC2020_IMOUBOX_c_x )
+
+                #define COPY_clk_c_y (      mou -> clk_c_y )
+                #define FILE_clk_c_y ( AAC2020_IMOUBOX_c_y )
+
+            //: UPP_XY: (Up    XY)
+
+                #define COPY_upp_u_x (      mou -> upp_u_x )
+                #define FILE_upp_u_x ( AAC2020_IMOUBOX_u_x )
+
+                #define COPY_upp_u_y (      mou -> upp_u_y )
+                #define FILE_upp_u_y ( AAC2020_IMOUBOX_u_y )
+
+            //: DOW_XY: (Down  XY)
+
+                #define COPY_dow_d_x (      mou -> dow_d_x )
+                #define FILE_dow_d_x ( AAC2020_IMOUBOX_d_x )
+
+                #define COPY_dow_d_y (      mou -> dow_d_y )
+                #define FILE_dow_d_y ( AAC2020_IMOUBOX_d_y )
+
+            //: DUCS: (IS[ [D]own,[U]p,[C]lick,[S]crolling ]) ?
+                #define COPY_iss_m_d (      mou -> iss_m_d ) 
+                #define FILE_iss_m_d ( AAC2020_IMOUBOX_m_d )
+                                                       
+                #define COPY_iss_m_u (      mou -> iss_m_u ) 
+                #define FILE_iss_m_u ( AAC2020_IMOUBOX_m_u )
+                                                       
+                #define COPY_iss_m_c (      mou -> iss_m_c ) 
+                #define FILE_iss_m_c ( AAC2020_IMOUBOX_m_c )
+                                                       
+                #define COPY_iss_m_s (      mou -> iss_m_s ) 
+                #define FILE_iss_m_s ( AAC2020_IMOUBOX_m_s )
+
+            //:MOUSE_WHEEL_NOTCHES:
+                #define COPY_whe_mwn (      mou -> whe_mwn )
+                #define FILE_whe_mwn ( AAC2020_IMOUBOX_mwn )
+
+            //:2NDARY_MOUSE_BUTTON_VARS:---------------------://
+            //:AKA:RIGHT_MOUSE_BUTTON:::---------------------://
+
+                #define COPY_pix_m2x (      mou -> pix_m2x )
+                #define FILE_pix_m2x ( AAC2020_IMOUBOX_m2x )
+
+                #define COPY_pix_m2y (      mou -> pix_m2y )
+                #define FILE_pix_m2y ( AAC2020_IMOUBOX_m2y )
+
+                #define COPY_dow_d2x (      mou -> dow_d2x )
+                #define FILE_dow_d2x ( AAC2020_IMOUBOX_d2x )
+
+                #define COPY_dow_d2y (      mou -> dow_d2y )
+                #define FILE_dow_d2y ( AAC2020_IMOUBOX_d2y )
+
+                #define COPY_iss_m2d (      mou -> iss_m2d )
+                #define FILE_iss_m2d ( AAC2020_IMOUBOX_m2d )
+
+                #define COPY_iss_m2u (      mou -> iss_m2u )
+                #define FILE_iss_m2u ( AAC2020_IMOUBOX_m2u )
+
+                #define COPY_iss_ds2 (      mou -> iss_ds2 )
+                #define FILE_iss_ds2 ( AAC2020_IMOUBOX_ds2 )
+            
+            //:---------------------:::AKA:RIGHT_MOUSE_BUTTON://
+            //:---------------------:2NDARY_MOUSE_BUTTON_VARS://
+
+            //:HACK_ALIGNMENT:
+                #define COPY_hak_aln (      mou -> hak_aln )
+                #define FILE_hak_aln ( AAC2020_IMOUBOX_aln )
+
+        //:BEG:INTERLACE_YOUR_DEFINES_TO_REDUCE_ERRORS:======://
+        #define COPY ( bol )
+        #define LOAD (!bol )
+        
+        //: mou -> gam_tik: Game Time Ticker. 
+            if( COPY ){ COPY_gam_tik = FILE_gam_tik ; };
+            if( LOAD ){ FILE_gam_tik = COPY_gam_tik ; };
+        
+        //: mou -> exp: Mouse.EXPired ?
+            if( COPY ){ COPY_iss_exp = FILE_iss_exp ; };
+            if( LOAD ){ FILE_iss_exp = COPY_iss_exp ; };
+        
+        //: mou -> pix: Mouse.PIXel
+            if( COPY ){ COPY_pix_m_x = FILE_pix_m_x ; };
+            if( COPY ){ COPY_pix_m_y = FILE_pix_m_y ; };
+            if( LOAD ){ FILE_pix_m_x = COPY_pix_m_x ; };
+            if( LOAD ){ FILE_pix_m_y = COPY_pix_m_y ; };
+        
+        //: mou -> clk: Mouse.CLicK
+            if( COPY ){ COPY_clk_c_x = FILE_clk_c_x ; };
+            if( COPY ){ COPY_clk_c_y = FILE_clk_c_y ; };
+            if( LOAD ){ FILE_clk_c_x = COPY_clk_c_x ; };
+            if( LOAD ){ FILE_clk_c_y = COPY_clk_c_y ; };
+
+        //: mou -> upp: Mouse.UPP
+            if( COPY ){ COPY_upp_u_x = FILE_upp_u_x ; };
+            if( COPY ){ COPY_upp_u_y = FILE_upp_u_y ; };
+            if( LOAD ){ FILE_upp_u_x = COPY_upp_u_x ; };
+            if( LOAD ){ FILE_upp_u_y = COPY_upp_u_y ; };
+
+        //: mou -> dow: Mouse.DOWn
+            if( COPY ){ COPY_dow_d_x = FILE_dow_d_x ; };
+            if( COPY ){ COPY_dow_d_y = FILE_dow_d_y ; };
+            if( LOAD ){ FILE_dow_d_x = COPY_dow_d_x ; };
+            if( LOAD ){ FILE_dow_d_y = COPY_dow_d_y ; };
+        
+        //: mou -> iss: Mouse.ISS ( is in certain state? )
+            if( COPY ){ COPY_iss_m_d = FILE_iss_m_d ; };
+            if( COPY ){ COPY_iss_m_u = FILE_iss_m_u ; };
+            if( COPY ){ COPY_iss_m_c = FILE_iss_m_c ; };
+            if( COPY ){ COPY_iss_m_s = FILE_iss_m_s ; };
+
+            if( LOAD ){ FILE_iss_m_d = COPY_iss_m_d ; };
+            if( LOAD ){ FILE_iss_m_u = COPY_iss_m_u ; };
+            if( LOAD ){ FILE_iss_m_c = COPY_iss_m_c ; };
+            if( LOAD ){ FILE_iss_m_s = COPY_iss_m_s ; };
+        
+        //: mou.whe: Mouse.WHEel
+            if( COPY ){ COPY_whe_mwn = FILE_whe_mwn ; };
+            if( LOAD ){ FILE_whe_mwn = COPY_whe_mwn ; };
+
+            //:2NDARY_MOUSE_BUTTON_VARS:---------------------://
+            //:AKA:RIGHT_MOUSE_BUTTON:::---------------------://
+
+                if( COPY ){ COPY_pix_m2x = FILE_pix_m2x ; };
+                if( LOAD ){ FILE_pix_m2x = COPY_pix_m2x ; };
+                
+                if( COPY ){ COPY_pix_m2y = FILE_pix_m2y ; };
+                if( LOAD ){ FILE_pix_m2y = COPY_pix_m2y ; };
+                
+                if( COPY ){ COPY_dow_d2x = FILE_dow_d2x ; };
+                if( LOAD ){ FILE_dow_d2x = COPY_dow_d2x ; };
+                
+                if( COPY ){ COPY_dow_d2y = FILE_dow_d2y ; };
+                if( LOAD ){ FILE_dow_d2y = COPY_dow_d2y ; };
+                
+                if( COPY ){ COPY_iss_m2d = FILE_iss_m2d ; };
+                if( LOAD ){ FILE_iss_m2d = COPY_iss_m2d ; };
+                
+                if( COPY ){ COPY_iss_m2u = FILE_iss_m2u ; };
+                if( LOAD ){ FILE_iss_m2u = COPY_iss_m2u ; };
+                
+                if( COPY ){ COPY_iss_ds2 = FILE_iss_ds2 ; };
+                if( LOAD ){ FILE_iss_ds2 = COPY_iss_ds2 ; };
+
+            //:---------------------:::AKA:RIGHT_MOUSE_BUTTON://
+            //:---------------------:2NDARY_MOUSE_BUTTON_VARS://
+
+        //: ALIGNMENT_HACK:
+            if( COPY ){ COPY_hak_aln = FILE_hak_aln ; };
+            if( LOAD ){ FILE_hak_aln = COPY_hak_aln ; };
+
+        #undef  COPY  
+        #undef  LOAD  
+        //:END:INTERLACE_YOUR_DEFINES_TO_REDUCE_ERRORS:======://
+
+            //: GAME TICKER:
+                #undef  COPY_gam_tik //:(      mou -> gam_tik )
+                #undef  FILE_gam_tik //:( AAC2020_IMOUBOX_tik )
+                                     //:
+            //: EXPIRED ?            //:
+                #undef  COPY_iss_exp //:(      mou -> iss_exp )
+                #undef  FILE_iss_exp //:( AAC2020_IMOUBOX_exp )
+                                     //:
+            //: MOU_XY: (Mouse XY)   //:
+                                     //:
+                #undef  COPY_pix_m_x //:(      mou -> pix_m_x )
+                #undef  FILE_pix_m_x //:( AAC2020_IMOUBOX_m_x )
+                                     //:
+                #undef  COPY_pix_m_y //:(      mou -> pix_m_y )
+                #undef  FILE_pix_m_y //:( AAC2020_IMOUBOX_m_y )
+                                     //:
+            //: CLK_XY: (Click XY)   //:
+                                     //:
+                #undef  COPY_clk_c_x //:(      mou -> clk_c_x )
+                #undef  FILE_clk_c_x //:( AAC2020_IMOUBOX_c_x )
+                                     //:
+                #undef  COPY_clk_c_y //:(      mou -> clk_c_y )
+                #undef  FILE_clk_c_y //:( AAC2020_IMOUBOX_c_y )
+                                     //:
+            //: UPP_XY: (Up    XY)   //:
+                                     //:
+                #undef  COPY_upp_u_x //:(      mou -> upp_u_x )
+                #undef  FILE_upp_u_x //:( AAC2020_IMOUBOX_u_x )
+                                     //:
+                #undef  COPY_upp_u_y //:(      mou -> upp_u_y )
+                #undef  FILE_upp_u_y //:( AAC2020_IMOUBOX_u_y )
+                                     //:
+            //: DOW_XY: (Down  XY)   //:
+                                     //:
+                #undef  COPY_dow_d_x //:(      mou -> dow_d_x )
+                #undef  FILE_dow_d_x //:( AAC2020_IMOUBOX_d_x )
+                                     //:
+                #undef  COPY_dow_d_y //:(      mou -> dow_d_y )
+                #undef  FILE_dow_d_y //:( AAC2020_IMOUBOX_d_y )
+                                     //:
+            //: DUCS:                //:
+                #undef  COPY_iss_m_d //:(      mou -> iss_m_d ) 
+                #undef  FILE_iss_m_d //:( AAC2020_IMOUBOX_m_d )
+                                     //:                  
+                #undef  COPY_iss_m_u //:(      mou -> iss_m_u ) 
+                #undef  FILE_iss_m_u //:( AAC2020_IMOUBOX_m_u )
+                                     //:                  
+                #undef  COPY_iss_m_c //:(      mou -> iss_m_c ) 
+                #undef  FILE_iss_m_c //:( AAC2020_IMOUBOX_m_c )
+                                     //:                  
+                #undef  COPY_iss_m_s //:(      mou -> iss_m_s ) 
+                #undef  FILE_iss_m_s //:( AAC2020_IMOUBOX_m_s )
+                                     //:
+            //:MOUSE_WHEEL_NOTCHES:  //:
+                                     //:
+                #undef  COPY_whe_mwn //:(      mou -> whe_mwn )
+                #undef  FILE_whe_mwn //:( AAC2020_IMOUBOX_mwn )
+                                     //:
+            //:2NDARY_MOUSE_BUTTON_VARS:---------------------://
+            //:AKA:RIGHT_MOUSE_BUTTON:::---------------------://
+                                     //:
+                #undef  COPY_pix_m2x //:(      mou -> pix_m2x )
+                #undef  FILE_pix_m2x //:( AAC2020_IMOUBOX_m2x )
+                                     //:
+                #undef  COPY_pix_m2y //:(      mou -> pix_m2y )
+                #undef  FILE_pix_m2y //:( AAC2020_IMOUBOX_m2y )
+                                     //:
+                #undef  COPY_dow_d2x //:(      mou -> dow_d2x )
+                #undef  FILE_dow_d2x //:( AAC2020_IMOUBOX_d2x )
+                                     //:
+                #undef  COPY_dow_d2y //:(      mou -> dow_d2y )
+                #undef  FILE_dow_d2y //:( AAC2020_IMOUBOX_d2y )
+                                     //:
+                #undef  COPY_iss_m2d //:(      mou -> iss_m2d )
+                #undef  FILE_iss_m2d //:( AAC2020_IMOUBOX_m2d )
+                                     //:
+                #undef  COPY_iss_m2u //:(      mou -> iss_m2u )
+                #undef  FILE_iss_m2u //:( AAC2020_IMOUBOX_m2u )
+                                     //:
+                #undef  COPY_iss_ds2 //:(      mou -> iss_ds2 )
+                #undef  FILE_iss_ds2 //:( AAC2020_IMOUBOX_ds2 )
+                                     //:
+            //:---------------------:::AKA:RIGHT_MOUSE_BUTTON://
+            //:---------------------:2NDARY_MOUSE_BUTTON_VARS://
+            //:HACK_ALIGNMENT:       //:
+                #undef  COPY_hak_aln //:(      mou -> hak_aln )
+                #undef  FILE_hak_aln //:( AAC2020_IMOUBOX_aln )
+
+        //:END:INTERLACE_YOUR_DEFINES_TO_REDUCE_ERRORS:======://
+
+    }
+
+
+#undef  ERR      //:------------------------------------: 01 ://
+#undef  MOU      //:------------------------------------: 02 ://
+#undef  U08      //:------------------------------------: 03 ://
+#undef  U32      //:------------------------------------: 04 ://
+#undef  DEX_EDI  //:------------------------------------: 05 ://
+#undef  DEX_INI  //:------------------------------------: 06 ://
+//:====================================:MOUSE_STATE_COPY_LOAD://
+//:UNIT_TEST_SECTION:========================================://
+#define U08  uint8_t /** GCC: <stdint.h> **/          //: 01 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 02 ://
+#define I32  int32_t /** GCC: <stdint.h> **/          //: 03 ://
+#define MOU struct AAC2020_MOUTEMP                    //: 04 ://
+#define ERR aac2020_moutemp_Halt                      //: 05 ://
+#define LOG aac2020_moutemp_Info_any                  //: 06 ://
 
     U32
-    AAC2020_MOUTEMP_InitNone( U32 u32 ){
-        if( u32 ){ /** reserved for future use **/ };
+    AAC2020_MOUTEMP_UnitTest( U32 u32 )
+    {
+        if( u32 ){ /** NOOP **/ };
+
+        //:TEST_COPYLOAD_OF_MOUSE_STATE:---------------------://
+
+            I32 siz ;
+            I32 dex ;
+
+            MOU bak={ 0 }; //:FILE_SCOPE_VARIABLE_BACKUP
+            MOU m_1={ 0 }; //:LOAD_INTO_FILESCOPE_VAR : 1111 ://
+            MOU m_2={ 0 }; //:COPY_FROM_FILESCOPE_VAR : 0000 ://
+
+            //:BACKUP_OR_RESTORE:----------------------------://
+            AAC2020_MOUTEMP_CopyIfTrue_LoadIfFalse( 
+                &(bak), 1 /** CREATE BACKUP BY COPYING **/ 
+            );;
+            //:----------------------------:BACKUP_OR_RESTORE://
+            //:MAIN_TEST_CODE:-------------------------------://
+            /** ******************************************** ***
+            @VID_IID[ 0163 ]TIME[ 04:29:42 ]SUMMARY_WRITING
+            @VID_IID[ 0163 ]TIME[ 04:34:23 ]SUMMARY_DONE
+
+            To make absolutely sure the [copy/load] code 
+            works correctly. We will binary 1 fill a
+            temporary ( MOUTEMP ) object and load it into
+            the FILESCOPE ( IMOUBOX ) vars. Then we will
+            COPY the FILESCOPE ( IMOUBOX ) vars down into
+            a DIFFERENT temporary ( MOUTEMP ) object.
+            If all goes correctly, then both temporary
+            objects will be zero filled.
+
+            We will need to add PADDING to the struct for 
+            this to work. And create dummy padding FILESCOPE
+            variables that are also copied for this to work...
+            
+            This... Kinda sucks. But... I've never done
+            this stuff before... So let's see it through
+            and see what happens.
+            *** ******************************************** **/
+
+                siz=( sizeof( MOU ) ); /**SizeInBytes**/
+                for( dex = 0 ; dex <= (siz-1) ; dex++ ){
+
+                    /** ONE FILL m_1 **/
+                    (((U08*)( &(m_1) ))[ dex ])=((U08)0xFF);
+                };;
+
+                //:Load 1 filled object into FILESCOPE data:
+                AAC2020_MOUTEMP_CopyIfTrue_LoadIfFalse(
+                    &(m_1), 0 //:<-- LOAD_INTO_FILE
+                );;
+
+                //:Copy what __SHOULD__ now be 1-filled
+                //:FILESCOPE variables into different temp
+                //:object.
+                AAC2020_MOUTEMP_CopyIfTrue_LoadIfFalse(
+                    &(m_2), 1 //:<-- COPY_FROM_FILE
+                );;
+
+                //[ IF_THIS_FAILS_WE_WILL_JUST_HAVE_TO_CHECK ]//
+                //[ EVERY_VARIABLE_ONE_BY_ONE_AND_HOPE_WE    ]//
+                //[ KEEP_THAT_CODE_UP_TO_DATE                ]//
+
+                //:m_1 & m_2 should now be 1 filled.
+                for( dex = 0 ; dex <= (siz-1) ; dex++ ){
+                    if( 0xFF != (((U08*)( &(m_1) ))[ dex ]) ){
+                        ERR("[COPYLOAD_FAILED:REALLY_BAD:m_1]");
+                    };;
+                };;
+                for( dex = 0 ; dex <= (siz-1) ; dex++ ){
+                    if( 0xFF != (((U08*)( &(m_2) ))[ dex ]) ){
+                        
+                        printf("[...:dex]:%d\n", dex );
+                        ERR("[COPYLOAD_FAILED:----------:m_2]");
+                    };;
+                };;
+                for( dex = 0 ; dex <= (siz-1) ; dex++ ){
+                    if(  (((U08*)( &(m_1) ))[ dex ]) 
+                    !=   (((U08*)( &(m_2) ))[ dex ]) 
+                    ){
+                        ERR("[NOW_THAT_IS_FUCKING_WEIRD]");
+                    };;
+                };;
+
+            //:-------------------------------:MAIN_TEST_CODE://
+            //:BACKUP_OR_RESTORE:----------------------------://
+            AAC2020_MOUTEMP_CopyIfTrue_LoadIfFalse( 
+                &(bak), 0 /** RESTORE BACKUP BY LOADING **/ 
+            );;
+            //:----------------------------:BACKUP_OR_RESTORE://
+
+        //:---------------------:TEST_COPYLOAD_OF_MOUSE_STATE://
+
         return( 0x00 );
     }
 
-#undef  U32
-//:================================================:INIT_NONE://
+#undef  U08  //:----------------------------------------: 01 ://
+#undef  U32  //:----------------------------------------: 02 ://
+#undef  I32  //:----------------------------------------: 03 ://
+#undef  MOU  //:----------------------------------------: 04 ://
+#undef  ERR  //:----------------------------------------: 05 ://
+#undef  LOG  //:----------------------------------------: 06 ://
+//:========================================:UNIT_TEST_SECTION://

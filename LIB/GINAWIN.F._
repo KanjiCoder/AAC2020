@@ -486,8 +486,8 @@
         //:===================:ASSERT_SATED_FUNCTION_POINTERS://
         //:MUST_BE_BEFORE_SWITCH:============================://
 
-            
-            AAC2020_IMOUBOX_gam_tik =( 
+            //:PREVIOUSLY_KNOWN_AS[ AAC2020_IMOUBOX_gam_tik ]
+            AAC2020_IMOUBOX_tik =( 
                 AAC2020_GAMTICK_gam_tik    //+ YES: GAMETICK +//
             //- AAC2020_GAMTIME_gam_tik -////- NOT: GAMETIME -//
             );
@@ -617,6 +617,19 @@
             //-   );;                                        -//
         }
         };; //:---------------------------------------:SWITCH://
+        //:AFTER_THE_SWTICH:---------------------------------://
+
+            if( AAC2020_IMOUBOX_m2d >  0 ){ //:MOUSE_2_IS_DOWN
+            if( AAC2020_IMOUBOX_ds2 <= 0 ){ //:NOT___DRAGSTART
+
+                //:Keep track of number of frames
+                //:we have been dragging for.
+                (AAC2020_IMOUBOX_m2d++);
+
+            };;};;
+           
+
+        //:------------------------------:
         
         //:#_I_THINK_MUST_ALWAYS_CALL_DEFWINPROC_#://
         return_this_result=(                                 

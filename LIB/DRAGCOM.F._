@@ -44,3 +44,184 @@
 #undef  U32  //:----------------------------------------: 02 ://
 #undef  P_F  //:----------------------------------------: 03 ://
 //:===========================:AAC2020_SUBLIBRARY_BOILERPLATE://
+//:DRAGGING_COMMON_CODE:=====================================://
+#define U08  uint8_t /** GCC: <stdint.h> **/          //: 01 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 02 ://
+#define I32  int32_t /** GCC: <stdint.h> **/          //: 03 ://
+#define F32    float                                  //: 04 ://
+
+    void
+    AAC2020_DRAGCOM_Drag(
+        U08 DEX_TAU_000_015 //:EX[ AAC2020_TAUDEPO.TAU_015 ]
+    ,   U08 DEX_SUB_000_015 //:EX[ AAC2020_TAUDEPO.PAINT5D ]
+    
+    //: THREE[ DEX_VAR_000_255 ]VALUES:
+    ,   U08 LOC_VD1 //: #1: EXAMPLE[ AAC2020_TAUDEPO.P5D_VD1 ]
+    ,   U08 LOC_VP1 //: #2: EXAMPLE[ AAC2020_TAUDEPO.P5D_VP1 ]
+    ,   U08 LOC_VP0 //: #3: EXAMPLE[ AAC2020_TAUDEPO.P5D_VP0 ]
+
+    //: INITIAL MOUSE DOWN POSITION:
+    ,   I32 d2x
+    ,   I32 d2y
+
+    //: CURRENT MOUSE DOWN POSITION:
+    ,   I32 m2x
+    ,   I32 m2y
+
+    ,   I32 rec_bou //:<--[ max_window_size / rect_bounds ]
+    )
+    {
+        //:Declare_Variables:--------------------------------://
+
+            U32 x_0;
+            U32 x_1;
+            U32 y_0;
+            U32 y_1;
+
+        //:--------------------------------:Declare_Variables://
+        //:GET_SIZE_OF_ON_SCREEN_VIEWPORT:-------------------://
+
+            AAC2020_TAUDEPO_Get( 
+                DEX_TAU_000_015 //:EX[ AAC2020_TAUDEPO.TAU_015 ]
+            ,   DEX_SUB_000_015 //:EX[ AAC2020_TAUDEPO.PAINT5D ]
+            ,           LOC_VP0 //:EX[ AAC2020_TAUDEPO.P5D_VP0 ]
+            ,  &(x_0),&(x_1),&(y_0),&(y_1)
+            );;
+
+            U32 vp0_wid=( x_1 - x_0 + 1 );
+            U32 vp0_hig=( y_1 - y_0 + 1 );
+            //:assert( vp0_wid == vp0_hig );
+            //:I32 vp0_san=( (I32)( vp0_wid | vp0_hig ) );
+
+        //:-------------------:GET_SIZE_OF_ON_SCREEN_VIEWPORT://
+        //:CAM_STATE_AT_TIME_OF_MOUSE_DOWN:------------------://
+
+            AAC2020_TAUDEPO_Get( 
+                DEX_TAU_000_015 //:EX[ AAC2020_TAUDEPO.TAU_015 ]
+            ,   DEX_SUB_000_015 //:EX[ AAC2020_TAUDEPO.PAINT5D ]
+            ,           LOC_VD1 //:EX[ AAC2020_TAUDEPO.P5D_VD1 ]
+            ,  &(x_0),&(x_1),&(y_0),&(y_1)
+            );;
+
+        //:------------------:CAM_STATE_AT_TIME_OF_MOUSE_DOWN://
+        //:LOAD_SAVED_CAMERA:--------------------------------://
+
+            AAC2020_TAUDEPO_Put( 
+                DEX_TAU_000_015 //:EX[ AAC2020_TAUDEPO.TAU_015 ]
+            ,   DEX_SUB_000_015 //:EX[ AAC2020_TAUDEPO.PAINT5D ]
+            ,           LOC_VP1 //:EX[ AAC2020_TAUDEPO.P5D_VP1 ]
+            ,   (x_0), (x_1), (y_0), (y_1)
+            );;
+
+        //:--------------------------------:LOAD_SAVED_CAMERA://
+        //:APPLY_DRAG_VECTOR_TO_CAMERA:----------------------://
+
+            U32 wid=( x_1 - x_0 + 1 );
+            U32 hig=( y_1 - y_0 + 1 );
+            assert( wid == hig );
+            I32 cam_san=((I32)( wid | hig ));
+
+            /**@VID_IID[ 0164 ]TIME[ 00:47:00 ] *********** **/
+            //:EXAMP(   256   /    2    )== LARGE NUMBER(128)
+            //:EXAMP(   256   /   256   )== SMALL_NUMBER( 1 )
+            F32 ppp=(  //:ppp:pixels_per_pebble
+                ((F32)rec_bou) 
+            /   ((F32)cam_san)
+            );;
+
+            //+----------------------------------------------+//
+            //|      @VID_IID[ 0164 ]TIME[ 01:27:42 ]        |//
+            //|      If on-screen pixel is HUGE... We        |//
+            //|      need a LARGER raw pixel delta           |//
+            //|      before the[ LOC_VP1 ]Data_Camera_Rect   |//
+            //|      will move by one pixel.                 |//
+            //|                                              |//
+            //|      In other words, we need to collect      |//
+            //|      one screenp_pixel_size's worth of       |//
+            //|      pixels before we can translate the      |//
+            //|      camera by 1 unit.                       |//
+            //|                                              |//
+            //|      |<-- BIG:spx -->|                       |//
+            //|      +---------------+                       |//
+            //|      |               |                       |//
+            //|      |               |                       |//
+            //|      |  SCREEN_PIXEL |                       |//
+            //|      |               |                       |//
+            //|      |               |                       |//
+            //|      |            [A]<----"A": Actual Pixel  |//
+            //|      +---------------+        (FragmentSize) |//
+            //|                                              |//
+            //+----------------------------------------------+//
+            //:NUMBER_OF_FRAGMENTS_IN_SCREEN_PIXEL:==========://
+
+                //: spx: Num frags in screen pixel, X-axis.  ://
+                //: spy: Num frags in screen pixel, Y-axis.  ://
+
+                F32 spx=( /** sps: screen_pixel_size: X **/
+                    ((F32)vp0_wid) //:<--On_Screen_Viewport
+                /   ((F32)rec_bou) //:<--Canvas_User_View:WID
+                );;
+                F32 spy=( /** sps: screen_pixel_size: Y **/
+                    ((F32)vp0_hig) //:<--On_Screen_Viewport
+                /   ((F32)rec_bou) //:<--Canvas_User_View:HIG
+                );;
+            
+            //:===========NUMBER_OF_FRAGMENTS_IN_SCREEN_PIXEL://
+            //:CLICK_VECTOR_MEASURED_IN_FRAGS:===============://
+
+                I32 d2x_ATO_m2x = ( m2x - d2x );
+                I32 d2y_ATO_m2y = ( m2y - d2y );
+
+            //:===============:CLICK_VECTOR_MEASURED_IN_FRAGS://
+            //:CALC_OFFSCREEN_DATA_RECT_TRANSLATE:===========://
+            /** ******************************************** ***
+                @VID_IID[ 0164 ]TIME[ 01:42:42 ]
+
+                VP1:Viewport_One(1): 
+                (Offscreen/Source/TileMapDataBitmap Viewport)
+
+                VP1 is offscreen viewport because their could
+                    be other offscreen viewports in future
+                    with higher numbers. But there is only
+                    ONE onscreen(DEST)viewport. So we numbered
+                    [onscreen/dest] viewport VP0.
+            *** ******************************************** **/
+
+                I32 tra_i_x=((I32)( 
+                    ((F32)d2x_ATO_m2x)   / spx / ppp   
+                    //: FRAGS / 
+                    //:     frags_per_screen_pixel      
+                    //:             / pixels_per_pebble
+                ));;
+                I32 tra_i_y=((I32)( 
+                    ((F32)d2y_ATO_m2y) / spy / ppp   
+                    //: FRAGS / 
+                    //:     frags_per_screen_pixel      
+                    //:             / pixels_per_pebble
+                ));;
+            
+            //:===========:CALC_OFFSCREEN_DATA_RECT_TRANSLATE://
+            //:APPLY_CAMERA_PAN:=============================://
+
+                //[ TAUDEPO == AAC2020_TAUDEPO ]//
+
+                aac2020_tautype_rec_inc_Tran(
+                    DEX_TAU_000_015 //:EX[ TAUDEPO.TAU_015 ]
+                ,   DEX_SUB_000_015 //:EX[ TAUDEPO.PAINT5D ]
+                ,           LOC_VP1 //:EX[ TAUDEPO.P5D_VP1 ]
+                ,     ( 0 - (tra_i_x) )
+                ,     ( 0 - (tra_i_y) )
+                ,            rec_bou
+                );;
+
+            //:=============================:APPLY_CAMERA_PAN://
+
+        //:----------------------:APPLY_DRAG_VECTOR_TO_CAMERA://
+
+    }
+
+#undef  U08  //:----------------------------------------: 01 ://
+#undef  U32  //:----------------------------------------: 02 ://
+#undef  I32  //:----------------------------------------: 03 ://
+#undef  F32  //:----------------------------------------: 04 ://
+//:=====================================:DRAGGING_COMMON_CODE://

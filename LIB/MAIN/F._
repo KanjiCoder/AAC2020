@@ -61,120 +61,7 @@
 #define DEX_INI  (AAC2020_CEDITOR_dex_ini+0)          //: 04 ://
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-    //:FUNC:ActiveEditorReadMouse:- - - - - - - - - - - - - -://
-    #if( AAC2020_INCLUDE_MOUTEMP >= 1 ) //:##################://
-    #define MOU struct AAC2020_MOUTEMP  //:111111111111111111://
 
-        U32
-        AAC2020_HandleInput_Mouse_ActiveEditorReadMouse(
-            MOU* mou
-        )
-        {
-            if( ((MOU*)0) == mou ){
-                ERR("[NULL_MOUSE_TEMP_OBJECT_GIVEN_YEAR_2021]");
-            };;
-            
-            #if( AAC2020_INCLUDE_PAINT5D <= 0 ) //:##########://
-            
-                /** @VID_IID[ 0162 ]TIME[ 00:49:13 ] ******* **/
-                /** PAINT5D is the first[ EDITOR ]that uses  **/
-                /** mouse input. Thus if NOT INCLUDED....... **/
-                /**                                          **/
-                /** No System exists that uses our temporary **/
-                /** mouse input struct. .................... **/
-                /** **************************************** **/
-            
-                if( mou != ((void*)0) ){ /** NOOP **/ };
-            
-            #endif //:#######################################://
-            #if( AAC2020_INCLUDE_PAINT5D ) //:#-#-#-#-#-#-#-#://
-            if( DEX_EDI == AAC2020_CEDITOR_paint5d ){
-            if( DEX_INI == AAC2020_CEDITOR_paint5d ){
-            
-                //:IS_BEING_CALLED. CONFIRMED! GOOD!
-                aac2020_paint5d_MouInn( mou );
-            
-            };;};;
-            #endif //:#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#://
-
-            return( 0x00 );
-        }
-
-    #undef MOU  //:------------------:////:111111111111111111://
-    #endif //: AAC2020_INCLUDE_MOUTEMP  //:##################://
-    //:- - - - - - - - - - - - - -:FUNC:ActiveEditorReadMouse://
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-    U32 
-    AAC2020_HandleInput_Mouse( U32 u32 )
-    {
-
-        if( u32 ){ /** RESERVED FOR FUTURE USE **/ };
-
-        if( AAC2020_IMOUBOX_exp >= 1 ){
-            //- return                                       -//
-            //+ Dont do this. There may be reasons an update +//
-            //+ function does not care that the object is    +//
-            //+ expired. Like using the last known valid     +//
-            //+ state of the mouse cursor to keep rendering  +//
-            //+ an icon in a given position.                 +//
-            //+ @VID_IID[ 0155 ]TIME[ 02:37:32 ] +++++++++++ +//
-        };;
-
-        //:If MOUTEMP does not exist yet, then no systems
-        //:that take mouse input should exist either.
-        #if( AAC2020_INCLUDE_MOUTEMP >= 1 ) //:##############://
-        #define MOU struct AAC2020_MOUTEMP
-
-            MOU mou ={ 0 };
-
-            //: mou.exp: Mouse.EXPired ?
-                mou.iss_exp  =  AAC2020_IMOUBOX_exp ;
-
-            //: mou.pix: Mouse.PIXel
-                mou.pix_m_x  =  AAC2020_IMOUBOX_m_x ;
-                mou.pix_m_y  =  AAC2020_IMOUBOX_m_y ;
-            
-            //: mou.clk: Mouse.CLicK
-                mou.clk_c_x  =  AAC2020_IMOUBOX_c_x ;
-                mou.clk_c_y  =  AAC2020_IMOUBOX_c_y ;
-                       
-            //: mou.upp: Mouse.UPP
-                mou.upp_u_x  =  AAC2020_IMOUBOX_u_x ;
-                mou.upp_u_y  =  AAC2020_IMOUBOX_u_y ;
-                              
-            //: mou.dow: Mouse.DOWn
-                mou.dow_d_x  =  AAC2020_IMOUBOX_d_x ;
-                mou.dow_d_y  =  AAC2020_IMOUBOX_d_y ;
-          
-            //: mou.iss: Mouse.ISS ( is in certain state? )
-                mou.iss_m_d  =  AAC2020_IMOUBOX_m_d ;
-                mou.iss_m_u  =  AAC2020_IMOUBOX_m_u ;
-                mou.iss_m_c  =  AAC2020_IMOUBOX_m_c ;
-                mou.iss_m_s  =  AAC2020_IMOUBOX_m_s ;
-
-            //: mou.whe: Mouse.WHEel
-                mou.whe_mwn  =  AAC2020_IMOUBOX_mwn ;
-
-            /** Only Active Editor Will Look At Mouse. **/
-            AAC2020_HandleInput_Mouse_ActiveEditorReadMouse(
-                &( mou )
-            );;
-
-
-        #undef  MOU
-        #endif //:###########################################://
-        #if( AAC2020_INCLUDE_IMOUBOX >= 1 ) //:##############://
-
-            //:EXPIRE OBJECT AFTER USE TO AVOID RE_USE
-            //:OF_THE_SAME_STATE:
-            AAC2020_IMOUBOX_exp=( 1 );
-
-        #endif //:###########################################://
-
-        return( 0x00 );
-    }
-
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
     U32
     AAC2020_HandleInput( U32 u32 ){
@@ -303,6 +190,8 @@
 
         //:========================:BATCHED_KEYBOARD_HANDLERS://
         //:MOUSE_INPUT:======================================://
+        #if( AAC2020_INCLUDE_MOUTEMP >= 1 ) //:##############://
+        #define MOU struct AAC2020_MOUTEMP
         /** ************************************************ ***
         @VID_IID[ 0152 ]TIME[ 00:51:55 ]DATE[ 2021_02_23 ]
 
@@ -318,9 +207,14 @@
         could be the problem.
         *** ************************************************ **/
 
-            AAC2020_HandleInput_Mouse( u32 );
+        MOU* mou = &( AAC2020_AACMAIN_Mou );
+        AAC2020_AACMAIN_CopyGlobals_Mouse( mou ); //:INSTANTIATE 
+        AAC2020_AACMAIN_HandleInput_Mouse( mou );
+        AAC2020_AACMAIN_UnspamInput_Mouse( mou );
+        AAC2020_AACMAIN_LoadGlobals_Mouse( mou ); //:PERSIST
 
-
+        #undef  MOU
+        #endif //:AAC2020_INCLUDE_MOUTEMP:###################://
         //:======================================:MOUSE_INPUT://
 
         return( 0x00 );
@@ -490,6 +384,15 @@
             FMACROS_P5D1OGL_InitNone( 0 ); //:  48  # LIBCHAN://
             #undef  X
         #endif //:- - - - - - - - - - - - - - - - - - - - - -://
+        //:TOP_LEVEL_INITIALIZER_ALWAYS_LAST:================://
+
+         //-FMACROS_AACMAIN_InitNone( 0 ):<<< NO MACRO! ---- -//
+         //-AAC2020_AACMAIN_InitNone( 0 ):<<< WRONG NAME! -- -//
+         //-FMACROS_AACMAIN_Init(     X ):<<< NO MACRO! ---- -//
+         //-AAC2020_AACMAIN_Init(     X ):<<< WRONG NAME! -- -//
+            AAC2020_AACMAIN_InitFinal( 0 );
+
+        //:================:TOP_LEVEL_INITIALIZER_ALWAYS_LAST://
         #if( AAC2020_INCLUDE_GINAWIN >= 1 )  //:- - - - - - -://
 
             
