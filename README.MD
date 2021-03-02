@@ -1343,6 +1343,29 @@
     //:============================================:ITS_WRONG://
     //:LIBCHAN_AND_LIBCHAN_DIAGRAM:==========================://
 
+        +------------+
+        | 1: SILENCE |
+        | 2: KILTEST |
+        | 3: REENUTR |
+        | 4: TODOMAN |
+        +------------+
+        
+         GAMTICK 
+
+         CEDITOR
+         
+                  +-------+---+++++++---+
+                  |FILEBOI| 1 ||||||| 2 |
+                  +-------+-^-+++++++-^-+
+                            ^         ^
+                      +-----^-+ +-----^-+
+                      |PHEXDUM| |NATIDUI|
+                      +-----^-+ +-------+
+                            ^
+                      +-----^-+
+                      |HARDASS|
+                      +-------+
+        
         +-----------------------------------------------+
         | Native functions  (NATIKEY,NATIMOU) included  |
         | BEFORE containers (IKEYBOX,IMOUBOX) so that   |
@@ -1356,19 +1379,252 @@
         | | * : NATIMOU | |
         | +-^-----------+ |
         |   ^             |
-        | +-^-----------+ |
-        | | * : IKEYBOX | |
-        | | * : IMOUBOX | |
-        | +-------------+ |
-        +-----------------+
-
-        +-------------+
-        | 1 : GINAMOU | GINAWIN's [MOU]se handler code.
-        +-------------+
-        | 2 : GINAWIN | Graphics_Init_And_WINdow
-        +-------------+
-
-
+        | +-^-----------+ |   
+        | | * : IKEYBOX <<<<<<<+--------------------------+
+        | | * : IMOUBOX | |    | +---------+  +---------+ |
+        | +-------------+ |    | | KEYBIND |  | IKEYLIS | |
+        +-----------------+    | +---------+  | IKEYCMD | |
+                               |              +---------+ |
+                               +--------------------------+
+        
+        
+        
+        
+        [WIN32_NATIVE_WINDOW]------------------------------+
+        |  +-------------+                                 |
+        |  | 1 : GINAMOU | GINAWIN's [MOU]se handler code. |
+        |  +-------------+                                 |
+        |  | 2 : GINAWIN | Graphics_Init_And_WINdow        |
+        |  +-------------+                                 |
+        +--------------------------------------------------+
+        
+        [OPENGL:NOT_SETUP]--------------+
+        | 1:GLEBIND : BINDINGS  (FUNCS) |
+        | 2:GLCONST : CONSTANTS (DATA ) |
+        +-------------------------------+
+        
+            
+        +----------------------------+
+        |WINDOW_SIZE & MOUSE_POSITION|
+        +-------++++++++++++++-------+
+        |IMOUBOX||||||||||||||GINAWIN|
+        +-------++++++++++++++-------+ 
+        |                            |
+        +----------------------------+
+        | 1 |
+        +-^-+
+          ^
+        +-^-----+ 
+        |CPUNIFO|
+        +---^---+
+            ^  
+        +---^---+
+        |GRAQUAD|   
+        +---^---+
+            ^
+        +---^---+
+        |FRAGBED|   
+        +-------+
+        
+            +-------+---+---+---+---+---+---+
+            |PIXNAME| 1 | 2 | 3 | 4 | 5 | 6 |
+            +-------+-^-+-^-+-^-+-^-+-^-+-^-+
+                      ^   ^   ^   ^   ^   ^
+                +-----^-+ ^   ^   ^   ^   ^
+                |PIXSAVE|-^-+ ^   ^   ^   ^
+                +---|PIXBACK|-^-+ ^   ^   ^
+                    +---|GPUDATA|-^-+ ^   ^
+                        +---|PIXPUSH|-^-+ ^
+                            +---|PIXLOAD|-^-+
+                                +---|DUMPASS| 
+                                    +-------+
+                                    
+            +------------------------------------+
+            |GENTCOM : GENerateTile:COMmon(code) |
+            +-------------+----------------------+
+            | * : GENTDOW : DOWNscale algorithm  |
+            | * : GENTUPP :  UPPscale algorithm  |
+            +-------------+----------------------+
+            
+            +----------------------------------------+
+            |POLYOGL:POLYfills_OpenGL.(CPU-side GLSL)|
+            +-------+-----------+--------------------+
+            |POLYOGL| 1 | 2 | 3 |                    |
+            +-------+-^---^-----+--------------------+
+                      ^   ^
+                +-----^-+ ^   
+                |FRAGCOM| ^   
+                +-----^-+ ^   
+                      ^   ^
+                      ^   ^
+                  +---^---^--------------------------------+
+                  [ EDITOR_SHADERS ::::::::::::::::::::::: |
+                  [ Order doesn't matter strictly, but     |
+                  [ should be in the order associated with |
+                  [ it's number key on keyboard.           |
+                  | +---+-------+                          |
+                  | | 0 |GPUVIEW|>>> PIXNAME_taudepo       |
+                  | +---+-------+    PIXNAME_******* (ANY) |
+                  | +---+-------+                          |
+                  | | 1 |P5D1OGL|>>> PIXNAME_paint5d       |
+                  | +---+-------+                          |
+                  |                                        |
+                  | Any system in this group can           |
+                  | directly reference:                    |
+                  | 1: POLYOGL                             |
+                  | 2: FRAGCOM                             |
+                  +----------------------------------------+
+                  
+                  +----------------------------------------+
+                  [ TAU:Texture_As_Uniform:                |
+                  [ Storing GLSL uniforms using a 512x512  |
+                  [ block of memory known as "taudepo"     |
+                  +----------------------------------------+
+                  | 1 : TAUDIRT : Dirty Flags "Quad"tree   |
+                  | 2 : TAUDEPO : Var Locations On Texture |
+                  | 3 : TAUTYPE : Treat Pixels As Types    |
+                  | 4 : TAUSYNC : CPU<==>GPU Synchronize   |
+                  +----------------------------------------+
+                  | TAUTYPE comes BEFORE TAUSYNC so that   |
+                  | TAUTYPE variables are not allowed to   |
+                  | synchronize with GPU on a granular     |
+                  | level. Sync all edited [GPU<==>CPU]    |
+                  | variables once per frame.              |
+                  +----------------------------------------+
+                
+                    
+        [ COMMON_EDITOR_INPUT_TRANSFORMATION_FUNCTIONS ]-------+
+        |                                                      |
+        | +-------------+                                      |
+        | | * : ZOOMCOM |<< Zoom  Functions For Editor Controls|
+        | +-------------+                                      |
+        | +-------------+                                      |
+        | | * : DRAGCOM |<< Drag  Functions For Editor Controls|
+        | +-------------+                                      |
+        | +-------------+                                      |
+        | | * : CLICKOM |<< Click Functions For Editor Controls|
+        | +-------------+                                      |
+        +-^----------------------------------------------------+
+          ^
+        +-^----------------------------------------------------+
+        | EDITOR Camera Functions:                             |
+        | There are TWO styles of editor cameras:              |
+        | 1. EDITCAM: Camera behaves like EDITOR               |
+        | 2. GAMECAM: Camera behaves like GAME                 |
+        |                                                      |
+        | AAC2020 is EDITOR-Centric. Meaning in-game action    |
+        | is still technically an "EDITOR". But it is an       |
+        | editor designed for gameplay instead of asset        |
+        | creation. Alternatively, gameplay may be inside      |
+        | an asset creation editor where the controls have     |
+        | been put into a "gameplay" scheme rather than        |
+        | an "editor" scheme.                                  |
+        +------------------------------------------------------+
+        | +-------------+                                      |
+        | | * : EDITCAM | EDITOR---like input transformations. |  
+        | +-------------+          FUNCTIONS_ONLY, __NO__DATA__|    
+        | +-------------+                                      |
+        | | * : GAMECAM | GAMEPLAY-like input transformations. |  
+        | +-------------+          FUNCTIONS_ONLY, __NO__DATA__|
+        +------------------------------------------------------+
+        
+        +-------------------------------------+
+        | MOUSE_STATE + CURRENT(ACTIVE)EDITOR |
+        +-----------+---------------+---------+
+        | +-------+ |               |         |
+        | |IMOUBOX| |               |         |
+        | +---^---+ |               |         |
+        |     ^     |[[[[[[ + ]]]]]]| CEDITOR |
+        | +---^---+ |               |         |
+        | |MOUTEMP| |               |         |
+        | +---^---+ |               |         |
+        +-----------+-------^-------+---------+
+                            ^
+                            ^
+        +-------------------^-----------------+
+        | AACMAIN : Main Input Handler        |
+        +-------------------------------------+
+        |  Called in system dependency order: |
+        |                                     |
+        |  1: PAINT5D.<MOUSE_INPUT_HANDLER>   |
+        |                                     |
+        +-------------------------------------+
+        
+        #PATTERN_BREAKERS#:----------------------------------+
+        |                                                    |
+        |   1. PAINT5D system is broken into:                |
+        |       A: PAINT5D (CPU side code)                   |
+        |       B: P5D1OGL (GPU side code)                   |
+        |       In retrospect, should have just created a    |
+        |       "PAINT5D.FRA._" file instead for where to    |
+        |       put PAINT5D fragment shader code.            |
+        +----------------------------------------------------+
+        
+        //:DENSE_DEPENDENCY_GRAPH:---------------------------://
+        
+            Some systems may appear in multiple groups.
+            
+            Lower Lettered groups must be included before
+            higher lettered groups.
+            
+            Systems that occur in more than one group use the
+            ordering of their LOWEST lettered group when
+            solving the dependency graph in[ AAC2020.C11 ]
+            and[ LIBCHAN.TOP._ + LIBCHAN.BOT._ ].
+            
+            LETTERS(AZ): Groups
+            NUMBERS(##): Order Matters Within Group
+            STARS(  **): __ANY__ Order Within Group
+            UPP: Upstream Dependency
+        
+            _A.01:SILENCE  _B.01:FILEBOI  _C.**:NATIKEY
+            _A.02:KILTEST  _B.02:PHEXDUM  _C.**:NATIMOU
+            _A.03:REENUTR  _B.03:HARDASS  _D.**:IKEYBOX
+            _A.04:TODOMAN                 _D.**:IMOUBOX
+            
+            _E.**:KEYBIND  _F.01:IKEYLIS  _G.**:CEDITOR
+                           _F.02:IKEYCMD
+                
+            _H.01:GINAMOU <<< _L:MOUTEM   _J.01:GLEBIND
+            _H.02:GINAWIN     _I:NATDUI   _J.02:GLCONST
+            
+            +---------------+ +------------------+
+            |   UPP:KEYBIND | |      UPP:FILEBOI |
+            +---------------+ +------------------+ 
+            | _K.01:CPUINFO | | _M.01.--.PIXNAME | 
+            | _K.02:GRAQUAD | | _M.02.**.PIXSAVE | 
+            | _K.03:FRAGBED | | _M.02.**.PIXBACK |
+            +---------------+ | _M.03.01.GPUDATA |
+            +---------------+ | _M.03.**.PIXPUSH |
+            |   UPP:FILEBOI | | _M.03.**.PIXLOAD |
+            |   UPP:PIXNAME | +------------------+
+            +---------------+ +---------------+
+            | _N.01:HARDASS | |   UPP:PIXNAME |
+            | _N.02:DUMPASS | +---------------+
+            +---------------+ | _P.01:POLYOGL |
+            +---------------+ | _P.**:FRAGCOM |
+            |   UPP:PIXNAME | +---------------+
+            +---------------+ +---------------+
+            | _O.01:GENTCOM | |   UPP:PIXNAME |
+            | _O.**:GENTDOW | +---------------+
+            | _O.**:GENTUPP | | _Q.01:GPUWIRE |
+            +---------------+ | _Q.02:GPUVIEW |
+            +---------------+ +---------------+
+            |   UPP:PIXNAME | +---------------+
+            +---------------+ |   UPP:<NONE!> |
+            | _R.01:TAUDIRT | +---------------+
+            | _R.02:TAUDEPO | | _S.**:ZOOMCOM |
+            | _R.03:TAUTYPE | | _S.**:DRAGCOM |
+            | _R.04:TAUSYNC | | _S.**:CLICKOM |
+            +---------------+ +---------------+
+            +---------------+ +---------------+
+            |    UPP:[ _S ] | |   UPP:PIXNAME |
+            +---------------+ +---------------+
+            | _T.**:EDITCAM | | _U.01:PAINT5D |
+            | _T.**:GAMECAM | | _U.02:P5D1OGL |
+            +---------------+ +---------------+
+            
+        //:---------------------------:DENSE_DEPENDENCY_GRAPH://
 
     //:==========================:LIBCHAN_AND_LIBCHAN_DIAGRAM://
     
