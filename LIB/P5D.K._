@@ -1,0 +1,354 @@
+//:KEYBOARD_HANDLER:(KeyInn):================================://
+#define             I32  int32_t /**GCC: <stdint.h>**///: 01 ://
+#define             U32 uint32_t /**GCC: <stdint.h>**///: 02 ://
+#define DEX_EDI_paint5d ( 1 )                         //: 03 ://
+#define         KEY_P5D ( AAC2020_KEYBIND.PAINT5D )   //: 04 ://
+#define             LOG   aac2020_paint5d_Info_any    //: 05 ://
+#define             ERR   aac2020_paint5d_Halt        //: 06 ://
+#define         LOG_VPC   aac2020_paint5d_Info_VPC    //: 07 ://
+#define         LOG_VP0   aac2020_paint5d_Info_VP0    //: 08 ://
+#define         LOG_VP1   aac2020_paint5d_Info_VP1    //: 09 ://
+
+    /** ************************************************ **/  
+    /** P5D.K._ : PAINT5D.F.KeyInn / PAINT5D.F.KeyBoard  **/
+    /** ************************************************ **/
+    
+    I32
+    aac2020_paint5d_KeyInn( signed char chr_key )
+    {
+        I32 res_var =( 0 );
+
+        //:DEBUG_VARIABLE_TEST:------------------------------://
+        #define PUT AAC2020_TAUDEPO_Put
+        #define TAU AAC2020_TAUDEPO.TAU_015
+        #define SUB AAC2020_TAUDEPO.PAINT5D
+        #define D_1 AAC2020_TAUDEPO.P5D_D_1
+        #define D_2 AAC2020_TAUDEPO.P5D_D_2
+        #define D_3 AAC2020_TAUDEPO.P5D_D_3
+        #define D_4 AAC2020_TAUDEPO.P5D_D_4
+        #define INN x_0,x_1,y_0,y_1
+
+            if( (0+chr_key) == KEY_P5D.p5d_bug ){
+
+                /** @VID_IID[ 0135 ]TIME[ 01:33:50 ]         **/
+                /** Hope to see colored pixels in corners    **/
+                /** when debugging paint5d taudepo memory.   **/
+            
+                U32 x_0; U32 y_0;
+                U32 x_1; U32 y_1;
+
+                x_0 =( 0xFF0000FF ); //:RED
+                x_1 =( 0x00FF00FF ); //:GREEN
+                y_0 =( 0x0000FFFF ); //:BLUE
+                y_1 =( 0xFFFFFFFF ); //:ALPHA
+                PUT( TAU,SUB,D_1,INN );
+
+                x_0 =( 0xFF00FFFF ); //:MAGENTA
+                x_1 =( 0xFFFF00FF ); //:YELLOW
+                y_0 =( 0x00FFFFFF ); //:CYAN
+                y_1 =( 0xFFFFFFFF ); //:WHITE
+                PUT( TAU,SUB,D_2,INN );
+
+                x_0 =( 0x880000FF ); //:RED     : DARK
+                x_1 =( 0x008800FF ); //:GREEN   : DARK
+                y_0 =( 0x000088FF ); //:BLUE    : DARK
+                y_1 =( 0x888888FF ); //:ALPHA   : DARK
+                PUT( TAU,SUB,D_3,INN );
+
+                x_0 =( 0x880088FF ); //:MAGENTA : DARK
+                x_1 =( 0x888800FF ); //:YELLOW  : DARK
+                y_0 =( 0x008888FF ); //:CYAN    : DARK
+                y_1 =( 0x888888FF ); //:WHITE   : DARK
+                PUT( TAU,SUB,D_4,INN );
+
+                AAC2020_TAUDEPO_ClearUnused_Paint5D( );
+
+            };;
+
+        #undef  PUT  //:--------------------------------: 01 ://
+        #undef  TAU  //:--------------------------------: 02 ://
+        #undef  SUB  //:--------------------------------: 03 ://
+        #undef  D_1  //:--------------------------------: 04 ://
+        #undef  D_2  //:--------------------------------: 05 ://
+        #undef  D_3  //:--------------------------------: 06 ://
+        #undef  D_4  //:--------------------------------: 07 ://
+        #undef  INN  //:--------------------------------: 08 ://
+        //:------------------------------:DEBUG_VARIABLE_TEST://
+        //:SAVE_PAINT5D_SYSTEM_DATA_TO_DISK_AS_PNG_FILE:-----://
+
+            if( chr_key == KEY_P5D.p5d_out ){
+
+                /** @VID_IID[ 0095 ]TIME[ 02:13:45 ]     *** **/
+                /** SAVE_FILE: ".../MOD/paint5d.PNG"     *** **/
+                /** For testing we will want to use the  *** **/
+                /** [ "P" / p5d_pat ] key before saving  *** **/
+                /** to disk so we have some type of      *** **/
+                /** meaningful pattern to look at in our *** **/
+                /** MS-PAINT software of choice.         *** **/
+
+                AAC2020_PIXSAVE_SaveFile_paint5d( );
+                printf("[CMD:p5d_out]\n");
+                fflush( stdout );
+            };;
+
+
+        //:-----:SAVE_PAINT5D_SYSTEM_DATA_TO_DISK_AS_PNG_FILE://
+        //:OVERWRITE_EDITOR_WITH_DEFAULT_AUSETS:-------------://
+            if( chr_key == KEY_P5D.p5d_pat ){
+                /** **************************************** ***
+                @VID_IID[ 0135 ]TIME[ 00:26:23 ]
+                This is where data sets for paint5d are
+                loaded into the rendering engine.
+                Paint5D is responsible for creating the
+                "Terminal Tile Designs". Meaning these
+                designs are NOT fractal as once you get
+                down to this depth you cannot dive any
+                deeper. Hower. These tiles do have different
+                layers and tile sizes that give them a
+                fractal look dispite not being fractal.
+
+                @TILE_LOADING@
+                @DATA_LOADING@
+                *** **************************************** **/
+
+            //: aac2020_paint5d_DrawDefaultAuset_001(  );
+                AAC2020_DUMPASS_png_001_RAM_paint5d( 0 );
+            //: AAC2020_DUMPASS_png_002_RAM_paint5d( 0 );
+            //: AAC2020_GENTDOW_aya_RAM_paint5d( 0 );
+
+                AAC2020_PIXPUSH_t2d_PAINT5D(           );
+
+                printf("[CMD:p5d_pat]\n");
+                fflush( stdout );
+            };;
+        //:-------------:OVERWRITE_EDITOR_WITH_DEFAULT_AUSETS://
+        //:ACTIVE_AUSET_CONTROLS:----------------------------://
+            if( chr_key == KEY_P5D.p5d_a_n ){ //:AUSET:NEXT
+            /** @VID_IID[ 0129 ]TIME[ 04:40:13 ] *********** **/
+
+                U32 a_d; //: AUSET_DEX (in focus,being rendered)
+                U32 u_1; //: UNUSED #1
+                U32 u_2; //: UNUSED #2
+                U32 u_3; //: UNUSED #3
+        
+                /** @VID_IID[ 0132 ]TIME[ 02:22:42 ]         **/
+                /** Trying to get aus_dex to render proper   **/
+                /** via shader code.                         **/
+                assert( 15 == AAC2020_TAUDEPO.TAU_015 );
+                assert(  1 == AAC2020_TAUDEPO.PAINT5D );
+                    if(  9 != AAC2020_TAUDEPO.P5D_A_D ){
+                    /** ************************************ ***
+                        If this gets tripped make sure
+                        To refactor the GLSL shader code in:
+                        FILE[     P5D1OGL.FRA._          ]
+                        CTRL_F[ @_HARDCODED[ P5D_A_D ]_@ ]
+                    ** ************************************* **/
+                        ERR("[REFACTORED:P5D_A_D:VALUE?]");
+
+                    };;
+
+                AAC2020_TAUDEPO_Get( 
+                    AAC2020_TAUDEPO.TAU_015
+                ,   AAC2020_TAUDEPO.PAINT5D
+                ,   AAC2020_TAUDEPO.P5D_A_D
+                , &(a_d) , &(u_1) , &(u_2) , &(u_3)
+                );;
+
+                //: rbsrbs: that would be: a_d++; a_d %= 16;
+                //: Me(approx):Capping is better than wrapping
+                //: rbsrbs: PepeHands
+                a_d++; if( a_d >= (16-1) ){ a_d = (16-1); };
+
+                AAC2020_TAUDEPO_Put( 
+                    AAC2020_TAUDEPO.TAU_015
+                ,   AAC2020_TAUDEPO.PAINT5D
+                ,   AAC2020_TAUDEPO.P5D_A_D
+                ,  (a_d) ,  (u_1) ,  (u_2) ,  (u_3)
+                );;
+
+                printf("[auset_index++:a_d]:%d\n", a_d );
+
+            }else
+            if( chr_key == KEY_P5D.p5d_a_s ){ //:AUSET:SNAP
+
+                printf("[TO_FUCKING_DO:AUSET_SNAP_TO_EXTENTS]");
+                fflush(stdout);
+
+            }else
+            if( chr_key == KEY_P5D.p5d_a_b ){ //:AUSET:BACK
+            /** @VID_IID[ 0129 ]TIME[ 04:43:52 ]CUT_AND_PASTE**/
+
+                U32 a_d; //: AUSET_DEX (in focus,being rendered)
+                U32 u_1; //: UNUSED #1
+                U32 u_2; //: UNUSED #2
+                U32 u_3; //: UNUSED #3
+
+                I32 A_D; //: Signed version of[ a_d ]
+
+                AAC2020_TAUDEPO_Get( 
+                    AAC2020_TAUDEPO.TAU_015
+                ,   AAC2020_TAUDEPO.PAINT5D
+                ,   AAC2020_TAUDEPO.P5D_A_D
+                , &(a_d) , &(u_1) , &(u_2) , &(u_3)
+                );;
+
+                //: rbsrbs: that would be: a_d++; a_d %= 16;
+                A_D=((I32)a_d);
+                A_D--; if( A_D <= 0 ){ A_D = 0; }; /**CAP_MIN**/
+                a_d=((U32)A_D);
+
+                AAC2020_TAUDEPO_Put( 
+                    AAC2020_TAUDEPO.TAU_015
+                ,   AAC2020_TAUDEPO.PAINT5D
+                ,   AAC2020_TAUDEPO.P5D_A_D
+                ,  (a_d) ,  (u_1) ,  (u_2) ,  (u_3)
+                );;
+
+                printf("[auset_index--:a_d]:%d\n", a_d );
+
+            };;
+        //:----------------------------:ACTIVE_AUSET_CONTROLS://
+        //:CAMERA_CONTROL:-----------------------------------://
+
+            //:MoveCamera_XY:--------------------------------://
+            /** ******************************************** ***
+
+                #_CTRL_F_HELP_#
+
+                p5d_cam_lef ===> p5d_vp1_lef  ( ''J'' )
+                p5d_cam_rig ===> p5d_vp1_rig  ( ''L'' )
+                p5d_cam_upp ===> p5d_vp1_upp  ( ''I'' )
+                p5d_cam_dow ===> p5d_vp1_dow  ( ''K'' )
+                                           
+                p5d_cam_z_o ===> p5d_vp1_z_o  ( ''R'' )
+                p5d_cam_z_i ===> p5d_vp1_z_i  ( ''V'' )
+
+            *** ******************************************** **/
+
+            if( chr_key == KEY_P5D.p5d_vp1_lef ){
+                     LOG("[KEY_P5D.p5d_vp1_lef]\n",0);
+                     LOG_VPC();
+                     LOG_VP0();
+                     LOG_VP1();
+                aac2020_paint5d_MoveCamera_XY( 0 - 1 , 0 * 0 );
+                     LOG_VP1();
+            }else
+            if( chr_key == KEY_P5D.p5d_vp1_rig ){
+                     LOG("[KEY_P5D.p5d_vp1_rig]\n",0);
+                     LOG_VPC();
+                     LOG_VP0();
+                     LOG_VP1();
+                aac2020_paint5d_MoveCamera_XY( 0 + 1 , 0 * 0 );
+                     LOG_VP1();
+            }else
+            if( chr_key == KEY_P5D.p5d_vp1_upp ){
+                     LOG("[KEY_P5D.p5d_vp1_upp]\n",0);
+                     LOG_VPC();
+                     LOG_VP0();
+                     LOG_VP1();
+                aac2020_paint5d_MoveCamera_XY( 0 * 0 , 0 - 1 );
+                     LOG_VP1();
+            }else                                     
+            if( chr_key == KEY_P5D.p5d_vp1_dow ){   
+                     LOG("[KEY_P5D.p5d_vp1_dow]\n",0);
+                     LOG_VPC();
+                     LOG_VP0();
+                     LOG_VP1();
+                aac2020_paint5d_MoveCamera_XY( 0 * 0 , 0 + 1 );
+                     LOG_VP1();
+            };;
+
+            //:--------------------------------:MoveCamera_XY://
+            //:ZoomCamera:-----------------------------------://
+
+            if( chr_key == KEY_P5D.p5d_vp1_z_o ){
+                aac2020_paint5d_ZoomCamera( 0 - 1 ); //:NEG==OUT
+            }else                                     
+            if( chr_key == KEY_P5D.p5d_vp1_z_i ){         
+                aac2020_paint5d_ZoomCamera( 0 + 1 ); //:POS==INN
+            };;
+
+            //:-----------------------------------:ZoomCamera://
+
+        //:-----------------------------------:CAMERA_CONTROL://
+        //:MOVE_BRUSH:---------------------------------------://
+
+            if( chr_key == KEY_P5D.p5d_bru_lef ){
+                aac2020_paint5d_MoveBrush_XY( 0 - 1 , 0 * 0 );
+            }else
+            if( chr_key == KEY_P5D.p5d_bru_rig ){
+                aac2020_paint5d_MoveBrush_XY( 0 + 1 , 0 * 0 );
+            }else
+            if( chr_key == KEY_P5D.p5d_bru_upp ){
+                aac2020_paint5d_MoveBrush_XY( 0 * 0 , 0 - 1 );
+            }else                                     
+            if( chr_key == KEY_P5D.p5d_bru_dow ){         
+                aac2020_paint5d_MoveBrush_XY( 0 * 0 , 0 + 1 );
+            };;
+
+        //:---------------------------------------:MOVE_BRUSH://
+        //:TILE_VALUE(T_V):----------------------------------://
+        
+            //+  DATA : AAC2020_TAUDEPO_SUB_PAINT5D_VAR_T_V  +//
+
+            /** @VID_IID[ 0066 ]TIME[ 03H 40M 05S ] **/
+            /** WHY CALLED: TileValueDeltaMutate    **/
+
+            if( chr_key == KEY_P5D.p5d_v_n ){ //:n:NEXT
+                /** HERE[ Bak_Til | PrevTile | PreviousTile ]**/
+                aac2020_paint5d_DeltaMutate_TileValue( 0 + 1 );
+            }else
+            if( chr_key == KEY_P5D.p5d_v_b ){ //:b:BACK
+                /** HERE[ Nex_Til() | NextTile(...) ] **/
+                aac2020_paint5d_DeltaMutate_TileValue( 0 - 1 );
+            };;
+
+        //:----------------------------------:TILE_VALUE(T_V)://
+        //:TILE_EXPONENT(T_E):-------------------------------://
+
+            //+  DATA : AAC2020_TAUDEPO_SUB_PAINT5D_VAR_T_E  +//
+
+            if( chr_key == KEY_P5D.p5d_e_n ){ //:n:NEXT
+                aac2020_paint5d_DeltaMutate_TileExponent(0 +1);
+            }else
+            if( chr_key == KEY_P5D.p5d_e_b ){ //:b:BACK
+                aac2020_paint5d_DeltaMutate_TileExponent(0 -1);
+            };;
+
+        //:-------------------------------:TILE_EXPONENT(T_E)://
+        //:TILE_LAYER_0_TO_2(T_L):---------------------------://
+
+            if( chr_key == KEY_P5D.p5d_l_n ){ //:n:NEXT
+                aac2020_paint5d_DeltaMutate_TileLayer(0 +1);
+            }else
+            if( chr_key == KEY_P5D.p5d_l_b ){ //:b:BACK
+                aac2020_paint5d_DeltaMutate_TileLayer(0 -1);
+            };;
+
+
+        //:---------------------------:TILE_LAYER_0_TO_2(T_L)://
+        //:TILE_TOGGLE:--------------------------------------://
+
+            if( chr_key == KEY_P5D.p5d_tog ){ //:toggle
+                aac2020_paint5d_ToggleTile( );
+            };;
+
+        //:--------------------------------------:TILE_TOGGLE://
+
+        return( res_var );
+    }
+
+//# NO_UNDEFINES_NOT_A_TOP_LEVEL_FILE ########################//
+//:================================:KEYBOARD_HANDLER:(KeyInn)://
+//:CTRL_F_HELP:==============================================://
+/** ******************************************************** ***
+
+    next_brush_value ======:------+ 
+    NextBrushValue   ======:-----+ \
+    prev_brush_value ======:----+ \ \
+    previous_brush_value ==:--+  \ \ \
+    PrevBrushValue ========:\  \  \ \ \
+    PreviousBrushValue   ==> ..._DeltaMutate_TileValue
+
+*** ******************************************************** **/
+//:==============================================:CTRL_F_HELP://
