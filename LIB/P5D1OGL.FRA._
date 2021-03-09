@@ -109,6 +109,9 @@
         #define CUVIPIX struct AAC2020_P5D1OGL_CUVIPIX   ///
         #define TYP_F_C /** nothing **/            //| 8 |//
         #define INN_F_C /** nothing **/            //| 9 |//
+        #define ARR_U32(n) U32[n]
+        #define ARR_BEG (  //:GLSL_ARRAY_INITER_BEG
+        #define ARR_END )  //:GLSL_ARRAY_INITER_END
                                                    //| # |//
     #else                                          //| # |//
                                                    //| # |//
@@ -121,6 +124,9 @@
         #define CUVIPIX struct AAC2020_P5D1OGL_CUVIPIX   ///
         #define TYP_F_C struct AAC2020_POLYOGL_FV4 //| 8 |//
         #define INN_F_C F_C                        //| 9 |//
+        #define ARR_U32(n) //:ERASE_IT_IN_C99
+        #define ARR_BEG {  //:_C99_ARRAY_INITER_BEG
+        #define ARR_END }  //:_C99_ARRAY_INITER_END
                                                    //| # |//
     #endif                                         //| # |//
     //:------------------------------:seven_letter_macros://
@@ -1404,47 +1410,166 @@
                     ,         2  //:AKA[ lay_dex ]       ///
                     ,   aus_dex  //:AKA[ aus_dex ]       ///   
                     ));;////////////////////////////////////
+
+
+                if( u32_l_0 > UFF ){ /**NOOP**/ };
+
+                //: U08 arr[ 3 ]=        { 1 , 2 , 3 }; //:C99
+                //: U08 arr[ 3 ]=U08[ 3 ]( 1 , 2 , 3 ); //:OGL
+
+                //:UNDEF_OR_DEF_U32_VALS:----------------://
+                #if( AAC2020_MACRO_THIS_IS_OPEN_GL >= 1 )  
+            
+                    #define U_000 ( uint(  0))
+                    #define U_001 ( uint(  1))
+                    #define U_008 ( uint(  8))
+                    #define U_016 ( uint( 16))
+                    #define U_032 ( uint( 32))
+                    #define U_048 ( uint( 48))
+                    #define U_064 ( uint( 64))
+                    #define U_096 ( uint( 96))
+                    #define U_128 ( uint(128))
+                #else
+                    #define U_000 ((U32)(  0))
+                    #define U_001 ((U32)(  1))
+                    #define U_008 ((U32)(  8))
+                    #define U_016 ((U32)( 16))
+                    #define U_032 ((U32)( 32))
+                    #define U_048 ((U32)( 48))
+                    #define U_064 ((U32)( 64))
+                    #define U_096 ((U32)( 96))
+                    #define U_128 ((U32)(128))
+                #endif
+                //:----------------:UNDEF_OR_DEF_U32_VALS://
+
+                    //:Bot : layer_lumonosity_pallet
+                    U32 pal_l_0[4]= ARR_U32(4)
+                                    ARR_BEG
+
+                                    /**/U_016   
+                                    ,   U_032   
+                                    ,   U_048   
+                                    ,   U_064   
+
+                                    ARR_END;
+                    if( pal_l_0[0] > UFF ){ /**NOOP**/ };
+
+                    //:Mid : layer_lumonosity_pallet :
+                    U32 pal_l_1[4]= ARR_U32(4)
+                                    ARR_BEG
+
+                                    /**/U_016   
+                                    ,   U_032   
+                                    ,   U_048   
+                                    ,   U_064   
+
+                                    ARR_END;
+                    
+                    //:Top : layer_lumonosity_pallet :
+                    U32 pal_l_2[4]= ARR_U32(4)
+                                    ARR_BEG
+
+                                    /**/U_016   
+                                    ,   U_032   
+                                    ,   U_048   
+                                    ,   U_064   
+
+                                    ARR_END;
+                    
+                    //:NON_DILLUTED_AVERAGE:=================://
+                    //:Total Number Of Non_Zero Tile Values
+                    //:Over the current pixel for the 
+                    //:current layer.
+                    U32 tot_l_0=MAK_U32(0);
+                    U32 tot_l_1=MAK_U32(0);
+                    U32 tot_l_2=MAK_U32(0);
+
+
+                    tot_l_0=MAK_U32( 8 );
+                    tot_l_1=MAK_U32( 8 );
+                    tot_l_2=MAK_U32( 8 );
+                    
                 
-                    //:ABOUT_TO_MESS_THIS_UP_2020_03_09
-                    U32 u32_pix =( U00 |
-                        ((( U00 
-                        + ((( u32_l_0 >> 0 ) & B11) * H55)
-                        + ((( u32_l_0 >> 2 ) & B11) * H55)
-                        + ((( u32_l_0 >> 4 ) & B11) * H55)
-                        + ((( u32_l_0 >> 6 ) & B11) * H55)
-                        + ((( u32_l_0 >> 8 ) & B11) * H55)
-                        + ((( u32_l_0 >>10 ) & B11) * H55)
-                        + ((( u32_l_0 >>12 ) & B11) * H55)
-                        + ((( u32_l_0 >>14 ) & B11) * H55)
-                        ) / MAK_U32( 8 ) ) 
-                        << 24 )
-                    |
-                        ((( U00 
-                        + ((( u32_l_1 >> 0 ) & B11) * H55)
-                        + ((( u32_l_1 >> 2 ) & B11) * H55)
-                        + ((( u32_l_1 >> 4 ) & B11) * H55)
-                        + ((( u32_l_1 >> 6 ) & B11) * H55)
-                        + ((( u32_l_1 >> 8 ) & B11) * H55)
-                        + ((( u32_l_1 >>10 ) & B11) * H55)
-                        + ((( u32_l_1 >>12 ) & B11) * H55)
-                        + ((( u32_l_1 >>14 ) & B11) * H55)
-                        ) / MAK_U32( 8 ) )
-                        << 16 )
-                    |
-                        ((( U00 
-                        + ((( u32_l_2 >> 0 ) & B11) * H55)
-                        + ((( u32_l_2 >> 2 ) & B11) * H55)
-                        + ((( u32_l_2 >> 4 ) & B11) * H55)
-                        + ((( u32_l_2 >> 6 ) & B11) * H55)
-                        + ((( u32_l_2 >> 8 ) & B11) * H55)
-                        + ((( u32_l_2 >>10 ) & B11) * H55)
-                        + ((( u32_l_2 >>12 ) & B11) * H55)
-                        + ((( u32_l_2 >>14 ) & B11) * H55)
-                        ) / MAK_U32( 8 ) )
-                        << 8 )
-                    |
-                        ( UFF << 0 )
+                    U32 sum_l_0=MAK_U32(0);
+                    U32 sum_l_1=MAK_U32(0);
+                    U32 sum_l_2=MAK_U32(0);
+
+                    sum_l_0=( U_000
+                        + pal_l_0[ ( u32_l_0 >> 0 ) & B11 ]
+                        + pal_l_0[ ( u32_l_0 >> 2 ) & B11 ]
+                        + pal_l_0[ ( u32_l_0 >> 4 ) & B11 ]
+                        + pal_l_0[ ( u32_l_0 >> 6 ) & B11 ]
+                        + pal_l_0[ ( u32_l_0 >> 8 ) & B11 ]
+                        + pal_l_0[ ( u32_l_0 >>10 ) & B11 ]
+                        + pal_l_0[ ( u32_l_0 >>12 ) & B11 ]
+                        + pal_l_0[ ( u32_l_0 >>14 ) & B11 ]
                     );;
+                    sum_l_1=( U_000
+                        + pal_l_1[ ( u32_l_1 >> 0 ) & B11 ]
+                        + pal_l_1[ ( u32_l_1 >> 2 ) & B11 ]
+                        + pal_l_1[ ( u32_l_1 >> 4 ) & B11 ]
+                        + pal_l_1[ ( u32_l_1 >> 6 ) & B11 ]
+                        + pal_l_1[ ( u32_l_1 >> 8 ) & B11 ]
+                        + pal_l_1[ ( u32_l_1 >>10 ) & B11 ]
+                        + pal_l_1[ ( u32_l_1 >>12 ) & B11 ]
+                        + pal_l_1[ ( u32_l_1 >>14 ) & B11 ]
+                    );;
+                    sum_l_2=( U_000
+                        + pal_l_2[ ( u32_l_2 >> 0 ) & B11 ]
+                        + pal_l_2[ ( u32_l_2 >> 2 ) & B11 ]
+                        + pal_l_2[ ( u32_l_2 >> 4 ) & B11 ]
+                        + pal_l_2[ ( u32_l_2 >> 6 ) & B11 ]
+                        + pal_l_2[ ( u32_l_2 >> 8 ) & B11 ]
+                        + pal_l_2[ ( u32_l_2 >>10 ) & B11 ]
+                        + pal_l_2[ ( u32_l_2 >>12 ) & B11 ]
+                        + pal_l_2[ ( u32_l_2 >>14 ) & B11 ]
+                    );;
+                
+                    if( sum_l_0 > UFF ){ /** NOOP **/ };
+                
+                    
+                    //:Amount to add:
+                    U32 add_l_0=MAK_U32(0);
+                    U32 add_l_1=MAK_U32(0);
+                    U32 add_l_2=MAK_U32(0);
+
+                    add_l_0=(( sum_l_0 / tot_l_0 )+U_000);
+                    add_l_1=(( sum_l_1 / tot_l_1 )+U_000);
+                    add_l_2=(( sum_l_2 / tot_l_2 )+U_000);
+
+                    if( add_l_0 > U_128 ){ add_l_0 = U_128; };
+                    if( add_l_1 > U_128 ){ add_l_1 = U_128; };
+                    if( add_l_2 > U_128 ){ add_l_2 = U_128; };
+
+                    U32 lum_l_0=MAK_U32(0);
+                    U32 lum_l_1=MAK_U32(0);
+                    U32 lum_l_2=MAK_U32(0);
+
+                    lum_l_0=(  MAK_U32(  0) + add_l_0 );
+                    lum_l_1=(  MAK_U32(  0) + add_l_1 );
+                    lum_l_2=(  MAK_U32(  0) + add_l_2 );
+                         
+
+            ////    //:=================:NON_DILLUTED_AVERAGE://
+
+
+
+                U32 u32_pix=MAK_U32( 0 );
+
+                if( lum_l_0 > UFF ){ lum_l_0 = UFF; };
+                if( lum_l_1 > UFF ){ lum_l_1 = UFF; };
+                if( lum_l_2 > UFF ){ lum_l_2 = UFF; };
+
+                U32 lum_all=( lum_l_0 + lum_l_1 + lum_l_2 );
+                if( lum_all > UFF ){ lum_all = UFF; };
+
+                u32_pix=( 
+                       lum_all << 24
+                    |  lum_all << 16
+                    |  lum_all <<  8
+                    |  UFF     <<  0
+                );;
+   
                     
                 //:-------------:CORE_RENDERING_ALGORITHM://
 
@@ -1460,21 +1585,6 @@
                 uv4_pix.z =MAK_U32(   0 ); //:BLUE
                 uv4_pix.w =MAK_U32( 255 ); //:ALPHA
             };;
-
-            /// if( u32_pix > MAK_U32(0) ){ /** NOOP **/ };
-
-    ////    if( cuv_i_x >= (256-1) || cuv_i_y >= (256-1) ){
-    ////    
-    ////        uv4_pix.x =MAK_U32( 128 ); //:RED
-    ////        uv4_pix.y =MAK_U32( 128 ); //:GREEN
-    ////        uv4_pix.z =MAK_U32( 128 ); //:BLUE
-    ////        uv4_pix.w =MAK_U32( 255 ); //:ALPHA
-    ////    }else{
-    ////        uv4_pix.x = ( u32_pix >> 24 ) & UFF ;
-    ////        uv4_pix.y = ( u32_pix >> 16 ) & UFF ;
-    ////        uv4_pix.z = ( u32_pix >>  8 ) & UFF ;
-    ////        uv4_pix.w = ( u32_pix >>  0 ) & UFF ;
-    ////    };;
 
 
             /** @VID_IID[ 0116 ]TIME[ 01:33:00 ] ******* **/
@@ -1503,6 +1613,17 @@
 
             #endif
 
+            //:UNDEF_OR_DEF_U32_COLORS:------------------://
+            #undef U_000 
+            #undef U_001 
+            #undef U_008 
+            #undef U_016 
+            #undef U_032 
+            #undef U_048 
+            #undef U_064 
+            #undef U_096 
+            #undef U_128 
+            //:------------------:UNDEF_OR_DEF_U32_COLORS://
         }
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
     //:always_exists_error_string_macros:----------------://
@@ -1548,6 +1669,9 @@
         #undef  CUVIPIX                            //[ 6 ]//
         #undef  TYP_F_C                            //[ 7 ]//
         #undef  INN_F_C                            //[ 8 ]//
+        #undef  ARR_U32
+        #undef  ARR_BEG
+        #undef  ARR_END
                                                    //[ x ]//
     //:------------------------------:seven_letter_macros://
     //:main_shim_macros:---------------------------------://

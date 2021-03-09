@@ -122,6 +122,22 @@
                 fflush( stdout );
             };;
         //:-------------:OVERWRITE_EDITOR_WITH_DEFAULT_AUSETS://
+        //:DELETE_ALL_DATA_ON_ALL_LAYERS:--------------------://
+        if( chr_key == KEY_P5D.p5d_del ){
+
+            aac2020_paint5d_PRESS_TIMES_p5d_del++;
+            if( aac2020_paint5d_PRESS_TIMES_p5d_del >= 6 ){
+                aac2020_paint5d_PRESS_TIMES_p5d_del = (0);
+                
+                for( I32 b=( 0 ); b <=((512*512*4)-1) ; b++ ){
+                    AAC2020_PIXNAME_paint5d_cpu_pix[ b ]=(0x00);
+                };;
+                //:upload to GPU
+                AAC2020_PIXPUSH_t2d_PAINT5D();
+            };;
+
+        };;
+        //:--------------------:DELETE_ALL_DATA_ON_ALL_LAYERS://
         //:ACTIVE_AUSET_CONTROLS:----------------------------://
             if( chr_key == KEY_P5D.p5d_a_n ){ //:AUSET:NEXT
             /** @VID_IID[ 0129 ]TIME[ 04:40:13 ] *********** **/
