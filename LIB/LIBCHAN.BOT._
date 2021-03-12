@@ -216,6 +216,11 @@
               #error "[OUT_OF_ORDER:AAC2020_INCLUDE_TAUSYNC]"
 #endif
 #endif
+#if( 0                           != AAC2020_INCLUDE_TAUFRAG )
+#if( macro_libchan_order_TAUFRAG != AAC2020_INCLUDE_TAUFRAG )
+              #error "[OUT_OF_ORDER:AAC2020_INCLUDE_TAUFRAG]"
+#endif
+#endif
 #if( 0                           != AAC2020_INCLUDE_ZOOMCOM )
 #if( macro_libchan_order_ZOOMCOM != AAC2020_INCLUDE_ZOOMCOM )
               #error "[OUT_OF_ORDER:AAC2020_INCLUDE_ZOOMCOM]"
@@ -383,25 +388,28 @@
     #if( macro_libchan_order_TAUSYNC !=     43   )
     #error "[TAIL_ORDER_FAIL:TAUSYNC]"  //: -- ://
     #endif                              //: -- ://
-    #if( macro_libchan_order_ZOOMCOM !=     44   )
+    #if( macro_libchan_order_TAUFRAG !=     44   )
+    #error "[TAIL_ORDER_FAIL:TAUFRAG]"  //: -- ://
+    #endif                              //: -- ://
+    #if( macro_libchan_order_ZOOMCOM !=     45   )
     #error "[TAIL_ORDER_FAIL:ZOOMCOM]"  //: -- ://
     #endif                              //: -- ://
-    #if( macro_libchan_order_DRAGCOM !=     45   )
+    #if( macro_libchan_order_DRAGCOM !=     46   )
     #error "[TAIL_ORDER_FAIL:DRAGCOM]"  //: -- ://
     #endif                              //: -- ://
-    #if( macro_libchan_order_CLICKOM !=     46   )
+    #if( macro_libchan_order_CLICKOM !=     47   )
     #error "[TAIL_ORDER_FAIL:CLICKOM]"  //: -- ://
     #endif                              //: -- ://
-    #if( macro_libchan_order_EDITCAM !=     47   )
-    #error "[TAIL_ORDER_FAIL:EDITCAM]"  //: -- ://
-    #endif                              //: -- ://
-    #if( macro_libchan_order_GAMECAM !=     48   )
+    #if( macro_libchan_order_EDITCAM !=     48   )
+    #error "[TAIL_ORDER_FAIL:EDITCAM]"  //:    ://
+    #endif                              //:    ://
+    #if( macro_libchan_order_GAMECAM !=     49   )
     #error "[TAIL_ORDER_FAIL:GAMECAM]"  //:    ://
     #endif                              //:    ://
-    #if( macro_libchan_order_PAINT5D !=     49   )
+    #if( macro_libchan_order_PAINT5D !=     50   )
     #error "[TAIL_ORDER_FAIL:PAINT5D]"  //:    ://
     #endif                              //:    ://
-    #if( macro_libchan_order_P5D1OGL !=     50   )
+    #if( macro_libchan_order_P5D1OGL !=     51   )
     #error "[TAIL_ORDER_FAIL:P5D1OGL]"
     #endif
 
@@ -410,6 +418,14 @@
 //:================================:LIBRARY_CHAIN_ORDER:CHECK://
 //:CLEANUP:==================================================://
 
+    //:USE_BOTTOM_FILES_TO_UNDO_TOP_FILES:===================://
+
+        //: .BOT == .BOTTOM ( A file that undoes a .TOP file )
+
+        //+ DONT_DO_THIS_UNLESS_NO_OTHER_WAY +//
+        //- #include  "TAUFRAG.FRA.BOT._"    -//
+
+    //:===================:USE_BOTTOM_FILES_TO_UNDO_TOP_FILES://
     //:DONT_POLLUTE_OTHER_PEOPLES_CODE_WITH_MACROS:==========://
 
     //:#_BE_NICE_AVOID_MACRO_POLLUTION_OF_OTHERS_CODE_#://
@@ -457,13 +473,14 @@
     #undef  macro_libchan_order_TAUDEPO   //:----## 41 ##----://
     #undef  macro_libchan_order_TAUTYPE   //:----## 42 ##----://
     #undef  macro_libchan_order_TAUSYNC   //:----## 43 ##----://
-    #undef  macro_libchan_order_ZOOMCOM   //:----## 44 ##----://
-    #undef  macro_libchan_order_DRAGCOM   //:----## 45 ##----://
-    #undef  macro_libchan_order_CLICKOM   //:----## 46 ##----://
-    #undef  macro_libchan_order_EDITCAM   //:----## 47 ##----://
-    #undef  macro_libchan_order_GAMECAM   //:----## 48 ##----://
-    #undef  macro_libchan_order_PAINT5D   //:----## 49 ##----://
-    #undef  macro_libchan_order_P5D1OGL   //:----## 50 ##----://
+    #undef  macro_libchan_order_TAUFRAG   //:----## 44 ##----://
+    #undef  macro_libchan_order_ZOOMCOM   //:----## 45 ##----://
+    #undef  macro_libchan_order_DRAGCOM   //:----## 46 ##----://
+    #undef  macro_libchan_order_CLICKOM   //:----## 47 ##----://
+    #undef  macro_libchan_order_EDITCAM   //:----## 48 ##----://
+    #undef  macro_libchan_order_GAMECAM   //:----## 49 ##----://
+    #undef  macro_libchan_order_PAINT5D   //:----## 50 ##----://
+    #undef  macro_libchan_order_P5D1OGL   //:----## 51 ##----://
  
     //:==========:DONT_POLLUTE_OTHER_PEOPLES_CODE_WITH_MACROS://
 
