@@ -9,6 +9,33 @@
     //[   VIDEO COMMENT TIMESTAMP EXAMPLE   ]//
 *** ******************************************************** ***
 
+#_DOUBLE_SQUARE_BRACKET_MACROS_#################################
+
+    @VID_IID[ 0177 ]TIME[ 02:55:13 ]
+    When we decide a macro SHOULD NOT be used, we surround
+    it in double square brackets to intentionally cause
+    compiler error if the macro value is referenced.
+
+    Usually we do something like:
+
+        #define MY_MACRO "DONT_USE_THIS_MACRO"
+
+    But we can't use that strategy in fragment shader code
+    because fragment shader code must be wrapped in a
+    string and the double quote characters will destroy
+    my preprocessing steps. (I use AWK command in bash
+    script to wrap fragment code into shader strings. )
+    ------------------------------------------------------------
+
+        #define TAU   [[taudepo]]  
+        #define P5D   [[paint5d]] 
+
+        #define TAU   [[ 0 ]]       
+        #define P5D   [[ 1 ]] 
+
+    ------------------------------------------------------------
+
+#################################_DOUBLE_SQUARE_BRACKET_MACROS_#
 #_EXT_COM_2020_03_13_315PM_#####################################
 
     EXTRACTED_IN_THIS_VIDEO: VID_IID[ 0177 ]TIME[ 01:08:32 ]
