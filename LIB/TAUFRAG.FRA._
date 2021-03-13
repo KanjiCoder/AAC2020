@@ -12,6 +12,21 @@
 
         //:DEX_TAU_000_015:------------------------------://
 
+        #define AAC2020_TAUFRAG_taudepo_tau_000 (  0 )
+        #define AAC2020_TAUFRAG_taudepo_tau_001 (  1 )
+        #define AAC2020_TAUFRAG_taudepo_tau_002 (  2 )
+        #define AAC2020_TAUFRAG_taudepo_tau_003 (  3 )
+        #define AAC2020_TAUFRAG_taudepo_tau_004 (  4 )
+        #define AAC2020_TAUFRAG_taudepo_tau_005 (  5 )
+        #define AAC2020_TAUFRAG_taudepo_tau_006 (  6 )
+        #define AAC2020_TAUFRAG_taudepo_tau_007 (  7 )
+        #define AAC2020_TAUFRAG_taudepo_tau_008 (  8 )
+        #define AAC2020_TAUFRAG_taudepo_tau_009 (  9 )
+        #define AAC2020_TAUFRAG_taudepo_tau_010 ( 10 )
+        #define AAC2020_TAUFRAG_taudepo_tau_011 ( 11 )
+        #define AAC2020_TAUFRAG_taudepo_tau_012 ( 12 )
+        #define AAC2020_TAUFRAG_taudepo_tau_013 ( 13 )
+        #define AAC2020_TAUFRAG_taudepo_tau_014 ( 14 )
         #define AAC2020_TAUFRAG_taudepo_tau_015 ( 15 )
 
         //:------------------------------:DEX_TAU_000_015://
@@ -46,7 +61,7 @@
                         
     //:=======================:COPIED_FROM[ TAUDEPO.D._ ]://
     //:================================:TAUDEPO_CONSTANTS://
-    //:TAUDEPO_SHORTHAND_MACROS:-------------------------://
+    //:TAUDEPO_SHORTHAND_MACROS:DEFINE:------------------://
     #if( 1 == 1 /** OPENGL OR C99 **/ ) //:##############://
     /** ************************************************ ***
     @VID_IID[ 0173 ]TIME[ 03:09:00 ]
@@ -55,6 +70,21 @@
 
         //|DEX_TAU_000_015:------------------------------|//
 
+        #define TAU_000 AAC2020_TAUFRAG_taudepo_tau_000 
+        #define TAU_001 AAC2020_TAUFRAG_taudepo_tau_001 
+        #define TAU_002 AAC2020_TAUFRAG_taudepo_tau_002 
+        #define TAU_003 AAC2020_TAUFRAG_taudepo_tau_003 
+        #define TAU_004 AAC2020_TAUFRAG_taudepo_tau_004 
+        #define TAU_005 AAC2020_TAUFRAG_taudepo_tau_005 
+        #define TAU_006 AAC2020_TAUFRAG_taudepo_tau_006 
+        #define TAU_007 AAC2020_TAUFRAG_taudepo_tau_007 
+        #define TAU_008 AAC2020_TAUFRAG_taudepo_tau_008 
+        #define TAU_009 AAC2020_TAUFRAG_taudepo_tau_009 
+        #define TAU_010 AAC2020_TAUFRAG_taudepo_tau_010 
+        #define TAU_011 AAC2020_TAUFRAG_taudepo_tau_011 
+        #define TAU_012 AAC2020_TAUFRAG_taudepo_tau_012 
+        #define TAU_013 AAC2020_TAUFRAG_taudepo_tau_013 
+        #define TAU_014 AAC2020_TAUFRAG_taudepo_tau_014 
         #define TAU_015 AAC2020_TAUFRAG_taudepo_tau_015 
 
         //|------------------------------:DEX_TAU_000_015|//
@@ -82,19 +112,266 @@
         //|------------------------------:DEX_VAR_000_255|//
 
     #endif //:###########################################://
-    //:-------------------------:TAUDEPO_SHORTHAND_MACROS://
+    //:------------------:TAUDEPO_SHORTHAND_MACROS:DEFINE://
+    //[TAUFRAG_DEFINES___GO_HERE:========================]//
+        //|SAME_IN_BOTH_LANGUAGES_MACROS:-----------|----|//
+        //:SHORTCUT[ ERR_STR_MAC ]::::::::::::::////| ## |//
+            //:E_S_P:Error_String_Private         //| ## |//
+            #define            ESP( e_m ) #e_m    //| 01 |//
+            #define E_S( e_m ) ESP( e_m )         //| 02 |//
+        //::::::::::::::SHORTCUT[ ERR_STR_MAC ]:////| ## |//
+        //|----------------:SAME_IN_BOTH_LANGUAGES_MACROS|//
+    #if defined( AAC2020_MACRO_THIS_IS_OPEN_GL )  //[ -- ]//
+        /** RUNNING_AS: GLSL **/                  //[ -- ]//
+                                                  //[ -- ]//
+        #define I32 int                           //[ 03 ]//
+        #define MF3 float /** AKA: MAK_F32 **/    //[ 04 ]//
+        #define MI3 int   /** AKA: MAK_I32 **/    //[ 05 ]//
+        #define TRU trunc /** Like Floor   **/    //[ 06 ]//
+        #define REC struct AAC2020_FRAGCOM_REC    //[ 07 ]//
+        #define ASS /**Nothing**/                 //[ 08 ]//
+        #define IV2 ivec2                         //[ 09 ]//
+        #define U32 uint                          //[ 10 ]//
+        #define TAU taudepo                       //[ 11 ]//
+        #define P5D paint5d                       //[ 12 ]//
+        #define I00 int( 0 )                      //[ 13 ]//
+    #else                                         //[ -- ]//
+        /** RUNNING_AS: _C99 **/                  //[ -- ]//
+                                                  //[ -- ]//
+        #define I32 int32_t                       //[ 03 ]//
+        #define MF3 AAC2020_POLYOGL_MAK_F32       //[ 04 ]//
+        #define MI3 AAC2020_POLYOGL_MAK_I32       //[ 05 ]//
+        #define TRU AAC2020_POLYOGL_Trunc         //[ 06 ]//
+        #define REC struct AAC2020_POLYOGL_REC    //[ 07 ]//
+        #define ASS assert                        //[ 08 ]//
+        #define IV2 struct AAC2020_POLYOGL_IV2    //[ 09 ]//
+        #define U32 uint32_t                      //[ 10 ]//
+        #define TAU SUB_TAU                       //[ 11 ]//
+        #define P5D SUB_P5D                       //[ 12 ]//
+        #define I00 (  0  )
+    #endif                                        //[ -- ]//
+    //[========================:TAUFRAG_DEFINES___GO_HERE]//
     //[TAUFRAG_FUNCTIONS_GO_HERE:========================]//
     //++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
+        I32
+        aac2020_taufrag_pix_dex(    /** @_PRIVATE_FUNC_@ **/
+            I32 dex_tau //:EX: AAC2020_TAUDEPO.TAU_015                         
+        ,   I32 dex_sub //:EX: AAC2020_TAUDEPO.PAINT5D                                                  
+        ,   I32 dex_var //:EX: AAC2020_TAUDEPO.P5D_A_D  
+        )
+        {
+        /** ******************************************** ***
+        About this function:
+        Original_Name[ aac2020_p5d1ogl_taudepo_pix_dex ]
+        CPU_SIDE_CODE[         aac2020_taudepo_pix_dex ]
+        *** ******************************************** **/
+            #if !defined( AAC2020_MACRO_THIS_IS_OPEN_GL ) //
+
+                //:@VID_IID[ 0177 ]TIME[ 00:10:42 ]
+                //:NUTS:Need_Unit_Test
+                AAC2020_TODOMAN_Vital(
+                    E_S( [NUT:2021_03_13] )
+                );;
+
+            #endif //:###################################://
+
+            I32 pix_dex; //:<--[ output/return ]variable
+
+            /** ************************************* **/
+            /** ^ is placeholder for ownership symbol **/
+            /**   in english language because need to **/
+            /**   avoid quotes in this file because   **/
+            /**   it gets stringified.                **/
+            /**   @VID_IID[ 0177 ]TIME[ 00:54:00 ]    **/
+            /** ************************************* **/
+
+            I32 t_x ; //: [dex_tau]^s xy location 
+            I32 t_y ; //: [dex_tau]^s xy location 
+                     
+            I32 s_x ; //: [dex_sub]^s xy location 
+            I32 s_y ; //: [dex_sub]^s xy location 
+                        
+            I32 v_x ; //: [dex_var]^s xy location 
+            I32 v_y ; //: [dex_var]^s xy location 
+
+            I32 p_x ; //: pixel_x: (GLOBAL, on 512x512)
+            I32 p_y ; //: pixel_y: (GLOBAL, on 512x512)
+
+            //:INDEX_TO_XY_GLSL:-------------------------://  
+            //:                                          ://
+            //:SEE[ #DIA_TAU_CEL# ]IN[ LIB/TAUDEPO.D._ ] ://
+            #define D dex_tau          //:DEX_TAU_000_015://
+            t_y  =MI3( TRU( MF3(D) / MF3(   4 )));   
+            t_x  =(       (     D  -(t_y *  4 )));                                   
+            #undef  D                  //:DEX_TAU_000_015:// 
+            //:                                          ://
+            //:SEE[ #DIA_SUB_CEL# ]IN[ LIB/TAUDEPO.D._ ] ://
+            #define D dex_sub          //:DEX_SUB_000_015://
+            s_y  =MI3( TRU( MF3(D) / MF3(   4 )));   
+            s_x  =(       (     D  -(s_y *  4 )));                                   
+            #undef  D                  //:DEX_SUB_000_015://
+            //:                                          ://
+            //:SEE[ #DIA_VAR_CEL# ]IN[ LIB/TAUDEPO.D._ ] ://
+            #define D dex_var          //:DEX_VAR_000_255://
+            v_y  =MI3( TRU( MF3(D) / MF3(  16 )));   
+            v_x  =(       (     D  -(v_y * 16 )));                                   
+            #undef  D                  //:DEX_VAR_000_255://
+            //:                                          ://
+            //:-------------------------:INDEX_TO_XY_GLSL://
+
+            //:global_pixel_xy_on_512x512:---------------://
+                                                      //:://
+            p_x =( 0                                  //:://
+            +  (t_x * (512 / 4) ) //: 128x128_tau_cells  ://
+            +  (s_x * (128 / 4) ) //: 032x032_sub_cells  ://
+            +  (v_x * (    2  ) ) //: 002x002 pix_per_var://
+            );;                   //:(002x002:4pixper_var://
+                                                      //:://
+            p_y =( 0                                  //:://
+            +  (t_y * (512 / 4) ) //: 128x128_tau_cells  ://
+            +  (s_y * (128 / 4) ) //: 032x032_sub_cells  ://
+            +  (v_y * (    2  ) ) //: 002x002 pix_per_var://
+            );;                   //:(002x002:4pixper_var://
+            //:                     :                    ://
+            //:---------------:global_pixel_xy_on_512x512://
+
+            //:XY_TO_INDEX_FORMULA_FOR_TOP_LEFT_PIXEL    ://
+            //:OF_OUR_2X2_CLUSTER_OF_PIXELS_REPRESENTING ://
+            //:A_SINGLE_VARIABLE.                        ://
+                    pix_dex = p_x + ( 512 * p_y);
+            return( pix_dex );
+        }
+        //:- - - - - - - - - - - -- - - - - - - - - - - -://
 
 
+        U32                                          
+        aac2020_taufrag_Get_U32(    /** @_PRIVATE_FUNC_@ **/           
+            I32 dex_tau //:EX: AAC2020_TAUDEPO.TAU_015                         
+        ,   I32 dex_sub //:EX: AAC2020_TAUDEPO.PAINT5D                                                  
+        ,   I32 dex_var //:EX: AAC2020_TAUDEPO.P5D_A_D  
+        )
+        {
+            ASS( dex_tau <= ( 16-1) );
+            ASS( dex_sub <= ( 16-1) );
+            ASS( dex_var <= (256-1) );
+                    
+            I32 pix_dex; //:GLOBAL_PIXEL_LOCATION: AS_INDEX
+            IV2     glo; //:GLOBAL_PIXEL_LOCATION: AS____XY
 
+            pix_dex=(
+                aac2020_taufrag_pix_dex(
+                    dex_tau //: EX: AAC2020_TAUDEPO.TAU_015
+                ,   dex_sub //: EX: AAC2020_TAUDEPO.PAINT5D        
+                ,   dex_var //: EX: AAC2020_TAUDEPO.P5D_A_D    
+                ));;
 
+            
+            //:INDEX_TO_XY_GLSL:-------------------------://                          
+            #define D pix_dex  //:GLOBAL:DEX             ://
+            #define G glo      //:GLOBAL:XY              ://
+            G.y  =MI3( TRU( MF3(D) /  MF3( 512)));   
+            G.x  =   (    (     D  - (G.y *512)));                                   
+            #undef  D                 //:----------------://             
+            #undef  G                 //:----------------://
+            //:-------------------------:INDEX_TO_XY_GLSL://
+
+                                                     
+            U32 u32_var ;                            
+                                                           
+            u32_var =(                               
+                AAC2020_FRAGCOM_TexelFetch_U32(           
+                    TAU //:texture_to_sample    ://  
+                ,   glo //:integer_texel_coord  ://  
+                ,   I00 //:level_of_detail_zero ://  
+                ));;                                 
+           
+            /** Return Value Encoded In Taudepo Memory ..**/
+            /** TAU: Texture_As_Uniform .............. ..**/
+            return( u32_var );                       
+        }       
+        //:- - - - - - - - - - - -- - - - - - - - - - - -://
+        REC                                          
+        aac2020_taufrag_Get_REC(    /** @_PRIVATE_FUNC_@ **/              
+            I32 dex_tau //:EX: AAC2020_TAUDEPO.TAU_015                         
+        ,   I32 dex_sub //:EX: AAC2020_TAUDEPO.PAINT5D                                                  
+        ,   I32 dex_var //:EX: AAC2020_TAUDEPO.P5D_VP0  
+        )
+        {  
+            ASS( dex_tau <= ( 16-1) );
+            ASS( dex_sub <= ( 16-1) );
+            ASS( dex_var <= (256-1) );
+                    
+            I32 pix_dex; //:GLOBAL_PIXEL_LOCATION: AS_INDEX
+            I32     g_x; //:GLOBAL_PIXEL_LOCATION: X-coord
+            I32     g_y; //:GLOBAL_PIXEL_LOCATION: Y-coord
+
+            pix_dex=( /**#TOP_LEFT_PIXEL_OF_2X2_CLUSTER#**/
+                aac2020_taufrag_pix_dex(
+                    dex_tau //: EX: AAC2020_TAUDEPO.TAU_015
+                ,   dex_sub //: EX: AAC2020_TAUDEPO.PAINT5D        
+                ,   dex_var //: EX: AAC2020_TAUDEPO.P5D_A_D    
+                ));;
+
+            
+            //:INDEX_TO_XY_GLSL:-------------------------://                          
+            #define D pix_dex  //:GLOBAL:DEX             ://
+            g_y  =MI3( TRU( MF3(D) / MF3( 512)));   
+            g_x  =(       (     D  -(g_y *512)));                                   
+            #undef  D                 //:----------------://             
+            //:-------------------------:INDEX_TO_XY_GLSL://    
+
+                                                     
+            REC rec; /** I32 Rectangle **/                         
+                               
+            #define GET_U32 AAC2020_FRAGCOM_TexelFetch_U32XY        
+            #define GET_I32(a,b,c,d)  MI3(GET_U32(a,b,c,d))        
+
+            //:  LOCATION     DATA_STORED_AT_LOCATION
+            //:  +---+---+    +---+---+  //:T_L ==> x_0
+            //:  |T_L|T_R|    |x_0|x_1|  //:T_R ==> x_1
+            //:  +---+---+    +---+---+  //:B_L ==> y_0
+            //:  |B_L|B_R|    |y_0|y_1|  //:B_R ==> y_1
+            //:  +---+---+    +---+---+
+            rec.x_0 =(GET_I32(TAU,g_x+0,g_y+0,I00)); //T_L//     
+            rec.x_1 =(GET_I32(TAU,g_x+1,g_y+0,I00)); //T_R//
+            rec.y_0 =(GET_I32(TAU,g_x+0,g_y+1,I00)); //B_L//
+            rec.y_1 =(GET_I32(TAU,g_x+1,g_y+1,I00)); //B_R//
+
+            #undef  GET_U32
+            #undef  GET_I32
+            
+           
+            /** Return Value Encoded In Taudepo Memory ..**/
+            /** TAU: Texture_As_Uniform .............. ..**/
+            return( rec );      
+        }
+        //:- - - - - - - - - - - -- - - - - - - - - - - -://
 
 
     //++++++++++++++++++++++++++++++++++++++++++++++++++++//
     //[========================:TAUFRAG_FUNCTIONS_GO_HERE]//
-    //:TAUDEPO_SHORTHAND_MACROS:-------------------------://
+    //[TAUFRAG_DEFINES___GO_HERE:========================]//
+
+        /** Undefine Previous Defines From This File. **/
+        /** @VID_IID[ 0177 ]TIME[ 00:51:23 ] ******** **/
+
+        #undef  ESP  //|----------------------------| 01 |//
+        #undef  E_S  //|----------------------------| 02 |//
+        #undef  I32  //[----------------------------[ 03 ]//
+        #undef  MF3  //[----------------------------[ 04 ]//
+        #undef  MI3  //[----------------------------[ 05 ]//
+        #undef  TRU  //[----------------------------[ 06 ]//
+        #undef  REC  //[----------------------------[ 07 ]//
+        #undef  ASS  //[----------------------------[ 08 ]//
+        #undef  IV2  //[----------------------------[ 09 ]//
+        #undef  U32  //[----------------------------[ 10 ]//
+        #undef  TAU  //[----------------------------[ 11 ]//
+        #undef  P5D  //[----------------------------[ 12 ]//
+        #undef  I00  //[----------------------------[ 13 ]//
+
+    //[========================:TAUFRAG_DEFINES___GO_HERE]//
+    //:TAUDEPO_SHORTHAND_MACROS:UNDEF:-------------------://
     #if( 1 == 1 /** OPENGL OR C99 **/ ) //:##############://
     /** ************************************************ ***
     @VID_IID[ 0173 ]TIME[ 03:09:00 ]
@@ -103,33 +380,48 @@
 
         //|DEX_TAU_000_015:------------------------------|//
 
-        #define TAU_015 AAC2020_TAUFRAG_taudepo_tau_015 
+        #undef  TAU_000  //:--------------: DEX_TAU : 00 :// 
+        #undef  TAU_001  //:--------------: DEX_TAU : 01 :// 
+        #undef  TAU_002  //:--------------: DEX_TAU : 02 :// 
+        #undef  TAU_003  //:--------------: DEX_TAU : 03 :// 
+        #undef  TAU_004  //:--------------: DEX_TAU : 04 :// 
+        #undef  TAU_005  //:--------------: DEX_TAU : 05 :// 
+        #undef  TAU_006  //:--------------: DEX_TAU : 06 :// 
+        #undef  TAU_007  //:--------------: DEX_TAU : 07 :// 
+        #undef  TAU_008  //:--------------: DEX_TAU : 08 :// 
+        #undef  TAU_009  //:--------------: DEX_TAU : 09 :// 
+        #undef  TAU_010  //:--------------: DEX_TAU : 10 :// 
+        #undef  TAU_011  //:--------------: DEX_TAU : 11 :// 
+        #undef  TAU_012  //:--------------: DEX_TAU : 12 :// 
+        #undef  TAU_013  //:--------------: DEX_TAU : 13 :// 
+        #undef  TAU_014  //:--------------: DEX_TAU : 14 :// 
+        #undef  TAU_015  //:--------------: DEX_TAU : 15 :// 
 
         //|------------------------------:DEX_TAU_000_015|//
         //|DEX_SUB_000_015:------------------------------|//
 
-        #define SUB_TAU AAC2020_TAUFRAG_taudepo_sub_taudepo 
-        #define SUB_P5D AAC2020_TAUFRAG_taudepo_sub_paint5d 
+        #undef  SUB_TAU  //:--------------: DEX_SUB : 00 ://
+        #undef  SUB_P5D  //:--------------: DEX_SUB : 01 ://
 
         //|------------------------------:DEX_SUB_000_015|//
         //|DEX_VAR_000_255:------------------------------|//
         
         /**[ P5D == PAINT5D Editor Variables ]**/
     
-        #define P5D_D_1 AAC2020_TAUFRAG_tau_sub_p5d_VAR_D_1 
-        #define P5D_vp0 AAC2020_TAUFRAG_tau_sub_p5d_VAR_vp0 
-        #define P5D_vp1 AAC2020_TAUFRAG_tau_sub_p5d_VAR_vp1 
-        #define P5D_vpc AAC2020_TAUFRAG_tau_sub_p5d_VAR_vpc 
-        #define P5D_T_Q AAC2020_TAUFRAG_tau_sub_p5d_VAR_T_Q 
-        #define P5D_T_E AAC2020_TAUFRAG_tau_sub_p5d_VAR_T_E 
-        #define P5D_T_L AAC2020_TAUFRAG_tau_sub_p5d_VAR_T_L 
-        #define P5D_B_X AAC2020_TAUFRAG_tau_sub_p5d_VAR_B_X 
-        #define P5D_B_Y AAC2020_TAUFRAG_tau_sub_p5d_VAR_B_Y 
-        #define P5D_A_D AAC2020_TAUFRAG_tau_sub_p5d_VAR_A_D 
-        #define P5D_T_V AAC2020_TAUFRAG_tau_sub_p5d_VAR_T_V 
-        #define P5D_vd1 AAC2020_TAUFRAG_tau_sub_p5d_VAR_vd1 
+        #undef  P5D_D_1  //:--------------: VAR_D_1 : 00 ://
+        #undef  P5D_vp0  //:--------------: VAR_vp0 : 01 ://
+        #undef  P5D_vp1  //:--------------: VAR_vp1 : 02 ://
+        #undef  P5D_vpc  //:--------------: VAR_vpc : 03 ://
+        #undef  P5D_T_Q  //:--------------: VAR_T_Q : 04 ://
+        #undef  P5D_T_E  //:--------------: VAR_T_E : 05 ://
+        #undef  P5D_T_L  //:--------------: VAR_T_L : 06 ://
+        #undef  P5D_B_X  //:--------------: VAR_B_X : 07 ://
+        #undef  P5D_B_Y  //:--------------: VAR_B_Y : 08 ://
+        #undef  P5D_A_D  //:--------------: VAR_A_D : 09 ://
+        #undef  P5D_T_V  //:--------------: VAR_T_V : 10 ://
+        #undef  P5D_vd1  //:--------------: VAR_vd1 : 11 ://
 
         //|------------------------------:DEX_VAR_000_255|//
 
     #endif //:###########################################://
-    //:-------------------------:TAUDEPO_SHORTHAND_MACROS://
+    //:-------------------:TAUDEPO_SHORTHAND_MACROS:UNDEF://

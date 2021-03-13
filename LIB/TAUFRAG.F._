@@ -64,6 +64,7 @@
 #define LOG aac2020_taufrag_Info_any                  //: 03 ://
 #define ERR aac2020_taufrag_Halt                      //: 04 ://
 #define E_V extern void                               //: 05 ://
+#define P_F printf                                    //: 06 ://
 
     U32
     AAC2020_TAUFRAG_UnitTest( U32 u32 )
@@ -74,8 +75,8 @@
     
         //:TAUDEPO_SHADER_CONSTANTS:-------------------------://
 
-            E_V aac2020_taufrag_UTC_taudepo_CopiesMatch( V );
-                aac2020_taufrag_UTC_taudepo_CopiesMatch(   );
+            E_V aac2020_taufrag_UTC_taudepo_CopiesMatch( void );
+                aac2020_taufrag_UTC_taudepo_CopiesMatch(      );
 
         //:-------------------------:TAUDEPO_SHADER_CONSTANTS://
 
@@ -100,7 +101,7 @@
     C99 code that can compile as GLSL due to macro magic.
     AT_MAKERWORKS_DATE[ 2021_03_11 ]
     *** **************************************************** **/
-    #define NUM_TAU (  1 )
+    #define NUM_TAU ( 16 )
     #define NUM_SUB (  2 )
     #define NUM_VAR ( 12 )
 
@@ -114,7 +115,52 @@
         U32 tab_DEX_TAU_000_015[ NUM_TAU * 2 ]={
             //::DEX_TAU_000_015:----------------------------:://
 
-            /**/        AAC2020_TAUDEPO_TAU_015
+            /**/        AAC2020_TAUDEPO_TAU_000
+            ,   AAC2020_TAUFRAG_taudepo_tau_000
+
+            ,           AAC2020_TAUDEPO_TAU_001
+            ,   AAC2020_TAUFRAG_taudepo_tau_001
+
+            ,           AAC2020_TAUDEPO_TAU_002
+            ,   AAC2020_TAUFRAG_taudepo_tau_002
+
+            ,           AAC2020_TAUDEPO_TAU_003
+            ,   AAC2020_TAUFRAG_taudepo_tau_003
+
+            ,           AAC2020_TAUDEPO_TAU_004
+            ,   AAC2020_TAUFRAG_taudepo_tau_004
+
+            ,           AAC2020_TAUDEPO_TAU_005
+            ,   AAC2020_TAUFRAG_taudepo_tau_005
+
+            ,           AAC2020_TAUDEPO_TAU_006
+            ,   AAC2020_TAUFRAG_taudepo_tau_006
+
+            ,           AAC2020_TAUDEPO_TAU_007
+            ,   AAC2020_TAUFRAG_taudepo_tau_007
+
+            ,           AAC2020_TAUDEPO_TAU_008
+            ,   AAC2020_TAUFRAG_taudepo_tau_008
+
+            ,           AAC2020_TAUDEPO_TAU_009
+            ,   AAC2020_TAUFRAG_taudepo_tau_009
+
+            ,           AAC2020_TAUDEPO_TAU_010
+            ,   AAC2020_TAUFRAG_taudepo_tau_010
+
+            ,           AAC2020_TAUDEPO_TAU_011
+            ,   AAC2020_TAUFRAG_taudepo_tau_011
+
+            ,           AAC2020_TAUDEPO_TAU_012
+            ,   AAC2020_TAUFRAG_taudepo_tau_012
+
+            ,           AAC2020_TAUDEPO_TAU_013
+            ,   AAC2020_TAUFRAG_taudepo_tau_013
+
+            ,           AAC2020_TAUDEPO_TAU_014
+            ,   AAC2020_TAUFRAG_taudepo_tau_014
+
+            ,           AAC2020_TAUDEPO_TAU_015
             ,   AAC2020_TAUFRAG_taudepo_tau_015
 
             //::----------------------------:DEX_TAU_000_015:://
@@ -190,7 +236,7 @@
         #define M_I (     NUM_TAU-1       )
         #define TAU ( tab_DEX_TAU_000_015 )
         
-            for  dex_met = 1 ; dex_met <= ( 2 ) ; dex_met++ ){
+            for( dex_met = 1 ; dex_met <= ( 2 ) ; dex_met++ ){
             for( dex_tau = 0 ; dex_tau <= (M_I) ; dex_tau++ ){
 
                 dex_taudepo =(( dex_tau * 2 )+0 );
@@ -207,10 +253,13 @@
                     };;
                 }else
                 if( 2 == dex_met ){
-                    if( (              0         )
-                    ||  ( loc_taudepo != dex_tau )
-                    ||  ( loc_taufrag != dex_tau )
+                    if( (              0                )
+                    ||  ( loc_taudepo != ((U32)dex_tau) )
+                    ||  ( loc_taufrag != ((U32)dex_tau) )
                     ){
+                        P_F("[loc_taudepo]:%d\n", loc_taudepo);
+                        P_F("[loc_taufrag]:%d\n", loc_taufrag);
+                        P_F("[....dex_tau]:%d\n",     dex_tau);
                         ERR("[TAUFRAG_UTC_TAUDEPO:_DEX_:TAU]");
                     };;
                 }else{
@@ -226,7 +275,7 @@
         #define M_I (     NUM_SUB-1       )
         #define SUB ( tab_DEX_SUB_000_015 )
         
-            for  dex_met = 1 ; dex_met <= ( 2 ) ; dex_met++ ){
+            for( dex_met = 1 ; dex_met <= ( 2 ) ; dex_met++ ){
             for( dex_sub = 0 ; dex_sub <= (M_I) ; dex_sub++ ){
 
                 dex_taudepo =(( dex_sub * 2 )+0 );
@@ -243,9 +292,9 @@
                     };;
                 }else
                 if( 2 == dex_met ){
-                    if( (              0         )
-                    ||  ( loc_taudepo != dex_sub )
-                    ||  ( loc_taufrag != dex_sub )
+                    if( (              0                )
+                    ||  ( loc_taudepo != ((U32)dex_sub) )
+                    ||  ( loc_taufrag != ((U32)dex_sub) )
                     ){
                         ERR("[TAUFRAG_UTC_TAUDEPO:_DEX_:SUB]");
                     };;
@@ -261,7 +310,7 @@
         #define M_I (     NUM_VAR-1       )
         #define VAR ( tab_DEX_VAR_000_255 )
         
-            for  dex_met = 1 ; dex_met <= ( 2 ) ; dex_met++ ){
+            for( dex_met = 1 ; dex_met <= ( 2 ) ; dex_met++ ){
             for( dex_var = 0 ; dex_var <= (M_I) ; dex_var++ ){
 
                 dex_taudepo =(( dex_var * 2 )+0 );
@@ -278,9 +327,9 @@
                     };;
                 }else
                 if( 2 == dex_met ){
-                    if( (              0         )
-                    ||  ( loc_taudepo != dex_var )
-                    ||  ( loc_taufrag != dex_var )
+                    if( (              0                )
+                    ||  ( loc_taudepo != ((U32)dex_var) )
+                    ||  ( loc_taufrag != ((U32)dex_var) )
                     ){
                         ERR("[TAUFRAG_UTC_TAUDEPO:_DEX_:VAR]");
                     };;
@@ -304,6 +353,7 @@
 #undef  LOG  //:----------------------------------------: 03 ://
 #undef  ERR  //:----------------------------------------: 04 ://
 #undef  E_V  //:----------------------------------------: 05 ://
+#undef  P_F  //:----------------------------------------: 06 ://
 //:========================================:UNIT_TEST_SECTION://
     
     

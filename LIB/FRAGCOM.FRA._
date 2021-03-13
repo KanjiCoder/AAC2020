@@ -2,6 +2,33 @@
 
     //:TODO: REWORK THIS CODE INTO NEW SHADER
 
+    //:ALL_SHADERS_KNOW_ABOUT_ALL_MEMORY:----------------://
+    //:glsl_file_scope_stuff:----------------------------://
+    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL           //| # |//
+                                                   //| # |//
+        //:#_KEEP_USAMPLER_HIGH_#          ://     //| # |//
+        //:#_SAM_PRECISION_BEFORE_SAM_VAR_#://     //| # |//
+        precision highp usampler2D;                //| # |//
+                                                   //| # |//
+        //|(( UNI ))____________________________|////| # |//
+        //[:::::::SHADERTOY_COMPATIBILITY:::::::]////| # |//
+        #define fragCoord gl_FragCoord             //| # |//
+        #define       F_C gl_FragCoord             //| # |//
+        uniform vec3 iResolution;                  //| # |//
+        uniform usampler2D taudepo;                //| # |//
+        uniform usampler2D paint5d;                //| # |//
+                                                   //| # |//
+        //|(( INN ))____________________________|////| # |//
+        //:     fag_tec:FrAGshaderTExtureCoord  :////| # |//
+        in vec2 fag_tec;                           //| # |//
+                                                   //| # |//
+        //|(( OUT ))____________________________|////| # |//
+        out vec4 FragColor;                        //| # |//
+                                                   //| # |//
+    #endif                                         //| # |//
+    //:----------------------------:glsl_file_scope_stuff://
+    //:----------------:ALL_SHADERS_KNOW_ABOUT_ALL_MEMORY://
+
     //[CUT_AND_PASTE_THIS_INTO_GLSL_SOURCE:==============]//
     //[AAC2020_FRAGCOM_DEFAULT_001:======================]//
     //[PASTE_INTO_FILE[ COM_001._ ]:=====================]//
@@ -349,13 +376,68 @@
 
             return( dst );
         }
-
+        //:- - - - - - - - - - - -- - - - - - - - - - - -://  
         /** TRASHED:AAC2020_FRAGCOM_rec_src_MAP_rec_dst  **/
         /** SEE[ DOC/TRASH/005._ ]                       **/
         /** VID_IID[ 0145 ]TIME[ 02:43:23 ]              **/
+        //:- - - - - - - - - - - -- - - - - - - - - - - -://  
 
-
-
+        U32                                       //[ TF ]//
+        AAC2020_FRAGCOM_TexelFetch_U32(           //[ TF ]//
+            SAM u32_sam //:<-[C99/C11]AND[GLSL]:////[ TF ]//
+        ,   IV2 glo                               //[ TF ]//
+        ,   I32 levodet_ALWAYS_ZERO               //[ TF ]//
+        )                                         //[ TF ]//
+        {                                         //[ TF ]//
+            U32 u32_var; /** Output/Return **/    //[ TF ]//
+                                                  //[ TF ]//
+            //:TEXEL_FETCH_RETURNS_XYZW_U08:-------------://     
+            /** GET: [ x,y,z,w ] / [r,g,b,a]  **/ //[ TF ]//
+            /**      texel As a uvec 4 type.  **/ //[ TF ]//
+                UV4 uv4=(                         //[ TF ]//
+                    T_F(                          //[ TF ]//
+                        u32_sam                   //[ TF ]//
+                    ,   glo                       //[ TF ]//
+                    ,   levodet_ALWAYS_ZERO       //[ TF ]//
+                    ));;                          //[ TF ]//
+                                                  //[ TF ]//
+            //:-------------:TEXEL_FETCH_RETURNS_XYZW_U08://
+            //:BIT_PACK_YOUR_PIXEL:----------------------://
+            #define CPU_PIX AAC2020_PIXNAME_paint5d_cpu_pix
+            /** **************************************TF *** 
+                @VID_IID[ 0177 ]TIME[ 01:05:33 ]  //[ TF ]//
+                #_EXT_COM_2021_03_13_313PM_#      //[ TF ]//
+            *** **************************************TF **/ 
+                                                  //[ TF ]//
+                u32_var=( U00 /** 0x00 **/        //[ TF ]//
+                | ( uv4.x << 24 ) //: R ://       //[ TF ]//
+                | ( uv4.y << 16 ) //: G ://       //[ TF ]//
+                | ( uv4.z <<  8 ) //: B ://       //[ TF ]//
+                | ( uv4.w <<  0 ) //: A ://       //[ TF ]//
+                );;  /**@PAIR_CODE_2021_01_14@ **///[ TF ]//
+                                                  //[ TF ]//
+            #undef  CPU_PIX                       //[ TF ]//
+            //:----------------------:BIT_PACK_YOUR_PIXEL://
+            return( u32_var );                    //[ TF ]//
+        }                                         //[ TF ]//
+        //:- - - - - - - - - - - -- - - - - - - - - - - -://
+        U32                                       //[ TF ]//
+        AAC2020_FRAGCOM_TexelFetch_U32XY(         //[ TF ]//
+            SAM u32_sam //:<-[C99/C11]AND[GLSL]:////[ TF ]//
+        ,   I32 g_x                               //[ TF ]//
+        ,   I32 g_y                               //[ TF ]//
+        ,   I32 levodet_ALWAYS_ZERO               //[ TF ]//
+        )                                         //[ TF ]//
+        {                                         //[ TF ]//
+            /** #_EXT_COM_2020_03_13_315PM_# **/  //[ TF ]//
+            return(                               //[ TF ]//
+            AAC2020_FRAGCOM_TexelFetch_U32(       //[ TF ]//
+                u32_sam                           //[ TF ]//
+            ,   MAK_IV2( g_x , g_y )              //[ TF ]//
+            ,   levodet_ALWAYS_ZERO               //[ TF ]//
+            ));;                                  //[ TF ]//
+        }                                         //[ TF ]//
+                                                  //[ TF ]//
         //:- - - - - - - - - - - -- - - - - - - - - - - -://  
     //:always_exists_error_string_macros:----------------://
                                                    //[ x ]//

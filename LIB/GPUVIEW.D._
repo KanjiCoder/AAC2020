@@ -2,6 +2,26 @@
 //: GPUVIEW : GPU_(texture)_VIEW
 //: GTEXVEW : Gpu_TEXture_ViEW  
 
+//:ORDER_ENFORCER_GAURD:=====================================://
+
+    /** **************************************************** **/
+    /** @VID_IID[ 0174 ]TIME[ 02:38:11 ]ORDER_ENFORCER_ADDED **/
+    /** We almost decided to refactor the code wrongly. So   **/
+    /** added this code to catch ourselves if we ever make   **/
+    /** that fuck up.                                        **/
+    /** **************************************************** **/
+    
+    /** GPUVIEW should be included AFTER  FRAGCOM  **/
+    #if( AAC2020_INCLUDE_FRAGCOM <= 0 )  
+        #error "[GPUVIEW_NEEDS_FRAGCOMS_GENERIC_MAPPING_FUNCS]"
+    #endif
+
+    /** GPUVIEW should be included BEFORE TAUFRAG  **/
+    #if( AAC2020_INCLUDE_TAUFRAG >= 1 )  
+        #error "[GPUVIEW_DOESNT_NEED_TO_KNOW_WHAT_PIXELS_MEAN]"
+    #endif
+
+//:=====================================:ORDER_ENFORCER_GAURD://
 //:MISC_VARS:================================================://
 #define U08 uint8_t /** GCC: <stdint.h> **/
 

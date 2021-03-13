@@ -5,30 +5,6 @@
     //[PASTE_INTO_FILE[ P5D_001._ ]:=====================]//
     //:P5D_001____AAC2020_PAINT5D_DEFAULT_001:===========://
     //|SIM:Shim_Ifdef_Macros:|||||||||||||||||||||||||||||//
-    //:glsl_file_scope_stuff:----------------------------://
-    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL           //| # |//
-                                                   //| # |//
-        //:#_KEEP_USAMPLER_HIGH_#          ://     //| # |//
-        //:#_SAM_PRECISION_BEFORE_SAM_VAR_#://     //| # |//
-        precision highp usampler2D;                //| # |//
-                                                   //| # |//
-        //|(( UNI ))____________________________|////| # |//
-        //[:::::::SHADERTOY_COMPATIBILITY:::::::]////| # |//
-        #define fragCoord gl_FragCoord             //| # |//
-        #define       F_C gl_FragCoord             //| # |//
-        uniform vec3 iResolution;                  //| # |//
-        uniform usampler2D taudepo;                //| # |//
-        uniform usampler2D paint5d;                //| # |//
-                                                   //| # |//
-        //|(( INN ))____________________________|////| # |//
-        //:     fag_tec:FrAGshaderTExtureCoord  :////| # |//
-        in vec2 fag_tec;                           //| # |//
-                                                   //| # |//
-        //|(( OUT ))____________________________|////| # |//
-        out vec4 FragColor;                        //| # |//
-                                                   //| # |//
-    #endif                                         //| # |//
-    //:----------------------------:glsl_file_scope_stuff://
     //:always_exists_error_string_macros:----------------://
                                                    //| # |//
         /** ******************************** ***   //| # |//
@@ -170,48 +146,11 @@
         ,   I32 levodet_ALWAYS_ZERO                //[ x ]//
         )                                          //[ x ]//
         {                                          //[ x ]//
-            U32 u32_var; /** Output/Return **/     //[ x ]//
-                                                   //[ x ]//
-            //:TEXEL_FETCH_RETURNS_XYZW_U08:-------------://     
-            /** GET: [ x,y,z,w ] / [r,g,b,a]  **/  //[ x ]//
-            /**      texel As a uvec 4 type.  **/  //[ x ]//
-                UV4 uv4=(                          //[ x ]//
-                    T_F(                           //[ x ]//
-                        u32_sam                    //[ x ]//
-                    ,   glo                        //[ x ]//
-                    ,   levodet_ALWAYS_ZERO        //[ x ]//
-                    ));;                           //[ x ]//
-                                                   //[ x ]//
-            //:-------------:TEXEL_FETCH_RETURNS_XYZW_U08://
-            //:BIT_PACK_YOUR_PIXEL:----------------------://
-            #define CPU_PIX AAC2020_PIXNAME_paint5d_cpu_pix
-            /** **************************************** ***
-                @VID_IID[ 0086 ]TIME[ 01:29:10 ]   //[ x ]//
-                Bit shifting code copied directly  //[ x ]//
-                from                               //[ x ]//
-                aac2020_paint5d_UTC_BitPack_Get 's //[ x ]//
-                bitshift code because we are       //[ x ]//
-                really good at fucking up          //[ x ]//
-                trivial bit shifting code.         //[ x ]//
-                                                   //[ x ]//
-                @VID_IID[ 0092 ]TIME[ 00:32:23 ]   //[ x ]//
-                Code relocated to here because we  //[ x ]//
-                mistakenly thought native GLSL     //[ x ]//
-                texelFetch returned a unit32 but   //[ x ]//
-                actually                           //[ x ]//
-                returns a [ uvec4 / UV4 ]          //[ x ]//
-            *** **************************************** **/
-                                                   //[ x ]//
-                u32_var=( U00 /** 0x00 **/         //[ x ]//
-                | ( uv4.x << 24 ) //: R ://        //[ x ]//
-                | ( uv4.y << 16 ) //: G ://        //[ x ]//
-                | ( uv4.z <<  8 ) //: B ://        //[ x ]//
-                | ( uv4.w <<  0 ) //: A ://        //[ x ]//
-                );;  /** @PAIR_CODE_2021_01_14@ **///[ x ]//
-                                                   //[ x ]//
-            #undef  CPU_PIX                        //[ x ]//
-            //:----------------------:BIT_PACK_YOUR_PIXEL://
-            return( u32_var );                     //[ x ]//
+            return(                                //[ x ]//
+            AAC2020_FRAGCOM_TexelFetch_U32(        //[ x ]//
+            /**/    u32_sam       , glo            //[ x ]//
+            ,       levodet_ALWAYS_ZERO            //[ x ]//
+            ));;                                   //[ x ]//
         }                                          //[ x ]//
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
         U32                                        //[ x ]//
@@ -222,93 +161,21 @@
         ,   I32 levodet_ALWAYS_ZERO                //[ x ]//
         )                                          //[ x ]//
         {                                          //[ x ]//
-            /** FUNC[  TexelFetch_U32XY ]      **/ //[ x ]//
-            /** ADDED[ DATE[ 2021_02_22 ]     ]**/ //[ x ]//
-            /** VID_IID[ 0151 ]TIME[ 01:14:32 ]**/ //[ x ]//
-            return(
-            AAC2020_P5D1OGL_TexelFetch_U32(
-                u32_sam
-            ,   MAK_IV2( g_x , g_y )
-            ,   levodet_ALWAYS_ZERO
-            ));;
-        }
-
-
-
-
+            return(                                //[ x ]//
+            AAC2020_FRAGCOM_TexelFetch_U32XY(      //[ x ]//
+            /**/    u32_sam , g_x , g_y            //[ x ]//
+            ,       levodet_ALWAYS_ZERO            //[ x ]//
+            ));;                                   //[ x ]//
+        }                                          //[ x ]//
         //:NEW_FEATURE_TAUDEPO_ACCESS:-------------------://
         //:DATE[ 2021_02_10 ]VID_IID[ 0131 ]T[ 04:35:23 ]://
     ////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////
 
+    //- REMOVED: aac2020_p5d1ogl_taudepo_pix_dex - - - - -//
+    //+ ....USE: aac2020_taufrag_pix_dex         + + + + +//
 
-        I32
-        aac2020_p5d1ogl_taudepo_pix_dex(   //:<<<<<<<<<<<<<<<<<<<<<<<<<<<< TODO: UNIT TEST THIS FUNCTION          
-            I32 dex_tau //:EX: AAC2020_TAUDEPO.TAU_015                         
-        ,   I32 dex_sub //:EX: AAC2020_TAUDEPO.PAINT5D                                                  
-        ,   I32 dex_var //:EX: AAC2020_TAUDEPO.P5D_A_D  
-        )
-        {
-            I32 pix_dex; //:<--[ output/return ]variable
-
-            I32 t_x ; //: dex_tau's xy location 
-            I32 t_y ; //: dex_tau's xy location 
-            
-            I32 s_x ; //: dex_sub's xy location 
-            I32 s_y ; //: dex_sub's xy location 
-            
-            I32 v_x ; //: dex_var's xy location 
-            I32 v_y ; //: dex_var's xy location 
-
-            I32 p_x ; //: pixel_x: (GLOBAL, on 512x512)
-            I32 p_y ; //: pixel_y: (GLOBAL, on 512x512)
-
-            //:INDEX_TO_XY_GLSL:-------------------------://  
-            //:                                          ://
-            //:SEE[ #DIA_TAU_CEL# ]IN[ LIB/TAUDEPO.D._ ] ://
-            #define D dex_tau          //:DEX_TAU_000_015://
-            t_y  =MAK_I32( TRU( MAK_F32(D) / MAK_F32( 4 )));   
-            t_x  =(           (         D  -   (t_y * 4 )));                                   
-            #undef  D                  //:DEX_TAU_000_015:// 
-            //:                                          ://
-            //:SEE[ #DIA_SUB_CEL# ]IN[ LIB/TAUDEPO.D._ ] ://
-            #define D dex_sub          //:DEX_SUB_000_015://
-            s_y  =MAK_I32( TRU( MAK_F32(D) / MAK_F32( 4 )));   
-            s_x  =(           (         D  -   (s_y * 4 )));                                   
-            #undef  D                  //:DEX_SUB_000_015://
-            //:                                          ://
-            //:SEE[ #DIA_VAR_CEL# ]IN[ LIB/TAUDEPO.D._ ] ://
-            #define D dex_var          //:DEX_VAR_000_255://
-            v_y  =MAK_I32( TRU( MAK_F32(D) / MAK_F32(16 )));   
-            v_x  =(           (         D  -   (v_y *16 )));                                   
-            #undef  D                  //:DEX_VAR_000_255://
-            //:                                          ://
-            //:-------------------------:INDEX_TO_XY_GLSL://
-
-            //:global_pixel_xy_on_512x512:---------------://
-                                                      //:://
-            p_x =( 0                                  //:://
-            +  (t_x * (512 / 4) ) //: 128x128_tau_cells  ://
-            +  (s_x * (128 / 4) ) //: 032x032_sub_cells  ://
-            +  (v_x * (    2  ) ) //: 002x002 pix_per_var://
-            );;                   //:(002x002:4pixper_var://
-                                                      //:://
-            p_y =( 0                                  //:://
-            +  (t_y * (512 / 4) ) //: 128x128_tau_cells  ://
-            +  (s_y * (128 / 4) ) //: 032x032_sub_cells  ://
-            +  (v_y * (    2  ) ) //: 002x002 pix_per_var://
-            );;                   //:(002x002:4pixper_var://
-            //:                     :                    ://
-            //:---------------:global_pixel_xy_on_512x512://
-
-            //:XY_TO_INDEX_FORMULA_FOR_TOP_LEFT_PIXEL    ://
-            //:OF_OUR_2X2_CLUSTER_OF_PIXELS_REPRESENTING ://
-            //:A_SINGLE_VARIABLE.                        ://
-                    pix_dex = p_x + ( 512 * p_y);
-            return( pix_dex );
-        }
-        //:- - - - - - - - - - - -- - - - - - - - - - - -://
         U32                                          
         AAC2020_P5D1OGL_TAUDEPO_Get_U32(                 
             I32 dex_tau //:EX: AAC2020_TAUDEPO.TAU_015                         
@@ -324,7 +191,7 @@
             IV2     glo; //:GLOBAL_PIXEL_LOCATION: AS____XY
 
             pix_dex=(
-                aac2020_p5d1ogl_taudepo_pix_dex(
+                aac2020_taufrag_pix_dex(
                     dex_tau //: EX: AAC2020_TAUDEPO.TAU_015
                 ,   dex_sub //: EX: AAC2020_TAUDEPO.PAINT5D        
                 ,   dex_var //: EX: AAC2020_TAUDEPO.P5D_A_D    
@@ -371,7 +238,7 @@
             I32     g_y; //:GLOBAL_PIXEL_LOCATION: Y-coord
 
             pix_dex=( /**#TOP_LEFT_PIXEL_OF_2X2_CLUSTER#**/
-                aac2020_p5d1ogl_taudepo_pix_dex(
+                aac2020_taufrag_pix_dex(
                     dex_tau //: EX: AAC2020_TAUDEPO.TAU_015
                 ,   dex_sub //: EX: AAC2020_TAUDEPO.PAINT5D        
                 ,   dex_var //: EX: AAC2020_TAUDEPO.P5D_A_D    

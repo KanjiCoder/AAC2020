@@ -70,6 +70,10 @@
         OUT="./LIB/FRAGCOM.FRA.STRING._"
         awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT
 
+        INN="./LIB/TAUFRAG.FRA._"
+        OUT="./LIB/TAUFRAG.FRA.STRING._"
+        awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT
+
         INN="./LIB/GPUVIEW.FRA._"
         OUT="./LIB/GPUVIEW.FRA.STRING._"
         awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT
