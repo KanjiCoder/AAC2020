@@ -97,8 +97,8 @@
         //|DEX_VAR_000_255:------------------------------|//
     
         #define P5D_D_1 AAC2020_TAUFRAG_tau_sub_p5d_VAR_D_1 
-        #define P5D_vp0 AAC2020_TAUFRAG_tau_sub_p5d_VAR_vp0 
-        #define P5D_vp1 AAC2020_TAUFRAG_tau_sub_p5d_VAR_vp1 
+        #define P5D_VP0 AAC2020_TAUFRAG_tau_sub_p5d_VAR_vp0 
+        #define P5D_VP1 AAC2020_TAUFRAG_tau_sub_p5d_VAR_vp1 
         #define P5D_vpc AAC2020_TAUFRAG_tau_sub_p5d_VAR_vpc 
         #define P5D_T_Q AAC2020_TAUFRAG_tau_sub_p5d_VAR_T_Q 
         #define P5D_T_E AAC2020_TAUFRAG_tau_sub_p5d_VAR_T_E 
@@ -135,6 +135,7 @@
         #define TAU taudepo                       //[ 11 ]//
         #define P5D paint5d                       //[ 12 ]//
         #define I00 int( 0 )                      //[ 13 ]//
+        #define VOD void                          //[ 14 ]//
     #else                                         //[ -- ]//
         /** RUNNING_AS: _C99 **/                  //[ -- ]//
                                                   //[ -- ]//
@@ -148,7 +149,8 @@
         #define U32 uint32_t                      //[ 10 ]//
         #define TAU SUB_TAU                       //[ 11 ]//
         #define P5D SUB_P5D                       //[ 12 ]//
-        #define I00 (  0  )
+        #define I00 (  0  )                       //[ 13 ]//
+        #define VOD void                          //[ 14 ]//
     #endif                                        //[ -- ]//
     //[========================:TAUFRAG_DEFINES___GO_HERE]//
     //[TAUFRAG_FUNCTIONS_GO_HERE:========================]//
@@ -347,8 +349,55 @@
             return( rec );      
         }
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
-
-
+        //:PUBLIC_RECTANGLE_GETTERS:=====================://
+        /** ******************************************** ***
+        MINI_LOCAL_FUNCTION_INDEX:
+            1: AAC2020_TAUFRAG_Get_REC_p5d_vp0
+            2: AAC2020_TAUFRAG_Get_REC_p5d_vp1
+            3: AAC2020_TAUFRAG_Get_I32_p5d_a_d  
+        *** ******************************************** **/
+            REC
+            AAC2020_TAUFRAG_Get_REC_p5d_vp0( VOD )
+            {
+                REC p5d_vp0; /**AKA[ P5D_REC_VP0 ]**/
+                p5d_vp0 =(
+                aac2020_taufrag_Get_REC(
+                    TAU_015 //:tau: TAU_015  
+                ,   SUB_P5D //:sub: PAINT5D  
+                ,   P5D_VP0 //:var: P5D_VP0  
+                ));;
+                return( p5d_vp0 );
+            }
+            //:- - - - - - - - - - -- - - - - - - - - - -://
+            REC
+            AAC2020_TAUFRAG_Get_REC_p5d_vp1( VOD )
+            {
+                REC p5d_vp1; /**AKA[ P5D_REC_VP1 ]**/
+                p5d_vp1 =(
+                aac2020_taufrag_Get_REC(
+                    TAU_015 //:tau: TAU_015  
+                ,   SUB_P5D //:sub: PAINT5D  
+                ,   P5D_VP1 //:var: P5D_VP1  
+                ));;
+                return( p5d_vp1 );
+            }
+            //:- - - - - - - - - - -- - - - - - - - - - -://
+            I32
+            AAC2020_TAUFRAG_Get_I32_p5d_a_d( VOD )
+            {
+                //: @HARDCODED@[ P5D_A_D ]
+                U32 aus_dex_u32;
+                I32 aus_dex;  
+                aus_dex_u32 =(
+                aac2020_taufrag_Get_U32(
+                    TAU_015 //:tau: TAU_015 
+                ,   SUB_P5D //:sub: PAINT5D 
+                ,   P5D_A_D //:var: P5D_A_D 
+                ));;
+                aus_dex=( MI3( aus_dex_u32 ) );
+                return( aus_dex );
+            }
+        //:=====================:PUBLIC_RECTANGLE_GETTERS://
     //++++++++++++++++++++++++++++++++++++++++++++++++++++//
     //[========================:TAUFRAG_FUNCTIONS_GO_HERE]//
     //[TAUFRAG_DEFINES___GO_HERE:========================]//
@@ -369,6 +418,7 @@
         #undef  TAU  //[----------------------------[ 11 ]//
         #undef  P5D  //[----------------------------[ 12 ]//
         #undef  I00  //[----------------------------[ 13 ]//
+        #undef  VOD  //[----------------------------[ 14 ]//
 
     //[========================:TAUFRAG_DEFINES___GO_HERE]//
     //:TAUDEPO_SHORTHAND_MACROS:UNDEF:-------------------://
@@ -409,8 +459,8 @@
         /**[ P5D == PAINT5D Editor Variables ]**/
     
         #undef  P5D_D_1  //:--------------: VAR_D_1 : 00 ://
-        #undef  P5D_vp0  //:--------------: VAR_vp0 : 01 ://
-        #undef  P5D_vp1  //:--------------: VAR_vp1 : 02 ://
+        #undef  P5D_VP0  //:--------------: VAR_vp0 : 01 ://
+        #undef  P5D_VP1  //:--------------: VAR_vp1 : 02 ://
         #undef  P5D_vpc  //:--------------: VAR_vpc : 03 ://
         #undef  P5D_T_Q  //:--------------: VAR_T_Q : 04 ://
         #undef  P5D_T_E  //:--------------: VAR_T_E : 05 ://
