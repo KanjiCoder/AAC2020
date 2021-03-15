@@ -9,6 +9,74 @@
     //[   VIDEO COMMENT TIMESTAMP EXAMPLE   ]//
 *** ******************************************************** ***
 
+
+@STATIC_MEMORY@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@DYNAMI_MEMORY@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @_STATIC_MEMORY_@ : TAU texture memory that should not
+                        be changed after it has been set.
+                        For example the glyph font used by
+                        UIRECTS system.
+    
+    @DYNAMIC_MEMORY@  :
+    @_DYNAMIC_MEMORY_@:
+    @_DYNAMI_MEMORY_@ : TAU texture memory that is dynamic and
+                        changes often during [editing|gameplay].
+                        Should use commands:
+
+                        AAC2020_TAUDEPO_Put( ....... )
+                        AAC2020_TAUDEPO_Get( ....... )
+                        AAC2020_TAUSYNC_Run( WET_RUN )
+                        
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@STATIC_MEMORY@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@DYNAMI_MEMORY@
+#__TOP_LEVEL_CELLS_#############################################
+#_DEX_TAU_RES_##################################################
+
+    @VID_IID[ 0181 ]TIME[ 03:23:32 ]UIR_SECTION_RESERVED
+
+    We have a lot of un-used sectors in the TAUDEPO memory.
+    Lets try to use the top-level cell zero(0)to store
+    UIRECT font glyphs.
+
+    Also thinking....
+
+        +-----------+ +-----------+
+        | STATIC_MEM| | DYNA__MEM |
+        V           V V           V 
+        +- - - - - -+ +- - - - - -+
+        | UIR . --- | | --- . --- |
+        | 000 . 001 | | 002 . 003 |
+        +- - - - - -+ +- - - - - -+
+        | --- . --- | | --- . --- |
+        | 004 . 005 | | 006 . 007 |  <<<<<< _TOP_LEVEL_CELLS_
+        +- - - - - -+ +- - - - - -+
+        | --- . --- | | --- . --- |
+        | 008 . 009 | | 010 . 011 |
+        +- - - - - -+ +- - - - - -+
+        | --- . --- | | --- . TAU |
+        | 012 . 013 | | 014 . 015 |
+        +- - - - - -+ +-----+-----+
+        
+        #_DEX_TAU_RESERVATIONS_##  000 : UIR : UIRECTS
+        #_DEX_TAU_RESERVED_######  001 : --- : un_used
+        #_DEX_TAU_RES_###########  002 : --- : un_used
+        +-----+-----+-----+-----+  003 : --- : un_used
+        | UIR | --- | --- | --- |  004 : --- : un_used
+        | 000 | 001 | 002 | 003 |  005 : --- : un_used
+        +-----+-----+-----+-----+  006 : --- : un_used
+        | --- | --- | --- | --- |  007 : --- : un_used
+        | 004 | 005 | 006 | 007 |  008 : --- : un_used
+        +-----+-----+-----+-----+  009 : --- : un_used
+        | --- | --- | --- | --- |  010 : --- : un_used
+        | 008 | 009 | 010 | 011 |  011 : --- : un_used
+        +-----+-----+-----+-----+  012 : --- : un_used
+        | --- | --- | --- | TAU |  013 : --- : un_used
+        | 012 | 013 | 014 | 015 |  014 : --- : un_used
+        +-----+-----+-----+-----+  015 : TAU : TAUDEPO
+
+##################################################_DEX_TAU_RES_#
+##############################################_TOP_LEVEL_CELLS_#
 #_DOUBLE_SQUARE_BRACKET_MACROS_#################################
 
     @VID_IID[ 0177 ]TIME[ 02:55:13 ]

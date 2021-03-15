@@ -70,7 +70,7 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 43 ,       "43");
 //:==================================================:TAUSYNC://
 //:PAINT5D:==================================================://
 #if(            AAC2020_INCLUDE_PAINT5D >=  1 )
-_Static_assert( AAC2020_INCLUDE_PAINT5D == 50 ,       "50");
+_Static_assert( AAC2020_INCLUDE_PAINT5D == 51 ,       "51");
 
     #define  FMACROS_PAINT5D_LoopTick   AAC2020_PAINT5D_LoopTick
 #endif
@@ -538,6 +538,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 50 ,       "50");
     GPUDATA
     GPUVIEW
     TAUDEPO
+    UIRECTS
     PAINT5D
 *** ******************************************************** **/
 //[AUTO_GENERATED_INIT_FUNCTIONS::- - - - - - - - - - - - - -]//
@@ -649,6 +650,18 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 50 ,       "50");
 
     #endif
     //:=========================================:INIT:TAUDEPO://
+    //:INIT:UIRECTS:=========================================://
+    #if(            AAC2020_INCLUDE_UIRECTS >=  1 )
+
+        #define  FMACROS_UIRECTS_Init       AAC2020_UIRECTS_Init
+
+    #endif
+    #if(    AAC2020_INCLUDE_UIRECTS == 0 )
+
+        #define  FMACROS_UIRECTS_Init(  DISCARDED_ARGUMENT )       
+
+    #endif
+    //:=========================================:INIT:UIRECTS://
     //:INIT:PAINT5D:=========================================://
     #if(            AAC2020_INCLUDE_PAINT5D >=  1 )
 

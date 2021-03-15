@@ -221,6 +221,11 @@
               #error "[OUT_OF_ORDER:AAC2020_INCLUDE_TAUFRAG]"
 #endif
 #endif
+#if( 0                           != AAC2020_INCLUDE_UIRECTS )
+#if( macro_libchan_order_UIRECTS != AAC2020_INCLUDE_UIRECTS )
+              #error "[OUT_OF_ORDER:AAC2020_INCLUDE_UIRECTS]"
+#endif
+#endif
 #if( 0                           != AAC2020_INCLUDE_ZOOMCOM )
 #if( macro_libchan_order_ZOOMCOM != AAC2020_INCLUDE_ZOOMCOM )
               #error "[OUT_OF_ORDER:AAC2020_INCLUDE_ZOOMCOM]"
@@ -391,25 +396,28 @@
     #if( macro_libchan_order_TAUFRAG !=     44   )
     #error "[TAIL_ORDER_FAIL:TAUFRAG]"  //: -- ://
     #endif                              //: -- ://
-    #if( macro_libchan_order_ZOOMCOM !=     45   )
+    #if( macro_libchan_order_UIRECTS !=     45   )
+    #error "[TAIL_ORDER_FAIL:UIRECTS]"  //: -- ://
+    #endif                              //: -- ://
+    #if( macro_libchan_order_ZOOMCOM !=     46   )
     #error "[TAIL_ORDER_FAIL:ZOOMCOM]"  //: -- ://
     #endif                              //: -- ://
-    #if( macro_libchan_order_DRAGCOM !=     46   )
+    #if( macro_libchan_order_DRAGCOM !=     47   )
     #error "[TAIL_ORDER_FAIL:DRAGCOM]"  //: -- ://
     #endif                              //: -- ://
-    #if( macro_libchan_order_CLICKOM !=     47   )
-    #error "[TAIL_ORDER_FAIL:CLICKOM]"  //: -- ://
-    #endif                              //: -- ://
-    #if( macro_libchan_order_EDITCAM !=     48   )
+    #if( macro_libchan_order_CLICKOM !=     48   )
+    #error "[TAIL_ORDER_FAIL:CLICKOM]"  //:    ://
+    #endif                              //:    ://
+    #if( macro_libchan_order_EDITCAM !=     49   )
     #error "[TAIL_ORDER_FAIL:EDITCAM]"  //:    ://
     #endif                              //:    ://
-    #if( macro_libchan_order_GAMECAM !=     49   )
+    #if( macro_libchan_order_GAMECAM !=     50   )
     #error "[TAIL_ORDER_FAIL:GAMECAM]"  //:    ://
     #endif                              //:    ://
-    #if( macro_libchan_order_PAINT5D !=     50   )
+    #if( macro_libchan_order_PAINT5D !=     51   )
     #error "[TAIL_ORDER_FAIL:PAINT5D]"  //:    ://
     #endif                              //:    ://
-    #if( macro_libchan_order_P5D1OGL !=     51   )
+    #if( macro_libchan_order_P5D1OGL !=     52   )
     #error "[TAIL_ORDER_FAIL:P5D1OGL]"
     #endif
 
@@ -474,13 +482,14 @@
     #undef  macro_libchan_order_TAUTYPE   //:----## 42 ##----://
     #undef  macro_libchan_order_TAUSYNC   //:----## 43 ##----://
     #undef  macro_libchan_order_TAUFRAG   //:----## 44 ##----://
-    #undef  macro_libchan_order_ZOOMCOM   //:----## 45 ##----://
-    #undef  macro_libchan_order_DRAGCOM   //:----## 46 ##----://
-    #undef  macro_libchan_order_CLICKOM   //:----## 47 ##----://
-    #undef  macro_libchan_order_EDITCAM   //:----## 48 ##----://
-    #undef  macro_libchan_order_GAMECAM   //:----## 49 ##----://
-    #undef  macro_libchan_order_PAINT5D   //:----## 50 ##----://
-    #undef  macro_libchan_order_P5D1OGL   //:----## 51 ##----://
+    #undef  macro_libchan_order_UIRECTS   //:----## 45 ##----://
+    #undef  macro_libchan_order_ZOOMCOM   //:----## 46 ##----://
+    #undef  macro_libchan_order_DRAGCOM   //:----## 47 ##----://
+    #undef  macro_libchan_order_CLICKOM   //:----## 48 ##----://
+    #undef  macro_libchan_order_EDITCAM   //:----## 49 ##----://
+    #undef  macro_libchan_order_GAMECAM   //:----## 50 ##----://
+    #undef  macro_libchan_order_PAINT5D   //:----## 51 ##----://
+    #undef  macro_libchan_order_P5D1OGL   //:----## 52 ##----://
  
     //:==========:DONT_POLLUTE_OTHER_PEOPLES_CODE_WITH_MACROS://
 

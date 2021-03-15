@@ -1,12 +1,90 @@
 
+//:ORDER_ENFORCER:===========================================://
+/** ******************************************************** ***
+
+    @VID_IID[ 0181 ]TIME[ 04:10:10 ]
+    The exact order of our dependency list does NOT
+    matter in [ AAC2020.C11 ]. But there are certain
+    relative orders that DO matter.
+
+    The orders we really care about have been specified here.
+    If this @ORDER_ENFORCER@ section becomes too distracting,
+    we can offboard it to a seperate @INCLUDE@ file.
+
+*** ******************************************************** **/
+
+    #ifndef AAC2020_INCLUDE_FRAGCOM
+
+        //: Common fragment shader code should NOT know about://
+        //: Something as specific as user interface rects.   ://
+
+        #error "[UIRECTS:__should_come_after__:FRAGCOM]"
+    #endif
+    #ifndef AAC2020_INCLUDE_GPUVIEW
+
+        //: GPUVIEW can look directly at the texture memory, ://
+        //: but it should have no knowledge of what each     ://
+        //: pixel of that texture memory is encoding.        ://
+        //: Thus included BEFORE UIRECTS library.            ://
+
+        #error "[UIRECTS:__should_come_after__:GPUVIEW]"
+    #endif
+    #ifndef AAC2020_INCLUDE_TAUDEPO
+
+        //: UIRECTS grabs a top level TAUDEPO slot           ://
+        //: for itself. To make the connection obvious,      ://
+        //: we have a line:                                  ://
+        //: #define AAC2020_UIRECTS_TAU_DEX                  ://
+        //:                      ( AAC2020_TAUDEPO_TAU_000 ) ://
+        //: Which necessitates that UIRECTS comes            ://
+        //: after TAUDEPO in inclusion order.                ://
+
+        #error "[UIRECTS:__should_come_after__:TAUDEPO]"
+    #endif
+
+    ////////////////////////////////////////////////////////////
+    //: The previous constraints mean we should make sure    ://
+    //: UIRECTS is included after ANY "TAU*" system.         ://
+    //: @VID_IID[ 0181 ]TIME[ 04:08:32 ]                     ://
+    ////////////////////////////////////////////////////////////
+        #ifndef AAC2020_INCLUDE_TAUDIRT
+            #error "[UIRECTS:after_any_TAU_sytem:TAUDIRT]"
+        #endif
+        #ifndef AAC2020_INCLUDE_TAUDEPO
+            #error "[UIRECTS:after_any_TAU_sytem:TAUDEPO]"
+        #endif
+        #ifndef AAC2020_INCLUDE_TAUTYPE
+            #error "[UIRECTS:after_any_TAU_sytem:TAUTYPE]"
+        #endif
+        #ifndef AAC2020_INCLUDE_TAUSYNC
+            #error "[UIRECTS:after_any_TAU_sytem:TAUSYNC]"
+        #endif
+        #ifndef AAC2020_INCLUDE_TAUFRAG
+            #error "[UIRECTS:after_any_TAU_sytem:TAUFRAG]"
+        #endif
+    ////////////////////////////////////////////////////////////
+
+//:===========================================:ORDER_ENFORCER://
+//:TAUDEPO_LOCATIONS:========================================://
+
+    //:@VID_IID[ 0181 ]TIME[ 03:56:13 ]
+    //:Top level allocation for static glyph data:
+    #define AAC2020_UIRECTS_TAU_DEX ( AAC2020_TAUDEPO_TAU_000 )
 
     //:EDITOR____NAME: PAINT5D
     //:RECTANGLE_NAME: P5D_UR1
     #define AAC2020_UIRECTS_PAINT5D_tau_loc_P5D_UR1
     //:-----1234567_1234567_1234567_1234567_1234567----------://
 
+//:========================================:TAUDEPO_LOCATIONS://
 //:SCRATCH_NOTES:============================================://
 /** ******************************************************** ***
+
+    +-------+ <--+
+    |       |     \
+    | GLYPH |      +-- (8x8 pixels, 1 bit color. (black|white))
+    |       |     /
+    +-------+ <--+
 
     Toggle Buttons:
     +---+---+---+
@@ -17,9 +95,10 @@
 
     tau_loc : TextureAsUniform: LOCation (1D on texture)
 
-    +---+---+---+===+---+---+---+
-    | p | 5 | d |   | l | a | 1 |
-    +---+---+---+===+---+---+---+
+    |<-----------112----------->|
+    +---+---+---+===+---+---+---+ ---
+    | p | 5 | d |   | l | a | 1 | 016
+    +---+---+---+===+---+---+---+ ---
 
 *** ******************************************************** **/
 //:============================================:SCRATCH_NOTES://

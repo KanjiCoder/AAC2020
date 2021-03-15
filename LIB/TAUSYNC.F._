@@ -1,7 +1,16 @@
 //: 1234567
 //: TAUSYNC.F._ : Gpu Sync of TAUDEPO. Uses TAUDIRT.D._
 //:               to only update the dirty regions of memory.
+//:MOST_IMPORTANT_FUNCTION_NOTES:============================://
+/** ******************************************************** ***
 
+    Use this to re-sync to GPU every frame:
+
+    #define WET_RUN aac2020_tausync_WET_RUN_FOR_PRODUCTION
+    AAC2020_TAUSYNC_Run( WET_RUN );
+    #undef  WET_RUN
+
+*** ******************************************************** **/
 //:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=====================://
     void 
     aac2020_tausync_Halt( const char* msg_err )
