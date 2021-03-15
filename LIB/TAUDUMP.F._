@@ -1,0 +1,61 @@
+//:ABOUT_TAUDUMP:============================================://
+/** ******************************************************** ***
+
+    Uses DUMPASS to help dump bitmap memory into a
+    sub-section of a TAUDEPO allocation.
+    ( A sub section of: AAC2020_PIXNAME_taudepo_cpu_pix )
+
+*** ******************************************************** **/
+//:============================================:ABOUT_TAUDUMP://
+//:DUMP_ASSET_INTO_SUB_SECTION_OF_512X512:===================://
+#define P_F   printf /** BeforeCrash_MSG **/          //: 01 ://
+#define U08  uint8_t /** GCC: <stdint.h> **/          //: 02 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 03 ://
+#define I32  int32_t /** GCC: <stdint.h> **/          //: 04 ://
+#define ERR aac2020_dumpass_Halt /**ERROR**/          //: 05 ://
+
+    void
+    AAC2020_TAUDUMP_SubSection(
+    /**/    U32 u32_arr //: EX: UIRECTS_64P_08G_PNG
+    ,       U32 u32_noe //: EX: UIRECTS_64P_08G_NOE
+
+    ,       I32 pix_wid //: EX: 64 (pixel_width__of:u32_arr)
+    ,       I32 pix_hig //: EX: 64 (pixel_height_of:u32_hig)
+
+    ,       U08 tau_dex     //: SEE[ #DIA_TAU_CEL# ]
+    ,       U08 sub_dex_000 //: SEE[ #DIA_SUB_CEL# ]
+    ,       U08 sub_dex_001 //: SEE[ #DIA_SUB_CEL# ]
+    )
+    {
+    /** **************************************************** ***
+    Dump memory into sub section of:
+    AAC2020_PIXNAME_taudepo_cpu_pix
+    @VID_IID[ 0181 ]TIME[ 04:59:32 ]
+    *** **************************************************** **/
+
+        //:TOP_LEF : OF_SELECTION_RECTANGLE:
+        I32 x_0=( tau_d_x * 128 )+( sub_x_0 * 32 );
+        I32 y_0=( tau_d_y * 128 )+( sub_y_0 * 32 );
+
+        //:TOP_RIG : OF_SELECTION_RECTANGLE:
+        I32 x_1=( tau_d_x * 128 )+( sub_x_1 * 32 );
+        I32 y_1=( tau_d_y * 128 )+( sub_y_1 * 32 );
+
+        //:PIXEL_DIMENSION_CHECKSUMS:
+        I32 wid_chk=( x_1 - x_0 + 1 );
+        I32 hig_chk=( y_1 - y_0 + 1 );
+
+        if( wid_chk != pix_wid ){ERR("[2021_03_15:6PM:WID]");};
+        if( hig_chk != pix_hig ){ERR("[2021_03_15:6PM:HIG]");};
+
+        I08* cpu_pix =( AAC2020_PIXNAME_taudepo_cpu_pix );
+
+
+    }
+
+#undef  P_F   printf /** BeforeCrash_MSG **/          //: 01 ://
+#undef  U08  uint8_t /** GCC: <stdint.h> **/          //: 02 ://
+#undef  U32 uint32_t /** GCC: <stdint.h> **/          //: 03 ://
+#undef  I32  int32_t /** GCC: <stdint.h> **/          //: 04 ://
+#undef  ERR aac2020_dumpass_Halt /**ERROR**/          //: 05 ://
+//:===================:DUMP_ASSET_INTO_SUB_SECTION_OF_512X512://

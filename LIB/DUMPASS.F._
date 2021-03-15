@@ -143,6 +143,73 @@
         }
 
     //:=-=-=-=-=-=-=-=-=-=-=-=-=:PAINT5D_DEFAULT_DATA_002.PNG://
+    //:UIRECTS_64P_08G.PNG::=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=://
+
+        /** ************************************************ **/
+        /** #_PATTERN_BREAKER_# : UIRECTS_64P_08G .......... **/
+        /** ------------------------------------------------ **/
+        /** Trying to keep all assets exactly 512x512        **/
+        /** pixels. But this asset is going to be put        **/
+        /** into a sub-section of TAUDEPO memory.            **/
+        /** And by that nature, canot use 100% of            **/
+        /** TAUDEPO'S 512x512.                               **/
+        /**                                                  **/
+        /** ALSO... This memory is __NOT__ being pasted      **/
+        /** directly into[ AAC2020_PIXNAME_taudepo_cpu_pix ] **/
+        /** It is being pre-processed and bit-packed into    **/
+        /** 8x8 1-bit color bitmaps that are stacked in      **/
+        /** stacks of 32 over each sector of 8x8 pixels.     **/
+        /** ************************************************ **/
+
+        void  /** raw png data to pixel data **/
+        AAC2020_DUMPASS_png_003_CTO_pix_arr( 
+            U08* *BYREF_pix_arr  //:<-- ALL_OUTPUT_PARAMS
+        ,   I32  *BYREF_pix_wid  //:<-- ALL_OUTPUT_PARAMS
+        ,   I32  *BYREF_pix_hig  //:<-- ALL_OUTPUT_PARAMS
+        )
+        {
+            //:input_checks:---------------------------------://
+
+                /** references can never be null **/
+                assert( ((U08**)0) !=( BYREF_pix_arr ) );
+                assert( ((I32* )0) !=( BYREF_pix_wid ) );
+                assert( ((I32* )0) !=( BYREF_pix_hig ) );
+                  
+                /** dont override if already in use. **/
+                assert( ((U08* )0) ==(*BYREF_pix_arr ) );
+                assert( ((I32  )0) ==(*BYREF_pix_wid ) );
+                assert( ((I32  )0) ==(*BYREF_pix_hig ) );
+
+            //:---------------------------------:input_checks://
+
+            U08* pix_arr=((U08*)0); //:Pixel_Component_Array
+            I32  pix_wid=(      0); //:Length_Of_Said__Array
+            I32  pix_hig=(      0); //:Length_Of_Said__Array
+
+            AAC2020_PHEXDUM_u32_arr_CTO_pix_arr(
+            /**/    UIRECTS_64P_08G_PNG //:  u32_arr
+            ,       UIRECTS_64P_08G_NOE //:  u32_len
+            ,     &(pix_arr) //:DEFLATED:002_PNG //:@_OUT_PAR_@
+            ,     &(pix_wid) //:--------:002_PNG //:@_OUT_PAR_@
+            ,     &(pix_hig) //:--------:002_PNG //:@_OUT_PAR_@
+            );;
+
+            /** @VID_IID[ 0181 ]TIME[ 04:45:13 ]:64x64pixels **/
+            if( (64*64*4) != (pix_wid*pix_hig*4) ){
+                P_F("[NOT_64X64_PIXELS:UIRECTS_64P_08G.PNG]\n");
+                ERR("[EMBEDDED_ASSET_NOT_064_x_064:png_003]!!");
+            };;
+
+            //:return_via_output_params:---------------------://
+
+                (*BYREF_pix_arr)=( pix_arr );
+                (*BYREF_pix_wid)=( pix_wid );
+                (*BYREF_pix_hig)=( pix_hig );
+               
+            //:---------------------:return_via_output_params://
+        }
+
+    //:=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=::UIRECTS_64P_08G.PNG://
 
 #undef  P_F  //:----------------------------------------: 01 ://
 #undef  U08  //:----------------------------------------: 02 ://
