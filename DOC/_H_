@@ -9,6 +9,119 @@
     //[   VIDEO COMMENT TIMESTAMP EXAMPLE   ]//
 *** ******************************************************** ***
 
+@MIN_CEL@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@MAX_CEL@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @_MIN_CEL_@ : TOP_LEF cell of[ cell_selection_rectangle ].
+    @_MAX_CEL_@ : BOT_RIG cell of[ cell_selection_rectangle ].
+
+    EXAMPLE: @VID_IID[ 0182 ]TIME[ 04:34:14 ]
+    ------------------------------------------------------------
+        UIRECTS.D._ creates a pixel selection rectangle by
+                    specifiying #DIA_VAR_CEL# cells.
+
+        UIRECTS.F._ Calls[ AAC2020_TAUDUMP_SubSection ]
+                    to paste UIRECT's hard coded asset
+                    into a subsection of taudepo memory.
+
+        Goal: Encode font glyphs into a portion of the
+              free space in[ AAC2020_PIXNAME_taudepo_cpu_pix ]
+    ------------------------------------------------------------
+
+
+@_S_FMT@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@_S_TYP@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @_SRC_FMT / @SRC_FMT: SOURCE_FORMAT
+    @_SRC_TYP / @SRC_TYP: SOURCE_TYPE
+
+    @VID_IID[ 0182 ]TIME[ 02:44:14 ]
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@_S_FMT@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@_S_TYP@
+@_ScanLineOrder_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    Probably means a doubly nested loop where
+    "Y" axis is the outer loop and "X" axis is the
+    inner loop.
+
+    This might seem like a pattern breaker because we usually
+    want to write "x" then "y" for consistency.
+    But in this case we want the result of the innermost
+    scope to traverse the pixels in scanline order.
+
+    (Left to right, then top to bottom)
+
+    @VID_IID[ 0182 ]TIME[ 02:02:30 ]
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@_ScanLineOrder_@
+@PAT_BRK@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @_PAT_BRK_@: Shorthand for[ @_PATTERN_BREAKER_@ ]
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@PAT_BRK@
+@_PATTERN_BREAKER_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@PATTERN_BREAKER@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @_PATTERN_BREAKER_@ :
+        Code that breaks the regularity of the structure.
+        And... It sucks... But the real world is messy
+        sometimes.
+
+        This is an attempt to put a bandaid on the
+        situation by making note of it.
+
+        @VID_IID[ 0182 ]TIME[ 02:25:00 ]
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@_PATTERN_BREAKER_@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@PATTERN_BREAKER@
+
+@_DONT_YOU_FUCKING_DARE_REFACTOR_THIS_@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @DONT_YOU_FUCKING_DARE_REFACTOR_THIS:
+
+        AKA: I know what I am doing and have reasons for
+             why I wrote the code the way I wrote it.
+
+             Long parameter lists are a good thing.
+             Putting all the params into an object
+             makes the code LESS readable.
+
+             READABLE: I can print off the code on paper
+                       and literally read it.
+
+                       If I need intellisense to understand
+                       it... Then it's NOT READABLE.
+                       @VID_IID[ 0182 ]TIME[ 00:55:42 ]
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@_DONT_YOU_FUCKING_DARE_REFACTOR_THIS_@
+@_DONT_U_FUCKING_DARE_REFACTOR_THIS_@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    SHORTHAND_FOR: @_DONT_YOU_FUCKING_DARE_REFACTOR_THIS_@
+
+@@@@@@@@@@@@@@@@@@@@@#@@@@@@_DONT_U_FUCKING_DARE_REFACTOR_THIS_@
+@_INTENTIONAL_DATA_CLUMP_CODE_SMELL_@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @INTENTIONAL_DATA_CLUMP:
+
+        Means the parameter list is intentionally using
+        a large number of parameters that are always
+        passed together in exactly that order.
+
+        DON_T FUCKING REFACTOR IT!
+
+        The idea:
+
+            1. Reduce abstraction
+            
+            2. Make the code __MORE__ readable.
+
+            ( Using intellisense to have to peek into an )
+            ( object passed to a function is __NOT__     )
+            ( readable code. Readable means I can print  )
+            ( it out on paper and literally read it.     )
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@_INTENTIONAL_DATA_CLUMP_CODE_SMELL_@
 #_CPU_PIX_MIS_SPELLINGS_########################################
 
     @VID_IID[ 0181 ]TIME[ 04:42:52 ]

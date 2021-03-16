@@ -28,19 +28,51 @@
             };;
         }
     //:=======================================:LOG_AFTER_HALT://
-    //:INIT_NONE:============================================://
-        U32
-        AAC2020_UIRECTS_Init( U32 u32 ){
-            if( u32 ){ /** reserved for future use **/ };
+    //:UIRECTS_INIT:=========================================://
+    
+        /** Not really boilerplate. So lower in code. **/
 
-            //:TODO: Bit pack glyph assets into taudepo
-            //:      memory.
-            AAC2020_TODOMAN_Vital("[BITPACKGLYPHS]");
-
-            return( 0x00 );
-        }
-    //:============================================:INIT_NONE://
+    //:=========================================:UIRECTS_INIT://
 #undef  SIL  //:----------------------------------------: 01 ://
 #undef  U32  //:----------------------------------------: 02 ://
 #undef  P_F  //:----------------------------------------: 03 ://
 //:===========================:AAC2020_SUBLIBRARY_BOILERPLATE://
+//:UIRECTS_INIT:=============================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+
+    U32
+    AAC2020_UIRECTS_Init( U32 u32 ){
+        if( u32 ){ /** reserved for future use **/ };
+
+        //:BITPACK_GLYPH_ASSETS_INTO_TAUDEPO_MEMORY:=========://
+
+            AAC2020_TAUDUMP_SubSection(
+            //:BITMAP_DATA_TO_PASTE_INTO_TEXTURE_MEMORY:
+            //:SUPPLIED_AS_A_COMPRESSED_PNG_FILE_______:
+            /**/UIRECTS_64P_08G_PNG  //:PNG_BINARY
+            ,   UIRECTS_64P_08G_NOE  //:NumOf_u32_Elements
+                                   
+            //:DIMENSIONS_OF_BITMAP_TO_PASTE_INTO_TEXTURE_MEMORY:
+            ,   AAC2020_UIRECTS_64P_08G_PNG_pix_wid //:INFLATED
+            ,   AAC2020_UIRECTS_64P_08G_PNG_pix_hig //:INFLATED
+
+            //:LOCATION_IN_TEXTURE_MEMORY_TO_PASTE_TO:
+            //:TEXTURE_OF[ AAC2020_PIXNAME_taudepo_cpu_pix ]
+            ,   AAC2020_UIRECTS_TAU_DEX //:[ tau_dex / dex_tau ]
+            ,   AAC2020_UIRECTS_64P_08G_PNG_sub_000  //:@MIN_CEL
+            ,   AAC2020_UIRECTS_64P_08G_PNG_sub_001  //:@MAX_CEL
+
+            //:COPY_PASTE_USING_1_BIT_COLOR:
+            //:    BLACK_PIXELS_BECOME: 0_BIT
+            //:ANY_OTHER_COLOR_BECOMES: 1_BIT
+            ,   AAC2020_UIRECTS_64P_08G_PNG_use_1bc //: use_1bc  
+            ,   AAC2020_UIRECTS_64P_08G_PNG_bit_dex //: bit_dex 
+            );;
+
+        //:=========:BITPACK_GLYPH_ASSETS_INTO_TAUDEPO_MEMORY://
+
+        return( 0x00 );
+    }
+
+#undef  U32
+//:=============================================:UIRECTS_INIT://

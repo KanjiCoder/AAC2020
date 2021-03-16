@@ -256,41 +256,70 @@
                 uv4_tex.z =MAK_U32( 128 ); //:BLUE
                 uv4_tex.w =MAK_U32( 255 ); //:ALPHA
             }else{
+            #define MACRO_PAINT5D_MEMORY ( 1 )
+            #define MACRO_UIRECTS_MEMORY ( 2 )
+
+                I32 mem_mac =( 2 );
+
+                I32 tau_c_x =( 0 ) ; /** TAU_CELL_X 01 **/
+                I32 tau_c_y =( 0 ) ; /** TAU_CELL_Y 02 **/
+                I32 sub_c_x =( 0 ) ; /** SUB_CELL_X 03 **/
+                I32 sub_c_y =( 0 ) ; /** SUB_CELL_Y 04 **/
+
+                if( MACRO_PAINT5D_MEMORY == mem_mac ){
+
+                    tau_c_x =( 3 ) ; /** TAU_CELL_X 01 **/
+                    tau_c_y =( 3 ) ; /** TAU_CELL_Y 02 **/
+                    sub_c_x =( 1 ) ; /** SUB_CELL_X 03 **/
+                    sub_c_y =( 0 ) ; /** SUB_CELL_Y 04 **/
+
+                }else
+                if( MACRO_UIRECTS_MEMORY == mem_mac ){
+
+                    tau_c_x =( 0 ) ; /** TAU_CELL_X 01 **/
+                    tau_c_y =( 0 ) ; /** TAU_CELL_Y 02 **/
+                    sub_c_x =( 1 ) ; /** SUB_CELL_X 03 **/
+                    sub_c_y =( 0 ) ; /** SUB_CELL_Y 04 **/
+
+                };;
+
                 /** Inside 512x512 user view area. **/
 
                 /** Global coordinate space selection **/
                 /** rectangle to zoom into.           **/
                 I32 x_0 =( 0
-                         +( 128 * 3 )
-                         +(  32 * 1 )
-                         +(       0 )
+                         +( 128 * tau_c_x )
+                         +(  32 * sub_c_x )
+                         +(     0         )
                 );;
                 I32 x_1 =( 0
-                         +( 128 * 3 )
-                         +(  32 * 1 )
-                         +(      31 )
+                         +( 128 * tau_c_x )
+                         +(  32 * sub_c_x )
+                         +(    31         )
                 );;
                              
                 I32 y_0 =( 0
-                         +( 128 * 3 )
-                         +(  32 * 0 )
-                         +(       0 )
+                         +( 128 * tau_c_y )
+                         +(  32 * sub_c_y )
+                         +(     0         )
                 );;
                 I32 y_1 =( 0
-                         +( 128 * 3 )
-                         +(  32 * 0 )
-                         +(      31 )
+                         +( 128 * tau_c_y )
+                         +(  32 * sub_c_y )
+                         +(     31        )
                 );;
 
-                /** @_PAIRED_COMMENT_@ ............. **/
-                /** @VID_IID[ 0136 ]TIME[ 00:53:23 ] **/    
-                /** #_PARCOM_2021_GPUVIEW_ASSERTS_#  **/
-                ASS( 416 == x_0 );
-                ASS( 384 == y_0 );
-                ASS( 447 == x_1 );
-                ASS( 415 == y_1 );
-                ASS( 32  == ( x_1 - x_0 + 1 ) );
-                ASS( 32  == ( y_1 - y_0 + 1 ) );
+                if( MACRO_PAINT5D_MEMORY == mem_mac  ){
+                    /** @_PAIRED_COMMENT_@ ............. **/
+                    /** @VID_IID[ 0136 ]TIME[ 00:53:23 ] **/    
+                    /** #_PARCOM_2021_GPUVIEW_ASSERTS_#  **/
+                    ASS( 416 == x_0 );                /****/
+                    ASS( 384 == y_0 );                /****/
+                    ASS( 447 == x_1 );                /****/
+                    ASS( 415 == y_1 );                /****/
+                    ASS( 32  == ( x_1 - x_0 + 1 ) );  /****/
+                    ASS( 32  == ( y_1 - y_0 + 1 ) );  /****/
+                };;
 
                 IV2 glo; /** glo is for global. **/
         
@@ -317,52 +346,77 @@
                
                 //: uv4_tex=( /** No Zoom, Full Texture **/
                 //: T_F( TAU , MAK_IV2(cuv_i_x,cuv_i_y),0 ));;
+
+            #undef  MACRO_PAINT5D_MEMORY
+            #undef  MACRO_UIRECTS_MEMORY
             };;
 
-            
+            #define MACRO_USE_DEBUG_TINTING (  0 ) //:#######://
+            #if(    MACRO_USE_DEBUG_TINTING <= 0 ) //:#######://
 
-            if( ( 1==1 )
-                && uv4_tex.x == MAK_U32(   0 )
-                && uv4_tex.y == MAK_U32(   0 )
-                && uv4_tex.z == MAK_U32(   0 )
-                && uv4_tex.w == MAK_U32(16-1 )
-            ){
-            #define M 255.0
-
-                FragColor = MAK_FV4(
-
-                    MAK_F32( uv4_tex.w ) /M * 0.0//:RED
-                ,   MAK_F32( uv4_tex.w ) /M *16.0//:GREEN
-                ,   MAK_F32( uv4_tex.w ) /M * 0.0//:BLUE
-                ,                             1.0 //:ALPHA
-                );;
-            #undef  M
-            }else
-            if( ( 1==1 )
-                && uv4_tex.x == MAK_U32( 0 )
-                && uv4_tex.y == MAK_U32( 0 )
-                && uv4_tex.z == MAK_U32( 0 )
-                && uv4_tex.w != MAK_U32( 0 )
-            ){
-            #define M 255.0
+                /** **************************************** **/
+                /** @VID_IID[ 0182 ]TIME[ 06:40:23 ] ******* **/
+                /** Show pixels as they actually are EXCEPT  **/
+                /** alpha because if alpha is zero for all   **/
+                /** we will just see black. ................ **/
+                /** **************************************** **/
 
                 FragColor = MAK_FV4(
-
-                    MAK_F32( uv4_tex.w ) /M * 4.0//:RED
-                ,   MAK_F32( uv4_tex.w ) /M * 8.0//:GREEN
-                ,   MAK_F32( uv4_tex.w ) /M *16.0//:BLUE
-                ,                             1.0 //:ALPHA
+                
+                    MAK_F32( uv4_tex.x ) / 255.0 //:RED   == x
+                ,   MAK_F32( uv4_tex.y ) / 255.0 //:GREEN == y
+                ,   MAK_F32( uv4_tex.z ) / 255.0 //:BLUE  == z
+                ,   MAK_F32(       UFF ) / 255.0 //:ALPHA == w
                 );;
-            #undef  M
-            }else{
-                FragColor = MAK_FV4(
 
-                    MAK_F32( uv4_tex.x ) / 255.0 //:RED
-                ,   MAK_F32( uv4_tex.y ) / 255.0 //:GREEN
-                ,   MAK_F32( uv4_tex.z ) / 255.0 //:BLUE
-                ,   MAK_F32( uv4_tex.w ) / 255.0 //:ALPHA
-                );;
-            };;
+            #endif
+            #if(    MACRO_USE_DEBUG_TINTING >= 1 ) //:#######://
+
+                if( ( 1==1 )
+                    && uv4_tex.x == MAK_U32(   0 )
+                    && uv4_tex.y == MAK_U32(   0 )
+                    && uv4_tex.z == MAK_U32(   0 )
+                    && uv4_tex.w == MAK_U32(16-1 )
+                ){
+                #define M 255.0
+
+                    FragColor = MAK_FV4(
+
+                        MAK_F32( uv4_tex.w ) /M * 0.0//:RED
+                    ,   MAK_F32( uv4_tex.w ) /M *16.0//:GREEN
+                    ,   MAK_F32( uv4_tex.w ) /M * 0.0//:BLUE
+                    ,                             1.0 //:ALPHA
+                    );;
+                #undef  M
+                }else
+                if( ( 1==1 )
+                    && uv4_tex.x == MAK_U32( 0 )
+                    && uv4_tex.y == MAK_U32( 0 )
+                    && uv4_tex.z == MAK_U32( 0 )
+                    && uv4_tex.w != MAK_U32( 0 )
+                ){
+                #define M 255.0
+
+                    FragColor = MAK_FV4(
+
+                        MAK_F32( uv4_tex.w ) /M * 4.0//:RED
+                    ,   MAK_F32( uv4_tex.w ) /M * 8.0//:GREEN
+                    ,   MAK_F32( uv4_tex.w ) /M *16.0//:BLUE
+                    ,                             1.0 //:ALPHA
+                    );;
+                #undef  M
+                }else{
+                    FragColor = MAK_FV4(
+
+                        MAK_F32( uv4_tex.x ) / 255.0 //:RED
+                    ,   MAK_F32( uv4_tex.y ) / 255.0 //:GREEN
+                    ,   MAK_F32( uv4_tex.z ) / 255.0 //:BLUE
+                    ,   MAK_F32( uv4_tex.w ) / 255.0 //:ALPHA
+                    );;
+                };;
+
+            #endif //:#######################################://
+            #undef  MACRO_USE_DEBUG_TINTING //:##############://
             
             #ifndef AAC2020_MACRO_THIS_IS_OPEN_GL
                 return( FragColor ); /**<-- C99**/

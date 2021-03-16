@@ -5,41 +5,483 @@
     sub-section of a TAUDEPO allocation.
     ( A sub section of: AAC2020_PIXNAME_taudepo_cpu_pix )
 
+    PUBLIC_FUNCTIONS:
+    //:------------------------------------------------------://
+        AAC2020_TAUDUMP_SubSection(
+        //:BITMAP_DATA_TO_PASTE_INTO_TEXTURE_MEMORY:
+                U32 u32_arr     //: EX: UIRECTS_64P_08G_PNG
+        ,       U32 u32_noe     //: EX: UIRECTS_64P_08G_NOE
+                               
+        //:DIMENSIONS_OF_BITMAP_TO_PASTE_INTO_TEXTURE_MEMORY:
+        ,       I32 pix_wid     //: EX: 64 (wid_of:u32_arr)
+        ,       I32 pix_hig     //: EX: 64 (hig_of:u32_arr)
+
+        //:LOCATION_IN_TEXTURE_MEMORY_TO_PASTE_TO:
+        ,       U08 tau_dex //: SEE[ #DIA_TAU_CEL# ]
+        ,       U08 sub_000 //: SEE[ #DIA_SUB_CEL# ] sub_dex_000
+        ,       U08 sub_001 //: SEE[ #DIA_SUB_CEL# ] sub_dex_001
+        );;
+    //:------------------------------------------------------://
+
 *** ******************************************************** **/
 //:============================================:ABOUT_TAUDUMP://
+//:AAC2020_SUBLIBRARY_BOILERPLATE:===========================://
+#define SIL AAC2020_SILENCE                           //: 01 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 02 ://
+#define P_F printf                                    //: 03 ://
+    //:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=================://
+        void 
+        aac2020_taudump_Halt( const char* msg_err )
+        {
+            P_F("[FATAL_ERROR:aac2020_taudump]:%s\n", msg_err );
+            fflush(stdout);
+            exit( 123 );
+        }
+    //:=================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+    //:LOG_AFTER_HALT:=======================================://
+        void
+        aac2020_taudump_Info_any( //:FUNC:::Info , OVERLOAD:any
+            const char* str_fmt   //:GENERAL:str , SPECIFIC:fmt
+        ,   void*       dat_any   //:GENERAL:dat , SPECIFIC:any
+        )
+        {                            int say=( 0 );
+            if( SIL.TAUDUMP <=(  0  ) ){ say=( 1 ); };
+            if( SIL.SILENCE <=( 0-1 ) ){ say=( 1 ); };
+            if( SIL.SILENCE >=( 0+1 ) ){ say=( 0 ); };
+            if( say >= 1 ){
+                P_F("[taudump_log]....(   " ); fflush( stdout );
+                P_F( str_fmt , dat_any      ); fflush( stdout );
+                P_F(               "   )\n" ); fflush( stdout );
+            };;
+        }
+    //:=======================================:LOG_AFTER_HALT://
+    //:INIT_NONE:============================================://
+        U32
+        AAC2020_TAUDUMP_InitNone( U32 u32 ){
+            if( u32 ){ /** reserved for future use **/ };
+            return( 0x00 );
+        }
+    //:============================================:INIT_NONE://
+#undef  SIL  //:----------------------------------------: 01 ://
+#undef  U32  //:----------------------------------------: 02 ://
+#undef  P_F  //:----------------------------------------: 03 ://
+//:===========================:AAC2020_SUBLIBRARY_BOILERPLATE://
 //:DUMP_ASSET_INTO_SUB_SECTION_OF_512X512:===================://
 #define P_F   printf /** BeforeCrash_MSG **/          //: 01 ://
 #define U08  uint8_t /** GCC: <stdint.h> **/          //: 02 ://
 #define U32 uint32_t /** GCC: <stdint.h> **/          //: 03 ://
 #define I32  int32_t /** GCC: <stdint.h> **/          //: 04 ://
 #define ERR aac2020_dumpass_Halt /**ERROR**/          //: 05 ://
+#define ASS assert                                    //: 06 ://
+#define COE aac2020_taudump_CrashOnGetError           //: 07 ://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    aac2020_taudump_CrashOnGetError(
+        const char* msg_err
+    )
+    {
+        U32 err;
+            err =( AAC2020_GLEBIND.glGetError() );
+        if( err != 0 ){ 
+            P_F("[TAUDUMP:COE:msg_err]:%s\n" , msg_err      );
+            ERR("[TAUDUMP:COE:SEE_MESSAGE_ABOVE_FOR_REASON]");
+        };;
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+         //:123_123://
+    void //:1234567://
+    aac2020_taudump_glTexSubImage2D(
+                     //:@_DONT_U_FUCKING_DARE_REFACTOR_THIS_@
+        I32  rec_x_0 //:@_INTENTIONAL_DATA_CLUMP_CODE_SMELL_@://
+    ,   I32  rec_x_1 //:@_INTENTIONAL_DATA_CLUMP_CODE_SMELL_@://
+    ,   I32  rec_y_0 //:@_INTENTIONAL_DATA_CLUMP_CODE_SMELL_@://
+    ,   I32  rec_y_1 //:@_INTENTIONAL_DATA_CLUMP_CODE_SMELL_@://
 
+    ,   U08* png_pix //:AKA[ pix_arr ](RGBA Byte Array)
+    ,   I32  png_wid //:AKA[ pix_wid ](pix_arr's WID in PIXELS)
+    ,   I32  png_hig //:AKA[ pix_hig ](pix_arr's HIG in PIXELS)
+
+    ,   I32  dex_edi //:Identifies CPU side bitmap.
+                     //:SEE[ CEDITOR.D._ ]
+                     //:EXAMPLE:AAC2020_CEDITOR_gpuview
+
+    ,   U08  use_1bc //:Use_One_Bit_Color?
+    ,   I32  bit_dex //:Bit_Index_To_Paste_1bc_To
+    ){
+    #define  CPU_WID ( 512 )
+    #define  CPU_HIG ( 512 )
+    #define  A__L__N (  4  ) //:RGBA,4bytes_per_pixel
+    #define  LEVODAT (  0  ) //:Level_Of_Detail_Always_Zero
+
+        U08* cpu_pix =((U08*)0); //:CpuSideBitmapRepresentingTex
+        I32  tex_lot =((I32 )0 - 696969); //:@TRAP_VALUE@
+        U32  tex_han =((U32 )0xFFFFFFFF); //:@TRAP_VALUE@
+
+        //:ERROR_CHECK_INPUTS:===============================://
+
+            if( 0
+            ||  png_wid != ( rec_x_1 - rec_x_0 + 1 )
+            ||  png_hig != ( rec_y_1 - rec_y_0 + 1 )
+            ||((U08*)0) == (      png_pix          )
+            ||  dex_edi <  (         0             )
+            ||  dex_edi >  (         9             )
+            ){
+                ERR("[INPUT_CHECKS_FAILED:2021_03_15]");
+            };;
+    
+            if( 0
+            ||  png_wid > 512 
+            ||  png_hig > 512
+            ){
+                /** **************************************** **/
+                /** We are always pasting the ENTIRE  ****** **/
+                /** png_pix to a location within      ****** **/
+                /** a given 512x512 CPU_PIX .         ****** **/
+                /** @VID_IID[ 0182 ]TIME[ 01:56:42 ]  ****** **/
+                /** **************************************** **/
+
+                ERR("[SUB_IMG_TO_COPY_IS_LARGER_THAN_TARGET]");
+
+            };;
+
+        //:===============================:ERROR_CHECK_INPUTS://
+        //:PICK_CORRECT_CPU_SIDE_BITMAP:=====================://
+        if( dex_edi == AAC2020_CEDITOR_gpuview ){
+                   //: AAC2020_CEDITOR_taudepo <--CloseButWrong
+            cpu_pix =( AAC2020_PIXNAME_taudepo_cpu_pix ); 
+                   //: AAC2020_PIXNAME_gpuview <--CloseButWrong
+            tex_lot =( AAC2020_PIXNAME_taudepo_tex_lot );
+                   //: AAC2020_PIXNAME_gpuview_tex_lot <--WRONG
+            tex_han =( AAC2020_PIXNAME_taudepo_tex_han );
+                   //: AAC2020_PIXNAME_gpuview_tex_han <--WRONG
+        }else
+        if( dex_edi == AAC2020_CEDITOR_paint5d ){
+            cpu_pix =( AAC2020_PIXNAME_paint5d_cpu_pix );
+            tex_lot =( AAC2020_PIXNAME_paint5d_tex_lot );
+            tex_han =( AAC2020_PIXNAME_paint5d_tex_han );
+        }else
+        if( dex_edi == AAC2020_CEDITOR_todo_02 ){
+            ERR("[NOT_IMPLEMENTED:2021_03_15]");
+        }else{
+            ERR("[INVALID_DEX_EDI:2021_03_15]");
+        };;
+
+        assert( ((U08*)0) != cpu_pix ); //:AssertNonNull
+        //:=====================:PICK_CORRECT_CPU_SIDE_BITMAP://
+        //:TEXTURE_PUSHING_STEPS:============================://
+        /** ************************************************ ***
+        STEP_01: copy_to_cpu_pix
+        STEP_02: push_to_gpu_texture
+        @VID_IID[ 0182 ]TIME[ 01:32:32 ]
+        *** ************************************************ **/
+
+            //:STEP_01:copy_to_cpu_pix:----------------------://
+            {
+                //:SOURCE:XY  (Always Origined At[0,0])
+                I32         p_x=(0-1); //: Pixel_X: (Of png_pix)
+                I32         p_y=(0-2); //: Pixel_Y: (Of png_pix)
+
+                //:DEST:::XY  (This is the larger bitmap)
+                I32         c_x=(0-3); //: Pixel_X: (Of cpu_pix)
+                I32         c_y=(0-4); //: Pixel_Y: (Of cpu_pix)
+
+                I32 png_pix_dex=(0-5); //: pix_dex: png_pix
+                I32 cpu_pix_dex=(0-6); //: pix_dex: cpu_pix
+
+                I32 png_com_dex=(0-5); //: com_dex: png_pix
+                I32 cpu_com_dex=(0-6); //: com_dex: cpu_pix
+
+                //:SCANLINE_LOOP_THROUGH_GRAPHIC:
+                for( p_y = 0 ; p_y <=(png_hig-1) ; p_y ++ ){
+                for( p_x = 0 ; p_x <=(png_wid-1) ; p_x ++ ){
+        
+                    c_x =( rec_x_0 + p_x ); //:CALC:dest_x
+                    c_y =( rec_y_0 + p_y ); //:CALC:dest_y
+                    assert( c_x >= 0 && c_x <= (512-1) );
+                    assert( c_y >= 0 && c_y <= (512-1) );
+                    assert( c_x >= rec_x_0 && c_x <= rec_x_1 );
+                    assert( c_y >= rec_y_0 && c_y <= rec_y_1 );
+
+                    //:XY_TO_INDEX_FORMULAS:
+                    png_pix_dex = p_x + ( p_y  * png_wid );
+                    cpu_pix_dex = c_x + ( c_y  * CPU_WID );
+    
+                    //:PIXEL_INDEXES_TO_COMPONENT_INDEXES:
+                    png_com_dex =( png_pix_dex * 4 ); //:RGBA==4
+                    cpu_com_dex =( cpu_pix_dex * 4 ); //:RGBA==4
+
+                    //:copy_rgba_components:-----------------://
+                    #define C_D cpu_com_dex
+                    #define P_D png_com_dex
+
+                        //:Out_Of_Bounds_Component_Index_Check:
+                        ASS( C_D+3 <= ((  512  *  512  *4)-1));
+                        ASS( P_D+3 <= ((png_wid*png_hig*4)-1));
+
+                        if( 0 == use_1bc ){ //:_32_BIT_COLOR
+
+                            cpu_pix[ cpu_com_dex + 0 ]=( //:R://
+                            png_pix[ png_com_dex + 0 ]  );;
+
+                            cpu_pix[ cpu_com_dex + 1 ]=( //:G://
+                            png_pix[ png_com_dex + 1 ]  );;
+
+                            cpu_pix[ cpu_com_dex + 2 ]=( //:B://
+                            png_pix[ png_com_dex + 2 ]  );;
+
+                            cpu_pix[ cpu_com_dex + 3 ]=( //:A://
+                            png_pix[ png_com_dex + 3 ]  );;
+
+                        }else
+                        if( 1 == use_1bc ){ //: ONE_BIT_COLOR
+
+                            //:STEP_1: Get_Bit_Value_To_Set
+                            //:STEP_2: Extract_1_Pixel
+                            //:STEP_3: Change__1_Bit
+                            //:STEP_4: Put_Pixel_Back
+
+                        //:STEP_1: Get_Bit_Value_To_Set .....://
+
+                            U32 new_bit =( 666 );
+
+                            if( 0
+                            ||  png_pix[ png_com_dex +0 ] >0 //R
+                            ||  png_pix[ png_com_dex +1 ] >0 //G
+                            ||  png_pix[ png_com_dex +2 ] >0 //B
+                            /// DO_NOT_LOOK_AT_ALPHA(+3) //////A
+                            ){
+                                new_bit=( 1 );
+                            }else{
+                                new_bit=( 0 );
+                            };;
+                            //////( new_bit >= 0 );
+                            assert( new_bit <= 1 );
+
+                        //:STEP_2: Extract_1_Pixel ..........://
+                        
+                            //:[old_pix / one_pix ]
+                            U32 one_pix =( 0x00/**AKA:u32_pix**/
+                            | ((cpu_pix[ C_D + 0 ] << 24)      )
+                            | ((cpu_pix[ C_D + 1 ] << 16)      )
+                            | ((cpu_pix[ C_D + 2 ] <<  8)      )
+                            | ((cpu_pix[ C_D + 3 ] <<  0)      )
+                            );;
+
+                            //:Valid index for 32 bit pixel?
+                            assert( bit_dex >=(   0  ) );
+                            assert( bit_dex <=(32 - 1) );
+
+                        //:STEP_3: Change__1_Bit ............://
+
+                            /** beraser: Bit_ERASER **/
+                            U32 beraser =(~( 1 << bit_dex ));
+                            U32 new_pix =(
+                            0x0
+                            | (one_pix  & beraser) //:ERASE_BIT
+                            | (new_bit << bit_dex) //:OVERWRITE
+                            );;
+
+                        //:STEP_4: Put_Pixel_Back ...........://
+                            
+                            U08 u_R=( new_pix >> 24 ) & 0xFF  ;
+                            U08 u_G=( new_pix >> 16 ) & 0xFF  ;
+                            U08 u_B=( new_pix >>  8 ) & 0xFF  ;
+                            U08 u_A=( new_pix >>  0 ) & 0xFF  ;
+
+                            cpu_pix[ cpu_com_dex + 0 ]=( u_R );
+                            cpu_pix[ cpu_com_dex + 1 ]=( u_G );
+                            cpu_pix[ cpu_com_dex + 2 ]=( u_B );
+                            cpu_pix[ cpu_com_dex + 3 ]=( u_A );
+
+                        }else{
+                            ERR("[BAD_BOOLEAN_GIVEN:TAUDUMP]");
+                        };;
+
+                    #undef  C_D 
+                    #undef  P_D  
+                    //:-----------------:copy_rgba_components://
+
+                };;};; //:NEXT[ p_y , p_x ](@_ScanLineOrder_@)
+            }
+            //:----------------------:STEP_01:copy_to_cpu_pix://
+            //:STEP_02:push_to_gpu_texture:------------------://
+            /** ******************************************** ***
+            @VID_IID[ 0182 ]TIME[ 02:15:15 ]
+            We are only pushing the dirty pixels that were 
+            just overwritten on[ cpu_pix ]by[ png_pix ]
+            ----------------------------------------------------
+            THIS_CODE_WAS_REFACTORED_FROM:
+                [ aac2020_tausync_glTexSubImage2D ]
+     
+            If you want to see original commentary explaining
+            how the glTexSubImage2D works, then go look
+            at FUNCTION[ aac2020_tausync_glTexSubImage2D ]
+            @VID_IID[ 0182 ]TIME[ 02:23:32 ]
+            ----------------------------------------------------
+            *** ******************************************** **/
+
+                //:tex_sub_image:PREP:-----------------------://
+
+                COE("[OH_NO_YOU_DIDNT_2021_03_16_1239AM:_A_]");
+
+                AAC2020_GLEBIND.glActiveTexture(
+                AAC2020_GLCONST.TEXTURE0          + tex_lot );;
+
+                COE("[OH_NO_YOU_DIDNT_2021_03_16_1239AM:_B_]");
+
+                AAC2020_GLEBIND.glBindTexture(
+                AAC2020_GLCONST.TEXTURE_2D        , tex_han );;
+
+                COE("[OH_NO_YOU_DIDNT_2021_03_16_1239AM:_C_]");
+
+                AAC2020_GLEBIND.glPixelStorei(
+                AAC2020_GLCONST.UNPACK_ALIGNMENT  , A__L__N );;
+
+                COE("[OH_NO_YOU_DIDNT_2021_03_16_1239AM:_D_]");
+
+                //:SEE[ DOC/TEXSUBIMAGE2D_STRIDE.TXT ]
+                AAC2020_GLEBIND.glPixelStorei(  
+                AAC2020_GLCONST.UNPACK_ROW_LENGTH , CPU_WID );;
+
+                COE("[OH_NO_YOU_DIDNT_2021_03_16_1239AM:_E_]");
+    
+                //:-----------------------:tex_sub_image:PREP://
+                //:tex_sub_image:DOIT:-----------------------://
+                {
+                    I32 oib_tfb;//:offset_in_bytes_to_first_byte
+
+                    oib_tfb=(
+                    //: oib_tft == 
+                      ( 0 //:XY_TO_INDEX_FORMULA:
+                        + (  1  * ( rec_x_0 ) ) //:X : remainder
+                        + ( 512 * ( rec_y_0 ) ) //:Y * stride
+                      ) * 4 //: Times_4_To_Get_Component_Index
+                    );;
+
+                    //:FINALLY_THE_ACTUAL_CALL:==============://
+                    AAC2020_GLEBIND.glTexSubImage2D(
+                    /**/    AAC2020_GLCONST.TEXTURE_2D 
+                    ,       LEVODAT 
+
+                    //:DIRTY_SUB_SELECTION_RECTANGLE:- - - -:://
+                    , ( rec_x_0 ) //: <--------------:org_lef://
+                    , ( rec_y_0 ) //: <--------------:org_top://
+                    , ( rec_x_1 - rec_x_0 + 1 )    //:rec_wid://
+                    , ( rec_y_1 - rec_y_0 + 1 )    //:rec_hig://
+
+                    //:CPU_PIX(s)IN:PIXNAME have this format:
+                    //:Basically, RGBA integer textures.
+                    ,   AAC2020_GLCONST.RGBA_INTEGER  //:@_S_FMT
+                    ,   AAC2020_GLCONST.UNSIGNED_BYTE //:@_S_TYP
+
+                    //:offset_in_bytes_to_first_byte
+                    ,   &( cpu_pix[ 0 + oib_tfb ] )
+                    );;
+                    //:===============:FINALLY_THE_ACTUAL_CALL://
+                }
+                //:-----------------------:tex_sub_image:DOIT://
+
+            //:------------------:STEP_02:push_to_gpu_texture://
+
+        //:============================:TEXTURE_PUSHING_STEPS://
+
+    #undef  CPU_WID
+    #undef  CPU_HIG
+    #undef  A__L__N
+    #undef  LEVODAT
+    } //:<<<<<<<<<<<<<<<<<[ aac2020_taudump_glTexSubImage2D ]://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://    
     void
     AAC2020_TAUDUMP_SubSection(
-    /**/    U32 u32_arr //: EX: UIRECTS_64P_08G_PNG
-    ,       U32 u32_noe //: EX: UIRECTS_64P_08G_NOE
+    //:BITMAP_DATA_TO_PASTE_INTO_TEXTURE_MEMORY:
+    /**/    U32* u32_arr     //: EX: UIRECTS_64P_08G_PNG
+    ,       I32  u32_noe     //: EX: UIRECTS_64P_08G_NOE
+                           
+    //:DIMENSIONS_OF_BITMAP_TO_PASTE_INTO_TEXTURE_MEMORY:
+    ,       I32 pix_wid     //: EX: 64 (pixel_width__of:u32_arr)
+    ,       I32 pix_hig     //: EX: 64 (pixel_height_of:u32_arr)
 
-    ,       I32 pix_wid //: EX: 64 (pixel_width__of:u32_arr)
-    ,       I32 pix_hig //: EX: 64 (pixel_height_of:u32_hig)
+    //:LOCATION_IN_TEXTURE_MEMORY_TO_PASTE_TO:
+    ,       U08 tau_dex //: SEE[ #DIA_TAU_CEL# ]
+    ,       U08 sub_000 //: SEE[ #DIA_SUB_CEL# ] sub_dex_000
+    ,       U08 sub_001 //: SEE[ #DIA_SUB_CEL# ] sub_dex_001
 
-    ,       U08 tau_dex     //: SEE[ #DIA_TAU_CEL# ]
-    ,       U08 sub_dex_000 //: SEE[ #DIA_SUB_CEL# ]
-    ,       U08 sub_dex_001 //: SEE[ #DIA_SUB_CEL# ]
+    //:COPY_PASTE_USING_1_BIT_COLOR:
+    //:    BLACK_PIXELS_BECOME: 0_BIT
+    //:ANY_OTHER_COLOR_BECOMES: 1_BIT
+    ,       U08 use_1bc //: USE_1_BIT_COLOR ?
+    ,       I32 bit_dex //: BIT_INDEX_TO_WRITE_TO.
     )
     {
     /** **************************************************** ***
     Dump memory into sub section of:
     AAC2020_PIXNAME_taudepo_cpu_pix
     @VID_IID[ 0181 ]TIME[ 04:59:32 ]
+
+            Example in diagram is a 64x64 pixel region
+            anchored into the top-left of #DIA_SUB_CEL#
+            @VID_IID[ 0182 ]TIME[ 00:16:16 ]
+
+            |<-----128----->|          |<-----512----->|
+            |<#DIA_SUB_CEL#>|          |<#DIA_TAU_CEL#>|
+      --=-- +---+---+---+---+-----+--> +---+---+---+---+ --- 
+       _32  |XY0| 1 | 2 | 3 |          |000|   | 2 | 3 | 128
+      --=-- +---+---+---+---+     +--> +---+   +---+---+ ---
+            | 4 |XY1| 6 | 7 |    /     |       | 6 | 7 |
+            +---+---+---+---+   /      +---+---+---+---+ 
+            | 8 | 9 |   |   |  /       | 8 | 9 |10 |11 |
+            +---+---+---+---+ /        +---+---+---+---+
+            |   |   |   |   |/         |12 |13 |14 |015| 
+            +---+---+---+---+          +---+---+---+---+
+            |<---- #_TAUDEPO_DIAGRAMS_4_TAUDUMP_# ---->|
+
+                    NOTE:[  sub_dex_000 == sub_000 ]
+            @ XY0 : Example sub_dex_000 actual parameter
+            @ XY1 : Example sub_dex_001 actual parameter
+                    NOTE:[  sub_dex_001 == sub_001 ]
+
+                        [  000]== UIR (UIRECTS)
+                        [01-14]== UNUSED_AS_OF_DATE:2021_03_15
+                        [  015]== TAU (EditorMemories)
+
+    *** **************************************************** **/
+    /** **************************************************** ***
+    STEP_01:FIGURE_OUT_WHAT_TO_PASTE_WHERE
+    STEP_02:CALL_HELPER_TO_COPY_PASTE_AND_UPLOAD
+    @VID_IID[ 0182 ]TIME[ 02:53:23 ]
     *** **************************************************** **/
 
+        //:STEP_01:FIGURE_OUT_WHAT_TO_PASTE_WHERE:===========://
+        #define TAU_WID ( 4 )/** 4x4 cells:SEE[ TAUDEPO.D._ ]**/
+        #define SUB_WID ( 4 )/** 4x4 cells:SEE[ TAUDEPO.D._ ]**/
+
+        //| SHORTCUT[ index_to_xy_formula_c99 ] ------------ |//
+        I32 tau_d_x =  tau_dex         % TAU_WID ; //| ----- |//
+        I32 tau_d_y = (tau_dex-tau_d_x)/ TAU_WID ; //| ----- |//
+
+        //| SHORTCUT[ index_to_xy_formula_c99 ] ------------ |//
+        I32 sub_x_0 =  sub_000         % SUB_WID ; //| ----- |//
+        I32 sub_y_0 = (sub_000-sub_x_0)/ SUB_WID ; //| ----- |//
+
+        //| SHORTCUT[ index_to_xy_formula_c99 ] ------------ |//
+        I32 sub_x_1 =  sub_001         % SUB_WID ; //| ----- |//
+        I32 sub_y_1 = (sub_001-sub_x_1)/ SUB_WID ; //| ----- |//
+
         //:TOP_LEF : OF_SELECTION_RECTANGLE:
-        I32 x_0=( tau_d_x * 128 )+( sub_x_0 * 32 );
-        I32 y_0=( tau_d_y * 128 )+( sub_y_0 * 32 );
+        I32 x_0=( tau_d_x * 128 )+( sub_x_0 * 32 );//[@ XY0 @]//
+        I32 y_0=( tau_d_y * 128 )+( sub_y_0 * 32 );//[@ XY0 @]//
 
         //:TOP_RIG : OF_SELECTION_RECTANGLE:
-        I32 x_1=( tau_d_x * 128 )+( sub_x_1 * 32 );
-        I32 y_1=( tau_d_y * 128 )+( sub_y_1 * 32 );
+        I32 x_1=( tau_d_x * 128 )+( sub_x_1 * 32 );//[@ XY1 @]//
+        I32 y_1=( tau_d_y * 128 )+( sub_y_1 * 32 );//[@ XY1 @]//
+
+        //:You need this correction because we want the      ://
+        //:bottom-right pixel, not the the top left pixel    ://
+        //:to get a selection rectangle covering all of the  ://
+        //:#DIA_SUB_CELL#(s) specified by                    ://
+        //:[ sub_000 ]&[ sub_001 ]@VID_IID[ 0182 ]           ://
+        x_1=( x_1 + (32-1) ); //: @VID_IID[ 0182 ]T[00:30:42]://
+        y_1=( y_1 + (32-1) ); //: @VID_IID[ 0182 ]T[00:30:42]://
 
         //:PIXEL_DIMENSION_CHECKSUMS:
         I32 wid_chk=( x_1 - x_0 + 1 );
@@ -48,14 +490,104 @@
         if( wid_chk != pix_wid ){ERR("[2021_03_15:6PM:WID]");};
         if( hig_chk != pix_hig ){ERR("[2021_03_15:6PM:HIG]");};
 
-        I08* cpu_pix =( AAC2020_PIXNAME_taudepo_cpu_pix );
+        //+ Right now we only use taudepo memory, but it is  +//
+        //+ identified by[ dex_edi= AAC2020_CEDITOR_gpuview ]+//
+        //- U08* cpu_pix =( AAC2020_PIXNAME_taudepo_cpu_pix )-//
 
+        #undef  TAU_WID
+        #undef  SUB_WID
+        //:===========:STEP_01:FIGURE_OUT_WHAT_TO_PASTE_WHERE://
+        //:STEP_02:UN_COMPRESS_PNG_TO_BYTE_ARRAY:============://
 
-    }
+            U08* pix_arr=((U08*)0); //:[ pix_arr / png_pix ]
+            I32  act_wid=(      0); //:[ pix_wid / png_wid ]
+            I32  act_hig=(      0); //:[ pix_hig / png_hig ]
 
-#undef  P_F   printf /** BeforeCrash_MSG **/          //: 01 ://
-#undef  U08  uint8_t /** GCC: <stdint.h> **/          //: 02 ://
-#undef  U32 uint32_t /** GCC: <stdint.h> **/          //: 03 ://
-#undef  I32  int32_t /** GCC: <stdint.h> **/          //: 04 ://
-#undef  ERR aac2020_dumpass_Halt /**ERROR**/          //: 05 ://
+            /**NOT_FUN[ AAC2020_DUMPASS_png_003_CTO_pix_arr ]**/
+            //:u32_arr: EXAMPLE:PAINT5D_DEFAULT_DATA_002_PNG
+            //:u32_noe: EXAMPLE:PAINT5D_DEFAULT_DATA_002_NOE
+            AAC2020_PHEXDUM_u32_arr_CTO_pix_arr(
+            /**/    u32_arr  //:[ u32_arr / u32_pix / u32_png ]
+            ,       u32_noe  //:[ u32_len / u32_noe           ]
+            ,     &(pix_arr) //:DEFLATED:002_PNG //:@_OUT_PAR_@
+            ,     &(act_wid) //:--------:002_PNG //:@_OUT_PAR_@
+            ,     &(act_hig) //:--------:002_PNG //:@_OUT_PAR_@
+            );;
+
+            if( 0
+            /** Actual size should match declared size. **/
+            ||  act_wid != pix_wid /** png_wid **/ 
+            ||  act_hig != pix_hig /** png_hig **/
+            ){
+                /** @VID_IID[ 0182 ]TIME[ 03:10:42 ] **/
+                P_F("[MAYBE_1:WRONG_ASSET_USED]"            );
+                P_F("[MAYBE_2:WRONG_ASSET_EMBEDDED]"        );
+                P_F("[MAYBE_3:CORRECT_ASSET_BUT_WRONG_SIZE]");
+
+                /** @VID_IID[ 0182 ]TIME[ 03:14:42 ] ******* **/
+                /** Error message will be what I think will  **/
+                /** be the most likely mistake I will make.  **/
+                /** Error message is not necessarily correct,**/
+                /** but my best guess........................**/
+
+                ERR("[MAYBE_SUPPLIED_WRONG_ASSET_TO_FUNC]"  );
+            };;
+           
+        //:============:STEP_02:UN_COMPRESS_PNG_TO_BYTE_ARRAY://
+        //:STEP_03:CALL_HELPER_TO_COPY_PASTE_AND_UPLOAD:=====://
+        
+            /** ******************************************** ***
+            @VID_IID[ 0182 ]TIME[ 03:24:42 ]KIND_OF_CONVOLUTED
+
+            We are in "TAUDUMP" so the memory block  
+            we are dumping to should 
+            ALWAYS_____BE: AAC2020_PIXNAME_taudepo_cpu_pix
+            IDENTIFIED_BY: AAC2020_CEDITOR_gpuview
+                    ( not: AAC2020_CEDITOR_taudepo )
+            *** ******************************************** **/
+            I32 dex_edi=( AAC2020_CEDITOR_gpuview );
+            /** ******************************************** **/
+
+            aac2020_taudump_glTexSubImage2D(
+                //:DESTINATION_PASTE_COORDINATES:
+                    x_0  //:[ rec_x_0 ]
+                ,   x_1  //:[ rec_x_1 ]
+                ,   y_0  //:[ rec_y_0 ]
+                ,   y_1  //:[ rec_y_1 ]
+
+                //:UNCOMPRESSED_PNG_BYTE_ARRAY:
+                ,   pix_arr //:[ pix_arr / png_pix ]://
+                ,   pix_wid //:[ pix_wid / png_wid ]://
+                ,   pix_hig //:[ pix_hig / png_hig ]://
+
+                //:WHAT_512X512_MEMORY_BLOCK_TO_PASTE_TO:
+                ,   dex_edi //:Identifies CPU side bitmap.
+                            //:SEE[ CEDITOR.D._ ]
+                            //:EXAMPLE:AAC2020_CEDITOR_gpuview
+
+                ,   use_1bc //:Use_1_Bit_Color?
+                ,   bit_dex //:Bit_Index_To_Paste_1bc_To
+            );;
+
+        //:=====:STEP_03:CALL_HELPER_TO_COPY_PASTE_AND_UPLOAD://
+        //:STEP_04:FREE_UNCOMPRESSED_PNG_BITMAP_DATA:========://
+
+            assert( pix_wid >=        1  );
+            assert( pix_hig >=        1  );
+            assert( pix_arr != ((U08*)0) );
+            free(   pix_arr              );
+                    pix_arr=(  ((U08*)0) );
+                    pix_wid=(         0  );
+                    pix_hig=(         0  );
+
+        //:========:STEP_04:FREE_UNCOMPRESSED_PNG_BITMAP_DATA://
+    } //:<<<<<<<<<<<<<<<<<<<<<<[ AAC2020_TAUDUMP_SubSection ]://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+#undef  P_F  //:----------------------------------------: 01 ://
+#undef  U08  //:----------------------------------------: 02 ://
+#undef  U32  //:----------------------------------------: 03 ://
+#undef  I32  //:----------------------------------------: 04 ://
+#undef  ERR  //:----------------------------------------: 05 ://
+#undef  ASS  //:----------------------------------------: 06 ://
+#undef  COE  //:----------------------------------------: 06 ://
 //:===================:DUMP_ASSET_INTO_SUB_SECTION_OF_512X512://

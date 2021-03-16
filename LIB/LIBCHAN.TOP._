@@ -104,8 +104,9 @@
     #define AAC2020_MAC_LIBCHAN_050 (50 )
     #define AAC2020_MAC_LIBCHAN_051 (51 )
     #define AAC2020_MAC_LIBCHAN_052 (52 )
+    #define AAC2020_MAC_LIBCHAN_053 (53 )
 
-    #define AAC2020_MAC_LIBCHAN_MAX (52 ) //:<-- Complile_Limit
+    #define AAC2020_MAC_LIBCHAN_MAX (53 ) //:<-- Complile_Limit
 
 //:============================================:LIBRARY_CHAIN://
 //:DATA:DATA_BEFORE_FUNCTIONS:===============================://
@@ -474,61 +475,70 @@
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_044 )
 
+        #include               "TAUDUMP.D._"    
+        #define AAC2020_INCLUDE_TAUDUMP (44 )
+        #else   //:     INCLUDE_TAUDUMP ( - )
+        #define AAC2020_INCLUDE_TAUDUMP ( 0 )
+        #endif
+
+
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_045 )
+
         #include               "TAUFRAG.D._"    
-        #define AAC2020_INCLUDE_TAUFRAG (44 )
+        #define AAC2020_INCLUDE_TAUFRAG (45 )
         #else   //:     INCLUDE_TAUFRAG ( - )
         #define AAC2020_INCLUDE_TAUFRAG ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_045 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_046 )
 
         #include               "UIRECTS.D._"    
-        #define AAC2020_INCLUDE_UIRECTS (45 )
+        #define AAC2020_INCLUDE_UIRECTS (46 )
         #else   //:     INCLUDE_UIRECTS ( - )
         #define AAC2020_INCLUDE_UIRECTS ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_046 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_047 )
 
         #include               "ZOOMCOM.D._"    
-        #define AAC2020_INCLUDE_ZOOMCOM (46 )
+        #define AAC2020_INCLUDE_ZOOMCOM (47 )
         #else   //:     INCLUDE_ZOOMCOM ( - )
         #define AAC2020_INCLUDE_ZOOMCOM ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_047 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_048 )
 
         #include               "DRAGCOM.D._"    
-        #define AAC2020_INCLUDE_DRAGCOM (47 )
+        #define AAC2020_INCLUDE_DRAGCOM (48 )
         #else   //:     INCLUDE_DRAGCOM ( - )
         #define AAC2020_INCLUDE_DRAGCOM ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_048 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_049 )
 
         #include               "CLICKOM.D._"    
-        #define AAC2020_INCLUDE_CLICKOM (48 )
+        #define AAC2020_INCLUDE_CLICKOM (49 )
         #else   //:     INCLUDE_CLICKOM ( - )
         #define AAC2020_INCLUDE_CLICKOM ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_049 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_050 )
 
         #include               "EDITCAM.D._"    
-        #define AAC2020_INCLUDE_EDITCAM (49 )
+        #define AAC2020_INCLUDE_EDITCAM (50 )
         #else   //:     INCLUDE_EDITCAM ( - )
         #define AAC2020_INCLUDE_EDITCAM ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_050 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_051 )
 
         #include               "GAMECAM.D._"    
-        #define AAC2020_INCLUDE_GAMECAM (50 )
+        #define AAC2020_INCLUDE_GAMECAM (51 )
         #else   //:     INCLUDE_GAMECAM ( - )
         #define AAC2020_INCLUDE_GAMECAM ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_051 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_052 )
 
         /** #PAINT5D_OLD_LIBCHAN_NOTES# **/
 
@@ -536,17 +546,17 @@
         #include "PAINT5D_DEFAULT_SHADERS\P5D_001._"  
 
         #include               "PAINT5D.D._"   
-        #define AAC2020_INCLUDE_PAINT5D (51 )
+        #define AAC2020_INCLUDE_PAINT5D (52 )
         #else   //:     INCLUDE_PAINT5D ( - )
         #define AAC2020_INCLUDE_PAINT5D ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_052 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_053 )
 
         //:@VID_IID[ 0103 ]TIME[ 02:18:30   ]
         //:FORMERLY_KNOWN_AS[   P5D_OGL.D._ ]
         #include               "P5D1OGL.D._"    
-        #define AAC2020_INCLUDE_P5D1OGL (52 )
+        #define AAC2020_INCLUDE_P5D1OGL (53 )
         #else   //:     INCLUDE_P5D1OGL ( - )
         #define AAC2020_INCLUDE_P5D1OGL ( 0 )
         #endif
@@ -909,6 +919,14 @@
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_044 )
 
+        #include               "TAUDUMP.F._"        
+        #define AAC2020_INCLUDE_TAUDUMP (44 )
+        #else   //:     INCLUDE_TAUDUMP ( - )
+        #define AAC2020_INCLUDE_TAUDUMP ( 0 )
+        #endif
+
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_045 )
+
         //:#_PATTERN_BREAKER_#://
         //:THIS_FRAGMENT_SHADER_IS_JUST_DATA_AT_THE_MOMENT
         //:@VID_IID[ 0174 ]TIME[ 01:11:30 ]ORIGINAL_LOCATION
@@ -916,77 +934,77 @@
         #include               "TAUFRAG.FRA._"
 
         #include               "TAUFRAG.F._"        
-        #define AAC2020_INCLUDE_TAUFRAG (44 )
+        #define AAC2020_INCLUDE_TAUFRAG (45 )
         #else   //:     INCLUDE_TAUFRAG ( - )
         #define AAC2020_INCLUDE_TAUFRAG ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_045 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_046 )
 
         #include               "UIRECTS.F._"        
-        #define AAC2020_INCLUDE_UIRECTS (45 )
+        #define AAC2020_INCLUDE_UIRECTS (46 )
         #else   //:     INCLUDE_UIRECTS ( - )
         #define AAC2020_INCLUDE_UIRECTS ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_046 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_047 )
 
         #include               "ZOOMCOM.F._"        
-        #define AAC2020_INCLUDE_ZOOMCOM (46 )
+        #define AAC2020_INCLUDE_ZOOMCOM (47 )
         #else   //:     INCLUDE_ZOOMCOM ( - )
         #define AAC2020_INCLUDE_ZOOMCOM ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_047 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_048 )
 
         #include               "DRAGCOM.F._"        
-        #define AAC2020_INCLUDE_DRAGCOM (47 )
+        #define AAC2020_INCLUDE_DRAGCOM (48 )
         #else   //:     INCLUDE_DRAGCOM ( - )
         #define AAC2020_INCLUDE_DRAGCOM ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_048 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_049 )
 
         #include               "CLICKOM.F._"        
-        #define AAC2020_INCLUDE_CLICKOM (48 )
+        #define AAC2020_INCLUDE_CLICKOM (49 )
         #else   //:     INCLUDE_CLICKOM ( - )
         #define AAC2020_INCLUDE_CLICKOM ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_049 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_050 )
 
         #include               "EDITCAM.F._"        
-        #define AAC2020_INCLUDE_EDITCAM (49 )
+        #define AAC2020_INCLUDE_EDITCAM (50 )
         #else   //:     INCLUDE_EDITCAM ( - )
         #define AAC2020_INCLUDE_EDITCAM ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_050 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_051 )
 
         #include               "GAMECAM.F._"        
-        #define AAC2020_INCLUDE_GAMECAM (50 )
+        #define AAC2020_INCLUDE_GAMECAM (51 )
         #else   //:     INCLUDE_GAMECAM ( - )
         #define AAC2020_INCLUDE_GAMECAM ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_051 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_052 )
 
         /** #PAINT5D_OLD_LIBCHAN_NOTES# **/
 
         #include               "PAINT5D.F._"        
-        #define AAC2020_INCLUDE_PAINT5D (51 )
+        #define AAC2020_INCLUDE_PAINT5D (52 )
         #else   //:     INCLUDE_PAINT5D ( - )
         #define AAC2020_INCLUDE_PAINT5D ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_052 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_053 )
 
         //:@VID_IID[ 0103 ]TIME[ 02:18:30   ]
         //:FORMERLY_KNOWN_AS[   P5D_OGL.F._ ]
         #include               "P5D1OGL.F._"    
         #include               "P5D1OGL.FRA._"    
         #include               "P5D1OGL.UTC._"    
-        #define AAC2020_INCLUDE_P5D1OGL (52 )
+        #define AAC2020_INCLUDE_P5D1OGL (53 )
         #else   //:     INCLUDE_P5D1OGL ( - )
         #define AAC2020_INCLUDE_P5D1OGL ( 0 )
         #endif
