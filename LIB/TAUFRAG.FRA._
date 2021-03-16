@@ -44,6 +44,14 @@
 
         //:[ tau_sub_p5d ]==[ TAUDEPO.SUBCELL.PAINT5D ]
 
+        /** ******************************************** **/
+        /** @VID_IID[ 0183 ]TIME[ 03:45:00 ]             **/
+        /** UGLY_HACK.THESE_DEFINES_HAVE_SAME_VALUES     **/
+        /** As[ AAC2020_TAUDEPO_* ]DEFINES_OF_SAME_NAME  **/
+        /** DONT_FORGET_TO_UPDATE_THE_UNIT_TEST:         **/
+        /** aac2020_taufrag_UTC_taudepo_CopiesMatch      **/
+        /** ******************************************** **/
+
         #define AAC2020_TAUFRAG_tau_sub_p5d_VAR_D_1 ( 0 )
         #define AAC2020_TAUFRAG_tau_sub_p5d_VAR_vp0 ( 1 )
         #define AAC2020_TAUFRAG_tau_sub_p5d_VAR_vp1 ( 2 )
@@ -56,6 +64,7 @@
         #define AAC2020_TAUFRAG_tau_sub_p5d_VAR_A_D ( 9 )
         #define AAC2020_TAUFRAG_tau_sub_p5d_VAR_T_V (10 )
         #define AAC2020_TAUFRAG_tau_sub_p5d_VAR_vd1 (11 )
+        #define AAC2020_TAUFRAG_tau_sub_p5d_VAR_UR1 (12 )
 
         //:------------------------------:DEX_VAR_000_255://
                         
@@ -108,6 +117,7 @@
         #define P5D_A_D AAC2020_TAUFRAG_tau_sub_p5d_VAR_A_D 
         #define P5D_T_V AAC2020_TAUFRAG_tau_sub_p5d_VAR_T_V 
         #define P5D_vd1 AAC2020_TAUFRAG_tau_sub_p5d_VAR_vd1 
+        #define P5D_UR1 AAC2020_TAUFRAG_tau_sub_p5d_VAR_UR1 
 
         //|------------------------------:DEX_VAR_000_255|//
 
@@ -355,6 +365,7 @@
             1: AAC2020_TAUFRAG_Get_REC_p5d_vp0
             2: AAC2020_TAUFRAG_Get_REC_p5d_vp1
             3: AAC2020_TAUFRAG_Get_I32_p5d_a_d  
+            4: AAC2020_TAUFRAG_Get_REC_p5d_ur1
         *** ******************************************** **/
             REC
             AAC2020_TAUFRAG_Get_REC_p5d_vp0( VOD )
@@ -397,6 +408,20 @@
                 aus_dex=( MI3( aus_dex_u32 ) );
                 return( aus_dex );
             }
+            //:- - - - - - - - - - -- - - - - - - - - - -://
+            REC
+            AAC2020_TAUFRAG_Get_REC_p5d_ur1( VOD )
+            {
+                REC p5d_ur1; /**AKA[ P5D_REC_UR1 ]**/
+                p5d_ur1 =(
+                aac2020_taufrag_Get_REC(
+                    TAU_015 //:tau: TAU_015  
+                ,   SUB_P5D //:sub: PAINT5D  
+                ,   P5D_UR1 //:var: P5D_UR1 
+                ));;
+                return( p5d_ur1 );
+            }
+            //:- - - - - - - - - - -- - - - - - - - - - -://
         //:=====================:PUBLIC_RECTANGLE_GETTERS://
     //++++++++++++++++++++++++++++++++++++++++++++++++++++//
     //[========================:TAUFRAG_FUNCTIONS_GO_HERE]//
@@ -470,6 +495,7 @@
         #undef  P5D_A_D  //:--------------: VAR_A_D : 09 ://
         #undef  P5D_T_V  //:--------------: VAR_T_V : 10 ://
         #undef  P5D_vd1  //:--------------: VAR_vd1 : 11 ://
+        #undef  P5D_UR1  //:--------------: VAR_UR1 : 12 ://
 
         //|------------------------------:DEX_VAR_000_255|//
 

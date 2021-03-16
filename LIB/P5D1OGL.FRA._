@@ -1086,6 +1086,9 @@
                 I32 aus_dex =(      /**AKA[ P5D_A_D ] **/
                     AAC2020_TAUFRAG_Get_I32_p5d_a_d() );;
 
+                REC p5d_ur1 =(  /**AKA[ P5D_REC_ur1 ] **/
+                    AAC2020_TAUFRAG_Get_REC_p5d_ur1() );;
+
             //:---------------:GET_VARS_STORED_IN_TEXTURE://    
             //:GET:canvas_user_view:---------------------://
 
@@ -1351,6 +1354,23 @@
             ,   MAK_F32( uv4_pix.z ) / 255.0
             ,   1.0 //:Alpha
             );;
+
+            //:DRAW_USER_INTERFACE_OVER_WHATEVER:============://
+                if( (1==1)
+                &&  fic.x >= p5d_ur1.x_0  //: INSIDE_UI_RECT?://
+                &&  fic.x <= p5d_ur1.x_1  //: INSIDE_UI_RECT?://
+                &&  fic.y >= p5d_ur1.y_0  //: INSIDE_UI_RECT?://
+                &&  fic.y <= p5d_ur1.y_1  //: INSIDE_UI_RECT?://
+                ){
+                    /** TODO: Make UI Transparent if needed **/
+
+                    FV4 ur1_pix=( /** UI_Rect_1:Pixel_RGBA **/
+                        AAC2020_UIFRAGS_PAINT5D_Main( F_C )
+                    );;   
+
+                    FragColor =( ur1_pix );
+                };;
+            //:============:DRAW_USER_INTERFACE_OVER_WHATEVER://
 
             
             #ifndef AAC2020_MACRO_THIS_IS_OPEN_GL

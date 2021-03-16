@@ -3128,6 +3128,7 @@
      T vpc_x_0 , T vpc_x_1 , T vpc_y_0 , T vpc_y_1 //:P5D_VPC://
     ,T vp0_x_0 , T vp0_x_1 , T vp0_y_0 , T vp0_y_1 //:P5D_VP0://
     ,T vp1_x_0 , T vp1_x_1 , T vp1_y_0 , T vp1_y_1 //:P5D_VP1://
+    ,T ur1_x_0 , T ur1_x_1 , T ur1_y_0 , T ur1_y_1 //:P5D_UR1://
 
     #undef  U
     #undef  I
@@ -3146,6 +3147,8 @@
             if( vp0_y_0 < 0 ){ ERR("[PRIA:vp0_y_0:OOB_NEG]");};
             if( vp1_x_0 < 0 ){ ERR("[PRIA:vp1_x_0:OOB_NEG]");};
             if( vp1_y_0 < 0 ){ ERR("[PRIA:vp1_y_0:OOB_NEG]");};
+            if( ur1_x_0 < 0 ){ ERR("[PRIA:ur1_x_0:OOB_NEG]");};
+            if( ur1_y_0 < 0 ){ ERR("[PRIA:ur1_y_0:OOB_NEG]");};
 
             /** Rough out of bounds check **/
             if( vpc_x_1 > U ){ ERR("[PRIA:vpc_x_1:OOB_POS]");};
@@ -3154,6 +3157,8 @@
             if( vp0_y_1 > U ){ ERR("[PRIA:vp0_y_1:OOB_POS]");};
             if( vp1_x_1 > U ){ ERR("[PRIA:vp1_x_1:OOB_POS]");};
             if( vp1_y_1 > U ){ ERR("[PRIA:vp1_y_1:OOB_POS]");};
+            if( ur1_x_1 > U ){ ERR("[PRIA:ur1_x_1:OOB_POS]");};
+            if( ur1_y_1 > U ){ ERR("[PRIA:ur1_y_1:OOB_POS]");};
 
             /** Specific out of bounds check   **/
             /** VP1: Offscreen/Source/TileMap  **/
@@ -3186,6 +3191,13 @@
             ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
             ,   AAC2020_TAUDEPO.P5D_VP1 //:DEX_VAR
             ,   (T)vp1_x_0 ,(T)vp1_x_1 ,(T)vp1_y_0 ,(T)vp1_y_1
+            );;
+
+            AAC2020_TAUDEPO_Put( 
+                AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+            ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+            ,   AAC2020_TAUDEPO.P5D_UR1 //:DEX_VAR
+            ,   (T)ur1_x_0 ,(T)ur1_x_1 ,(T)ur1_y_0 ,(T)ur1_y_1
             );;
 
         #undef  T
@@ -3260,8 +3272,6 @@
         I32 vp0_y_0 = (    0        ) + (lover_y/2);
         I32 vp0_y_1 = ( cli_hig - 1 ) - (lover_y/2);
 
-
-
         //: @POSSIBLE_PROBLEM@ - - - - - - - - - - - - - - - ://
         //: If we are manipulating this with user controls,  ://
         //: does this create a problem for us?               ://
@@ -3271,6 +3281,19 @@
         I32 vp1_x_1 =( 256 - 1 );
         I32 vp1_y_0 =(     0   );
         I32 vp1_y_1 =( 256 - 1 );
+
+        /** @VID_IID[ 0183 ]TIME[ 00:40:04 ]CALC_UIRECTS.P5D **/
+        /** Make[ P5D_UR1 ]User_Interface:                   **/
+        /**               1: Same   __HEIGHT__   As Viewport **/
+        /**               2: SnapTo __LEFT_SIDE_ Of Viewport **/
+        #define LEF_SID ( vp0_x_0 )/**LEFT_SIDE**/      ////////
+        #define UR1_WID ( AAC2020_UIRECTS.PAINT5D.P5D_UR1_WID )  
+        I32 ur1_x_0 =( LEF_SID -(UR1_WID)+ 1   ); //:P5D_UR1
+        I32 ur1_x_1 =( LEF_SID -(   0   )+ 1   ); //:P5D_UR1 
+        I32 ur1_y_0 =( vp0_y_0 /**@SAM_HIG@**/ ); //:P5D_UR1 
+        I32 ur1_y_1 =( vp0_y_1 /**@SAM_HIG@**/ ); //:P5D_UR1 
+        #undef  LEF_SID  ///////////////////////////////////////
+        #undef  UR1_WID  ///////////////////////////////////////
 
         //:Assert_VP0_Is_Square:-----------------------------://
 
@@ -3369,6 +3392,7 @@
             vpc_x_0 , vpc_x_1 , vpc_y_0 , vpc_y_1  //:P5D_VPC://
         ,   vp0_x_0 , vp0_x_1 , vp0_y_0 , vp0_y_1  //:P5D_VP0://
         ,   vp1_x_0 , vp1_x_1 , vp1_y_0 , vp1_y_1  //:P5D_VP1://
+        ,   ur1_x_0 , ur1_x_1 , ur1_y_0 , ur1_y_1  //:P5D_UR1://
         );;
 
         aac2020_paint5d_cli_wid = cli_wid;

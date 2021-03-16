@@ -90,6 +90,10 @@
         OUT="./LIB/GPUVIEW.FRA.STRING._"
         awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT
 
+        INN="./LIB/UIFRAGS.PAINT5D.FRA._"
+        OUT="./LIB/UIFRAGS.PAINT5D.FRA.STRING._"
+        awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT
+
         INN="./LIB/P5D1OGL.FRA._"
         OUT="./LIB/P5D1OGL.FRA.STRING._"
         awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT

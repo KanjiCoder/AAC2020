@@ -256,6 +256,11 @@
               #error "[OUT_OF_ORDER:AAC2020_INCLUDE_GAMECAM]"
 #endif
 #endif
+#if( 0                           != AAC2020_INCLUDE_UIFRAGS )
+#if( macro_libchan_order_UIFRAGS != AAC2020_INCLUDE_UIFRAGS )
+              #error "[OUT_OF_ORDER:AAC2020_INCLUDE_UIFRAGS]"
+#endif
+#endif
 #if( 0                           != AAC2020_INCLUDE_PAINT5D )
 #if( macro_libchan_order_PAINT5D != AAC2020_INCLUDE_PAINT5D )
               #error "[OUT_OF_ORDER:AAC2020_INCLUDE_PAINT5D]"
@@ -422,10 +427,13 @@
     #if( macro_libchan_order_GAMECAM !=     51   )
     #error "[TAIL_ORDER_FAIL:GAMECAM]"  //:    ://
     #endif                              //:    ://
-    #if( macro_libchan_order_PAINT5D !=     52   )
+    #if( macro_libchan_order_UIFRAGS !=     52   )
+    #error "[TAIL_ORDER_FAIL:UIFRAGS]"  //:    ://
+    #endif                              //:    ://
+    #if( macro_libchan_order_PAINT5D !=     53   )
     #error "[TAIL_ORDER_FAIL:PAINT5D]"  //:    ://
     #endif                              //:    ://
-    #if( macro_libchan_order_P5D1OGL !=     53   )
+    #if( macro_libchan_order_P5D1OGL !=     54   )
     #error "[TAIL_ORDER_FAIL:P5D1OGL]"
     #endif
 
@@ -497,8 +505,9 @@
     #undef  macro_libchan_order_CLICKOM   //:----## 49 ##----://
     #undef  macro_libchan_order_EDITCAM   //:----## 50 ##----://
     #undef  macro_libchan_order_GAMECAM   //:----## 51 ##----://
-    #undef  macro_libchan_order_PAINT5D   //:----## 52 ##----://
-    #undef  macro_libchan_order_P5D1OGL   //:----## 53 ##----://
+    #undef  macro_libchan_order_UIFRAGS   //:----## 52 ##----://
+    #undef  macro_libchan_order_PAINT5D   //:----## 53 ##----://
+    #undef  macro_libchan_order_P5D1OGL   //:----## 54 ##----://
  
     //:==========:DONT_POLLUTE_OTHER_PEOPLES_CODE_WITH_MACROS://
 

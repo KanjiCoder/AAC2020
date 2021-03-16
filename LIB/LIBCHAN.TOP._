@@ -105,8 +105,9 @@
     #define AAC2020_MAC_LIBCHAN_051 (51 )
     #define AAC2020_MAC_LIBCHAN_052 (52 )
     #define AAC2020_MAC_LIBCHAN_053 (53 )
+    #define AAC2020_MAC_LIBCHAN_054 (54 )
 
-    #define AAC2020_MAC_LIBCHAN_MAX (53 ) //:<-- Complile_Limit
+    #define AAC2020_MAC_LIBCHAN_MAX (54 ) //:<-- Complile_Limit
 
 //:============================================:LIBRARY_CHAIN://
 //:DATA:DATA_BEFORE_FUNCTIONS:===============================://
@@ -540,23 +541,31 @@
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_052 )
 
+        #include               "UIFRAGS.D._"    
+        #define AAC2020_INCLUDE_UIFRAGS (52 )
+        #else   //:     INCLUDE_UIFRAGS ( - )
+        #define AAC2020_INCLUDE_UIFRAGS ( 0 )
+        #endif
+
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_053 )
+
         /** #PAINT5D_OLD_LIBCHAN_NOTES# **/
 
         /** @IAM_DIFFERENT_NOTICE_ME@ **/
         #include "PAINT5D_DEFAULT_SHADERS\P5D_001._"  
 
         #include               "PAINT5D.D._"   
-        #define AAC2020_INCLUDE_PAINT5D (52 )
+        #define AAC2020_INCLUDE_PAINT5D (53 )
         #else   //:     INCLUDE_PAINT5D ( - )
         #define AAC2020_INCLUDE_PAINT5D ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_053 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_054 )
 
         //:@VID_IID[ 0103 ]TIME[ 02:18:30   ]
         //:FORMERLY_KNOWN_AS[   P5D_OGL.D._ ]
         #include               "P5D1OGL.D._"    
-        #define AAC2020_INCLUDE_P5D1OGL (53 )
+        #define AAC2020_INCLUDE_P5D1OGL (54 )
         #else   //:     INCLUDE_P5D1OGL ( - )
         #define AAC2020_INCLUDE_P5D1OGL ( 0 )
         #endif
@@ -989,22 +998,33 @@
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_052 )
 
+        //[ @_PATTERN_BREAKER_@ ]//
+        #include             "./UIFRAGS.PAINT5D.FRA._"          
+                             //:1234567.1234567.123._://
+        #include               "UIFRAGS.F._"        
+        #define AAC2020_INCLUDE_UIFRAGS (52 )
+        #else   //:     INCLUDE_UIFRAGS ( - )
+        #define AAC2020_INCLUDE_UIFRAGS ( 0 )
+        #endif
+
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_053 )
+
         /** #PAINT5D_OLD_LIBCHAN_NOTES# **/
 
         #include               "PAINT5D.F._"        
-        #define AAC2020_INCLUDE_PAINT5D (52 )
+        #define AAC2020_INCLUDE_PAINT5D (53 )
         #else   //:     INCLUDE_PAINT5D ( - )
         #define AAC2020_INCLUDE_PAINT5D ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_053 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_054 )
 
         //:@VID_IID[ 0103 ]TIME[ 02:18:30   ]
         //:FORMERLY_KNOWN_AS[   P5D_OGL.F._ ]
         #include               "P5D1OGL.F._"    
         #include               "P5D1OGL.FRA._"    
         #include               "P5D1OGL.UTC._"    
-        #define AAC2020_INCLUDE_P5D1OGL (53 )
+        #define AAC2020_INCLUDE_P5D1OGL (54 )
         #else   //:     INCLUDE_P5D1OGL ( - )
         #define AAC2020_INCLUDE_P5D1OGL ( 0 )
         #endif

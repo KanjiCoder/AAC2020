@@ -72,6 +72,8 @@
     #define AAC2020_UIRECTS_TAU_DEX ( AAC2020_TAUDEPO_TAU_000 )
 
     //:Hard coded asset should be 64x64 pixels:
+    #define AAC2020_UIRECTS_64P_08G_PNG_gly_san ( 8 )
+    #define AAC2020_UIRECTS_64P_08G_PNG_gly_iob ( 7 )
     #define AAC2020_UIRECTS_64P_08G_PNG_pix_wid (64 )
     #define AAC2020_UIRECTS_64P_08G_PNG_pix_hig (64 )
 
@@ -88,9 +90,60 @@
     //:EDITOR____NAME: PAINT5D         ::::::::::::::::::::::://
     //:RECTANGLE_NAME: P5D_UR1         ::::::::::::::::::::::://
     #define AAC2020_UIRECTS_PAINT5D_tau_loc_P5D_UR1 "[DONT_USE]"
-    //:USE[     AAC2020_TAUDEPO_SUB_PAINT5D_VAR_ur1 ]::::::::://
+    //:USE[     AAC2020_TAUDEPO_SUB_PAINT5D_VAR_UR1 ]::::::::://
+
+    //:Dimensions_Of_UI_Rects:-------------------------------://
+////  #define GLY_SAN ( AAC2020_UIRECTS_64P_08G_PNG_gly_san )
+////  #define GLY_IOB ( AAC2020_UIRECTS_64P_08G_PNG_gly_iob )
+////
+////      //: GLY_SAN : GLYph____SpAN_in_pixels
+////      //: GLY_IOB : GLYphs____In_One_Button
+////
+////      _Static_assert( GLY_SAN == 8, "[bad_mac:GLY_SAN]" );
+////      _Static_assert( GLY_IOB == 7, "[bad_mac:GLY_IOB]" );
+////
+////      #define AAC2020_UIRECTS_p5d_ur1_WID ( 8 * 7)
+        #define AAC2020_UIRECTS_p5d_ur1_HIG "[[===P5D_VP0===]]"
+////
+////  #undef  GLY_SAN
+////  #undef  GLY_IOB
+    //:-------------------------------:Dimensions_Of_UI_Rects://
 
 //:============================:UIRECTS_TAUDEPO_CONFIGURATION://
+//:UIRECT_LIBRARY_STRUCT:====================================://
+#define U08 uint8_t /** GCC: <stdint.h> **/
+#define CHR const char
+
+    struct AAC2020_UIRECTS_LIBRARY_STRUCT{
+
+        struct AAC2020_UIRECTS_paint5d{
+
+            const U08  P5D_UR1_WID ;
+            const CHR* P5D_UR1_HIG ;//:SAME_HEIGHT_AS:P5D_VP0://
+
+        }PAINT5D;
+        struct AAC2020_UIRECTS_todo_02{
+
+            int unused_stop_yelling_at_me_compiler ;
+
+        }TODO_02;
+        struct AAC2020_UIRECTS_todo_03{
+
+            int unused_stop_yelling_at_me_compiler ;
+
+        }TODO_03;
+
+    }AAC2020_UIRECTS={
+
+        .PAINT5D.P5D_UR1_WID=( 
+            AAC2020_UIRECTS_64P_08G_PNG_gly_san
+        *   AAC2020_UIRECTS_64P_08G_PNG_gly_iob )
+
+       ,.PAINT5D.P5D_UR1_HIG=( 
+            AAC2020_UIRECTS_p5d_ur1_HIG )
+    };
+
+//:====================================:UIRECT_LIBRARY_STRUCT://
 //:SCRATCH_NOTES:============================================://
 /** ******************************************************** ***
 

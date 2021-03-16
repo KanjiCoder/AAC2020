@@ -444,7 +444,28 @@
             ));;                                  //[ TF ]//
         }                                         //[ TF ]//
                                                   //[ TF ]//
-        //:- - - - - - - - - - - -- - - - - - - - - - - -://  
+        //:- - - - - - - - - - - -- - - - - - - - - - - -:// 
+        //:@VID_IID[ 0183 ]TIME[ 02:48:00 ]:- - - - - - -://
+        F32
+        FRAGCOM_GET_res_wid( void )
+        {
+            #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL
+                return( iResolution.x );
+            #else
+                return( AAC2020_CPUNIFO_iResolution_wid );
+            #endif
+        }
+        F32
+        FRAGCOM_GET_res_hig( void )
+        {
+            #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL
+                return( iResolution.y );
+            #else
+                return( AAC2020_CPUNIFO_iResolution_hig );
+            #endif
+        }
+        //:- - - - - - -:@VID_IID[ 0183 ]TIME[ 02:48:00 ]://
+        //:- - - - - - - - - - - -- - - - - - - - - - - -:// 
     //:always_exists_error_string_macros:----------------://
                                                    //[ x ]//
         #undef  E_S_private                        //[ x ]//
