@@ -3138,33 +3138,74 @@
         //:bound_check_inputs:-------------------------------://
         #define U 0x7FFFFFFF /**Upper Bound For Signed 32bit **/
 
-            /** PRIA: Put_Rec_In_All **/
+            //:bounds_checks_grouped_by_rectangle_name:------://
+            /** ******************************************** ***
+            Only add checks for errors that got triggered by 
+            "Grouped_By_Lower_And_Upper_Bounds" section.
+            Here we dive into the root of the problem.
+            @VID_IID[ 0201 ]TIME[ 00:25:00 ]
+            *** ******************************************** **/
 
-            /** lower bounds check **/
-            if( vpc_x_0 < 0 ){ ERR("[PRIA:vpc_x_0:OOB_NEG]");};
-            if( vpc_y_0 < 0 ){ ERR("[PRIA:vpc_y_0:OOB_NEG]");};
-            if( vp0_x_0 < 0 ){ ERR("[PRIA:vp0_x_0:OOB_NEG]");};
-            if( vp0_y_0 < 0 ){ ERR("[PRIA:vp0_y_0:OOB_NEG]");};
-            if( vp1_x_0 < 0 ){ ERR("[PRIA:vp1_x_0:OOB_NEG]");};
-            if( vp1_y_0 < 0 ){ ERR("[PRIA:vp1_y_0:OOB_NEG]");};
-            if( ur1_x_0 < 0 ){ ERR("[PRIA:ur1_x_0:OOB_NEG]");};
-            if( ur1_y_0 < 0 ){ ERR("[PRIA:ur1_y_0:OOB_NEG]");};
+                if( 0
+                ||  ur1_x_0 < 0
+                ||  ur1_x_1 > U
+                ||  ur1_y_0 < 0
+                ||  ur1_y_1 > U
+                ){
+                    //:UR1==[ UIRectangle1 / SideBarUI ]     ://
+                    //:To fix this problem, we will make     ://
+                    //:[ UR1 ] snap to fill editor viewport  ://
+                    //:when there is no room for [ UR1 ].    ://
+                    //:Then we will HIDE the side bar UI.    ://
+                    printf("[PAINT5D:ur1:OOB_SOMEHOW]\n");
+                    printf("[ur1_x_0]:%d\n" , ur1_x_0 );
+                    printf("[ur1_x_1]:%d\n" , ur1_x_1 );
+                    printf("[ur1_y_0]:%d\n" , ur1_y_0 );
+                    printf("[ur1_y_1]:%d\n" , ur1_y_1 );
+                    printf("[ur1:MIN]:%d\n" , (  0  ) );
+                    printf("[ur1:MAX]:%d\n" , (  U  ) );
 
-            /** Rough out of bounds check **/
-            if( vpc_x_1 > U ){ ERR("[PRIA:vpc_x_1:OOB_POS]");};
-            if( vpc_y_1 > U ){ ERR("[PRIA:vpc_y_1:OOB_POS]");};
-            if( vp0_x_1 > U ){ ERR("[PRIA:vp0_x_1:OOB_POS]");};
-            if( vp0_y_1 > U ){ ERR("[PRIA:vp0_y_1:OOB_POS]");};
-            if( vp1_x_1 > U ){ ERR("[PRIA:vp1_x_1:OOB_POS]");};
-            if( vp1_y_1 > U ){ ERR("[PRIA:vp1_y_1:OOB_POS]");};
-            if( ur1_x_1 > U ){ ERR("[PRIA:ur1_x_1:OOB_POS]");};
-            if( ur1_y_1 > U ){ ERR("[PRIA:ur1_y_1:OOB_POS]");};
+                };;
 
-            /** Specific out of bounds check   **/
-            /** VP1: Offscreen/Source/TileMap  **/
-            I32 vp1_max=( 256 - 1 ); /** for paint5d system**/
-            if( vp1_x_1 > vp1_max ){ ERR("[vp1_x_1:max]");};
-            if( vp1_y_1 > vp1_max ){ ERR("[vp1_y_1:max]");};
+            //:------:bounds_checks_grouped_by_rectangle_name://
+            //:Grouped_By_Lower_And_Upper_Bounds:------------://
+
+                /** PRIA  : Put_Rec_In_All               **/
+                /** PRIA_N: Negative Out Of Bounds Error **/
+                /** PRIA_P: Positive Out Of Bounds Error **/
+
+                /** lower bounds check **/
+                if( vpc_x_0 < 0 ){ ERR("[PRIA_N:vpc_x_0]");};
+                if( vpc_y_0 < 0 ){ ERR("[PRIA_N:vpc_y_0]");};
+                if( vp0_x_0 < 0 ){ ERR("[PRIA_N:vp0_x_0]");};
+                if( vp0_y_0 < 0 ){ ERR("[PRIA_N:vp0_y_0]");};
+                if( vp1_x_0 < 0 ){ ERR("[PRIA_N:vp1_x_0]");};
+                if( vp1_y_0 < 0 ){ ERR("[PRIA_N:vp1_y_0]");};
+                if( ur1_x_0 < 0 ){ ERR("[PRIA_N:ur1_x_0]");};
+                if( ur1_y_0 < 0 ){ ERR("[PRIA_N:ur1_y_0]");};
+
+                /** Rough out of bounds check **/
+                if( vpc_x_1 > U ){ ERR("[PRIA_P:vpc_x_1]");};
+                if( vpc_y_1 > U ){ ERR("[PRIA_P:vpc_y_1]");};
+                if( vp0_x_1 > U ){ ERR("[PRIA_P:vp0_x_1]");};
+                if( vp0_y_1 > U ){ ERR("[PRIA_P:vp0_y_1]");};
+                if( vp1_x_1 > U ){ ERR("[PRIA_P:vp1_x_1]");};
+                if( vp1_y_1 > U ){ ERR("[PRIA_P:vp1_y_1]");};
+                if( ur1_x_1 > U ){ ERR("[PRIA_P:ur1_x_1]");};
+                if( ur1_y_1 > U ){ ERR("[PRIA_P:ur1_y_1]");};
+
+            //:------------:Grouped_By_Lower_And_Upper_Bounds://
+            //:Editor_Specific_Bounds_Checks:----------------://
+
+                /** @VID_IID[ 0201 ]T[ 00:23:23 ]  **/
+                /** for paint5d system             **/
+                /** Specific out of bounds check   **/
+                /** VP1: Offscreen/Source/TileMap  **/
+                I32 vp1_max=( 256 - 1 ); 
+                if( vp1_x_1 > vp1_max ){ ERR("[vp1_x_1:max]");};
+                if( vp1_y_1 > vp1_max ){ ERR("[vp1_y_1:max]");};
+
+            //:----------------:Editor_Specific_Bounds_Checks://
 
         #undef  U
         //:-------------------------------:bound_check_inputs://
@@ -3210,13 +3251,20 @@
 #undef  ERR                                           //: 03 ://
 //:=================================:VIEWPORT_HELPER_FUNCTION://
 //:IOU:INIT_OR_UPDATE:=======================================://
-#define I32 int32_t /** GCC: <stdint.h> **/
+#define I32  int32_t /** GCC: <stdint.h> **/
+#define U32 uint32_t /** GCC: <stdint.h> **/
 #define ERR aac2020_paint5d_Halt
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     void        /** IOU:Initialize_Or_Update **/
     AAC2020_PAINT5D_IOU_ViewportRectangles( void )
     {           /** IOU:Initialize_Or_Update **/
+
+        //:variable_declarations_with_trap_values:-----------://
+
+            I32 ur1_vis=( 0-666 ); //:Is[ ur1 ]visible?
+
+        //:-----------:variable_declarations_with_trap_values://
 
         //:  #_GET_SIZE_OF_VIEWPORT_####  ://
         //:  #_DEFAULT_TERMINAL_HEIGHT_#  ://
@@ -3294,7 +3342,31 @@
         I32 ur1_y_1 =( vp0_y_1 /**@SAM_HIG@**/ ); //:P5D_UR1 
         #undef  LEF_SID  ///////////////////////////////////////
         #undef  UR1_WID  ///////////////////////////////////////
+        //:user_interface_size_hack:-------------------------://
+        if( 0
+        //:[ur1]     [vpc]
+        ||  ur1_x_0 < vpc_x_0 //:MIN:INCLUSIVE
+        ||  ur1_y_0 < vpc_y_0 //:MIN:INCLUSIVE
+        ||  ur1_x_1 > vpc_x_1 //:MAX:INCLUSIVE
+        ||  ur1_y_1 > vpc_y_1 //:MAX:INCLUSIVE
+        //:[ur1]     [vpc]
+        ){
+            //:Assume just not enough room to put UI on      ://
+            //:The side of[ vp0 ](Editor/Screen Within VPC)  ://
+            //:And snap[ ur1 ]into[ vp0 ]                    ://
 
+            //:SNAPP:
+            ur1_x_0 = vp0_x_0;
+            ur1_x_1 = vp0_x_1;
+            ur1_y_0 = vp0_y_0;
+            ur1_y_1 = vp0_y_1;
+        
+            ur1_vis =( 0 );
+        }else{
+            ur1_vis =( 1 );
+        };;
+        if( ur1_vis ){ /** NOOP FOR NOW **/ };
+        //:-------------------------:user_interface_size_hack://
         //:Assert_VP0_Is_Square:-----------------------------://
 
             //:@VID_IID[ 0151 ]TIME[ 00:25:05 ]
@@ -3365,7 +3437,20 @@
             /** ******************************************** **/
  
         //:------------------:Make_Sure_Nothing_Went_Negative://
+        //:Set_Visibility_Of_SOME_rectangles:----------------://
 
+            //:[ ur1_vis ]==[ P5D_VR1 ]://
+            if( ur1_vis != 0 && ur1_vis != 1 ){
+                ERR("[INVALID:ur1_vis]");
+            };;
+            AAC2020_TAUDEPO_Put( 
+                AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+            ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+            ,   AAC2020_TAUDEPO.P5D_VR1 //:DEX_VAR
+            ,   (U32)ur1_vis,( 0 ),( 0 ),( 0 )
+            );;
+
+        //:----------------:Set_Visibility_Of_SOME_rectangles://
         //:--------------------------------------------------://
         //: @VID_IID[ 0084 ]TIME[ 04:28:10 ] ................://
         //: Explanation on why viewports are named such.     ://
@@ -3450,8 +3535,9 @@
     }
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
-#undef  I32
-#undef  ERR
+#undef  I32  //:----------------------------------------: 01 ://
+#undef  U32  //:----------------------------------------: 02 ://
+#undef  ERR  //:----------------------------------------: 03 ://
 //:=======================================:IOU:INIT_OR_UPDATE://
 //:INITIALIZE_PAINT5D:=======================================://
 #define U32  uint32_t /** GCC: <stdint.h> **/         //: 01 ://

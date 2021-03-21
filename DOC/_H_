@@ -9,6 +9,48 @@
     //[   VIDEO COMMENT TIMESTAMP EXAMPLE   ]//
 *** ******************************************************** ***
 
+#_UI_BOTTON_THOUGHTS_###########################################
+
+    The only thing the GPU needs is text to display 
+    in the button. 4 pixels is enough for
+    two different sets of 7 letters + null terminators.
+
+        RGBARGBA
+        STA_001 <--+
+                    \___ 8 pixels total
+                    /
+        STA_002 <--+
+        RGBARGBA
+
+        +-----+
+        |     |
+        +-----+
+        |     |
+        +-----+
+
+        Shared UI Buttons
+        +---+ 
+        |   | 
+        +---+ 
+        |   | 
+        +---+ 
+        |   | 
+        +---+ 
+
+    32x32 == 128x128 characters
+
+    2 pixels == 8 character bytes.
+    2 pixels == 7 letters + null terminator
+
+    2 :  pixels for button text
+    30: pixels for button state
+
+    SIMPLIFY!
+    4 PIXELS :
+        2 pixels unclick    ( RGBARGBA )
+        2 pixels mouse down ( RGBARGBA )
+
+###########################################_UI_BOTTON_THOUGHTS_#
 #_ABOUT_E_S_MACROS_#############################################
 
         //:#_ABOUT_E_S_MACROS_#://                 //| # |//
