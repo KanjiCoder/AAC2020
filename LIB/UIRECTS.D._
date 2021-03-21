@@ -1,68 +1,41 @@
-
-//:ORDER_ENFORCER:===========================================://
+//:UIRECTS_DIAGRAM_SECTION:==================================://
 /** ******************************************************** ***
 
-    @VID_IID[ 0181 ]TIME[ 04:10:10 ]
-    The exact order of our dependency list does NOT
-    matter in [ AAC2020.C11 ]. But there are certain
-    relative orders that DO matter.
+    //:FONTS_USED_BY_ALL_UI_S_STORED_HERE:-------------------://
 
-    The orders we really care about have been specified here.
-    If this @ORDER_ENFORCER@ section becomes too distracting,
-    we can offboard it to a seperate @INCLUDE@ file.
+        [ UIRI ]==[ AAC2020_UIRECTS_Init       ]
+        [ TDSS ]==[ AAC2020_TAUDUMP_SubSection ]
+        1. [ UIRI ]calls[ TDSS ]
+        2. DIAGRAM COPIDED FROM[ TDSS ]
+
+                |<-----128----->|          |<-----512----->|
+                |<#DIA_SUB_CEL#>|          |<#DIA_TAU_CEL#>|
+          --=-- +---+---+---+---+-----+--> +---+---+---+---+ --- 
+           _32  |XY0| 1 | 2 | 3 |          |000|   | 2 | 3 | 128
+          --=-- +---+---+---+---+     +--> +---+   +---+---+ ---
+                | 4 |XY1| 6 | 7 |    /     |       | 6 | 7 |
+                +---+---+---+---+   /      +---+---+---+---+ 
+                | 8 | 9 |   |   |  /       | 8 | 9 |10 |11 |
+                +---+---+---+---+ /        +---+---+---+---+
+                |   |   |   |   |/         |12 |13 |14 |015| 
+                +---+---+---+---+          +---+---+---+---+
+                |<---- #_TAUDEPO_DIAGRAMS_4_TAUDUMP_# ---->|
+
+        //:---------------:FONTS_USED_BY_ALL_UI_S_STORED_HERE://
+        //:WHERE_IS_SPECIFIC_UI_LIST_OF_BUTTONS?-------------://
+
+            //:                              1234567         ://
+            //:I don't know. Maybe we make a UILISTS         ://
+            //:place for where to put user interface lists.  ://
+
+        //:-------------:WHERE_IS_SPECIFIC_UI_LIST_OF_BUTTONS://
+
 
 *** ******************************************************** **/
+//:==================================:UIRECTS_DIAGRAM_SECTION://
+//:ORDER_ENFORCER:===========================================://
 
-    #ifndef AAC2020_INCLUDE_FRAGCOM
-
-        //: Common fragment shader code should NOT know about://
-        //: Something as specific as user interface rects.   ://
-
-        #error "[UIRECTS:__should_come_after__:FRAGCOM]"
-    #endif
-    #ifndef AAC2020_INCLUDE_GPUVIEW
-
-        //: GPUVIEW can look directly at the texture memory, ://
-        //: but it should have no knowledge of what each     ://
-        //: pixel of that texture memory is encoding.        ://
-        //: Thus included BEFORE UIRECTS library.            ://
-
-        #error "[UIRECTS:__should_come_after__:GPUVIEW]"
-    #endif
-    #ifndef AAC2020_INCLUDE_TAUDEPO
-
-        //: UIRECTS grabs a top level TAUDEPO slot           ://
-        //: for itself. To make the connection obvious,      ://
-        //: we have a line:                                  ://
-        //: #define AAC2020_UIRECTS_TAU_DEX                  ://
-        //:                      ( AAC2020_TAUDEPO_TAU_000 ) ://
-        //: Which necessitates that UIRECTS comes            ://
-        //: after TAUDEPO in inclusion order.                ://
-
-        #error "[UIRECTS:__should_come_after__:TAUDEPO]"
-    #endif
-
-    ////////////////////////////////////////////////////////////
-    //: The previous constraints mean we should make sure    ://
-    //: UIRECTS is included after ANY "TAU*" system.         ://
-    //: @VID_IID[ 0181 ]TIME[ 04:08:32 ]                     ://
-    ////////////////////////////////////////////////////////////
-        #ifndef AAC2020_INCLUDE_TAUDIRT
-            #error "[UIRECTS:after_any_TAU_sytem:TAUDIRT]"
-        #endif
-        #ifndef AAC2020_INCLUDE_TAUDEPO
-            #error "[UIRECTS:after_any_TAU_sytem:TAUDEPO]"
-        #endif
-        #ifndef AAC2020_INCLUDE_TAUTYPE
-            #error "[UIRECTS:after_any_TAU_sytem:TAUTYPE]"
-        #endif
-        #ifndef AAC2020_INCLUDE_TAUSYNC
-            #error "[UIRECTS:after_any_TAU_sytem:TAUSYNC]"
-        #endif
-        #ifndef AAC2020_INCLUDE_TAUFRAG
-            #error "[UIRECTS:after_any_TAU_sytem:TAUFRAG]"
-        #endif
-    ////////////////////////////////////////////////////////////
+    #include "./UIRECTS.ORDER_ENFORCER._"
 
 //:===========================================:ORDER_ENFORCER://
 //:UIRECTS_TAUDEPO_CONFIGURATION:============================://
