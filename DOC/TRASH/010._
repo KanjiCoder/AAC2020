@@ -1,0 +1,175 @@
+    ////////////////////////////////////////////////////////////
+
+    //: TAUDEPO_BTN_LOC
+    //: 32x32 pixels for taudepo allocation.
+    //:     2 pixels for button's text
+    //:     1 pixel  for button type.
+    //:     1 pixel  for button's ui list order
+    //:     0 pixel  for button value. (If number display)
+    //:       ACTUALLY DISPLAY VARIABLE LINKED TO!
+
+    [val_btn][###_###]
+    [act_btn][_______]
+
+        EXAMPLE:
+        [p5d_a_b][ - ]  <-- decrimentor button
+        [p5d_a_n][ + ]  <-- incrimentor button
+        [P5D_T_V][###]  <-- number display button
+
+    1234 567n
+    RGBA+RGBA 2 pixels for button text.
+
+    [x][x]
+    [x][x]
+
+    What is simplist solution?
+    Take a sub cell from a taudepo location and
+    use it for up to 16 user interfaces max like so.
+    Each user interface can have no more than 16 elements.
+
+          +--+--+--+--+      +--+--+--+--+
+          |01|02|03|04| .... |13|14|15|16|
+          +--+--+--+--+      +--+--+--+--+
+
+    +--+  +--+--+--+--+      +--+--+--+--+
+    |01|  |  |  |  |  |      |  |  |  |  |
+    +--+  +--+--+--+--+      +--+--+--+--+
+    |02|  |  |  |  |  |      |  |  |  |  |        
+    +--+  +--+--+--+--+      +--+--+--+--+
+          ................................
+    +--+  +--+--+--+--+      +--+--+--+--+
+    |15|  |  |  |  |  |      |  |  |  |  |
+    +--+  +--+--+--+--+      +--+--+--+--+
+    |16|  |  |  |  |  |      |  |  |  |  |
+    +--+  +--+--+--+--+      +--+--+--+--+
+           ^^
+           ||
+          [16 paint5d ui elements in ui list]
+
+
+    ////////////////////////////////////////////////////////////
+
+    //: UILISTS
+    //: BTNLIST
+    U32 AAC2020_UILISTS_paint5d={
+
+        AAC2020_TAUDEPO_SUB_PAINT5D_VAR_T_V //:TAUDEPO_VAR_LOC
+    ,   AAC2020_TAUDEPO_SUB_PAINT5D_BTN_T_V //:TAUDEPO_BTN_LOC
+
+    };;
+
+
+    struct AAC2020_UILISTS_LIBRARY_STRUCT{
+
+
+    }AAC2020_UILISTS={
+
+
+    };;
+
+    #define AAC2020_TAUDEPO_T15_S01_V01_p5d_vp0 ( 1 )
+    #define P5D_VP0  AAC2020_TAUDEPO_T15_S01_V01_p5d_vp0
+
+    struct AAC2020_TAULIST_LIBRARY_STRUCT{
+
+
+    }AAC2020_TAULIST={
+
+        struct TAU_001{
+
+        }={
+
+        };
+        struct TAU_002{
+
+        }={
+
+        };
+        struct TAU_003{
+
+        }={
+
+        };
+        struct TAU_004{
+
+        }={
+
+        };
+        struct TAU_005{
+
+        }={
+
+        };
+        struct TAU_006{
+
+        }={
+
+        };
+        struct TAU_007{
+
+        }={
+
+        };
+        struct TAU_008{
+
+        }={
+
+        };
+        struct TAU_009{
+
+        }={
+
+        };
+        struct TAU_010{
+
+        }={
+
+        };
+        struct TAU_011{
+
+        }={
+
+        };
+        struct TAU_012{
+
+        }={
+
+        };
+        struct TAU_013{
+
+        }={
+
+        };
+        struct TAU_014{
+
+        }={
+
+        };
+        struct TAU_015{
+
+            CHR* name;
+
+        }={
+            .name="SYSTEM_VARIABLE"
+
+        };
+
+    };
+
+
+    Maybe we just need a big comment to say what goes where?
+
+    TAU_000 : UIRECTS ( user interface graphics )
+
+    TAU_014 : UILISTS ( editor user interfaces )
+    TAU_015 : EDIVARS ( editor variables )
+
+    //:What is this?
+    //:1: a parallel way to do same thing?
+    //:2: just a formalized way to help find things?
+    //:3: Somehow effects where things are wired up?
+    AAC2020_TAUTABLE[ aac2020_tautable_UIRECTS ]=( TAU_000 );
+    AAC2020_TAUTABLE[ aac2020_tautable_UILISTS ]=( TAU_014 );
+    AAC2020_TAUTABLE[ aac2020_tautable_EDIVARS ]=( TAU_015 );
+
+    What about...

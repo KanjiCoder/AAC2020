@@ -59,7 +59,7 @@ _Static_assert( AAC2020_INCLUDE_TAUDEPO == 41 ,       "41");
 //:==================================================:TAUDEPO://
 //:TAUSYNC:==================================================://
 #if(            AAC2020_INCLUDE_TAUSYNC >=  1 )
-_Static_assert( AAC2020_INCLUDE_TAUSYNC == 43 ,       "43");
+_Static_assert( AAC2020_INCLUDE_TAUSYNC == 44 ,       "44");
 
     #define  FMACROS_TAUSYNC_LoopTick   AAC2020_TAUSYNC_LoopTick
 #endif
@@ -70,7 +70,7 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 43 ,       "43");
 //:==================================================:TAUSYNC://
 //:PAINT5D:==================================================://
 #if(            AAC2020_INCLUDE_PAINT5D >=  1 )
-_Static_assert( AAC2020_INCLUDE_PAINT5D == 53 ,       "53");
+_Static_assert( AAC2020_INCLUDE_PAINT5D == 55 ,       "55");
 
     #define  FMACROS_PAINT5D_LoopTick   AAC2020_PAINT5D_LoopTick
 #endif
@@ -130,6 +130,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 53 ,       "53");
     FRAGCOM
     GPUWIRE
     TAUDIRT
+    TAUNAME
     TAUTYPE
     TAUSYNC
     TAUDUMP
@@ -432,6 +433,15 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 53 ,       "53");
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:TAUDIRT://
 
+//:InitNone:TAUNAME:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_TAUNAME >=  1 )
+#define      FMACROS_TAUNAME_InitNone AAC2020_TAUNAME_InitNone
+#endif
+#if( AAC2020_INCLUDE_TAUNAME == 0 )
+#define      FMACROS_TAUNAME_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:TAUNAME://
+
 //:InitNone:TAUTYPE:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_TAUTYPE >=  1 )
 #define      FMACROS_TAUTYPE_InitNone AAC2020_TAUTYPE_InitNone
@@ -559,6 +569,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 53 ,       "53");
     GPUVIEW
     TAUDEPO
     UIRECTS
+    UILISTS
     PAINT5D
 *** ******************************************************** **/
 //[AUTO_GENERATED_INIT_FUNCTIONS::- - - - - - - - - - - - - -]//
@@ -682,6 +693,18 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 53 ,       "53");
 
     #endif
     //:=========================================:INIT:UIRECTS://
+    //:INIT:UILISTS:=========================================://
+    #if(            AAC2020_INCLUDE_UILISTS >=  1 )
+
+        #define  FMACROS_UILISTS_Init       AAC2020_UILISTS_Init
+
+    #endif
+    #if(    AAC2020_INCLUDE_UILISTS == 0 )
+
+        #define  FMACROS_UILISTS_Init(  DISCARDED_ARGUMENT )       
+
+    #endif
+    //:=========================================:INIT:UILISTS://
     //:INIT:PAINT5D:=========================================://
     #if(            AAC2020_INCLUDE_PAINT5D >=  1 )
 

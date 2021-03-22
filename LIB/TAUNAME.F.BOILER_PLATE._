@@ -1,0 +1,41 @@
+//:AAC2020_SUBLIBRARY_BOILERPLATE:===========================://
+#define SIL AAC2020_SILENCE                           //: 01 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 02 ://
+#define P_F printf                                    //: 03 ://
+    //:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=================://
+        void 
+        aac2020_tauname_Halt( const char* msg_err )
+        {
+            P_F("[FATAL_ERROR:aac2020_tauname]:%s\n", msg_err );
+            fflush(stdout);
+            exit( 123 );
+        }
+    //:=================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+    //:LOG_AFTER_HALT:=======================================://
+        void
+        aac2020_tauname_Info_any( //:FUNC:::Info , OVERLOAD:any
+            const char* str_fmt   //:GENERAL:str , SPECIFIC:fmt
+        ,   void*       dat_any   //:GENERAL:dat , SPECIFIC:any
+        )
+        {                            int say=( 0 );
+            if( SIL.TAUNAME <=(  0  ) ){ say=( 1 ); };
+            if( SIL.SILENCE <=( 0-1 ) ){ say=( 1 ); };
+            if( SIL.SILENCE >=( 0+1 ) ){ say=( 0 ); };
+            if( say >= 1 ){
+                P_F("[tauname_log]....(   " ); fflush( stdout );
+                P_F( str_fmt , dat_any      ); fflush( stdout );
+                P_F(               "   )\n" ); fflush( stdout );
+            };;
+        }
+    //:=======================================:LOG_AFTER_HALT://
+    //:INIT_NONE:============================================://
+        U32
+        AAC2020_TAUNAME_InitNone( U32 u32 ){
+            if( u32 ){ /** reserved for future use **/ };
+            return( 0x00 );
+        }
+    //:============================================:INIT_NONE://
+#undef  SIL  //:----------------------------------------: 01 ://
+#undef  U32  //:----------------------------------------: 02 ://
+#undef  P_F  //:----------------------------------------: 03 ://
+//:===========================:AAC2020_SUBLIBRARY_BOILERPLATE://

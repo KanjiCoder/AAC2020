@@ -9,6 +9,185 @@
     //[   VIDEO COMMENT TIMESTAMP EXAMPLE   ]//
 *** ******************************************************** ***
 
+#_PHYSICALLY_FLAT_##############################################
+#_MENTALLY_NESTED_##############################################
+
+    YOU_MEAN[ @_PHYSICALLY_FLAT_@ | @_MENTALLY_NESTED_@ ]
+
+##############################################_PHYSICALLY_FLAT_#
+##############################################_MENTALLY_NESTED_#
+@_PHYSICALLY_FLAT_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    I want my code to have a physically flat structure in
+    the source. 
+
+    Do not write "self documenting code" that forces you
+    to make the code physically nested just because
+    some aspects are "@_MENTALLY_NESTED_@"
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@_PHYSICALLY_FLAT_@
+@_MENTALLY_NESTED_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    Just because the code structure is FLAT does not mean
+    that some concepts have a "mental" tree associated with
+    them.
+
+    For example: LIBCHAN source code is 100% linear/flat.
+                 But it represents a solution to a 
+                 depedency graph.
+
+    Just because the mental conception of the code is
+    BRANCHING/NESTED/TREE does not mean the code needs
+    to be that way. 
+
+    In fact, making the code 100% reflect our mental
+    models could impose un-necessary structure that
+    makes the code harder to work with.
+
+    @VID_IID[ 0204 ]TIME[ 00:40:00 ]
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@_MENTALLY_NESTED_@
+@_FROM_FUTURE_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @_FROM_FUTURE_@ : Means the sub-library somehow has
+                      knowledge of future items in the 
+                      LIBCHAN.
+
+                      This violates our "Layered On Approach"
+
+                      But sometimes a consolidated index of
+                      certain things. For example
+                      : "All editors current and future"
+                      is very useful to working with and
+                      understanding the code.
+
+                      @VID_IID[ 0204 ]TIME[ 00:22:22 ]
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@_FROM_FUTURE_@
+#_FROM_FUTURE_##################################################
+
+    YOU_MEAN[ @_FROM_FUTURE_@ ]
+    
+##################################################_FROM_FUTURE_#
+#_LAYERED_SYSTEMS_2021_03_######################################
+
+    @VID_IID[ 0204 ]TIME[ 00:19:23 ]
+
+    The design of this code base is such that when we create
+    a new sub-library it should always be OKAY to tack it
+    on to the VERY END (last element) of the LIBCHAN.
+
+    Sometimes this means we have systems that need to know
+    about future systems... Which breaks our layered on 
+    design.... But it is better than requiring that a
+    certain system always be LAST.
+    
+    Because if we require a certain system to be last,
+    then we cannot gaurantee tacking onto the end of the
+    libchan will always work without fail.
+
+    TL;DR 
+        Always allow tacking to end of LIBCHAN for new systems.
+
+######################################_LAYERED_SYSTEMS_2021_03_#
+@_XY_TO_INDEX_FORMULA_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    Means we are using the standar "xy to index" formula
+    that takes XY location and convert it to 1D index based
+    on scanline order. (right to left) then (top to bottom)
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@_XY_TO_INDEX_FORMULA_@
+#_UILISTS_ORIGINAL_THOUGHTS_####################################
+
+    @VID_IID[ 0203 ]TIME[ 02:22:42 ]
+    SEE[ DOC/TRASH/010._ ]
+
+####################################_UILISTS_ORIGINAL_THOUGHTS_#
+#_TAUNAME_NOT_FOR_REMAPPING_####################################
+
+    [ AAC2020_TAUNAME_edivars ] not to be used as a
+    "symbolic constant" to allow flexibility in code.
+
+    [ AAC2020_TAUNAME_edivars ] to be used as a formalization
+    of the meaning of [ TAU_015 ].
+
+    In other words, this is always true:
+
+        assert( AAC2020_TAUNAME_edivars == TAU_015 == 15 )
+
+    @VID_IID[ 0203 ]TIME[ 00:28:00 ]
+
+####################################_TAUNAME_NOT_FOR_REMAPPING_#
+#_TAUNAME_NOT_TO_BE_USED_FOR_FLEXIBILITY_#######################
+#TAUNAME_NOT_TO_BE_USED_FOR_FLEXIBILITY#########################
+
+    SUMMARY:
+        CORRECT:
+        [AAC2020_TAUNAME_edivars] is an ALIAS for [TAU_015]
+
+        WARNING:
+        [AAC2020_TAUNAME_edivars] is NOT A WAY TO FLEXIBLY    
+        RE_LOCATE MEMORY BY CHANGING IT'S UNDERLYING VALUE!
+        @VID_IID[ 0203 ]TIME[ 00:22:26 ]
+        DATE[ 00:24:00 ]
+
+    //|@VID_IID[ 0203 ]TIME[ 00:12:00 ]                 |//
+    //+# YES: USE FOR ASSERTS                           +//
+    //+# YES: USE FOR HIGH LEVEL UNDERSTANDING          +//
+    //[#  NO: NOT TO BE USED TO FLEXIBLY CHANGE MEMORY #]//
+     
+    //[ WRONG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!        ]//
+    //- AAC2020_TAUDEPO_Put(                            -//
+    //-     AAC2020_TAUNAME_edivars //:<-- @_NOT4FLEX_@ -//
+    //- ,   AAC2020_TAUDEPO.PAINT5D                     -//
+    //- ,   AAC2020_TAUDEPO.P5D_VP1                     -//
+    //- ,   x_0,x_1,y_0,y_1                             -//
+    //- );;                                             -//
+    //| CORRECT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!        |//
+    //+ assert( AAC2020_TAUDEPO_TAU_015                 +//
+    //+      == AAC2020_TAUNAME_edivars );;             +//
+    //+ AAC2020_TAUDEPO_Put(                            +//
+    //+     AAC2020_TAUDEPO_TAU_015 //:<-- @_NOTABS_@   +//
+    //+ ,   AAC2020_TAUDEPO.PAINT5D                     +//
+    //+ ,   AAC2020_TAUDEPO.P5D_VP1                     +//
+    //+ ,   x_0,x_1,y_0,y_1                             +//
+    //+ );;                                             +//
+
+#######################_TAUNAME_NOT_TO_BE_USED_FOR_FLEXIBILITY_#
+#########################TAUNAME_NOT_TO_BE_USED_FOR_FLEXIBILITY#
+#TAUNAME_ORIGINAL_THOUGHTS######################################
+#_TAUNAME_ORIGINAL_THOUGHTS_####################################
+
+    @VID_IID[ 0203 ]TIME[ 00:08:42 ]
+    Be careful, don't "over contanerize" your code.
+    But also don't make "spaghetti code"
+
+    //:Ask yourself a serious question...
+    //:"What is the purpose of a struct?"
+    //:Do you need a struct to organize ideas? NO.
+    //:Do you need a struct to pass around groups of data? YES.
+    //:Let's use TAUNAME as a centralized way to formalize
+    //:how certain data is used. But we don't need to go so
+    //:far as making as struct. We don't even have to use
+    //:TAUNAME variables in the code. It's just a self
+    //:documenting piece of code that gives me a high level
+    //:view of how different sections of TAUDEPO memory are
+    //:used at the highest level.
+    //:DATE[ 2021_03_21 ]
+
+
+    //:Comes after TAUDEPO and allows us to give
+    //:more meaningful names to the TAU_### indexes.
+    //:
+    //:We dont want more than one way to do something.
+    //:So just use TAUNAME to do static asserts on other
+    //:code to make sure you are using the correct "TAU"
+    //:in your code. Don't use "TAUNAME" to make code
+    //:"more flexible" and be able to move around blocks
+    //:of variables to different locations.
+
+######################################TAUNAME_ORIGINAL_THOUGHTS#
+####################################_TAUNAME_ORIGINAL_THOUGHTS_#
 #_UI_BOTTON_THOUGHTS_###########################################
 
     The only thing the GPU needs is text to display 
