@@ -108,8 +108,9 @@
     #define AAC2020_MAC_LIBCHAN_054 (54 )
     #define AAC2020_MAC_LIBCHAN_055 (55 )
     #define AAC2020_MAC_LIBCHAN_056 (56 )
+    #define AAC2020_MAC_LIBCHAN_057 (57 )
 
-    #define AAC2020_MAC_LIBCHAN_MAX (56 ) //:<-- Complile_Limit
+    #define AAC2020_MAC_LIBCHAN_MAX (57 ) //:<-- Complile_Limit
 
 //:============================================:LIBRARY_CHAIN://
 //:DATA:DATA_BEFORE_FUNCTIONS:===============================://
@@ -559,13 +560,21 @@
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_054 )
 
+        #include               "UISHARE.D._"    
+        #define AAC2020_INCLUDE_UISHARE (54 )
+        #else   //:     INCLUDE_UISHARE ( - )
+        #define AAC2020_INCLUDE_UISHARE ( 0 )
+        #endif
+
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_055 )
+
         #include               "UIFRAGS.D._"    
-        #define AAC2020_INCLUDE_UIFRAGS (54 )
+        #define AAC2020_INCLUDE_UIFRAGS (55 )
         #else   //:     INCLUDE_UIFRAGS ( - )
         #define AAC2020_INCLUDE_UIFRAGS ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_055 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_056 )
 
         /** #PAINT5D_OLD_LIBCHAN_NOTES# **/
 
@@ -573,17 +582,17 @@
         #include "PAINT5D_DEFAULT_SHADERS\P5D_001._"  
 
         #include               "PAINT5D.D._"   
-        #define AAC2020_INCLUDE_PAINT5D (55 )
+        #define AAC2020_INCLUDE_PAINT5D (56 )
         #else   //:     INCLUDE_PAINT5D ( - )
         #define AAC2020_INCLUDE_PAINT5D ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_056 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_057 )
 
         //:@VID_IID[ 0103 ]TIME[ 02:18:30   ]
         //:FORMERLY_KNOWN_AS[   P5D_OGL.D._ ]
         #include               "P5D1OGL.D._"    
-        #define AAC2020_INCLUDE_P5D1OGL (56 )
+        #define AAC2020_INCLUDE_P5D1OGL (57 )
         #else   //:     INCLUDE_P5D1OGL ( - )
         #define AAC2020_INCLUDE_P5D1OGL ( 0 )
         #endif
@@ -1032,33 +1041,44 @@
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_054 )
 
-        //[ @_PATTERN_BREAKER_@ ]//
-        #include             "./UIFRAGS.PAINT5D.FRA._"          
-                             //:1234567.1234567.123._://
-        #include               "UIFRAGS.F._"        
-        #define AAC2020_INCLUDE_UIFRAGS (54 )
-        #else   //:     INCLUDE_UIFRAGS ( - )
-        #define AAC2020_INCLUDE_UIFRAGS ( 0 )
+        //:@PATTERN_BREAKER@://
+        #include             "./UISHARE.FRA._"
+
+        #include               "UISHARE.F._"        
+        #define AAC2020_INCLUDE_UISHARE (54 )
+        #else   //:     INCLUDE_UISHARE ( - )
+        #define AAC2020_INCLUDE_UISHARE ( 0 )
         #endif
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_055 )
 
+        //[ @_PATTERN_BREAKER_@ ]//
+        #include             "./UIFRAGS.PAINT5D.FRA._"          
+                             //:1234567.1234567.123._://
+        #include               "UIFRAGS.F._"        
+        #define AAC2020_INCLUDE_UIFRAGS (55 )
+        #else   //:     INCLUDE_UIFRAGS ( - )
+        #define AAC2020_INCLUDE_UIFRAGS ( 0 )
+        #endif
+
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_056 )
+
         /** #PAINT5D_OLD_LIBCHAN_NOTES# **/
 
         #include               "PAINT5D.F._"        
-        #define AAC2020_INCLUDE_PAINT5D (55 )
+        #define AAC2020_INCLUDE_PAINT5D (56 )
         #else   //:     INCLUDE_PAINT5D ( - )
         #define AAC2020_INCLUDE_PAINT5D ( 0 )
         #endif
 
-#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_056 )
+#if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_057 )
 
         //:@VID_IID[ 0103 ]TIME[ 02:18:30   ]
         //:FORMERLY_KNOWN_AS[   P5D_OGL.F._ ]
         #include               "P5D1OGL.F._"    
         #include               "P5D1OGL.FRA._"    
         #include               "P5D1OGL.UTC._"    
-        #define AAC2020_INCLUDE_P5D1OGL (56 )
+        #define AAC2020_INCLUDE_P5D1OGL (57 )
         #else   //:     INCLUDE_P5D1OGL ( - )
         #define AAC2020_INCLUDE_P5D1OGL ( 0 )
         #endif

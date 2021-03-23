@@ -70,7 +70,7 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 44 ,       "44");
 //:==================================================:TAUSYNC://
 //:PAINT5D:==================================================://
 #if(            AAC2020_INCLUDE_PAINT5D >=  1 )
-_Static_assert( AAC2020_INCLUDE_PAINT5D == 55 ,       "55");
+_Static_assert( AAC2020_INCLUDE_PAINT5D == 56 ,       "56");
 
     #define  FMACROS_PAINT5D_LoopTick   AAC2020_PAINT5D_LoopTick
 #endif
@@ -140,6 +140,7 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 55 ,       "55");
     CLICKOM
     EDITCAM
     GAMECAM
+    UISHARE
     UIFRAGS
     P5D1OGL
 *** ******************************************************** **/
@@ -522,6 +523,15 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 55 ,       "55");
 #define      FMACROS_GAMECAM_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:GAMECAM://
+
+//:InitNone:UISHARE:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_UISHARE >=  1 )
+#define      FMACROS_UISHARE_InitNone AAC2020_UISHARE_InitNone
+#endif
+#if( AAC2020_INCLUDE_UISHARE == 0 )
+#define      FMACROS_UISHARE_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:UISHARE://
 
 //:InitNone:UIFRAGS:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_UIFRAGS >=  1 )

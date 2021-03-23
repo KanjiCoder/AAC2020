@@ -266,6 +266,11 @@
               #error "[OUT_OF_ORDER:AAC2020_INCLUDE_UILISTS]"
 #endif
 #endif
+#if( 0                           != AAC2020_INCLUDE_UISHARE )
+#if( macro_libchan_order_UISHARE != AAC2020_INCLUDE_UISHARE )
+              #error "[OUT_OF_ORDER:AAC2020_INCLUDE_UISHARE]"
+#endif
+#endif
 #if( 0                           != AAC2020_INCLUDE_UIFRAGS )
 #if( macro_libchan_order_UIFRAGS != AAC2020_INCLUDE_UIFRAGS )
               #error "[OUT_OF_ORDER:AAC2020_INCLUDE_UIFRAGS]"
@@ -443,13 +448,16 @@
     #if( macro_libchan_order_UILISTS !=     53   )
     #error "[TAIL_ORDER_FAIL:UILISTS]"  //:    ://
     #endif                              //:    ://
-    #if( macro_libchan_order_UIFRAGS !=     54   )
+    #if( macro_libchan_order_UISHARE !=     54   )
+    #error "[TAIL_ORDER_FAIL:UISHARE]"  //:    ://
+    #endif                              //:    ://
+    #if( macro_libchan_order_UIFRAGS !=     55   )
     #error "[TAIL_ORDER_FAIL:UIFRAGS]"  //:    ://
     #endif                              //:    ://
-    #if( macro_libchan_order_PAINT5D !=     55   )
+    #if( macro_libchan_order_PAINT5D !=     56   )
     #error "[TAIL_ORDER_FAIL:PAINT5D]"  //:    ://
     #endif                              //:    ://
-    #if( macro_libchan_order_P5D1OGL !=     56   )
+    #if( macro_libchan_order_P5D1OGL !=     57   )
     #error "[TAIL_ORDER_FAIL:P5D1OGL]"
     #endif
 
@@ -523,9 +531,10 @@
     #undef  macro_libchan_order_EDITCAM   //:----## 51 ##----://
     #undef  macro_libchan_order_GAMECAM   //:----## 52 ##----://
     #undef  macro_libchan_order_UILISTS   //:----## 53 ##----://
-    #undef  macro_libchan_order_UIFRAGS   //:----## 54 ##----://
-    #undef  macro_libchan_order_PAINT5D   //:----## 55 ##----://
-    #undef  macro_libchan_order_P5D1OGL   //:----## 56 ##----://
+    #undef  macro_libchan_order_UISHARE   //:----## 54 ##----://
+    #undef  macro_libchan_order_UIFRAGS   //:----## 55 ##----://
+    #undef  macro_libchan_order_PAINT5D   //:----## 56 ##----://
+    #undef  macro_libchan_order_P5D1OGL   //:----## 57 ##----://
  
     //:==========:DONT_POLLUTE_OTHER_PEOPLES_CODE_WITH_MACROS://
 
