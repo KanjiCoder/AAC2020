@@ -19,6 +19,8 @@
 
     //:LIST_____IDS:-----------------------------------------://
 
+        //: P5D == "Paint5D"
+
         //:[ P5D_UI1 ==> P5D_UR1 & P5D_VU1 ]://
         #define AAC2020_UILISTS_paint5d_P5D_UI0 ( [[ 0 ]] )
         #define AAC2020_UILISTS_paint5d_P5D_UI1 (    1    )
@@ -28,21 +30,37 @@
         #define AAC2020_UILISTS_paint5d_P5D_UI5 ( [[ 5 ]] )
         #define AAC2020_UILISTS_paint5d_P5D_UI6 ( [[ 6 ]] )
         #define AAC2020_UILISTS_paint5d_P5D_UI7 ( [[ 7 ]] )
-        #define AAC2020_UILISTS_paint5d_P5D_UI8 ( [[ 8 ]] )
-        #define AAC2020_UILISTS_paint5d_P5D_UI9 ( [[ 9 ]] )
+
+        /** ************************************************ **/
+        /** Never Use These. 8 UI-lists per sub-system means **/
+        /** we can have[ P5D_UI0 -to- P5D_UI7 ]              **/
+        /** @VID_IID[ 0249 ]TIME[ 00:38:42 ]                 **/
+        /** "DEXOOB" == inDEX_Out_Of_Bounds                  **/
+        /** ************************************************ **/
+
+        #define AAC2020_UILISTS_paint5d_P5D_UI8 ( "DEXOOB" )
+        #define AAC2020_UILISTS_paint5d_P5D_UI9 ( "DEXOOB" )
                          
     //:-----------------------------------------:LIST_____IDS://
     //:BUTTON_TYPES:-----------------------------------------://
 
+        /** ************************************************ **/
+        /** USE: but_def when you don't care about type of   **/
+        /**      button and you just want to get something   **/
+        /**      working right away.                         **/
+        /**      @VID_IID[ 0249 ]TIME[ 00:34:42 ]            **/
+        /** ************************************************ **/
+
         #define AAC2020_UILISTS_but_bad ( 0 ) //:BAD_BUTTON_TYPE
         #define AAC2020_UILISTS_but_min ( 1 ) //:MIN_BUTTON_TYPE
 
-        #define AAC2020_UILISTS_but_dec ( 1 ) //:Decrimentor  
-        #define AAC2020_UILISTS_but_inc ( 2 ) //:Incrimentor  
-        #define AAC2020_UILISTS_but_num ( 3 ) //:Number_Disp  
-        #define AAC2020_UILISTS_but_act ( 4 ) //:ACTION_CALL  
+        #define AAC2020_UILISTS_but_def ( 1 ) //:DEFAULT
+        #define AAC2020_UILISTS_but_dec ( 2 ) //:Decrimentor  
+        #define AAC2020_UILISTS_but_inc ( 3 ) //:Incrimentor  
+        #define AAC2020_UILISTS_but_num ( 4 ) //:Number_Disp  
+        #define AAC2020_UILISTS_but_act ( 5 ) //:ACTION_CALL  
 
-        #define AAC2020_UILISTS_but_max ( 4 ) //:MAX_BUTTON_TYPE
+        #define AAC2020_UILISTS_but_max ( 5 ) //:MAX_BUTTON_TYPE
     
     //:-----------------------------------------:BUTTON_TYPES://
     //:BUTTON_DISPLAY_SIZE:----------------------------------://
@@ -76,6 +94,13 @@
     @VID_IID[ 0203 ]TIME[ 01:41:42 ]DEPRECATED_VIDEO_COMMENT
     @VID_IID[ 0203 ]TIME[ 02:29:42 ]8_UILISTS_PER_EDITOR
 
+        X_AXIS: The UI-list (Same X === Same UILIST)
+        X_AXIS:[ 0 - 7 ]: Main  button data ,4 pixels per button
+        X_AXIS:[ 8 -15 ]: Extra button data ,4 pixels per button
+        Y_AXIS: The Button Number ( 0 -to- 15 )
+                UP to 16 usable buttons per UI-list.
+                @VID_IID[ 0249 ]TIME[ 00:53:23 ]XY_AXIS_USAGE
+               
               |<-- LIS_DEX+0 -->| | |<-- LIS_DEX+8 -->|
               |<--- ButMai ---->| | |<--- ButExt ---->|
               +--+--+--+--+--+--+ | +--+--+--+--+--+--+
@@ -93,9 +118,23 @@
         +--+  +--+--+--+--+--+--+ | +--+--+--+--+--+--+
         |15|  |  |  |  |  |  |  | | |  |  |  |  |  |  |
         +--+  +--+--+--+--+--+--+ | +--+--+--+--+--+--+
-               ^^                
-               ||
-              [16 paint5d ui elements in ui list P5D_UR1 ]
+                ^  ^  ^  ^  ^  ^      ^  ^
+                |  |  ....  |  |      |  |
+          P5D_UR0  |  ....  |  |      |  +- P5D_UR1's EXT_DAT
+          P5D_UR1--+  ....  |  |      +---- P5D_UR0's EXT_DAT
+          P5D_UR2.........  |  |      (EXT_DAT:Extra_Data)
+          P5D_UR3.........  |  |
+          P5D_UR4.........  |  |
+          P5D_UR5.........  |  |
+          P5D_UR6-----------+  |
+          P5D_UR7--------------+
+              ^^^ 
+              ||| 
+              ||| 
+              |||  
+              |||
+              [16 paint5d ui elements in ui list P5D_UI# ]
+ 
 
     *** **************************************************** **/
 //:---------------------------------------------:MAIN_DEFINES://

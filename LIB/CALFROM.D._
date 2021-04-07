@@ -1,0 +1,45 @@
+//:----------------------------------------------------------://
+//:                                                          ://
+//:     List of enumerations telling us where code was       ://
+//:     called from. Shouldn't have any functions.           ://
+//:     Data only system. Hence very high up the LIBCHAN.    ://
+//:                                                          ://
+//:----------------------------------------------------------://
+//:CALFROM_ENUMS:============================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+
+    //:places_code_and_be_called_from:-----------------------://
+
+        #define AAC2020_CALFROM_Main        ((U32)1001 )
+        #define AAC2020_CALFROM_HandleInput ((U32)1002 )
+                     
+    //:-----------------------:places_code_and_be_called_from://
+    //:editors_code_can_be_called_from:----------------------://
+
+        #define AAC2020_CALFROM_taudepo     ((U32)   0 )
+        #define AAC2020_CALFROM_paint5d     ((U32)   1 )
+        #define AAC2020_CALFROM_todo_02     ((U32)   2 )
+        #define AAC2020_CALFROM_todo_03     ((U32)   3 )
+
+    //:----------------------:editors_code_can_be_called_from://
+
+#undef  U32
+//:============================================:CALFROM_ENUMS://
+//:SCRATCHPAD:***********************************************://
+/** ******************************************************** ***
+
+    //: I think the inlined[ (U32) ]makes it impossible
+    //: to mis-use the macro like this:
+    //: @VID_IID[ 0249 ]TIME[ 03:24:13 ]
+    U32 some_arr[ AAC2020_CALFROM_paint5d ];
+                ||
+                \/
+    U32 some_arr[ ((U32)1 ) ];
+
+    @VID_IID[ 0249 ]TIME[ 03:30:00]
+    Turns out this will __NOT__ protect you from mis-use!
+
+    SEE[ SC_FILES\C99\TYPED_ENUM_HACK\TEH.C99 ]
+
+*** ******************************************************** **/
+//:***********************************************:SCRATCHPAD://

@@ -1,0 +1,224 @@
+//://////////////////////////////////////////////////////////://
+//:                                                          ://
+//:         UICLICK.F._ : Functions For UICLICK              ://
+//:                                                          ://
+//://////////////////////////////////////////////////////////://
+//:AAC2020_SUBLIBRARY_BOILERPLATE:===========================://
+#define SIL AAC2020_SILENCE                           //: 01 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 02 ://
+#define P_F printf                                    //: 03 ://
+    //:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=================://
+        void 
+        aac2020_uiclick_Halt( const char* msg_err )
+        {
+            P_F("[FATAL_ERROR:aac2020_uiclick]:%s\n", msg_err );
+            fflush(stdout);
+            exit( 123 );
+        }
+    //:=================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+    //:LOG_AFTER_HALT:=======================================://
+        void
+        aac2020_uiclick_Info_any( //:FUNC:::Info , OVERLOAD:any
+            const char* str_fmt   //:GENERAL:str , SPECIFIC:fmt
+        ,   void*       dat_any   //:GENERAL:dat , SPECIFIC:any
+        )
+        {                            int say=( 0 );
+            if( SIL.UICLICK <=(  0  ) ){ say=( 1 ); };
+            if( SIL.SILENCE <=( 0-1 ) ){ say=( 1 ); };
+            if( SIL.SILENCE >=( 0+1 ) ){ say=( 0 ); };
+            if( say >= 1 ){
+                P_F("[uiclick_log]....(   " ); fflush( stdout );
+                P_F( str_fmt , dat_any      ); fflush( stdout );
+                P_F(               "   )\n" ); fflush( stdout );
+            };;
+        }
+    //:=======================================:LOG_AFTER_HALT://
+    //:INIT_NONE:============================================://
+        U32
+        AAC2020_UICLICK_InitNone( U32 u32 ){
+            if( u32 ){ /** reserved for future use **/ };
+            return( 0x00 );
+        }
+    //:============================================:INIT_NONE://
+#undef  SIL  //:----------------------------------------: 01 ://
+#undef  U32  //:----------------------------------------: 02 ://
+#undef  P_F  //:----------------------------------------: 03 ://
+//:===========================:AAC2020_SUBLIBRARY_BOILERPLATE://
+//:LOAD_GLOBAL_MOUSE_STATE_IF_NONE_PROVIDED:=================://
+#define MOU      struct AAC2020_MOUTEMP               //: 01 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 02 ://
+#define ERR aac2020_uiclick_Halt                      //: 03 ://
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    void
+    aac2020_uiclick_LoadGlobals_Mouse(
+        MOU* mou
+    )
+    {
+    /** **************************************************** ***
+    @VID_IID[ 0249 ]TIME[ 04:06:55 ]
+    Same logic as[ AAC2020_AACMAIN_LoadGlobals_Mouse ]
+    *** **************************************************** **/
+        _Static_assert(     
+            AAC2020_INCLUDE_UICLICK
+        >   AAC2020_INCLUDE_MOUTEMP
+        , "[DONT_VIOLATE_THE_LIBCHAN:2021_04_07]"
+        );;
+
+        if( ((MOU*)0) == mou ){
+            //:NMI_TLG:NULL_MOUSE_INPUTTED_TO_LOAD_GLOBALS
+            ERR("[UICLICK.F:NMI_TLG:2021]");
+        };;
+        AAC2020_MOUTEMP_CopyIfTrue_LoadIfFalse(
+            mou //:<-- COPY_INTO_THIS_OBJECT
+        ,    0  //:<-- FALSE==>LOAD
+        );;
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    MOU*
+    aac2020_uiclick_GetMouseState(
+        MOU* inn_mou_ptr
+    ,   U32  inn_mou_has
+    ){
+
+        MOU* out_mou_ptr=((MOU*)0);
+
+        if( ((MOU*)0)==inn_mou_ptr && (0 == inn_mou_has ) ){
+        
+            //:USE GLOBAL MOUSE STATE:
+
+            aac2020_uiclick_LoadGlobals_Mouse( 
+                          &( AAC2020_UICLICK_mou ) );;
+            out_mou_ptr=( &( AAC2020_UICLICK_mou ) );
+        
+        }else
+        if( ((MOU*)0)!=inn_mou_ptr && (1 == inn_mou_has ) ){
+            
+            //:USE INJECTED MOUSE STATE:
+
+            out_mou_ptr=( inn_mou_ptr );
+
+        }else{
+            ERR("[BAD_COMBINATION_OF_INPUTS:2021]");
+        };;
+
+        return( out_mou_ptr );
+    }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+#undef  MOU  //:----------------------------------------: 01 ://
+#undef  U32  //:----------------------------------------: 02 ://
+#undef  ERR  //:----------------------------------------: 03 ://
+//:=================:LOAD_GLOBAL_MOUSE_STATE_IF_NONE_PROVIDED://
+//:UICLICK_FOR_SPECIFIC_EDITORS:=============================://
+#define MOU      struct AAC2020_MOUTEMP               //: 01 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 02 ://
+#define GET aac2020_uiclick_GetMouseState             //: 03 ://
+
+    void
+    aac2020_uiclick_PAINT5D( 
+        MOU* inn_mou_ptr //:<--[       allowed_to_be_null ]
+    ,   U32  inn_mou_has //:<--[ but_must_declare_as_null ]
+    ){
+        MOU* mou=( GET( inn_mou_ptr, inn_mou_has ));;
+
+
+        if( mou ){ /** NOOP **/ };
+
+        AAC2020_TODOMAN_Vital("[DO_STUFF_WITH_MOUS_HERE]");
+   
+    }
+
+#undef MOU  //:-----------------------------------------: 01 ://
+#undef U32  //:-----------------------------------------: 02 ://
+#undef GET  //:-----------------------------------------: 03 ://
+//:=============================:UICLICK_FOR_SPECIFIC_EDITORS://
+//:UICLICK_LOOP_TICK:========================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 01 ://
+#define ERR aac2020_uiclick_Halt                      //: 02 ://
+#define MOU struct AAC2020_MOUTEMP                    //: 03 ://
+
+    void
+    aac2020_uiclick_LoopTick_RouteToActiveEditor( void ){
+
+        //:--------------------------------------------------://
+        //:For now, I want the active editor to directly     ://
+        //:call the[ UICLICK ][ LoopTick ]function. Because  ://
+        //:why[ RE-WRITE ]the logic for finding or picking   ://
+        //:the active editor?                                ://
+        //:                                                  ://
+        //:Seems like using this function could lead to      ://
+        //:getting[ incoherent / unaligned ]code.            ://
+        //:                                                  ://
+        //:( Two sections of code in engine may not )        ://
+        //:( agree on the STATE OF THE GAME because )        ://
+        //:( they both independently calculated the )        ://
+        //:( state and came to different conclusions)        ://
+        //:                                                  ://
+        //:--------------------------------------------------://
+        ERR("[PROBABLY_SHOULDNT_DO_THIS_FUNCTION_2021_04_07]");
+    }
+
+    U32
+    AAC2020_UICLICK_LoopTick( 
+        U32 called_from_where  //:<--[ AAC2020_CALFROM ]VALUE
+    ){
+
+        #define S_A _Static_assert
+        S_A( 1001 == AAC2020_CALFROM_Main        ,"[[A]]");
+        S_A( 1002 == AAC2020_CALFROM_HandleInput ,"[[B]]");
+        S_A(    1 == AAC2020_CALFROM_paint5d     ,"[[1]]");
+ 
+
+        //:EARLY_EXIT:=======================================://
+
+            //: AAC2020_UICLICK_called_from_HandleInput
+            if( AAC2020_CALFROM_HandleInput
+            ==  called_from_where
+            ){
+
+                //:#_UICLICK_PAPER_TRAIL_#://
+                return( 0x00 ); //:<-- Call Ignored
+
+            };;
+
+            //: AAC2020_UICLICK_called_from_Main
+            if( AAC2020_CALFROM_Main
+            == called_from_where
+            ){
+
+                //:#_UICLICK_PAPER_TRAIL_#://
+                return( 0x00 );
+
+            };;
+        
+        //:=======================================:EARLY_EXIT://
+        //:Route_To_Invoking_Editor_If_We_Know:==============://
+        if( (0+called_from_where)==AAC2020_CALFROM_paint5d ){
+
+            aac2020_uiclick_PAINT5D( ((MOU*)0) , 0 );;
+
+        }else
+        
+        {  //:********** UN_SUPPORTED_CALLED_FROM: **********://
+
+            ERR("[THIS_ROUTE_NOT_SUPPORTED_AT_THIS_TIME]");
+            aac2020_uiclick_LoopTick_RouteToActiveEditor( );
+
+        };;//:********** UN_SUPPORTED_CALLED_FROM: **********://
+
+        //:==============:Route_To_Invoking_Editor_If_We_Know://
+
+
+        AAC2020_TODOMAN_Vital("[HANDLE_CLICKS_FOR_PAINT5D]");
+        return( 0x00 );
+    } 
+
+#undef  U32  //:----------------------------------------: 01 ://
+#undef  ERR  //:----------------------------------------: 02 ://
+#undef  MOU  //:----------------------------------------: 03 ://
+//:========================================:UICLICK_LOOP_TICK://

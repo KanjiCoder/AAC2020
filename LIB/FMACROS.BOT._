@@ -13,6 +13,7 @@
     #undef FMACROS_GRAQUAD_LoopTick
     #undef FMACROS_TAUDEPO_LoopTick
     #undef FMACROS_TAUSYNC_LoopTick
+    #undef FMACROS_UICLICK_LoopTick
     #undef FMACROS_PAINT5D_LoopTick
 
 //:=================================================:LOOPTICK://
@@ -20,62 +21,64 @@
 //:INIT:=====================================================://
 
     #undef FMACROS_SILENCE_InitNone //: 01 ://
-    #undef FMACROS_KILTEST_InitNone //: 02 ://
-    #undef FMACROS_REENUTR_InitNone //: 03 ://
-    #undef FMACROS_TODOMAN_InitNone //: 04 ://
-    #undef FMACROS_GAMTICK_InitNone //: 05 ://
-    #undef FMACROS_FILEBOI_InitNone //: 06 ://
-    #undef FMACROS_PHEXDUM_InitNone //: 07 ://
-    #undef FMACROS_HARDASS_InitNone //: 08 ://
-    #undef FMACROS_NATIKEY_InitNone //: 09 ://
-    #undef FMACROS_NATIMOU_InitNone //: 10 ://
-    #undef FMACROS_IKEYBOX_InitNone //: 11 ://
-    #undef FMACROS_IMOUBOX_InitNone //: 12 ://
-    #undef FMACROS_KEYBIND_InitNone //: 13 ://
-    #undef FMACROS_IKEYLIS_InitNone //: 14 ://
-    #undef FMACROS_IKEYCMD_InitNone //: 15 ://
-    #undef FMACROS_CEDITOR_InitNone //: 16 ://
-    #undef FMACROS_GINAMOU_InitNone //: 17 ://
-    #undef FMACROS_GINAWIN_Init     //: 18 ://
-    #undef FMACROS_NATIDUI_InitNone //: 19 ://
-    #undef FMACROS_GLEBIND_Init     //: 20 ://
-    #undef FMACROS_GLCONST_Init     //: 21 ://
-    #undef FMACROS_CPUNIFO_InitNone //: 22 ://
-    #undef FMACROS_GRAQUAD_Init     //: 23 ://
-    #undef FMACROS_MOUTEMP_InitNone //: 24 ://
-    #undef FMACROS_FRAGBED_Init     //: 25 ://
-    #undef FMACROS_PIXNAME_Init     //: 26 ://
-    #undef FMACROS_PIXSAVE_InitNone //: 27 ://
-    #undef FMACROS_PIXBACK_InitNone //: 28 ://
-    #undef FMACROS_GPUDATA_Init     //: 29 ://
-    #undef FMACROS_PIXPUSH_InitNone //: 30 ://
-    #undef FMACROS_PIXLOAD_InitNone //: 31 ://
-    #undef FMACROS_DUMPASS_InitNone //: 32 ://
-    #undef FMACROS_GENTCOM_InitNone //: 33 ://
-    #undef FMACROS_GENTDOW_InitNone //: 34 ://
-    #undef FMACROS_GENTUPP_InitNone //: 35 ://
-    #undef FMACROS_POLYOGL_InitNone //: 36 ://
-    #undef FMACROS_FRAGCOM_InitNone //: 37 ://
-    #undef FMACROS_GPUWIRE_InitNone //: 38 ://
-    #undef FMACROS_GPUVIEW_Init     //: 39 ://
-    #undef FMACROS_TAUDIRT_InitNone //: 40 ://
-    #undef FMACROS_TAUDEPO_Init     //: 41 ://
-    #undef FMACROS_TAUNAME_InitNone //: 42 ://
-    #undef FMACROS_TAUTYPE_InitNone //: 43 ://
-    #undef FMACROS_TAUSYNC_InitNone //: 44 ://
-    #undef FMACROS_TAUDUMP_InitNone //: 45 ://
-    #undef FMACROS_TAUFRAG_InitNone //: 46 ://
-    #undef FMACROS_UIRECTS_Init     //: 47 ://
-    #undef FMACROS_ZOOMCOM_InitNone //: 48 ://
-    #undef FMACROS_DRAGCOM_InitNone //: 49 ://
-    #undef FMACROS_CLICKOM_InitNone //: 50 ://
-    #undef FMACROS_EDITCAM_InitNone //: 51 ://
-    #undef FMACROS_GAMECAM_InitNone //: 52 ://
-    #undef FMACROS_UILISTS_Init     //: 53 ://
-    #undef FMACROS_UISHARE_InitNone //: 54 ://
-    #undef FMACROS_UIFRAGS_InitNone //: 55 ://
-    #undef FMACROS_PAINT5D_Init     //: 56 ://
-    #undef FMACROS_P5D1OGL_InitNone //: 57 ://
+    #undef FMACROS_CALFROM_InitNone //: 02 ://
+    #undef FMACROS_KILTEST_InitNone //: 03 ://
+    #undef FMACROS_REENUTR_InitNone //: 04 ://
+    #undef FMACROS_TODOMAN_InitNone //: 05 ://
+    #undef FMACROS_GAMTICK_InitNone //: 06 ://
+    #undef FMACROS_FILEBOI_InitNone //: 07 ://
+    #undef FMACROS_PHEXDUM_InitNone //: 08 ://
+    #undef FMACROS_HARDASS_InitNone //: 09 ://
+    #undef FMACROS_NATIKEY_InitNone //: 10 ://
+    #undef FMACROS_NATIMOU_InitNone //: 11 ://
+    #undef FMACROS_IKEYBOX_InitNone //: 12 ://
+    #undef FMACROS_IMOUBOX_InitNone //: 13 ://
+    #undef FMACROS_KEYBIND_InitNone //: 14 ://
+    #undef FMACROS_IKEYLIS_InitNone //: 15 ://
+    #undef FMACROS_IKEYCMD_InitNone //: 16 ://
+    #undef FMACROS_CEDITOR_InitNone //: 17 ://
+    #undef FMACROS_GINAMOU_InitNone //: 18 ://
+    #undef FMACROS_GINAWIN_Init     //: 19 ://
+    #undef FMACROS_NATIDUI_InitNone //: 20 ://
+    #undef FMACROS_GLEBIND_Init     //: 21 ://
+    #undef FMACROS_GLCONST_Init     //: 22 ://
+    #undef FMACROS_CPUNIFO_InitNone //: 23 ://
+    #undef FMACROS_GRAQUAD_Init     //: 24 ://
+    #undef FMACROS_MOUTEMP_InitNone //: 25 ://
+    #undef FMACROS_FRAGBED_Init     //: 26 ://
+    #undef FMACROS_PIXNAME_Init     //: 27 ://
+    #undef FMACROS_PIXSAVE_InitNone //: 28 ://
+    #undef FMACROS_PIXBACK_InitNone //: 29 ://
+    #undef FMACROS_GPUDATA_Init     //: 30 ://
+    #undef FMACROS_PIXPUSH_InitNone //: 31 ://
+    #undef FMACROS_PIXLOAD_InitNone //: 32 ://
+    #undef FMACROS_DUMPASS_InitNone //: 33 ://
+    #undef FMACROS_GENTCOM_InitNone //: 34 ://
+    #undef FMACROS_GENTDOW_InitNone //: 35 ://
+    #undef FMACROS_GENTUPP_InitNone //: 36 ://
+    #undef FMACROS_POLYOGL_InitNone //: 37 ://
+    #undef FMACROS_FRAGCOM_InitNone //: 38 ://
+    #undef FMACROS_GPUWIRE_InitNone //: 39 ://
+    #undef FMACROS_GPUVIEW_Init     //: 40 ://
+    #undef FMACROS_TAUDIRT_InitNone //: 41 ://
+    #undef FMACROS_TAUDEPO_Init     //: 42 ://
+    #undef FMACROS_TAUNAME_InitNone //: 43 ://
+    #undef FMACROS_TAUTYPE_InitNone //: 44 ://
+    #undef FMACROS_TAUSYNC_InitNone //: 45 ://
+    #undef FMACROS_TAUDUMP_InitNone //: 46 ://
+    #undef FMACROS_TAUFRAG_InitNone //: 47 ://
+    #undef FMACROS_UIRECTS_Init     //: 48 ://
+    #undef FMACROS_ZOOMCOM_InitNone //: 49 ://
+    #undef FMACROS_DRAGCOM_InitNone //: 50 ://
+    #undef FMACROS_CLICKOM_InitNone //: 51 ://
+    #undef FMACROS_EDITCAM_InitNone //: 52 ://
+    #undef FMACROS_GAMECAM_InitNone //: 53 ://
+    #undef FMACROS_UILISTS_Init     //: 54 ://
+    #undef FMACROS_UISHARE_InitNone //: 55 ://
+    #undef FMACROS_UIFRAGS_InitNone //: 56 ://
+    #undef FMACROS_UICLICK_InitNone //: 57 ://
+    #undef FMACROS_PAINT5D_Init     //: 58 ://
+    #undef FMACROS_P5D1OGL_InitNone //: 59 ://
 
 //:=====================================================:INIT://
 //:================================================:INIT_NONE://

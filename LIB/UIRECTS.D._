@@ -1,3 +1,33 @@
+//:UIRECTS_SUMMARY:==========================================://
+/** ******************************************************** ***
+
+    UIRECTS: Summary:
+
+    :WHAT_THIS_DOES:-------------------------------------------:
+
+        Used to store the raw graphical memory for displaying   
+        user interface. So right now, just a basic [A-Z]+[0-9]
+        bitmap glyph font where each symbol is 8x8 pixels.
+
+        Bit packs the glyph graphic into
+        [ AAC2020_PIXNAME_taudepo_cpu_pix ]
+        memory so that the glyphs only take up 1 bit per
+        pixel.
+
+    :-------------------------------------------:WHAT_THIS_DOES:
+    :what_this_does__NOT__do:----------------------------------:
+
+        1. __NOT__ : manage clicks / user input
+
+        2. __NOT__ : manage user interface rendering (UISHARE) 
+                                                     (UIFRAGS)
+
+        3. __NOT__ : store a specific UI design      (UILISTS)
+
+    :----------------------------------:what_this_does__NOT__do:
+
+*** ******************************************************** **/
+//:==========================================:UIRECTS_SUMMARY://
 //:UIRECTS_DIAGRAM_SECTION:==================================://
 /** ******************************************************** ***
 
@@ -45,6 +75,10 @@
     #define AAC2020_UIRECTS_TAU_DEX ( AAC2020_TAUDEPO_TAU_000 )
 
     //:Hard coded asset should be 64x64 pixels:
+    //: gly_san :GLYph___________SpAN (span==[wid==hig])
+    //: gly_iob :GLYphs_In_One_Button
+    //: pix_wid :width__in_PIXels
+    //: pix_hig :height_in_PIXels
     #define AAC2020_UIRECTS_64P_08G_PNG_gly_san ( 8 )
     #define AAC2020_UIRECTS_64P_08G_PNG_gly_iob ( 7 )
     #define AAC2020_UIRECTS_64P_08G_PNG_pix_wid (64 )
