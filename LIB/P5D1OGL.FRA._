@@ -1367,9 +1367,33 @@
                 ){
                     /** TODO: Make UI Transparent if needed **/
 
+                    IV2 fic_glo;
+                        fic_glo.x =( MAK_I32( F_C.x ) );
+                        fic_glo.y =( MAK_I32( F_C.y ) );
+
+                    /** TODO: Get mouse position somehow. **/
+                    IV2 mou_glo;
+                        mou_glo=( FRAGCOM_GET_mou_glo() );
+                    
+                    //|GET_Frag_And_Mouse_Local:-------------|//
+                    //+@VID_IID[ 0250 ]T[ 02:04:50 ]DONT_DO! +//
+                    //+BECAUSE[ p5d_ur1 ]IS_IN_GLOBAL_COORDS +//
+                    //- IV2 fic_loc=(                        -//
+                    //-     AAC2020_UISHARE_glo_CTO_loc(     -//
+                    //-         p5d_ur1,fic_glo ));;         -//
+                    //- IV2 mou_loc=(                        -//
+                    //-     AAC2020_UISHARE_glo_CTO_loc(     -//
+                    //-         p5d_ur1,mou_glo ));;         -//
+                    //-                                      -//
+                    //|-------------:GET_Frag_And_Mouse_Local|//
+
+
                     FV4 ur1_pix=( /** UI_Rect_1:Pixel_RGBA **/
-                        AAC2020_UIFRAGS_PAINT5D_Main( F_C )
-                    );;   
+                        AAC2020_UIFRAGS_PAINT5D_Main( 
+                            fic_glo //:<--[ FIC___GLOBAL ]
+                        ,   mou_glo //:<--[ mouse_GLOBAL ]
+                        ,         1 //:<--[ p5d_ur1      ]
+                        ));;
 
                     FragColor =( ur1_pix );
                 };;

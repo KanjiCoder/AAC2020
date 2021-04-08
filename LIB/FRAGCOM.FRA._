@@ -1,6 +1,16 @@
 
-
-    //:TODO: REWORK THIS CODE INTO NEW SHADER
+    //+//////////////////////////////////////////////////+//
+    //#HOW_IS_THIS_HEADER_ALLOWED_IN_THIS_FILE           #//
+    //#The precision and iResolution and what not?       #//
+    //[I think it is allowed because the declarations    ]//
+    //[are identical to previous ones?                   ]//
+    //+ WRONG... We moved all of the common fragment     +//
+    //+ shader code into here a while ago. This          +//
+    //+ prelude ONLY OCCURES HERE NOW and thus           +//
+    //+ [FRAGCOM.FRA._] must be included by other        +//
+    //+ shaders, such as file[ P5D_001._ ]               +//
+    //+ @VID_IID[ 0250 ]TIME[ 01:07:07 ]ITS_OKAY         +//
+    //[//////////////////////////////////////////////////]//
 
     //:ALL_SHADERS_KNOW_ABOUT_ALL_MEMORY:----------------://
     //:glsl_file_scope_stuff:----------------------------://
@@ -14,7 +24,11 @@
         //[:::::::SHADERTOY_COMPATIBILITY:::::::]////| # |//
         #define fragCoord gl_FragCoord             //| # |//
         #define       F_C gl_FragCoord             //| # |//
-        uniform vec3 iResolution;                  //| # |//
+                                                   //| # |//
+        uniform vec3  iResolution;                 //| # |//
+        uniform float iTime      ;                 //| # |//
+        uniform vec4  iMouse     ;                 //| # |//
+                                                   //| # |//
         uniform usampler2D taudepo;                //| # |//
         uniform usampler2D paint5d;                //| # |//
                                                    //| # |//
@@ -465,6 +479,37 @@
             #endif
         }
         //:- - - - - - -:@VID_IID[ 0183 ]TIME[ 02:48:00 ]://
+        //:- - - - - - - - - - - -- - - - - - - - - - - -:// 
+        IV2
+        FRAGCOM_GET_mou_glo( void )
+        {
+            IV2 mou_glo;
+
+            #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL //:#####://
+            //:[GPU_SIDE]################################://
+            /** @VID_IID[ 0250 ]TIME[ 01:57:42 ][TOP_LEF]**/
+            /** Mouse Origin Adjusted To Top_Left ****** **/
+
+                mou_glo.x = MAK_I32( iMouse.x );
+                mou_glo.y = MAK_I32( 
+                   ( iResolution.y - 1.0 )  //:<<--[TOP_LEF]
+                    -                       //:<<--[TOP_LEF]
+                   (      iMouse.y       )  //:<<--[TOP_LEF]
+                );;
+
+            #else
+            //:[CPU_SIDE]################################://
+                                   mou_glo.x =(
+                AAC2020_POLYOGL_Get_iMouse_X());;
+
+                                   mou_glo.y =(
+                AAC2020_POLYOGL_Get_iMouse_Y());;
+
+            #endif //:###################################://
+            //:##########################################://
+
+            return( mou_glo );
+        }
         //:- - - - - - - - - - - -- - - - - - - - - - - -:// 
     //:always_exists_error_string_macros:----------------://
                                                    //[ x ]//

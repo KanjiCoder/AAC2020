@@ -1,4 +1,70 @@
 //:shader code file for UISHARE
 
 
-//:START_WORKING_HERE: 2021_03_23
+ 
+    //:type_macros:--------------------------------------://
+    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL
+
+        #define I32        int
+        #define IV2        ivec2
+        #define REC        struct AAC2020_FRAGCOM_REC
+        #define ASS(S)     /**REMOVE THE CODE LINE**/
+    
+    #else
+
+        #define I32        int32_t /*GCC:<stdint.h>*/
+        #define IV2        struct AAC2020_POLYOGL_IV2
+        #define REC        struct AAC2020_POLYOGL_REC
+        #define ASS(S)     assert( S )
+
+    #endif
+    //:--------------------------------------:type_macros://
+
+    //:Get_User_Interface_Rectangle_By_Enum:-------------://
+    REC
+    AAC2020_UISHARE_Get_REC_p5d( 
+        I32 lis_dex //:<--[ 0 ==> UILISTS.P5D_UI0 ] --=--
+                    //:   [ 1 ==> UILISTS.P5D_UI1 ]   |
+                    //:   [ 2 ==> UILISTS.P5D_UI2 ]   8
+                    //:   [ # ==> UILISTS.P5D_UI# ]   |
+                    //:   [ 7 ==> UILISTS.P5D_UI7 ] --=--
+    )
+    {
+        ASS( lis_dex >= 0 && lis_dex <=(8-1) );
+
+        REC p5d_rec; /**[ p5d_ui0 ... p5d_ui7 ]**/
+        p5d_rec =(
+        AAC2020_TAUFRAG_Get_REC_p5d(
+            lis_dex //:EXAMPLE:[ P5D_UR0 | P5D_UR1 | ... ]
+        ));;
+        return( p5d_rec );
+    }
+    //:-------------:Get_User_Interface_Rectangle_By_Enum://
+
+    //:Global_To_Local:----------------------------------://
+    //-  IV2                                             -//
+    //-  AAC2020_UISHARE_rec_uin_fic_glo_CTO_fic_loc **/ -//
+    //-  AAC2020_UISHARE_glo_CTO_loc                     -//
+    //-  (                                               -//
+    //-      REC rec_uin //:RECtangle:User_INterface     -//
+    //-  ,   IV2 fic_glo //:FragmentIntegerCoord:GLOBAL  -//
+    //-  )                                               -//
+    //-  {                                               -//
+    //-      IV2 fic_loc ;                               -//
+    //-          fic_loc.x =( fic_glo.x - rec_uin.x_0 ); -//
+    //-          fic_loc.y =( fic_glo.y - rec_uin.y_0 ); -//
+    //-                                                  -//
+    //-      return( fic_loc );                          -//
+    //-  }                                               -//
+    #define AAC2020_UISHARE_glo_CTO_loc E_S(DONT_20210408)
+    //+ @VID_IID[ 0250 ]TIME[ 02:13:23 ]DO_NOT_USE_FUNC! +//
+    //+ REASON:Do Everything In 1-Coord System(GLOBAL)   +//
+    //:----------------------------------:Global_To_Local://
+    //:CLEAN_UP_AFTER_YOURSELF:--------------------------://
+    //:type_macros:--------------------------------------://
+        #undef  I32  //:----------------------------: 01 ://
+        #undef  IV2  //:----------------------------: 02 ://
+        #undef  REC  //:----------------------------: 03 ://
+        #undef  ASS  //:----------------------------: 04 ://
+    //:--------------------------------------:type_macros://
+    //:--------------------------:CLEAN_UP_AFTER_YOURSELF://

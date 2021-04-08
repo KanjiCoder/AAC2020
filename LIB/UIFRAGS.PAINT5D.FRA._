@@ -37,6 +37,7 @@
         #define ASS  /**NOTHING**/  //:  19  ://   //| # |//
         #define ERR  /**NOTHING**/  //:  20  ://   //| # |//
         #define TRU  trunc          //:  21  ://   //| # |//
+        #define REC  struct AAC2020_FRAGCOM_REC
     #else                                          //| # |//
                                                    //| # |//
         /** When Running As C99/C11 Code. **/      //| # |//
@@ -62,6 +63,7 @@
         #define ASS   assert        //:  19  ://   //| # |//
         #define ERR   aac2020_uifrags_Halt         //| # |//
         #define TRU   AAC2020_POLYOGL_Trunc        //| # |//
+        #define REC   struct AAC2020_POLYOGL_REC
     #endif                                         //| # |//
     //:--------------------------------------:type_macros://
     //:seven_letter_macros:------------------------------://
@@ -102,10 +104,11 @@
         //:- - - - - - - - - - - -- - - - - - - - - - - -://   
         FV4  //# NOT_MAIN_ENTRY_POINT_LIKE_OTHER_SHADERS #//
         AAC2020_UIFRAGS_PAINT5D_Main( 
-                       TYP_F_C          INN_F_C
-        //[ GLSL:|        vec4     |        F_C   - - - -]//
-        //[  C99:|  struct FV4     |        F_C   - - - -]//
+            IV2 fic_glo //:FragmentIntegerCoord:GLOBAL
+        ,   IV2 mou_glo //:Mouse_coordinate:::::GLOBAL
+        ,   I32 lis_dex //:[ UILISTS.D._ ].LIST_INDEX
         ){
+            if( lis_dex   > 0 ){ /** NOOP **/ };
 
             FV4 ur1_pix; /**Userinterface_Rect_1_PIXel   **/
              
@@ -124,13 +127,38 @@
             //:--------------------------------:GLSL_CODE://
             #endif
 
+            //: AAC2020_UISHARE_global_CTO_local
+
             ur1_pix = MAK_FV4(
-                (F_C.x)/255.0 //:RED   //:<--[ ORANGE ]
+                (fic_glo.x)/255.0 //:RED   //:<--[ ORANGE ]
             ,           128.0 //:GREEN //:<--[ ORANGE ]
             ,             0.0 //:BLUE
             ,           255.0 //:ALPHA
             );;
             
+            //:Get_User_Interface_Rectangle:
+            REC p5d_rec=(
+                AAC2020_UISHARE_Get_REC_p5d( lis_dex ));;
+                if( p5d_rec.x_0 > 0 ){ /** NOOP **/ };
+             
+            if( (1==1)
+            &&  mou_glo.x >= p5d_rec.x_0 //:X_BOUNDS
+            &&  mou_glo.x <= p5d_rec.x_1 //:X_BOUNDS
+            &&  mou_glo.y >= p5d_rec.y_0 //:Y_BOUNDS
+            &&  mou_glo.y <= p5d_rec.y_1 //:Y_BOUNDS
+            ){
+                //:UI Crosshair:
+                if( (0==1)
+                ||  fic_glo.x == mou_glo.x
+                ||  fic_glo.y == mou_glo.y
+                ){
+                    ur1_pix.x =( 1.0 );
+                    ur1_pix.y =( 0.0 );
+                    ur1_pix.z =( 0.0 );
+                    ur1_pix.w =( 1.0 );
+                };;
+
+            };;
 
             //# NOT_A_RETURN_FROM_MAIN_ENTRY_POINT #//
             //# UNLIKE_OTHER_SHADERS_WE_HAVE_WROTE #//
@@ -166,6 +194,8 @@
         #undef  FV4      //:  18  ://              //[ x ]//
         #undef  ASS      //:  19  ://              //[ x ]//
         #undef  ERR      //:  20  ://              //[ x ]//
+        #undef  TRU      //:  21  ://              //[ x ]//
+        #undef  REC      //:  22  ://              //[ x ]//
                                                    //[ x ]//
     //:--------------------------------------:type_macros://
     //:seven_letter_macros:------------------------------://
@@ -191,3 +221,21 @@
     //:---------------------------------:main_shim_macros://
     //[=============:PASTE_INTO_FILE[ UIFRAGS_PAINT5D._ ]]//
     //[==============:CUT_AND_PASTE_THIS_INTO_GLSL_SOURCE]//
+
+    //|:SCRATCHPAD_COMMENTED_OUT_CODE:==================:|//
+    /** ************************************************ ***
+
+        Old signature of[ AAC2020_UIFRAGS_PAINT5D_Main ]
+        before I realized we need to:
+        1. Do things in terms of local to UI coords.
+        2. Know what UI is currently in focus.
+
+        FV4  //# NOT_MAIN_ENTRY_POINT_LIKE_OTHER_SHADERS #//
+        AAC2020_UIFRAGS_PAINT5D_Main( 
+                       TYP_F_C          INN_F_C
+        //[ GLSL:|        vec4     |        F_C   - - - -]//
+        //[  C99:|  struct FV4     |        F_C   - - - -]//
+        ){ ... }
+
+    *** ************************************************ **/
+    //|:==================:SCRATCHPAD_COMMENTED_OUT_CODE:|//

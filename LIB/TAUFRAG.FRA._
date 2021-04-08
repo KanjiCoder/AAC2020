@@ -69,8 +69,30 @@
         #define AAC2020_TAUFRAG_tau_sub_p5d_VAR_A_D ( 9 )
         #define AAC2020_TAUFRAG_tau_sub_p5d_VAR_T_V (10 )
         #define AAC2020_TAUFRAG_tau_sub_p5d_VAR_vd1 (11 )
-        #define AAC2020_TAUFRAG_tau_sub_p5d_VAR_UR1 (12 )
-        #define AAC2020_TAUFRAG_tau_sub_p5d_VAR_VU1 (13 )
+
+        //:MUST_BE_SEQUENTIAL:@VID_IID[0250]TIME[03:21:50]:::://
+        //:MUST_MATCH_FILE[ R:/G/AAC2020/LIB/TAUDEPO.D._ ]:::://
+        //:EXAMPLE[ AAC2020_TAUDEPO_SUB_PAINT5D_VAR_UR0  ]:::://
+        #define AAC2020_TAUFRAG_tau_sub_p5d_VAR_UR0 (12 )
+        #define AAC2020_TAUFRAG_tau_sub_p5d_VAR_UR1 (13 )
+        #define AAC2020_TAUFRAG_tau_sub_p5d_VAR_UR2 (14 )
+        #define AAC2020_TAUFRAG_tau_sub_p5d_VAR_UR3 (15 )
+        #define AAC2020_TAUFRAG_tau_sub_p5d_VAR_UR4 (16 )
+        #define AAC2020_TAUFRAG_tau_sub_p5d_VAR_UR5 (17 )
+        #define AAC2020_TAUFRAG_tau_sub_p5d_VAR_UR6 (18 )
+        #define AAC2020_TAUFRAG_tau_sub_p5d_VAR_UR7 (19 )
+ 
+        //:MUST_BE_SEQUENTIAL:@VID_IID[0250]TIME[03:21:50]:::://
+        //:MUST_MATCH_FILE[ R:/G/AAC2020/LIB/TAUDEPO.D._ ]:::://
+        //:EXAMPLE[ AAC2020_TAUDEPO_SUB_PAINT5D_VAR_VU0  ]:::://
+        #define AAC2020_TAUFRAG_tau_sub_p5d_VAR_VU0 (20 )
+        #define AAC2020_TAUFRAG_tau_sub_p5d_VAR_VU1 (21 )
+        #define AAC2020_TAUFRAG_tau_sub_p5d_VAR_VU2 (22 )
+        #define AAC2020_TAUFRAG_tau_sub_p5d_VAR_VU3 (23 )
+        #define AAC2020_TAUFRAG_tau_sub_p5d_VAR_VU4 (24 )
+        #define AAC2020_TAUFRAG_tau_sub_p5d_VAR_VU5 (25 )
+        #define AAC2020_TAUFRAG_tau_sub_p5d_VAR_VU6 (26 )
+        #define AAC2020_TAUFRAG_tau_sub_p5d_VAR_VU7 (27 )
 
         //:------------------------------:DEX_VAR_000_255://
                         
@@ -122,9 +144,27 @@
         #define P5D_B_Y AAC2020_TAUFRAG_tau_sub_p5d_VAR_B_Y 
         #define P5D_A_D AAC2020_TAUFRAG_tau_sub_p5d_VAR_A_D 
         #define P5D_T_V AAC2020_TAUFRAG_tau_sub_p5d_VAR_T_V 
-        #define P5D_vd1 AAC2020_TAUFRAG_tau_sub_p5d_VAR_vd1 
-        #define P5D_UR1 AAC2020_TAUFRAG_tau_sub_p5d_VAR_UR1 
+        #define P5D_vd1 AAC2020_TAUFRAG_tau_sub_p5d_VAR_vd1
+ 
+        //: 8_PAINT5D : USER_INTERFACE_RECTANGLES:
+        #define P5D_UR0 AAC2020_TAUFRAG_tau_sub_p5d_VAR_UR0
+        #define P5D_UR1 AAC2020_TAUFRAG_tau_sub_p5d_VAR_UR1
+        #define P5D_UR2 AAC2020_TAUFRAG_tau_sub_p5d_VAR_UR2
+        #define P5D_UR3 AAC2020_TAUFRAG_tau_sub_p5d_VAR_UR3
+        #define P5D_UR4 AAC2020_TAUFRAG_tau_sub_p5d_VAR_UR4
+        #define P5D_UR5 AAC2020_TAUFRAG_tau_sub_p5d_VAR_UR5
+        #define P5D_UR6 AAC2020_TAUFRAG_tau_sub_p5d_VAR_UR6
+        #define P5D_UR7 AAC2020_TAUFRAG_tau_sub_p5d_VAR_UR7
+  
+        //: 8_PAINT5D : USER_INTERFACE_VISIBLE_FLAGS:
+        #define P5D_VU0 AAC2020_TAUFRAG_tau_sub_p5d_VAR_VU0 
         #define P5D_VU1 AAC2020_TAUFRAG_tau_sub_p5d_VAR_VU1 
+        #define P5D_VU2 AAC2020_TAUFRAG_tau_sub_p5d_VAR_VU2 
+        #define P5D_VU3 AAC2020_TAUFRAG_tau_sub_p5d_VAR_VU3 
+        #define P5D_VU4 AAC2020_TAUFRAG_tau_sub_p5d_VAR_VU4 
+        #define P5D_VU5 AAC2020_TAUFRAG_tau_sub_p5d_VAR_VU5 
+        #define P5D_VU6 AAC2020_TAUFRAG_tau_sub_p5d_VAR_VU6 
+        #define P5D_VU7 AAC2020_TAUFRAG_tau_sub_p5d_VAR_VU7 
 
         //|------------------------------:DEX_VAR_000_255|//
 
@@ -141,35 +181,60 @@
     #if defined( AAC2020_MACRO_THIS_IS_OPEN_GL )  //[ -- ]//
         /** RUNNING_AS: GLSL **/                  //[ -- ]//
                                                   //[ -- ]//
-        #define I32 int                           //[ 03 ]//
-        #define MF3 float /** AKA: MAK_F32 **/    //[ 04 ]//
-        #define MI3 int   /** AKA: MAK_I32 **/    //[ 05 ]//
-        #define TRU trunc /** Like Floor   **/    //[ 06 ]//
-        #define REC struct AAC2020_FRAGCOM_REC    //[ 07 ]//
-        #define ASS /**Nothing**/                 //[ 08 ]//
-        #define IV2 ivec2                         //[ 09 ]//
-        #define U32 uint                          //[ 10 ]//
-        #define TAU taudepo                       //[ 11 ]//
-        #define P5D paint5d                       //[ 12 ]//
-        #define I00 int( 0 )                      //[ 13 ]//
-        #define VOD void                          //[ 14 ]//
+        #define I32     int                       //[ 03 ]//
+        #define MF3     float /** AKA: MAK_F32 **///[ 04 ]//
+        #define MI3     int   /** AKA: MAK_I32 **///[ 05 ]//
+        #define TRU     trunc /** Like Floor   **///[ 06 ]//
+        #define REC     struct AAC2020_FRAGCOM_REC//[ 07 ]//
+        #define ASS     /**Nothing**/             //[ 08 ]//
+        #define IV2     ivec2                     //[ 09 ]//
+        #define U32     uint                      //[ 10 ]//
+        #define TAU     taudepo                   //[ 11 ]//
+        #define P5D     paint5d                   //[ 12 ]//
+        #define I00     int( 0 )                  //[ 13 ]//
+        #define VOD     void                      //[ 14 ]//
+        #define ERR(e_m)/**NOTHING**/             //[ 15 ]//
     #else                                         //[ -- ]//
         /** RUNNING_AS: _C99 **/                  //[ -- ]//
                                                   //[ -- ]//
-        #define I32 int32_t                       //[ 03 ]//
-        #define MF3 AAC2020_POLYOGL_MAK_F32       //[ 04 ]//
-        #define MI3 AAC2020_POLYOGL_MAK_I32       //[ 05 ]//
-        #define TRU AAC2020_POLYOGL_Trunc         //[ 06 ]//
-        #define REC struct AAC2020_POLYOGL_REC    //[ 07 ]//
-        #define ASS assert                        //[ 08 ]//
-        #define IV2 struct AAC2020_POLYOGL_IV2    //[ 09 ]//
-        #define U32 uint32_t                      //[ 10 ]//
-        #define TAU SUB_TAU                       //[ 11 ]//
-        #define P5D SUB_P5D                       //[ 12 ]//
-        #define I00 (  0  )                       //[ 13 ]//
-        #define VOD void                          //[ 14 ]//
+        #define I32     int32_t                   //[ 03 ]//
+        #define MF3     AAC2020_POLYOGL_MAK_F32   //[ 04 ]//
+        #define MI3     AAC2020_POLYOGL_MAK_I32   //[ 05 ]//
+        #define TRU     AAC2020_POLYOGL_Trunc     //[ 06 ]//
+        #define REC     struct AAC2020_POLYOGL_REC//[ 07 ]//
+        #define ASS     assert                    //[ 08 ]//
+        #define IV2     struct AAC2020_POLYOGL_IV2//[ 09 ]//
+        #define U32     uint32_t                  //[ 10 ]//
+        #define TAU     SUB_TAU                   //[ 11 ]//
+        #define P5D     SUB_P5D                   //[ 12 ]//
+        #define I00     (  0  )                   //[ 13 ]//
+        #define VOD     void                      //[ 14 ]//
+        #define ERR aac2020_taufrag_Halt_GLSL     //[ 15 ]//
     #endif                                        //[ -- ]//
     //[========================:TAUFRAG_DEFINES___GO_HERE]//
+    //|C99_ONLY_FUNCTIONS:===============================|//
+    #if !defined( AAC2020_MACRO_THIS_IS_OPEN_GL ) // NOTGLSL
+
+        void
+        aac2020_taufrag_Halt_GLSL(
+            const char* msg_err
+        )
+        {
+        /** ******************************************** ***
+        @VID_IID[ 0250 ]TIME[ 04:04:04 ]                 ***
+        @VID_IID[ 0250 ]TIME[ 04:06:42 ]NEED_E_S_WRAPPER ***
+        Fragment shader code doesn't know about the      ***
+        CPU-side code. So if we want to invoke an[ ERR ] ***
+        function from this code. We need to create one   ***
+        in this file.                                    ***
+        *** ******************************************** **/
+            printf( E_S([taufrag_Halt_GLSL]:%s\n),msg_err );
+            fflush(stdout);
+            exit( 232 );
+        }
+
+    #endif // ////////////////////////////////////// NOTGLSL
+    //|===============================:C99_ONLY_FUNCTIONS|//
     //[TAUFRAG_FUNCTIONS_GO_HERE:========================]//
     //++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
@@ -442,6 +507,53 @@
             }
             //:- - - - - - - - - - -- - - - - - - - - - -://
             REC
+            AAC2020_TAUFRAG_Get_REC_p5d(
+                I32 lis_dex //:<--[ 0 -to- 7 ]
+            )
+            {
+            /** **************************************** ***
+            THIS_FUNC[ AAC2020_TAUFRAG_Get_REC_p5d ]
+            CALLED_BY[ AAC2020_UISHARE_Get_REC_p5d ]
+            *** **************************************** **/
+                ASS( lis_dex >= 0 && lis_dex <=(8-1) );
+    
+                //:Get location in texture memory of
+                //:the paint5d user interface rectangle:
+                I32 var_dex =( P5D_UR0 + lis_dex );
+
+                #if defined( AAC2020_MACRO_THIS_IS_OPEN_GL )
+                    /** DO_NOTHING:CANT_ASSERT_IN_GLSL **/
+                #else
+                    /** ****************************** **/
+                    /**@VID_IID[ 0250 ]TIME[ 03:48:42 ]**/
+                    /**Make sure generated variable    **/
+                    /**handle is valid.                **/
+                    /** ****************************** **/
+                    if( 0
+                    ||  ( P5D_UR0 == var_dex )
+                    ||  ( P5D_UR1 == var_dex )
+                    ||  ( P5D_UR2 == var_dex )
+                    ||  ( P5D_UR3 == var_dex )
+                    ||  ( P5D_UR4 == var_dex )
+                    ||  ( P5D_UR5 == var_dex )
+                    ||  ( P5D_UR6 == var_dex )
+                    ||  ( P5D_UR7 == var_dex )
+                    ){
+                        ERR(E_S([BAD_P5D_VIEWPORT_REC_HANDLE]));
+                    };;
+                #endif
+
+                REC p5d_rec=(
+                aac2020_taufrag_Get_REC(
+                    TAU_015  //:tau: TAU_015 <-- Example
+                ,   SUB_P5D  //:sub: PAINT5D <-- Example
+                ,   var_dex  //:var: P5D_UR1 <-- Example
+                ));;
+
+                return( p5d_rec );
+            }
+
+            REC
             AAC2020_TAUFRAG_Get_REC_p5d_ur1( VOD )
             {
                 REC p5d_ur1; /**AKA[ P5D_REC_UR1 ]**/
@@ -489,6 +601,7 @@
         #undef  P5D  //[----------------------------[ 12 ]//
         #undef  I00  //[----------------------------[ 13 ]//
         #undef  VOD  //[----------------------------[ 14 ]//
+        #undef  ERR  //[----------------------------[ 15 ]//
 
     //[========================:TAUFRAG_DEFINES___GO_HERE]//
     //:TAUDEPO_SHORTHAND_MACROS:UNDEF:-------------------://
@@ -540,8 +653,24 @@
         #undef  P5D_A_D  //:--------------: VAR_A_D : 09 ://
         #undef  P5D_T_V  //:--------------: VAR_T_V : 10 ://
         #undef  P5D_vd1  //:--------------: VAR_vd1 : 11 ://
-        #undef  P5D_UR1  //:--------------: VAR_UR1 : 12 ://
-        #undef  P5D_VU1  //:--------------: VAR_VU1 : 13 ://
+
+        #undef  P5D_UR0  //:--------------: VAR_UR0 : 12 ://
+        #undef  P5D_UR1  //:--------------: VAR_UR1 : 13 ://
+        #undef  P5D_UR2  //:--------------: VAR_UR2 : 14 ://
+        #undef  P5D_UR3  //:--------------: VAR_UR3 : 15 ://
+        #undef  P5D_UR4  //:--------------: VAR_UR4 : 16 ://
+        #undef  P5D_UR5  //:--------------: VAR_UR5 : 17 ://
+        #undef  P5D_UR6  //:--------------: VAR_UR6 : 18 ://
+        #undef  P5D_UR7  //:--------------: VAR_UR7 : 19 ://
+
+        #undef  P5D_VU0  //:--------------: VAR_VU0 : 20 ://
+        #undef  P5D_VU1  //:--------------: VAR_VU1 : 21 ://
+        #undef  P5D_VU2  //:--------------: VAR_VU2 : 22 ://
+        #undef  P5D_VU3  //:--------------: VAR_VU3 : 23 ://
+        #undef  P5D_VU4  //:--------------: VAR_VU4 : 24 ://
+        #undef  P5D_VU5  //:--------------: VAR_VU5 : 25 ://
+        #undef  P5D_VU6  //:--------------: VAR_VU6 : 26 ://
+        #undef  P5D_VU7  //:--------------: VAR_VU7 : 27 ://
 
         //|------------------------------:DEX_VAR_000_255|//
 
