@@ -3,31 +3,56 @@
     #include "./UILISTS.F.BOILER_PLATE._"
 
 //:===========:UILISTS_FOR_DEAD_SIMPLE_USER_INTERFACE_BUTTONS://
-//:UILISTS_INITIALIZATION:===================================://
-#define U32 uint32_t /** GCC: <stdint.h> **/
+//:THESE_MACROS_SHOULD_NOT_BE_PROJECT_GLOBAL:================://
+/** @VID_IID[ 0250 ]TIME[ 07:24:12 ]************************ **/
 
-    U32
-    AAC2020_UILISTS_Init( 
-        U32 u32 
-    )
-    {
-    /** **************************************************** ***
-    Initializes all of the different user interfaces for all
-    of the different editors. Which means this system has
-    @_FROM_FUTURE_@ information about user editors that do
-    not exist yet.
-    @VID_IID[ 0204 ]TIME[ 00:15:42 ]#_LAYERED_SYSTEMS_2021_03_#
-    *** **************************************************** **/
-        if( u32 ){ /** NOOP **/ };
+    #if defined( TAU_001 )
+        #error ( "[TAU_001:SHOULD_NOT_BE_PROJECT_GLOBAL]" )
+    #endif
+    #if defined( TAU_002 )
+        #error ( "[TAU_002:SHOULD_NOT_BE_PROJECT_GLOBAL]" )
+    #endif
+    #if defined( TAU_003 )
+        #error ( "[TAU_003:SHOULD_NOT_BE_PROJECT_GLOBAL]" )
+    #endif
+    #if defined( TAU_004 )
+        #error ( "[TAU_004:SHOULD_NOT_BE_PROJECT_GLOBAL]" )
+    #endif
+    #if defined( TAU_005 )
+        #error ( "[TAU_005:SHOULD_NOT_BE_PROJECT_GLOBAL]" )
+    #endif
+    #if defined( TAU_006 )
+        #error ( "[TAU_006:SHOULD_NOT_BE_PROJECT_GLOBAL]" )
+    #endif
+    #if defined( TAU_007 )
+        #error ( "[TAU_007:SHOULD_NOT_BE_PROJECT_GLOBAL]" )
+    #endif
+    #if defined( TAU_008 )
+        #error ( "[TAU_008:SHOULD_NOT_BE_PROJECT_GLOBAL]" )
+    #endif
+    #if defined( TAU_009 )
+        #error ( "[TAU_009:SHOULD_NOT_BE_PROJECT_GLOBAL]" )
+    #endif
+    #if defined( TAU_010 )
+        #error ( "[TAU_010:SHOULD_NOT_BE_PROJECT_GLOBAL]" )
+    #endif
+    #if defined( TAU_011 )
+        #error ( "[TAU_011:SHOULD_NOT_BE_PROJECT_GLOBAL]" )
+    #endif
+    #if defined( TAU_012 )
+        #error ( "[TAU_012:SHOULD_NOT_BE_PROJECT_GLOBAL]" )
+    #endif
+    #if defined( TAU_013 )
+        #error ( "[TAU_013:SHOULD_NOT_BE_PROJECT_GLOBAL]" )
+    #endif
+    #if defined( TAU_014 )
+        #error ( "[TAU_014:SHOULD_NOT_BE_PROJECT_GLOBAL]" )
+    #endif
+    #if defined( TAU_015 )
+        #error ( "[TAU_015:SHOULD_NOT_BE_PROJECT_GLOBAL]" )
+    #endif
 
-        AAC2020_TODOMAN_Vital("[FINISH:AAC2020_UILISTS_Init]");
-
-
-        return( 0x00 );
-    }
-
-#undef  U32
-//:===================================:UILISTS_INITIALIZATION://
+//:================:THESE_MACROS_SHOULD_NOT_BE_PROJECT_GLOBAL://
 //:UILISTS_CORE_FUNCTIONS:===================================://
 #define NOC_WID ( 16 ) //:16 TAUDEPO #DIA_VAR_CEL#(s):--: 01 ://
 #define NOC_HIG ( 16 ) //:16 TAUDEPO #DIA_VAR_CEL#(s):--: 02 ://
@@ -67,14 +92,14 @@
         2: CREATE_EXTRA_DATAS_2X2_PAYLOAD
         3: STORE_PAYLOAD
         *** ************************************************ **/
-        #define TAUDEPO_DEX_TAU ( TAU_014 ) //:---------: 01 ://
+        #define TAUDEPO_DEX_TAU ( tau_014 ) //:---------: 01 ://
         #define             ZER (    0    ) //:---------: 02 ://
 
             //:CALC_STORAGE_LOCATION_OF_DATA:----------------://
 
                 //: TAU_UIL <--AKA
-                I32     TAU_014  =( AAC2020_TAUDEPO.TAU_014  );
-                assert( TAU_014 ==  AAC2020_TAUNAME_uilists  );
+                I32     tau_014  =( AAC2020_TAUDEPO.TAU_014  );
+                assert( tau_014 ==  AAC2020_TAUNAME_uilists  );
 
                 //:@VID_IID[0203]T[ 02:21:00 ]SHIFT_TO_RIGHT ://
                 //:Parallel extra data segment to the right. ://
@@ -178,14 +203,14 @@
         2: CREATE_BUTTON_2X2_PAYLOAD
         3: STORE_PAYLOAD
         *** ************************************************ **/
-        #define TAUDEPO_DEX_TAU ( TAU_014 )
+        #define TAUDEPO_DEX_TAU ( tau_014 )
         #define            ZERO (    0    )
 
             //:CALC_STORAGE_LOCATION_OF_DATA:----------------://
 
-                //:     TAU_014 ==[ TAU_UIL / DEX_SUB ]
-                I32     TAU_014  =( AAC2020_TAUDEPO.TAU_014 );
-                assert( TAU_014 ==  AAC2020_TAUNAME_uilists ); 
+                //:     tau_014 ==[ TAU_UIL / DEX_SUB ]
+                I32     tau_014  =( AAC2020_TAUDEPO.TAU_014 );
+                assert( tau_014 ==  AAC2020_TAUNAME_uilists ); 
 
                 I32 button_cell_x=( UILISTS_LIS_DEX + ZERO );
                 I32 button_cell_y=( UILISTS_BUT_DEX + ZERO );
@@ -253,3 +278,58 @@
 #undef      I32  //:------------------------------------: 06 ://
 #undef      CHR  //:------------------------------------: 07 ://
 //:===================================:UILISTS_CORE_FUNCTIONS://
+//:UILISTS_INITIALIZATION:===================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+#define I32  int32_t /** GCC: <stdint.h> **/
+#define PBM AAC2020_UILISTS_Put_ButMai
+#define P5D AAC2020_TAUDEPO_SUB_PAINT5D
+#define UR1 ( 1 /** Ui_Rectangle_01 **/ )
+#define BUS AAC2020_UILISTS_P5D_UR1_but_tex
+
+    U32
+    AAC2020_UILISTS_Init( 
+        U32 u32 
+    )
+    {
+    /** **************************************************** ***
+    Initializes all of the different user interfaces for all
+    of the different editors. Which means this system has
+    @_FROM_FUTURE_@ information about user editors that do
+    not exist yet.
+    @VID_IID[ 0204 ]TIME[ 00:15:42 ]#_LAYERED_SYSTEMS_2021_03_#
+    *** **************************************************** **/
+        if( u32 ){ /** NOOP **/ };
+
+        AAC2020_TODOMAN_Vital("[FINISH:AAC2020_UILISTS_Init]");
+
+        I32 typ =( AAC2020_UILISTS_but_def ); //:Button_Type
+        I32 val =(           0             ); //:Button_Value
+        
+        //:BUS==[ AAC2020_UILISTS_P5D_UR1_but_tex[ 0 -to- 15 ]
+        PBM( P5D,UR1,   0, BUS[  0 ]  , typ,val  );
+        PBM( P5D,UR1,   1, BUS[  1 ]  , typ,val  );
+        PBM( P5D,UR1,   2, BUS[  2 ]  , typ,val  );
+        PBM( P5D,UR1,   3, BUS[  3 ]  , typ,val  );
+        PBM( P5D,UR1,   4, BUS[  4 ]  , typ,val  );
+        PBM( P5D,UR1,   5, BUS[  5 ]  , typ,val  );
+        PBM( P5D,UR1,   6, BUS[  6 ]  , typ,val  );
+        PBM( P5D,UR1,   7, BUS[  7 ]  , typ,val  );
+        PBM( P5D,UR1,   8, BUS[  8 ]  , typ,val  );
+        PBM( P5D,UR1,   9, BUS[  9 ]  , typ,val  );
+        PBM( P5D,UR1,  10, BUS[ 10 ]  , typ,val  );
+        PBM( P5D,UR1,  11, BUS[ 11 ]  , typ,val  );
+        PBM( P5D,UR1,  12, BUS[ 12 ]  , typ,val  );
+        PBM( P5D,UR1,  13, BUS[ 13 ]  , typ,val  );
+        PBM( P5D,UR1,  14, BUS[ 14 ]  , typ,val  );
+        PBM( P5D,UR1,  15, BUS[ 15 ]  , typ,val  );
+ 
+        return( 0x00 );
+    }
+
+#undef  U32  /**U32:Uint_32_Type   **/  //:-------------: 01 ://
+#undef  I32  /**I32: Int_32_Type   **/  //:-------------: 02 ://
+#undef  PBM  /**PBM:Put_Button_Main**/  //:-------------: 03 ://
+#undef  P5D  /**P5D:Paint5D        **/  //:-------------: 04 ://
+#undef  UR1  /**UR1:Ui_Rect_00001  **/  //:-------------: 05 ://
+#undef  BUS  /**BUS:Button_String  **/  //:-------------: 06 ://
+//:===================================:UILISTS_INITIALIZATION://

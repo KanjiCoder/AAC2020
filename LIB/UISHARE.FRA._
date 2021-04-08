@@ -4,18 +4,24 @@
  
     //:type_macros:--------------------------------------://
     #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL
-
+        
         #define I32        int
         #define IV2        ivec2
+        #define FV4        vec4
         #define REC        struct AAC2020_FRAGCOM_REC
         #define ASS(S)     /**REMOVE THE CODE LINE**/
-    
+        #define MF3        float
+        #define MF4         vec4
+        #define MOD        AAC2020_FRAGCOM_MOD_I32
     #else
-
         #define I32        int32_t /*GCC:<stdint.h>*/
         #define IV2        struct AAC2020_POLYOGL_IV2
+        #define FV4        struct AAC2020_POLYOGL_FV4
         #define REC        struct AAC2020_POLYOGL_REC
         #define ASS(S)     assert( S )
+        #define MF3        AAC2020_POLYOGL_MAK_F32  
+        #define MF4        AAC2020_POLYOGL_MAK_FV4
+        #define MOD        AAC2020_POLYOGL_MOD_I32
 
     #endif
     //:--------------------------------------:type_macros://
@@ -40,6 +46,33 @@
         return( p5d_rec );
     }
     //:-------------:Get_User_Interface_Rectangle_By_Enum://
+    //:Get_Button_Pixel:---------------------------------://
+
+        FV4 /**Normalized_0_to_1_RGBA_Color**/
+        AAC2020_UISHARE_Get_but_pix(
+        /**/I32 dex_edi //:<-- What Editor?
+        ,   I32 lis_dex //:<-- What UI? 
+        ,   I32     b_y //:<-- What Button?
+        ,   I32     b_x //:<-- What Character Cell?
+        )
+        {
+            if( dex_edi > 0 ){ /**  NOOP **/ };
+            if( lis_dex > 0 ){ /**  NOOP **/ };
+
+            I32 oex=( MOD( b_x , 2 ) );
+            I32 oey=( MOD( b_y , 2 ) );
+            
+            FV4 rec_pix = MF4(
+                (   MF3(   oex )*64.0 ) / 255.0
+            ,   (   MF3(   oey )*64.0 ) / 255.0
+            ,   (      (   0.0 )* 1.0 ) / 255.0
+            ,   (      ( 255.0 )* 1.0 ) / 255.0
+            );;
+
+            return( rec_pix );
+        }
+
+    //:Get_Button_Pixel:---------------------------------://
 
     //:Global_To_Local:----------------------------------://
     //-  IV2                                             -//
@@ -66,5 +99,6 @@
         #undef  IV2  //:----------------------------: 02 ://
         #undef  REC  //:----------------------------: 03 ://
         #undef  ASS  //:----------------------------: 04 ://
+        #undef  MF3  //:----------------------------: 05 ://
     //:--------------------------------------:type_macros://
     //:--------------------------:CLEAN_UP_AFTER_YOURSELF://

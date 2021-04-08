@@ -209,14 +209,15 @@
         #define P5D     SUB_P5D                   //[ 12 ]//
         #define I00     (  0  )                   //[ 13 ]//
         #define VOD     void                      //[ 14 ]//
-        #define ERR aac2020_taufrag_Halt_GLSL     //[ 15 ]//
+        #define ERR aac2020_taufrag_Halt_FRAG     //[ 15 ]//
     #endif                                        //[ -- ]//
     //[========================:TAUFRAG_DEFINES___GO_HERE]//
     //|C99_ONLY_FUNCTIONS:===============================|//
     #if !defined( AAC2020_MACRO_THIS_IS_OPEN_GL ) // NOTGLSL
 
         void
-        aac2020_taufrag_Halt_GLSL(
+    //- aac2020_taufrag_Halt_GLSL -//
+        aac2020_taufrag_Halt_FRAG(
             const char* msg_err
         )
         {
@@ -228,7 +229,7 @@
         function from this code. We need to create one   ***
         in this file.                                    ***
         *** ******************************************** **/
-            printf( E_S([taufrag_Halt_GLSL]:%s\n),msg_err );
+            printf( E_S([taufrag_Halt_FRAG]:%s\n),msg_err );
             fflush(stdout);
             exit( 232 );
         }

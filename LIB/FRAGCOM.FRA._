@@ -88,9 +88,10 @@
         #define V_A                 //:  17  ://   //| # |//
         #define FV4         vec4    //:  18  ://   //| # |//
         #define ASS  /**NOTHING**/  //:  19  ://   //| # |//
-        #define ERR  /**NOTHING**/  //:  20  ://   //| # |//
-        #define TRU  trunc          //:  21  ://   //| # |//
+        #define ERR(e_m) /**BLANK**///:  20  ://   //| 20|//
+        #define TRU  trunc          //:  21  ://   //| 21|//
         #define REC  struct AAC2020_FRAGCOM_REC    //| 22|//
+
     #else                                          //| # |//
                                                    //| # |//
         /** When Running As C99/C11 Code. **/      //| # |//
@@ -117,9 +118,10 @@
         #define V_A   void          //:  17  ://   //| # |//
         #define FV4   struct AAC2020_POLYOGL_FV4   //| # |//
         #define ASS   assert        //:  19  ://   //| # |//
-        #define ERR   aac2020_p5d1ogl_Halt         //| # |//
-        #define TRU   AAC2020_POLYOGL_Trunc        //| # |//
-        #define REC  struct AAC2020_POLYOGL_REC   //| 22 |//
+        #define ERR   aac2020_fragcom_Halt_FRAG    //| 20|//
+        #define TRU   AAC2020_POLYOGL_Trunc        //| 21|//
+        #define REC   struct AAC2020_POLYOGL_REC   //| 22|//
+        
     #endif                                         //| # |//
     //:--------------------------------------:type_macros://
     //:seven_letter_macros:------------------------------://
@@ -161,7 +163,29 @@
     #endif                                         //[---]//
     //:------------------------------:seven_letter_macros://
     //||||||||||||||||||||||||||||||SIM:Shim_Ifdef_Macros|//
+    //+C99_FRAG_SHADER_ONLY:=============================+//
+    #if !defined( AAC2020_MACRO_THIS_IS_OPEN_GL ) // NOTGLSL
 
+        void
+     //-aac2020_fragcom_Halt_GLSL-//
+        aac2020_fragcom_Halt_FRAG(
+            const char* msg_err
+        )
+        {
+        /** ******************************************** ***
+        @VID_IID[ 0250 ]TIME[ 05:16:00 ]                 ***
+        Fragment shader code doesn't know about the      ***
+        CPU-side code. So if we want to invoke an[ ERR ] ***
+        function from this code. We need to create one   ***
+        in this file.                                    ***
+        *** ******************************************** **/
+            printf( E_S([fragcom_Halt_FRAG]:%s\n),msg_err );
+            fflush(stdout);
+            exit( 232 );
+        }
+
+    #endif // ////////////////////////////////////// NOTGLSL
+    //+=============================:C99_FRAG_SHADER_ONLY+//
     //:COMMON_DATA_TYPES_USED_IN_SHADERS:================://
 
         //:INTEGER_RECTANGLE:----------------------------://
@@ -510,6 +534,34 @@
 
             return( mou_glo );
         }
+        //:- - - - - - - - - - - -- - - - - - - - - - - -://
+        I32
+        AAC2020_FRAGCOM_MOD_I32(
+            I32 inn_i32
+        ,   I32 divisor
+        )
+        {
+            I32 mod_i32; //:<--[ output_variable ]
+
+            #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL //:#####://
+
+                F32 inn_f32=( MAK_F32( inn_i32 ) );
+                F32 div_f32=( MAK_F32( divisor ) );
+
+                F32 mod_f32 =( mod( inn_f32 , div_f32 ) );
+
+                mod_i32 =( MAK_I32( mod_f32 ) );
+ 
+            #else //:####################################://
+
+                mod_i32 =( inn_i32 % divisor );
+                ERR( E_S([ONLY_RUN_AS_GLSL_2021_04_08] ) );
+
+            #endif //:###################################://
+
+            return( mod_i32 );
+        }
+ 
         //:- - - - - - - - - - - -- - - - - - - - - - - -:// 
     //:always_exists_error_string_macros:----------------://
                                                    //[ x ]//
