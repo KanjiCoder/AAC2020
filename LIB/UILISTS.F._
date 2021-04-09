@@ -1,58 +1,9 @@
 //:UILISTS_FOR_DEAD_SIMPLE_USER_INTERFACE_BUTTONS:===========://
 
     #include "./UILISTS.F.BOILER_PLATE._"
+    #include "./UILISTS.F.TAU_MACRO_ERROR_CHECKS._"
 
 //:===========:UILISTS_FOR_DEAD_SIMPLE_USER_INTERFACE_BUTTONS://
-//:THESE_MACROS_SHOULD_NOT_BE_PROJECT_GLOBAL:================://
-/** @VID_IID[ 0250 ]TIME[ 07:24:12 ]************************ **/
-
-    #if defined( TAU_001 )
-        #error ( "[TAU_001:SHOULD_NOT_BE_PROJECT_GLOBAL]" )
-    #endif
-    #if defined( TAU_002 )
-        #error ( "[TAU_002:SHOULD_NOT_BE_PROJECT_GLOBAL]" )
-    #endif
-    #if defined( TAU_003 )
-        #error ( "[TAU_003:SHOULD_NOT_BE_PROJECT_GLOBAL]" )
-    #endif
-    #if defined( TAU_004 )
-        #error ( "[TAU_004:SHOULD_NOT_BE_PROJECT_GLOBAL]" )
-    #endif
-    #if defined( TAU_005 )
-        #error ( "[TAU_005:SHOULD_NOT_BE_PROJECT_GLOBAL]" )
-    #endif
-    #if defined( TAU_006 )
-        #error ( "[TAU_006:SHOULD_NOT_BE_PROJECT_GLOBAL]" )
-    #endif
-    #if defined( TAU_007 )
-        #error ( "[TAU_007:SHOULD_NOT_BE_PROJECT_GLOBAL]" )
-    #endif
-    #if defined( TAU_008 )
-        #error ( "[TAU_008:SHOULD_NOT_BE_PROJECT_GLOBAL]" )
-    #endif
-    #if defined( TAU_009 )
-        #error ( "[TAU_009:SHOULD_NOT_BE_PROJECT_GLOBAL]" )
-    #endif
-    #if defined( TAU_010 )
-        #error ( "[TAU_010:SHOULD_NOT_BE_PROJECT_GLOBAL]" )
-    #endif
-    #if defined( TAU_011 )
-        #error ( "[TAU_011:SHOULD_NOT_BE_PROJECT_GLOBAL]" )
-    #endif
-    #if defined( TAU_012 )
-        #error ( "[TAU_012:SHOULD_NOT_BE_PROJECT_GLOBAL]" )
-    #endif
-    #if defined( TAU_013 )
-        #error ( "[TAU_013:SHOULD_NOT_BE_PROJECT_GLOBAL]" )
-    #endif
-    #if defined( TAU_014 )
-        #error ( "[TAU_014:SHOULD_NOT_BE_PROJECT_GLOBAL]" )
-    #endif
-    #if defined( TAU_015 )
-        #error ( "[TAU_015:SHOULD_NOT_BE_PROJECT_GLOBAL]" )
-    #endif
-
-//:================:THESE_MACROS_SHOULD_NOT_BE_PROJECT_GLOBAL://
 //:UILISTS_CORE_FUNCTIONS:===================================://
 #define NOC_WID ( 16 ) //:16 TAUDEPO #DIA_VAR_CEL#(s):--: 01 ://
 #define NOC_HIG ( 16 ) //:16 TAUDEPO #DIA_VAR_CEL#(s):--: 02 ://
@@ -61,215 +12,50 @@
 #define U32 uint32_t   /** GCC: <stdint.h> **/  //:-----: 05 ://
 #define I32  int32_t   /** GCC: <stdint.h> **/  //:-----: 06 ://
 #define CHR const char                          //:-----: 07 ://
+#define NCC       char                          //:-----: 08 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
 
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    //:FUNCTION_INDEX: (FOR:UILISTS_CORE_FUNCTIONS)
 
-    void
-    AAC2020_UILISTS_Put_ButExt( //:ButExt:ButtonExtra(data)
-    /**/I32 TAUDEPO_SUB_DEX //:AKA[ DEX_SUB_000_015 ](EDITOR#)
-    ,   I32 UILISTS_LIS_DEX //:LIST__INDEX:[ 0 -to- ( 8-1) ]
-    ,   I32 UILISTS_BUT_DEX //:BUTTON_INDEX[ 0 -to- (16-1) ]
-    
-    ,   U32* ext_arr //:Extra Data Array
-    ,   I32  ext_len //:NumberOfUint32's worth of data
-    )
-    {
-        //:Error_Check_Inputs:-------------------------------://
+        #include "./UILISTS.F.PUT._"
+        //: 1: AAC2020_UILISTS_Put_ButExt
+        //: 2: AAC2020_UILISTS_Put_ButMai
 
-            assert( TAUDEPO_SUB_DEX <=(16-1) );
-            assert( UILISTS_LIS_DEX <=( 8-1) );
-            assert( UILISTS_BUT_DEX <=(16-1) );
+        #include "./UILISTS.F.GETTERS_NOT_HERE._"
+        //: 1: AAC2020_UILISTS_Get_ButExt
+        //: 2: AAC2020_UILISTS_Get_ButMai
 
-            assert( ((U32*)0) !=  ext_arr );
-            assert( ((I32 )0)  <  ext_len );
-            assert( ((I32 )4)  >= ext_len ); 
-
-        //:-------------------------------:Error_Check_Inputs://
-        //:CORE_LOGIC:=======================================://
-        /** ************************************************ ***
-        SUMMARY:
-        1: CALC_STORAGE_LOCATION_OF_DATA
-        2: CREATE_EXTRA_DATAS_2X2_PAYLOAD
-        3: STORE_PAYLOAD
-        *** ************************************************ **/
-        #define TAUDEPO_DEX_TAU ( tau_014 ) //:---------: 01 ://
-        #define             ZER (    0    ) //:---------: 02 ://
-
-            //:CALC_STORAGE_LOCATION_OF_DATA:----------------://
-
-                //: TAU_UIL <--AKA
-                I32     tau_014  =( AAC2020_TAUDEPO.TAU_014  );
-                assert( tau_014 ==  AAC2020_TAUNAME_uilists  );
-
-                //:@VID_IID[0203]T[ 02:21:00 ]SHIFT_TO_RIGHT ://
-                //:Parallel extra data segment to the right. ://
-                //:Reason is because:                        ://
-                //:1: 16 ui lists is TOO MUCH.               ://
-                //:2: My vars can only go up to 9 anyways.   ://
-                //:   (EX: P5D_UR1 , P5D_UR2 , P5D_UR3 ...)  ://
-                I32 button_cell_x=( UILISTS_LIS_DEX + ( 8 ) );
-                I32 button_cell_y=( UILISTS_BUT_DEX + (ZER) );
-                
-                I32 TAUDEPO_DEX_VAR =( //:DEX_VAR_000_255
-                    //:@_XY_TO_INDEX_FORMULA_@
-                    button_cell_x + ( button_cell_y * NOC_WID )
-                );;
-
-                assert( TAUDEPO_DEX_TAU == ( 14  ) );
-                assert( TAUDEPO_SUB_DEX <= ( 16-1) );
-                assert( TAUDEPO_DEX_VAR <= (256-1) );
-
-                assert( TAUDEPO_DEX_TAU >= (   0 ) );
-                assert( TAUDEPO_SUB_DEX >= (   0 ) );
-                assert( TAUDEPO_DEX_VAR >= (   0 ) );
-
-            //:----------------:CALC_STORAGE_LOCATION_OF_DATA://
-            //:CREATE_EXTRA_DATAS_2X2_PAYLOAD:---------------://
-            #define ONE (    1    ) //:Length to index location
-            #define LEN ( ext_len )
-            #define ARR ( ext_arr )
-
-                U32 p_1 =( (U32)0x00000000 );
-                U32 p_2 =( (U32)0x00000000 );
-                U32 p_3 =( (U32)0x00000000 );
-                U32 p_4 =( (U32)0x00000000 );
-                
-                //:Copy The Valid Data. Any other data just
-                //:will end up zeroed out.
-                if( LEN >=( 1 ) ){ p_1 = ARR[ 1 - ONE ]; };
-                if( LEN >=( 2 ) ){ p_2 = ARR[ 2 - ONE ]; };
-                if( LEN >=( 3 ) ){ p_3 = ARR[ 3 - ONE ]; };
-                if( LEN >=( 4 ) ){ p_4 = ARR[ 4 - ONE ]; };
-
-            #undef ONE
-            #undef LEN
-            #undef ARR  
-            //:---------------:CREATE_EXTRA_DATAS_2X2_PAYLOAD://
-            //:STORE_PAYLOAD:--------------------------------://
-
-                AAC2020_TAUDEPO_Put(
-                    (U08)TAUDEPO_DEX_TAU //:[ DEX_TAU_000_015 ]
-                ,   (U08)TAUDEPO_SUB_DEX //:[ DEX_SUB_000_015 ]
-                ,   (U08)TAUDEPO_DEX_VAR //:[ DEX_VAR_000_255 ]
-                ,    p_1 //:PIXEL_STORING_DATA #1
-                ,    p_2 //:PIXEL_STORING_DATA #2
-                ,    p_3 //:PIXEL_STORING_DATA #3
-                ,    p_4 //:PIXEL_STORING_DATA #4   
-                );;
-
-            //:--------------------------------:STORE_PAYLOAD://
-
-        #undef              ZER  //:--------------------: 01 ://
-        #undef  TAUDEPO_DEX_TAU  //:--------------------: 02 ://
-        //:=======================================:CORE_LOGIC://
-    }
-
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-
-    void
-    AAC2020_UILISTS_Put_ButMai( //:ButMai:ButtonMain(data)
-    /**/I32 TAUDEPO_SUB_DEX //:AKA[ DEX_SUB_000_015 ](EDITOR#)
-    ,   I32 UILISTS_LIS_DEX //:LIST__INDEX:[ 0 -to- ( 8-1) ]
-    ,   I32 UILISTS_BUT_DEX //:BUTTON_INDEX[ 0 -to- (16-1) ]
-    
-    ,   CHR* but_tex //:Button_Text, 7 chars + Null Term
-    ,   U32  but_typ //:Button_TYPE[ dec | inc | num | act ]
-    ,   U32  but_val //:Button_VALU( Not always useful )
-    ){
-        //:error_check_inputs:-------------------------------://
-        #define BUT_MIN AAC2020_UILISTS_but_min
-        #define BUT_MAX AAC2020_UILISTS_but_max
-
-            assert( ((CHR*)0) != but_tex );
-            assert( but_typ   >= BUT_MIN );
-            assert( but_typ   <= BUT_MAX );
-            //:     but_val   :: Allowed to be anything ://
-
-            assert( TAUDEPO_SUB_DEX <=(16-1) );
-            assert( UILISTS_LIS_DEX <=( 8-1) );
-            assert( UILISTS_BUT_DEX <=(16-1) );
-
-            assert( TAUDEPO_SUB_DEX >=(   0) );
-            assert( UILISTS_LIS_DEX >=(   0) );
-            assert( UILISTS_BUT_DEX >=(   0) );
-
-        #undef  BUT_MIN
-        #undef  BUT_MAX
-        //:-------------------------------:error_check_inputs://
-        //:CORE_LOGIC:=======================================://
-        /** ************************************************ ***
-        SUMMARY:
-        1: CALC_STORAGE_LOCATION_OF_DATA
-        2: CREATE_BUTTON_2X2_PAYLOAD
-        3: STORE_PAYLOAD
-        *** ************************************************ **/
-        #define TAUDEPO_DEX_TAU ( tau_014 )
-        #define            ZERO (    0    )
-
-            //:CALC_STORAGE_LOCATION_OF_DATA:----------------://
-
-                //:     tau_014 ==[ TAU_UIL / DEX_SUB ]
-                I32     tau_014  =( AAC2020_TAUDEPO.TAU_014 );
-                assert( tau_014 ==  AAC2020_TAUNAME_uilists ); 
-
-                I32 button_cell_x=( UILISTS_LIS_DEX + ZERO );
-                I32 button_cell_y=( UILISTS_BUT_DEX + ZERO );
-                
-                I32 TAUDEPO_DEX_VAR =( //:DEX_VAR_000_255
-                    //:@_XY_TO_INDEX_FORMULA_@
-                    button_cell_x + ( button_cell_y * NOC_WID )
-                );;
-
-                assert( TAUDEPO_DEX_TAU == ( 14  ) );
-                assert( TAUDEPO_SUB_DEX <= ( 16-1) );
-                assert( TAUDEPO_DEX_VAR <= (256-1) );
-
-                assert( TAUDEPO_DEX_TAU >= (   0 ) );
-                assert( TAUDEPO_SUB_DEX >= (   0 ) );
-                assert( TAUDEPO_DEX_VAR >= (   0 ) );
-
-            //:----------------:CALC_STORAGE_LOCATION_OF_DATA://
-            //:CREATE_BUTTON_2X2_PAYLOAD:--------------------://
-
-                /** SEE[ UILISTS.D._ ]FOR_DIAGRAM**/
-
-                U32 p_1=( 0x00 
-                        |   (( but_tex[0] << 24 ) & 0xFF ) 
-                        |   (( but_tex[1] << 16 ) & 0xFF ) 
-                        |   (( but_tex[2] <<  8 ) & 0xFF ) 
-                        |   (( but_tex[3] <<  0 ) & 0xFF ) );;
-                U32 p_2=( 0x00
-                        |   (( but_tex[4] << 24 ) & 0xFF ) 
-                        |   (( but_tex[5] << 16 ) & 0xFF ) 
-                        |   (( but_tex[6] <<  8 ) & 0xFF ) 
-                        |   (( but_tex[7] <<  0 ) & 0xFF ) );;
-                U32 p_3=( but_typ );
-                U32 p_4=( but_val );
-
-                assert( 0 ==but_tex[7] ); //:NULL_TERMINATOR
-
-            //:--------------------:CREATE_BUTTON_2X2_PAYLOAD://
-            //:STORE_PAYLOAD:--------------------------------://
-
-                AAC2020_TAUDEPO_Put(
-                    (U08)TAUDEPO_DEX_TAU //:[ DEX_TAU_000_015 ]
-                ,   (U08)TAUDEPO_SUB_DEX //:[ DEX_SUB_000_015 ]
-                ,   (U08)TAUDEPO_DEX_VAR //:[ DEX_VAR_000_255 ]
-                ,    p_1 //:PIXEL_STORING_DATA #1
-                ,    p_2 //:PIXEL_STORING_DATA #2
-                ,    p_3 //:PIXEL_STORING_DATA #3
-                ,    p_4 //:PIXEL_STORING_DATA #4   
-                );;
-
-            //:--------------------------------:STORE_PAYLOAD://
-
-        #undef            ZERO
-        #undef TAUDEPO_DEX_TAU
-        //:=======================================:CORE_LOGIC://
-    }
-
-    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+//  //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+//  void
+//  AAC2020_UILISTS_Get_ButExt(//:ButExt:ButtonExtra(data)
+//  /**/I32  TAUDEPO_SUB_DEX   //:AKA[DEX_SUB_000_015](EDITOR#)
+//  ,   I32  UILISTS_LIS_DEX   //:LIST__INDEX:[ 0 -to- ( 8-1) ]
+//  ,   I32  UILISTS_BUT_DEX   //:BUTTON_INDEX[ 0 -to- (16-1) ]
+//  
+//  ,   U32* ext_arr //:Extra Data Array
+//  ,   I32  ext_len //:NumberOfUint32's worth of data
+//  )
+//  {
+//
+//
+//  }
+//  //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+//  void
+//  AAC2020_UILISTS_Get_ButMai( //:ButMai:ButtonMain(data)
+//  /**/I32 TAUDEPO_SUB_DEX //:AKA[ DEX_SUB_000_015 ](EDITOR#)
+//  ,   I32 UILISTS_LIS_DEX //:LIST__INDEX:[ 0 -to- ( 8-1) ]
+//  ,   I32 UILISTS_BUT_DEX //:BUTTON_INDEX[ 0 -to- (16-1) ]
+//  
+//  ,   NCC* but_tex //:Button_Text, 7 chars + Null Term
+//  ,   U32  but_typ //:Button_TYPE[ dec | inc | num | act ]
+//  ,   U32  but_val //:Button_VALU( Not always useful )
+//  ){
+//
+//
+//  }
+//  //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
 #undef  NOC_WID  //:NOC:NumberOfCells:------------------: 01 ://
 #undef  NOC_HIG  //:NOC:NumberOfCells:------------------: 02 ://
 #undef  HAF_WID  //:HALF of NOC_WID  :------------------: 03 ://
@@ -277,6 +63,7 @@
 #undef      U32  //:------------------------------------: 05 ://
 #undef      I32  //:------------------------------------: 06 ://
 #undef      CHR  //:------------------------------------: 07 ://
+#undef      NCC  //:------------------------------------: 08 ://
 //:===================================:UILISTS_CORE_FUNCTIONS://
 //:UILISTS_INITIALIZATION:===================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
@@ -300,7 +87,8 @@
     *** **************************************************** **/
         if( u32 ){ /** NOOP **/ };
 
-        AAC2020_TODOMAN_Vital("[FINISH:AAC2020_UILISTS_Init]");
+        extern U32 AAC2020_UILISTS_UnitTest( U32 );
+                   AAC2020_UILISTS_UnitTest( 0x0 );
 
         I32 typ =( AAC2020_UILISTS_but_def ); //:Button_Type
         I32 val =(           0             ); //:Button_Value
@@ -333,3 +121,62 @@
 #undef  UR1  /**UR1:Ui_Rect_00001  **/  //:-------------: 05 ://
 #undef  BUS  /**BUS:Button_String  **/  //:-------------: 06 ://
 //:===================================:UILISTS_INITIALIZATION://
+//:UILISTS_UNIT_TEST_SECTION:================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 01 ://
+#define U08  uint8_t /** GCC: <stdint.h> **/          //: 02 ://
+#define ERR aac2020_uilists_Halt                      //: 03 ://
+#define LOG aac2020_uilists_Info_any                  //: 04 ://
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    U32
+    AAC2020_UILISTS_UnitTest( 
+        U32 u32 
+    )
+    {
+    LOG( "[AAC2020_UILISTS_UnitTest:BEG]\n" , 0 );
+        
+        if( u32 ){ /** Reserved_For_Future_Use **/ };
+
+        //:Backup_Or_Restore_TAUDEPO_memory:-----------------://
+
+            U08* u08_arr=( (U08*)0 ); //:<--MUST_BE_NIL_HERE
+            AAC2020_PIXBACK_Backup_taudepo( &(u08_arr) );
+            
+        //:-----------------:Backup_Or_Restore_TAUDEPO_memory://
+        //:RUN_PRIVATE_UNIT_TESTS:---------------------------://
+
+            extern U32 aac2020_uilists_UnitTest( U32 );
+                       aac2020_uilists_UnitTest( u32 );
+
+        //:---------------------------:RUN_PRIVATE_UNIT_TESTS://
+        //:Backup_Or_Restore_TAUDEPO_memory:-----------------://
+
+            AAC2020_PIXBACK_Restore_taudepo( &(u08_arr) );
+            if( ((U08*)0) != u08_arr ){
+                ERR("[INVALID_POINTER_NOT_SET_TO_ZERO]");
+            };;
+
+        //:-----------------:Backup_Or_Restore_TAUDEPO_memory://
+
+    LOG( "[AAC2020_UILISTS_UnitTest:END]\n" , 0 );
+    return( 0x00 );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    U32
+    aac2020_uilists_UnitTest(
+        U32 u32
+    )
+    {
+        if( u32 ){ /** Reserved_For_Future_Use **/ };
+
+        /////////////////////////////////////////////////////////////////////
+
+        return( 0x00 );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+#undef  U32  //:----------------------------------------: 01 ://
+#undef  U08  //:----------------------------------------: 02 ://
+#undef  ERR  //:----------------------------------------: 03 ://
+#undef  LOG  //:----------------------------------------: 04 ://
+//:================================:UILISTS_UNIT_TEST_SECTION://
