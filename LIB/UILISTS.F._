@@ -13,6 +13,8 @@
 #define I32  int32_t   /** GCC: <stdint.h> **/  //:-----: 06 ://
 #define CHR const char                          //:-----: 07 ://
 #define NCC       char                          //:-----: 08 ://
+#define ASS assert                              //:-----: 09 ://
+#define ERR aac2020_uilists_Halt                //:-----: 10 ://
 //: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
 
     //:FUNCTION_INDEX: (FOR:UILISTS_CORE_FUNCTIONS)
@@ -26,35 +28,328 @@
         //: 2: AAC2020_UILISTS_Get_ButMai
 
 //: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
-//  //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-//  void
-//  AAC2020_UILISTS_Get_ButExt(//:ButExt:ButtonExtra(data)
-//  /**/I32  TAUDEPO_SUB_DEX   //:AKA[DEX_SUB_000_015](EDITOR#)
-//  ,   I32  UILISTS_LIS_DEX   //:LIST__INDEX:[ 0 -to- ( 8-1) ]
-//  ,   I32  UILISTS_BUT_DEX   //:BUTTON_INDEX[ 0 -to- (16-1) ]
-//  
-//  ,   U32* ext_arr //:Extra Data Array
-//  ,   I32  ext_len //:NumberOfUint32's worth of data
-//  )
-//  {
-//
-//
-//  }
-//  //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
-//  void
-//  AAC2020_UILISTS_Get_ButMai( //:ButMai:ButtonMain(data)
-//  /**/I32 TAUDEPO_SUB_DEX //:AKA[ DEX_SUB_000_015 ](EDITOR#)
-//  ,   I32 UILISTS_LIS_DEX //:LIST__INDEX:[ 0 -to- ( 8-1) ]
-//  ,   I32 UILISTS_BUT_DEX //:BUTTON_INDEX[ 0 -to- (16-1) ]
-//  
-//  ,   NCC* but_tex //:Button_Text, 7 chars + Null Term
-//  ,   U32  but_typ //:Button_TYPE[ dec | inc | num | act ]
-//  ,   U32  but_val //:Button_VALU( Not always useful )
-//  ){
-//
-//
-//  }
-//  //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    AAC2020_UILISTS_Get_ButExt(//:ButExt:ButtonExtra(data)
+    /**/I32  TAUDEPO_SUB_DEX   //:AKA[DEX_SUB_000_015](EDITOR#)
+    ,   I32  UILISTS_LIS_DEX   //:LIST__INDEX:[ 0 -to- ( 8-1) ]
+    ,   I32  UILISTS_BUT_DEX   //:BUTTON_INDEX[ 0 -to- (16-1) ]
+    
+    ,   U32*        ext_arr //:Extra Data Array (Really:U32**)
+    ,   I32  *BYREF_ext_len //:NumberOfUint32's worth of data
+    )
+    {
+        //:FUCKING_POINTER_DECAY:----------------------------://
+        /** @VID_IID[ 0251 ]TIME[ 03:53:00 ]                 **/
+        /** @VID_IID[ 0251 ]TIME[ 04:02:00 ]REMOVED_CODE     **/
+        /** Pointers automatically decay into arrays, yet    **/
+        /** I can't pass an array into a function taking     **/
+        /** a pointer. Fuck that.                            **/
+        /** ************************************************ **/
+
+            //:ARG!!!!!NOTHING_HERE_NOW://
+
+        //:----------------------------:FUCKING_POINTER_DECAY://
+        //:Main_Variables:-----------------------------------://
+
+        //- U32* ext_arr =( (U32*)0 ); //:@TRAP_VALUE@ -//
+            I32  ext_len =( 0 - 666 ); //:@TRAP_VALUE@
+
+        //:-----------------------------------:Main_Variables://
+        //:Error_Check_Inputs:-------------------------------://
+        //:_AND__Load__Inputs:-------------------------------://
+
+            //:Range_Checks:
+            assert( TAUDEPO_SUB_DEX <=(16-1) );
+            assert( UILISTS_LIS_DEX <=( 8-1) );
+            assert( UILISTS_BUT_DEX <=(16-1) );
+
+            //:References_Cannot_Be_Null:
+        //- if(((void**)0)==BYREF_ext_arr){ERR("[xx]");};    -//
+            if(((I32  *)0)==BYREF_ext_len){ERR("[20210409B]");};
+
+        //- ext_arr=( * ((U32**)BYREF_ext_arr) ); -//
+            ext_len=( * (       BYREF_ext_len) ); //:DEREFERENCE
+
+            if( ((U32*)0) == ext_arr ){
+                ERR("[EXT_ARR:ISS_NIL]");
+            };;
+            if( ext_len < 1 ){ ERR("[EXT_LEN:OOB_NEG]"); };
+            if( ext_len > 4 ){ ERR("[EXT_LEN:OOB_POS]"); };
+            
+            //:ext_arr should be zeroed out for however      ://
+            //:many slots there are. This is to communicate  ://
+            //:our intentions to overwrite the data.         ://
+            for( I32 i = 0 ; i <= (ext_len-1) ; i++ ){
+
+                if( ext_arr[ i ] != 0 ){
+                    ERR("[EXT_ARR:NOT_ZEROED_OUT]");
+                };;
+            };;
+
+        //:-------------------------------:_AND__Load__Inputs://
+        //:-------------------------------:Error_Check_Inputs://
+        //:CORE_LOGIC:=======================================://
+        /**SEE[ AAC2020_UILISTS_Put_ButExt ]FOR__EXPLAINATION**/
+        #define TAUDEPO_DEX_TAU ( tau_014 ) //:---------: 01 ://
+        #define             ZER (    0    ) //:---------: 02 ://
+
+            I32     tau_014  =( AAC2020_TAUDEPO.TAU_014  );
+            assert( tau_014 ==  AAC2020_TAUNAME_uilists  );
+
+            I32 button_cell_x=( UILISTS_LIS_DEX + ( 8 ) );
+            I32 button_cell_y=( UILISTS_BUT_DEX + (ZER) );
+
+            I32 TAUDEPO_DEX_VAR =( //:DEX_VAR_000_255
+                //:@_XY_TO_INDEX_FORMULA_@
+                button_cell_x + ( button_cell_y * NOC_WID )
+            );;
+
+            assert( TAUDEPO_DEX_TAU == ( 14  ) );
+            assert( TAUDEPO_SUB_DEX <= ( 16-1) );
+            assert( TAUDEPO_DEX_VAR <= (256-1) );
+        
+            assert( TAUDEPO_DEX_TAU >= (   0 ) );
+            assert( TAUDEPO_SUB_DEX >= (   0 ) );
+            assert( TAUDEPO_DEX_VAR >= (   0 ) );
+
+            #define ONE (    1    ) //:Length to index location
+            #define LEN ( ext_len )
+            #define ARR ( ext_arr )
+
+                U32 p_1 =( (U32)0x00000000 );
+                U32 p_2 =( (U32)0x00000000 );
+                U32 p_3 =( (U32)0x00000000 );
+                U32 p_4 =( (U32)0x00000000 );
+
+                //:FETCH_FOUR_PIXELS_OF_DATA:
+                AAC2020_TAUDEPO_Get(
+                    (U08)TAUDEPO_DEX_TAU //:[ DEX_TAU_000_015 ]
+                ,   (U08)TAUDEPO_SUB_DEX //:[ DEX_SUB_000_015 ]
+                ,   (U08)TAUDEPO_DEX_VAR //:[ DEX_VAR_000_255 ]
+                ,  &(p_1)//:PIXEL_STORING_DATA #1
+                ,  &(p_2)//:PIXEL_STORING_DATA #2
+                ,  &(p_3)//:PIXEL_STORING_DATA #3
+                ,  &(p_4)//:PIXEL_STORING_DATA #4   
+                );;
+                
+                //:INVERSE_OF_THE_PUTTER:
+                if( LEN >=( 1 ) ){ ARR[ 1 - ONE ] = p_1 ; };
+                if( LEN >=( 2 ) ){ ARR[ 2 - ONE ] = p_2 ; };
+                if( LEN >=( 3 ) ){ ARR[ 3 - ONE ] = p_3 ; };
+                if( LEN >=( 4 ) ){ ARR[ 4 - ONE ] = p_4 ; };
+
+            #undef ONE
+            #undef LEN
+            #undef ARR  
+
+        #undef  TAUDEPO_DEX_TAU  //:--------------------: 01 ://
+        #undef              ZER  //:--------------------: 02 ://
+        //:=======================================:CORE_LOGIC://
+        //:Error_Check_Outputs:------------------------------://
+
+            if( ((U32*)0) == ext_arr ){ ERR("[NIL:EXT_ARR]"); };
+            if( (      1) >  ext_len ){ ERR("[001:ext_len]"); };
+            if( (      4) <  ext_len ){ ERR("[003:ext_len]"); };
+
+        //:------------------------------:Error_Check_Outputs://
+        //:Return_Outputs_Via_Output_Params:-----------------://
+
+        //- if(                                      -//
+        //-     (* ((U32**)BYREF_ext_arr) )          -//
+        //- !=  (                ext_arr  )          -//
+        //- ){                                       -//
+        //-     ERR("[YOUDONEFUCKEDUP_2021_04_09]"); -//
+        //- };;                                      -//
+
+                 (*BYREF_ext_len)  = ( ext_len )  ;//::LOAD::://
+
+        //:-----------------:Return_Outputs_Via_Output_Params://
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    AAC2020_UILISTS_Get_ButMai( //:ButMai:ButtonMain(data)   ://
+    /**/I32 TAUDEPO_SUB_DEX //:AKA[DEX_SUB_000_015](EDITOR#)j://
+    ,   I32 UILISTS_LIS_DEX //:LIST__INDEX:[ 0 -to- ( 8-1) ] ://
+    ,   I32 UILISTS_BUT_DEX //:BUTTON_INDEX[ 0 -to- (16-1) ] ://
+                                                             
+    ,   NCC*        but_tex //: Text, 7 chars + Null Term    ://
+    ,   U32  *BYREF_but_typ //: TYPE[ dec | inc | num | act ]://
+    ,   U32  *BYREF_but_val //: VALU( Not always useful )    ://
+    ){                  
+        //:Main_variables_we_are_working_with:---------------://
+            
+            /** @VID_IID[ 0251 ]TIME[ 01:51:05 ] **/
+            /** EVEN_ZERO_HERE_IS_A_TRAP_VALUE   **/
+            //-  but_tex =(  (NCC*)0  ); -//
+            U32  but_typ =(0xFFFFFFFF ); //:INIT_TO_TRAP_VALUE
+            U32  but_val =(0xFFFFFFFF ); //:INIT_TO_TRAP_VALUE
+            //:............0xRRGGBBAA........................://
+
+        //:---------------:Main_variables_we_are_working_with://
+        //:UNPACK_REFERENCES:--------------------------------://
+        //:_AND_ERROR_CHECKS:--------------------------------://
+        /** @VID_IID[ 0251 ]TIME[ 01:36:00 ]ALL_OUTPUTS_BYREF**/
+        #define BUT_MIN AAC2020_UILISTS_but_min
+        #define BUT_MAX AAC2020_UILISTS_but_max
+
+            //:Ref should __NOT__ be null 
+        //- assert( ((NCC**)0) != (BYREF_but_tex)); -//
+            assert( ((U32 *)0) != (BYREF_but_typ));
+            assert( ((U32 *)0) != (BYREF_but_val));
+            
+            //:Underlying char array should __NOT__ be null.
+        //- but_tex =(*BYREF_but_tex ); -//
+            assert( ((NCC*)0) !=  but_tex );
+
+            //:Underlying[ but_typ ]AND[ but_val ]           ://
+            //:should be zeroed out so we communicate our    ://
+            //:intention to overwrite those values.          ://
+            //:ACTUALLY[ but_tex ]should also be all zeros.  ://
+            but_typ=( *BYREF_but_typ );
+            but_val=( *BYREF_but_val );
+
+            //:but_typ_should_be_zeroed_out:-----------------://
+
+                if( 0 == but_typ ){
+                    /** GOOD. Should be zeroed out to signal **/
+                    /** our intention to override it.        **/
+                }else
+                if( 1
+                    && ( but_typ  > BUT_MIN ) 
+                    && ( but_typ  < BUT_MAX ) 
+                ){
+                    printf("[but_typ]:%d\n" , but_typ );
+                    printf("[BUT_MIN]:%d\n" , BUT_MIN );
+                    printf("[BUT_MAX]:%d\n" , BUT_MAX );
+                    ERR("[BUT_TYP:EXP_ZERO_WHEN_USING_GETTER]");
+                }else{
+                    ERR("[YOU_SUPER_SCREWED_UP_2021]");
+                };;
+
+            //:but_typ_should_be_zeroed_out:-----------------://
+            //:but_val_should_be_zeroed_out:-----------------://
+
+                assert( 0 == but_val );  
+
+            //:-----------------:but_val_should_be_zeroed_out://
+            //:button_text_should_be_zeroed_out:-------------://
+
+                //:Button text array should be zeroed out too
+                //:to communicate that we would like to override
+                //:it's character's.
+                for( I32 i = 0 ; i <=(8-1) ; i++ ){
+                    if( but_tex[ i ] != ((NCC)0) ){
+                        ERR("[BUT_TEX:NOT_0ED_OUT_4_COLLECT]");
+                    };;
+                };;
+
+            //:-------------:button_text_should_be_zeroed_out://
+
+        #undef BUT_MIN
+        #undef BUT_MAX
+        //:--------------------------------:_AND_ERROR_CHECKS://
+        //:--------------------------------:UNPACK_REFERENCES://
+        //:error_check_inputs:-------------------------------://
+        #define BUT_MIN AAC2020_UILISTS_but_min
+        #define BUT_MAX AAC2020_UILISTS_but_max
+
+            assert( TAUDEPO_SUB_DEX <=(16-1) );
+            assert( UILISTS_LIS_DEX <=( 8-1) );
+            assert( UILISTS_BUT_DEX <=(16-1) );
+
+            assert( TAUDEPO_SUB_DEX >=(   0) );
+            assert( UILISTS_LIS_DEX >=(   0) );
+            assert( UILISTS_BUT_DEX >=(   0) );
+
+        #undef  BUT_MIN
+        #undef  BUT_MAX
+        //:-------------------------------:error_check_inputs://
+        //:CORE_LOGIC:=======================================://
+        /**SEE[ AAC2020_UILISTS_Put_ButMai ]FOR__EXPLAINATION**/
+        #define TAUDEPO_DEX_TAU ( tau_014 )  //:--------: 01 ://
+        #define            ZERO (    0    )  //:--------: 02 ://
+
+            //:     tau_014 ==[ TAU_UIL / DEX_SUB ]
+            I32     tau_014  =( AAC2020_TAUDEPO.TAU_014 );
+            assert( tau_014 ==  AAC2020_TAUNAME_uilists ); 
+            
+            I32 button_cell_x=( UILISTS_LIS_DEX + ZERO );
+            I32 button_cell_y=( UILISTS_BUT_DEX + ZERO );
+            
+            I32 TAUDEPO_DEX_VAR =( //:DEX_VAR_000_255
+                //:@_XY_TO_INDEX_FORMULA_@
+                button_cell_x + ( button_cell_y * NOC_WID )
+            );;
+            
+            assert( TAUDEPO_DEX_TAU == ( 14  ) );
+            assert( TAUDEPO_SUB_DEX <= ( 16-1) );
+            assert( TAUDEPO_DEX_VAR <= (256-1) );
+            
+            assert( TAUDEPO_DEX_TAU >= (   0 ) );
+            assert( TAUDEPO_SUB_DEX >= (   0 ) );
+            assert( TAUDEPO_DEX_VAR >= (   0 ) );
+
+            //:4_Pixels_Containing_Data_We_Want_To_Get:
+            U32 p_1 =( 0x00000000 );
+            U32 p_2 =( 0x00000000 );
+            U32 p_3 =( 0x00000000 );
+            U32 p_4 =( 0x00000000 );
+
+            AAC2020_TAUDEPO_Get(
+                (U08)TAUDEPO_DEX_TAU //:[ DEX_TAU_000_015 ]
+            ,   (U08)TAUDEPO_SUB_DEX //:[ DEX_SUB_000_015 ]
+            ,   (U08)TAUDEPO_DEX_VAR //:[ DEX_VAR_000_255 ]
+            ,  &(p_1)//:PIXEL_STORING_DATA #1
+            ,  &(p_2)//:PIXEL_STORING_DATA #2
+            ,  &(p_3)//:PIXEL_STORING_DATA #3
+            ,  &(p_4)//:PIXEL_STORING_DATA #4   
+            );;
+
+            //:TWO_PIXELS_HOLDS_8_ASCII_CHARACTER
+            //:( 7 Letters + One Null Terminator )
+            //:ASSUMPTION[ but_tex is exactly 8 slots ! ]
+
+            //:FIRST_FOUR_FIRST_PIXEL:(p_1[ 0 -to- 3 ])
+            but_tex[ 0 ]=( ( p_1 >> 24 ) & 0xFF );
+            but_tex[ 1 ]=( ( p_1 >> 16 ) & 0xFF );
+            but_tex[ 2 ]=( ( p_1 >>  8 ) & 0xFF );
+            but_tex[ 3 ]=( ( p_1 >>  0 ) & 0xFF );
+
+            //:NEXT_FOUR_SECOND_PIXEL:(p_2[ 4 -to- 7 ])
+            but_tex[ 4 ]=( ( p_2 >> 24 ) & 0xFF );
+            but_tex[ 5 ]=( ( p_2 >> 16 ) & 0xFF );
+            but_tex[ 6 ]=( ( p_2 >>  8 ) & 0xFF );
+            but_tex[ 7 ]=( ( p_2 >>  0 ) & 0xFF );
+
+            //:LAST_TWO_PIXELS[ but_typ & but_val ]:
+            but_typ=( p_3 );
+            but_val=( p_4 );
+            
+            assert( but_tex[7] == 0 ); //:NULL_TERMINATOR!
+  
+
+        #undef             ZERO  //:--------------------: 01 ://
+        #undef  TAUDEPO_DEX_TAU  //:--------------------: 02 ://
+        //:=======================================:CORE_LOGIC://
+        //:LOAD_OUTPUTS_AND_ERROR_CHECK:=====================://
+        #define BUT_MIN AAC2020_UILISTS_but_min
+        #define BUT_MAX AAC2020_UILISTS_but_max
+
+            assert( ((NCC*)0) != but_tex );
+            assert( but_typ   >= BUT_MIN );
+            assert( but_typ   <= BUT_MAX );
+            //:     but_val   :: Allowed to be anything ://
+
+        //- assert( (*BYREF_but_tex)==( but_tex ) ); - - - - -//
+                    (*BYREF_but_typ) =( but_typ )  ; //:LOAD ://
+                    (*BYREF_but_val) =( but_val )  ; //:LOAD ://
+
+        #undef BUT_MIN
+        #undef BUT_MAX
+        //:=====================:LOAD_OUTPUTS_AND_ERROR_CHECK://
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 //: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
 #undef  NOC_WID  //:NOC:NumberOfCells:------------------: 01 ://
 #undef  NOC_HIG  //:NOC:NumberOfCells:------------------: 02 ://
@@ -64,6 +359,8 @@
 #undef      I32  //:------------------------------------: 06 ://
 #undef      CHR  //:------------------------------------: 07 ://
 #undef      NCC  //:------------------------------------: 08 ://
+#undef      ASS  //:------------------------------------: 09 ://
+#undef      ERR  //:------------------------------------: 10 ://
 //:===================================:UILISTS_CORE_FUNCTIONS://
 //:UILISTS_INITIALIZATION:===================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
@@ -121,11 +418,44 @@
 #undef  UR1  /**UR1:Ui_Rect_00001  **/  //:-------------: 05 ://
 #undef  BUS  /**BUS:Button_String  **/  //:-------------: 06 ://
 //:===================================:UILISTS_INITIALIZATION://
+//:HELPER_FUNCTIONS_FOR_UNIT_TESTS:==========================://
+#define CHR const char
+#define I32 int32_t /** GCC: <stdint.h> **/
+
+    void
+    aac2020_uilists_PrintC8( 
+        CHR*  var_nam      //:<--string with variable name
+    ,   CHR   but_tex[ 8 ] //:<--char array to print off
+    )
+    {
+
+        printf( "[PrintC8:var_nam]%s:" , var_nam );
+        printf( " ( " );
+        for( I32 i = 0; i < 7; i++){
+
+            if( 0 == but_tex[i] ){
+                printf( "%c" , '*' );
+            }else{
+                printf( "%c", but_tex[i] ); 
+            };;
+
+        };;
+        printf( " ) " );
+        printf( "\n"  );
+
+    }
+
+#undef  CHR
+#undef  I32
+//:==========================:HELPER_FUNCTIONS_FOR_UNIT_TESTS://
 //:UILISTS_UNIT_TEST_SECTION:================================://
-#define U32 uint32_t /** GCC: <stdint.h> **/          //: 01 ://
-#define U08  uint8_t /** GCC: <stdint.h> **/          //: 02 ://
-#define ERR aac2020_uilists_Halt                      //: 03 ://
-#define LOG aac2020_uilists_Info_any                  //: 04 ://
+#define I32  int32_t /** GCC: <stdint.h> **/          //: 01 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 02 ://
+#define U08  uint8_t /** GCC: <stdint.h> **/          //: 03 ://
+#define ERR aac2020_uilists_Halt                      //: 04 ://
+#define LOG aac2020_uilists_Info_any                  //: 05 ://
+#define CHR const char                                //: 06 ://
+#define NCC       char                                //: 07 ://
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     U32
@@ -133,7 +463,7 @@
         U32 u32 
     )
     {
-    LOG( "[AAC2020_UILISTS_UnitTest:BEG]\n" , 0 );
+    LOG( "[AAC2020_UILISTS_UnitTest:BEG]" , 0 );
         
         if( u32 ){ /** Reserved_For_Future_Use **/ };
 
@@ -158,7 +488,7 @@
 
         //:-----------------:Backup_Or_Restore_TAUDEPO_memory://
 
-    LOG( "[AAC2020_UILISTS_UnitTest:END]\n" , 0 );
+    LOG( "[AAC2020_UILISTS_UnitTest:END]" , 0 );
     return( 0x00 );
     }
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
@@ -169,14 +499,295 @@
     {
         if( u32 ){ /** Reserved_For_Future_Use **/ };
 
-        /////////////////////////////////////////////////////////////////////
+        //:BUTTON_EXTRA:( ButExt ):
+        void aac2020_uilists_UTC_ButExt( void );
+             aac2020_uilists_UTC_ButExt( );
+
+        //:BUTTON__MAIN:( ButMai ):
+        void aac2020_uilists_UTC_ButMai( void );
+             aac2020_uilists_UTC_ButMai( );
+
 
         return( 0x00 );
     }
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
-#undef  U32  //:----------------------------------------: 01 ://
-#undef  U08  //:----------------------------------------: 02 ://
-#undef  ERR  //:----------------------------------------: 03 ://
-#undef  LOG  //:----------------------------------------: 04 ://
+    void
+    aac2020_uilists_UTC_ButExt( 
+        void
+    )
+    {
+
+        I32 ext_len=( 4 );
+
+        U32 top_lef_p_1 =( 0xFFFFFFFF );
+        U32 top_lef_p_2 =( 0xBADEBADE );
+        U32 top_lef_p_3 =( 0xF000F000 );
+        U32 top_lef_p_4 =( 0x12345678 );
+
+        U32 top_rig_p_1 =( 0x83745232 );
+        U32 top_rig_p_2 =( 0x32FABC34 );
+        U32 top_rig_p_3 =( 0x33FF8732 );
+        U32 top_rig_p_4 =( 0x44BBCCCC );
+
+        U32 bot_lef_p_1 =( 0x83327452 );
+        U32 bot_lef_p_2 =( 0x3234FABC );
+        U32 bot_lef_p_3 =( 0x3332FF87 );
+        U32 bot_lef_p_4 =( 0x44CCBBCC );
+
+        U32 bot_rig_p_1 =( 0x5634D452 );
+        U32 bot_rig_p_2 =( 0x3DD4FABC );
+        U32 bot_rig_p_3 =( 0x3332DD87 );
+        U32 bot_rig_p_4 =( 0x4DCCDBCC );
+
+        U32 top_lef[ 4 ]={ 0 };
+            top_lef[ 0 ]=( top_lef_p_1 );
+            top_lef[ 1 ]=( top_lef_p_2 );
+            top_lef[ 2 ]=( top_lef_p_3 );
+            top_lef[ 3 ]=( top_lef_p_4 );
+
+        U32 top_rig[ 4 ]={ 0 };
+            top_rig[ 0 ]=( top_rig_p_1 );
+            top_rig[ 1 ]=( top_rig_p_2 );
+            top_rig[ 2 ]=( top_rig_p_3 );
+            top_rig[ 3 ]=( top_rig_p_4 );
+
+        U32 bot_lef[ 4 ]={ 0 };
+            bot_lef[ 0 ]=( bot_lef_p_1 );
+            bot_lef[ 1 ]=( bot_lef_p_2 );
+            bot_lef[ 2 ]=( bot_lef_p_3 );
+            bot_lef[ 3 ]=( bot_lef_p_4 );
+
+        U32 bot_rig[ 4 ]={ 0 };
+            bot_rig[ 0 ]=( bot_rig_p_1 );
+            bot_rig[ 1 ]=( bot_rig_p_2 );
+            bot_rig[ 2 ]=( bot_rig_p_3 );
+            bot_rig[ 3 ]=( bot_rig_p_4 );
+
+        U32 top_lef_GOT[ 4 ]={ 0,0,0,0 }; //:GOTTEN_VALUES
+        U32 top_rig_GOT[ 4 ]={ 0 }; //:GOTTEN_VALUES
+        U32 bot_lef_GOT[ 4 ]={ 0 }; //:GOTTEN_VALUES
+        U32 bot_rig_GOT[ 4 ]={ 0 }; //:GOTTEN_VALUES
+
+        //:put_data_in_extreme_4_corners:--------------------://
+        /** @VID_IID[ 0251 ]TIME[ 03:15:50 ]DIAGRAM_EXPLAIN  **/
+
+            //:TOP_LEF:
+            AAC2020_UILISTS_Put_ButExt(
+                0, 0, 0,top_lef,ext_len );;
+        
+            //:TOP_RIG:
+            AAC2020_UILISTS_Put_ButExt(
+                3, 7, 0,top_rig,ext_len );;
+
+            //:BOT_LEF:
+            AAC2020_UILISTS_Put_ButExt(
+               12, 0,15,bot_lef,ext_len );;
+
+            //:BOT_RIG:
+            AAC2020_UILISTS_Put_ButExt(
+               15, 7,15,bot_rig,ext_len );;
+
+        //:--------------------:put_data_in_extreme_4_corners://
+        //:get_data_in_extreme_4_corners:--------------------://
+
+            //:TOP_LEF:
+            AAC2020_UILISTS_Get_ButExt(
+            /**/ 0, 0, 0,&(top_lef_GOT[0]),&(ext_len) );;
+            
+            //:TOP_RIG:
+            AAC2020_UILISTS_Get_ButExt(
+            /**/ 3, 7, 0,&(top_rig_GOT[0]),&(ext_len) );;
+            
+            //:BOT_LEF:
+            AAC2020_UILISTS_Get_ButExt(
+            /**/12, 0,15,&(bot_lef_GOT[0]),&(ext_len) );;
+            
+            //:BOT_RIG:
+            AAC2020_UILISTS_Get_ButExt(
+            /**/15, 7,15,&(bot_rig_GOT[0]),&(ext_len) );;
+
+        //:--------------------:get_data_in_extreme_4_corners://
+        //:Check_GOT_against_PUT:----------------------------://
+
+            for( I32 i = 0 ; i <=(4-1) ; i++ ){
+                if( 0
+                ||  top_lef[i] != top_lef_GOT[i] 
+                ||  top_rig[i] != top_rig_GOT[i] 
+                ||  bot_lef[i] != bot_lef_GOT[i] 
+                ||  bot_rig[i] != bot_rig_GOT[i] 
+                ){
+                    ERR("[FAILED:GET_PUT:ButExt]");
+                };;
+            };;
+
+        //:----------------------------:Check_GOT_against_PUT://
+    }
+
+    void
+    aac2020_uilists_UTC_ButMai( 
+        void
+    )
+    {
+        //:but_tex:------------------------------------------://
+
+        CHR top_lef_EXP[ 8 ] ={ '1','2','3','4','5','6','7',0 };
+        CHR top_rig_EXP[ 8 ] ={ 'A','B','C','D','E','F','G',0 };
+        CHR bot_lef_EXP[ 8 ] ={ 'h','i','j','k','l','m','n',0 };
+        CHR bot_rig_EXP[ 8 ] ={ 'v','a','r','_','n','a','m',0 };
+
+        NCC top_lef_GOT[ 8 ]={ 0 }; //:GOTTEN_VALUES
+        NCC top_rig_GOT[ 8 ]={ 0 }; //:GOTTEN_VALUES
+        NCC bot_lef_GOT[ 8 ]={ 0 }; //:GOTTEN_VALUES
+        NCC bot_rig_GOT[ 8 ]={ 0 }; //:GOTTEN_VALUES
+
+        //:------------------------------------------:but_tex://
+        //:but_typ:------------------------------------------://
+
+            //:CAPITALS ==[EXP]==[EXPECTED]:
+            U32 top_lef_TYP  =( 1 );
+            U32 top_rig_TYP  =( 2 );
+            U32 bot_lef_TYP  =( 3 );
+            U32 bot_rig_TYP  =( 4 );
+
+            //:LOWERCASE==[EXP]==[EXPECTED]:
+            U32 top_lef_typ  =( 0 );
+            U32 top_rig_typ  =( 0 );
+            U32 bot_lef_typ  =( 0 );
+            U32 bot_rig_typ  =( 0 );
+
+        //:------------------------------------------:but_typ://
+        //:but_val:------------------------------------------://
+
+            //:CAPITALS ==[EXP]==[EXPECTED]:
+            U32 top_lef_VAL  =( 23         );
+            U32 top_rig_VAL  =( 0x0000FFFF );
+            U32 bot_lef_VAL  =( 0x12345678 );
+            U32 bot_rig_VAL  =( 0xFF00FF00 );
+
+            //:LOWERCASE==[EXP]==[EXPECTED]:
+            U32 top_lef_val  =(  0 );
+            U32 top_rig_val  =(  0 );
+            U32 bot_lef_val  =(  0 );
+            U32 bot_rig_val  =(  0 );
+
+        //:------------------------------------------:but_val//
+        //:put_data_in_extreme_4_corners:--------------------://
+        /** @VID_IID[ 0251 ]TIME[ 03:15:50 ]DIAGRAM_EXPLAIN  **/
+
+            //:TOP_LEF:
+            AAC2020_UILISTS_Put_ButMai(
+                0, 0, 0,top_lef_EXP,top_lef_TYP,top_lef_VAL );;
+        
+            //:TOP_RIG:
+            AAC2020_UILISTS_Put_ButMai(
+                3, 7, 0,top_rig_EXP,top_rig_TYP,top_rig_VAL );;
+
+            //:BOT_LEF:
+            AAC2020_UILISTS_Put_ButMai(
+               12, 0,15,bot_lef_EXP,bot_lef_TYP,bot_lef_VAL );;
+
+            //:BOT_RIG:
+            AAC2020_UILISTS_Put_ButMai(
+               15, 7,15,bot_rig_EXP,bot_rig_TYP,bot_rig_VAL );;
+
+        //:--------------------:put_data_in_extreme_4_corners://
+        //:get_data_in_extreme_4_corners:--------------------://
+
+            //:TOP_LEF:
+            AAC2020_UILISTS_Get_ButMai(
+            /**/ 0, 0, 0,      &( top_lef_GOT[0])
+                        ,      &( top_lef_typ   )
+                        ,      &( top_lef_val   ) );;
+            
+            //:TOP_RIG:
+            AAC2020_UILISTS_Get_ButMai(
+            /**/ 3, 7, 0,      &( top_rig_GOT[0]) 
+                        ,      &( top_rig_typ   )
+                        ,      &( top_rig_val   ) );;
+            
+            //:BOT_LEF:
+            AAC2020_UILISTS_Get_ButMai(
+            /**/12, 0,15,      &( bot_lef_GOT[0]) 
+                        ,      &( bot_lef_typ   )
+                        ,      &( bot_lef_val   ) );;
+            
+            //:BOT_RIG:
+            AAC2020_UILISTS_Get_ButMai(
+            /**/15, 7,15,      &( bot_rig_GOT[0]) 
+                        ,      &( bot_rig_typ   )
+                        ,      &( bot_rig_val   ) );;
+
+        //:--------------------:get_data_in_extreme_4_corners://
+        //:Check_GOT_against_PUT:----------------------------://
+
+            for( I32 i = 0 ; i <=(4-1) ; i++ ){
+                if( 0
+                ||  top_lef_EXP[i] != top_lef_GOT[i] 
+                ||  top_rig_EXP[i] != top_rig_GOT[i] 
+                ||  bot_lef_EXP[i] != bot_lef_GOT[i] 
+                ||  bot_rig_EXP[i] != bot_rig_GOT[i] 
+                ){
+
+                    if( 1
+                        && ( 0 == top_lef_GOT[ 8 - 1 ] )
+                        && ( 0 == top_rig_GOT[ 8 - 1 ] )
+                        && ( 0 == bot_lef_GOT[ 8 - 1 ] )
+                        && ( 0 == bot_rig_GOT[ 8 - 1 ] )
+                    ){
+                        /** DO NOTHING **/
+                    }else{
+                        printf("[INJECTING_NULL_TERMS]");        
+                        top_lef_GOT[ 8 - 1 ]=( 0 );
+                        top_rig_GOT[ 8 - 1 ]=( 0 );
+                        bot_lef_GOT[ 8 - 1 ]=( 0 );
+                        bot_rig_GOT[ 8 - 1 ]=( 0 );
+                    };;
+
+                    #define P_C aac2020_uilists_PrintC8
+
+                         printf( "[top_lef_EXP]:%s\n",
+                                   top_lef_EXP );;
+                            P_C( "[top_lef_GOT]",
+                                   top_lef_GOT );;
+
+                         printf( "[top_rig_EXP]:%s\n",
+                                   top_rig_EXP );;
+                            P_C( "[top_rig_GOT]",
+                                   top_rig_GOT );;
+
+                         printf( "[bot_lef_EXP]:%s\n",
+                                   bot_lef_EXP );;
+                            P_C( "[bot_lef_GOT]",
+                                   bot_lef_GOT );;
+
+                         printf( "[bot_rig_EXP]:%s\n",
+                                   bot_rig_EXP );;
+                            P_C( "[bot_rig_GOT]",
+                                   bot_rig_GOT );;
+
+                    #undef  P_C
+
+                    ERR("[FAILED:GET_PUT:ButMai]");
+                };;
+            };;
+            if( 0
+                || top_lef_VAL != top_lef_val
+                || top_rig_VAL != top_rig_val
+                || bot_lef_VAL != bot_lef_val
+                || bot_rig_VAL != bot_rig_val
+            ){
+                ERR("[YOUVEGOTSERIOUSPROBLEMSMYMAN]");
+            };;
+
+        //:----------------------------:Check_GOT_against_PUT://
+    }
+
+#undef  I32  //:----------------------------------------: 01 ://
+#undef  U32  //:----------------------------------------: 02 ://
+#undef  U08  //:----------------------------------------: 03 ://
+#undef  ERR  //:----------------------------------------: 04 ://
+#undef  LOG  //:----------------------------------------: 05 ://
+#undef  CHR  //:----------------------------------------: 06 ://
+#undef  NCC  //:----------------------------------------: 07 ://
 //:================================:UILISTS_UNIT_TEST_SECTION://

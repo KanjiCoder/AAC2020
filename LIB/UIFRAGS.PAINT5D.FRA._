@@ -154,12 +154,19 @@
                
                 I32 dex_edi=( 1 /** PAINT5D **/ );
 
+                IV2 but_pix; //:<--LocalPixelWithinButton
+                    but_pix.x=((fic_glo.x-p5d_rec.x_0)
+                                -( b_x*8 ));;
+                    but_pix.y=((fic_glo.y-p5d_rec.y_0)
+                               -( b_y*8 ));;
+
                 ur1_pix=(
                     AAC2020_UISHARE_Get_but_pix(
                     /**/dex_edi //:<-- What Editor?
                     ,   lis_dex //:<-- What UI? 
                     ,       b_y //:<-- What Button?
                     ,       b_x //:<-- What Character Cell?
+                    ,   but_pix //:<-- Button Pixel LOCAL
                     ));;
 
             //:-----------------------:GET_CURRENT_BUTTON://

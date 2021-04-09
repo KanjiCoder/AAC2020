@@ -19,7 +19,7 @@
 
             assert( ((U32*)0) !=  ext_arr );
             assert( ((I32 )0)  <  ext_len ); //:MIN_VAL[ 1 ]
-            assert( ((I32 )4)  >= ext_len ); //:MAX_VAL[ 3 ]
+            assert( ((I32 )4)  >= ext_len ); //:MAX_VAL[ 4 ]
 
         //:-------------------------------:Error_Check_Inputs://
         //:CORE_LOGIC:=======================================://
@@ -171,15 +171,15 @@
                 /** SEE[ UILISTS.D._ ]FOR_DIAGRAM**/
 
                 U32 p_1=( 0x00 
-                        |   (( but_tex[0] << 24 ) & 0xFF ) 
-                        |   (( but_tex[1] << 16 ) & 0xFF ) 
-                        |   (( but_tex[2] <<  8 ) & 0xFF ) 
-                        |   (( but_tex[3] <<  0 ) & 0xFF ) );;
-                U32 p_2=( 0x00
-                        |   (( but_tex[4] << 24 ) & 0xFF ) 
-                        |   (( but_tex[5] << 16 ) & 0xFF ) 
-                        |   (( but_tex[6] <<  8 ) & 0xFF ) 
-                        |   (( but_tex[7] <<  0 ) & 0xFF ) );;
+                        |   (  (but_tex[0] & 0xFF) << 24 ) 
+                        |   (  (but_tex[1] & 0xFF) << 16 ) 
+                        |   (  (but_tex[2] & 0xFF) <<  8 ) 
+                        |   (  (but_tex[3] & 0xFF) <<  0 ) );;
+                U32 p_2=( 0x00           
+                        |   (  (but_tex[4] & 0xFF) << 24 ) 
+                        |   (  (but_tex[5] & 0xFF) << 16 ) 
+                        |   (  (but_tex[6] & 0xFF) <<  8 ) 
+                        |   (  (but_tex[7] & 0xFF) <<  0 ) );;
                 U32 p_3=( but_typ );
                 U32 p_4=( but_val );
 
