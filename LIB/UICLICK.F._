@@ -72,7 +72,7 @@
         };;
         AAC2020_MOUTEMP_CopyIfTrue_LoadIfFalse(
             mou //:<-- COPY_INTO_THIS_OBJECT
-        ,    0  //:<-- FALSE==>LOAD
+        ,    1  //:<-- TRUE(1)COPY_FILE_SCOPE_VARS_INTO[ mou ]
         );;
     }
 
@@ -114,10 +114,200 @@
 #undef  U32  //:----------------------------------------: 02 ://
 #undef  ERR  //:----------------------------------------: 03 ://
 //:=================:LOAD_GLOBAL_MOUSE_STATE_IF_NONE_PROVIDED://
+//:UI_BOUNDS_DETECTION_HELPERS:==============================://
+#define TAU_015 (      15 )                             //:01://
+#define TAU_TAU ( TAU_015 )                             //:02://
+#define SUB_P5D (       1 )                             //:03://
+#define P5D_UR0 ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_UR0 ) //:04://
+#define P5D_VU0 ( AAC2020_TAUDEPO_SUB_PAINT5D_VAR_VU0 ) //:05://
+#define     REC  struct AAC2020_POLYOGL_REC             //:06://
+#define     I32  int32_t /** GCC: <stdint.h> **/        //:07://
+#define     U32 uint32_t /** GCC: <stdint.h> **/        //:08://
+#define     ERR aac2020_uiclick_Halt                    //:09://
+
+    void
+    aac2020_uiclick_Get_rec_uin_REC(
+        I32         dex_edi
+    ,   I32         lis_dex
+    ,   REC  *BYREF_rec_uin
+    )
+    {
+        //:input_checking:-----------------------------------://
+            if( dex_edi >= 1 && dex_edi <= 9  ){
+                /** Do nothing. Valid Editor Index **/
+            }else{
+                /** Acheivement Unlocked: 10+ editors. **/
+                //:RMT9_EDIT:ReallyMoreThan9_EDITors?
+                ERR("[RMT9_EDIT?(#REDC#)]");
+            };;
+            assert( lis_dex >= 0 && lis_dex <=(8-1) );
+        //:-----------------------------------:input_checking://
+
+        /** @VID_IID[ 0252 ]TIME[ 04:34:42 ]**************** **/
+        /** Get first user interface rectangle variable      **/
+        /** [ handle / 1D taudepo pixel cluster location]    **/
+        /** to help us procedurally calculate the user       **/
+        /** interface rectangle (rec_uin) to fetch.          **/
+        /** ************************************************ **/
+        I32 edi_ur0 =( 0 - 222 );
+
+        if( 1 == dex_edi ){
+            edi_ur0 = ( P5D_UR0 );
+        }else
+        if( 2 == dex_edi ){
+            ERR("[TODO:2]");
+        }else
+        { ERR("[TODO:NEW_CHOICE]"); };
+
+        REC STACK_COPY_rec_uin ={ 0 };
+        STACK_COPY_rec_uin=(
+            aac2020_taufrag_Get_REC(
+                TAU_TAU //:<------------ dex_tau
+            ,   dex_edi //:<------------ dex_sub
+            ,   edi_ur0 + lis_dex //:<-- dex_var
+            ));;
+
+        //:MANUALLY_COPY_OVER_DATA:--------------------------://
+
+            (*BYREF_rec_uin).x_0 =( STACK_COPY_rec_uin.x_0 );
+            (*BYREF_rec_uin).x_1 =( STACK_COPY_rec_uin.x_1 );
+            (*BYREF_rec_uin).y_0 =( STACK_COPY_rec_uin.y_0 );
+            (*BYREF_rec_uin).y_1 =( STACK_COPY_rec_uin.y_1 );
+
+        //:--------------------------:MANUALLY_COPY_OVER_DATA://
+    }
+    I32
+    aac2020_uiclick_Get_rec_uin_VIS(
+        I32         dex_edi
+    ,   I32         lis_dex
+    //- I32  *BYREF_rec_vis -//
+    )
+    {
+        //:input_checking:-----------------------------------://
+            if( dex_edi >= 1 && dex_edi <= 9  ){
+                /** Do nothing. Valid Editor Index **/
+            }else{
+                /** Acheivement Unlocked: 10+ editors. **/
+                //:RMT9_EDIT:ReallyMoreThan9_EDITors?
+                ERR("[RMT9_EDIT?(#VIS#)]");
+            };;
+            assert( lis_dex >= 0 && lis_dex <=(8-1) );
+        //:-----------------------------------:input_checking://
+        //:CORE_FUNCTION_LOGIC:------------------------------://
+
+            I32 edi_vu0 =( 0 - 666 );
+            if( 1 == dex_edi /** EDITOR_NAME: PAINT5D **/ ){
+                edi_vu0 = ( P5D_VU0 );
+            }else
+            if( 2 == dex_edi /** EDITOR_NAME: TODO_02 **/ ){
+                ERR("[TODO:2021_04_10:233PM]");
+            }else
+            { ERR("[TODO:NEW_CHOICE:2021_04_10:233PM]"); };
+            
+            U32 user_interface_is_visible=( 
+                aac2020_taufrag_Get_U32(
+                    TAU_TAU           //:<--[ dex_tau ]
+                ,   dex_edi           //:<--[ dex_sub ]
+                ,   edi_vu0 + lis_dex //:<--[ dex_var ]
+                ));;
+
+        //:------------------------------:CORE_FUNCTION_LOGIC://
+        //:Return_Via_Output_Param:--------------------------://
+
+            //- (*BYREF_rec_vis)=(user_interface_is_visible);-//
+
+        //:--------------------------:Return_Via_Output_Param://
+        //:Return_Like_Normal_Human_Being:-------------------://
+
+            return( (I32)user_interface_is_visible );
+
+        //:-------------------:Return_Like_Normal_Human_Being://
+    }
+            
+
+    I32
+    aac2020_uiclick_InBounds(
+        I32 dex_edi //:<--User Interfaces for WHICH editor?
+    ,   I32 lis_dex //:<--User Interface List Index (HandleToList)
+    ,   I32 mou_i_x //:<--[ Mouse_Integer_X / mou.m_x ]
+    ,   I32 mou_i_y //:<--[ Mouse_Integer_Y / mou.m_x ]
+    )
+    {
+        //:#_GET_USER_INTERFACE_RECTANGLE_BOUNDS_#://
+
+        REC rec_uin={0};
+
+        aac2020_uiclick_Get_rec_uin_REC(
+            dex_edi
+        ,   lis_dex
+        , &(rec_uin)
+        );;
+            
+        I32 is_the_mouse_inside_user_interface=(0-666);
+
+        if( 1
+        &&  mou_i_x >= rec_uin.x_0
+        &&  mou_i_x <= rec_uin.x_1
+        &&  mou_i_y >= rec_uin.y_0
+        &&  mou_i_y <= rec_uin.y_1
+        ){
+            is_the_mouse_inside_user_interface=( 1 );
+        }else{
+            is_the_mouse_inside_user_interface=( 0 );
+        };;
+
+        return( is_the_mouse_inside_user_interface );
+    }
+
+    I32
+    aac2020_uiclick_InBounds_AND_Visible(
+        I32 dex_edi //:<--User Interfaces for WHICH editor?
+    ,   I32 lis_dex //:<--User Interface List Index (HandleToList)
+    ,   I32 mou_i_x //:<--[ Mouse_Integer_X / mou.m_x ]
+    ,   I32 mou_i_y //:<--[ Mouse_Integer_Y / mou.m_x ]
+    )
+    {
+        I32 in_bounds=(
+            aac2020_uiclick_InBounds(
+                dex_edi,lis_dex,mou_i_x,mou_i_y ));;
+
+        I32 visible=(
+            aac2020_uiclick_Get_rec_uin_VIS(
+                dex_edi,lis_dex ));;
+
+        I32 in_bounds_AND_visible=(
+            in_bounds  && visible  );;
+
+        return( in_bounds_AND_visible );
+
+    }
+
+#undef  TAU_015  //:--------------------------------------:01://
+#undef  TAU_TAU  //:--------------------------------------:02://
+#undef  SUB_P5D  //:--------------------------------------:03://
+#undef  P5D_UR0  //:--------------------------------------:04://
+#undef  P5D_VU0  //:--------------------------------------:05://
+#undef      REC  //:--------------------------------------:06://
+#undef      I32  //:--------------------------------------:07://
+#undef      U32  //:--------------------------------------:08://
+#undef      ERR  //:--------------------------------------:09://
+//:UI_BOUNDS_DETECTION_HELPERS:==============================://
 //:UICLICK_FOR_SPECIFIC_EDITORS:=============================://
 #define MOU      struct AAC2020_MOUTEMP               //: 01 ://
 #define U32 uint32_t /** GCC: <stdint.h> **/          //: 02 ://
-#define GET aac2020_uiclick_GetMouseState             //: 03 ://
+#define I32  int32_t /** GCC: <stdint.h> **/          //: 03 ://
+#define GET aac2020_uiclick_GetMouseState             //: 04 ://
+#define LOG aac2020_uiclick_Info_any                  //: 05 ://
+
+    void
+    aac2020_uiclick_PAINT5D_uin_001(
+        MOU* mou
+    )
+    {
+        if( mou -> pix_m_x ){ /* NOOP */ };
+        printf("[sjflsjfsjf]\n");
+        //:<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< LOGIC!
+    }
 
     void
     aac2020_uiclick_PAINT5D( 
@@ -126,16 +316,43 @@
     ){
         MOU* mou=( GET( inn_mou_ptr, inn_mou_has ));;
 
+        I32 pix_m_x=( mou -> pix_m_x ); /** CLICK_X **/
+        I32 pix_m_y=( mou -> pix_m_y ); /** CLICK_Y **/
 
-        if( mou ){ /** NOOP **/ };
+        I32 in_bounds_of_ui_list_001 /** uin_001 **/ =(
+            aac2020_uiclick_InBounds_AND_Visible(
+                1  //:PAINT5D SYSTEM
+            ,   1  //:User Interface List #1
+            ,   pix_m_x //:AKA[ mou_i_x | mou -> clk_c_x ]
+            ,   pix_m_y //:AKA[ mou_i_y | mou -> clk_c_y ]
+            ));;
 
-        AAC2020_TODOMAN_Vital("[DO_STUFF_WITH_MOUS_HERE]");
-   
+        if( in_bounds_of_ui_list_001 > 0 /** uin_001 **/ ){
+
+            LOG("[CLICKYFUCKINCLICKACLACK]",0);
+            aac2020_uiclick_PAINT5D_uin_001( mou );
+                
+        }else{
+ 
+            /// #define L_I void*)(intmax_t
+
+            LOG("[NO_CLACKS_GIVEN]",0);
+
+                       LOG("[OOB:pix_m_x]%d",
+                (void*)(intmax_t)pix_m_y);
+
+                       LOG("[OOB:pix_m_x]%d",
+                (void*)(intmax_t)pix_m_y);
+
+            /// #undef  L_I 
+        };;
     }
 
 #undef MOU  //:-----------------------------------------: 01 ://
 #undef U32  //:-----------------------------------------: 02 ://
-#undef GET  //:-----------------------------------------: 03 ://
+#undef I32  //:-----------------------------------------: 03 ://
+#undef GET  //:-----------------------------------------: 04 ://
+#undef LOG  //:-----------------------------------------: 05 ://
 //:=============================:UICLICK_FOR_SPECIFIC_EDITORS://
 //:UICLICK_LOOP_TICK:========================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/          //: 01 ://

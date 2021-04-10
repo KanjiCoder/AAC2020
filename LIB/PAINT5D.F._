@@ -2538,12 +2538,14 @@
 #define U08  uint8_t /** GCC: <stdint.h> **/          //: 01 ://
 #define U32 uint32_t /** GCC: <stdint.h> **/          //: 02 ://
 #define I32  int32_t /** GCC: <stdint.h> **/          //: 03 ://
-#define MOU struct AAC2020_MOUTEMP                    //: 04 ://
-#define REC struct AAC2020_POLYOGL_REC                //: 05 ://
-#define IV2 struct AAC2020_POLYOGL_IV2                //: 06 ://
-#define ASS assert                                    //: 07 ://
-#define LOG aac2020_paint5d_Info_any                  //: 08 :// 
-#define ERR aac2020_paint5d_Halt                      //: 09 ://        
+#define I_P intmax_t /** GCC: <stdint.h> **/          //: 04 ://
+#define L_I  void*)(I_P /**Logging_Cast : INTEGER**/  //: 05 ://
+#define MOU struct AAC2020_MOUTEMP                    //: 06 ://
+#define REC struct AAC2020_POLYOGL_REC                //: 07 ://
+#define IV2 struct AAC2020_POLYOGL_IV2                //: 08 ://
+#define ASS assert                                    //: 09 ://
+#define LOG aac2020_paint5d_Info_any                  //: 10 :// 
+#define ERR aac2020_paint5d_Halt                      //: 11 ://        
 
     //:OMC: On_Mouse_Click / OnMouseClick
 
@@ -2577,8 +2579,8 @@
         }else{
             is_click_within_canvas_user_view_bounds =( 0 );
 
-            printf("[mou->clk_c_x]:%d\n",mou->clk_c_x);
-            printf("[mou->clk_c_y]:%d\n",mou->clk_c_y);
+            LOG("[mou->clk_c_x]:%d\n",(void*)(I_P)mou->clk_c_x);
+            LOG("[mou->clk_c_y]:%d\n",(void*)(I_P)mou->clk_c_y);
             LOG("[CLICK_NOT_IN_CANVAS_USER_VIEW_BOUNDS]",0);
         };;
          
@@ -2594,13 +2596,6 @@
         MOU* mou
     )
     {
-        //:call_centralized_ui_click_handler:----------------://
-
-            AAC2020_UICLICK_LoopTick(
-                AAC2020_CALFROM_paint5d
-            );;
-
-        //:----------------:call_centralized_ui_click_handler://
         //:toggle_tile_at_mouse_position:--------------------://
          
         LOG("[PAINT5D:IN_BOUND_MOUSE_CLICK]" , ((void*)0) );
@@ -2722,8 +2717,8 @@
 
                 //:Pretty sure this is wrong...
                 //:Because it is not local to tile quadrant.
-                printf("[p5d_b_x]:%d\n", p5d_b_x);
-                printf("[p5d_b_y]:%d\n", p5d_b_y);
+                LOG("[p5d_b_x]:%d\n", (L_I)p5d_b_x);
+                LOG("[p5d_b_y]:%d\n", (L_I)p5d_b_y);
 
             //:-----------:CanvasUserView_CTO_BrushPixelCoord://
             //:Store_Brush_Coord_In_Texture:-----------------://
@@ -2824,7 +2819,21 @@
         //:::::::::::::::::::::::::OMC:OnMouseClick::::::::::://
         if( aac2020_paint5d_MouInn_OMC_InBoundCheck(   mou )>0){
             aac2020_paint5d_MouInn_OMC_InBoundActions( mou );
+            //:@VID_IID[ 0252 ]TIME[ 03:50:00 ]              ://
+            //:IN_BOUNDS_IS_ONLY_THE_MAIN_VIEWPORT_RECTANGLE ://
+            printf("[YOOOOO!]\n");
+            printf("[mou->pix_m_x]:%d\n",mou->pix_m_x);
         };;
+
+        //:BOUNDS_OF_MAIN_VIEWPORT_DOES_NOT_INCLUDE_UI:------://
+        //:call_centralized_ui_click_handler:----------------://
+
+            AAC2020_UICLICK_LoopTick(
+                AAC2020_CALFROM_paint5d
+            );;
+
+        //:----------------:call_centralized_ui_click_handler://
+        //:------:BOUNDS_OF_MAIN_VIEWPORT_DOES_NOT_INCLUDE_UI://
 
         return( 0x00 );
     }
@@ -3032,12 +3041,14 @@
 #undef  U08  //:----------------------------------------: 01 ://
 #undef  U32  //:----------------------------------------: 02 ://
 #undef  I32  //:----------------------------------------: 03 ://
-#undef  MOU  //:----------------------------------------: 04 ://
-#undef  REC  //:----------------------------------------: 05 ://
-#undef  IV2  //:----------------------------------------: 06 ://
-#undef  ASS  //:----------------------------------------: 07 ://
-#undef  LOG  //:----------------------------------------: 08 ://
-#undef  ERR  //:----------------------------------------: 09 ://
+#undef  I_P  //:----------------------------------------: 04 ://
+#undef  L_I  //:----------------------------------------: 05 ://
+#undef  MOU  //:----------------------------------------: 06 ://
+#undef  REC  //:----------------------------------------: 07 ://
+#undef  IV2  //:----------------------------------------: 08 ://
+#undef  ASS  //:----------------------------------------: 09 ://
+#undef  LOG  //:----------------------------------------: 10 ://
+#undef  ERR  //:----------------------------------------: 11 ://
 //:=============================:MOUSE_INPUT_HANDLER:(MouInn)://
 //:KEYBOARD_HANDLER:(KeyInn):================================://
 #define             I32  int32_t /**GCC: <stdint.h>**///: 01 ://
