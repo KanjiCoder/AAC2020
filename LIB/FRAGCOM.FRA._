@@ -513,13 +513,16 @@
             //:[GPU_SIDE]################################://
             /** @VID_IID[ 0250 ]TIME[ 01:57:42 ][TOP_LEF]**/
             /** Mouse Origin Adjusted To Top_Left ****** **/
+            /** @VID_IID[ 0252 ]TIME[ 02:54:23 ][UN_FLIP]**/
 
                 mou_glo.x = MAK_I32( iMouse.x );
-                mou_glo.y = MAK_I32( 
-                   ( iResolution.y - 1.0 )  //:<<--[TOP_LEF]
-                    -                       //:<<--[TOP_LEF]
-                   (      iMouse.y       )  //:<<--[TOP_LEF]
-                );;
+                mou_glo.y = MAK_I32( iMouse.y );
+
+            //- mou_glo.y = MAK_I32(       NO_FUCKIN_FLIP-//
+            //-    ( iResolution.y - 1.0 ) NO_FUCKIN_FLIP-//
+            //-     -                      NO_FUCKIN_FLIP-//
+            //-    (      iMouse.y       ) NO_FUCKIN_FLIP-//
+            //- );;                        NO_FUCKIN_FLIP-//
 
             #else
             //:[CPU_SIDE]################################://

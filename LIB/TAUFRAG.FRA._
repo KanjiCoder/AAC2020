@@ -581,6 +581,29 @@
             }   
 
         //:==========:__SOME__rects_have_visibility_flags://
+        //:SOME_TEXEL_FETCH:=============================://
+        //:SOME_TEXEL_TECH_RETURN_U32:===================://
+        U32
+        AAC2020_TAUFRAG_TexelFetch_U32(
+            I32 i_x_glo 
+        ,   I32 i_y_glo
+        ){
+            IV2 ixy_glo;
+                ixy_glo.x=( i_x_glo );
+                ixy_glo.y=( i_y_glo );
+
+            U32 pix_out=(                                        
+                AAC2020_FRAGCOM_TexelFetch_U32(            
+                    TAU     //: SAM //:<-[C99]&[GLSL]:// 
+                ,   ixy_glo //: IV2                  ://            
+                ,   (0)     //: I32 LOD_ALWAYS_ZERO  ://           
+                ));;
+
+            return( pix_out );
+        }
+        //:===================:SOME_TEXEL_TECH_RETURN_U32://
+        //:=============================:SOME_TEXEL_FETCH://
+
     //++++++++++++++++++++++++++++++++++++++++++++++++++++//
     //[========================:TAUFRAG_FUNCTIONS_GO_HERE]//
     //[TAUFRAG_DEFINES___GO_HERE:========================]//
