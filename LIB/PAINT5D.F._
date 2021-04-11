@@ -1988,7 +1988,7 @@
         U32     u_2; /** Unused # 2 **/
         U32     u_3; /** Unused # 3 **/
 
-        //:tile_value:READ:----------------------------------://
+        //:tile_exponent:READ:-------------------------------://
 
             AAC2020_TAUDEPO_Get( 
                 AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
@@ -1997,8 +1997,8 @@
             ,  &(til_exp),&(u_1),&(u_2),&(u_3)
             );;
 
-        //:----------------------------------:tile_value:READ://
-        //:tile_value:TRANSFORM:-----------------------------://
+        //:-------------------------------:tile_exponent:READ://
+        //:tile_exponent:TRANSFORM:--------------------------://
 
             //:##############################################://
             #if( AAC2020_PAINT5D_MISC_INLINED_TESTS >= 1 ) 
@@ -2007,15 +2007,18 @@
 
             #endif //:#######################################://
             //:##############################################://
+            //:CAP_TO_MAX_VALUE:=============================://
+            /** @VID_IID[ 0253 ]TIME[ 05:45:32 ]BUG_FIX **** **/
+            
+                assert( 7 == AAC2020_PAINT5D_MAX_til_exp );
 
-            assert( 15 == AAC2020_PAINT5D_MAX_aus_dex );
+                til_exp =CAP( //:<-- aac2020_paint5d_i32_Cap_u32
+                    (I32)til_exp + del_t_e 
+                ,   (U16) 0 //:<---[ @HARD_CODED@ ]
+                ,   (U16) 7 //:<---[ @HARD_CODED@ ]
+                );;
 
-            til_exp =CAP( 
-                (I32)til_exp + del_t_e 
-            ,   (U16) 0 //:<---[ @HARD_CODED@ ]
-            ,   (U16)15 //:<---[ @HARD_CODED@ ]
-            );;
-
+            //:=============================:CAP_TO_MAX_VALUE://
             //:##############################################://
             #if( AAC2020_PAINT5D_MISC_INLINED_TESTS >= 1 ) 
 
@@ -2032,8 +2035,8 @@
             #endif //:#######################################://
             //:##############################################://
 
-        //:-----------------------------:tile_value:TRANSFORM://
-        //:tile_value:WRITE:---------------------------------://
+        //:--------------------------:tile_exponent:TRANSFORM://
+        //:tile_exponent:WRITE:------------------------------://
 
             AAC2020_TAUDEPO_Put( 
                 AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
@@ -2042,7 +2045,7 @@
             ,   (til_exp), (u_1), (u_2), (u_3)
             );;
 
-        //:---------------------------------:tile_value:WRITE://
+        //:------------------------------:tile_exponent:WRITE://
 
         return;
     }
@@ -2059,7 +2062,7 @@
         U32     u_2; /** Unused # 2 **/
         U32     u_3; /** Unused # 3 **/
 
-        //:tile_value:READ:----------------------------------://
+        //:tile_layer:READ:----------------------------------://
 
             AAC2020_TAUDEPO_Get( 
                 AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
@@ -2068,8 +2071,8 @@
             ,  &(til_lay),&(u_1),&(u_2),&(u_3)
             );;
 
-        //:----------------------------------:tile_value:READ://
-        //:tile_value:TRANSFORM:-----------------------------://
+        //:----------------------------------:tile_layer:READ://
+        //:tile_layer:TRANSFORM:-----------------------------://
  
             assert( 2 == AAC2020_PAINT5D_MAX_til_lay );
 
@@ -2079,8 +2082,8 @@
             ,   (U16) 2 //:<---[ @HARD_CODED@ ]
             );;
 
-        //:-----------------------------:tile_value:TRANSFORM://
-        //:tile_value:WRITE:---------------------------------://
+        //:-----------------------------:tile_layer:TRANSFORM://
+        //:tile_layer:WRITE:---------------------------------://
 
             AAC2020_TAUDEPO_Put( 
                 AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
@@ -2089,7 +2092,7 @@
             ,   (til_lay), (u_1), (u_2), (u_3)
             );;
 
-        //:---------------------------------:tile_value:WRITE://
+        //:---------------------------------:tile_layer:WRITE://
 
         return;
     }
@@ -3136,6 +3139,7 @@
 #define U32 uint32_t /** GCC: <stdint.h> **/          //: 01 ://
 #define I32  int32_t /** GCC: <stdint.h> **/          //: 02 ://
 #define ERR aac2020_paint5d_Halt                      //: 03 ://
+#define LOG aac2020_paint5d_Info_any                  //: 04 ://
 
     void
     AAC2020_PAINT5D_PUT_rec_inc_ALL(
@@ -3155,6 +3159,8 @@
     {
         //:bound_check_inputs:-------------------------------://
         #define U 0x7FFFFFFF /**Upper Bound For Signed 32bit **/
+
+            I32 should_crash=( 0 );
 
             //:bounds_checks_grouped_by_rectangle_name:------://
             /** ******************************************** ***
@@ -3183,6 +3189,7 @@
                     printf("[ur1:MIN]:%d\n" , (  0  ) );
                     printf("[ur1:MAX]:%d\n" , (  U  ) );
 
+                    should_crash=( 1 );
                 };;
 
             //:------:bounds_checks_grouped_by_rectangle_name://
@@ -3224,6 +3231,83 @@
                 if( vp1_y_1 > vp1_max ){ ERR("[vp1_y_1:max]");};
 
             //:----------------:Editor_Specific_Bounds_Checks://
+            //:Check_For_UI_Overlap_With_VP1:----------------://
+                
+                if( 1
+                &&   ( ur1_x_0 == vp0_x_0 ) //:<--[100%_OVERLAP]
+                &&   ( ur1_x_1 == vp0_x_1 ) //:<--[100%_OVERLAP]
+                &&   ( ur1_y_0 == vp0_y_0 ) //:<--[100%_OVERLAP]
+                &&   ( ur1_y_1 == vp0_y_1 ) //:<--[100%_OVERLAP]
+                ){
+                    /** ************************************ **/
+                    /** 100% overlap is allowed      ******* **/
+                    /** Because we do this hack when ******* **/
+                    /** user interface (ur1_***) is  ******* **/
+                    /** hidden. ur1's rectangle is   ******* **/
+                    /** hidden when it CANNOT fit on ******* **/
+                    /** screen without leaking over  ******* **/
+                    /** edge of client area.         ******* **/
+                    /** @VID_IID[ 0254 ]TIME[ 00:14:23 ] *** **/
+                    /** ************************************ **/
+            
+                    //[ DO NOTHING ]//
+
+                }else{
+
+                    //:ONLY_CHECK_FOR_X_AXIS_OVERLAP:--------://
+                    /**@VID_IID[0254]TIME[00:24:32]********* **/
+                    if( 1
+                    &&  ur1_x_0 >= vp0_x_0 
+                    &&  ur1_x_0 <= vp0_x_1
+                    ){
+                        LOG("[UR1_LEF_EDGE_INSIDE:VP0]",0);
+                        should_crash=( 1 );
+                    };;
+                    if( 1
+                    &&  ur1_x_1 >= vp0_x_0 
+                    &&  ur1_x_1 <= vp0_x_1
+                    ){
+                        LOG("[UR1_RIG_EDGE_INSIDE:VP0]",0);
+                        should_crash=( 1 );
+                    };;
+                    //:--------:ONLY_CHECK_FOR_X_AXIS_OVERLAP://
+
+                    if( should_crash ){
+
+                        printf("\n\n");
+                        printf( "[ur1_x_0]%d\n",ur1_x_0 );
+                        printf( "[ur1_x_1]%d\n",ur1_x_1 );
+                        printf( "[ur1_y_0]%d\n",ur1_y_0 );
+                        printf( "[ur1_y_1]%d\n",ur1_y_1 );
+
+                        printf("\n\n");
+                        printf( "[vp0_x_0]%d\n",vp0_x_0 );
+                        printf( "[vp0_x_1]%d\n",vp0_x_1 );
+                        printf( "[vp0_y_0]%d\n",vp0_y_0 );
+                        printf( "[vp0_y_1]%d\n",vp0_y_1 );
+
+                        printf("\n\n");
+                        ERR("[UR1_OVERLAPPING_VP0]");
+
+                    };;
+    
+                };;
+
+            //:----------------:Check_For_UI_Overlap_With_VP1://
+            //:Should_Crash_Check:---------------------------://
+            if( should_crash > 0 ){
+
+                /** **************************************** **/
+                /** A different error call should have       **/
+                /** been called by now. But for some reason  **/
+                /** did not. We are here to make sure things **/
+                /** crash. @VID_IID[ 0254 ]TIME[ 00:08:23 ]  **/
+                /** **************************************** **/
+
+                ERR("[SHOULD_HAVE_CRASHED_EARLIER]");
+
+            };;
+            //:---------------------------:Should_Crash_Check://
 
         #undef  U
         //:-------------------------------:bound_check_inputs://
@@ -3267,6 +3351,7 @@
 #undef  U32                                           //: 01 ://
 #undef  I32                                           //: 02 ://
 #undef  ERR                                           //: 03 ://
+#undef  LOG                                           //: 04 ://
 //:=================================:VIEWPORT_HELPER_FUNCTION://
 //:IOU:INIT_OR_UPDATE:=======================================://
 #define I32  int32_t /** GCC: <stdint.h> **/
@@ -3349,13 +3434,15 @@
         I32 vp1_y_1 =( 256 - 1 );
 
         /** @VID_IID[ 0183 ]TIME[ 00:40:04 ]CALC_UIRECTS.P5D **/
+        /** @VID_IID[ 0254 ]TIME[ 00:30:16 ]FIXED_OFFBY1_ERR **/
+        /** @VID_IID[ 0254 ]TIME[ 00:36:00 ]FIXED_OB1ERR_002 **/
         /** Make[ P5D_UR1 ]User_Interface:                   **/
         /**               1: Same   __HEIGHT__   As Viewport **/
         /**               2: SnapTo __LEFT_SIDE_ Of Viewport **/
         #define LEF_SID ( vp0_x_0 )/**LEFT_SIDE**/      ////////
         #define UR1_WID ( AAC2020_UIRECTS.PAINT5D.P5D_UR1_WID )  
-        I32 ur1_x_0 =( LEF_SID -(UR1_WID)+ 1   ); //:P5D_UR1
-        I32 ur1_x_1 =( LEF_SID -(   0   )+ 1   ); //:P5D_UR1 
+        I32 ur1_x_0 =( LEF_SID -(UR1_WID)- 0   ); //:P5D_UR1
+        I32 ur1_x_1 =( LEF_SID -(   0   )- 1   ); //:P5D_UR1 
         I32 ur1_y_0 =( vp0_y_0 /**@SAM_HIG@**/ ); //:P5D_UR1 
         I32 ur1_y_1 =( vp0_y_1 /**@SAM_HIG@**/ ); //:P5D_UR1 
         #undef  LEF_SID  ///////////////////////////////////////
@@ -3898,6 +3985,45 @@
 #undef  U32  //:----------------------------------------: 01 ://
 #undef  I32  //:----------------------------------------: 02 ://
 //:================================================:LOOP_TICK://
+//:WRAPPERS_FOR:UICLICK_PAINT5D:=============================://
+/** ******************************************************** **/
+/** @VID_IID[ 0253 ]TIME[ 05:13:00 ]                         **/
+/** Wrappers so that we can forward declare THESE            **/
+/** functions that are used by[ UICLICK.F.PAINT5D ]          **/
+/** rather than the originals. So that that forward          **/
+/** declaring does not muck with our intentions of           **/
+/** creating struct function ordering within this file.      **/
+/** ******************************************************** **/
+#define I32 int32_t /** GCC: <stdint.h> **/
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    aac2020_paint5d_FOR_uiclick_FUN_DeltaMutate_TileValue(
+        I32 del_val //:<--[ delta_value ]
+    )
+    {
+        aac2020_paint5d_DeltaMutate_TileValue( del_val );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    aac2020_paint5d_FOR_uiclick_FUN_DeltaMutate_TileExponent(
+        I32 del_val //:<--[ delta_value ]
+    )
+    {
+        aac2020_paint5d_DeltaMutate_TileExponent( del_val );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    aac2020_paint5d_FOR_uiclick_FUN_DeltaMutate_TileLayer(
+        I32 del_val //:<--[ delta_value ]
+    )
+    {
+        aac2020_paint5d_DeltaMutate_TileLayer( del_val );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+#undef  I32
+//:=============================:WRAPPERS_FOR:UICLICK_PAINT5D://
 //:SECTION_UNIT_TEST:========================================://
 //:UNIT_TEST_SECTION:========================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/

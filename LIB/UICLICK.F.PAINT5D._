@@ -1,0 +1,193 @@
+//:MISC_INCLUDES:============================================://
+
+    #include "./UICLICK.F.PAINT5D.BOILER_PLATE._"
+
+//:============================================:MISC_INCLUDES://
+//:FORWARD_DECLARE_ALL_BUTTON_BOUND_FUNCTIONS:===============://
+
+    extern void aac2020_uiclick_paint5d_P5D_CBC( void );
+    extern void aac2020_uiclick_paint5d_P5D_CBS( void );
+    extern void aac2020_uiclick_paint5d_P5D_CBL( void );
+
+//:===============:FORWARD_DECLARE_ALL_BUTTON_BOUND_FUNCTIONS://
+//:FORWARD_DECLARE_PAINT5D_FUNCTIONS_NEEDED:=================://
+#define E_V extern void
+#define FUN(n) aac2020_paint5d_FOR_uiclick_FUN_DeltaMutate_##n
+#define I32 int32_t /** GCC: <stdint.h> **/
+
+    E_V FUN( TileValue    )( I32 del_val ); //:<--@_FWD_DEC_@://
+    E_V FUN( TileExponent )( I32 del_val ); //:<--@_FWD_DEC_@://
+    E_V FUN( TileLayer    )( I32 del_val ); //:<--@_FWD_DEC_@://
+
+#undef  E_V
+#undef  FUN
+#undef  I32
+//:=================:FORWARD_DECLARE_PAINT5D_FUNCTIONS_NEEDED://
+//:MAIN_CLICK_HANDLER_ROUTER_THINGY:=========================://
+#define CHR const char
+#define LOG aac2020_uiclick_paint5d_Info_any
+
+    void //:<-- Might be interesting to always return
+         //:    a string so we can have a 3DSMAX
+         //:   "echo all commands" type thing going on.
+    aac2020_uiclick_paint5d_CallFunctionUsing_but_tex(
+        CHR* but_tex
+    )
+    {
+
+        if( 0 == strcmp( but_tex , "P5D_CBC" ) ){
+            aac2020_uiclick_paint5d_P5D_CBC( );
+
+        }else
+        if( 0 == strcmp( but_tex , "P5D_CBS" ) ){
+            aac2020_uiclick_paint5d_P5D_CBS( );
+
+        }else
+        if( 0 == strcmp( but_tex , "P5D_CBL" ) ){
+            aac2020_uiclick_paint5d_P5D_CBL( );
+
+        }else
+        //:***************** NOTHING__FOUND *****************://
+        { 
+            LOG("[NO_FUNCTION_FOR_THIS_BUTTON_EXISTS]",0);
+        }
+        //:***************** NOTHING__FOUND *****************://
+    }
+
+
+#undef  CHR
+#undef  LOG
+//:=========================:MAIN_CLICK_HANDLER_ROUTER_THINGY://
+//:VALUE_CYCLE_HELPER_FUNCTION:==============================://
+#define ERR aac2020_uiclick_paint5d_Halt              //: 01 ://
+#define I32  int32_t /** GCC: <stdint.h> **/          //: 02 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 03 ://
+
+    void
+    aac2020_uiclick_paint5d_CycleToNextValue(
+        I32 p5d_var //:<--[ Paint5d(P5D)variable(VAR)HANDLE ]
+    )
+    {
+        //:error_check_enum_input:---------------------------://
+    
+            if( 0
+            ||((0+ p5d_var +0)==( AAC2020_TAUDEPO.P5D_T_V ))
+            ||((0+ p5d_var +0)==( AAC2020_TAUDEPO.P5D_T_E ))
+            ||((0+ p5d_var +0)==( AAC2020_TAUDEPO.P5D_T_L ))
+            ){
+                /** Okay. One of the enums we want. **/
+            }else{
+                ERR("[INVALID_ENUM_CHOICE_YOUGODDAMNEDFOOL]");
+            };;
+
+        //:---------------------------:error_check_enum_input://
+        //:declare_variables_in_c89_fashion:-----------------://
+
+            U32     u_1 ; //:Unused#1
+            U32     u_2 ; //:Unused#2
+            U32     u_3 ; //:Unused#3
+            U32 var_001 ; //:VALUE before increment
+            U32 var_002 ; //:VALUE after  increment
+
+        //:-----------------:declare_variables_in_c89_fashion://
+        //:get_current_value:--------------------------------://
+
+            AAC2020_TAUDEPO_Get( 
+                AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+            ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+            ,                   p5d_var //:DEX_VAR  
+            ,  &(var_001),&(u_1),&(u_2),&(u_3)
+            );;
+
+        //:--------------------------------:get_current_value://
+        //:inc_to_next_value:--------------------------------://
+
+            if( (0+ p5d_var +0) == AAC2020_TAUDEPO.P5D_T_V ){
+                                   //:[P5D_T_V]>>>[P5D_CBC]://
+
+    aac2020_paint5d_FOR_uiclick_FUN_DeltaMutate_TileValue(   
+    0+1 );;
+    
+            }else
+            if( (0+ p5d_var +0) == AAC2020_TAUDEPO.P5D_T_E ){
+                                   //:[P5D_T_E]>>>[P5D_CBS]://
+
+    aac2020_paint5d_FOR_uiclick_FUN_DeltaMutate_TileExponent( 
+    0+1 );
+    
+            }else
+            if( (0+ p5d_var +0) == AAC2020_TAUDEPO.P5D_T_L ){
+                                   //:[P5D_T_L]>>>[P5D_CBL]://
+
+    aac2020_paint5d_FOR_uiclick_FUN_DeltaMutate_TileLayer(    
+    0+1 );
+    
+            }else
+
+            { //:***************** BAD_ENUM *****************://
+                ERR("[INVALID_ENUM_PROVIDED_FOR_CYCLE_FUNC]");
+            } //:***************** BAD_ENUM *****************://
+
+        //:--------------------------------:inc_to_next_value://
+        //:loop_back_to_start_if_hit_ceiling:----------------://
+
+            AAC2020_TAUDEPO_Get( 
+                AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+            ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+            ,                   p5d_var //:DEX_VAR  
+            ,  &(var_002),&(u_1),&(u_2),&(u_3)
+            );;
+
+            if( var_001 == var_002 ){ //:<-- CEILING_HIT ?
+
+                AAC2020_TAUDEPO_Put( 
+                    AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+                ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+                ,                   p5d_var //:DEX_VAR  
+                ,   (   0   ), (u_1), (u_2), (u_3)
+                );;
+    
+            };;
+
+        //:----------------:loop_back_to_start_if_hit_ceiling://
+
+    }
+
+#undef  ERR  //:----------------------------------------: 01 ://
+#undef  I32  //:----------------------------------------: 02 ://
+#undef  U32  //:----------------------------------------: 03 ://
+//:==============================:VALUE_CYCLE_HELPER_FUNCTION://
+//:PAINT5D_CLICK_FUNCTIONS:==================================://
+#define LOG aac2020_uiclick_paint5d_Info_any
+
+
+    void //:///////////////////[CBC:Cycle_Brush_Color]///////://
+    aac2020_uiclick_paint5d_P5D_CBC( void ){
+    LOG(  "[uiclick_paint5d_P5D_CBC(void)]" ,0 );
+
+        aac2020_uiclick_paint5d_CycleToNextValue(
+            AAC2020_TAUDEPO.P5D_T_V //:[P5D_CBC]==>[P5D_T_V]
+        );;
+    }
+
+    void //:///////////////////[CBS:Cycle_Brush_Size]////////://
+    aac2020_uiclick_paint5d_P5D_CBS( void ){
+    LOG(  "[uiclick_paint5d_P5D_CBS(void)]" ,0 );
+
+        aac2020_uiclick_paint5d_CycleToNextValue(
+            AAC2020_TAUDEPO.P5D_T_E //:[P5D_CBS]==>[P5D_T_E]
+        );;
+    }
+
+    void //:///////////////////[CBL:Cycle_Brush_Layer]///////://
+    aac2020_uiclick_paint5d_P5D_CBL( void ){
+    LOG(  "[uiclick_paint5d_P5D_CBL(void)]" ,0 );
+
+        aac2020_uiclick_paint5d_CycleToNextValue(
+            AAC2020_TAUDEPO.P5D_T_L //:[P5D_CBL]==>[P5D_T_L]
+        );;
+    }
+
+
+#undef  LOG
+//:==================================:PAINT5D_CLICK_FUNCTIONS://

@@ -1,0 +1,40 @@
+//:UICLICK_BOILERPLATE:======================================://
+#define SIL AAC2020_SILENCE                           //: 01 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 02 ://
+#define P_F printf                                    //: 03 ://
+    //:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=================://
+        void 
+        aac2020_uiclick_paint5d_Halt( const char* msg_err )
+        {
+            P_F("[FATAL_ERROR:aac2020_uiclick_paint5d]:%s\n"
+            , msg_err );
+            fflush(stdout);
+            exit( 123 );
+        }
+    //:=================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+    //:LOG_AFTER_HALT:=======================================://
+    #define F_L_U_S_H fflush( stdout );
+
+        void
+        aac2020_uiclick_paint5d_Info_any( 
+                                  //:FUNC:::Info , OVERLOAD:any
+            const char* str_fmt   //:GENERAL:str , SPECIFIC:fmt
+        ,   void*       dat_any   //:GENERAL:dat , SPECIFIC:any
+        )
+        {                                    int say=( 0 );
+            if( SIL.UICLICK_PAINT5D <=(  0  ) ){ say=( 1 ); };
+            if( SIL.SILENCE         <=( 0-1 ) ){ say=( 1 ); };
+            if( SIL.SILENCE         >=( 0+1 ) ){ say=( 0 ); };
+            if( say >= 1 ){
+                P_F("[uiclick_paint5d_log]....(   " ); F_L_U_S_H
+                P_F( str_fmt , dat_any              ); F_L_U_S_H
+                P_F(               "   )\n"         ); F_L_U_S_H
+            };;
+        }
+
+    #undef F_L_U_S_H
+    //:=======================================:LOG_AFTER_HALT://
+#undef  SIL  //:----------------------------------------: 01 ://
+#undef  U32  //:----------------------------------------: 02 ://
+#undef  P_F  //:----------------------------------------: 03 ://
+//:======================================:UICLICK_BOILERPLATE://

@@ -3,6 +3,15 @@
 //:         UICLICK.F._ : Functions For UICLICK              ://
 //:                                                          ://
 //://////////////////////////////////////////////////////////://
+//:INCLUDE_EDITOR_SPECIFIC_CODE:=============================://
+
+    #if( AAC2020_INCLUDE_PAINT5D >= 1 ) //:##################://
+
+        #include "./UICLICK.F.PAINT5D._"  
+        
+    #endif
+
+//:=============================:INCLUDE_EDITOR_SPECIFIC_CODE://
 //:AAC2020_SUBLIBRARY_BOILERPLATE:===========================://
 #define SIL AAC2020_SILENCE                           //: 01 ://
 #define U32 uint32_t /** GCC: <stdint.h> **/          //: 02 ://
@@ -298,15 +307,105 @@
 #define I32  int32_t /** GCC: <stdint.h> **/          //: 03 ://
 #define GET aac2020_uiclick_GetMouseState             //: 04 ://
 #define LOG aac2020_uiclick_Info_any                  //: 05 ://
+#define NCC char                                      //: 06 ://
+#define REC struct AAC2020_POLYOGL_REC                //: 07 ://
+#define ERR aac2020_uiclick_Halt                      //: 08 ://
 
     void
     aac2020_uiclick_PAINT5D_uin_001(
         MOU* mou
     )
     {
-        if( mou -> pix_m_x ){ /* NOOP */ };
-        printf("[sjflsjfsjf]\n");
-        //:<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< LOGIC!
+        //:declare_vars_like_its_c89:------------------------://
+
+            REC rec_uin={  0     }; //: uin=="User_INterface
+
+            I32     g_x=(0 - 666 ); //: Global Mouse X
+            I32     g_y=(0 - 666 ); //: Global Mouse Y
+
+            I32     l_x=(0 - 666 ); //: Local  Mouse X
+            I32     l_y=(0 - 666 ); //: Local  Mouse Y
+
+            I32     t_x=(0 - 666 ); //: [GLYPH/BUTTON]TILE:X
+            I32     t_y=(0 - 666 ); //: [GLYPH/BUTTON]TILE:Y
+
+            NCC            but_tex[8]={0}; //:MUST_BE_ZEROED_OUT
+            U32     UNUSED_but_typ   =(0); //:MUST_BE_ZEROED_OUT
+            U32     UNUSED_but_val   =(0); //:MUST_BE_ZEROED_OUT
+
+        //:------------------------:declare_vars_like_its_c89://
+        //:extract_global_mouse_pos:-------------------------://
+
+            g_x =( mou -> pix_m_x );
+            g_y =( mou -> pix_m_y );
+
+        //:-------------------------:extract_global_mouse_pos://
+        //:get_user_interface_rectangle:---------------------://
+
+            aac2020_uiclick_Get_rec_uin_REC(
+                   1 //:<--[ dex_edi == PAINT5D ]
+            ,      1 //:<--[ lis_dex == (  1  ) ]
+            , &(rec_uin)
+            );;
+
+        //:---------------------:get_user_interface_rectangle://
+        //:Calculate_Local_Mouse:----------------------------://
+
+            l_x = ( g_x - rec_uin.x_0 );
+            l_y = ( g_y - rec_uin.y_0 );
+
+        //:----------------------------:Calculate_Local_Mouse://
+        //:Get_UI_Button_Index:------------------------------://
+        /** @VID_IID[ 0253 ]TIME[ 00:41:23 ]TILEMAP_COLLISION**/
+        #define TIL_WID ( 8 /** 8 Pixels In A Glyph Tile **/ )
+        #define TIL_HIG ( 8 /** Buttons are 8 pixels tall**/ )
+
+            t_x = ( l_x / TIL_WID ); //:Locates_Button_Glyph
+            t_y = ( l_y / TIL_HIG ); //:Locates_Button
+            
+        #undef  TIL_WID  //:----------------------------: 01 ://
+        #undef  TIL_HIG  //:----------------------------: 02 ://
+        //:------------------------------:Get_UI_Button_Index://
+        //:Get_Name_Of_Button_Text:--------------------------://
+        //:#_GET_BUTTON_NAME_#:------------------------------://
+
+            AAC2020_UILISTS_Get_ButMai(
+                1 //:<--[ sub_dex / dex_sub ]==[ PAINT5D ]
+            ,   1 //:<--[ lis_dex ]==[ uin_001 ]
+            , t_y //:<--[ but_dex ]==[     t_y ]
+            
+            ,          but_tex
+            , &(UNUSED_but_typ)
+            , &(UNUSED_but_val)
+            );;
+
+            printf( "[but_tex]:%s\n"      , but_tex      );
+            printf( "[but_tex.char]:%c\n" , but_tex[t_x] );
+            fflush( stdout );
+
+        //:------------------------------:#_GET_BUTTON_NAME_#://
+        //:--------------------------:Get_Name_Of_Button_Text://
+        //:CALL_FUNCTION_ASSOCIATED_WITH_BUTTON:=============://
+        #if( AAC2020_INCLUDE_PAINT5D > 0 ) //:###############://
+
+            aac2020_uiclick_paint5d_CallFunctionUsing_but_tex(
+                but_tex
+            );;
+
+        #else //:############################################://
+
+            /** ******************************************** **/
+            /** @VID_IID[ 0253 ]TIME[ 02:26:50 ]             **/
+            /** If paint5D does not exist, then how the      **/
+            /** hell did you render the UI for the user to   **/
+            /** click and invoke the functions that got us   **/
+            /** to this point?                               **/
+            /** ******************************************** **/
+
+            ERR("[HOW_DID_YOU_GET_HERE?]");
+
+        #endif
+        //:=============:CALL_FUNCTION_ASSOCIATED_WITH_BUTTON://
     }
 
     void
@@ -353,6 +452,9 @@
 #undef I32  //:-----------------------------------------: 03 ://
 #undef GET  //:-----------------------------------------: 04 ://
 #undef LOG  //:-----------------------------------------: 05 ://
+#undef NCC  //:-----------------------------------------: 06 ://
+#undef REC  //:-----------------------------------------: 07 ://
+#undef ERR  //:-----------------------------------------: 08 ://
 //:=============================:UICLICK_FOR_SPECIFIC_EDITORS://
 //:UICLICK_LOOP_TICK:========================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/          //: 01 ://
