@@ -1,0 +1,48 @@
+
+    https://pastebin.com/NuL4cfXz
+
+    The WHY:
+    ------------------------------------------------------------
+    I figured out a solution using a bit of bash. The reason
+    I am asking for such a feature is because I want to make
+    sure my project can compile using[ gcc -c AAC2020.C11 ]
+    no matter how complex my bash-based build system gets.
+
+    I want a low barrier to entry for the code base.
+    The bash script is necessary for DEVELOPING/CHANGING
+    the code base. But shouldn't be necessary for others who
+    just want to include[ AAC2020.C11 ]in their own projects.
+    ------------------------------------------------------------
+
+
+    The WHAT:
+    ------------------------------------------------------------
+
+    Compiling[ MAIN_PROJECT_FOLDER ]'s C11 file on
+    command line will result in[ EXTENSION_CODE_PROJECT ]'s
+    C11 file being included.
+
+    
+        PARENT_FOLDER[-]
+                      |
+                      |
+                     [-]MAIN_PROJECT_FOLDER
+                      |
+                     [-]EXTENSION_CODE_PROJECT
+
+    ------------------------------------------------------------
+
+    Main project's C11 file tried to include say...
+    "../EXTENSION_CODE_PROJECT/MAIN.C11" but it doesn't
+    exist. Rather than throwing compile time error because
+    file does not exist, the compilation just ignores this
+    and moves on. (Is there a way to do this without making )
+    ( my compiler settings less restrictive? )
+
+        PARENT_FOLDER[-]
+                      |
+                      |
+                     [-]MAIN_PROJECT_FOLDER
+ 
+    ------------------------------------------------------------
+

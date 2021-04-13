@@ -10,6 +10,44 @@
 *** ******************************************************** ***
 
 
+#_TOUPAC_NOTES_FIRST_DRAFT_#####################################
+
+    96 INFO FETCHES ==
+    ( 8 * TILE_SIZES )*( 4 * U_L_R_D )*( 3 * LAYERS )
+            +---+
+            | U |
+        +---+---+---+               |<------ 8 ------>|
+        | L | 0 | R | FOR_TILE_SIZES[ 0,1,2,3,4,5,6,7 ]
+        +---+---+---+
+            | D |
+            +---+
+
+    We can break this into 32 fetches per layer...
+    Touching value bitmask is 4 bits...
+    
+    32 == ( 4 * BITS_TOUCH_VAL )*( 8 * TILE_SIZES )
+
+    If we render layer-by-layer...
+    We can pack all touching information into 
+    a[ TOUPACK ]( toupac0 | toupac1 | toupac2 )
+
+
+    TOUPACK Structure: (Uses NETWORK BYTE ORDER)
+
+    [ E_00 E_01 E_02 E_03    E_04 E_05 E_06 E_07 ]
+    [ 0000 0000 0000 0000 || 0000 0000 0000 0000 ]
+    |<------------------ U32 ------------------->|
+
+    E_00 : Tile_Size_EXPONENT # 0 's Touching [Bits/Flags]
+    E_01 : Tile_Size_EXPONENT # 1 's Touching [Bits/Flags]  
+    E_02 : Tile_Size_EXPONENT # 2 's Touching [Bits/Flags]  
+    E_03 : Tile_Size_EXPONENT # 3 's Touching [Bits/Flags]  
+    E_04 : Tile_Size_EXPONENT # 4 's Touching [Bits/Flags]  
+    E_05 : Tile_Size_EXPONENT # 5 's Touching [Bits/Flags]  
+    E_06 : Tile_Size_EXPONENT # 6 's Touching [Bits/Flags]  
+    E_07 : Tile_Size_EXPONENT # 7 's Touching [Bits/Flags]  
+
+#####################################_TOUPAC_NOTES_FIRST_DRAFT_#
 #_USER_INTERFACE_SNAPPING_CODE_#################################
 
     user-interface-snapping-code

@@ -77,6 +77,17 @@
         ## So we can automate process of creating GLSL        ##
         ## code from C99 code.                                ##
         ########################################################
+        ##:COMMON_MACROS:------------------------------------:##
+
+            INN="./LIB/EDITOR_SHADER_MACROS.TOP._"
+            OUT="./LIB/EDITOR_SHADER_MACROS.TOP.STRING._"
+            awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT
+
+            INN="./LIB/EDITOR_SHADER_MACROS.BOT._"
+            OUT="./LIB/EDITOR_SHADER_MACROS.BOT.STRING._"
+            awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT
+
+        ##:------------------------------------:COMMON_MACROS:##
         ##:MAIN_MASS_SHADERS:--------------------------------:##
 
             INN="./LIB/FRAGCOM.FRA._"

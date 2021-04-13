@@ -1052,198 +1052,40 @@
             #endif
         }
         //:- - - - - - - - - - - -- - - - - - - - - - - -://   
-
-////    U32
-////    AAC2020_PAINT5D_RENDCORE(
-////    /**/I32  fic_i_x  //:<--FragIntCoord:X           ://
-////    ,   I32  fic_i_y  //:<--FragIntCoord:Y           ://
-////    ,   I32  cuv_i_x  //:<--CanvasUserView           ://
-////    ,   I32  cuv_i_y  //:<--CanvasUserView           ://
-////    ,   I32  aus_dex  //:<--Auset_Index[ 0 -to- 15 ] ://
-////    ,   U32  u32_l_0  //:<--Layers( BitPacked Data ) ://
-////    ,   U32  u32_l_1  //:<--Layers( BitPacked Data ) ://
-////    ,   U32  u32_l_2  //:<--Layers( BitPacked Data ) ://
-////    )
-////    {
-////        /** TODO: 1: tile local coordinate. **/ 
-////        /** TODO: 2: touching value of current tile **/
-////        /**          the renderer is over.          **/
-////
-////        if( fic_i_x > 0 ){ /** NOOP **/ };
-////        if( fic_i_y > 0 ){ /** NOOP **/ };
-////        if( cuv_i_x > 0 ){ /** NOOP **/ };
-////        if( cuv_i_y > 0 ){ /** NOOP **/ };
-////        if( aus_dex > 0 ){ /** NOOP **/ };
-////
-////
-////        //: U08 arr[ 3 ]=        { 1 , 2 , 3 }; //:C99
-////        //: U08 arr[ 3 ]=U08[ 3 ]( 1 , 2 , 3 ); //:OGL
-////
-////        //:UNDEF_OR_DEF_U32_VALS:--------------------://
-////        #if( AAC2020_MACRO_THIS_IS_OPEN_GL >= 1 )  
-////        
-////            #define U_000 ( uint(  0))
-////            #define U_001 ( uint(  1))
-////            #define U_008 ( uint(  8))
-////            #define U_016 ( uint( 16))
-////            #define U_032 ( uint( 32))
-////            #define U_048 ( uint( 48))
-////            #define U_064 ( uint( 64))
-////            #define U_096 ( uint( 96))
-////            #define U_128 ( uint(128))
-////        #else
-////            #define U_000 ((U32)(  0))
-////            #define U_001 ((U32)(  1))
-////            #define U_008 ((U32)(  8))
-////            #define U_016 ((U32)( 16))
-////            #define U_032 ((U32)( 32))
-////            #define U_048 ((U32)( 48))
-////            #define U_064 ((U32)( 64))
-////            #define U_096 ((U32)( 96))
-////            #define U_128 ((U32)(128))
-////        #endif
-////        //:--------------------:UNDEF_OR_DEF_U32_VALS://
-////        //:HARD_CODED_COLOR_PALLET:------------------://
-////
-////                //:Bot : layer_lumonosity_pallet
-////                U32 pal_l_0[4]= ARR_U32(4)
-////                                ARR_BEG
-////
-////                                /**/U_016   
-////                                ,   U_032   
-////                                ,   U_048   
-////                                ,   U_064   
-////
-////                                ARR_END;
-////                if( pal_l_0[0] > UFF ){ /**NOOP**/ };
-////
-////                //:Mid : layer_lumonosity_pallet :
-////                U32 pal_l_1[4]= ARR_U32(4)
-////                                ARR_BEG
-////
-////                                /**/U_016   
-////                                ,   U_032   
-////                                ,   U_048   
-////                                ,   U_064   
-////
-////                                ARR_END;
-////                
-////                //:Top : layer_lumonosity_pallet :
-////                U32 pal_l_2[4]= ARR_U32(4)
-////                                ARR_BEG
-////
-////                                /**/U_016   
-////                                ,   U_032   
-////                                ,   U_048   
-////                                ,   U_064   
-////
-////                                ARR_END;
-////
-////        //:------------------:HARD_CODED_COLOR_PALLET://
-////        //:NON_DILLUTED_AVERAGE:=====================://
-////
-////            //:Total Number Of Non_Zero Tile Values
-////            //:Over the current pixel for the 
-////            //:current layer.
-////            U32 tot_l_0=MAK_U32(0);
-////            U32 tot_l_1=MAK_U32(0);
-////            U32 tot_l_2=MAK_U32(0);
-////            
-////            tot_l_0=MAK_U32( 8 );
-////            tot_l_1=MAK_U32( 8 );
-////            tot_l_2=MAK_U32( 8 );
-////            
-////            U32 sum_l_0=MAK_U32(0);
-////            U32 sum_l_1=MAK_U32(0);
-////            U32 sum_l_2=MAK_U32(0);
-////            
-////            sum_l_0=( U_000
-////                + pal_l_0[ ( u32_l_0 >> 0 ) & B11 ]
-////                + pal_l_0[ ( u32_l_0 >> 2 ) & B11 ]
-////                + pal_l_0[ ( u32_l_0 >> 4 ) & B11 ]
-////                + pal_l_0[ ( u32_l_0 >> 6 ) & B11 ]
-////                + pal_l_0[ ( u32_l_0 >> 8 ) & B11 ]
-////                + pal_l_0[ ( u32_l_0 >>10 ) & B11 ]
-////                + pal_l_0[ ( u32_l_0 >>12 ) & B11 ]
-////                + pal_l_0[ ( u32_l_0 >>14 ) & B11 ]
-////            );;
-////            sum_l_1=( U_000
-////                + pal_l_1[ ( u32_l_1 >> 0 ) & B11 ]
-////                + pal_l_1[ ( u32_l_1 >> 2 ) & B11 ]
-////                + pal_l_1[ ( u32_l_1 >> 4 ) & B11 ]
-////                + pal_l_1[ ( u32_l_1 >> 6 ) & B11 ]
-////                + pal_l_1[ ( u32_l_1 >> 8 ) & B11 ]
-////                + pal_l_1[ ( u32_l_1 >>10 ) & B11 ]
-////                + pal_l_1[ ( u32_l_1 >>12 ) & B11 ]
-////                + pal_l_1[ ( u32_l_1 >>14 ) & B11 ]
-////            );;
-////            sum_l_2=( U_000
-////                + pal_l_2[ ( u32_l_2 >> 0 ) & B11 ]
-////                + pal_l_2[ ( u32_l_2 >> 2 ) & B11 ]
-////                + pal_l_2[ ( u32_l_2 >> 4 ) & B11 ]
-////                + pal_l_2[ ( u32_l_2 >> 6 ) & B11 ]
-////                + pal_l_2[ ( u32_l_2 >> 8 ) & B11 ]
-////                + pal_l_2[ ( u32_l_2 >>10 ) & B11 ]
-////                + pal_l_2[ ( u32_l_2 >>12 ) & B11 ]
-////                + pal_l_2[ ( u32_l_2 >>14 ) & B11 ]
-////            );;
-////
-////            //:Amount to add:
-////            U32 add_l_0=MAK_U32(0);
-////            U32 add_l_1=MAK_U32(0);
-////            U32 add_l_2=MAK_U32(0);
-////            
-////            add_l_0=(( sum_l_0 / tot_l_0 )+U_000);
-////            add_l_1=(( sum_l_1 / tot_l_1 )+U_000);
-////            add_l_2=(( sum_l_2 / tot_l_2 )+U_000);
-////            
-////            if( add_l_0 > U_128 ){ add_l_0 = U_128; };
-////            if( add_l_1 > U_128 ){ add_l_1 = U_128; };
-////            if( add_l_2 > U_128 ){ add_l_2 = U_128; };
-////            
-////            U32 lum_l_0=MAK_U32(0);
-////            U32 lum_l_1=MAK_U32(0);
-////            U32 lum_l_2=MAK_U32(0);
-////            
-////            lum_l_0=(  MAK_U32(  0) + add_l_0 );
-////            lum_l_1=(  MAK_U32(  0) + add_l_1 );
-////            lum_l_2=(  MAK_U32(  0) + add_l_2 );
-////                     
-////
-////        //:=====================:NON_DILLUTED_AVERAGE://
-////        //:PACK_YOUR_FUCKING_BAGS:===================://
-////
-////            U32 u32_pix=MAK_U32( 0 );
-////
-////            if( lum_l_0 > UFF ){ lum_l_0 = UFF; };
-////            if( lum_l_1 > UFF ){ lum_l_1 = UFF; };
-////            if( lum_l_2 > UFF ){ lum_l_2 = UFF; };
-////
-////            U32 lum_all=( lum_l_0 + lum_l_1 + lum_l_2 );
-////            if( lum_all > UFF ){ lum_all = UFF; };
-////
-////            u32_pix=( 
-////                   lum_all << 24
-////                |  lum_all << 16
-////                |  lum_all <<  8
-////                |  UFF     <<  0
-////            );;
-////        //:===================:PACK_YOUR_FUCKING_BAGS://
-////        //:OUTPUT_IS_U32_PIXEL_VALUE:================://
-////
-////            return( u32_pix );
-////
-////        //:================:OUTPUT_IS_U32_PIXEL_VALUE://
-////
-////    }
-
-        //:- - - - - - - - - - - -- - - - - - - - - - - -://   
         RET_MAIN
         FUN_MAIN( 
                        TYP_F_C          INN_F_C
         //[ GLSL:|     NOTHING     |    NOTHING   - - - -]//
         //[  C99:|  struct FV4     |    F_C       - - - -]//
         ){
+        
+            //: U08 arr[ 3 ]=        { 1 , 2 , 3 }; //:C99
+            //: U08 arr[ 3 ]=U08[ 3 ]( 1 , 2 , 3 ); //:OGL
+
+    ////    //:UNDEF_OR_DEF_U32_COLORS:------------------://
+    ////    #if( AAC2020_MACRO_THIS_IS_OPEN_GL >= 1 )  
+    ////    
+    ////        #define U32_000 ( uint(  0))//:[ U_000 ]://
+    ////        #define U32_001 ( uint(  1))//:[ U_001 ]://
+    ////        #define U32_008 ( uint(  8))//:[ U_008 ]://
+    ////        #define U32_016 ( uint( 16))//:[ U_016 ]://
+    ////        #define U32_032 ( uint( 32))//:[ U_032 ]://
+    ////        #define U32_048 ( uint( 48))//:[ U_048 ]://
+    ////        #define U32_064 ( uint( 64))//:[ U_064 ]://
+    ////        #define U32_096 ( uint( 96))//:[ U_096 ]://
+    ////        #define U32_128 ( uint(128))//:[ U_128 ]://
+    ////    #else         
+    ////        #define U32_000 ((U32)(  0))//:[ U_000 ]://
+    ////        #define U32_001 ((U32)(  1))//:[ U_001 ]://
+    ////        #define U32_008 ((U32)(  8))//:[ U_008 ]://
+    ////        #define U32_016 ((U32)( 16))//:[ U_016 ]://
+    ////        #define U32_032 ((U32)( 32))//:[ U_032 ]://
+    ////        #define U32_048 ((U32)( 48))//:[ U_048 ]://
+    ////        #define U32_064 ((U32)( 64))//:[ U_064 ]://
+    ////        #define U32_096 ((U32)( 96))//:[ U_096 ]://
+    ////        #define U32_128 ((U32)(128))//:[ U_128 ]://
+    ////    #endif
+    ////    //:------------------:UNDEF_OR_DEF_U32_COLORS://
 
             //:DECLARE_VARIABLES:------------------------://
              
@@ -1328,7 +1170,28 @@
                 ASS( cuv_i_x <= (256-1) );
                 ASS( cuv_i_y <= (256-1) );
 
+                //:TOUCHING_VALUES_FOR_EACH_LAYER:-------://
+                U32 toupaca[ 3 ]= ARR_U32( 3 )
+                ARR_BEG
+                
+                /**/U32_000   
+                ,   U32_000   
+                ,   U32_000   
+  
+                ARR_END;
+                for( I32 lay = 0 ; lay <=(3-1) ; lay++ ){
+
+                    toupaca[ lay ]=( U32_000 );
+
+                    if( toupaca[ lay ] > U32_000 ){
+                        /** NOOP **/
+                    };;
+
+                };;
+                //:-------:TOUCHING_VALUES_FOR_EACH_LAYER://
                 //:GET_LAYER_DATA:-----------------------://
+                /** Value of all tiles over the pixel    **/
+                /** being rendered.@IID[0256]T[01:20:23] **/
 
                     U32 u32_l_0=(
                     AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Get( 
@@ -1455,17 +1318,17 @@
 
             #endif
 
-            //:UNDEF_OR_DEF_U32_COLORS:------------------://
-            #undef U_000 
-            #undef U_001 
-            #undef U_008 
-            #undef U_016 
-            #undef U_032 
-            #undef U_048 
-            #undef U_064 
-            #undef U_096 
-            #undef U_128 
-            //:------------------:UNDEF_OR_DEF_U32_COLORS://
+    ////    //:UNDEF_OR_DEF_U32_COLORS:------------------://
+    ////    #undef U_000 
+    ////    #undef U_001 
+    ////    #undef U_008 
+    ////    #undef U_016 
+    ////    #undef U_032 
+    ////    #undef U_048 
+    ////    #undef U_064 
+    ////    #undef U_096 
+    ////    #undef U_128 
+    ////    //:------------------:UNDEF_OR_DEF_U32_COLORS://
         }
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
     //:always_exists_error_string_macros:----------------://

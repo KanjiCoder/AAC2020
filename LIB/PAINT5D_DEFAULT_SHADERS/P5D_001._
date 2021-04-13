@@ -15,12 +15,15 @@ const char* AAC2020_PAINT5D_DEFAULT_001=( //:////////////////://
         #include "../UISHARE.FRA.STRING._"
 
     //:------------------------------:COMMON_FRAG_SHADER_CODE://
-    //:EXTENDABLE_CODE_SECTION:==============================://
 
-        #include             "../RENCORE.TOP.STRING._"
+    //:||||||||||||||||||||||||||||||||||||||||||||||||||||||://
+    #include "../EDITOR_SHADER_MACROS.TOP.STRING._"
+    //:||||||||||||||||||||||||||||||||||||||||||||||||||||||://
+    
+        //:EXTENDABLE_CODE_SECTION:--------------------------://
+        #include "../RENCORE.TOP.STRING._"
 
-        #if( AAC2020_INCLUDE_EXTCODE_PAINT5D > 0 ) //:#######://
-
+            #if( AAC2020_INCLUDE_EXTCODE_PAINT5D > 0 ) //:###://
             /** ******************************************** **/
             /** Highest priority extension will auto         **/
             /** generate it's ".string" file LAST.           **/
@@ -29,21 +32,23 @@ const char* AAC2020_PAINT5D_DEFAULT_001=( //:////////////////://
             /** the same editors or systems.                 **/
             /** ******************************************** **/
 
-            #include "../AUTOGEN/PAINT5D.RENCORE.STRING._"
-        #else
-            #include "../RENCORE/PAINT5D.RENCORE.STRING._"
-        #endif
+                #include "../AUTOGEN/PAINT5D.RENCORE.STRING._"
+            #else
+                #include "../RENCORE/PAINT5D.RENCORE.STRING._"
+            #endif
 
+        #include "../RENCORE.BOT.STRING._"
+        //:--------------------------:EXTENDABLE_CODE_SECTION://
+        //:PAINT5D_USER_INTERFACE_CODE:----------------------://
 
-        #include             "../RENCORE.BOT.STRING._"
+            #include "../UIFRAGS.PAINT5D.FRA.STRING._"
+            #include "../P5D1OGL.FRA.STRING._"
 
-    //:==============================:EXTENDABLE_CODE_SECTION://
-    //:PAINT5D_SPECIFIC_SHADER_CODE:-------------------------://
+        //:----------------------:PAINT5D_USER_INTERFACE_CODE://
 
-        #include "../UIFRAGS.PAINT5D.FRA.STRING._"
-        #include "../P5D1OGL.FRA.STRING._"
-
-    //:-------------------------:PAINT5D_SPECIFIC_SHADER_CODE://
+    //:||||||||||||||||||||||||||||||||||||||||||||||||||||||://
+    #include "../EDITOR_SHADER_MACROS.BOT.STRING._"
+    //:||||||||||||||||||||||||||||||||||||||||||||||||||||||://
                                                 
 ); //:///////////////////////////////////////////////////////://
 //:==============================:AAC2020_PAINT5D_DEFAULT_001://
