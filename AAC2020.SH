@@ -77,30 +77,63 @@
         ## So we can automate process of creating GLSL        ##
         ## code from C99 code.                                ##
         ########################################################
+        ##:MAIN_MASS_SHADERS:--------------------------------:##
 
-        INN="./LIB/FRAGCOM.FRA._"
-        OUT="./LIB/FRAGCOM.FRA.STRING._"
-        awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT
+            INN="./LIB/FRAGCOM.FRA._"
+            OUT="./LIB/FRAGCOM.FRA.STRING._"
+            awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT
 
-        INN="./LIB/TAUFRAG.FRA._"
-        OUT="./LIB/TAUFRAG.FRA.STRING._"
-        awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT
+            INN="./LIB/TAUFRAG.FRA._"
+            OUT="./LIB/TAUFRAG.FRA.STRING._"
+            awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT
 
-        INN="./LIB/GPUVIEW.FRA._"
-        OUT="./LIB/GPUVIEW.FRA.STRING._"
-        awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT
+            INN="./LIB/GPUVIEW.FRA._"
+            OUT="./LIB/GPUVIEW.FRA.STRING._"
+            awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT
 
-        INN="./LIB/UISHARE.FRA._"
-        OUT="./LIB/UISHARE.FRA.STRING._"
-        awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT
+            INN="./LIB/UISHARE.FRA._"
+            OUT="./LIB/UISHARE.FRA.STRING._"
+            awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT
 
-        INN="./LIB/UIFRAGS.PAINT5D.FRA._"
-        OUT="./LIB/UIFRAGS.PAINT5D.FRA.STRING._"
-        awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT
+            INN="./LIB/UIFRAGS.PAINT5D.FRA._"
+            OUT="./LIB/UIFRAGS.PAINT5D.FRA.STRING._"
+            awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT
 
-        INN="./LIB/P5D1OGL.FRA._"
-        OUT="./LIB/P5D1OGL.FRA.STRING._"
-        awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT
+            INN="./LIB/P5D1OGL.FRA._"
+            OUT="./LIB/P5D1OGL.FRA.STRING._"
+            awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT
+
+        ##:--------------------------------:MAIN_MASS_SHADERS:##
+        ##:RENCORE_PRIVATE:----------------------------------:##
+
+            ## :::::::::::::::::::::::::::::::::::::::::::::: ##
+            ## These files should __NOT__ be copied by :::::: ##
+            ## AAC2020_EXTCODE_******* writers.        :::::: ##
+            ## (extension code writers)                :::::: ##
+            ## :::::::::::::::::::::::::::::::::::::::::::::: ##
+
+            INN="./LIB/RENCORE.TOP._"
+            OUT="./LIB/RENCORE.TOP.STRING._"
+            awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT
+
+            INN="./LIB/RENCORE.BOT._"
+            OUT="./LIB/RENCORE.BOT.STRING._"
+            awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT
+
+        ##:----------------------------------:RENCORE_PRIVATE:##
+        ##:RENCORE(S):---------------------------------------:##
+
+            ## :::::::::::::::::::::::::::::::::::::::::::::: ##
+            ## Allow for EXTENDING (compile time plugin) :::: ##
+            ## the AAC2020 code base. For example, see  ::::: ##
+            ## PROJECT[ AAC2020_EXTCODE_MANDELA ] ::::::::::: ##
+            ## :::::::::::::::::::::::::::::::::::::::::::::: ##
+
+            INN="./LIB/RENCORE/PAINT5D.RENCORE._"
+            OUT="./LIB/RENCORE/PAINT5D.RENCORE.STRING._"
+            awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT
+
+        ##:---------------------------------------:RENCORE(S):##
 
     ########################_GENERATE_GLSL_CODE_FROM_C99_CODE_##
     ##  SC[ hkmf-mini] #########################################

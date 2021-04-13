@@ -8,12 +8,42 @@ const char* AAC2020_PAINT5D_DEFAULT_001=( //:////////////////://
 //|The C99 File: P5D_OGL._                   |////://////////://
 //://////////////////////////////////////////////////////////://
 
-    #include "../FRAGCOM.FRA.STRING._"
-    #include "../TAUFRAG.FRA.STRING._"
-    #include "../UISHARE.FRA.STRING._"
+    //:COMMON_FRAG_SHADER_CODE:------------------------------://
 
-    #include "../UIFRAGS.PAINT5D.FRA.STRING._"
-    #include "../P5D1OGL.FRA.STRING._"
+        #include "../FRAGCOM.FRA.STRING._"
+        #include "../TAUFRAG.FRA.STRING._"
+        #include "../UISHARE.FRA.STRING._"
+
+    //:------------------------------:COMMON_FRAG_SHADER_CODE://
+    //:EXTENDABLE_CODE_SECTION:==============================://
+
+        #include             "../RENCORE.TOP.STRING._"
+
+        #if( AAC2020_INCLUDE_EXTCODE_PAINT5D > 0 ) //:#######://
+
+            /** ******************************************** **/
+            /** Highest priority extension will auto         **/
+            /** generate it's ".string" file LAST.           **/
+            /** As all extensions will create override files **/
+            /** with the same names if they are overriding   **/
+            /** the same editors or systems.                 **/
+            /** ******************************************** **/
+
+            #include "../AUTOGEN/PAINT5D.RENCORE.STRING._"
+        #else
+            #include "../RENCORE/PAINT5D.RENCORE.STRING._"
+        #endif
+
+
+        #include             "../RENCORE.BOT.STRING._"
+
+    //:==============================:EXTENDABLE_CODE_SECTION://
+    //:PAINT5D_SPECIFIC_SHADER_CODE:-------------------------://
+
+        #include "../UIFRAGS.PAINT5D.FRA.STRING._"
+        #include "../P5D1OGL.FRA.STRING._"
+
+    //:-------------------------:PAINT5D_SPECIFIC_SHADER_CODE://
                                                 
 ); //:///////////////////////////////////////////////////////://
 //:==============================:AAC2020_PAINT5D_DEFAULT_001://
