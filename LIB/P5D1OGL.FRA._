@@ -85,9 +85,6 @@
         #define CUVIPIX struct AAC2020_P5D1OGL_CUVIPIX   ///
         #define TYP_F_C /** nothing **/            //| 8 |//
         #define INN_F_C /** nothing **/            //| 9 |//
-        #define ARR_U32(n) U32[n]
-        #define ARR_BEG (  //:GLSL_ARRAY_INITER_BEG
-        #define ARR_END )  //:GLSL_ARRAY_INITER_END
                                                    //| # |//
     #else                                          //| # |//
                                                    //| # |//
@@ -100,9 +97,6 @@
         #define CUVIPIX struct AAC2020_P5D1OGL_CUVIPIX   ///
         #define TYP_F_C struct AAC2020_POLYOGL_FV4 //| 8 |//
         #define INN_F_C F_C                        //| 9 |//
-        #define ARR_U32(n) //:ERASE_IT_IN_C99
-        #define ARR_BEG {  //:_C99_ARRAY_INITER_BEG
-        #define ARR_END }  //:_C99_ARRAY_INITER_END
                                                    //| # |//
     #endif                                         //| # |//
     //:------------------------------:seven_letter_macros://
@@ -608,6 +602,18 @@
             return( squ_ash );                     //:---://
         }                                          //:---://
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
+
+
+
+
+
+
+
+
+
+
+
+
     //://////////////////////////////////////////////////://
     //://////////////////////////////////////////////////://
     //://////////////////////////////////////////////////://
@@ -718,7 +724,6 @@
             return( p5d_tor );                     //:---://
         }                                          //:---://
                                                    //:---://
-        //:- - - - - - - - - - - -- - - - - - - - - - - -://
         /** ******************************************** **/
         /** @VID_IID[ 0105 ]TIME[ 04:41:40 ]         *** **/
         /** This code only exists to test the        *** **/
@@ -890,7 +895,176 @@
     //://////////////////////////////////////////////////://
     //://////////////////////////////////////////////////://
     //://////////////////////////////////////////////////://
+        //:- - - - - - - - - - - -- - - - - - - - - - - -://
+        //:- - - - - - - - - - - -- - - - - - - - - - - -://
+        U32                                              
+        AAC2020_P5D1OGL_cuvipix_CTO_til_val_Get(          
+            I32 cuv_i_x_000_255  //:AKA[ cuvipix.i_x ]   ///
+        ,   I32 cuv_i_y_000_255  //:AKA[ cuvipix.i_y ]   ///
+        ,   I32 lay_dex_000_002  //:AKA[ lay_dex ]       ///
+        ,   I32 aus_dex_000_015  //:AKA[ aus_dex ]       ///
+        ,   I32 til_exp_000_007  //:AKA[ til_exp ]       ///
+        )
+        {               
+        /** ******************************************** ***
+        @VID_IID[ 0257 ]TIME[ 02:03:42 ]
+        LIKE[ AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Get ]
+        But has the extra parameter[ til_exp ]and gets just
+        ONE_TILE_VALUE( til_val )instead of a bitpacking
+        of all tile values under the current pixel.
+        
+        Using this to help calculate touching values for
+        auto-tiling calculations.
+        SEE[ toupaca / toupac0 / toupac1 / toupac2 ]
+        
+        We should be able to create this function by
+        [ COPY + PAST ]ing[ cuvipix_CTO_cuvbits_Get ]
+        and removing the tile exponent( t_e / til_exp )loop.
+
+        SEE[ #_WORKING_OUT_TOUPACK_BIT_FETCHING_# ]
+        *** ******************************************** **/                                            
+        #define C_X cuv_i_x_000_255               //: 01 ://
+        #define C_Y cuv_i_y_000_255               //: 02 ://
+        #define T_L lay_dex_000_002               //: 03 ://
+        #define A_D aus_dex_000_015               //: 04 ://
+        #define ETO_m_c AAC2020_P5D1OGL_til_exp_CTO_max_cor
+        #define ETO_s_a AAC2020_P5D1OGL_til_exp_CTO_squ_ash
+            //:input_checks:- - - - - - - - - - - - - - -://
+                                                     //:i://
+                ASS( cuv_i_x_000_255 >=  (  0  )  ); //:i://
+                ASS( cuv_i_y_000_255 >=  (  0  )  ); //:i://
+                ASS( lay_dex_000_002 >=  (  0  )  ); //:i://
+                ASS( aus_dex_000_015 >=  (  0  )  ); //:i://
+                ASS( til_exp_000_007 >=  (  0  )  ); //:i://
+                                                     //:i://
+                ASS( cuv_i_x_000_255 <=  (256-1)  ); //:i://
+                ASS( cuv_i_y_000_255 <=  (256-1)  ); //:i://
+                ASS( lay_dex_000_002 <=    (3-1)  ); //:i://
+                ASS( aus_dex_000_015 <=   (16-1)  ); //:i://
+                ASS( til_exp_000_007 <=   ( 8-1)  ); //:i://
+                                                     //:i://
+            //:- - - - - - - - - - - - - - -:input_checks://
+            //:var__declare:- - - - - - - - - - - - - - -://
                                                           //
+                //:UNSIGNED_FOR_BIT_PACKING:-------------://
+                                                          //
+                //+  @VID_IID[0257]T[02:30:50]           +//
+                //+  Version only gets 1 tile value.     +//
+                //+  No bitpacking of tile values.       +//
+                //- /** Canvas_User_View:BITS  **/       -//
+                //- U32 cuvbits =( U00 /** 0x00 **/ );   -//
+                                                          //
+                U32     t_v; /** [ t_v / til_val ] **/    //
+                                                          //
+                //:-------------:UNSIGNED_FOR_BIT_PACKING://
+                //:EVERYTHING_ELSE:----------------------://
+                                                      //////
+                /// glocpix not needed,               //////
+                /// AAC2020_P5D1OGL_Get function      //////
+                ///  handles calculation of that.     //////
+                /// glocpix; /** GLObal Coord PIXels  ...**/
+                             /** Data View Coordinate ...**/
+                                                      //////
+            //  IV2 til_qua; /** Tile Quadrant ..........**/
+                I32 qua_c_x; /** Tile Quadrant: cell x   **/
+                I32 qua_c_y; /** Tile Quadrant: cell y   **/
+                                                      //////
+                I32 nos_t_x; /** NO_Squash(nos)TileX(t_x)**/
+                I32 nos_t_y; /** NO_Squash(nos)TileY(t_y)**/
+                                                      //////
+                I32     t_x; /** Final Local Tile [X|Y]  **/
+                I32     t_y; /** AKA[ loc_t_x | loc_t_y ]**/
+                                                      //////
+                I32     s_a; /** Squash Amount (squ_ash) **/
+                                                      //////
+                I32     t_q; /** TileQuadrant / til_qua  **/
+                //-     t_e;     TileExponent / til_exp  -//
+                I32     m_c; /** MaximumCoord / max_cor  **/
+                                                      //////
+                //:----------------------:EVERYTHING_ELSE://
+                                                      //////
+            //:- - - - - - - - - - - - - - -:var__declare://
+                                                      //////
+            //: til_qua ==( [ cuv_i_x && cuv_i_y ] / 128 )
+            qua_c_x =( C_X / 128 );                   //////
+            qua_c_y =( C_Y / 128 );                   //////
+            ASS( qua_c_x >= 0 && qua_c_x <= 1 );      //////
+            ASS( qua_c_y >= 0 && qua_c_y <= 1 );      //////
+                                                      //////
+            /** @VID_IID[ 0098 ]TIME[ 05:32:00 ] **/  //////
+            /** Fixed xy-to-index math here.     **/  //////
+            t_q = qua_c_x + ( qua_c_y  *  2  );       //////
+            ASS( t_q >= 0 && t_q <= (4-1) );          //////
+                                                      //////
+            /** NOS: NOt_Squashed ............ **/    //////
+            /** nos_t_x : Not squashed loc_t_x **/    //////
+            /** nos_t_y : Not squashed loc_t_y **/    //////
+            nos_t_x = C_X -( qua_c_x * 128 );         //////
+            nos_t_y = C_Y -( qua_c_y * 128 );         //////
+                                                       
+            #define T_E ( til_exp_000_007 )   
+            //- for( t_e = 0 ; t_e <=( 8 - 1 ) ; t_e ++ )-//
+            {   //:<--[ NO_LONGER_A_LOOP ]               ://
+                //:<--[ @VID_IID[ 0257 ]T[ 02:29:32 ]    ://
+                                                         ///
+                /** m_c == max_cor  **/                  ///
+                /** Max Coord Index **/                  ///
+                m_c = ETO_m_c(  T_E  );                  ///
+                s_a = ETO_s_a(  T_E  );                  ///
+                                                         ///
+                t_x = nos_t_x / s_a ;                    ///
+                t_y = nos_t_y / s_a ;                    ///
+                                                         ///
+                /**  t_y === loc_t_y ( PAINT5D.D._ ).....**/
+                /**  t_x === loc_t_x ( #_DIA_DAL_# ).....**/
+                ASS( t_x >= 0 && t_x <= m_c );           ///
+                ASS( t_y >= 0 && t_y <= m_c );           ///
+                                                         ///
+                //:BINARY PACKED TILE VALUES (til_val)   ://
+                //:      BIN[ 00 ] ==> DEC[ 0 ]          ://
+                //:      BIN[ 01 ] ==> DEC[ 1 ]          ://
+                //:      BIN[ 10 ] ==> DEC[ 2 ]          ://
+                //:      BIN[ 11 ] ==> DEC[ 3 ]          ://
+                t_v=(                                    ///
+                    AAC2020_P5D1OGL_Get(                 ///
+                        t_q    //: I32 [ til_qua / t_q ] ://                         
+                    ,   T_E    //: I32 [ til_exp / t_e ] ://                        
+                    ,   T_L    //: I32 [ til_lay / t_l ] ://                        
+                    ,   t_x    //: I32 [ loc_t_x / t_x ] ://                        
+                    ,   t_y    //: I32 [ loc_t_y / t_y ] ://                        
+                    ,   A_D    //: I32 [ aus_dex / a_d ] ://                        
+                    ));;                                 ///
+                                                         ///
+                ASS( t_v <= U03 /** AKA: uint(4-1) **/ );///
+                ASS( t_v == ( BIN_011 & t_v) );          ///
+
+                //||||||||||||||||||||||||||||||||||||||||//
+                //+ THIS_VERSION_DOESNT_BIT_PACK         +//
+                //+ MULTIPLE TILE_VALUES.                +//
+                //- cuvbits=(                            -//
+                //- cuvbits |                            -//
+                //-     (                                -//
+                //-         /** 2 bits per tile value.**/-//
+                //-         /** Position based on it's**/-//
+                //-         /** tile exponent (t_e)   **/-//
+                //-         t_v <<( t_e * 2 )            -//
+                //-     )                                -//
+                //- );;                                  -//
+                //||||||||||||||||||||||||||||||||||||||||//
+                                   
+            } //:<--[ NO_LONGER_A_LOOP ]
+            #undef  T_E
+                                                     
+            return( t_v /**RETURN[ til_val ]UNDER PIXEL**/);                           
+                                                     
+        #undef          C_X //:---------------------: 01 ://
+        #undef          C_Y //:---------------------: 02 ://
+        #undef          T_L //:---------------------: 03 ://
+        #undef          A_D //:---------------------: 04 ://
+        #undef      ETO_m_c //:---------------------: 05 ://
+        #undef      ETO_s_a //:---------------------: 06 ://
+        } //:END[ AAC2020_P5D1OGL_cuvipix_CTO_til_val_Get ]     
+        //:- - - - - - - - - - - -- - - - - - - - - - - -://                                         
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
         U32                                              ///
         AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Get(         ///
@@ -1170,25 +1344,6 @@
                 ASS( cuv_i_x <= (256-1) );
                 ASS( cuv_i_y <= (256-1) );
 
-                //:TOUCHING_VALUES_FOR_EACH_LAYER:-------://
-                U32 toupaca[ 3 ]= ARR_U32( 3 )
-                ARR_BEG
-                
-                /**/U32_000   
-                ,   U32_000   
-                ,   U32_000   
-  
-                ARR_END;
-                for( I32 lay = 0 ; lay <=(3-1) ; lay++ ){
-
-                    toupaca[ lay ]=( U32_000 );
-
-                    if( toupaca[ lay ] > U32_000 ){
-                        /** NOOP **/
-                    };;
-
-                };;
-                //:-------:TOUCHING_VALUES_FOR_EACH_LAYER://
                 //:GET_LAYER_DATA:-----------------------://
                 /** Value of all tiles over the pixel    **/
                 /** being rendered.@IID[0256]T[01:20:23] **/
@@ -1216,6 +1371,132 @@
                     ));;////////////////////////////////////
 
                 //:-----------------------:GET_LAYER_DATA://
+                //:TOUCHING_VALUES_FOR_EACH_LAYER:-------://
+
+                //:SEE[ #_NOTES_TOUPACK_BIT_FETCHING_# ]
+                U32 toupaca[ 3 ]= ARR_U32( 3 )
+                ARR_BEG
+                
+                /**/U32_000   
+                ,   U32_000   
+                ,   U32_000   
+  
+                ARR_END;
+
+                /** **************************************** **/
+                /** @VID_IID[ 0256 ]TIME[ 03:48:50 ] ** **** **/
+                /** Lookup table to convert a tile size **** **/
+                /** exponent into the relative size of  **** **/
+                /** the tile measuered in[ pebbles ]    **** **/
+                /** **************************************** **/
+                I32 LUT_til_exp_CTO_til_peb[ 8 ]= ARR_I32( 8 )
+                ARR_BEG
+                /**/   1  //: til_exp == 0 ://
+                ,      2  //: til_exp == 1 ://
+                ,      4  //: til_exp == 2 ://
+                ,      8  //: til_exp == 3 ://
+                ,     16  //: til_exp == 4 ://
+                ,     32  //: til_exp == 5 ://
+                ,     64  //: til_exp == 6 ://
+                ,    128  //: til_exp == 7 ://
+                ARR_END;
+
+                //:@VID_IID[ 0256 ]TIME[ 03:52:32 ]::::::::::://
+                //:Touching Values For Auto Tiling Require ::://
+                //:that we query what tiles are around     ::://
+                //:the current tile being rendered.        ::://
+                //:                                        ::://
+                I32 mov_top;  //:FIND:Tile_Neighbor_ABOVE  ::://
+                I32 mov_lef;  //:FIND:Tile_Neighbor_LEFT   ::://
+                I32 mov_rig;  //:FIND:Tile_Neighbor_RIGHT  ::://
+                I32 mov_bot;  //:FIND:Tile_Neighbor_BELOW  ::://
+
+                /** @VID_IID[ 0257 ]TIME[ 00:20:32 ] ******* **/
+                /** Size Of A Tile Measured In Pebbles.      **/
+                /** Written this way because it can be       **/
+                /** read as a conversion factor.             **/
+                /** (READ_AS: til ==> peb)                   **/
+                /**            til___til peb_____peb         **/
+                /**            --------- -----------         **/
+                /** Example: ( til * til_peb ==> peb )       **/
+                /**            --------- -----------         **/
+                /**            til___til peb_____peb         **/
+                I32 til_peb;                        /** **** **/
+                /** **************************************** **/
+
+                for( I32 lay_dex = ( 0 )
+                ;        lay_dex <=(3-1) 
+                ;        lay_dex++ 
+                ){
+
+                toupaca[ lay_dex ]=( U32_000 );
+
+                for( I32 til_exp = ( 0 )
+                ;        til_exp <=(8-1)
+                ;        til_exp++
+                ){
+
+                    til_peb=LUT_til_exp_CTO_til_peb[
+                                til_exp            ];;
+
+                    //:A bit wasteful. <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<MAKE_EFFICIENT_AND_LESS_WASTEFUL
+                    mov_top=( til_peb );  //:<<<<<<<<<<<<<<<<<<<<<<<<<<<MAKE_EFFICIENT_AND_LESS_WASTEFUL
+                    mov_lef=( til_peb );  //:<<<<<<<<<<<<<<<<<<<<<<<<<<<MAKE_EFFICIENT_AND_LESS_WASTEFUL
+                    mov_rig=( til_peb );  //:<<<<<<<<<<<<<<<<<<<<<<<<<<<MAKE_EFFICIENT_AND_LESS_WASTEFUL
+                    mov_bot=( til_peb );  //:<<<<<<<<<<<<<<<<<<<<<<<<<<<MAKE_EFFICIENT_AND_LESS_WASTEFUL
+
+                    U32 u32_top =(
+                    (( cuv_i_y  -( til_peb) ) <= 0 ) 
+                    ?
+                        //AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Get(
+                       AAC2020_P5D1OGL_cuvipix_CTO_til_val_Get( 
+                            cuv_i_x  *(    1   ) //:<---[ STAY ]
+                        ,   cuv_i_y  -( mov_top) //:<---[ STAY ]
+                        ,   lay_dex  //:AKA[ lay_dex ]        
+                        ,   aus_dex  //:AKA[ aus_dex ] 
+                        ,   til_exp
+                        )
+                    :
+                        U32_000
+                    );; 
+
+                    U32 u32_lef =(
+                    AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Get( 
+                        cuv_i_x  -( mov_lef ) //:<---[ STAY ]
+                    ,   cuv_i_y  *(    1    ) //:<---[ STAY ]
+                    ,   lay_dex  //:AKA[ lay_dex ]        
+                    ,   aus_dex  //:AKA[ aus_dex ]          
+                    ));;////////////////////////////////////
+                    U32 u32_rig =(
+                    AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Get( 
+                        cuv_i_x  +( mov_rig ) //:<---[ STAY ]
+                    ,   cuv_i_y  *(    1    ) //:<---[ STAY ]
+                    ,   lay_dex  //:AKA[ lay_dex ]        
+                    ,   aus_dex  //:AKA[ aus_dex ]          
+                    ));;////////////////////////////////////
+                    U32 u32_bot =(
+                    AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Get( 
+                        cuv_i_x  *(    1    ) //:<---[ STAY ]
+                    ,   cuv_i_y  +( mov_bot ) //:<---[ STAY ]
+                    ,   lay_dex  //:AKA[ lay_dex ]        
+                    ,   aus_dex  //:AKA[ aus_dex ]          
+                    ));;////////////////////////////////////
+                    
+                    if( u32_top > U32_000 ){ /** NOOP **/ };
+                    if( u32_lef > U32_000 ){ /** NOOP **/ };
+                    if( u32_rig > U32_000 ){ /** NOOP **/ };
+                    if( u32_bot > U32_000 ){ /** NOOP **/ };
+
+
+
+
+                    if( toupaca[ lay_dex ] > U32_000 ){
+                        /** NOOP **/
+                    };;
+
+                };;};;
+                //:-------:TOUCHING_VALUES_FOR_EACH_LAYER://
+
                 //:CORE_RENDERING_ALGORITHM:-------------://
 
                     U32 u32_pix=(
@@ -1318,17 +1599,6 @@
 
             #endif
 
-    ////    //:UNDEF_OR_DEF_U32_COLORS:------------------://
-    ////    #undef U_000 
-    ////    #undef U_001 
-    ////    #undef U_008 
-    ////    #undef U_016 
-    ////    #undef U_032 
-    ////    #undef U_048 
-    ////    #undef U_064 
-    ////    #undef U_096 
-    ////    #undef U_128 
-    ////    //:------------------:UNDEF_OR_DEF_U32_COLORS://
         }
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
     //:always_exists_error_string_macros:----------------://
@@ -1374,9 +1644,6 @@
         #undef  CUVIPIX                            //[ 6 ]//
         #undef  TYP_F_C                            //[ 7 ]//
         #undef  INN_F_C                            //[ 8 ]//
-        #undef  ARR_U32
-        #undef  ARR_BEG
-        #undef  ARR_END
                                                    //[ x ]//
     //:------------------------------:seven_letter_macros://
     //:main_shim_macros:---------------------------------://

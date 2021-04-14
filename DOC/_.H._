@@ -9,7 +9,151 @@
     //[   VIDEO COMMENT TIMESTAMP EXAMPLE   ]//
 *** ******************************************************** ***
 
+#_WORKING_OUT_TOUPACK_BIT_FETCHING_#############################
+#_NOTES_TOUPACK_BIT_FETCHING_###################################
 
+    @VID_IID[ 0257 ]TIME[ 01:46:42 ]
+    FIGURING_OUT_HOW_TO_PACK_BITS_INTO_A_UINT32
+    THAT_HOLDS_ALL_TOUCHING_VALUES_FOR_ALL_TILES_SIZES
+    THAT_EXIST_UNDER_THE_CURRENT_PIXEL
+
+    You have a pixel at point[ PIX ].
+    How do you gather the auto tiling values for all of
+    the adjacten tiles of different tile sizes?
+
+    To get this to work we need to steal code from
+    FUNCTION[ AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Get ]
+    And re-work it to NOT loop over tile exponent sizes.
+
+    INSTEAD_OF_THIS:
+
+        //:PACKS ALL TILE VALUES FOR ALL 
+        //:TILE SIZE EXPONENTS ( til_exp )INTO A UINT32
+        AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Get( 
+            cuv_i_x  *(    1   ) //:<---[ STAY ]
+        ,   cuv_i_y  -( mov_top) //:<---[ STAY ]
+        ,   lay_dex  //:AKA[ lay_dex ]        
+        ,   aus_dex  //:AKA[ aus_dex ] 
+        );;
+               
+        //:GETS_ONLY_ONE_TILE_VALUE_FOR_THE_CURRENT
+        //:[ cuv_i_x , cuv_i_y ]Location. You must specify
+        //:what tile under the pixel you are trying to look
+        //:at by providing[ lay_dex + aus_dex + til_exp ]
+        AAC2020_P5D1OGL_cuvipix_CTO_til_val_Get( 
+            cuv_i_x  *(    1   ) //:<---[ STAY ]
+        ,   cuv_i_y  -( mov_top) //:<---[ STAY ]
+        ,   lay_dex  //:AKA[ lay_dex ]        
+        ,   aus_dex  //:AKA[ aus_dex ] 
+        ,   til_exp
+        );;
+                      
+                    
+                     
+                         +---+---+-------+
+                         |   |   |       |
+                         +---+   |       |
+                         |       |       |
+                         +-------+       |
+                         |               |
+                         +---+           |  
+                         |T_0|           |
+         +---+---+---+---+---+---+-------+---+---+-------+    
+         |   |   |   |L_0|PIX|R_0|       |   |   |       |
+         +---+   |   +---|---+---+       +---+   |       |
+         |       |       |B_0|   |       |       |       |
+         +-------+       |---+---+       +-------+       |
+         |               |               |               |       
+         |               |               |               |       
+         |               |               |               |       
+         +---------------+---+---+-------+---------------+       
+                         |   |   |       |       
+                         +---+   |       |
+                         |       |       |
+                         +-------+       |
+                         |               |       
+                         |               |       
+                         |               |       
+                         +---------------+      
+
+
+                         +---+---+-------+
+                         |   |   |       |
+                         +---+   |       |
+                         |       |       |
+                         +-------+       |
+                         |       |       |
+                         |  T_1  |       |  
+                         |       |       |
+         +---+---+-------+-------+-------+---+---+-------+    
+         |   |   |       |PIX|   |       |   |   |       |
+         +---+   |  L_1  |---+   |  R_1  |---+   |       |
+         |       |       |       |       |       |       |
+         +-------+-------+-------+-------+-------+       |
+         |               |       |       |               |       
+         |               |  B_1  |       |               |       
+         |               |       |       |               |       
+         +---------------+-------+-------+---------------+       
+                         |   |   |       |       
+                         +---+   |       |
+                         |       |       |
+                         +-------+       |
+                         |               |       
+                         |               |       
+                         |               |       
+                         +---------------+     
+
+
+                         +---------------+
+                         |               |
+                         |               |
+                         |               |
+                         |      T_2      |
+                         |               |
+                         |               |  
+                         |               |
+         +---------------+---+---+-------+---------------+    
+         |               |PIX|   |       |               |
+         |               |---+   |       |               |
+         |               |       |       |               |
+         |      L_2      +-------+       |      R_2      |
+         |               |               |               |       
+         |               |               |               |       
+         |               |               |               |       
+         +---------------+---------------+---------------+       
+                         |               |       
+                         |               |
+                         |               |
+                         |      B_2      |
+                         |               |       
+                         |               |       
+                         |               |       
+                         +---------------+          
+          
+###################################_NOTES_TOUPACK_BIT_FETCHING_#            
+#############################_WORKING_OUT_TOUPACK_BIT_FETCHING_#
+#AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Get########################
+
+    Gets all of the tiles UNDER a given pixel.
+    The pixel coordinate defined by a thing called
+    a [ cuvipix ]( CanvasUserVIew:PIXel )
+
+            This[ cuv_i_x , cuv_i_y ]postion has mutliple
+            tiles of different sizes under it.
+              |
+            +-|-+----+--------+
+            | V |    |        |
+            +---+    |        |
+            |        |        |
+            |        |        |
+            +--------+        |
+            |                 |
+            |                 |
+            |                 |
+            |                 |
+            +-----------------+
+
+########################AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Get#
 #_TOUPAC_NOTES_FIRST_DRAFT_#####################################
 
     96 INFO FETCHES ==
