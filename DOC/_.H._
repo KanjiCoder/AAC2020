@@ -9,6 +9,70 @@
     //[   VIDEO COMMENT TIMESTAMP EXAMPLE   ]//
 *** ******************************************************** ***
 
+#_WHY_DOES_RENCORE_RETURN_U32_##################################
+
+    @VID_IID[ 0257 ]TIME[ 03:41:50 ]WHY_USING_U32_NOT_F32
+
+    REASON_001:
+        We might want to use the renderer code to render out
+        pixel-perfect datasets that are interpreted as some
+        type of DATA rather than on-screen game visuals.
+
+        For example... The mandela renderer code could have
+        a render mode that outputs very specific pixel values
+        that allow us to easily convert the resulting bitmap
+        into a SVG path.
+
+        Because GLSL code can also compile on the CPU side,
+        we can do the equivalent of[ render to texture ]
+        without ever invoking[ ANY ]GLSL code! Which is 
+        pretty damn awesome!
+
+        It makes our pipeline a lot simpler for some stuff.
+
+        Note that we do __NOT__ get the speed benifits of
+        render to texture if we render to texture on[ CPU ]
+        side. But perfectly fast enough for an export to
+        hard disk function.
+
+    Another Thought:
+        @VID_IID[ 03:47:42 ]BLENDING_LAYERS_MAY_CORRUPT_DATA
+
+        REASON_001 kind of implies we have ability to
+        supply layer blending function overrides to our
+        [ extension / plugin ]architecture as well.
+        Because without that, we loose the pixel perfect
+        nature of what we are doing when the different
+        layers are composited together.
+
+        Maybe something like...
+        
+            AAC2020_PAINT5D_COMCORE (COMpositor CORE)
+            This blends all the layers and tile sizes together.
+
+##################################_WHY_DOES_RENCORE_RETURN_U32_#
+#_WORKING_OUT_SIGNATURE_FOR_FINAL_RENCORE_FUNCTION_#############
+
+
+    U32
+    AAC2020_PAINT5D_RENCORE(
+
+        aus_dex <-- what auset is being rendererd?
+    ,   til_lay
+    ,   til_exp <-- what size is the current tile?
+    ,   til_val <-- what tile value is being rendered?
+    ,   tou_val <-- what touching value does current tile have?
+    ,   tilop_x <-- TIle_LOcal_Percent(coordinate)X
+    ,   tilop_y <-- TIle_LOcal_Percent(coordinate)y
+    )
+    {
+        //: ( 7 params * 4 bytes_each )==( 28 BYTE PAYLOAD )
+
+
+        ....CODE....
+    }
+
+#############_WORKING_OUT_SIGNATURE_FOR_FINAL_RENCORE_FUNCTION_#
 #_WORKING_OUT_TOUPACK_BIT_FETCHING_#############################
 #_NOTES_TOUPACK_BIT_FETCHING_###################################
 
