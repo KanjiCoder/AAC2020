@@ -1301,24 +1301,82 @@
                                       
     //:|||||||||||||||||||||||:DIAGRAMS:ATE_Subtile_User_View://
     //:DIAGRAMS:RENDER_CORE_FLOW:============================://
+        //:ABOUT:============================================://
+
+            RENCORE_******* functions are part of the 
+            extension system. Allows code base users to 
+            inject custom rendering code without having to
+            deal with the nitty gritty data retrieval and
+            display problems.
+
+            @VID_IID[ 0258 ]TIME[ 05:52:00 ]REVIEW_SECTION
+
+        //:VARIABLE_NAMES:===================================://
+
+        RENCORE : RENder_CORe
 
         tilodat : TILe_LOcal_DATa ( @_CONCEPTUAL_OBJECT_@ )
-        laypixu : LAYer_PIXel_Uint32
-        laypixa : LAYPIXu______Array
+                  tilodat==(a_d,t_l,t_e,t_v,tou,p_x,p_y)
 
-        laypixu=(
-        AAC2020_PAINT5D_RENCORE_tilodat_CTO_laypixu(
-            a_d     //:AKA[ aus_dex ]¯¯¯¯|¯¯¯¯
-        ,   t_l     //:AKA[ til_lay ]    |
-        ,   t_e     //:AKA[ til_exp ]    |
-        ,   t_v     //:AKA[ til_val ] tilodat
-        ,   tou     //:AKA[ tou_val ]    |
-        ,   p_x     //:AKA[ tilop_x ]    |
-        ,   p_y     //:AKA[ tilop_y ]____|____
-        ));;
+        tilpixu : TILe_PIXels:Uint32
+        tilpixa : TILe_PIXels:Array
         
+        laypixu : LAYer_PIXels:Uint32
+        laypixa : LAYer_PIXels:Array
 
+        plypix3 : PLY( as in toilet paper )PIXels 3 (3 layers)
 
+        //:===================================:VARIABLE_NAMES://
+        //:FAKE_CODE:========================================://
+
+        FOR_EACH[[[ t_l / til_lay ]]]
+        FOR_EACH[[[ t_e / til_exp ]]]
+
+            tilpixu=(
+            AAC2020_PAINT5D_RENCORE_tilodat_CTO_tilpixu(
+                a_d     //:AKA[ aus_dex ]¯¯¯¯|¯¯¯¯
+            ,   t_l     //:AKA[ til_lay ]    |
+            ,   t_e     //:AKA[ til_exp ]    |
+            ,   t_v     //:AKA[ til_val ] tilodat
+            ,   tou     //:AKA[ tou_val ]    |
+            ,   p_x     //:AKA[ tilop_x ]    |
+            ,   p_y     //:AKA[ tilop_y ]____|____
+            ));;
+            tilpixa[ t_e ]=( tilpixu );
+
+        NEXT[[[ t_e / til_exp ]]]
+        
+            laypixu=(
+            AAC2020_PAINT5D_RENCORE_tilpixa_CTO_laypixu(
+                                    tilpixa ));;
+
+            laypixa[ t_l ]=( laypixu );
+
+        NEXT[[[ t_l / til_lay ]]]
+
+        OUTSIDE_THE_LOOP:
+
+            plypix3=(
+            AAC2020_PAINT5D_RENCORE_laypixa_CTO_plypix3(
+                                    laypixa ));;
+
+        //:========================================:FAKE_CODE://
+        //:PROGRAM_FLOW:=====================================://
+
+            tilodat
+               |   \__RENCORE_tilodat_CTO_tilpixu
+               V   /  (HOW_TO: Render Individual Tiles)
+            tilpixu
+            tilpixa
+               |   \__RENCORE_tilpixa_CTO_laypixu
+               V   /  (HOW_TO: Composite Tiles On Same Layer)
+            laypixu
+            laypixa
+               |   \__RENCORE_laypixa_CTO_plypix3
+               V   /  (HOW_TO: Composite 3 Flattened Layers )
+            plypix3
+
+        //:=====================================:PROGRAM_FLOW://
 
     //:============================:DIAGRAMS:RENDER_CORE_FLOW://
     //:=============================================:DIAGRAMS://
