@@ -1300,7 +1300,7 @@
             }
                                       
     //:|||||||||||||||||||||||:DIAGRAMS:ATE_Subtile_User_View://
-    //:DIAGRAMS:RENDER_CORE_FLOW:============================://
+    //:DIAGRAMS:RENDER_CORE_FLOW:||||||||||||||||||||||||||||://
         //:ABOUT:============================================://
 
             RENCORE_******* functions are part of the 
@@ -1378,7 +1378,210 @@
 
         //:=====================================:PROGRAM_FLOW://
 
-    //:============================:DIAGRAMS:RENDER_CORE_FLOW://
+    //:||||||||||||||||||||||||||||:DIAGRAMS:RENDER_CORE_FLOW://
+    //:DIAGRAMS:TOUCHING_VALUE:||||||||||||||||||||||||||||||://
+
+        #_TOUCHING_VALUE_BITS_# #_WANG_STYLE_#
+        #_NEIGHBOR_VALUE_BITS_#  #WANG_STYLE#
+
+            We are using[ WANG_STYLE ]auto tiling.
+            Which requires 16 sub-tiles in an[ auset ].
+            ( auset == auto tile set ).
+
+            REF_FOR_SMART_PEOPLE[ tinyurl.com/NVIDIA-WANG ]
+            REF_EASY_FOR_ME[        tinyurl.com/EASY-WANG ]
+
+        @tou_val@ @_tou_val_@ <--[ CTRL_F_HELP ]
+       
+        //|----------------------------------------|//
+        //|Layout of bits for touching pattern:    |//
+        //|TOUCHING:  ___  ___  ,  ___  ___        |//
+        //|           X_0  X_1     Y_0  Y_1        |//
+        //|           LEF  RIG     TOP  BOT        |//
+        //|                       (UPP)(DOW)       |//
+        //|                                        |//
+        //|           Y_0          AHK ShortCut:   |//
+        //|        +---+---+       (AutoHotKey)    |//
+        //|        | TILE  |       [TOUCH_DIAGRAM] |//
+        //|    X_0 |  ON   | X_1                   |//
+        //|        |SCREEN |                       |//
+        //|        +---+---+                       |//
+        //|           Y_1                          |//
+        //|----------------------------------------|//
+            
+             0 <<<<<<<<<<<<<<<<<<<<< TOUSHIF_X_0 ==( 3 )
+             |    0 <<<<<<<<<<<<<<<< TOUSHIF_X_1 ==( 2 )
+             |    |       0 <<<<<<<< TOUSHIF_Y_0 ==( 1 )
+             |    |       |    0 <<< TOUSHIF_Y_1 ==( 0 )
+             0    0   |   0    0 
+            ___  ___  |  ___  ___
+            X_0  X_1  |  Y_0  Y_1 <--NETWORKISH_BYTE_ORDER
+                                    (I guess "bit" order )
+
+
+
+          @VID_IID[ 0258 ]TIME[ 00:23:00 ]MAKING_CHECKSUMS
+          TOUCHING_CHECKSUM_X_0 =( 8 )
+          TOUCHING_CHECKSUM_X_1 =( 8 )
+          TOUCHING_CHECKSUM_Y_0 =( 8 )
+          TOUCHING_CHECKSUM_Y_1 =( 8 )
+
+          +-------+
+          |       |    0    0   |   0    0   | BIN[ 0000 ]
+          |   o   |   ___  ___  |  ___  ___  | DEC[    0 ]
+          |       |   X_0  X_1  |  Y_0  Y_1  | HEX[ 0x00 ]
+          +-------+
+
+          +-------+
+          |       |    0    0   |   0    1   | BIN[ 0001 ]
+          |   o   |   ___  ___  |  ___  ___  | DEC[    1 ]
+          |   |   |   X_0  X_1  |  Y_0  Y_1  | HEX[ 0x01 ]
+          +---+---+
+
+          +---+---+
+          |   |   |    0    0   |   1    0   | BIN[ 0010 ]
+          |   o   |   ___  ___  |  ___  ___  | DEC[    2 ]
+          |       |   X_0  X_1  |  Y_0  Y_1  | HEX[ 0x02 ]
+          +-------+
+ 
+          +---+---+
+          |   |   |    0    0   |   1    1   | BIN[ 0011 ]
+          |   o   |   ___  ___  |  ___  ___  | DEC[    3 ]
+          |   |   |   X_0  X_1  |  Y_0  Y_1  | HEX[ 0x03 ]
+          +---+---+
+
+          +-------+
+          |       |    0    1   |   0    0   | BIN[ 0100 ]
+          |   o---+   ___  ___  |  ___  ___  | DEC[    4 ]
+          |       |   X_0  X_1  |  Y_0  Y_1  | HEX[ 0x04 ]
+          +-------+
+
+          +-------+
+          |       |    0    1   |   0    1   | BIN[ 0101 ]
+          |   o---+   ___  ___  |  ___  ___  | DEC[    5 ]
+          |   |   |   X_0  X_1  |  Y_0  Y_1  | HEX[ 0x05 ]
+          +---+---+
+
+          +---+---+
+          |   |   |    0    1   |   1    0   | BIN[ 0110 ]
+          |   o---+   ___  ___  |  ___  ___  | DEC[    6 ]
+          |       |   X_0  X_1  |  Y_0  Y_1  | HEX[ 0x06 ]
+          +-------+
+
+          +---+---+
+          |   |   |    0    1   |   1    1   | BIN[ 0111 ]
+          |   o---+   ___  ___  |  ___  ___  | DEC[    7 ]
+          |   |   |   X_0  X_1  |  Y_0  Y_1  | HEX[ 0x07 ]
+          +---+---+
+
+          +-------+
+          |       |    1    0   |   0    0   | BIN[ 1000 ]
+          +---o   |   ___  ___  |  ___  ___  | DEC[    8 ]
+          |       |   X_0  X_1  |  Y_0  Y_1  | HEX[ 0x08 ]
+          +-------+
+
+          +-------+
+          |       |    1    0   |   0    1   | BIN[ 1001 ]
+          +---o   |   ___  ___  |  ___  ___  | DEC[    9 ]
+          |   |   |   X_0  X_1  |  Y_0  Y_1  | HEX[ 0x09 ]
+          +---+---+
+
+          +---+---+
+          |   |   |    1    0   |   1    0   | BIN[ 1010 ]
+          +---o   |   ___  ___  |  ___  ___  | DEC[   10 ]
+          |       |   X_0  X_1  |  Y_0  Y_1  | HEX[ 0x0A ]
+          +-------+
+
+          +---+---+
+          |   |   |    1    0   |   1    1   | BIN[ 1011 ]
+          +---o   |   ___  ___  |  ___  ___  | DEC[   11 ]
+          |   |   |   X_0  X_1  |  Y_0  Y_1  | HEX[ 0x0B ]
+          +---+---+
+
+          +-------+
+          |       |    1    1   |   0    0   | BIN[ 1100 ]
+          +---o---+   ___  ___  |  ___  ___  | DEC[   12 ]
+          |       |   X_0  X_1  |  Y_0  Y_1  | HEX[ 0x0C ]
+          +-------+
+
+          +-------+
+          |       |    1    1   |   0    1   | BIN[ 1101 ]
+          +---o---+   ___  ___  |  ___  ___  | DEC[   13 ]
+          |   |   |   X_0  X_1  |  Y_0  Y_1  | HEX[ 0x0D ]
+          +---+---+
+
+          +---+---+
+          |   |   |    1    1   |   1    0   | BIN[ 1110 ]
+          +---o---+   ___  ___  |  ___  ___  | DEC[   14 ]
+          |       |   X_0  X_1  |  Y_0  Y_1  | HEX[ 0x0E ]
+          +-------+
+
+          +---+---+
+          |   |   |    1    1   |   1    1   | BIN[ 1111 ]
+          +---o---+   ___  ___  |  ___  ___  | DEC[   15 ]
+          |   |   |   X_0  X_1  |  Y_0  Y_1  | HEX[ 0x0F ]
+          +---+---+
+
+    //:||||||||||||||||||||||||||||||:DIAGRAMS:TOUCHING_VALUE://
+    //:DIAGRAMS:CLUDMAP(ing):||||||||||||||||||||||||||||||||://
+
+        @VID_IID[ 0259 ]TIME[ 03:07:42 ]MOVING_THINGS_AROUND
+
+        VP0:Viewport_Zero(0): (Destination/Screen Viewport)
+        VP1:Viewport_One(1): (Offscreen/Source/Data/Tilemap)
+
+        AAC2020_P5D1OGL_CludMap_ZOF_1_D :
+            Cludmap ZERo_OFset , 1-dimensional
+
+        AAC2020_P5D1OGL_CludMap_RNG_1_D :
+            CludMap Using RANG , 1-dimensional
+
+        AAC2020_P5D1OGL_CludMap_fic_vp0_vp1_clu :
+            CludMap Using:
+                1. fic: Fragment Integer Coord (fic)
+                2. vp0: VP0 selection rectangle.
+                3. vp1: VP1 selection rectangle.
+                4. clu: Pebble Size (Cluster_Size)
+  
+    
+        |<-------- input_range -------->|
+        |0|1|2|3|4|5|6|7|8|9|A|B|C|D|E|F|
+        |       |       |       |       |
+        |0|1|2|3| 
+        |<- out ->|(output_range)
+    
+        Cluster_Size==( 1 )
+        |<-------- input_range -------->|
+        |0|1|2|3|4|5|6|7|8|9|A|B|C|D|E|F|
+        |0.0    |0.0    |0.0    |0.0    |
+        |1.0    |1.0    |1.0    |1.0    |
+
+        Cluster_Size==( 2 )
+        |<-------- input_range -------->|
+        |0|1|2|3|4|5|6|7|8|9|A|B|C|D|E|F|
+        |0.0            |0.0            |
+        |1.0            |1.0            |
+
+        1 ==> 0.5
+
+        +---+---+---+---+
+        |   |   |   |   |
+        +---+   +---+   +
+        |       |       |
+        +---+---+  ---  +
+        |   |           |
+        +---+   |       +
+        |               |
+        +---+---+---+---+
+
+    //:||||||||||||||||||||||||||||||||:DIAGRAMS:CLUDMAP(ing)://
+    //:DIAGRAMS:fic_MAP_tiloper:|||||||||||||||||||||||||||||://
+
+        fic_MAP_tiloper ]WRAPS[ CLUDMAP ]function
+        Allows us to take the fragment integer coord on
+        screen and figure out the local interior
+        coordinates of the tile we want to render.
+
     //:=============================================:DIAGRAMS://
     //:VARIABLE_NAME_INDEX:==================================://
     

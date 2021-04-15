@@ -45,11 +45,12 @@
     toupac1 : TOUching_PACK_1 (2nd layer)
     toupac2 : TOUching_PACK_2 (3rd layer)
 
-    mov_top : MOVe( to view or sample TLRB ) TOP
+    mov_top : MOVe( to view or sample TLRB ) TOP    
     mov_lef : MOVe( to view or sample TLRB ) LEFT
     mov_rig : MOVe( to view or sample TLRB ) RIGHT
     mov_bot : MOVe( to view or sample TLRB ) BOTTOM
 
+    tiloper : TIle_LOcal_PERcentage(tiloper.[x|y]==tilop_[x|y])
     tilop_x : TIle_LOcal_Percentage:X (-1.0 to +1.0 range)
     tilop_y : TIle_LOcal_Percentage:Y (-1.0 to +1.0 range)
 
@@ -65,13 +66,18 @@
     laypixu : LAYer_PIXels:Uint32
     laypixa : LAYer_PIXels:Array
 
+    plypixu : Could_Be_A[ plypix1 | plypix2 | plypix3 | ETC ]
     plypix3 : PLY( as in toilet paper )PIXels 3 (3 layers)
+    plypixa : An array of[ plypixu / plypix3 ]
+
+    CUV_MAX : Canvas_User_View_MAX (MAXVAL[ cuv_i_x | cuv_i_y ])
   
 *** ******************************************************** **/
 /** ******************************************************** ***
 
     BAD / INCORRECT / MIS_SPELLED 
 
+    MAX_CUV >>>> CUV_MAX
     ironedu >>>> laypixu
 
     tiladat >>>> tilodat

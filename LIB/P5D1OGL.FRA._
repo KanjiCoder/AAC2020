@@ -28,22 +28,23 @@
         #define I32          int    //:  03  ://   //| # |//
         #define IV2        ivec2    //:  04  ://   //| # |//
         #define UV4        uvec4    //:  05  ://   //| # |//
-        #define T_F   texelFetch    //:  06  ://   //| # |//
-        #define TAU      taudepo    //:  07  ://   //| # |//
-        #define P5D      paint5d    //:  08  ://   //| # |//
-        #define SAM   usampler2D    //:  09  ://   //| # |//
-        #define UFF    uint(0xFF)   //:  10  ://   //| # |//
-        #define U00    uint( 0  )   //:  11  ://   //| # |//
-        #define I00     int( 0  )   //:  12  ://   //| # |//
-        #define U03    uint( 3  )   //:  13  ://   //| # |//
-        #define B_3    uint( 3  )   //:  14  ://   //| # |//
-        #define B11    uint( 3  )   //:  15  ://   //| # |//
-        #define H55    uint(0x55)   //:  16  ://   //| # |//
-        #define V_A                 //:  17  ://   //| # |//
-        #define FV4         vec4    //:  18  ://   //| # |//
-        #define ASS  /**NOTHING**/  //:  19  ://   //| # |//
-        #define ERR  /**NOTHING**/  //:  20  ://   //| # |//
-        #define TRU  trunc          //:  21  ://   //| # |//
+        #define FV2         vec2    //:  06  ://
+        #define T_F   texelFetch    //:  07  ://   //| # |//
+        #define TAU      taudepo    //:  08  ://   //| # |//
+        #define P5D      paint5d    //:  09  ://   //| # |//
+        #define SAM   usampler2D    //:  10  ://   //| # |//
+        #define UFF    uint(0xFF)   //:  11  ://   //| # |//
+        #define U00    uint( 0  )   //:  12  ://   //| # |//
+        #define I00     int( 0  )   //:  13  ://   //| # |//
+        #define U03    uint( 3  )   //:  14  ://   //| # |//
+        #define B_3    uint( 3  )   //:  15  ://   //| # |//
+        #define B11    uint( 3  )   //:  16  ://   //| # |//
+        #define H55    uint(0x55)   //:  17  ://   //| # |//
+        #define V_A                 //:  18  ://   //| # |//
+        #define FV4         vec4    //:  19  ://   //| # |//
+        #define ASS  /**NOTHING**/  //:  20  ://   //| # |//
+        #define ERR  /**NOTHING**/  //:  21  ://   //| # |//
+        #define TRU  trunc          //:  22  ://   //| # |//
         #define REC  struct AAC2020_FRAGCOM_REC
     #else                                          //| # |//
                                                    //| # |//
@@ -54,20 +55,21 @@
         #define I32    int32_t      //:  03  ://   //| # |//
         #define IV2   struct AAC2020_POLYOGL_IV2   //| # |//
         #define UV4   struct AAC2020_POLYOGL_UV4   //| # |//
+        #define FV2   struct AAC2020_POLYOGL_FV2
         #define T_F   AAC2020_POLYOGL_tex_fet      //| # |//
-        #define TAU   ( 0 )         //:  07  ://   //| # |//
-        #define P5D   ( 1 )         //:  08  ://   //| # |//
-        #define SAM    int          //:  09  ://   //| # |//
-        #define UFF    0xFF         //:  10  ://   //| # |//
-        #define U00    0x00         //:  11  ://   //| # |//
-        #define I00   ( 0 )         //:  12  ://   //| # |//
-        #define U03   ( 3 )         //:  13  ://   //| # |//
-        #define B_3   ( 3 )         //:  14  ://   //| # |//
-        #define B11   ( 3 )         //:  15  ://   //| # |//
-        #define H55    0x55         //:  16  ://   //| # |//
-        #define V_A   void          //:  17  ://   //| # |//
+        #define TAU   ( 0 )         //:  08  ://   //| # |//
+        #define P5D   ( 1 )         //:  09  ://   //| # |//
+        #define SAM    int          //:  10  ://   //| # |//
+        #define UFF    0xFF         //:  11  ://   //| # |//
+        #define U00    0x00         //:  12  ://   //| # |//
+        #define I00   ( 0 )         //:  13  ://   //| # |//
+        #define U03   ( 3 )         //:  14  ://   //| # |//
+        #define B_3   ( 3 )         //:  15  ://   //| # |//
+        #define B11   ( 3 )         //:  16  ://   //| # |//
+        #define H55    0x55         //:  17  ://   //| # |//
+        #define V_A   void          //:  18  ://   //| # |//
         #define FV4   struct AAC2020_POLYOGL_FV4   //| # |//
-        #define ASS   assert        //:  19  ://   //| # |//
+        #define ASS   assert        //:  20  ://   //| # |//
         #define ERR   aac2020_p5d1ogl_Halt         //| # |//
         #define TRU   AAC2020_POLYOGL_Trunc        //| # |//
         #define REC   struct AAC2020_POLYOGL_REC
@@ -1385,6 +1387,118 @@
                 return( AAC2020_CPUNIFO_iResolution_hig );
             #endif
         }
+        //:- - - - - - - - - - - -- - - - - - - - - - - -://
+        FV2
+        AAC2020_P5D1OGL_CludMap_fic_vp0_vp1_clu(
+            IV2 fic      //:fic:Fragment_Integer_Coord       
+        ,   REC p5d_vp0  //:BOUNDS_OF_INPUT[ fic ]
+        ,   REC p5d_vp1  //:BOUNDS_OF_FETCH[ cuv ]
+        ,   I32 clu_san  //:Clustering_Span_Size   
+        )
+        {
+        /** ******************************************** ***
+        @VID_IID[ 0259 ]TIME[ 03:15:32 ]
+        Like a normal mapping function where we take a 
+        point[ fic ]on rectangle[ p5d_vp0 ]and map it
+        to a point on[ p5d_vp1 ]....
+
+        However there are TWO primary differences:
+        1. Rather than snapping to the nearest discrete
+           unit on[ p5d_vp1 ]we are returning a float
+           value that signifies a percentage WITHIN
+           that discrete unit.
+
+        2. The descrete units on[ p5d_vp1 ]can be grouped
+           into larger discrete units by specifying a
+           whole number greater than 1 for[ clu_san ].
+           ( clu_san ==[ 1 -to- 7 ] inclusive in our   )
+           ( current use case. We are grouping pebbles )
+           ( into larger tile sizes.                   )
+
+        @VID_IID[ 0259 ]TIME[ 03:18:42 ]WHATS_USED_FOR?
+        Function is used to help us calculate internal
+        tile coordinates within the current tile the 
+        pixel is found to be in.
+        ( AKA[ tiloper / [ tilop_x , tilop_y ] )
+        (      1234567     1234567   1234567   )
+
+            Looking at[ AAC2020_FRAGCOM_fic_MAP_cuv ]  
+            may help us write this function body.      
+        *** ******************************************** **/
+
+            FV2 tiloper ;
+                tiloper.x =( 0.0 );
+                tiloper.y =( 0.0 );
+
+            if( fic.x       > 0 ){ /** NOOP **/ };          
+            if( p5d_vp0.x_0 > 0 ){ /** NOOP **/ };
+            if( p5d_vp1.x_0 > 0 ){ /** NOOP **/ };  
+            if( clu_san     > 0 ){ /** NOOP **/ };
+
+            return( tiloper );
+        }
+        //:- - - - - - - - - - - -- - - - - - - - - - - -://   
+        FV2
+        AAC2020_P5D1OGL_fic_MAP_tiloper(
+            IV2 fic      //:fic:Fragment_Integer_Coord       
+        ,   REC p5d_vp0  //:BOUNDS_OF_INPUT[ fic ]
+        ,   REC p5d_vp1  //:BOUNDS_OF_FETCH[ cuv ]
+        ,   I32 til_exp  //:TILesize_EXPonent
+        )
+        {
+        /** ******************************************** ***
+        @VID_IID[ 0259 ]TIME[ 01:23:50 ]
+        Function_Like[ AAC2020_FRAGCOM_fic_MAP_cuv ]
+        But an extra 4th(4) parameter[ til_exp ]
+        is supplied.
+
+        Instead of getting the canvas user view integer
+        coordinate, it get's us the LOCAL coordinate of
+        the tile[ fic ]is inside of.
+
+        tiloper==[ 0.0 , 0.0 ] ==> CEN_TER (0,0)
+        tiloper==[-1.0 ,-1.0 ] ==> TOP_LEF (-,-)
+        tiloper==[+1.0 ,-1.0 ] ==> TOP_RIG (+,-)
+        tiloper==[-1.0 ,+1.0 ] ==> BOT_LEF (-,+)
+        tiloper==[+1.0 ,+1.0 ] ==> BOT_RIG (+,+)
+        *** ******************************************** **/
+        //:LOCAL_HARDCODED_LOOKUP_TABLE:=================://
+        I32 LUT_til_exp_CTO_til_peb[ 8 ]= ARR_I32( 8 )
+        ARR_BEG
+        /**/   1  //: til_exp == 0 ://
+        ,      2  //: til_exp == 1 ://
+        ,      4  //: til_exp == 2 ://
+        ,      8  //: til_exp == 3 ://
+        ,     16  //: til_exp == 4 ://
+        ,     32  //: til_exp == 5 ://
+        ,     64  //: til_exp == 6 ://
+        ,    128  //: til_exp == 7 ://
+        ARR_END;
+        //:=================:LOCAL_HARDCODED_LOOKUP_TABLE://
+
+        //:<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TODO:FIGURE_OUT_THIS_MAPPING_LOGIC
+            I32 til_peb =(LUT_til_exp_CTO_til_peb[
+                              til_exp ]);;
+            FV2 tiloper ;
+
+            tiloper=(
+            AAC2020_P5D1OGL_CludMap_fic_vp0_vp1_clu(
+                fic      //:fic:Fragment_Integer_Coord       
+            ,   p5d_vp0  //:BOUNDS_OF_INPUT[ fic ]
+            ,   p5d_vp1  //:BOUNDS_OF_FETCH[ cuv ]
+            ,   til_peb  //:destination_unit_grouping_size
+            ));;         //:[ til_peb == clu == ClusterSize ]
+
+
+
+            if( fic.x       > 0 ){ /** NOOP **/ };
+            if( p5d_vp0.x_0 > 0 ){ /** NOOP **/ };
+            if( p5d_vp1.x_0 > 0 ){ /** NOOP **/ };
+            if( til_exp     > 0 ){ /** NOOP **/ };
+            if( til_peb     > 0 ){ /** NOOP **/ };
+
+            return( tiloper );
+        }
         //:- - - - - - - - - - - -- - - - - - - - - - - -://   
         RET_MAIN
         FUN_MAIN( 
@@ -1504,6 +1618,7 @@
                 ASS( cuv_i_x <= (256-1) );
                 ASS( cuv_i_y <= (256-1) );
 
+                //:TOUCHING_VALUES_FOR_EACH_LAYER:-------://
                 //:GET_LAYER_DATA:-----------------------://
                 /** Value of all tiles over the pixel    **/
                 /** being rendered.@IID[0256]T[01:20:23] **/
@@ -1532,17 +1647,8 @@
 
                 //:-----------------------:GET_LAYER_DATA://
                 //:TOUCHING_VALUES_FOR_EACH_LAYER:-------://
-                //:#_P5D1OGL_TOUPACA_#:------------------://
 
-                //:SEE[ #_NOTES_TOUPACK_BIT_FETCHING_# ]
-                U32 toupaca[ 3 ]= ARR_U32( 3 )
-                ARR_BEG
-                
-                /**/U32_000   
-                ,   U32_000   
-                ,   U32_000   
-  
-                ARR_END;
+            //:IDONT_KNOW_WHAT_TO_CALL_THIS_SECTION:---------://
 
                 /** **************************************** **/
                 /** @VID_IID[ 0256 ]TIME[ 03:48:50 ] ** **** **/
@@ -1567,10 +1673,10 @@
                 //:that we query what tiles are around     ::://
                 //:the current tile being rendered.        ::://
                 //:                                        ::://
-                I32 mov_top;  //:FIND:Tile_Neighbor_ABOVE  ::://
-                I32 mov_lef;  //:FIND:Tile_Neighbor_LEFT   ::://
-                I32 mov_rig;  //:FIND:Tile_Neighbor_RIGHT  ::://
-                I32 mov_bot;  //:FIND:Tile_Neighbor_BELOW  ::://
+                /// MOV_TOP;  //:FIND:Tile_Neighbor_ABOVE  ::://
+                /// MOV_LEF;  //:FIND:Tile_Neighbor_LEFT   ::://
+                /// MOV_RIG;  //:FIND:Tile_Neighbor_RIGHT  ::://
+                /// MOV_BOT;  //:FIND:Tile_Neighbor_BELOW  ::://
 
                 /** @VID_IID[ 0257 ]TIME[ 00:20:32 ] ******* **/
                 /** Size Of A Tile Measured In Pebbles.      **/
@@ -1585,79 +1691,191 @@
                 I32 til_peb;                        /** **** **/
                 /** **************************************** **/
 
-                for( I32 lay_dex = ( 0 )
-                ;        lay_dex <=(3-1) 
-                ;        lay_dex++ 
+                U32     cen ; //:<--[ My_House_Is_CENTER_Tile ]
+                U32     ntv ; //:<--[ Neightbor_Tile_Value    ]
+                U32     bit ; //:<--[ tou_bit :Touching_Bit   ]
+                U32     tou ; //:<--[ tou_val :Touching_Value ]
+                FV2 tiloper ; //:<--[ tilop_x , tilop_y       ]
+
+                for( I32 til_lay = ( 0 ) //:[ wrong:lay_dex ]
+                ;        til_lay <=(3-1) //:[ wrong:lay_dex ] 
+                ;        til_lay++       //:[ wrong:lay_dex ]
                 ){
-
-                toupaca[ lay_dex ]=( U32_000 );
-
                 for( I32 til_exp = ( 0 )
                 ;        til_exp <=(8-1)
                 ;        til_exp++
                 ){
+                //|LOOP_SECTION:TOUCHING_VALUES:||||||||||||||//
+
+                    tou=( U32_000 /** @_ERASE_PER_ITER_@ **/ );
 
                     til_peb=LUT_til_exp_CTO_til_peb[
                                 til_exp            ];;
 
-                    //:A bit wasteful. <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<MAKE_EFFICIENT_AND_LESS_WASTEFUL
-                    mov_top=( til_peb );  //:<<<<<<<<<<<<<<<<<<<<<<<<<<<MAKE_EFFICIENT_AND_LESS_WASTEFUL
-                    mov_lef=( til_peb );  //:<<<<<<<<<<<<<<<<<<<<<<<<<<<MAKE_EFFICIENT_AND_LESS_WASTEFUL
-                    mov_rig=( til_peb );  //:<<<<<<<<<<<<<<<<<<<<<<<<<<<MAKE_EFFICIENT_AND_LESS_WASTEFUL
-                    mov_bot=( til_peb );  //:<<<<<<<<<<<<<<<<<<<<<<<<<<<MAKE_EFFICIENT_AND_LESS_WASTEFUL
+                    //:WHERE_IS_MY_HOUSE:====================://
 
-                    U32 u32_top =(
-                    (( cuv_i_y  -( til_peb) ) <= 0 ) 
-                    ?
-                        //AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Get(
-                       AAC2020_P5D1OGL_cuvipix_CTO_til_val_Get( 
-                            cuv_i_x  *(    1   ) //:<---[ STAY ]
-                        ,   cuv_i_y  -( mov_top) //:<---[ STAY ]
-                        ,   lay_dex  //:AKA[ lay_dex ]        
-                        ,   aus_dex  //:AKA[ aus_dex ] 
-                        ,   til_exp
-                        )
-                    :
-                        U32_000
-                    );; 
+                        cen=(
+                        AAC2020_P5D1OGL_cuvipix_CTO_til_val_Get( 
+                            cuv_i_x  //:<--[ canvas_user_view ]
+                        ,   cuv_i_y  //:<--[ canvas_user_view ]
+                        ,   til_lay  //:AKA[ til_lay / t_l ]       
+                        ,   aus_dex  //:AKA[ aus_dex / a_d ]
+                        ,   til_exp  //:AKA[ til_exp / t_e ]
+                        ));; 
+ 
+                    //:====================:WHERE_IS_MY_HOUSE://
+                    //:CANVAS_USER_VIEW_MAX_VALUE:===========://
 
-                    U32 u32_lef =(
-                    AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Get( 
-                        cuv_i_x  -( mov_lef ) //:<---[ STAY ]
-                    ,   cuv_i_y  *(    1    ) //:<---[ STAY ]
-                    ,   lay_dex  //:AKA[ lay_dex ]        
-                    ,   aus_dex  //:AKA[ aus_dex ]          
-                    ));;////////////////////////////////////
-                    U32 u32_rig =(
-                    AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Get( 
-                        cuv_i_x  +( mov_rig ) //:<---[ STAY ]
-                    ,   cuv_i_y  *(    1    ) //:<---[ STAY ]
-                    ,   lay_dex  //:AKA[ lay_dex ]        
-                    ,   aus_dex  //:AKA[ aus_dex ]          
-                    ));;////////////////////////////////////
-                    U32 u32_bot =(
-                    AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Get( 
-                        cuv_i_x  *(    1    ) //:<---[ STAY ]
-                    ,   cuv_i_y  +( mov_bot ) //:<---[ STAY ]
-                    ,   lay_dex  //:AKA[ lay_dex ]        
-                    ,   aus_dex  //:AKA[ aus_dex ]          
-                    ));;////////////////////////////////////
+                        #define  CUV_MAX ( 256 - 1 )
+
+                    //:===========:CANVAS_USER_VIEW_MAX_VALUE://
+                    //:NEIGHBOR_SHIFT_AMOUNTS:===============://
+
+                        //:     123_123_123
+                        //:     1234567_123
+                        #define TOUSHIF_X_0 ( 3 ) //:LEF://
+                        #define TOUSHIF_X_1 ( 2 ) //:RIG://
+                        #define TOUSHIF_Y_0 ( 1 ) //:TOP://
+                        #define TOUSHIF_Y_1 ( 0 ) //:BOT://
+    
+                    //:===============:NEIGHBOR_SHIFT_AMOUNTS://
+                    //:NEIGHBOR_TOP:=========================://
+                    //:SEE[ README.MD ]SEARCH[ WANG_STYLE ]::://
+                    #define MOV_TOP   (     til_peb )
+                    #define U32_TOP   (         ntv )
+                    #define TOUSHIF   ( TOUSHIF_Y_0 )
+
+                        U32_TOP =(
+                        ( ((cuv_i_y)-(MOV_TOP)) < 0 ) 
+                        ? 
+                        U32_000 //:OUT_OF_BOUNDS_USE_ZERO
+                        :
+                        AAC2020_P5D1OGL_cuvipix_CTO_til_val_Get( 
+                          ((cuv_i_x)*(   1   )) //:<---[ STAY ]
+                        , ((cuv_i_y)-(MOV_TOP)) //:<---[ MOVE ]
+                        ,   til_lay  //:AKA[ til_lay / t_l ]    
+                        ,   aus_dex  //:AKA[ aus_dex / a_d ]
+                        ,   til_exp  //:AKA[ til_exp / t_e ]
+                        ));; 
+ 
+                        bit =( ntv == cen ? U32_001 : U32_000 );
+                        tou =( tou | ( bit << TOUSHIF ) );
+            
+                    #undef  MOV_TOP
+                    #undef  U32_TOP
+                    #undef  TOUSHIF
+                    //:=========================:NEIGHBOR_TOP://
+                    //:NEIGHBOR_LEF:=========================://
+                    //:SEE[ README.MD ]SEARCH[ WANG_STYLE ]::://
+                    #define MOV_LEF   (     til_peb )
+                    #define U32_LEF   (         ntv )
+                    #define TOUSHIF   ( TOUSHIF_X_0 )
+
+                        U32_LEF =(
+                        ( ((cuv_i_x)-(MOV_LEF)) < 0 ) 
+                        ? 
+                        U32_000 //:OUT_OF_BOUNDS_USE_ZERO
+                        :
+                        AAC2020_P5D1OGL_cuvipix_CTO_til_val_Get( 
+                          ((cuv_i_x)-(MOV_LEF)) //:<---[ MOVE ]
+                        , ((cuv_i_y)*(   1   )) //:<---[ STAY ]
+                        ,   til_lay  //:AKA[ til_lay / t_l ]        
+                        ,   aus_dex  //:AKA[ aus_dex / a_d ]
+                        ,   til_exp  //:AKA[ til_exp / t_e ]
+                        ));; 
+ 
+                        bit =( ntv == cen ? U32_001 : U32_000 );
+                        tou =( tou | ( bit << TOUSHIF ) );
+            
+                    #undef  MOV_LEF
+                    #undef  U32_LEF
+                    #undef  TOUSHIF
+                    //:=========================:NEIGHBOR_LEF://
+                    //:NEIGHBOR_RIG:=========================://
+                    //:SEE[ README.MD ]SEARCH[ WANG_STYLE ]::://
+                    #define MOV_RIG   (     til_peb )
+                    #define U32_RIG   (         ntv )
+                    #define TOUSHIF   ( TOUSHIF_X_1 )
+
+                        U32_RIG =(
+                        ( ((cuv_i_x)+(MOV_RIG)) > CUV_MAX ) 
+                        ? 
+                        U32_000 //:OUT_OF_BOUNDS_USE_ZERO
+                        :
+                        AAC2020_P5D1OGL_cuvipix_CTO_til_val_Get( 
+                          ((cuv_i_x)+(MOV_RIG)) //:<---[ MOVE ]
+                        , ((cuv_i_y)*(   1   )) //:<---[ STAY ]
+                        ,   til_lay  //:AKA[ til_lay / t_l ]        
+                        ,   aus_dex  //:AKA[ aus_dex / a_d ]
+                        ,   til_exp  //:AKA[ til_exp / t_e ]
+                        ));; 
+ 
+                        bit =( ntv == cen ? U32_001 : U32_000 );
+                        tou =( tou | ( bit << TOUSHIF ) );
+            
+                    #undef  MOV_RIG
+                    #undef  U32_RIG
+                    #undef  TOUSHIF
+                    //:=========================:NEIGHBOR_RIG://
+                    //:NEIGHBOR_BOT:=========================://
+                    //:SEE[ README.MD ]SEARCH[ WANG_STYLE ]::://
+                    #define MOV_BOT   (     til_peb )
+                    #define U32_BOT   (         ntv )
+                    #define TOUSHIF   ( TOUSHIF_Y_1 )
+
+                        U32_BOT =(
+                        ( ((cuv_i_y)+(MOV_BOT)) > CUV_MAX ) 
+                        ? 
+                        U32_000 //:OUT_OF_BOUNDS_USE_ZERO
+                        :
+                        AAC2020_P5D1OGL_cuvipix_CTO_til_val_Get( 
+                          ((cuv_i_x)*(   1   )) //:<---[ STAY ]
+                        , ((cuv_i_y)+(MOV_BOT)) //:<---[ MOVE ]
+                        ,   til_lay  //:AKA[ til_lay / t_l ]        
+                        ,   aus_dex  //:AKA[ aus_dex / a_d ]
+                        ,   til_exp  //:AKA[ til_exp / t_e ]
+                        ));; 
+ 
+                        bit =( ntv == cen ? U32_001 : U32_000 );
+                        tou =( tou | ( bit << TOUSHIF ) );
+            
+                    #undef  MOV_BOT
+                    #undef  U32_BOT
+                    #undef  TOUSHIF
+                    //:=========================:NEIGHBOR_BOT://
+                    //:NEIGHBOR_SHIFT_AMOUNTS:===============://
+
+                        //:     123_123_123
+                        //:     1234567_123
+                        #undef  TOUSHIF_X_0  //:---------: 3 ://
+                        #undef  TOUSHIF_X_1  //:---------: 2 ://
+                        #undef  TOUSHIF_Y_0  //:---------: 1 ://
+                        #undef  TOUSHIF_Y_1  //:---------: 0 ://
+    
+                    //:===============:NEIGHBOR_SHIFT_AMOUNTS://
+                    //:CANVAS_USER_VIEW_MAX_VALUE:===========://
+
+                        #undef  CUV_MAX
+
+                    //:===========:CANVAS_USER_VIEW_MAX_VALUE://
+
+                //||||||||||||||:LOOP_SECTION:TOUCHING_VALUES|//
+                //|LOOP_SECTION:TILE_LOCAL_COORDS:||||||||||||//
+
+                    if( tiloper.x > 0 ){ /** NOOP **/ };
+
+                    //:BASED_ON[ AAC2020_FRAGCOM_fic_MAP_cuv ]
+                    tiloper=(AAC2020_P5D1OGL_fic_MAP_tiloper(
+                    fic , p5d_vp0 , p5d_vp1 , til_exp
+                    ));;
+
+                //||||||||||||:LOOP_SECTION:TILE_LOCAL_COORDS|//
+                      
                     
-                    if( u32_top > U32_000 ){ /** NOOP **/ };
-                    if( u32_lef > U32_000 ){ /** NOOP **/ };
-                    if( u32_rig > U32_000 ){ /** NOOP **/ };
-                    if( u32_bot > U32_000 ){ /** NOOP **/ };
+                };;};; //:<--[ NEXT[ til_lay , til_exp ] ]
+            //:---------:IDONT_KNOW_WHAT_TO_CALL_THIS_SECTION://
 
 
-
-
-                    if( toupaca[ lay_dex ] > U32_000 ){
-                        /** NOOP **/
-                    };; 
-
-                };;};;
-                //:------------------:#_P5D1OGL_TOUPACA_#://
-                //:-------:TOUCHING_VALUES_FOR_EACH_LAYER://
 
                 //:CORE_RENDERING_ALGORITHM:-------------://
 
@@ -1847,21 +2065,24 @@
         #undef  I32      //:  03  ://              //[ x ]//
         #undef  IV2      //:  04  ://              //[ x ]//
         #undef  UV4      //:  05  ://              //[ x ]//
-        #undef  T_F      //:  06  ://              //[ x ]//
-        #undef  TAU      //:  07  ://              //[ x ]//
-        #undef  P5D      //:  08  ://              //[ x ]//
-        #undef  SAM      //:  09  ://              //[ x ]//
-        #undef  UFF      //:  10  ://              //[ x ]//
-        #undef  U00      //:  11  ://              //[ x ]//
-        #undef  I00      //:  12  ://              //[ x ]//
-        #undef  U03      //:  13  ://              //[ x ]//
-        #undef  B_3      //:  14  ://              //[ x ]//
-        #undef  B11      //:  15  ://              //[ x ]//
-        #undef  H55      //:  16  ://              //[ x ]//
-        #undef  V_A      //:  17  ://              //[ x ]//
-        #undef  FV4      //:  18  ://              //[ x ]//
-        #undef  ASS      //:  19  ://              //[ x ]//
-        #undef  ERR      //:  20  ://              //[ x ]//
+        #undef  FV2      //:  06  ://              //[ x ]//
+        #undef  T_F      //:  07  ://              //[ x ]//
+        #undef  TAU      //:  08  ://              //[ x ]//
+        #undef  P5D      //:  09  ://              //[ x ]//
+        #undef  SAM      //:  10  ://              //[ x ]//
+        #undef  UFF      //:  11  ://              //[ x ]//
+        #undef  U00      //:  12  ://              //[ x ]//
+        #undef  I00      //:  13  ://              //[ x ]//
+        #undef  U03      //:  14  ://              //[ x ]//
+        #undef  B_3      //:  15  ://              //[ x ]//
+        #undef  B11      //:  16  ://              //[ x ]//
+        #undef  H55      //:  17  ://              //[ x ]//
+        #undef  V_A      //:  18  ://              //[ x ]//
+        #undef  FV4      //:  19  ://              //[ x ]//
+        #undef  ASS      //:  20  ://              //[ x ]//
+        #undef  ERR      //:  21  ://              //[ x ]//
+        #undef  TRU      //:  22  ://              //[ x ]//
+        #undef  REC      //:  22  ://              //[ x ]//
                                                    //[ x ]//
     //:--------------------------------------:type_macros://
     //:seven_letter_macros:------------------------------://
