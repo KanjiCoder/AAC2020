@@ -9,6 +9,88 @@
     //[   VIDEO COMMENT TIMESTAMP EXAMPLE   ]//
 *** ******************************************************** ***
 
+
+#_P5D1OGL_TOUPACA_##############################################
+
+    @VID_IID[ 0258 ]TIME[ 03:06:00 ]TYPING_THE_NOTES
+    @VID_IID[ 0258 ]TIME[ 03:08:42 ]EXPLAIN_THE_CODE
+    @VID_IID[ 0258 ]TIME[ 03:13:42 ]FIXED_THE_COMMENTS
+
+    //+ Below Is Wrong. ------------------------------------ +//
+    //- Calculating all of the auto tiling values for a      -//
+    //- given layer so that we can bit pack them together    -//
+    //- and pass them into a [ RENCORE ] function that       -//
+    //- users of our [ AAC2020 ]code base can plug into.     -//
+
+    //+ Below Is Correction. ------------------------------- +//
+    //| We have to bit pack together a touching value by     |//
+    //| looking at neighbors to the[ top , lef , rig , bot ] |//
+    //| so that we can pass in a touching value to           |//
+    //| a user-modifiable[ RENCORE ]function.                |//
+
+    This will hopefully allow users to easily customize
+    the engine for their own use.
+
+    To help make sure customization is EASY + PRACTICAL,
+    we are creating the[ MANDELA ]renderer as an
+    [ EXTENSION / CODEIN / COMPILE TIME PLUGIN ]
+    to the PAINT5D system.
+
+    ( Also, we want to keep MANDELA maker to ourselves    )
+    ( until we make money off of it. Then we will release )
+    ( it to the public after we have a headstart.         )
+
+    SEE[ #_PROPOSED_RENCORE_SIGNATURE_# ]
+
+##############################################_P5D1OGL_TOUPACA_#
+@MEMORY_STOMP_CHECK@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@_MEMORY_STOMP_CHECK_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    MEMORY_STOMP_CHECK:
+
+        Code that is checking to make sure two variables
+        do not occupy the same memory address.
+
+        Memory address might not be a[ POINTER ].
+        Memory address could mean[ INTEGER_HANDLE ]
+        like an array index. Or it could be a physical
+        pixel location on a bitmap where we are bit-packing
+        variables into texture memory.
+
+        @VID_IID[ 0258 ]TIME[ 02:06:02 ]EXPLAIN_AGAIN
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@MEMORY_STOMP_CHECK@ 
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@_MEMORY_STOMP_CHECK_@ 
+@EDGE_CASE@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@_EDGE_CASE_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @VID_IID[ 0258 ]TIME[ 01:10:55 ]
+    A "edge_case" is like a legal loophole in code.
+    So the code probably works for 99% of cases.
+    But you got clever and found a case where it
+    should technically still work, but it fails.
+
+    These types of cases should be tested for __LAST__
+    after we have done "smoke_test" cases.
+
+    Basically, we want to .... "clamp on the pressure slowly"
+    when testing out the code for correctness.
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@EDGE_CASE@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@_EDGE_CASE_@
+@_SMOKE_TEST_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@SMOKE_TEST@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @VID_IID[ 0258 ]TIME[ 01:08:50 ]
+    A "smoke_test" is a dead simple test case that if it
+    FAILS, means we screwed up BIG_TIME. It means we have
+    some type of GROSS/LARGE error in the way we wrote the
+    code/function being tested.
+
+    It is the antithesis of a @EDGE_CASE@ .
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@_SMOKE_TEST_@ 
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@SMOKE_TEST@ 
 #_WHY_DOES_RENCORE_RETURN_U32_##################################
 
     @VID_IID[ 0257 ]TIME[ 03:41:50 ]WHY_USING_U32_NOT_F32
@@ -53,12 +135,14 @@
 ##################################_WHY_DOES_RENCORE_RETURN_U32_#
 #_WORKING_OUT_SIGNATURE_FOR_FINAL_RENCORE_FUNCTION_#############
 
+    #_PROPOSED_RENCORE_SIGNATURE_#
+     #PROPOSED_RENCORE_SIGNATURE#
 
     U32
     AAC2020_PAINT5D_RENCORE(
 
         aus_dex <-- what auset is being rendererd?
-    ,   til_lay
+    ,   til_lay <-- Tile LAYER[ 0 | 1 | 2 ](3 total layers)
     ,   til_exp <-- what size is the current tile?
     ,   til_val <-- what tile value is being rendered?
     ,   tou_val <-- what touching value does current tile have?

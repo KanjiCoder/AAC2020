@@ -611,6 +611,7 @@
     #ifndef AAC2020_MACRO_THIS_IS_OPEN_GL          //: # ://
     #define P5D_TOR struct aac2020_p5d1ogl_P5D_TOR //: 1 ://
     #define U08 uint8_t /** GCC: <stdint.h> **/    //: 2 ://
+    //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
                                                    //:---://
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
                                                    //:---://
@@ -878,14 +879,11 @@
         #undef  LAY  //:----------------------------: 03 ://
         #undef  AUS  //:----------------------------: 04 ://
         #undef  B16  //:----------------------------: 05 ://
-        }                                                 //
-                                                          //
-    #undef  P5D_TOR                               //: 01 ://
-    #undef      U08                               //: 02 ://
+        } //:{ AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Put }:://                                              //
 
     //:C99C99C99C99C99C99C99C99::C99C99C99C99C99C99C99C99://
 
-        U32
+        void
         AAC2020_P5D1OGL_cuvipix_CTO_til_val_Put(
             //|LOCATION_OF_THE_DATA|||||||||||||||||||||||//
             I32 cuv_i_x_000_255  //:AKA[ cuvipix.i_x ]   ///
@@ -898,16 +896,158 @@
         ,   U32 til_val_000_003  //:STORES_1_TILE_VALUE  ///
         )
         {
-            if( cuv_i_x_000_255 > 0 ){ /** NOOP **/ };
-            if( cuv_i_y_000_255 > 0 ){ /** NOOP **/ };
+        #define I_X cuv_i_x_000_255  //:------------: 01 ://
+        #define I_Y cuv_i_y_000_255  //:------------: 02 ://
+        #define LAY lay_dex_000_002  //:------------: 03 ://
+        #define AUS aus_dex_000_015  //:------------: 04 ://
+        #define T_E til_exp_000_007  //:------------: 05 ://
+        #define T_V til_val_000_003  //:------------: 06 ://
+        //-     B16 cuvbits_cuv_b16  //:------------: ## -//
+        //:new_input_checks_2021_04_14:------------------://
+        #define E aac2020_p5d1ogl_Halt
 
-            if( lay_dex_000_002 > 0 ){ /** NOOP **/ };
-            if( aus_dex_000_015 > 0 ){ /** NOOP **/ };
-            if( til_exp_000_007 > 0 ){ /** NOOP **/ };
-            if( til_val_000_003 > 0 ){ /** NOOP **/ };
+            /**@VID_IID[0258]TIME[00:25:50]************* **/
+            if( I_X <0||I_X >255 ){E(E_S([I_X:20210414]));};
+            if( I_Y <0||I_Y >255 ){E(E_S([I_Y:20210414]));};
+            if( LAY <0||LAY >  2 ){E(E_S([LAY:20210414]));};
+            if( AUS <0||AUS > 15 ){E(E_S([AUS:20210414]));};
+            if( T_E <0||T_E >  7 ){E(E_S([T_E:20210414]));};
+            if(         T_V >  3 ){E(E_S([T_V:20210414]));};
 
-            return( U32_000 /** TODO: LOGIC **/ );
+        #undef  E
+        //:------------------:new_input_checks_2021_04_14://
+        //:declare_variables:----------------------------://
+                                                   //:---://
+            /** **************************************** ***
+            Which SubTile Graphic Are You Drawing On?    ///
+            There are four of them. This is the          ///
+            origin pixel of the quadrant targeted.       ///
+            *** **************************************** **/
+                                                   //:---://
+            I32 til_qua_q_x; //:QUADRANT                 ://
+            I32 til_qua_q_y; //:                         ://
+                             //:                         ://
+            I32 til_qua_o_x; //:ORIGIN                   ://
+            I32 til_qua_o_y; //:                         ://
+                             //:                         ://
+            I32     til_qua; //:1D_INDEX_VERSION         ://
+                             //:@VID_IID[0105]T[6:51:10] ://
+                             //:                         ://
+            I32     peb_t_x; //:PEBBLE_TILE_X            ://
+            I32     peb_t_y; //:PEBBLE_TILE_Y            ://
+                             //:                         ://
+            I32     loc_t_x; //:LOCAL_TILE[ X | Y ]COORD ://
+            I32     loc_t_y; //:@VID_IID[0105]T[6:38:00] ://
+                                                          //
+            //-         t_e; //:til_exp( TileSizeExponent-//
+                                                          //
+            I32     max_cor; //:maximum_local_tile_coord ://
+                                                          //
+            I32     til_peb; //:TILe_(size_in)_PEBbles   ://
+                             //:@VID_IID[0105]T[7:26:00] ://
+                                                          //
+            //:UNSIGNED!!!!                               //
+            //-     til_val; //:two_bit_tile_value_to_set-//
+            //:UNSIGNED!!!!                               //
+                                                          //
+        //- P5D_TOR p5d_tor;    Paint5D_TileORigin       -//
+                             //:Origin_On_The_Texture    ://
+                             //:Memory_Storing_Data      ://
+                                                          //
+        //:----------------------------:declare_variables://
+                                                          //
+            /** @VID_IID[ 0105 ]TIME[ 03:40:00 ] ******* **/
+            /** cuvbits_cuv_b16 : USAGE_DESCRIBED ****** **/
+            /** @VID_IID[ 0258 ]TIME[ 00:14:23 ] ******* **/
+            /** Why_Are_We_Removing[ cuvbits_cuv_b16 ] * **/
+                                                          //
+            til_qua_q_x=( I_X / 128 );                    //
+            til_qua_q_y=( I_Y / 128 );                    //
+            ASS( til_qua_q_x >= 0 && til_qua_q_x <= 1 );  //
+            ASS( til_qua_q_y >= 0 && til_qua_q_y <= 1 );  //
+                                                          //
+            til_qua_o_x=( til_qua_q_x * 128 );            //
+            til_qua_o_y=( til_qua_q_y * 128 );            //
+            ASS( til_qua_o_x >= 0 && til_qua_o_x <= 128 );//
+            ASS( til_qua_o_y >= 0 && til_qua_o_y <= 128 );//
+                                                          //
+            peb_t_x=( cuv_i_x_000_255 -( til_qua_o_x ) ); //
+            peb_t_y=( cuv_i_y_000_255 -( til_qua_o_y ) ); //
+                                                          //
+            /** xy to index formula for 2x2 cell grid **/ //
+            til_qua =(   til_qua_q_x +                    //
+                       ( til_qua_q_y  *  2 ) );;          //
+            assert( til_qua >= 0 && til_qua <=(4-1) );    //
+                                                          //
+            //:set_all_8_tiles:--------------------------://
+            #define TIL_EXP T_E                           //
+            #define TIL_VAL T_V                           //
+            //- for( t_e = 0 ; t_e <=(8-1) ; t_e ++ )    -//
+            {         
+                                                          //
+                /** Convert[ I_X , I_Y ] coords into   ..**/
+                /** Local To Data Parition Coordinates ..**/
+                                                          //
+                til_peb=(                                 //
+                    AAC2020_P5D1OGL_til_exp_CTO_til_peb(  //
+                                    TIL_EXP ));           //
+                ASS( til_peb >= 0 && til_peb <= 128 );    //
+                                                          //
+                     loc_t_x=( peb_t_x / til_peb );       //
+                     loc_t_y=( peb_t_y / til_peb );       //
+                ASS( loc_t_x >= 0 && loc_t_x <=(128-1));  //
+                ASS( loc_t_y >= 0 && loc_t_y <=(128-1));  //
+                                                          //
+                //:local_tile_exact_bounds_check:--------://
+                                                          //
+                    max_cor=(                             //
+                    AAC2020_P5D1OGL_til_exp_CTO_max_cor(  //
+                                    TIL_EXP ));;          //
+                                                          //
+                    if( loc_t_x > max_cor                 //
+                    ||  loc_t_y > max_cor                 //
+                    ){                                    //
+                        ERR(E_S( LOC_TXY_OOB_2021 ));     //
+                    };;                                   //
+                                                          //
+                //:--------:local_tile_exact_bounds_check://
+                                                          //
+                //+ @VID_IID[ 0258 ]T[00:33:23]WHY_GONE? +//
+                //- til_val =(                           -//
+                //-     ( cuvbits_cuv_b16 >> (t_e*2) )   -//
+                //-     &( BIN_011 ) //:<--2BitMask      -//
+                //- );;                                  -//
+                //- assert( til_val <= 3 );              -//
+                                                          //
+                /** All Values Are U08 Here           **/ //
+                /** But that's okay because were are  **/ //
+                /** NOT compiling as OPENGL code here **/ //
+                AAC2020_PAINT5D_Put(                      //
+                    (U08)til_qua //:[til_qua | t_q      ]://
+                ,   (U08)TIL_EXP //:[til_exp | t_e      ]://
+                ,   (U08)LAY     //:[til_lay | t_l | lay]://
+                ,   (U08)loc_t_x //:[loc_t_x | t_x      ]://
+                ,   (U08)loc_t_y //:[loc_t_y | t_y      ]://
+                ,   (U08)AUS     //:[aus_dex | a_d      ]://
+                ,   (U08)TIL_VAL //:[til_val | t_v      ]://
+                );;                                       //
+            };;                                           //
+            #undef  TIL_EXP                               //
+            #undef  TIL_VAL                               //
+            //:--------------------------:set_all_8_tiles://
+                                                          //
+        #undef  I_X  //:----------------------------: 01 ://
+        #undef  I_Y  //:----------------------------: 02 ://
+        #undef  LAY  //:----------------------------: 03 ://
+        #undef  AUS  //:----------------------------: 04 ://
+        #undef  T_E  //:----------------------------: 05 ://
+        #undef  T_V  //:----------------------------: 06 ://
+        //-     B16  //:----------------------------: ## -//
         }
+
+    //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+    #undef  P5D_TOR                               //: 01 ://
+    #undef      U08                               //: 02 ://
     #endif  //:#AAC2020_MACRO_THIS_IS_OPEN_GL     ::: ## ://
     //://////////////////////////////////////////////////://
     //://////////////////////////////////////////////////://
@@ -1392,6 +1532,7 @@
 
                 //:-----------------------:GET_LAYER_DATA://
                 //:TOUCHING_VALUES_FOR_EACH_LAYER:-------://
+                //:#_P5D1OGL_TOUPACA_#:------------------://
 
                 //:SEE[ #_NOTES_TOUPACK_BIT_FETCHING_# ]
                 U32 toupaca[ 3 ]= ARR_U32( 3 )
@@ -1512,9 +1653,10 @@
 
                     if( toupaca[ lay_dex ] > U32_000 ){
                         /** NOOP **/
-                    };;
+                    };; 
 
                 };;};;
+                //:------------------:#_P5D1OGL_TOUPACA_#://
                 //:-------:TOUCHING_VALUES_FOR_EACH_LAYER://
 
                 //:CORE_RENDERING_ALGORITHM:-------------://
