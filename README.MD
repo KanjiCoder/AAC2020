@@ -1300,6 +1300,27 @@
             }
                                       
     //:|||||||||||||||||||||||:DIAGRAMS:ATE_Subtile_User_View://
+    //:DIAGRAMS:RENDER_CORE_FLOW:============================://
+
+        tilodat : TILe_LOcal_DATa ( @_CONCEPTUAL_OBJECT_@ )
+        laypixu : LAYer_PIXel_Uint32
+        laypixa : LAYPIXu______Array
+
+        laypixu=(
+        AAC2020_PAINT5D_RENCORE_tilodat_CTO_laypixu(
+            a_d     //:AKA[ aus_dex ]¯¯¯¯|¯¯¯¯
+        ,   t_l     //:AKA[ til_lay ]    |
+        ,   t_e     //:AKA[ til_exp ]    |
+        ,   t_v     //:AKA[ til_val ] tilodat
+        ,   tou     //:AKA[ tou_val ]    |
+        ,   p_x     //:AKA[ tilop_x ]    |
+        ,   p_y     //:AKA[ tilop_y ]____|____
+        ));;
+        
+
+
+
+    //:============================:DIAGRAMS:RENDER_CORE_FLOW://
     //:=============================================:DIAGRAMS://
     //:VARIABLE_NAME_INDEX:==================================://
     

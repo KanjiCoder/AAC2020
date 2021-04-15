@@ -9,7 +9,101 @@
     //[   VIDEO COMMENT TIMESTAMP EXAMPLE   ]//
 *** ******************************************************** ***
 
+@_MALFORMED_CONCEPTUAL_OBJECT_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@MALFORMED_CONCEPTUAL_OBJECT@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@MALFORMED_DATA_CLUMP@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@_MALFORMED_DATA_CLUMP_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
+    @VID_IID[ 0258 ]TIME[ 05:21:13 ]REVIEWING_THIS_SECTION
+
+    MALFORMED_CONCEPTUAL_OBJECT:
+    MALFORMED_DATA_CLUMP:
+
+        A conceptual object __IS__ present in a 
+        parameter list __WHEN__ any of these conditions are met:
+
+        1. The parameters are in the wrong relative order.
+        2. Unrelated parameters are embedded into the 
+           conceptual object group.
+        3. Missing a parameter/member of conceptual object.
+    
+        EXAMPLE #1:
+
+            FUNCTION_CALL(
+                conceptual_object_param_01
+            ,   conceptual_object_param_04
+            ,   conceptual_object_param_02
+            ,   conceptual_object_param_03 );;
+
+        EXAMPLE #2:
+
+            FUNCTION_CALL(
+                conceptual_object_param_01
+            ,   conceptual_object_param_02
+            ,   UNRELATED_PARAMETER_STUCK_IN_THE_MIDDLE
+            ,   conceptual_object_param_03
+            ,   conceptual_object_param_04 );;
+            
+        EXAMPLE #3:
+
+            FUNCTION_CALL(
+                conceptual_object_param_01
+            ,   conceptual_object_param_02
+                //:MISSING PARAM NUMBER 03!!! ://
+            ,   conceptual_object_param_04 );;
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@_MALFORMED_CONCEPTUAL_OBJECT_@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@MALFORMED_CONCEPTUAL_OBJECT@ 
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@MALFORMED_DATA_CLUMP@ 
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@_MALFORMED_DATA_CLUMP_@ 
+@_CONCEPTUAL_OBJECT_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@CONCEPTUAL_OBJECT@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@CONCEPTUAL_STRUCT@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@_CONCEPTUAL_STRUCT_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @VID_IID[ 0258 ]TIME[ 05:17:00 ]REVIEW_THIS_SECTION
+
+    CONCEPTUAL_OBJECT: 
+        (Known as a "dataclump" in some circles)
+
+        A grouping of variables that creates a
+        [ conceputal object / conceptual struct ].
+        In other words, a collection of variables that
+        some[ clean_code_asshole ]would try to put into
+        a struct.
+
+        When using a CONCEPTUAL_OBJECT , the parameters
+        should always be clustered together and appear in
+        the same exact order when passed into a function.
+
+        EXAMPLE:
+
+        laypixu=(
+        AAC2020_PAINT5D_RENCORE_tilodat_CTO_laypixu(
+            a_d     //:AKA[ aus_dex ]¯¯¯¯|¯¯¯¯
+        ,   t_l     //:AKA[ til_lay ]    |
+        ,   t_e     //:AKA[ til_exp ]    |
+        ,   t_v     //:AKA[ til_val ] tilodat
+        ,   tou     //:AKA[ tou_val ]    |
+        ,   p_x     //:AKA[ tilop_x ]    |
+        ,   p_y     //:AKA[ tilop_y ]____|____
+        ));;
+
+        "tilodat" is a conceptual struct. When conceptually
+        passing around a[ tilodat ]object, all of these
+        parameters must be grouped together and be in this
+        exact order.
+
+        To group all of these parameters together in
+        a different order would be a 
+        [ @MALFORMED_CONCEPTUAL_OBJECT@ ]
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@_CONCEPTUAL_OBJECT_@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@CONCEPTUAL_OBJECT@ 
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@CONCEPTUAL_STRUCT@ 
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@_CONCEPTUAL_STRUCT_@
 #_P5D1OGL_TOUPACA_##############################################
 
     @VID_IID[ 0258 ]TIME[ 03:06:00 ]TYPING_THE_NOTES
@@ -141,13 +235,15 @@
     U32
     AAC2020_PAINT5D_RENCORE(
 
-        aus_dex <-- what auset is being rendererd?
-    ,   til_lay <-- Tile LAYER[ 0 | 1 | 2 ](3 total layers)
-    ,   til_exp <-- what size is the current tile?
-    ,   til_val <-- what tile value is being rendered?
-    ,   tou_val <-- what touching value does current tile have?
-    ,   tilop_x <-- TIle_LOcal_Percent(coordinate)X
-    ,   tilop_y <-- TIle_LOcal_Percent(coordinate)y
+        I32 aus_dex <-- what auset is being rendererd?
+    ,   I32 til_lay <-- Tile LAYER[ 0 | 1 | 2 ](3 total layers)
+    ,   I32 til_exp <-- what size is the current tile?
+
+    ,   U32 til_val <-- what tile value is being rendered?
+    ,   U32 tou_val <-- what touching value does tile have?
+
+    ,   F32 tilop_x <-- TIle_LOcal_Percent(coordinate)X
+    ,   F32 tilop_y <-- TIle_LOcal_Percent(coordinate)y
     )
     {
         //: ( 7 params * 4 bytes_each )==( 28 BYTE PAYLOAD )

@@ -1661,22 +1661,93 @@
 
                 //:CORE_RENDERING_ALGORITHM:-------------://
 
-                    U32 u32_pix=(
-                        AAC2020_PAINT5D_RENCORE(
-                        /**/    fic.x  //:<--FragIntCoord:X
-                        ,       fic.y  //:<--FragIntCoord:Y
-                        ,     cuv_i_x  //:<--CanvasUserView
-                        ,     cuv_i_y  //:<--CanvasUserView
-                        ,     aus_dex  //:<--Auset_Index
-                        ,     u32_l_0  //:<--Layers
-                        ,     u32_l_1  //:<--Layers
-                        ,     u32_l_2  //:<--Layers
-                        ));;
+        ////    U32 c_b ; /** c_b : cuvbits         **/
+        ////    U32 t_v ; /** t_v : til_val         **/
+        ////    U32 tou ; /** tou : tou_val         **/
+        ////    U32 r_c ; /** r_c : RENCORE.corepix **/
+        ////    
+        ////    /** all pixels for a given layer **/
+        ////    U32 laypixa[ 8 ]= ARR_U32( 8 )
+        ////    ARR_BEG
+        ////    
+        ////    /**/U32_000 //: 01 :// 
+        ////    ,   U32_000 //: 02 :// 
+        ////    ,   U32_000 //: 03 :// 
+        ////    ,   U32_000 //: 04 :// 
+        ////    ,   U32_000 //: 05 :// 
+        ////    ,   U32_000 //: 06 :// 
+        ////    ,   U32_000 //: 07 :// 
+        ////    ,   U32_000 //: 08 :// 
+        ////
+        ////    ARR_END;
+        ////
+        ////    for( I32 t_l = 0 ; t_l <=(3-1) ; t_l ++ ){
+        ////
+        ////        U32 c_b=(
+        ////        AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Get( 
+        ////            cuv_i_x  //:AKA[ cuvipix.i_x ]   ///
+        ////        ,   cuv_i_y  //:AKA[ cuvipix.i_y ]   ///
+        ////        ,       t_l  //:AKA[ til_lay / t_l ] ///
+        ////        ,   aus_dex  //:AKA[ aus_dex ]       ///   
+        ////        ));;////////////////////////////////////
+        ////    
+        ////        for(I32 t_e = 0 ; t_e <=(8-1) ; t_e ++ ){
+        ////
+        ////            /**[c_b]packed little-endian. So **/
+        ////            /** larger tile values are in    **/
+        ////            /** more significant bit slots.  **/   
+        ////            t_v =( ( c_b >> (t_e*2) ) & B11 );;
+        ////
+        ////            tou =( U32_000 /** TODO:CALC **/ );
+        ////            p_x =( 0.0     /** TODO:CALC **/ );
+        ////            p_y =( 0.0     /** TODO:CALC **/ );
+        ////
+        ////            laypixu=(
+        ////    AAC2020_PAINT5D_RENCORE_tilodat_CTO_laypixu(
+        ////                aus_dex //:AKA[ aus_dex / a_d ]
+        ////            ,   t_l     //:AKA[ til_lay / t_l ] 
+        ////            ,   t_e     //:AKA[ til_exp / t_e ] 
+        ////            ,   t_v     //:AKA[ til_val / t_v ] 
+        ////            ,   tou     //:AKA[ tou_val / tou ]
+        ////            ,   p_x     //:AKA[ tilop_x / p_x ]
+        ////            ,   p_y     //:AKA[ tilop_y / p_y ] 
+        ////            ));;
+        ////
+        ////            /** tilpixa **/
+        ////            laypixa[ t_e ]=( laypixu );
+        ////
+        ////        };;
+        ////
+        ////        ironedu=(
+        ////            AAC2020_PAINT5D_laypixa_CTO_ironedu
+        ////                            laypixa ) );;
+        ////
+        ////        ironeda[ t_l ]=( ironedu );
+        ////
+        ////    };;
+        ////
+        ////    plypix3=(
+        ////    AAC2020_PAINT5D_ironeda_CTO_plypix3(
+        ////                    ironeda ));;
+        ////
+        ////    u32_pix=( plypix3 );
+
+                U32 u32_pix=(
+                    AAC2020_PAINT5D_RENCORE(
+                    /**/    fic.x  //:<--FragIntCoord:X
+                    ,       fic.y  //:<--FragIntCoord:Y
+                    ,     cuv_i_x  //:<--CanvasUserView
+                    ,     cuv_i_y  //:<--CanvasUserView
+                    ,     aus_dex  //:<--Auset_Index
+                    ,     u32_l_0  //:<--Layers
+                    ,     u32_l_1  //:<--Layers
+                    ,     u32_l_2  //:<--Layers
+                    ));;
 
                 //:-------------:CORE_RENDERING_ALGORITHM://
  
 
-              
+                
 
                 //:INSIDE_VIEWPORT_BOUNDS ==> UNPACK_PIXEL:
                 uv4_pix.x = ( u32_pix >> 24 ) & UFF ;
