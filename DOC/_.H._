@@ -8,7 +8,57 @@
     //( @VID_URL@[ TODO_YOUTUBE_VIDEO_URL ] )//
     //[   VIDEO COMMENT TIMESTAMP EXAMPLE   ]//
 *** ******************************************************** ***
+#_P5D_FIC_MAP_TILOPER_EXPLAINED_################################
+@VID_IID[ 0260 ]TIME[ 02:02:50 ]EXTRACTED_TO_HASHTAG_FILE
 
+        @VID_IID[ 0259 ]TIME[ 01:23:50 ]
+        Function_Like[ AAC2020_FRAGCOM_fic_MAP_cuv ]
+        But an extra 4th(4) parameter[ til_exp ]
+        is supplied.
+
+        Instead of getting the canvas user view integer
+        coordinate, it get's us the LOCAL coordinate of
+        the tile[ fic ]is inside of.
+
+        tiloper==[ 0.0 , 0.0 ] ==> CEN_TER (0,0)
+        tiloper==[-1.0 ,-1.0 ] ==> TOP_LEF (-,-)
+        tiloper==[+1.0 ,-1.0 ] ==> TOP_RIG (+,-)
+        tiloper==[-1.0 ,+1.0 ] ==> BOT_LEF (-,+)
+        tiloper==[+1.0 ,+1.0 ] ==> BOT_RIG (+,+)
+
+################################_P5D_FIC_MAP_TILOPER_EXPLAINED_#
+#_CLUDMAP_FIC_VP0_VP1_CLU_EXPLAINED_############################
+@VID_IID[ 0260 ]TIME[ 02:00:23 ]EXTRACTED_TO_HASHTAG_FILE
+
+        @VID_IID[ 0259 ]TIME[ 03:15:32 ]
+        Like a normal mapping function where we take a 
+        point[ fic ]on rectangle[ p5d_vp0 ]and map it
+        to a point on[ p5d_vp1 ]....
+
+        However there are TWO primary differences:
+        1. Rather than snapping to the nearest discrete
+           unit on[ p5d_vp1 ]we are returning a float
+           value that signifies a percentage WITHIN
+           that discrete unit.
+
+        2. The descrete units on[ p5d_vp1 ]can be grouped
+           into larger discrete units by specifying a
+           whole number greater than 1 for[ clu_san ].
+           ( clu_san ==[ 1 -to- 7 ] inclusive in our   )
+           ( current use case. We are grouping pebbles )
+           ( into larger tile sizes.                   )
+
+        @VID_IID[ 0259 ]TIME[ 03:18:42 ]WHATS_USED_FOR?
+        Function is used to help us calculate internal
+        tile coordinates within the current tile the 
+        pixel is found to be in.
+        ( AKA[ tiloper / [ tilop_x , tilop_y ] )
+        (      1234567     1234567   1234567   )
+
+            Looking at[ AAC2020_FRAGCOM_fic_MAP_cuv ]  
+            may help us write this function body.  
+
+############################_CLUDMAP_FIC_VP0_VP1_CLU_EXPLAINED_#
 #_TOGGLE_TILE_NOT_A_BUG_FIX_####################################
 
     @VID_IID[ 0259 ]TIME[ 03:33:00 ]

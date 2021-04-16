@@ -1388,6 +1388,45 @@
             #endif
         }
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
+        F32
+        AAC2020_P5D1OGL_CludMap_ZOF_1_D(
+            I32 fraic_1 //:[ fic.x | fic.y ]/(fraic_x|fraic_y)
+        ,   I32 vp0_san //:[ p5d_vp0's [wid|hig] in pixels ]
+        ,   I32 vp1_san //:[ p5d_vp1's [wid|hig] in pixels ]
+        ,   I32 clu_san //:Clustering_Of_vp0_units
+        )
+        {
+            if( fraic_1 > 0 ){ /** NOOP **/ };
+            if( vp0_san > 0 ){ /** NOOP **/ };
+            if( vp1_san > 0 ){ /** NOOP **/ };
+            if( clu_san > 0 ){ /** NOOP **/ };
+
+            return( 0.0 );
+        }
+        //:- - - - - - - - - - - -- - - - - - - - - - - -://
+        F32
+        AAC2020_P5D1OGL_CludMap_RNG_1_D(
+            I32 fraic_1 //:[ fic.x | fic.y ]/(fraic_x|fraic_y)
+
+        ,   I32 vp0_b_0 //:AKA[ vp0_min ]( x_0 | y_0 )
+        ,   I32 vp0_b_1 //:AKA[ vp0_max ]( x_1 | y_1 )
+
+        ,   I32 vp1_b_0 //:AKA[ vp1_min ]( x_0 | y_0 ) 
+        ,   I32 vp1_b_1 //:AKA[ vp1_max ]( x_1 | y_1 ) 
+
+        ,   I32 clu_san //:Clustering_Of_vp0_units
+        )
+        {
+            if( fraic_1 > 0 ){ /** NOOP **/ };
+            if( vp0_b_0 > 0 ){ /** NOOP **/ };
+            if( vp0_b_1 > 0 ){ /** NOOP **/ };
+            if( vp1_b_0 > 0 ){ /** NOOP **/ };
+            if( vp1_b_1 > 0 ){ /** NOOP **/ };
+            if( clu_san > 0 ){ /** NOOP **/ };
+            
+            return( 0.0 );
+        }
+        //:- - - - - - - - - - - -- - - - - - - - - - - -://
         FV2
         AAC2020_P5D1OGL_CludMap_fic_vp0_vp1_clu(
             IV2 fic      //:fic:Fragment_Integer_Coord       
@@ -1397,33 +1436,7 @@
         )
         {
         /** ******************************************** ***
-        @VID_IID[ 0259 ]TIME[ 03:15:32 ]
-        Like a normal mapping function where we take a 
-        point[ fic ]on rectangle[ p5d_vp0 ]and map it
-        to a point on[ p5d_vp1 ]....
-
-        However there are TWO primary differences:
-        1. Rather than snapping to the nearest discrete
-           unit on[ p5d_vp1 ]we are returning a float
-           value that signifies a percentage WITHIN
-           that discrete unit.
-
-        2. The descrete units on[ p5d_vp1 ]can be grouped
-           into larger discrete units by specifying a
-           whole number greater than 1 for[ clu_san ].
-           ( clu_san ==[ 1 -to- 7 ] inclusive in our   )
-           ( current use case. We are grouping pebbles )
-           ( into larger tile sizes.                   )
-
-        @VID_IID[ 0259 ]TIME[ 03:18:42 ]WHATS_USED_FOR?
-        Function is used to help us calculate internal
-        tile coordinates within the current tile the 
-        pixel is found to be in.
-        ( AKA[ tiloper / [ tilop_x , tilop_y ] )
-        (      1234567     1234567   1234567   )
-
-            Looking at[ AAC2020_FRAGCOM_fic_MAP_cuv ]  
-            may help us write this function body.      
+        FUNC_NOTES[ #_CLUDMAP_FIC_VP0_VP1_CLU_EXPLAINED_# ]
         *** ******************************************** **/
 
             FV2 tiloper ;
@@ -1447,20 +1460,7 @@
         )
         {
         /** ******************************************** ***
-        @VID_IID[ 0259 ]TIME[ 01:23:50 ]
-        Function_Like[ AAC2020_FRAGCOM_fic_MAP_cuv ]
-        But an extra 4th(4) parameter[ til_exp ]
-        is supplied.
-
-        Instead of getting the canvas user view integer
-        coordinate, it get's us the LOCAL coordinate of
-        the tile[ fic ]is inside of.
-
-        tiloper==[ 0.0 , 0.0 ] ==> CEN_TER (0,0)
-        tiloper==[-1.0 ,-1.0 ] ==> TOP_LEF (-,-)
-        tiloper==[+1.0 ,-1.0 ] ==> TOP_RIG (+,-)
-        tiloper==[-1.0 ,+1.0 ] ==> BOT_LEF (-,+)
-        tiloper==[+1.0 ,+1.0 ] ==> BOT_RIG (+,+)
+        FUNC_NOTES[ #_P5D_FIC_MAP_TILOPER_EXPLAINED_# ]
         *** ******************************************** **/
         //:LOCAL_HARDCODED_LOOKUP_TABLE:=================://
         I32 LUT_til_exp_CTO_til_peb[ 8 ]= ARR_I32( 8 )

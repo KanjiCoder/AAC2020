@@ -1574,6 +1574,147 @@
         |               |
         +---+---+---+---+
 
+        NOTE: We need to map each discreet[ cuvipix ][x/y]
+              value to a larger tile with dimensions...
+              [ 0x400000 -BY- 0x400000 ].
+
+              0x400000 is i32 max value divided by 256 and
+              then rounded down to the nearest power of 2.
+            
+              The idea is that I want do all my calculations
+              in discrete units before I convert to float32
+              percentage coordinates.
+
+            
+        cuvipix : Canvas_User_View_PIXels
+        cu4mpix : Canvas_User_4Million_PIX (upscaled:cuvipix)
+
+        //:NOT_CERTAIN_ABOUT_THIS_DIAGRAM:===================://
+        @VID_IID[ 0260 ]TIME[ 00:22:32 ]WHY_NOT_CERTAIN       
+        @VID_IID[ 0261 ]TIME[ 01:58:00 ]SOMEWHAT_NONSENSE
+
+            |<-p5d_vp1->|  ( VP1 : Offscreen/Source/TileMap)
+            |<-cuvipix->|  ( VP0 : Destination/Screen      )
+            +---+---+---+ 
+            | 0 | 1 | 2 | <--[ UPSCALE:( cuvipix --> cu4mpix ) ]
+            +---+---+---+ 
+            |   |   |   |
+            |   |   |   +-----------------------------------+
+            |   |   +-----------------------+               |
+            |   +-----------+               |               |
+            |               |               |               |
+            +---------------+---------------+---------------+
+            |       0       |       1       |       2       |
+            +---------------+-------^-------+---------------+
+            ^               ^       |       ^               ^
+            |<- 0x400000  ->|<- 0x400000  ->|<- 0x400000  ->|
+            |<----------------- cu4mpix ------------------->|
+            ^                       |                       ^
+            |     +-----------------+                       |
+            +-+   |   +-------------------------------------+
+              |   |   |
+            +-|-+-|-+-|-+ 
+            | 0 | 1 | 2 | <--[ When Mapping. Hit The Edges    ]
+            +---+---+---+    [ To make sure tiles end up with ]
+            |<-p5d_vp0->|    [ 100% coord values on their     ]
+                             [ edges.                         ]
+
+            p5d_vp0:pixel[ 0 ] ==> (-1.0 tilop_x of cuvipix[0])
+            p5d_vp0:pixel[ 1 ] ==> ( 0.0 tilop_x of cuvipix[1])
+            p5d_vp0:pixel[ 2 ] ==> (+1.0 tilop_x of cuvipix[2])
+
+        //:===================:NOT_CERTAIN_ABOUT_THIS_DIAGRAM://
+        //:SOLVE_IT_1_DIMENSIONALLY:=========================://
+        @VID_IID[ 0260 ]TIME[ 01:48:42 ]SECTION_OVERVIEW
+
+            //:TILOPER_DIAGRAM:------------------------------://
+            @VID_IID[ 0260 ]TIME[ 01:37:50 ]FIGURING_IT_OUT
+                
+                       |  0/4  |  1/4  |  2/4  |  3/4  |  4/4  |
+
+                       +-------+-------+-------+-------+-------+
+            tilop_x -->|-1.00f |-0.50f | 0.00f |+0.50f |+1.00f |
+            tilop_y    |       |       |       |       |       |
+                |      |(-100%)|(-50%) |(  0% )|(+50%) |(+100%)|
+                V      +-------+-------+-------+-------+-------+
+        --- +-------+  +-------+-------+-------+-------+-------+
+            |-1.00f |  |       |       |       |       |       |
+        0/4 |       |  |       |       |       |       |       |
+            |(-100%)|  |       |       |       |       |       |
+        --- +-------+  +-------+-------+-------+-------+-------+
+            |-0.50f |  |       |       |       |       |       |
+        1/4 |       |  |       |       |       |       |       |
+            |(-50%) |  |       |       |       |       |       |
+        --- +-------+  +-------+-------+-------+-------+-------+
+            | 0.00f |  |       |       |       |       |       |
+        2/4 |       |  |       |       |       |       |       |
+            |(  0% )|  |       |       |       |       |       |
+        --- +-------+  +-------+-------+-------+-------+-------+
+            |+0.50f |  |       |       |       |       |       |
+        3/4 |       |  |       |       |       |       |       |
+            |(+50%) |  |       |       |       |       |       |
+        --- +-------+  +-------+-------+-------+-------+-------+
+            |+1.00f |  |       |       |       |       |       |
+        4/4 |       |  |       |       |       |       |       |
+            |(+100%)|  |       |       |       |       |       |
+        --- +-------+  +-------+-------+-------+-------+-------+
+
+            [ ( ( 0/4 ) * 2.0 ) - 1.0 ]==> -1.0
+            [ ( ( 1/4 ) * 2.0 ) - 1.0 ]==> -0.5
+            [ ( ( 2/4 ) * 2.0 ) - 1.0 ]==>  0.0
+            [ ( ( 3/4 ) * 2.0 ) - 1.0 ]==> +0.5
+            [ ( ( 4/4 ) * 2.0 ) - 1.0 ]==> +1.0
+
+            //:------------------------------:TILOPER_DIAGRAM://
+            //:1X1_INPUT:------------------------------------://
+
+            +---+
+            |1x1| <-- p5d_vp1 viewport.
+            +---+
+
+            //:------------------------------------:1X1_INPUT://
+            //:VP0_OUTPUT_MAPPINGS:--------------------------://
+            @VID_IID[ 0260 ]TIME[ 01:08:23 ]ALIAS_ARTIFACTING
+            @VID_IID[ 0260 ]TIME[ 01:19:19 ]FINAL_EXPLANATION
+            @VID_IID[ 0260 ]TIME[ 01:52:13 ]RED_EARTH_ANALOGY
+
+            +---+
+            |0.0| <---------- p5d_vp0 , 1 pixel(s) wide.       
+            +---+             PIXEL[ 0 ]==>( tilop_x ==  0.0 )
+
+            +---+---+
+            |-1.|+1.| <------ p5d_vp0 , 2 pixel(s) wide.
+            +---+---+         PIXEL[ 0 ]==>( tilop_x == -1.0 )
+                              PIXEL[ 1 ]==>( tilop_x == +1.0 )
+
+            +---+---+---+
+            |-1.|0.0|+1.| <-- p5d_vp0 , 3 pixel(s) wide
+            +---+---+---+     PIXEL[ 0 ]==>( tilop_x == -1.0 )
+            ^     ^     ^     PIXEL[ 1 ]==>( tilop_x ==  0.0 )
+            |     |     |     PIXEL[ 2 ]==>( tilop_x == +1.0 )
+            +-----+-----+
+                  |
+            [  tiloper   ]( tiloper:TIle_LOcal_PERcentage )
+            [  tilop_x   ]
+                [ tilop_x == 0.0 ]
+                    |          
+                    V          
+            +---+---+---+---+ PIXEL[ 0 ]==>( tilop_x == -1.0 )
+            |-1.|-.3|+.3|+1.| PIXEL[ 1 ]==>( tilop_x == -0.3 )
+            +---+---+---+---+ PIXEL[ 2 ]==>( tilop_x == +0.3 )
+            |25%|25%|25%|25%| PIXEL[ 3 ]==>( tilop_x == +1.0 )
+            [ ( ( 0/3 ) * 2.0 ) - 1.0 ]==> -1.0
+            [ ( ( 1/3 ) * 2.0 ) - 1.0 ]==> -0.3
+            [ ( ( 2/3 ) * 2.0 ) - 1.0 ]==> +0.3
+            [ ( ( 3/3 ) * 2.0 ) - 1.0 ]==> +1.0
+
+            ROUGH_FORMULA:
+               percent = ( pixel_x / ( width_in_pixels - 1 ) )
+ 
+            //:--------------------------:VP0_OUTPUT_MAPPINGS://
+
+        //:=========================:SOLVE_IT_1_DIMENSIONALLY://
+
     //:||||||||||||||||||||||||||||||||:DIAGRAMS:CLUDMAP(ing)://
     //:DIAGRAMS:fic_MAP_tiloper:|||||||||||||||||||||||||||||://
 

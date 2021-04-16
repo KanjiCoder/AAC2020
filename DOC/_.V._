@@ -50,9 +50,9 @@
     mov_rig : MOVe( to view or sample TLRB ) RIGHT
     mov_bot : MOVe( to view or sample TLRB ) BOTTOM
 
-    tiloper : TIle_LOcal_PERcentage(tiloper.[x|y]==tilop_[x|y])
-    tilop_x : TIle_LOcal_Percentage:X (-1.0 to +1.0 range)
-    tilop_y : TIle_LOcal_Percentage:Y (-1.0 to +1.0 range)
+    tiloper : Tile_Internal_LOcal_PER(tiloper.[x|y]=tilop_[x|y])
+    tilop_x : Tile_Internal_LOcal_Per:X (-1.0 to +1.0 range)
+    tilop_y : Tile_Internal_LOcal_Per:Y (-1.0 to +1.0 range)
 
     til_lay : TILe_LAYer ( 0 | 1 | 2 )THREE_TOTAL_LAYERS
 
@@ -71,6 +71,9 @@
     plypixa : An array of[ plypixu / plypix3 ]
 
     CUV_MAX : Canvas_User_View_MAX (MAXVAL[ cuv_i_x | cuv_i_y ])
+
+    cuvipix : Canvas_User_View_PIXels
+    cu4mpix : Canvas_User_4Million_PIX (upscaled:cuvipix)
   
 *** ******************************************************** **/
 /** ******************************************************** ***
