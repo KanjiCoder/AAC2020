@@ -1574,16 +1574,18 @@
         |               |
         +---+---+---+---+
 
-        NOTE: We need to map each discreet[ cuvipix ][x/y]
-              value to a larger tile with dimensions...
-              [ 0x400000 -BY- 0x400000 ].
-
-              0x400000 is i32 max value divided by 256 and
-              then rounded down to the nearest power of 2.
-            
-              The idea is that I want do all my calculations
-              in discrete units before I convert to float32
-              percentage coordinates.
+        NOTE_02: Ditched[ 0x400000 ]Scaling_Idea_From[ NOTE_01 ]
+                 @VID_IID[ 0261 ]TIME[ 04:13:50 ]
+        NOTE_01: We need to map each discreet[ cuvipix ][x/y]
+                 value to a larger tile with dimensions...
+                 [ 0x400000 -BY- 0x400000 ].
+                 
+                 0x400000 is i32 max value divided by 256 and
+                 then rounded down to the nearest power of 2.
+                 
+                 The idea is that I want do all my calculations
+                 in discrete units before I convert to float32
+                 percentage coordinates.
 
             
         cuvipix : Canvas_User_View_PIXels
@@ -1593,12 +1595,13 @@
         @VID_IID[ 0260 ]TIME[ 00:22:32 ]WHY_NOT_CERTAIN       
         @VID_IID[ 0261 ]TIME[ 01:58:00 ]SOMEWHAT_NONSENSE
 
+            |1_DATAPIX_1|  <--EXTACTLY_ONE_DATA_PIXEL
             |<-p5d_vp1->|  ( VP1 : Offscreen/Source/TileMap)
             |<-cuvipix->|  ( VP0 : Destination/Screen      )
             +---+---+---+ 
             | 0 | 1 | 2 | <--[ UPSCALE:( cuvipix --> cu4mpix ) ]
-            +---+---+---+ 
-            |   |   |   |
+            +---+---+---+    [ @VID_IID[ 0261 ]T[ 04:10:10 ]   ]
+            |   |   |   |    [ 3 cells == 0x400000 units       ]
             |   |   |   +-----------------------------------+
             |   |   +-----------------------+               |
             |   +-----------+               |               |
@@ -1626,6 +1629,10 @@
         //:===================:NOT_CERTAIN_ABOUT_THIS_DIAGRAM://
         //:SOLVE_IT_1_DIMENSIONALLY:=========================://
         @VID_IID[ 0260 ]TIME[ 01:48:42 ]SECTION_OVERVIEW
+
+            //:SEE[ aac2020_P5D1OGL_UTC_CludMap_ZOF_1_D ]
+            //:FOR[ A_Test_Implementing_These_Diagrams  ]
+            //:REF[ @VID_IID[ 0261 ]TIME[ 04:15:23 ]    ]
 
             //:TILOPER_DIAGRAM:------------------------------://
             @VID_IID[ 0260 ]TIME[ 01:37:50 ]FIGURING_IT_OUT
