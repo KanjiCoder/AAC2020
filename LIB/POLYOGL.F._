@@ -32,6 +32,26 @@
 #define F32   float                                   //: 09 ://
 #define ERR   aac2020_polyogl_Halt                    //: 10 ://
 
+    //:GLSL_POLYFILL:ABSOLUTE_VALUE:=========================://
+
+        F32
+        AAC2020_POLYOGL_ABS_F32(
+            F32 f32
+        )
+        {
+            F32 out_f32 ; 
+
+            if( f32 < 0 ){
+                out_f32 =( 0 - f32 );
+            }else{
+                out_f32 =( 0 + f32 );
+            };;
+
+            return( out_f32 );
+
+        }
+
+    //:=========================:GLSL_POLYFILL:ABSOLUTE_VALUE://
     //:GLSL_POLYFILL:FLOOR_ROUND_CEIL:=======================://
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
             //:GLSL_POLYFILL:FLOOR:==========================://
