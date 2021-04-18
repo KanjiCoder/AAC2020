@@ -45,7 +45,8 @@
         #define ASS  /**NOTHING**/  //:  20  ://   //| # |//
         #define ERR  /**NOTHING**/  //:  21  ://   //| # |//
         #define LOG  /**NOTHING**/  //:  22  ://   //| # |//
-        #define TRU  trunc          //:  23  ://   //| # |//
+        #define LOF  /**NOTHING**/  //:  23  ://   //| # |//
+        #define TRU  trunc          //:  24  ://   //| # |//
         #define REC  struct AAC2020_FRAGCOM_REC
     #else                                          //| # |//
                                                    //| # |//
@@ -73,6 +74,7 @@
         #define ASS   assert        //:  20  ://   //| # |//
         #define ERR   aac2020_p5d1ogl_Halt         //| # |//
         #define LOG   aac2020_p5d1ogl_Info_any     //| - |//
+        #define LOF   aac2020_p5d1ogl_Info_f32     //| - |//
         #define TRU   AAC2020_POLYOGL_Trunc        //| # |//
         #define REC   struct AAC2020_POLYOGL_REC
     #endif                                         //| # |//
@@ -1442,6 +1444,17 @@
                 #define I_x_P  intmax_t /** GCC: <stdint.h> **/
                 #define V_x_P  void
                 #define VCAST V_x_P*)(I_x_P
+                #define DCAST V_x_P*)(double
+
+                    if( vp0_nom > 1.0 ){
+                        LOG(E_S([vp0_nom_GT_1]),0);
+                    };;
+                    if( vp0_nom== 1.0 ){
+                        LOG(E_S([vp0_nom_EQ_1]),0);
+                    };;
+                    if( vp0_nom < 1.0 ){
+                        LOG(E_S([vp0_nom_LT_1]),0);
+                    };;
 
                     //:--------------------------------------://
                     //: #VP0_GT1# :                          ://
@@ -1454,18 +1467,20 @@
                     //: ( 0.0 == dead_center                 ://
                     //:--------------------------------------://
 
-                    LOG(E_S([fraic_1]:%d), (VCAST)fraic_1 );
-                    LOG(E_S([vp0_san]:%d), (VCAST)vp0_san );
-                    LOG(E_S([vp1_san]:%d), (VCAST)vp1_san );
-                    LOG(E_S([clu_san]:%d), (VCAST)clu_san );
+                    LOG(E_S([0_0:fraic_1]:%d), (VCAST)fraic_1 );
+                    LOG(E_S([0_0:vp0_san]:%d), (VCAST)vp0_san );
+                    LOG(E_S([0_0:vp1_san]:%d), (VCAST)vp1_san );
+                    LOG(E_S([0_0:clu_san]:%d), (VCAST)clu_san );
                                         
-                    LOG(E_S([fraic_L]:%f), (VCAST)fraic_L );
-                    LOG(E_S([vp0_nom]:%f), (VCAST)vp0_nom );
-                    ERR(E_S([fraic_L:OOBPOS]));
+                    LOF(E_S([0_0:fraic_L]:%f),        fraic_L );
+                    LOF(E_S([0_0:vp0_nom]:%f),        vp0_nom );
+                    LOF(E_S([PIX_PER_TIL]:%f),            ppt );
+                    ERR(E_S([0_0:fraic_L:OOBPOS]));
             
                 #undef I_x_P
                 #undef V_x_P
                 #undef VCAST
+                #undef DCAST
                 };;};;
             /** ******************************************** ***
             +---+
@@ -1513,14 +1528,36 @@
         ,   I32 clu_san //:Clustering_Of_vp0_units
         )
         {
-            if( fraic_1 > 0 ){ /** NOOP **/ };
-            if( vp0_b_0 > 0 ){ /** NOOP **/ };
-            if( vp0_b_1 > 0 ){ /** NOOP **/ };
-            if( vp1_b_0 > 0 ){ /** NOOP **/ };
-            if( vp1_b_1 > 0 ){ /** NOOP **/ };
-            if( clu_san > 0 ){ /** NOOP **/ };
-            
-            return( 0.0 );
+        /** ******************************************** ***
+            vp1:( tile dat )vp0:( on screen pixels )
+            [ ][ ][ ][ ]    [ ][ ][ ][ ][ ][ ][ ][ ]
+            [ ][ ][ ][ ]    [ ][ ][ ][ ][ ][ ][ ][ ]
+            [ ][ ][ ][ ]    [ ][ ][ ][ ][ ][ ][ ][ ]
+            [ ][ ][ ][ ]    [ ][ ][ ][ ][ ][ ][ ][ ]
+                            [ ][ ][ ][ ][ ][ ][ ][ ]
+                            [ ][ ][ ][ ][ ][ ][ ][ ]
+                            [ ][ ][ ][ ][ ][ ][ ][ ]
+                            [ ][ ][ ][ ][ ][ ][ ][ ]
+        *** ******************************************** **/
+           
+            I32     vp0_san = ( vp0_b_1 - vp0_b_0 + 1 );
+            I32     vp1_san = ( vp1_b_1 - vp1_b_0 + 1 );
+
+            //:Probably not exactly correct here.
+            //:maybe we need to subtract the delta
+            //:difference between origins of both
+            //:viewports?
+            I32 zer_fraic_1 = ( fraic_1 - vp0_b_0     );
+
+            F32 tilop_1=(
+            AAC2020_P5D1OGL_CludMap_ZOF_1_D(
+                zer_fraic_1  //:<-- Zeroed_Out
+            ,       vp0_san  
+            ,       vp1_san  
+            ,       clu_san  
+            ));;
+
+            return( tilop_1 );
         }
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
         FV2
@@ -2178,8 +2215,9 @@
         #undef  ASS      //:  20  ://              //[ x ]//
         #undef  ERR      //:  21  ://              //[ x ]//
         #undef  LOG      //:  22  ://              //[ x ]//
-        #undef  TRU      //:  23  ://              //[ x ]//
-        #undef  REC      //:  24  ://              //[ x ]//
+        #undef  LOF      //:  23  ://              //[ x ]//
+        #undef  TRU      //:  24  ://              //[ x ]//
+        #undef  REC      //:  25  ://              //[ x ]//
                                                    //[ x ]//
     //:--------------------------------------:type_macros://
     //:seven_letter_macros:------------------------------://
