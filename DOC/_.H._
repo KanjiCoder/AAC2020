@@ -8,6 +8,440 @@
     //( @VID_URL@[ TODO_YOUTUBE_VIDEO_URL ] )//
     //[   VIDEO COMMENT TIMESTAMP EXAMPLE   ]//
 *** ******************************************************** ***
+
+#_I_DONT_KNOW_WHAT_IAM_DOING_HELP_ME_2021_04_20_################
+
+        EXAMPLE_002:
+        TAG_NAME[ #_WHY_ZERO_2021_04_20_# ]
+        TAG__VID[ 0266 ]TIME[ 07:11:42 ]
+
+            STEP_001:-------------------------------------------
+            Initial Problem:
+
+            clu_san : 3
+                       |<-- TWO_TILE_CAMERA -->|
+                   |<-clu_san>||<-clu_san>||<-clu_san>|
+            vp1 :      [01][02][03][04][05][06]
+            vp0 :      [00][01][02][03][04][05][06][07][08][09]  
+                        |
+                        AA  BB  CC  DD  EE  FF  GG  HH  II  JJ
+
+            STEP_002:-------------------------------------------
+            BACKSHIFT:vp1
+                   |<-clu_san>||<-clu_san>|
+            vp1 :[00]  [01][02][03][04][05]  
+            vp0 :[-1]  [00][01][02][03][04][05][06][07][08] 
+            fic :           aa  bb  cc  dd  ee  ff  gg  hh  ii  
+            
+            STEP_002:-------------------------------------------
+            FINAL_TRANSFORM: ( vp0 coords +1 to zero out )
+                 |    clu_san || clu_san  || clu_san  |
+            vp1 :[00]  [01][02][03][04][05]  
+            vp0 :[00]  [01][02][03][04][05][06][07][08][09] 
+            fic :       AA  BB  CC  DD  EE  FF  GG  HH  II    
+
+
+            vp1 :[00]      [01]    [02]    [03]    [04]   [05]  
+            vp0 :[00]  [01][02][03][04][05][06][07][08][09] 
+            fic :       AA  BB  CC  DD  EE  FF  GG  HH  II    
+
+            @VID_IID[ 0266 ]TIME[ 07:26:55 ]
+                fic   --> per          <-- I_DONT_KNOW_ANYMORE..
+            AA(  1  ) --> 0.0          <-- I_DONT_KNOW_ANYMORE..
+            BB(  2  ) -->+1.0 //:RIG   <-- I_DONT_KNOW_ANYMORE..
+            CC(  3  ) -->-1.0 //:LEF   <-- I_DONT_KNOW_ANYMORE..
+            DD(  4  ) --> 0.0          <-- I_DONT_KNOW_ANYMORE..
+            EE(  5  ) -->+1.0 //:RIG   <-- I_DONT_KNOW_ANYMORE..
+            FF(  6  ) -->-1.0 //:LEF   <-- I_DONT_KNOW_ANYMORE..
+            GG(  7  ) --> 0.0          <-- I_DONT_KNOW_ANYMORE..
+                fic   --> per          <-- I_DONT_KNOW_ANYMORE..
+
+#_I_DONT_KNOW_WHAT_IAM_DOING_HELP_ME_2021_04_20_################
+#_BIG__MOMMY__MILKIES_EXAMPLE_##################################
+@VID_IID[ 0266 ]TIME[ 05:54:50 ]
+
+        EXAMPLE_001:
+
+            clu_san : 3
+                    |<--clu_san->|    |<--clu_san->|
+            vp1 :   [00] [01] [02]    [03] [04] [05]
+            vp0 :   [00][01][02][03][04][05][06][07][08][09]  
+
+            vp1 (1ST_HALF):   [00]    [01]    [02]
+            vp0 (1ST_HALF):   [00][01][02][03][04] 
+            per (1ST_HALF):   (-1)    (0.)    (+1)
+
+            vp1 (2ND_HALF):   [03]    [04]    [05]
+            vp0 (2ND_HALF):   [05][06][07][08][09] 
+            per (2ND_HALF):   (-1)    (0.)    (+1)
+
+
+##################################_BIG__MOMMY__MILKIES_EXAMPLE_#
+#_EXPLAINING_TO_i_just_said_hello_##############################
+
+
+        [ ] <-- vp1, offscreen tiles
+        [ ][ ][ ] <-- vp0 onscreen pixels
+        -1  0  +1
+
+        [0] <-- vp1, offscreen tiles
+        [ ][ ][ ][ ][ ][ ][ ][ ][ ] <-- vp0 onscreen pixels
+        -1    -.5    0    +.5    +1
+
+        [5] <-- vp1, offscreen tiles
+        [ ][ ][ ][ ][ ][ ][ ][ ][ ] <-- vp0 onscreen pixels
+        -1    -.5    0    +.5    +1
+
+        |ONEBIGTILE|
+        |<----4--->| clu_san==4 , rendering a 4x sized tile
+        [ ][ ][ ][ ] <-- vp1 , offscreen PEBBLES
+
+        [ ][ ][ ][ ] <-- 4 pixels onscreen.
+        /   |  |    \
+     -1     |  |    +1
+            |  |
+            |  |
+       -0.3333 +0.3333
+
+
+
+          |EASY_CAM  |
+    |<----4--->||<----4--->||<----4--->|
+    [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ] <-- offscreen data
+
+##############################_EXPLAINING_TO_i_just_said_hello_#
+#_I_DONT_KNOW_WHAT_IAM_DOING_2021_04_20_########################
+@VID_IID[ 0266 ]TIME[ 04:47:30 ]
+
+            /** **************************************** ***
+            Example_Problem_001_DATE20210420                            
+                        
+                     |<--------- clu_san==9 ----------->|
+                  vp1_b_0                         vp1_b_1    
+                     | |                               ||       
+            INN:vp1: [09][10][11][12][13][14][15][16][17]   
+            INN:vp0: [00]    [01]    [02]    [03]    [04]   
+                       |       |                       |       
+                  vp0_b_0      |                  vp0_b_1  
+                          fraic_1
+                                                            
+              ZER_vp1_b_0                     ZER_vp1_b_1
+                       |                               |    
+            OUT:vp1: [00][01][02][03][04][05][06][07][08]   
+            OUT:vp0: [-9]    [-8]    [-7]    [-6]    [ 5]   
+                       |       |                       |
+                       |  BAK_vp0_pop                  |
+              BAK_vp0_b_0                     BAK_vp0_b_1  
+                                    
+            *** **************************************** **/
+
+########################_I_DONT_KNOW_WHAT_IAM_DOING_2021_04_20_#
+#_CLUDMAP_RNG_TEST_CASES_#######################################
+@VID_IID[ 0266 ]TIME[ 00:37:00 ]CUT_PASTED_INTO_DOCUMENTATION
+ORIGINALLY_FROM_FILE[ P5D1OGL.FRA._ ]
+
+            //:  @VID_IID[ 265 ]TIME[ 00:00:42 ]-------------://
+            //:  #_MAINTAIN_PROPORTION_AFTER_PULLING_BACK_#  ://
+            //:  |<--------- 10 --------------->|            ://
+            //:  |<- 3 ->|  |<------- 7 ------->|            ://
+            //:  [#][#][#]  [#][#][#][#][#][#][#] <--( vp1 ) ://
+            //:   ^                                          ://
+            //:   |                                          ://
+            //:  NOT_AT_ZERO_COMMA_ZERO                      ://
+            //:                                              ://
+            //:                                              ://
+            //:  [#] <-- destination pixel (vp0)             ://
+            //:                                              ://
+            //:  Currently: 10:1 ratio between ranges.       ://
+            //:                                              ://
+            //:  If we widen these ranges[ vp1 & vp0 ]by     ://
+            //:  pulling back to the LEFT sides.... the      ://
+            //:  resulting ranges must still have the same   ://
+            //:  proportionality.                            ://
+            //:----------------------------------------------://
+            
+            //:Example Problem: -----------------------------://
+            //:#EXAP_2021_04_19#                             ://
+            //:                              10              ://
+            //:                               |              ://
+            //:[0][1][2][3][4][5][6][7][8][9][0]             ://
+            //:[0]         [ ][ ][ ]   <-------------[ vp1 ] ://
+            //:[0]   [A][A][A][B][B][B][C][C][C] <---[ vp0 ] ://
+            //:      [2]   [4]   [6]         [0]             ://
+            //: vp1 [ 04 -to- 06 ] <-- 3 pebbles offscreen   ://
+            //: vp0 [ 02 -to- 10 ] <-- 9 pixels  onscreen    ://
+            //:                                              ://
+            //: With no clustering, expecting 3 pixels per   ://
+            //: tile distribution. Thus internal coords:     ://
+            //: [ -1 , 0.0 , +1 ]<-- for each of 3 tiles     ://
+            //: being rendered to screen using the 9         ://
+            //: pixels available.                            ://
+
+                vp1 :     [04]         [05]         [06]
+                          |  |         |  |         |  |
+                      +---+  +---+ +---+  +---+ +---+  +---+
+                      |          | |          | |          |
+                vp0 : [02][03][04] [05][06][07] [08][09][10]
+
+
+            //:----------------------------------------------://
+
+            //:Example_Problem: -----------------------------://
+            //:#_EXAP_2021_04_19_238AM_#                     ://
+            //:                                              ://
+            //:Custering_In_Groups_Of_2                      ://
+            //:But no offsets to make it dead simple.        ://
+            //:                                              ://
+            //:| AA |  BB | <---[ clu_san == 2, so 2 tiles. ]://
+            //:[0][1][2][3] <---[ vp1 ](OffScreenTiles)(Pebbles)
+            //:[0][1] <---------[ vp0 ](OnScreenPixels)      ://
+            //:                                              ://
+            //: With clustering( clu_san ) of 2, the outputs ://
+            //: for both pixels should be[ 0.0 ]because we   ://
+            //: have exact center of tiles[ AA ]&&[ BB ].    ://
+            //:----------------------------------------------://
+
+            //:#_EXAP_2021_04_19_244AM_# --------------------://
+            //:No offset, cluster size of 3.                 ://
+            //:expected output for each tile are             ://
+            //:[ -1 , 0.0 , +1 ]                             ://
+            //:                                              ://
+            //:[0][1][2][3][4][5] <--[ vp1 ]                 ://
+            //:[0][1][2][3][4][5] <--[ vp0 ]                 ://
+            //:----------------------------------------------://
+
+            //:#_EXAP_2021_04_19_253AM_# --------------------://
+            //:Like[ 244AM ]example problem, but larger      ://
+            //:[ vp0 ] range.                                ://
+            //:[0][1][2]  [3][4][5] <--[ vp1 ]               ://
+            //:    |          |        [ clu_san == 3 ]      ://
+            //:    +------+---+                              ://
+            //:           |                                  ://
+            //:[0][1][2] [3] [4][5][6] <--[ vp0 ]( first half )
+            //:[7][8][9] [0] [1][2][3] <--[ vp0 ]( 2nd   half )
+            //:                     |                        ://
+            //:                    [13th index]              ://
+            //:----------------------------------------------://
+
+            //:#_EXAP_2021_04_19_309AM_#---------------------://
+            //:Like[ 253AM ]Example, but now attempting an   ://
+            //:offset of[ vp0 ](pixel destination viewport)  ://
+            //:and seeing if we can predict results.         ://
+            //:                                              ://
+            //:[0][1][2]  [3][4][5] <--[ vp1 ]               ://
+            //:    |          |        [ clu_san == 3 ]      ://
+            //:    +------+---+                              ://
+            //:           |                                  ://
+            //:[1][2][3] [4] [5][6][7] <--[ vp0 ]( first half )
+            //:[8][9][0] [1] [2][3][4] <--[ vp0 ]( 2nd   half )
+            //:----------------------------------------------://
+
+            //:#_EXAP_2021_04_19_320AM_#---------------------://
+            //:Like[ 253AM ]Example, but we snap onto        ://
+            //:[[0][1][2]]causing all pixels to belong to    ://
+            //:only 1 tile instead of 2 tiles.               ://
+            //:                                              ://
+            //:[0]---[1]  <<<<<<<<<<<<<[ vp1 ]               ://
+            //:[0][1][2]  [*][*][*]    [ clu_san == 3 ]      ://     
+            //:    |          |                              ://
+            //:    +------+---+                              ://
+            //:           |                                  ://
+            //:    [0][1][2][3][4][5][6] <--[ vp0 ]PART_01   ://
+            //:             [7]  <----------[ vp0 ]PART_02   ://
+            //:    [8][9][0][1][2][3][4] <--[ vp0 ]PART_03   ://
+            //:                                              ://
+            //:    [1] ==> -1.0                              ://
+            //:    [2] ==>  0.0                              ://
+            //:    [3] ==> +1.0                              ://
+            //:----------------------------------------------://
+
+            //:#_EXAP_2021_04_19_343AM_#---------------------://
+            //:Like[ 253AM ]Example, but we snap onto        ://
+            //:[[3][4][5]]causing all pixels to belong to    ://
+            //:only 1 tile instead of 2 tiles.               ://
+            //:                                              ://
+            //:           [3]---[5]  <<<<<<<<<<<<<[ vp1 ]    ://
+            //:[*][*][*]  [3][4][5]    [ clu_san == 3 ]      ://     
+            //:    |          |                              ://
+            //:    +------+---+                              ://
+            //:           |                                  ://
+            //:    [0][1][2][3][4][5][6] <--[ vp0 ]PART_01   ://
+            //:             [7]  <----------[ vp0 ]PART_02   ://
+            //:    [8][9][0][1][2][3][4] <--[ vp0 ]PART_03   ://
+            //:                                              ://
+            //:    [1] ==> -1.0                              ://
+            //:    [2] ==>  0.0                              ://
+            //:    [3] ==> +1.0                              ://
+            //:----------------------------------------------://
+
+            //:#_EXAPROB_2021_04_19_535PM_AYE_#: BASE_PROBLEM://
+            //:#_EXAPROB_2021_04_19_535PM_BEE_#: SCALING     ://
+            //:#_EXAPROB_2021_04_19_535PM_CEE_#: SHIFTING    ://
+            //:@VID_IID[ 0264 ]TIME[ 00:35:13 ]INTO_TESTS_NOW://
+            //:                                              ://
+            //: |<---------- 9 ---------->| <--(clu_san==9)  ://
+            //: [X] - [X] - [X] - [X] - [X]                  ://
+            //: [0][1][2][3][4][5][6][7][8] <--(vp1_san==9)  ://
+            //: | |   | |   | |   | |   | |                  ://
+            //: | |   | |   | |   | |   | |                  ://
+            //: [0]:::[1]:::[2]:::[3]:::[4] <-- vp0 no scaling
+            //: (-1) (-.5) (0.0) (+.5) (+1)                  ://
+            //:                                              ://
+            //: _EXAPROB_2021_04_19_535PM_BEE_ :             ://
+            //: 1: Multiply offscreen range by 3. BOTH_BY_THREE
+            //: 2: Multiply onscreen  range by 3. BOTH_BY_THREE     
+            //: 3: Keep[ clu_san ]as nine(9)                 ://
+            //:                                              ://
+            //: #_EXAPROB_2021_04_19_535PM_CEE_#             ://
+            //: Instead of scaling everything, shift over    ://
+            //: the ranges and predict the outcome again.    ://
+            //: [ vp1 ] must be shifted in increments of     ://
+            //: the phase (clu_san). But [vp0] can be        ://
+            //: shifted by 100% arbitrary amounts as long    ://
+            //: as we do not change the LENGTH of[ vp0 ]     ://
+            //: range.                                       ://
+            //- SKIPPED_BECAUSE_TOO_MANY_VARS_AND_CRASHING   -//
+            //:----------------------------------------------://
+
+            #_TEST_CASE_I_FUCKING_HATE_THIS_WHEN_WILL_IT_END_#
+
+            Take this situation, and offset only the OUTPUT
+            range and see if we still get correct answers.
+
+            |<---------- 9 ---------->| <--(clu_san==9)   
+            [X] - [X] - [X] - [X] - [X]                   
+            [0][1][2][3][4][5][6][7][8] <--(vp1_san==9)   
+            | |   | |   | |   | |   | |                   
+            | |   | |   | |   | |   | |                   
+            [0]:::[1]:::[2]:::[3]:::[4] <-- vp0 no scaling
+            (-1) (-.5) (0.0) (+.5) (+1)         
+            | |   | |   | |   | |   | |
+            [101]:[102]:[103]:[104]:[105]<- vp0 +101 offset.
+
+    //||||||||||||||||||||||||||||||||||||||||||||||||||||||||//
+    //[Figuring_Out_Test_Index[ 80 ]:------------------------]//
+
+        #_OKAY_NOW_SHIFT_THE_OUTPUT_RANGE_INSTEAD_CHUCK_#
+        
+        |<---------- 9 ---------->| <--(clu_san==9)   
+        [X] - [X] - [X] - [X] - [X]                   
+        [0][1][2][3][4][5][6][7][8] <--(vp1_san==9)   
+        | |   | |   | |   | |   | | 
+        09 10 11 12 13 14 15 16 17  <--(vp1_san +9 OFFSET)
+        [9][0][1][2][3][4][5][6][7] <--(vp1_san==9)                     
+        | |   | |   | |   | |   | |                   
+        [0]:::[1]:::[2]:::[3]:::[4] <-- vp0 no scaling
+        (-1) (-.5) (0.0) (+.5) (+1)        
+    
+        :ON_CRASH:---------------------------------------------:
+        p5d1ogl_log: [ fraic_1 ]:(  0 )
+        p5d1ogl_log: [ vp0_b_0 ]:(  0 )
+        p5d1ogl_log: [ vp0_b_1 ]:(  4 )
+        p5d1ogl_log: [ vp1_b_0 ]:(  9 )
+        p5d1ogl_log: [ vp1_b_1 ]:( 17 )
+        p5d1ogl_log: [ clu_san ]:(  9 )
+        p5d1ogl_log: [ aac2020_p5d1ogl_utc_t_i]:80  
+        :---------------------------------------------:ON_CRASH:
+
+        INPUT:
+        vp1: [09][10][11][12][13][14][15][16][17]
+        vp0: [00]    [01]    [02]    [03]    [04]
+        
+
+
+    //[-------------------------Figuring_Out_Test_Index[ 80 ]]//
+    //||||||||||||||||||||||||||||||||||||||||||||||||||||||||//
+ 
+
+#######################################_CLUDMAP_RNG_TEST_CASES_#
+#_MATH_PEROID_EXPLAINED_URL_####################################
+#_MATH_PERIOD_EXPLAINED_URL_####################################
+
+    Unfortunately, I can't spell the word "peroid"...
+
+    https://www.mathsisfun.com/algebra/
+        amplitude-period-frequency-phase-shift.html
+
+####################################_MATH_PEROID_EXPLAINED_URL_#
+####################################_MATH_PERIOD_EXPLAINED_URL_#
+#_RAID_NOTES_VID_266_###########################################
+@VID_IID[ 0266 ]TIME[ 01:49:11 ]
+
+    vp0_b_0 --> [ vp0_x_0 | vp0_y_0 ]
+    vp0_b_1 --> [ vp0_x_1 | vp0_y_1 ]
+
+        +------y_0-----+
+        |              |
+        |              |
+       x_0            x_1
+        |              |
+        |              |
+        +------y_1-----+
+
+    |<---------  vp1 -------->|
+    [0][1][2][3][4][5][6][7][8] <--OFFSCREEN DATA
+
+
+    [0]         [1]         [2] <--ON_SCREEN VIEWPORT
+        
+        
+        [ ][ ]
+        [ ][ ] <-- offscreen selection rectangle
+        
+    +----------------++----------------+
+    | (-1,-1)        || (-1,-1)        |
+    |                ||                |
+    |                ||                |
+    |     0.0,0.0    ||       0.0      |
+    |                ||                |
+    |         (+1,+1)||         (+1,+1)|
+    +----------------++----------------+
+    | (-1,-1)        || (-1,-1)        |
+    |                ||                |
+    |                ||                |
+    |       0.0      ||       0.0      |
+    |                ||                |
+    |         (+1,+1)||         (+1,+1)|
+    +----------------++----------------+
+    +----------------++----------------+
+    |(-1,-1)                           |
+    |                                  |
+    |                                  |
+    |                                  |
+    |                                  |
+    |                                  |
+    +               0.0                +
+    |                                  |
+    |                                  |
+    |                                  |
+    |                                  |
+    |                                  |
+    |                           (+1,+1)|
+    +----------------++----------------+
+
+    AAC2020_PAINT5D_RENCORE_tilodat_CTO_tilpixu(
+                aus_dex //:AKA[ aus_dex / a_d ]
+            ,   t_l     //:AKA[ til_lay / t_l ] 
+            ,   t_e     //:AKA[ til_exp / t_e ] 
+            ,   t_v     //:AKA[ til_val / t_v ] 
+            ,   tou     //:AKA[ tou_val / tou ]
+            ,   p_x     //:AKA[ tilop_x / p_x ]
+            ,   p_y     //:AKA[ tilop_y / p_y ] 
+            ));;
+
+###########################################_RAID_NOTES_VID_266_#
+@_WHATS_MY_UTC_DEX_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @WHATS_MY_UTC_DEX@:
+        Some functions may be aware of a "unit test index"
+        set by unit testing code. This unit test index
+        being logged is only important to look at if the
+        code failed a runtime assertion during a unit 
+        test. Otherwise the number is meaningless.
+
+        @VID_IID[ 0263 ]TIME[ 03:00:50 ]
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@_WHATS_MY_UTC_DEX_@
 #_P5D_FIC_MAP_TILOPER_EXPLAINED_################################
 @VID_IID[ 0260 ]TIME[ 02:02:50 ]EXTRACTED_TO_HASHTAG_FILE
 

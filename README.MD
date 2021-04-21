@@ -1763,15 +1763,19 @@
             //:---------:1x1_TILE_TO_PIXELS_BUT_VP0_IS_OFFSET://
             //:Smaller_Range_Of_Values:----------------------://
             /** Still 1:1 mapping between tiles and pixels   **/
+            /** @VID_IID[ 0263 ]T[ 04:42:32 ]FIXING_IT_UP    **/
             /** #_VP1_010_VP0_005_#                          **/
 
-            THIS_ISNT_WHAT_YOU_THINK:
+            YOU_DONT_KNOW_WHAT_YOU_ARE_DOING....:
 
                 |<-------------- p5d_vp1 -------------->|
                 |<---------------- 010 ---------------->|
+                |<-------vp1:LEF--->|<------ vp1:RIG -->|
+                |<------ 005 ------>|<------ 005 ------>|
                 +---+---+---+---+---+---+---+---+---+---+  
                 | 0 |   | 2 |   | 4 | 5 |   | 7 |   | 9 |  
                 +---+---+---+---+---+---+---+---+---+---+ 
+        DES_OUT[ -1      0.0     +1  -1      0.0     +1 ]
 
                 |<---- p5d_vp0 ---->|
                 |<------ 005 ------>|
@@ -1784,34 +1788,149 @@
                                     +---+---+---+---+---+
                                     |<---- p5d_vp0 ---->|
 
-                #_PROBLEM_IS_MORE_LIKE_THIS_2021_04_17#:
-
-                |<-------------- p5d_vp1 -------------->|
-                |<---------------- 010 ---------------->|
-                +---+---+---+---+---+---+---+---+---+---+  
-                | 0 |   | 2 |   | 4 | 5 |   | 7 |   | 9 |  
-                +---+---+---+---+---+---+---+---+---+---+ 
-
-                |<-------------- p5d_vp0 -------------->|
-                |<---------------- 010 ---------------->|
-                |<------ 005 ------>|
-                +---+---+---+---+---+-------------------+
-                | 0 |   | 2 |   | 4 |                   |
-                +---+---+---+---+---+-------------------+
-                                    |<------ 005 ------>|
-                +-------------------+---+---+---+---+---+
-                |                   | 5 |   | 7 |   | 9 |  
-                +-------------------+---+---+---+---+---+
-                |<---------------- 010 ---------------->|
-                |<-------------- p5d_vp0 -------------->|
-
-
-
-
+ 
             //:----------------------:Smaller_Range_Of_Values://
+            //:ZOOM_ON_IN_ON_CELL_2:-------------------------://
+            /** @VID_IID[ 0263 ]TIME[ 04:58:23 ]EXPLAINED ** **/
+            //: #_ZOOM_123_TEST_#
+
+                If input range for[ vp1 ]is[ 1 -to- 3 ]
+                we should expect outputs to be between
+                [ -0.5 ]and[ +0.5 ]with[ 0.0 ]in the center.
+                ...i think...
+
+                clu_san ==(  5  );
+
+                    |<-- vp1 -->| ( p5d_vp1 == [ 1 -to- 3 ] )
+                    +-----------+
+                    |-.5     +.5|
+                +---+---+---+---+---+  +---+---+---+---+---+  
+                | 0 | 1 | 2 | 3 | 4 |  | 5 |   | 7 |   | 9 | 
+                +---+---+---+---+---+  +---+---+---+---+---+ 
+        DES_OUT[ -1 |    0.0    | +1    -1      0.0     +1 ]
+                    +-----------+
+
+                |<---- p5d_vp0 ---->|( p5d_vp0 == [ 1 -to- 5 ] )
+                |<------ 005 ------>|
+                +---+---+---+---+---+
+                | * | 1 | 2 | 3 | * | 
+                +---+---+---+---+---+
+                     /    |    \
+                  -0.5   0.0  +0.5
+
+                I got this test to pass but uncertain if
+                I have the correct math....
+
+                Looking at it... I think this math is correct.
+                If[ p5d_vp1 ]was 1 pixel larger on each side
+            &&  If[ p5d_vp1 ]was 1 pixel larger on each side
+            ,   look at how the mapping would still check out.
+
+            //:-------------------------:ZOOM_ON_IN_ON_CELL_2://
+            //:BACKSHIFTING_PROPORTIONALLY:------------------://
+
+                We need to backshift[ vp1_san ]'s left bound
+                until it hits [0]. Then we need to
+                backshift[ vp0_san ]'s left bound backwards
+                by the same PROPORTIONAL amount.
+                In current diagram there is a 1:1 proportion
+                between offscreen data tiles( vp1_san )
+                to on screen pixels( vp0_san ), so 
+                in this EXCEPTION, we just have to shift
+                backwards by identical amounts on both
+                [ vp1_san ]and[ vp0_san ]
+
+            THIS: - - - - - - - - - - - - - - - - - - - - - - -:
+                clu_san==[ 2 ] 
+                | 01 || 02 || 03 |
+                [0][1][2][3][4][5] <--[ vp1_san == 2 ]
+                      |    |
+                      |    |
+                      [2][3] <--------[ vp0_san == 2 ]
+                      vp1 ==[ 2 -to- 3 ]
+                      vp0 ==[ 2 -to- 3 ]
+                      f_1 ==[ 2   &  3 ]
+        
+            BECOMES: - - - - - - - - - - - - - - - - - - - - - :
+                clu_san==[ 2 ] 
+                | 01 || 02 || 03 |
+                [0][1][2][3][4][5] <--[ vp1_san == 2 ]
+                |          |
+                |          |
+                [0][1][2][3] <--------[ vp0_san == 2 ]
+                      vp1 ==[ 0 -to- 3 ]
+                      vp0 ==[ 0 -to- 3 ]
+                      f_1 ==[ 2   &  3 ] <-- unchanged.
+
+            //:------------------:BACKSHIFTING_PROPORTIONALLY://
 
 
         //:=============================:SOLVE_WITH_1D_RANGES://
+        //:STILL_SOLVING_WITH_1D_RANGES:=====================://
+    ////////////////////////////////////////////////////////////
+
+
+    [      01      ][      02      ] <--[ clu_san ]
+    [00][01][02][03][04][05][06][07] <--[ vp1_san ][ num_peb ]
+    |              |               |
+    |  +-----------+               |
+    |  |                           |
+    |  |   +-----------------------+
+    |  |   |
+    [00][01] <--------------------------[ vp0_san ][ num_pix ]
+     ^^  \\
+     ||   PIXEL_B(01)
+    PIXEL_A(00)
+
+    How do we get same results for [01] when[ vp0 ]is no
+    longer origined at[ 0,0 ] ?
+    
+        AAC2020_P5D1OGL_CludMap_ZOF_1_D(
+            [ 00 | 01 ] <-- fraic_1 
+        ,   (    2    ) <-- vp0_san  
+        ,   (    8    ) <-- vp1_san  
+        ,   (    4    ) <-- clu_san ( 4 pebbles per tile )
+        );;
+
+    If we wanted to just map[ PIXEL_B ]using[ CludMap_RNG_1_D ]
+    how would we do that? Format the call below, then figure
+    out the internal math.
+
+        AAC2020_P5D1OGL_CludMap_RNG_1_D(
+            01 <-- fraic_1 //:[ fic.x | fic.y ]/(fraic_x|fraic_y)
+
+                   //: range only covers 1 pixel here.
+        ,    1 <-- vp0_b_0 //:AKA[ vp0_min ]( x_0 | y_0 )
+        ,    1 <-- vp0_b_1 //:AKA[ vp0_max ]( x_1 | y_1 )
+
+                   //: mapping to offscreen[ pebbles/tiles ]
+                   //:[ 4 - 7 ]which should be clustered to
+                   //:be interpeted as a single tile.
+        ,    4 <-- vp1_b_0 //:AKA[ vp1_min ]( x_0 | y_0 ) 
+        ,    7 <-- vp1_b_1 //:AKA[ vp1_max ]( x_1 | y_1 ) 
+
+                   //:pretty sure cluster size sould remain
+                   //:un-changed.
+        ,    4 <-- clu_san //:Clustering_Of_vp0_units
+        );;
+
+    FIRST_THOUGHT:
+    I think the answer is to widen [ vp0_san ]and[ vp1_san ]
+    by proportional amounts by pulling back on their lower
+    bounds until[ vp1_san ]is origined at[ 0,0 ].
+    This will preserve the correct phases for clustering
+    of internal tile coordinates derived from tiles that are 
+    are greater than 1 pebble in size.
+
+    2ND_THOUGHT:FIRST_THOUGHT_WAS_CLOSE:
+    We only need to widen[ vp1_san ](offscreen data)
+    until it hits the origin. [ vp0_san ](on screen pixels)
+    will end up whatever it needs to be based on proportionally
+    scaling with[ vp1_san ].
+
+
+    ////////////////////////////////////////////////////////////
+        //:STILL_SOLVING_WITH_1D_RANGES:=====================://
 
     //:||||||||||||||||||||||||||||||||:DIAGRAMS:CLUDMAP(ing)://
     //:DIAGRAMS:fic_MAP_tiloper:|||||||||||||||||||||||||||||://

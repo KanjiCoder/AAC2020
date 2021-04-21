@@ -397,8 +397,11 @@
         /** ONCE PASSING, PUT BACK IN CHRONOLOGICAL **/
         /**[ ADDED_DATE ]ORDER ******************** **/
 
-            E_V aac2020_P5D1OGL_UTC_CludMap_RNG_1_D( V );
-                aac2020_P5D1OGL_UTC_CludMap_RNG_1_D(   );
+        E_V aac2020_P5D1OGL_UTC_CludMap_RNG_1_D_TRY002( V );  
+            aac2020_P5D1OGL_UTC_CludMap_RNG_1_D_TRY002(   );  
+
+ ////   E_V aac2020_P5D1OGL_UTC_CludMap_RNG_1_D( V );  
+ ////       aac2020_P5D1OGL_UTC_CludMap_RNG_1_D(   );  
 
         //:----------------------------:ADDED_DATE_2021_04_17://
 
@@ -530,9 +533,151 @@
     //: - - - - - - - - - - - - -:aac2020_P5D1OGL_UTC_private://
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     void
+    aac2020_P5D1OGL_UTC_CludMap_RNG_1_D_TRY002( void )
+    {
+    #define NUM_TES ( 6 )
+    #define     INN ( 6 )
+    #define     OUT ( 1 )
+    LOG("[aac2020_P5D1OGL_UTC_CludMap_RNG_1_D_TRY002:BEG]",0);
+    /** **************************************************** ***
+    KEEP THIS FUNCTION TO A __FEW__ WELL THOUGHT OUT TEST
+    CASES. NO MORE THAN __3__. IF THESE TESTS PASS WE SHOULD
+    BE 99% CERTAIN THE CODE IS CORRECT.
+    *** **************************************************** **/
+
+        I32 fraic_1 ; //:[fragment_integer_coord    ]::::::::://
+        I32 vp0_b_0 ; //:[on_screen_pixels:min_bound]::::::::://
+        I32 vp0_b_1 ; //:[on_screen_pixels:max_bound]::::::::://
+        I32 vp1_b_0 ; //:[off_screen_tiles:min_bound]::::::::://
+        I32 vp1_b_1 ; //:[off_screen_tiles:max_bound]::::::::://
+        I32 clu_san ; //:[pebble_clustering_size    ]::::::::://
+
+        /** ************************************************ ***
+        EXAMPLE_001: ( #_BIG__MOMMY__MILKIES_EXAMPLE_# )
+
+            clu_san : 3
+                    |<------ TWO_TILE_CAMERA ----->|
+                    |<--clu_san->|    |<--clu_san->|
+            vp1 :   [00] [01] [02]    [03] [04] [05]
+            vp0 :   [00][01][02][03][04][05][06][07][08][09]  
+
+            vp1 (1ST_HALF):   [00]    [01]    [02]
+            vp0 (1ST_HALF):   [00][01][02][03][04] 
+            per (1ST_HALF):   (-1)    (0.)    (+1)
+
+            vp1 (2ND_HALF):   [03]    [04]    [05]
+            vp0 (2ND_HALF):   [05][06][07][08][09] 
+            per (2ND_HALF):   (-1)    (0.)    (+1)
+
+        THOUGHT: Break apart EXAMPLE_001 into finer grain
+                 parts and then move your tile-camera
+                 and predict the outputs.
+
+        *** ************************************************ **/
+
+
+        I32 tab_utc_inn[ NUM_TES * INN ]={
+        //: EXAMPLE_001
+        //: |fraic_1|vp0_b_0|vp0_b_1|vp1_b_0|vp1_b_1| clu_san://
+        //: |       |<---- vp0 ---->|<---- vp1 ---->| clu |  ://
+        //: |  fic  |  b_0  |  b_1  |  b_0  |  b_1  | clu |  ://
+
+        //: EXAMPLE_001:1ST_HALF:
+        /**/ (   0 ),(   0 ),(   9 ),(   0 ),(   5 ),( 3 )//:000
+        ,    (   2 ),(   0 ),(   9 ),(   0 ),(   5 ),( 3 )//:001
+        ,    (   4 ),(   0 ),(   9 ),(   0 ),(   5 ),( 3 )//:002
+
+        //: EXAMPLE_001:2ND_HALF:
+        ,    (   5 ),(   0 ),(   9 ),(   0 ),(   5 ),( 3 )//:003
+        ,    (   7 ),(   0 ),(   9 ),(   0 ),(   5 ),( 3 )//:004
+        ,    (   9 ),(   0 ),(   9 ),(   0 ),(   5 ),( 3 )//:005
+
+
+        };;
+        F32 tab_utc_out[ NUM_TES * OUT ]={
+        //: EXAMPLE_001:1ST_HALF:
+        /**/ (-1.0) //:TEST_INDEX[ 000 ]TEST_NUMBER[ 001 ]
+        ,    ( 0.0) //:TEST_INDEX[ 001 ]TEST_NUMBER[ 002 ]
+        ,    (+1.0) //:TEST_INDEX[ 002 ]TEST_NUMBER[ 003 ]
+
+        //: EXAMPLE_001:2ND_HALF:
+        ,    (-1.0) //:TEST_INDEX[ 003 ]TEST_NUMBER[ 004 ]
+        ,    ( 0.0) //:TEST_INDEX[ 004 ]TEST_NUMBER[ 005 ]
+        ,    (+1.0) //:TEST_INDEX[ 005 ]TEST_NUMBER[ 006 ]
+
+        };;
+
+        //:HIJACKED_TEST_RUNNER_CODE:------------------------://
+        /**@VID_IID[ 0266 ]TIME[05:34:32]PASTED_THIS_SECTION **/
+
+        I32 t_i; /**test__index**/
+        I32 bos; /**base_offset**/
+        I32 m_i; /**max___index**/
+
+        F32 EXP_tilop_1; /** EXPECTED **/
+        F32 ACT_tilop_1; /** ACTUAL   **/
+        F32 delta=( 777.777 );
+
+        m_i=( NUM_TES - 1 );
+        for( t_i = 0 ; t_i <=( m_i) ; t_i++ ){
+
+            aac2020_p5d1ogl_utc_t_i=( t_i );
+
+            bos =( t_i * INN );
+            fraic_1 = tab_utc_inn[ bos + 0 ];
+            vp0_b_0 = tab_utc_inn[ bos + 1 ];
+            vp0_b_1 = tab_utc_inn[ bos + 2 ];
+            vp1_b_0 = tab_utc_inn[ bos + 3 ];
+            vp1_b_1 = tab_utc_inn[ bos + 4 ];
+            clu_san = tab_utc_inn[ bos + 5 ];
+
+            EXP_tilop_1 =( tab_utc_out[ (t_i * OUT)+0 ] );
+            ACT_tilop_1=(
+            AAC2020_P5D1OGL_CludMap_RNG_1_D(
+                fraic_1  //:[ fraic_1  
+            ,   vp0_b_0  //:[ vp0_san  
+            ,   vp0_b_1  //:[ vp0_san  
+            ,   vp1_b_0  //:[ vp1_san  
+            ,   vp1_b_1  //:[ vp1_san  
+            ,   clu_san  //:[ clu_san  
+            ));;
+
+            //:should_i_crash?:------------------------------://
+            delta=( AAC2020_POLYOGL_ABS_F32(
+                EXP_tilop_1 - ACT_tilop_1   ));;
+    
+            if( delta > 0.0001 ){
+            #define P printf
+
+                P( "[^_^:t_i:.......]:%d\n",        t_i );
+                P( "[^_^:EXP_tilop_1]:%f\n",EXP_tilop_1 );
+                P( "[^_^:ACT_tilop_1]:%f\n",ACT_tilop_1 );
+                P( "\n" );
+
+                P( "[^_^:HACKISH_INTERNAL_DEBUG...]\n");
+                P( "[^_^:AAC2020_P5D1OGL_DEBUVAR_vp0_nom]:%f\n"
+                ,       AAC2020_P5D1OGL_DEBUVAR_vp0_nom );;
+                P( "[^_^:AAC2020_P5D1OGL_DEBUVAR_fraic_L]:%f\n"
+                ,       AAC2020_P5D1OGL_DEBUVAR_fraic_L );;
+                P( "\n" );
+                
+                ERR("[^_^:EXP_tilop_1_NOT_MATCHING_ACTUAL]");
+            #undef  P
+            };; //:--------------------------:should_i_crash?://
+
+        };;//:NEXT[ t_i ]://
+        //:------------------------:HIJACKED_TEST_RUNNER_CODE://
+
+    LOG("[aac2020_P5D1OGL_UTC_CludMap_RNG_1_D_TRY002:END]",0);
+    #undef NUM_TES
+    #undef     INN
+    #undef     OUT
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
     aac2020_P5D1OGL_UTC_CludMap_RNG_1_D( void )
     {
-    #define NUM_TES ( 17 - 3 - 2 )
+    #define NUM_TES ( 85  )
     #define     INN ( 6 )
     #define     OUT ( 1 )
     LOG("[aac2020_P5D1OGL_UTC_CludMap_RNG_1_D:BEG]",0);
@@ -557,27 +702,160 @@
         ,    ( 127 ),(  0  ),( 127 ),(  0  ),( 255 ),( 1 )//:004
 
         //: README_MD[ @_SAME_PHASE_@ ]
-        ,    (  0  ),( 128 ),( 255 ),(  0  ),( 255 ),( 1 )//:005
-        ,    ( 127 ),( 128 ),( 255 ),(  0  ),( 255 ),( 1 )//:006
+        ,    ( 128 ),( 128 ),( 255 ),(  0  ),( 255 ),( 1 )//:005
+        ,    ( 255 ),( 128 ),( 255 ),(  0  ),( 255 ),( 1 )//:006
 
         //: PREVIOUS_4_TESTS_WITH_128_CLUSTERING:
         //: @VID_IID[ 0261 ]TIME[ 05:56:13 ]I_WAS_WRONG
         //: @VID_IID[ 0261 ]TIME[ 05:57:50 ]CLUSTER_IS_128
         ,    (  0  ),(  0  ),( 127 ),(  0  ),( 255 ),(128)//:007
         ,    ( 127 ),(  0  ),( 127 ),(  0  ),( 255 ),(128)//:008
-        ,    (  0  ),( 128 ),( 255 ),(  0  ),( 255 ),(128)//:009
-        ,    ( 127 ),( 128 ),( 255 ),(  0  ),( 255 ),(128)//:010
+        ,    ( 128 ),( 128 ),( 255 ),(  0  ),( 255 ),(128)//:009
+        ,    ( 255 ),( 128 ),( 255 ),(  0  ),( 255 ),(128)//:010
 
+        //:P5D1OGL_FRA[ #EXAP_2021_04_19# ]
+        ,    (  2  ),(  2  ),(  10 ),(  4  ),(  6  ),( 1 )//:011
+        ,    (  3  ),(  2  ),(  10 ),(  4  ),(  6  ),( 1 )//:012
+        ,    (  4  ),(  2  ),(  10 ),(  4  ),(  6  ),( 1 )//:013
+             //:- - - - - - - - - - - - - - - - - - - - - - -://
+        ,    (  5  ),(  2  ),(  10 ),(  4  ),(  6  ),( 1 )//:014
+        ,    (  6  ),(  2  ),(  10 ),(  4  ),(  6  ),( 1 )//:015
+        ,    (  7  ),(  2  ),(  10 ),(  4  ),(  6  ),( 1 )//:016
+             //:- - - - - - - - - - - - - - - - - - - - - - -://
+        ,    (  8  ),(  2  ),(  10 ),(  4  ),(  6  ),( 1 )//:017
+        ,    (  9  ),(  2  ),(  10 ),(  4  ),(  6  ),( 1 )//:018
+        ,    ( 10  ),(  2  ),(  10 ),(  4  ),(  6  ),( 1 )//:019
+             //:- - - - - - - - - - - - - - - - - - - - - - -://
+
+        //:P5D1OGL_FRA[ #_EXAP_2021_04_19_238AM_# ]
+        //: |       |<---- vp0 ---->|<---- vp1 ---->| clu |  ://
+        //: |  fic  |  b_0  |  b_1  |  b_0  |  b_1  | clu |  ://
+        ,    (  0  ),(  0  ),(  1  ),(  0  ),(  3  ),( 2 )//:020      
+        ,    (  1  ),(  0  ),(  1  ),(  0  ),(  3  ),( 2 )//:021  
+
+        //:P5D1OGL_FRA[ #_EXAP_2021_04_19_244AM_# ]
+        ,    (  0  ),(  0  ),(  5  ),(  0  ),(  5  ),( 3 )//:022        
+        ,    (  1  ),(  0  ),(  5  ),(  0  ),(  5  ),( 3 )//:023        
+        ,    (  2  ),(  0  ),(  5  ),(  0  ),(  5  ),( 3 )//:024
+             //:- - - - - - - - - - - - - - - - - - - - - - -://
+        ,    (  3  ),(  0  ),(  5  ),(  0  ),(  5  ),( 3 )//:025        
+        ,    (  4  ),(  0  ),(  5  ),(  0  ),(  5  ),( 3 )//:026        
+        ,    (  5  ),(  0  ),(  5  ),(  0  ),(  5  ),( 3 )//:027   
+
+        //:P5DOGL_FRA[ #_EXAP_2021_04_19_253AM_# ]
+        ,    (  3  ),(  0  ),( 13  ),(  0  ),(  5  ),( 3 )//:028  
+        ,    ( 10  ),(  0  ),( 13  ),(  0  ),(  5  ),( 3 )//:029  
+             //:- - - - - - - - - - - - - - - - - - - - - - -://
+        ,    (  0  ),(  0  ),( 13  ),(  0  ),(  5  ),( 3 )//:030 
+        ,    (  7  ),(  0  ),( 13  ),(  0  ),(  5  ),( 3 )//:031 
+             //:- - - - - - - - - - - - - - - - - - - - - - -://
+        ,    (  6  ),(  0  ),( 13  ),(  0  ),(  5  ),( 3 )//:032 
+        ,    ( 13  ),(  0  ),( 13  ),(  0  ),(  5  ),( 3 )//:033
+
+        //:P5DOGL_FRA[ #_EXAP_2021_04_19_309AM_# ]
+        ,    (  4  ),(  1  ),( 14  ),(  0  ),(  5  ),( 3 )//:034  
+        ,    ( 11  ),(  1  ),( 14  ),(  0  ),(  5  ),( 3 )//:035  
+             //:- - - - - - - - - - - - - - - - - - - - - - -://
+        ,    (  1  ),(  1  ),( 14  ),(  0  ),(  5  ),( 3 )//:036 
+        ,    (  8  ),(  1  ),( 14  ),(  0  ),(  5  ),( 3 )//:037 
+             //:- - - - - - - - - - - - - - - - - - - - - - -://
+        ,    (  7  ),(  1  ),( 14  ),(  0  ),(  5  ),( 3 )//:038
+        ,    ( 14  ),(  1  ),( 14  ),(  0  ),(  5  ),( 3 )//:039
+
+        //:P5DOGL_FRA[ #_EXAP_2021_04_19_320AM_# ]
+        ,    (  0  ),(  0  ),( 14  ),(  0  ),(  2  ),( 3 )//:040
+        ,    (  7  ),(  0  ),( 14  ),(  0  ),(  2  ),( 3 )//:041
+        ,    ( 14  ),(  0  ),( 14  ),(  0  ),(  2  ),( 3 )//:042
+
+        //:P5DOGL_FRA[ #_EXAP_2021_04_19_343AM_# ]
+        ,    (  0  ),(  0  ),( 14  ),(  3  ),(  5  ),( 3 )//:043
+        ,    (  7  ),(  0  ),( 14  ),(  3  ),(  5  ),( 3 )//:044
+        ,    ( 14  ),(  0  ),( 14  ),(  3  ),(  5  ),( 3 )//:045
+
+        //: LETS NOT MESS WITH CLUSTERING UNTIL WE NAIL DOWN    
+        //: ALL OF THE OTHER TRANSFORMATIONS!!!
         //: README_MD[ #_VP1_010_VP0_005_# ]
-        ,    (  0  ),(  0  ),(  4  ),(  0  ),(  9  ),( 5 )//:011
-////    ,    (  2  ),(  0  ),(  4  ),(  0  ),(  9  ),( 5 )//:012
-////    ,    (  4  ),(  0  ),(  4  ),(  0  ),(  9  ),( 5 )//:013
-             //:- - - - - - - - - - - - - - - - - - - - - - -://
-////    ,    (  5  ),(  5  ),(  9  ),(  0  ),(  9  ),( 5 )//:014
-////    ,    (  7  ),(  5  ),(  9  ),(  0  ),(  9  ),( 5 )//:015
-////    ,    (  9  ),(  5  ),(  9  ),(  0  ),(  9  ),( 5 )//:016
+        ,    (  0  ),(  0  ),(  4  ),(  0  ),(  4  ),( 5 )//:046
+        ,    (  2  ),(  0  ),(  4  ),(  0  ),(  4  ),( 5 )//:047
+        ,    (  4  ),(  0  ),(  4  ),(  0  ),(  4  ),( 5 )//:048
+            //:- - - - - - - - - - - - - - - - - - - - - - -://
+        ,    (  5  ),(  5  ),(  9  ),(  5  ),(  9  ),( 5 )//:049
+        ,    (  7  ),(  5  ),(  9  ),(  5  ),(  9  ),( 5 )//:050
+        ,    (  9  ),(  5  ),(  9  ),(  5  ),(  9  ),( 5 )//:051
              //:- - - - - - - - - - - - - - - - - - - - - - -://
 
+        //: README_MD[ #_ZOOM_123_TEST_# ]
+        //: @VID_IID[ 0264 ]TIME[ 00:01:23 ]
+        //: |       |<---- vp0 ---->|<---- vp1 ---->| clu |  ://
+        //: |  fic  |  b_0  |  b_1  |  b_0  |  b_1  | clu |  ://
+        ,    (  2  ),(  1  ),(  3  ),(  1  ),(  3  ),( 5 )//:052
+        ,    (  1  ),(  1  ),(  3  ),(  1  ),(  3  ),( 5 )//:053
+        ,    (  3  ),(  1  ),(  3  ),(  1  ),(  3  ),( 5 )//:054
+
+        //: P5D1OGL_FRA[ #_EXAPROB_2021_04_19_535PM_AYE_# ]
+        //: @VID_IID[ 0264 ]TIME[ 00:37:42 ]
+        //: |       |<---- vp0 ---->|<---- vp1 ---->| clu |  ://
+        //: |  fic  |  b_0  |  b_1  |  b_0  |  b_1  | clu |  ://
+        ,    (  0  ),(  0  ),(  4  ),(  0  ),(  8  ),( 9 )//:055
+        ,    (  1  ),(  0  ),(  4  ),(  0  ),(  8  ),( 9 )//:056
+        ,    (  2  ),(  0  ),(  4  ),(  0  ),(  8  ),( 9 )//:057
+        ,    (  3  ),(  0  ),(  4  ),(  0  ),(  8  ),( 9 )//:058
+        ,    (  4  ),(  0  ),(  4  ),(  0  ),(  8  ),( 9 )//:059
+
+        //: P5D1OGL_FRA[ #_EXAPROB_2021_04_19_535PM_BEE_# ]
+        //: @VID_IID[ 0264 ]TIME[ 00:47:13 ]
+        //: |       |<---- vp0 ---->|<---- vp1 ---->| clu |  ://
+        //: |  fic  |  b_0  |  b_1  |  b_0  |  b_1  | clu |  ://
+        ,    (  0  ),(  0  ),( 14  ),(  0  ),( 26  ),( 9 )//:060
+        ,    (  1  ),(  0  ),( 14  ),(  0  ),( 26  ),( 9 )//:061
+        ,    (  2  ),(  0  ),( 14  ),(  0  ),( 26  ),( 9 )//:062
+        ,    (  3  ),(  0  ),( 14  ),(  0  ),( 26  ),( 9 )//:063
+        ,    (  4  ),(  0  ),( 14  ),(  0  ),( 26  ),( 9 )//:064
+             //:- -|||-----|||-----|||-----|||-----|||-------://
+        ,    (  5  ),(  0  ),( 14  ),(  0  ),( 26  ),( 9 )//:065
+        ,    (  6  ),(  0  ),( 14  ),(  0  ),( 26  ),( 9 )//:066
+        ,    (  7  ),(  0  ),( 14  ),(  0  ),( 26  ),( 9 )//:067
+        ,    (  8  ),(  0  ),( 14  ),(  0  ),( 26  ),( 9 )//:068
+        ,    (  9  ),(  0  ),( 14  ),(  0  ),( 26  ),( 9 )//:069
+             //:- -|||-----|||-----|||-----|||-----|||-------://
+        ,    ( 10  ),(  0  ),( 14  ),(  0  ),( 26  ),( 9 )//:070
+        ,    ( 11  ),(  0  ),( 14  ),(  0  ),( 26  ),( 9 )//:071
+        ,    ( 12  ),(  0  ),( 14  ),(  0  ),( 26  ),( 9 )//:072
+        ,    ( 13  ),(  0  ),( 14  ),(  0  ),( 26  ),( 9 )//:073
+        ,    ( 14  ),(  0  ),( 14  ),(  0  ),( 26  ),( 9 )//:074
+             //:- -|||-----|||-----|||-----|||-----|||-------://
+
+        //: #_TEST_CASE_I_FUCKING_HATE_THIS_WHEN_WILL_IT_END_#
+        //: @VID_IID[ 0265 ]TIME[ 00:43:42 ] ::::::::::::::::://
+        ,    (101  ),(101  ),(105  ),(  0  ),(  8  ),( 9 )//:075
+        ,    (102  ),(101  ),(105  ),(  0  ),(  8  ),( 9 )//:076
+        ,    (103  ),(101  ),(105  ),(  0  ),(  8  ),( 9 )//:077
+        ,    (104  ),(101  ),(105  ),(  0  ),(  8  ),( 9 )//:078
+        ,    (105  ),(101  ),(105  ),(  0  ),(  8  ),( 9 )//:079
+
+        //: #_OKAY_NOW_SHIFT_THE_OUTPUT_RANGE_INSTEAD_CHUCK_#://
+        //: Test_Based_On[ #_exaprob_2021_04_19_535pm_aye_# ]://
+        //: @VID_IID[ 0266 ]TIME[ 00:01:42 ]                 ://
+        ,    (  0  ),(  0  ),(  4  ),(  0+9),(  8+9),( 9 )//:080
+        ,    (  1  ),(  0  ),(  4  ),(  0+9),(  8+9),( 9 )//:081
+        ,    (  2  ),(  0  ),(  4  ),(  0+9),(  8+9),( 9 )//:082
+        ,    (  3  ),(  0  ),(  4  ),(  0+9),(  8+9),( 9 )//:083
+        ,    (  4  ),(  0  ),(  4  ),(  0+9),(  8+9),( 9 )//:084
+
+
+////    //: P5D1OGL_FRA[ #_EXAPROB_2021_04_19_535PM_CEE_# ]
+////    //: @VID_IID[ 0264 ]TIME[ 00:58:23 ]FILLING_IT_OUT
+////    //:  vp1 : 0 + (9*3) ==  27 <--Shift_By[clu_san]Multiple
+////    //:  vp1 : 8 + (9*3) ==  35 <--Shift_By[clu_san]Multiple
+////    //:  vp0 : 0 + (313) == 313
+////    //:  vp0 : 4 + (313) == 317
+////    ,    ( 313 ),( 313 ),( 317 ),( 27  ),( 35  ),( 9 )//:079
+////    ,    ( 314 ),( 313 ),( 317 ),( 27  ),( 35  ),( 9 )//:080
+////    ,    ( 315 ),( 313 ),( 317 ),( 27  ),( 35  ),( 9 )//:081
+////    ,    ( 316 ),( 313 ),( 317 ),( 27  ),( 35  ),( 9 )//:082
+////    ,    ( 317 ),( 313 ),( 317 ),( 27  ),( 35  ),( 9 )//:083
+    
+            //:FUUUUCKINGFUCK!!!
 
         };;
         F32 tab_utc_out[ NUM_TES * OUT ]={
@@ -586,27 +864,149 @@
         ,    (-1.0) //:TEST_INDEX[ 002 ]TEST_NUMBER[ 003 ]
 
         //: README_MD[ @_NO_OFFSET_APPLIED_@ ]
-        ,    ( 0.0) //:TEST_INDEX[ ### ]TEST_NUMBER[ 004 ]
-        ,    ( 0.0) //:TEST_INDEX[ ### ]TEST_NUMBER[ 005 ]
+        ,    ( 0.0) //:TEST_INDEX[ 003 ]TEST_NUMBER[ 004 ]
+        ,    ( 0.0) //:TEST_INDEX[ 004 ]TEST_NUMBER[ 005 ]
 
         //: README_MD[ @_SAME_PHASE_@ ]
-        ,    ( 0.0) //:TEST_INDEX[ ### ]TEST_NUMBER[ 006 ]
-        ,    ( 0.0) //:TEST_INDEX[ ### ]TEST_NUMBER[ 007 ]
+        ,    ( 0.0) //:TEST_INDEX[ 005 ]TEST_NUMBER[ 006 ]
+        ,    ( 0.0) //:TEST_INDEX[ 006 ]TEST_NUMBER[ 007 ]
 
         //: PREVIOUS_4_TESTS_WITH_128_CLUSTERING
-        ,    (-1.0) //:TEST_INDEX[ ### ]TEST_NUMBER[ 008 ]
-        ,    (+1.0) //:TEST_INDEX[ ### ]TEST_NUMBER[ 009 ]
-        ,    (-1.0) //:TEST_INDEX[ ### ]TEST_NUMBER[ 010 ]
-        ,    (+1.0) //:TEST_INDEX[ ### ]TEST_NUMBER[ 011 ]
+        ,    (-1.0) //:TEST_INDEX[ 007 ]TEST_NUMBER[ 008 ]
+        ,    (+1.0) //:TEST_INDEX[ 008 ]TEST_NUMBER[ 009 ]
+        ,    (-1.0) //:TEST_INDEX[ 009 ]TEST_NUMBER[ 010 ]
+        ,    (+1.0) //:TEST_INDEX[ 010 ]TEST_NUMBER[ 011 ]
 
+        //:P5D1OGL_FRA[ #EXAP_2021_04_19# ]
+        ,    (-1.0) //:TEST_INDEX[ 011 ]TEST_NUMBER[ 012 ]
+        ,    ( 0.0) //:TEST_INDEX[ 012 ]TEST_NUMBER[ 013 ]
+        ,    (+1.0) //:TEST_INDEX[ 013 ]TEST_NUMBER[ 014 ]
+        //:- - - -://
+        ,    (-1.0) //:TEST_INDEX[ 014 ]TEST_NUMBER[ 015 ]
+        ,    ( 0.0) //:TEST_INDEX[ 015 ]TEST_NUMBER[ 016 ]
+        ,    (+1.0) //:TEST_INDEX[ 016 ]TEST_NUMBER[ 017 ]
+        //:- - - -://
+        ,    (-1.0) //:TEST_INDEX[ 017 ]TEST_NUMBER[ 018 ]
+        ,    ( 0.0) //:TEST_INDEX[ 018 ]TEST_NUMBER[ 019 ]
+        ,    (+1.0) //:TEST_INDEX[ 019 ]TEST_NUMBER[ 020 ]
+        //:- - - -://
+
+        //:P5D1OGL_FRA[ #_EXAP_2021_04_19_238AM_# ]
+        ,    ( 0.0) //:TEST_INDEX[ 020 ]TEST_NUMBER[ 021 ]
+        ,    ( 0.0) //:TEST_INDEX[ 021 ]TEST_NUMBER[ 022 ]
+
+        //:P5D1OGL_FRA[ #_EXAP_2021_04_19_244AM_# ]
+        ,    (-1.0) //:TEST_INDEX[ 022 ]TEST_NUMBER[ 023 ]
+        ,    ( 0.0) //:TEST_INDEX[ 023 ]TEST_NUMBER[ 024 ]
+        ,    (+1.0) //:TEST_INDEX[ 024 ]TEST_NUMBER[ 025 ]
+        //:- - - -://
+        ,    (-1.0) //:TEST_INDEX[ 025 ]TEST_NUMBER[ 026 ]
+        ,    ( 0.0) //:TEST_INDEX[ 026 ]TEST_NUMBER[ 027 ]
+        ,    (+1.0) //:TEST_INDEX[ 027 ]TEST_NUMBER[ 028 ]
+
+        //:P5DOGL_FRA[ #_EXAP_2021_04_19_253AM_# ]
+        ,    ( 0.0) //:TEST_INDEX[ 028 ]TEST_NUMBER[ 029 ]
+        ,    ( 0.0) //:TEST_INDEX[ 029 ]TEST_NUMBER[ 030 ]
+        //:- - - - - - - - - - ----- - - - - - - - - - ://
+        ,    (-1.0) //:TEST_INDEX[ 030 ]TEST_NUMBER[ 031 ]
+        ,    (-1.0) //:TEST_INDEX[ 031 ]TEST_NUMBER[ 032 ]
+        //:- - - - - - - - - - ----- - - - - - - - - - ://
+        ,    (+1.0) //:TEST_INDEX[ 032 ]TEST_NUMBER[ 033 ]
+        ,    (+1.0) //:TEST_INDEX[ 033 ]TEST_NUMBER[ 034 ]
+        //:- - - - - - - - - - ----- - - - - - - - - - ://
+
+        //:P5DOGL_FRA[ #_EXAP_2021_04_19_309AM_# ]
+        ,    ( 0.0) //:TEST_INDEX[ 034 ]TEST_NUMBER[ 035 ]
+        ,    ( 0.0) //:TEST_INDEX[ 035 ]TEST_NUMBER[ 036 ]
+        //:- - - - - - - - - - ----- - - - - - - - - - ://
+        ,    (-1.0) //:TEST_INDEX[ 036 ]TEST_NUMBER[ 037 ]
+        ,    (-1.0) //:TEST_INDEX[ 037 ]TEST_NUMBER[ 038 ]
+        //:- - - - - - - - - - ----- - - - - - - - - - ://
+        ,    (+1.0) //:TEST_INDEX[ 038 ]TEST_NUMBER[ 039 ]
+        ,    (+1.0) //:TEST_INDEX[ 039 ]TEST_NUMBER[ 040 ]
+        //:- - - - - - - - - - ----- - - - - - - - - - ://
+
+        //:P5DOGL_FRA[ #_EXAP_2021_04_19_320AM_# ]
+        ,    (-1.0) //:TEST_INDEX[ 040 ]TEST_NUMBER[ 041 ]
+        ,    ( 0.0) //:TEST_INDEX[ 041 ]TEST_NUMBER[ 042 ]
+        ,    (+1.0) //:TEST_INDEX[ 042 ]TEST_NUMBER[ 043 ]
+
+        //:P5DOGL_FRA[ #_EXAP_2021_04_19_343AM_# ]
+        ,    (-1.0) //:TEST_INDEX[ 043 ]TEST_NUMBER[ 044 ]
+        ,    ( 0.0) //:TEST_INDEX[ 044 ]TEST_NUMBER[ 045 ]
+        ,    (+1.0) //:TEST_INDEX[ 045 ]TEST_NUMBER[ 046 ]
+
+        //: Dont do clustering until we are 100% on the
+        //: other aspects.
         //: README_MD[ #_VP1_010_VP0_005_# ]
-        ,    (-1.0) //:TEST_INDEX[ ### ]TEST_NUMBER[ 012 ]
-////    ,    ( 0.0) //:TEST_INDEX[ ### ]TEST_NUMBER[ 013 ]
-////    ,    (+1.0) //:TEST_INDEX[ ### ]TEST_NUMBER[ 014 ]
-////    ,    (-1.0) //:TEST_INDEX[ ### ]TEST_NUMBER[ 015 ]
-////    ,    ( 0.0) //:TEST_INDEX[ ### ]TEST_NUMBER[ 016 ]
-////    ,    (+1.0) //:TEST_INDEX[ ### ]TEST_NUMBER[ 017 ]
+        ,    (-1.0) //:TEST_INDEX[ 046 ]TEST_NUMBER[ 047 ]
+        ,    ( 0.0) //:TEST_INDEX[ 047 ]TEST_NUMBER[ 048 ]
+        ,    (+1.0) //:TEST_INDEX[ 048 ]TEST_NUMBER[ 049 ]
+        ,    (-1.0) //:TEST_INDEX[ 049 ]TEST_NUMBER[ 050 ]
+        ,    ( 0.0) //:TEST_INDEX[ 050 ]TEST_NUMBER[ 051 ]
+        ,    (+1.0) //:TEST_INDEX[ 051 ]TEST_NUMBER[ 052 ]
 
+        //: README_MD[ #_ZOOM_123_TEST_# ]
+        //: @VID_IID[ 0264 ]TIME[ 00:00:42 ]
+        ,    ( 0.0) //:TEST_INDEX[ 052 ]TEST_NUMBER[ 053 ]
+        ,    (-0.5) //:TEST_INDEX[ 053 ]TEST_NUMBER[ 054 ]
+        ,    (+0.5) //:TEST_INDEX[ 054 ]TEST_NUMBER[ 055 ]
+
+        //: P5D1OGL_FRA[ #_EXAPROB_2021_04_19_535PM_AYE_# ]
+        ,    (-1.0) //:TEST_INDEX[ 055 ]TEST_NUMBER[ 056 ]
+        ,    (-0.5) //:TEST_INDEX[ 056 ]TEST_NUMBER[ 057 ]
+        ,    ( 0.0) //:TEST_INDEX[ 057 ]TEST_NUMBER[ 058 ]
+        ,    (+0.5) //:TEST_INDEX[ 058 ]TEST_NUMBER[ 059 ]
+        ,    (+1.0) //:TEST_INDEX[ 059 ]TEST_NUMBER[ 060 ]
+    
+        //: P5D1OGL_FRA[ #_EXAPROB_2021_04_19_535PM_BEE_# ]
+        //: @VID_IID[ 0264 ]TIME[ 00:51:23 ]WRITING_ANSWERS
+        ,    (-1.0) //:TEST_INDEX[ 060 ]TEST_NUMBER[ 061 ]
+        ,    (-0.5) //:TEST_INDEX[ 061 ]TEST_NUMBER[ 062 ]
+        ,    ( 0.0) //:TEST_INDEX[ 062 ]TEST_NUMBER[ 063 ]
+        ,    (+0.5) //:TEST_INDEX[ 063 ]TEST_NUMBER[ 064 ]
+        ,    (+1.0) //:TEST_INDEX[ 064 ]TEST_NUMBER[ 065 ]
+             //:- - - - - - - - - - - - - - - - - - - -://
+        ,    (-1.0) //:TEST_INDEX[ 065 ]TEST_NUMBER[ 066 ]
+        ,    (-0.5) //:TEST_INDEX[ 066 ]TEST_NUMBER[ 067 ]
+        ,    ( 0.0) //:TEST_INDEX[ 067 ]TEST_NUMBER[ 068 ]
+        ,    (+0.5) //:TEST_INDEX[ 068 ]TEST_NUMBER[ 069 ]
+        ,    (+1.0) //:TEST_INDEX[ 069 ]TEST_NUMBER[ 070 ]
+             //:- - - - - - - - - - - - - - - - - - - -://
+        ,    (-1.0) //:TEST_INDEX[ 070 ]TEST_NUMBER[ 071 ]
+        ,    (-0.5) //:TEST_INDEX[ 071 ]TEST_NUMBER[ 072 ]
+        ,    ( 0.0) //:TEST_INDEX[ 072 ]TEST_NUMBER[ 073 ]
+        ,    (+0.5) //:TEST_INDEX[ 073 ]TEST_NUMBER[ 074 ]
+        ,    (+1.0) //:TEST_INDEX[ 074 ]TEST_NUMBER[ 075 ]
+             //:- - - - - - - - - - - - - - - - - - - -://
+
+        //: #_TEST_CASE_I_FUCKING_HATE_THIS_WHEN_WILL_IT_END_#
+        //: @VID_IID[ 0265 ]TIME[ 00:42:32 ]
+        ,    (-1.0) //:TEST_INDEX[ 075 ]TEST_NUMBER[ 076 ]
+        ,    (-0.5) //:TEST_INDEX[ 076 ]TEST_NUMBER[ 077 ]
+        ,    ( 0.0) //:TEST_INDEX[ 077 ]TEST_NUMBER[ 078 ]
+        ,    (+0.5) //:TEST_INDEX[ 078 ]TEST_NUMBER[ 079 ]
+        ,    (+1.0) //:TEST_INDEX[ 079 ]TEST_NUMBER[ 080 ]
+
+        //: #_OKAY_NOW_SHIFT_THE_OUTPUT_RANGE_INSTEAD_CHUCK_#
+        ,    (-1.0) //:TEST_INDEX[ 080 ]TEST_NUMBER[ 081 ]
+        ,    (-0.5) //:TEST_INDEX[ 081 ]TEST_NUMBER[ 082 ]
+        ,    ( 0.0) //:TEST_INDEX[ 082 ]TEST_NUMBER[ 083 ]
+        ,    (+0.5) //:TEST_INDEX[ 083 ]TEST_NUMBER[ 084 ]
+        ,    (+1.0) //:TEST_INDEX[ 084 ]TEST_NUMBER[ 085 ]
+
+
+////    //: P5D1OGL_FRA[ #_EXAPROB_2021_04_19_535PM_CEE_# ]
+////    //: @VID_IID[ 0264 ]TIME[ 01:06:50 ]
+////    ,    (-1.0) //:TEST_INDEX[ ### ]TEST_NUMBER[ ### ]
+////    ,    (-0.5) //:TEST_INDEX[ ### ]TEST_NUMBER[ ### ]
+////    ,    ( 0.0) //:TEST_INDEX[ ### ]TEST_NUMBER[ ### ]
+////    ,    (+0.5) //:TEST_INDEX[ ### ]TEST_NUMBER[ ### ]
+////    ,    (+1.0) //:TEST_INDEX[ ### ]TEST_NUMBER[ ### ]
+     
+        //:TODO: Combine previous tests into one that
+        //:      both shifts and scales, and then we 
+        //:      are out of this unit testing hell for a bit.
 
         };;
 
@@ -623,6 +1023,8 @@
 
         m_i=( NUM_TES - 1 );
         for( t_i = 0 ; t_i <=( m_i) ; t_i++ ){
+
+            aac2020_p5d1ogl_utc_t_i=( t_i );
 
             bos =( t_i * INN );
             fraic_1 = tab_utc_inn[ bos + 0 ];
@@ -678,7 +1080,7 @@
     void
     aac2020_P5D1OGL_UTC_CludMap_ZOF_1_D( void )
     {
-    #define NUM_TES (159 )  //:-------------------------: 01 ://
+    #define NUM_TES (165 )  //:-------------------------: 01 ://
     #define     INN (  4 )  //:-------------------------: 02 ://
     #define     OUT (  1 )  //:-------------------------: 03 ://
     LOG("[aac2020_P5D1OGL_UTC_CludMap_ZOF_1_D:BEG]",0);
@@ -992,14 +1394,23 @@
 
         //:README_MD[ #_VP1_010_VP0_005_# ]
         //:README_MD[ #_PROBLEM_IS_MORE_LIKE_THIS_2021_04_17_# ]
-        ,   (  0  ),(  10   ) ,   ( 10  ),(  5  )  //:TST_15#://
-        ,   (  2  ),(  10   ) ,   ( 10  ),(  5  )  //:TST_15#://
-        ,   (  4  ),(  10   ) ,   ( 10  ),(  5  )  //:TST_15#://
+        ,   (  0  ),(  10   ) ,   ( 10  ),(  5  )  //:TST_154://
+        ,   (  2  ),(  10   ) ,   ( 10  ),(  5  )  //:TST_155://
+        ,   (  4  ),(  10   ) ,   ( 10  ),(  5  )  //:TST_156://
             //:- - - - - - - - - - - -- - - - - - - - - - - -://
-        ,   (  5  ),(  10   ) ,   ( 10  ),(  5  )  //:TST_15#://
-        ,   (  7  ),(  10   ) ,   ( 10  ),(  5  )  //:TST_15#://
-        ,   (  9  ),(  10   ) ,   ( 10  ),(  5  )  //:TST_15#://
+        ,   (  5  ),(  10   ) ,   ( 10  ),(  5  )  //:TST_157://
+        ,   (  7  ),(  10   ) ,   ( 10  ),(  5  )  //:TST_158://
+        ,   (  9  ),(  10   ) ,   ( 10  ),(  5  )  //:TST_159://
             //:- - - - - - - - - - - -- - - - - - - - - - - -://
+
+        //:DOC_H[ #_BIG__MOMMY__MILKIES_EXAMPLE_# ]
+        ,   (  0  ),(  10   ) ,   ( 10  ),(  5  )  //:TST_160://
+        ,   (  2  ),(  10   ) ,   ( 10  ),(  5  )  //:TST_161://
+        ,   (  4  ),(  10   ) ,   ( 10  ),(  5  )  //:TST_162://
+            //:- - - - - - - - - - - -- - - - - - - - - - - -://
+        ,   (  5  ),(  10   ) ,   (  6  ),(  3  )  //:TST_163://
+        ,   (  7  ),(  10   ) ,   (  6  ),(  3  )  //:TST_164://
+        ,   (  9  ),(  10   ) ,   (  6  ),(  3  )  //:TST_165://
 
         };;
         F32 tab_utc_out[ NUM_TES * OUT ]={
@@ -1208,20 +1619,29 @@
         ,   (  0.0  )  //:TST_148
 
         //:19TH_TEST_SET_MORE_TILES_THAN_PIXELS
-        ,   (  0.0    )  //:TST_149
-        ,   ( -1.0    )  //:TST_150
-        ,   ( +1.0    )  //:TST_151
-        ,   ( -1.0    )  //:TST_152
-        ,   ( -0.3333 )  //:TST_153
+        ,   (  0.0    )//:TST_149
+        ,   ( -1.0    )//:TST_150
+        ,   ( +1.0    )//:TST_151
+        ,   ( -1.0    )//:TST_152
+        ,   ( -0.3333 )//:TST_153
 
         //:README_MD[ #_VP1_010_VP0_005_# ]
-        ,   ( -1.0 )
-        ,   (  0.0 )
-        ,   ( +1.0 )
-            //:--://
-        ,   ( -1.0 )
-        ,   (  0.0 )
-        ,   ( +1.0 )
+        ,   ( -1.0 )   //:TST_154
+        ,   (  0.0 )   //:TST_155
+        ,   ( +1.0 )   //:TST_156
+            //:--://   ----------
+        ,   ( -1.0 )   //:TST_157
+        ,   (  0.0 )   //:TST_158
+        ,   ( +1.0 )   //:TST_159
+
+        //:DOC_H[ #_BIG__MOMMY__MILKIES_EXAMPLE_# ]
+        ,   ( -1.0 )   //:TST_160
+        ,   (  0.0 )   //:TST_161
+        ,   ( +1.0 )   //:TST_162
+            //:--://   ----------
+        ,   ( -1.0 )   //:TST_163
+        ,   (  0.0 )   //:TST_164
+        ,   ( +1.0 )   //:TST_165
 
         };;
 

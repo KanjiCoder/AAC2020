@@ -9,6 +9,7 @@
 #define LOG_SYS   AAC2020_SILENCE  //:------------------: 01 ://
 #define     P_F            printf  //:------------------: 02 ://
 #define     F_F  fflush( stdout )  //:------------------: 03 ://
+#define     I32  int32_t           //:------------------: 04 ://
 
     //:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:- - - - - - - - -://
         void 
@@ -53,10 +54,28 @@
             };;
         }
     //:- - - - - - - - - - - - - - - - - - - -:LOG_AFTER_HALT://
+    //:LOG_AFTER_HALT:- - - - - - - - - - - - - - - - - - - -://
+        void
+        aac2020_p5d1ogl_Info_i32( //:FUNC:::Info , OVERLOAD:i32
+            const char* str_fmt   //:GENERAL:str , SPECIFIC:fmt
+        ,   I32         dat_i32   //:GENERAL:dat , SPECIFIC:i32
+        )
+        {                                int say=( 0 );
+            if( LOG_SYS.P5D1OGL <=(  0  ) ){ say=( 1 ); };
+            if( LOG_SYS.SILENCE <=( 0-1 ) ){ say=( 1 ); };
+            if( LOG_SYS.SILENCE >=( 0+1 ) ){ say=( 0 ); };
+            if( say >= 1 ){
+                printf("[p5d1ogl_log:I32]....(   " ); F_F ;
+                printf( str_fmt , dat_i32          ); F_F ;
+                printf(               "   )\n"     ); F_F ;
+            };;
+        }
+    //:- - - - - - - - - - - - - - - - - - - -:LOG_AFTER_HALT://
 
 #undef  LOG_SYS  //:------------------------------------: 01 ://
 #undef      P_F  //:------------------------------------: 02 ://
 #undef      F_F  //:------------------------------------: 03 ://
+#undef      I32  //:------------------------------------: 04 ://
 //:===============================:ONLY_TWO_TYPES_OF_MESSAGES://
 //:INIT_NONE:================================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/

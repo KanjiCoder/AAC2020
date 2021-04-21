@@ -46,7 +46,8 @@
         #define ERR  /**NOTHING**/  //:  21  ://   //| # |//
         #define LOG  /**NOTHING**/  //:  22  ://   //| # |//
         #define LOF  /**NOTHING**/  //:  23  ://   //| # |//
-        #define TRU  trunc          //:  24  ://   //| # |//
+        #define LOI  /**NOTHING**/  //:  24  ://   //| # |//
+        #define TRU  trunc          //:  25  ://   //| # |//
         #define REC  struct AAC2020_FRAGCOM_REC
     #else                                          //| # |//
                                                    //| # |//
@@ -75,6 +76,7 @@
         #define ERR   aac2020_p5d1ogl_Halt         //| # |//
         #define LOG   aac2020_p5d1ogl_Info_any     //| - |//
         #define LOF   aac2020_p5d1ogl_Info_f32     //| - |//
+        #define LOI   aac2020_p5d1ogl_Info_i32     //| - |//
         #define TRU   AAC2020_POLYOGL_Trunc        //| # |//
         #define REC   struct AAC2020_POLYOGL_REC
     #endif                                         //| # |//
@@ -1445,7 +1447,9 @@
                 #define V_x_P  void
                 #define VCAST V_x_P*)(I_x_P
                 #define DCAST V_x_P*)(double
-
+        
+                    LOG(E_S([RUNTIME_FUNCTION_CALL_PROBLEM]),0);
+        
                     if( vp0_nom > 1.0 ){
                         LOG(E_S([vp0_nom_GT_1]),0);
                     };;
@@ -1455,7 +1459,7 @@
                     if( vp0_nom < 1.0 ){
                         LOG(E_S([vp0_nom_LT_1]),0);
                     };;
-
+        
                     //:--------------------------------------://
                     //: #VP0_GT1# :                          ://
                     //: vp0_nom must be greater than 1.0.    ://
@@ -1466,7 +1470,7 @@
                     //: we could have is [ 0.0 ]             ://
                     //: ( 0.0 == dead_center                 ://
                     //:--------------------------------------://
-
+        
                     LOG(E_S([0_0:fraic_1]:%d), (VCAST)fraic_1 );
                     LOG(E_S([0_0:vp0_san]:%d), (VCAST)vp0_san );
                     LOG(E_S([0_0:vp1_san]:%d), (VCAST)vp1_san );
@@ -1475,6 +1479,11 @@
                     LOF(E_S([0_0:fraic_L]:%f),        fraic_L );
                     LOF(E_S([0_0:vp0_nom]:%f),        vp0_nom );
                     LOF(E_S([PIX_PER_TIL]:%f),            ppt );
+        
+                    //:@_WHATS_MY_UTC_DEX_@://
+                    LOI(E_S([aac2020_p5d1ogl_utc_t_i]:%d)
+                    ,        aac2020_p5d1ogl_utc_t_i    );;
+        
                     ERR(E_S([0_0:fraic_L:OOBPOS]));
             
                 #undef I_x_P
@@ -1491,11 +1500,11 @@
             |f_L|f_L|  <-- vp0_nom (onscreen)
             +---+---+ 
             *** ******************************************** **/
-
+        
                 /** C99 Hackish debugging vars **/
                 AAC2020_P5D1OGL_DEBUVAR_vp0_nom =( vp0_nom );
                 AAC2020_P5D1OGL_DEBUVAR_fraic_L =( fraic_L );
-
+        
             #endif //:#######################################://
             //:##############################################://
 
@@ -1519,45 +1528,121 @@
         AAC2020_P5D1OGL_CludMap_RNG_1_D(
             I32 fraic_1 //:[ fic.x | fic.y ]/(fraic_x|fraic_y)
 
+            //:ON_SCREEN_VIEWPORT_PIXEL_SELECTION_RECT:(1D)
         ,   I32 vp0_b_0 //:AKA[ vp0_min ]( x_0 | y_0 )
         ,   I32 vp0_b_1 //:AKA[ vp0_max ]( x_1 | y_1 )
 
+            //:OFFSCREEN_TILE_DATA_SELECTION_RECT:(1D)
         ,   I32 vp1_b_0 //:AKA[ vp1_min ]( x_0 | y_0 ) 
         ,   I32 vp1_b_1 //:AKA[ vp1_max ]( x_1 | y_1 ) 
 
         ,   I32 clu_san //:Clustering_Of_vp0_units
         )
         {
-        /** ******************************************** ***
-            vp1:( tile dat )vp0:( on screen pixels )
-            [ ][ ][ ][ ]    [ ][ ][ ][ ][ ][ ][ ][ ]
-            [ ][ ][ ][ ]    [ ][ ][ ][ ][ ][ ][ ][ ]
-            [ ][ ][ ][ ]    [ ][ ][ ][ ][ ][ ][ ][ ]
-            [ ][ ][ ][ ]    [ ][ ][ ][ ][ ][ ][ ][ ]
-                            [ ][ ][ ][ ][ ][ ][ ][ ]
-                            [ ][ ][ ][ ][ ][ ][ ][ ]
-                            [ ][ ][ ][ ][ ][ ][ ][ ]
-                            [ ][ ][ ][ ][ ][ ][ ][ ]
-        *** ******************************************** **/
-           
-            I32     vp0_san = ( vp0_b_1 - vp0_b_0 + 1 );
-            I32     vp1_san = ( vp1_b_1 - vp1_b_0 + 1 );
+        //:FIRST_DRAFT_IN_THE_TRASH[ DOC/000/TRASH\011._ ]
+            //:Error_Check_Inputs:-----------------------://
+            #if !defined( AAC2020_MACRO_THIS_IS_OPEN_GL ) 
 
-            //:Probably not exactly correct here.
-            //:maybe we need to subtract the delta
-            //:difference between origins of both
-            //:viewports?
-            I32 zer_fraic_1 = ( fraic_1 - vp0_b_0     );
+                //:Mal_Formed_Out_Of_Order_Range?
+                if( vp0_b_0 > vp0_b_1 ){ ERR(E_S([E_01]));};
+                if( vp1_b_0 > vp1_b_1 ){ ERR(E_S([E_02]));};
+
+                //: fraic_1 not on[ vp0 ]range?
+                if( fraic_1 > vp0_b_1 ){ ERR(E_S([E_03]));};
+                if( fraic_1 < vp0_b_0 ){ ERR(E_S([E_04]));};
+
+                //: clu_san less than 1?
+                if( clu_san < 1       ){ ERR(E_S([E_05]));};
+                
+            #endif
+            //:-----------------------:Error_Check_Inputs://
+            //:Define_Variables:-------------------------://
+
+                //:Offscreen tilemap data viewport(vp1)  ://
+                //:must be shifted so that it's origin   ://
+                //:is at[ 0 ]so that the correct         ://
+                //:[ period / phase ]is maintained.      ://
+                //:SEE[ #_MATH_PERIOD_EXPLAINED_URL_# ]  ://
+                I32 ZER_vp1_b_0 ; //:<--[ vp1 : ZEROED ]
+                I32 ZER_vp1_b_1 ; //:<--[ vp1 : ZEROED ]
+                
+                  
+                //:Onscreen pixel viewport origin need   ://
+                //:__NOT__be at [0,0] but must be back   ://
+                //:shifted to maintain the original      ://
+                //:proportions between the two viewport  ://
+                //:selection ranges.                     ://
+                I32 BAK_vp0_b_0 ; //:<--[ vp0 : BACKED ]
+                I32 BAK_vp0_b_1 ; //:<--[ vp0 : BACKED ]
+                I32 BAK_vp0_pop ; //:<--[ POINT_ON_PATH]
+
+            //:-------------------------:Define_Variables://
+            //:Derive_Values:----------------------------://
+                ZER_vp1_b_0 = ( vp1_b_0 - vp1_b_0 );
+                ZER_vp1_b_1 = ( vp1_b_1 - vp1_b_0 );
+
+                BAK_vp0_pop = ( fraic_1 - vp1_b_0 );
+                BAK_vp0_b_0 = ( vp0_b_0 - vp1_b_0 );
+                BAK_vp0_b_1 = ( vp0_b_1 - vp1_b_0 );
+            //:----------------------------:Derive_Values://
+            //:Error_Check_Derived_Values:---------------://
+            #if !defined( AAC2020_MACRO_THIS_IS_OPEN_GL )  
+
+                if( ZER_vp1_b_0 != 0 ){
+                    ERR(E_S([ZER_vp1_b_0:NOT_ZERO]));
+                };;
+                
+                //:INPUTS[ AAC2020_P5D1OGL_CludMap_ZOF_1_D ]
+                I32 chk_fraic_1 =( BAK_vp0_pop - BAK_vp0_b_0 );
+                I32 chk_vp0_san =( BAK_vp0_b_1 - 
+                                   BAK_vp0_b_0 + 1 );
+            ////I32 chk_vp1_san =( ZER_vp1_b_1 -
+            ////                   ZER_vp1_b_0 + 1 );
+
+                if( chk_fraic_1 < 0 ){ ERR(E_S([E_06]));};
+                if( chk_fraic_1 >(chk_vp0_san-1) ){
+                    ERR(E_S([chk_fraic_1:OOB_POS]));
+                };;
+                
+            #endif //:############################:IF_C99://
+            //:---------------:Error_Check_Derived_Values://
+            //:Origin_00_Version:------------------------://
+            //: TAG_NAME[ #WHY_ZERO_2021_04_20# ] :::::::://
+            //: TAG__VID[ 0266 ]TIME[  07:11:42 ] :::::::://
+            #define WHY_ZERO_2021_04_20 ( 0 ) 
+
+    
+            //: [TODO]:REMOVE_THE_INTERMEDIARY_VARIABLES:
+            //: [FAST]:Optimization_Point_Here
+            I32 fic =( BAK_vp0_pop - WHY_ZERO_2021_04_20);
+            I32 vp0 =( BAK_vp0_b_1 - BAK_vp0_b_0 + 1 );
+            I32 vp1 =( ZER_vp1_b_1 - ZER_vp1_b_0 + 1 );
+            I32 clu =(     clu_san                   );
+
+            #undef  WHY_ZERO_2021_04_20
+            //:IF_C99:###################################://
+            #if !defined( AAC2020_MACRO_THIS_IS_OPEN_GL )  
+            if( 1 > 0 ){
+
+                LOG(E_S([ATC:CludMap_ZOF_1_D]),0);
+                LOI(E_S([fic]:%d),fic);
+                LOI(E_S([vp0]:%d),vp0);
+                LOI(E_S([vp1]:%d),vp1);
+                LOI(E_S([clu]:%d),clu);
+
+            };;
+            #endif //:###################################://
+            //:###################################:IF_C99://
 
             F32 tilop_1=(
             AAC2020_P5D1OGL_CludMap_ZOF_1_D(
-                zer_fraic_1  //:<-- Zeroed_Out
-            ,       vp0_san  
-            ,       vp1_san  
-            ,       clu_san  
+                fic
+            ,   vp0
+            ,   vp1
+            ,   clu  
             ));;
-
             return( tilop_1 );
+            //:------------------------:Origin_00_Version://
         }
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
         FV2
@@ -2216,8 +2301,9 @@
         #undef  ERR      //:  21  ://              //[ x ]//
         #undef  LOG      //:  22  ://              //[ x ]//
         #undef  LOF      //:  23  ://              //[ x ]//
-        #undef  TRU      //:  24  ://              //[ x ]//
-        #undef  REC      //:  25  ://              //[ x ]//
+        #undef  LOI      //:  24  ://              //[ x ]//
+        #undef  TRU      //:  25  ://              //[ x ]//
+        #undef  REC      //:  26  ://              //[ x ]//
                                                    //[ x ]//
     //:--------------------------------------:type_macros://
     //:seven_letter_macros:------------------------------://

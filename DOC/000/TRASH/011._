@@ -1,0 +1,191 @@
+        F32
+        AAC2020_P5D1OGL_CludMap_RNG_1_D(
+            I32 fraic_1 //:[ fic.x | fic.y ]/(fraic_x|fraic_y)
+
+        ,   I32 vp0_b_0 //:AKA[ vp0_min ]( x_0 | y_0 )
+        ,   I32 vp0_b_1 //:AKA[ vp0_max ]( x_1 | y_1 )
+
+        ,   I32 vp1_b_0 //:AKA[ vp1_min ]( x_0 | y_0 ) 
+        ,   I32 vp1_b_1 //:AKA[ vp1_max ]( x_1 | y_1 ) 
+
+        ,   I32 clu_san //:Clustering_Of_vp0_units
+        )
+        {
+        /** ******************************************** ***
+            vp1:( tile dat )vp0:( on screen pixels )
+            [ ][ ][ ][ ]    [ ][ ][ ][ ][ ][ ][ ][ ]
+            [ ][ ][ ][ ]    [ ][ ][ ][ ][ ][ ][ ][ ]
+            [ ][ ][ ][ ]    [ ][ ][ ][ ][ ][ ][ ][ ]
+            [ ][ ][ ][ ]    [ ][ ][ ][ ][ ][ ][ ][ ]
+                            [ ][ ][ ][ ][ ][ ][ ][ ]
+                            [ ][ ][ ][ ][ ][ ][ ][ ]
+                            [ ][ ][ ][ ][ ][ ][ ][ ]
+                            [ ][ ][ ][ ][ ][ ][ ][ ]
+        *** ******************************************** **/
+        #if !defined( AAC2020_MACRO_THIS_IS_OPEN_GL ) //:://
+            I32 should_crash=( 0 );
+
+            if( vp0_b_1 < vp0_b_0 ){
+                LOG(E_S([vp0_out_of_order]),0);
+                should_crash=( 1 );
+            };;
+            if( vp1_b_1 < vp1_b_0 ){
+                LOG(E_S([vp1_out_of_order]),0);
+                should_crash=( 1 );
+            };;
+
+            if( fraic_1 < vp0_b_0 ){ 
+                LOG(E_S([fraic_oob_neg]),0);
+                LOI(E_S([fraic_1]:%d),fraic_1);
+                LOI(E_S([vp0_b_0]:%d),vp0_b_0);
+                should_crash=( 1 );
+            };;
+            if( fraic_1 > vp0_b_1 ){ 
+                LOG(E_S([fraic_oob_pos]),0);
+                LOI(E_S([fraic_1]:%d),fraic_1);
+                LOI(E_S([vp0_b_1]:%d),vp0_b_1);
+                should_crash=( 1 );
+            };;
+            if( clu_san <= 0 ){
+                LOG(E_S([must_clu_san_at_least_one]),0);
+                should_crash=( 1 );
+            };;
+
+            if( should_crash >= 1 ){
+
+                /** If we are currently running unit *** **/
+                /** tests, I would like to know what *** **/
+                /** test caused the invalid inputs.  *** **/
+                LOI(
+                    E_S([aac2020_p5d1ogl_utc_t_i]:%d)
+                ,        aac2020_p5d1ogl_utc_t_i
+                );;
+
+                ERR(E_S([BAD_INPUTS:CludMap_RNG_1_D]));
+            };;
+
+        #endif //:#######################################://
+           
+            //:SEE_DOC[ #_CLUDMAP_RNG_TEST_CASES_# ]
+
+            //:Span_Vars:--------------------------------://
+            /** Can be optimized down to just 2 variables**/
+            /** but keep it like this until our unit test**/
+            /** code is passing. @IID[ 0265 ]T[00:16:23] **/
+
+                I32 OLD_vp0_san; //:p5d_vp0:span
+                I32 OLD_vp1_san; //:p5d_vp1:span
+
+                I32 NEW_vp0_san; //:p5d_vp0:span
+                I32 NEW_vp1_san; //:p5d_vp1:span
+
+                I32 NEW_vp0_b_0; //:p5d_vp0:LOWER_BOUND
+                I32 NEW_vp1_b_0; //:p5d_vp1:LOWER_BOUND
+
+            //:--------------------------------:Span_Vars://
+
+
+            //:@VID_IID[ 0264 ]TIME[ 00:12:42 ]----------://
+            //:Shift everything back so that
+            //:offscreen data point starts at zero.
+            //:make sure backshifting on[ vp0 ] is
+            //:proportional in size to backshifting
+            //:on[ vp1 ].
+            OLD_vp0_san = ( vp0_b_1 - vp0_b_0 + 1 );
+            OLD_vp1_san = ( vp1_b_1 - vp1_b_0 + 1 );
+            I32 vp0_per_vp1 =( OLD_vp0_san / OLD_vp1_san );
+            NEW_vp0_b_0=( vp0_b_0 - (vp0_per_vp1*vp1_b_0 ));
+        //+ NEW_vp1_b_0=( vp1_b_0 - (     1     *vp1_b_0 )) +//
+            NEW_vp1_b_0=( 0 );  
+
+            //: OLD_NIAVE_FORMULA:
+            //: Put back in because we have to calculate this
+            //: a second time after transforming the inputs.
+            //: @VID_IID[ 0264 ]TIME[ 00:14:42 ]
+            NEW_vp0_san = ( vp0_b_1 - NEW_vp0_b_0 + 1 );
+            NEW_vp1_san = ( vp1_b_1 - NEW_vp1_b_0 + 1 );        
+
+            //:Probably not exactly correct here.
+            //:maybe we need to subtract the delta
+            //:difference between origins of both
+            //:viewports?
+            I32 zer_fraic_1 = ( fraic_1 - NEW_vp0_b_0 );
+        //: I32 zer_fraic_1 = ( fraic_1 );
+
+            //:IF_C99:#######################################://
+            #if !defined( AAC2020_MACRO_THIS_IS_OPEN_GL ) //:://
+            if( vp0_b_0 == 0 && vp0_b_1 == 4
+            &&  vp1_b_0 == 9 && vp1_b_1 == 17 /**8+9**/
+            &&  fraic_1 == 1
+            ){ //:WORK_OUT_BY_HAND, test_index[ 81 ]from[ UTC ].
+            //: TEST_81_DETECTED
+            //: [zer_fraic_1]:1 
+            //: [NEW_vp0_san]:5 
+            //: [NEW_vp1_san]:18
+            //: [....clu_san]:9 
+                LOG(E_S(TEST_81_DETECTED),0);
+                LOI(E_S([zer_fraic_1]:%d),zer_fraic_1);
+                LOI(E_S([NEW_vp0_san]:%d),NEW_vp0_san);
+                LOI(E_S([NEW_vp1_san]:%d),NEW_vp1_san);
+                LOI(E_S([....clu_san]:%d),    clu_san);
+
+                /** ************************************ ***
+                9-to-17 ==> 9 (range: 9) (TILE_DATA)
+                0-to- 4 ==> 5 (range: 5) (SCREENPIX)
+                RATIO( SCREENPIX/TILE_DATA )==( 1.8 )
+
+                [00][01]....[16][17][18](NEW:vp1)
+                [00][01][02][03][04][05](NEW:vp0)
+                RATIO(SCREENPIX/TILE_DATA)==(19/6)==(3.1666)
+                *** ************************************ **/
+            };;
+            #endif //:#######################################://
+            //:#######################################:IF_C99://
+            //:IF_C99:###################################://
+            //:Error_Check_Computed_Values:--------------://
+            #if !defined( AAC2020_MACRO_THIS_IS_OPEN_GL ) 
+
+                F32 ratio_OLD =( ((F32)OLD_vp1_san)
+                               / ((F32)OLD_vp0_san) );;
+
+                F32 ratio_NEW =( ((F32)NEW_vp1_san)
+                               / ((F32)NEW_vp0_san) );;
+
+                if( ratio_OLD != ratio_NEW ){
+                
+                    LOI(E_S([fraic_1]:%d),fraic_1);
+                    LOI(E_S([vp0_b_0]:%d),vp0_b_0);
+                    LOI(E_S([vp0_b_1]:%d),vp0_b_1);
+                    LOI(E_S([vp1_b_0]:%d),vp1_b_0);
+                    LOI(E_S([vp1_b_1]:%d),vp1_b_1);
+                    LOI(E_S([clu_san]:%d),clu_san);
+
+                    LOI(E_S([aac2020_p5d1ogl_utc_t_i]:%d)
+                            ,aac2020_p5d1ogl_utc_t_i);;
+
+                    ERR(E_S([RATIOS_NOT_PRESERVED]));
+
+
+
+
+
+
+
+
+
+                };;
+
+            #endif //:###################################://
+            //:--------------:Error_Check_Computed_Values://
+            //:###################################:IF_C99://
+
+            F32 tilop_1=(
+            AAC2020_P5D1OGL_CludMap_ZOF_1_D(
+                zer_fraic_1  //:<-- Zeroed_Out
+            ,   NEW_vp0_san  //:MAG_LEN[ vp0_b_0 - vp0_b_1 ]
+            ,   NEW_vp1_san  //:MAG_LEN[ vp1_b_0 - vp1_b_1 ]
+            ,       clu_san  
+            ));;
+
+            return( tilop_1 );
+        }
