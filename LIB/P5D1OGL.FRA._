@@ -1539,110 +1539,109 @@
         ,   I32 clu_san //:Clustering_Of_vp0_units
         )
         {
-        //:FIRST_DRAFT_IN_THE_TRASH[ DOC/000/TRASH\011._ ]
-            //:Error_Check_Inputs:-----------------------://
-            #if !defined( AAC2020_MACRO_THIS_IS_OPEN_GL ) 
+        //:FIRST__DRAFT_IN_THE_TRASH[ DOC/000/TRASH/011._ ]
+        //:SECOND_DRAFT_IN_THE_TRASH[ DOC/000/TRASH/012._ ]
+        //:THIRD__DRAFT_NOTES[ #_RNG_1_D_VERSION_003_#    ]
 
-                //:Mal_Formed_Out_Of_Order_Range?
-                if( vp0_b_0 > vp0_b_1 ){ ERR(E_S([E_01]));};
-                if( vp1_b_0 > vp1_b_1 ){ ERR(E_S([E_02]));};
+            F32 tiloper =( 0.0 );
 
-                //: fraic_1 not on[ vp0 ]range?
-                if( fraic_1 > vp0_b_1 ){ ERR(E_S([E_03]));};
-                if( fraic_1 < vp0_b_0 ){ ERR(E_S([E_04]));};
+            F32 coc_pic =( 0.0 ); //:AKA[ coc_CTO_pic ]
+                                  //:AKA[ sub_clu -PER- PIXEL ]
 
-                //: clu_san less than 1?
-                if( clu_san < 1       ){ ERR(E_S([E_05]));};
-                
-            #endif
-            //:-----------------------:Error_Check_Inputs://
-            //:Define_Variables:-------------------------://
+            if( fraic_1 > 0 ){ /** NOOP **/ };
+            if( vp0_b_0 > 0 ){ /** NOOP **/ };
+            if( vp0_b_1 > 0 ){ /** NOOP **/ };
+            if( vp1_b_0 > 0 ){ /** NOOP **/ };
+            if( vp1_b_1 > 0 ){ /** NOOP **/ };
+            if( clu_san > 0 ){ /** NOOP **/ };
 
-                //:Offscreen tilemap data viewport(vp1)  ://
-                //:must be shifted so that it's origin   ://
-                //:is at[ 0 ]so that the correct         ://
-                //:[ period / phase ]is maintained.      ://
-                //:SEE[ #_MATH_PERIOD_EXPLAINED_URL_# ]  ://
-                I32 ZER_vp1_b_0 ; //:<--[ vp1 : ZEROED ]
-                I32 ZER_vp1_b_1 ; //:<--[ vp1 : ZEROED ]
-                
-                  
-                //:Onscreen pixel viewport origin need   ://
-                //:__NOT__be at [0,0] but must be back   ://
-                //:shifted to maintain the original      ://
-                //:proportions between the two viewport  ://
-                //:selection ranges.                     ://
-                I32 BAK_vp0_b_0 ; //:<--[ vp0 : BACKED ]
-                I32 BAK_vp0_b_1 ; //:<--[ vp0 : BACKED ]
-                I32 BAK_vp0_pop ; //:<--[ POINT_ON_PATH]
+            //:SEE[ #_DIA_2021_04_21_AYE_# ]
 
-            //:-------------------------:Define_Variables://
-            //:Derive_Values:----------------------------://
-                ZER_vp1_b_0 = ( vp1_b_0 - vp1_b_0 );
-                ZER_vp1_b_1 = ( vp1_b_1 - vp1_b_0 );
+            F32 vp1_san=(  
+                MAK_F32(vp1_b_1)-MAK_F32(vp1_b_0)+1.0 );;
+            F32 vp0_san=(  
+                MAK_F32(vp0_b_1)-MAK_F32(vp0_b_0)+1.0 );;
+            F32 f32_clu=(
+                MAK_F32( clu_san ) );
 
-                BAK_vp0_pop = ( fraic_1 - vp1_b_0 );
-                BAK_vp0_b_0 = ( vp0_b_0 - vp1_b_0 );
-                BAK_vp0_b_1 = ( vp0_b_1 - vp1_b_0 );
-            //:----------------------------:Derive_Values://
-            //:Error_Check_Derived_Values:---------------://
-            #if !defined( AAC2020_MACRO_THIS_IS_OPEN_GL )  
+            if( (vp1_san / f32_clu) > vp0_san ){
+                //:More tiles than pixels, so just always
+                //:Assume we are in the dead center of 
+                //:whatever tile is associated with that
+                //:pixel.
+                tiloper = ( 0.0 );
+            }else{
+            #define PIG      fraic_1
+            #define COC_SAN  coc_CTO_pic
+           
+                #if defined( AAC2020_MACRO_THIS_IS_OPEN_GL )
+                    #define F_L_O_O_R AAC2020_FRAGCOM_FLO_F32
+                #else
+                    #define F_L_O_O_R AAC2020_POLYOGL_FLO_F32
+                #endif
 
-                if( ZER_vp1_b_0 != 0 ){
-                    ERR(E_S([ZER_vp1_b_0:NOT_ZERO]));
-                };;
-                
-                //:INPUTS[ AAC2020_P5D1OGL_CludMap_ZOF_1_D ]
-                I32 chk_fraic_1 =( BAK_vp0_pop - BAK_vp0_b_0 );
-                I32 chk_vp0_san =( BAK_vp0_b_1 - 
-                                   BAK_vp0_b_0 + 1 );
-            ////I32 chk_vp1_san =( ZER_vp1_b_1 -
-            ////                   ZER_vp1_b_0 + 1 );
+                //: num_coc : NUMberof: Cluster_lOcal_Coords
+                //: num_pic : NUMberof: PIxel___local_Coords
+                //:     coc * coc_pic ==     pic  
+                //: num_coc * coc_pic == num_pic
+                coc_CTO_pic =MAK_F32( vp0_san / vp1_san );
+                        pil =MAK_F32( PIG - vp0_b_0 );
+                        pic =(
+                            pil
+                        -   
+                           (F_L_O_O_R( pil / COC_SAN )
+                                          *( COC_SAN ))
+                        );;
 
-                if( chk_fraic_1 < 0 ){ ERR(E_S([E_06]));};
-                if( chk_fraic_1 >(chk_vp0_san-1) ){
-                    ERR(E_S([chk_fraic_1:OOB_POS]));
-                };;
-                
-            #endif //:############################:IF_C99://
-            //:---------------:Error_Check_Derived_Values://
-            //:Origin_00_Version:------------------------://
-            //: TAG_NAME[ #WHY_ZERO_2021_04_20# ] :::::::://
-            //: TAG__VID[ 0266 ]TIME[  07:11:42 ] :::::::://
-            #define WHY_ZERO_2021_04_20 ( 0 ) 
+                bas_cug =MAK_F32( vp1_b_0 );
 
-    
-            //: [TODO]:REMOVE_THE_INTERMEDIARY_VARIABLES:
-            //: [FAST]:Optimization_Point_Here
-            I32 fic =( BAK_vp0_pop - WHY_ZERO_2021_04_20);
-            I32 vp0 =( BAK_vp0_b_1 - BAK_vp0_b_0 + 1 );
-            I32 vp1 =( ZER_vp1_b_1 - ZER_vp1_b_0 + 1 );
-            I32 clu =(     clu_san                   );
+            //: bas_coc == bas_cug % f32_clu ____________://
+                bas_coc =( 
+                        bas_cug
+                        -
+                        (F_L_O_O_R( bas_cug /  f32_clu )     
+                                            *( f32_clu ))
+                        );;
 
-            #undef  WHY_ZERO_2021_04_20
+                off_coc=( 
+                    F_L_O_O_R( pil / coc_CTO_pic ) ); 
+
+            //: tar_coc ==(bas_coc+off_coc)%(clu_san) ___://
+                tar_coc=(
+                               (bas_coc+off_coc)-
+                   (F_L_O_O_R( (bas_coc+off_coc)/f32_clu )
+                                                *f32_clu )
+                );;
+
+                ASS( pic > 0 && pic < (coc_CTO_pic -1) );
+                ASS( pic > 0 && pic < (COC_SAN     -1) );
+
+
             //:IF_C99:###################################://
-            #if !defined( AAC2020_MACRO_THIS_IS_OPEN_GL )  
-            if( 1 > 0 ){
+            #if !defined( AAC2020_MACRO_THIS_IS_OPEN_GL )
+            if( 3 == clu_san ){
+            if( 5 == vp1_b_0 ){
+            if( 6 == vp1_b_1 ){
+            if( 7 == vp0_b_0 ){
+            if(10 == vp0_b_1 ){
 
-                LOG(E_S([ATC:CludMap_ZOF_1_D]),0);
-                LOI(E_S([fic]:%d),fic);
-                LOI(E_S([vp0]:%d),vp0);
-                LOI(E_S([vp1]:%d),vp1);
-                LOI(E_S([clu]:%d),clu);
+                if( 7 == fraic_1 ){
+                //:#_YOU_WERE_HERE_ON_2021_04_22_252AM_#
 
-            };;
-            #endif //:###################################://
+                };;
+                
+
+            };;};;};;};;};;
+            #endif //:-----------------------------------://
             //:###################################:IF_C99://
 
-            F32 tilop_1=(
-            AAC2020_P5D1OGL_CludMap_ZOF_1_D(
-                fic
-            ,   vp0
-            ,   vp1
-            ,   clu  
-            ));;
-            return( tilop_1 );
-            //:------------------------:Origin_00_Version://
+            #undef PIG
+            #undef COC_SAN
+            #undef F_L_O_O_R
+            };;
+
+            return( tiloper );
+
         }
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
         FV2

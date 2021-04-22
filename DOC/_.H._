@@ -9,6 +9,265 @@
     //[   VIDEO COMMENT TIMESTAMP EXAMPLE   ]//
 *** ******************************************************** ***
 
+@_SC_MOD_WITHOUT_MOD_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@_C99_MODNOMOD_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @MOD_WITHOUT_MOD:
+     Denotes doing modulus operation without using the "%"
+     operator. Sometimes we require this low-level precision.
+
+    SHORTCUT[ C99_MODNOMOD ]( @C99_MODNOMOD@ )
+
+        MODDED_VALUE=(  //:@C99_MODNOMOD@://
+                    (F32_BAS_001)-
+        (F_L_O_O_R( (F32_BAS_001)/F32_DIV_002 )
+                                 *F32_DIV_002 ));;
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@_C99_MODNOMOD_@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@_SC_MOD_WITHOUT_MOD_@
+#_RNG_1_D_VERSION_003_LOCAL_CLUSTER_CELL_#######################
+
+    EVERYTHING IN THIS SECTION USES THE SAME EXAMPLE PROBLEM!
+    @VID_IID[ 0267 ]TIME[ 02:02:23 ]
+
+
+    #_DIA_2021_04_21_AYE_#-------------------------------------#
+        @VID_IID[ 0267 ]TIME[ 01:09:12 ]
+        Here is an example problem that is giving us trouble.
+
+        clu_san==( 3 )
+        
+        cug ==[ 3 to 8 ]
+        cug : ClUster_Global(Coordinate)
+    
+                                vp1_b_0 == 5
+                                vp1_b_1 == 6
+                        |<----- vp1 ----->|
+                        |       -1.0      |  0.0        +1.0
+      -1.0         0.0  |     +1.0|       |   |           |
+        |           |   |       | |       |   |           |
+        +---|---+---|---+---|---+ +---|---+---|---+---|---+
+        |  cug  |  cug  |  cug  | |  cug  |  cug  |  cug  |
+        |   3   |   4   |   5   | |   6   |   7   |   8   |
+        |       |       |       | |       |       |       |
+        +---|---+---|---+---|---+ +---|---+---|---+---|---+
+                        ^   ^   ^ ^   ^   ^
+                        |   |   | |   |   |
+                      .33 .66   1.0 .66  .33
+                        |   |   | |   |   |
+                        +---+---+ +---+---+ 
+                        | 7 | 8 | | 9 |10 |<- fraic_1=[7,8,9,10]
+                        +---+---+ +---+---+ 
+                        |<----- vp0 ----->| 
+                                vp0_b_0 == 7 
+                                vp0_b_1 == 10
+
+    #-------------------------------------#_DIA_2021_04_21_AYE_#
+    #_DIA_2021_04_21_BEE_#-------------------------------------#
+
+        @VID_IID[ 0267 ]TIME[ 01:09:42 ]
+        Localize the problem a bit.
+        Try to solve discretely, but use floating point and
+        hope the cases where things don't fit in evenly just
+        work out nicely enough.
+
+        clu_san==( 3 )
+
+        [ coc / clu_loc ] : Cluster_lOcal_Coordinate
+        [ pic / pix_loc ] : PIxel__local__Coordinate
+        [ sub / sub_clu ] : Sub_Cluster(discreet unit)
+    
+                                vp1_b_0 == 0
+                                vp1_b_1 == 1
+                        |<----- vp1 ----->|
+                        |       -1.0      |  0.0        +1.0
+      -1.0         0.0  |     +1.0|       |   |           |
+        |           |   |       | |       |   |           |
+        +---|---+---|---+---|---+ +---|---+---|---+---|---+
+        |       |       |       | |       |       |       |
+        |   0   |   1   |   2   | |   0   |   1   |   2   |
+        |  coc  |  coc  |  coc  | |  coc  |  coc  |  coc  |
+        +-------+-------+---+---+ +---+---+-------+-------+
+        |       |       ^   ^         ^   ^
+        |sub_clu|     .33 .66       .66 .33
+                        |                 |
+                        +---+---+ +---+---+ 
+                        | 0 | 1 | | 0 | 1 | 
+                        |pic|pic| |pic|pic|
+                        +---+---+ +---+---+ 
+                        |<----- vp0 ----->| 
+                                vp0_b_0 == 0 
+                                vp0_b_1 == 3
+
+    #-------------------------------------#_DIA_2021_04_21_BEE_#
+    #_DIA_COC_PIC_##############################################
+    
+        COC_SAN     : Define for[ coc_CTO_pix ]that makes you
+                      think of it as a length rather than
+                      a conversion scale factor.
+        coc_CTO_pix : Longhanded_for[ coc_pix / COC_PIX ]
+        COC_PIC: coc_CTO_pic
+                 coc ConvertTO pic 
+                 Where CTO is a scalefactor.
+            
+                 coc * coc_pic == pic  
+
+            clu_san should __NOT__ affect how this
+            number is calculated. YES. 100% certain.
+
+        vp1_pix : Viewport_1_Pixel
+
+            |<------------- vp1_san == 3 ---------->|
+            | clu_san==3 ---------------------------|
+            | clu_san==2 -------------|             |
+            | clu_san==1|             |             |
+            V           V             V             V
+            +-----------+ +-----------+ +-----------+
+            |    coc    | |    coc    | |    coc    |
+            |     0     | |     1     | |     2     |
+            |  vp1_pix  | |  vp1_pix  | |  vp1_pix  |
+            +-----------+ +-----------+ +-----------+
+
+            +---+---+---+ +---+---+---+ +---+---+---+
+            | 0 | 1 | 2 | | 0 | 1 | 2 | | 0 | 1 | 2 |
+            |pic|pic|pic| |pic|pic|pic| |pic|pic|pic|
+            +---+---+---+ +---+---+---+ +---+---+---+
+            |                                       |
+            |<----------- vp0_san == 9 ------------>|
+
+            coc_pix = ( vp0_san / vp1_san );
+            coc_pix = (    9    /    3    );
+            coc_pix = (         3         );
+
+    ##############################################_DIA_COC_PIC_#
+    ##_DIA_GLO_PIC_#############################################
+
+        glo_pic : GLOBAL_pic (pic == PIxel_local_Coordinate)
+            G_P : GLOBAL_pic (G_P == glo_pic , shorthand )
+
+        vp1 : we __CARE__ about it's orgin.
+        vp0 : we dont give a shit. We just want to know it's
+              [span/range/length/magnitude].
+
+        pig : Pixel Index Global
+        pil : Pixel Index Local ( AKA: glo_pic )
+
+        pic : Pixel_Local____Coordinate (sub-divides[ coc ] )
+        pic : Pixel_Internal_Coordiante (sub-divides[ coc ] )
+
+        coc : Cluster_lOcal_Coordinate
+
+        bas_cug : BASe_cug (lowest[ cug ] value in vp1 range )
+        bas_coc : BASe_coc (lowest[ coc ] value in vp1 range )
+
+                         vp1_b_0
+                         bas_cug                   vp1_b_1
+                            |                         |
+        +-------+---|---+---|---+ +---|---+---|---+---|---+
+global->|  cug  |  cug  |  cug  | |  cug  |  cug  |  cug  |
+        |   3   |   4   |   5   | |   6   |   7   |   8   |
+        +-------+-------+-------+ +-------+-------+-------+ 
+                        |<----- vp1 ----->|
+        +-------+-------+---+---+ +---+---+-------+-------+
+local-> |***_***|***_***|bas_coc| |***_***|***_***|***_***|
+        |   0   |   1   |   2   | |   0   |   1   |   2   |
+        |  coc  |  coc  |  coc  | |  coc  |  coc  |  coc  |
+        +-------+-------+---+---+ +---+---+-------+-------+
+                        +---+---+ +---+---+
+        bas_coc == 2    | 7 | 8 | | 9 |10 |
+                        |pig|pig| |pig|pig| <--[ vp0_pix ](S)
+                        +---+---+ +---+---+    [ fraic_1 ](S)             
+                        +---+---+ +---+---+
+                        | 0 | 1 | | 2 | 3 |
+                        |pil|pil| |pil|pil| <--[ glo_pic ](S)
+                        +---+---+ +---+---+                   
+                        +---+---+ +---+---+ 
+                        | 0 | 1 | | 0 | 1 | 
+                        |pic|pic| |pic|pic| <--[ pix_loc ](S)
+                        +---+---+ +---+---+ 
+                        |<--- vp0_san --->| 
+                        +---+---+ +---+---+  +.3 ( +0.333333 )
+                        |+.3| +1| | -1|-.3|  +1  ( +1.000000 )
+                        |per|per| |per|per|  -1  ( -1.000000 )
+                        +---+---+ +---+---+  -.3 ( -0.333333 )
+                        
+    ##############################################_DIA_GLO_PIC_#
+    ##_DIA_LOCAL_SCREEN_PIXEL_##################################
+
+            coc : Cluster_lOcal_Coordinate
+        bas_coc : BASe___coc
+        off_coc : OFFset_coc
+        tar_coc : TARget_coc
+        
+                                   bas_coc == 2
+                                   off_coc == 1
+                                   tar_coc == 0
+                ( bas_coc + off_coc )%( clu_san )== tar_coc 
+
+                                  |tar_coc|
+                                  |       |
+                        |<----- vp1 ----->|
+        +-------+-------+---+---+ +---+---+-------+-------+
+local-> |***_***|***_***|bas_coc| |***_***|***_***|***_***|
+        |   0   |   1   |   2   | |   0   |   1   |   2   |
+        |  coc  |  coc  |  coc  | |  coc  |  coc  |  coc  |
+        +-------+-------+---+---+ +---+---+-------+-------+
+                        |<----- vp0 ----->|
+                        +---+---+ +---+---+
+        bas_coc == 2    | 0 | 1 | | 0 | 1 |
+                        |pic|pic| |pic|pic| <--[ vp0_pix ](S)
+                        +---+---+ +---+---+    [ fraic_1 ](S)   
+                                    ^
+                                    |
+                                fraic_1 == 9
+                               (    fic == 9 )
+
+
+    ###################################_DIA_LOCAL_SCREEN_PIXEL_#
+
+#######################_RNG_1_D_VERSION_003_LOCAL_CLUSTER_CELL_#
+#_RNG_1_D_VERSION_003_##########################################
+
+    NOTES_FOR[ AAC2020_P5D1OGL_CludMap_RNG_1_D ]
+    ( My 3rd attempt at solving this )
+    @VID_IID[ 0267 ]TIME[ 00:33:22 ]
+
+        /** ******************************************** ***
+        If 1 tile on offscreen data was mapped to the entire
+        screen viewport, and the screen viewport was only 
+        3 pixels [ wid | hig | san ].
+
+                +---+
+                |   | <------[ p5d_vp1 : Tile_Data ]        
+                +---+
+               /  |  \
+              /   |   \
+             /    |    \
+            +     |     +
+            |     |     |
+            V     V     V
+          -1.0   0.0  +1.0
+            |     |     |
+            +---+-|-+---+
+            |   |   |   | <--[ p5d_vp0 : Screen_Pixels ]
+            +---+---+---+
+    
+        A seemingly good approach for solving this problem
+        is to modify[ AAC2020_P5D1OGL_CludMap_RNG_1_D ]
+        inputs and transform them into
+        [ AAC2020_P5D1OGL_CludMap_ZOF_1_D ] inputs and
+        then just call [ ZOF_1_D ]. But I have attempted
+        this TWICE over the course of an entire week and
+        failed. Got 95% of the way each attempt but then
+        unit tests started failing. Wrapping the code is
+        basically "encapsulation" and willful ignorance
+        of the problem.... In order to fully understand
+        our unit tests... We cannot take this easy
+        "transform data and wrap function" approach.
+        @VID_IID[ 0267 ]TIME[ 00:31:31 ]
+        *** ******************************************* ***/
+
+##########################################_RNG_1_D_VERSION_003_#
 #_I_DONT_KNOW_WHAT_IAM_DOING_HELP_ME_2021_04_20_################
 
         EXAMPLE_002:

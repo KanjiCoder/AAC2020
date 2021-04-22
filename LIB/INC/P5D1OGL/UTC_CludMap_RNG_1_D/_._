@@ -1,0 +1,95 @@
+    #define NUM_TES ( 3 )
+    #define     INN ( 6 )
+    #define     OUT ( 1 )
+    LOG("[aac2020_P5D1OGL_UTC_CludMap_RNG_1_D:BEG]",0);
+
+        I32 fraic_1 ; //:[fragment_integer_coord    ]::::::::://
+        I32 vp0_b_0 ; //:[on_screen_pixels:min_bound]::::::::://
+        I32 vp0_b_1 ; //:[on_screen_pixels:max_bound]::::::::://
+        I32 vp1_b_0 ; //:[off_screen_tiles:min_bound]::::::::://
+        I32 vp1_b_1 ; //:[off_screen_tiles:max_bound]::::::::://
+        I32 clu_san ; //:[pebble_clustering_size    ]::::::::://
+        
+        I32 tab_utc_inn[ NUM_TES * INN ]={
+        //: |fraic_1|vp0_b_0|vp0_b_1|vp1_b_0|vp1_b_1| clu_san://
+        //: |       |<---- vp0 ---->|<---- vp1 ---->| clu |  ://
+        //: |  fic  |  b_0  |  b_1  |  b_0  |  b_1  | clu |  ://
+        /**/ (  0  ),(  0  ),(  0  ),(  0  ),(  0  ),( 1 )//:000
+        ,    (  0  ),(  0  ),(  0  ),(  0  ),(  0  ),( 2 )//:001
+        ,    (  0  ),(  0  ),(  0  ),(  0  ),(  0  ),( 3 )//:002
+
+        };;
+        F32 tab_utc_out[ NUM_TES * OUT ]={
+        /**/ ( 0.0) //:TEST_INDEX[ 000 ]TEST_NUMBER[ 001 ]
+        ,    (-1.0) //:TEST_INDEX[ 001 ]TEST_NUMBER[ 002 ]
+        ,    (-1.0) //:TEST_INDEX[ 002 ]TEST_NUMBER[ 003 ]
+
+
+
+        };;
+
+        //:HIJACKED_TEST_RUNNER_CODE:------------------------://
+        /**@VID_IID[ 0261 ]TIME[05:15:32 ]WHY_HIJACKED?  *** **/
+
+        I32 t_i; /**test__index**/
+        I32 bos; /**base_offset**/
+        I32 m_i; /**max___index**/
+
+        F32 EXP_tilop_1; /** EXPECTED **/
+        F32 ACT_tilop_1; /** ACTUAL   **/
+        F32 delta=( 777.777 );
+
+        m_i=( NUM_TES - 1 );
+        for( t_i = 0 ; t_i <=( m_i) ; t_i++ ){
+
+            aac2020_p5d1ogl_utc_t_i=( t_i );
+
+            bos =( t_i * INN );
+            fraic_1 = tab_utc_inn[ bos + 0 ];
+            vp0_b_0 = tab_utc_inn[ bos + 1 ];
+            vp0_b_1 = tab_utc_inn[ bos + 2 ];
+            vp1_b_0 = tab_utc_inn[ bos + 3 ];
+            vp1_b_1 = tab_utc_inn[ bos + 4 ];
+            clu_san = tab_utc_inn[ bos + 5 ];
+
+            EXP_tilop_1 =( tab_utc_out[ (t_i * OUT)+0 ] );
+            ACT_tilop_1=(
+            AAC2020_P5D1OGL_CludMap_RNG_1_D(
+                fraic_1  //:[ fraic_1  
+            ,   vp0_b_0  //:[ vp0_san  
+            ,   vp0_b_1  //:[ vp0_san  
+            ,   vp1_b_0  //:[ vp1_san  
+            ,   vp1_b_1  //:[ vp1_san  
+            ,   clu_san  //:[ clu_san  
+            ));;
+
+            //:should_i_crash?:------------------------------://
+            delta=( AAC2020_POLYOGL_ABS_F32(
+                EXP_tilop_1 - ACT_tilop_1   ));;
+    
+            if( delta > 0.0001 ){
+            #define P printf
+
+                P( "[X_X:t_i:.......]:%d\n",        t_i );
+                P( "[X_X:EXP_tilop_1]:%f\n",EXP_tilop_1 );
+                P( "[X_X:ACT_tilop_1]:%f\n",ACT_tilop_1 );
+                P( "\n" );
+
+                P( "[X_X:HACKISH_INTERNAL_DEBUG...]\n");
+                P( "[X_X:AAC2020_P5D1OGL_DEBUVAR_vp0_nom]:%f\n"
+                ,       AAC2020_P5D1OGL_DEBUVAR_vp0_nom );;
+                P( "[X_X:AAC2020_P5D1OGL_DEBUVAR_fraic_L]:%f\n"
+                ,       AAC2020_P5D1OGL_DEBUVAR_fraic_L );;
+                P( "\n" );
+                
+                ERR("[X_X:EXP_tilop_1_NOT_MATCHING_ACTUAL]");
+            #undef  P
+            };; //:--------------------------:should_i_crash?://
+
+        };;//:NEXT[ t_i ]://
+        //:------------------------:HIJACKED_TEST_RUNNER_CODE://
+
+    LOG("[aac2020_P5D1OGL_UTC_CludMap_RNG_1_D:END]",0);
+    #undef NUM_TES
+    #undef     INN
+    #undef     OUT
