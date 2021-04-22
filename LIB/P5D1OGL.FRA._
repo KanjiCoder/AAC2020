@@ -1543,10 +1543,9 @@
         //:SECOND_DRAFT_IN_THE_TRASH[ DOC/000/TRASH/012._ ]
         //:THIRD__DRAFT_NOTES[ #_RNG_1_D_VERSION_003_#    ]
 
-            F32 tiloper =( 0.0 );
+            F32 tilop_1 =( 0.0 ); /** tiloper , 1D **/
 
-            F32 coc_pic =( 0.0 ); //:AKA[ coc_CTO_pic ]
-                                  //:AKA[ sub_clu -PER- PIXEL ]
+
 
             if( fraic_1 > 0 ){ /** NOOP **/ };
             if( vp0_b_0 > 0 ){ /** NOOP **/ };
@@ -1569,17 +1568,35 @@
                 //:Assume we are in the dead center of 
                 //:whatever tile is associated with that
                 //:pixel.
-                tiloper = ( 0.0 );
+                tilop_1 = ( 0.0 );
             }else{
             #define PIG      fraic_1
             #define COC_SAN  coc_CTO_pic
-           
+  
                 #if defined( AAC2020_MACRO_THIS_IS_OPEN_GL )
                     #define F_L_O_O_R AAC2020_FRAGCOM_FLO_F32
                 #else
                     #define F_L_O_O_R AAC2020_POLYOGL_FLO_F32
                 #endif
 
+                //:declare_vars:-------------------------://
+                
+                    //: cug : ClUster_Global_Coordinate :://
+                    //: coc : Cluster_lOcal__Coordinate :://
+
+                F32     bas_cug ;//:BASe_cug(low[ cug ]vp1)
+                F32     bas_coc ;//:BASe_coc(low[ coc ]vp1)
+                F32     off_coc ;//:OFFset_coc
+                F32     tar_coc ;//:TARget_coc
+                ///     f32_clu ;  :Float32_CLUster_span:://
+                
+                F32 coc_CTO_pic ;//:AKA[sub_clu -PER- PIXEL]
+                F32         pil ;//:Pixel_Index____Local
+                F32         pic ;//:Pixel_Internal_Coord
+                
+                //:-------------------------:declare_vars://
+
+                
                 //: num_coc : NUMberof: Cluster_lOcal_Coords
                 //: num_pic : NUMberof: PIxel___local_Coords
                 //:     coc * coc_pic ==     pic  
@@ -1615,7 +1632,8 @@
 
                 ASS( pic > 0 && pic < (coc_CTO_pic -1) );
                 ASS( pic > 0 && pic < (COC_SAN     -1) );
-
+            
+                if( tar_coc > 0.0 ){ /** NOOP **/ };
 
             //:IF_C99:###################################://
             #if !defined( AAC2020_MACRO_THIS_IS_OPEN_GL )
@@ -1624,13 +1642,39 @@
             if( 6 == vp1_b_1 ){
             if( 7 == vp0_b_0 ){
             if(10 == vp0_b_1 ){
+            #define ACT_TILOP_1 tilop_1
+
+                F32 itest_delta;
+                F32 EXP_tilop_1;
+
+                //:Test cases below based on diagrams:
+                //:#_RNG_1_D_DIAGRAMS_DATE_2021_04_22_#
 
                 if( 7 == fraic_1 ){
-                //:#_YOU_WERE_HERE_ON_2021_04_22_252AM_#
-
+                    EXP_tilop_1 =( +0.3333 );
                 };;
+                if( 8 == fraic_1 ){
+                    EXP_tilop_1 =( +1.0000 );
+                };;
+                if( 9 == fraic_1 ){
+                    EXP_tilop_1 =( -1.0000 );
+                };;
+                if(10 == fraic_1 ){
+                    EXP_tilop_1 =( -0.3333 );
+                };;
+
+                itest_delta=( AAC2020_POLYOGL_ABS_F32(
+                         EXP_tilop_1 - ACT_TILOP_1   ));;
+
+                if( itest_delta > 0.0001 ){ //:----------://
+
+        
+                    ERR(E_S([FAILED_INTERNAL_TEST_2021]));
+
+                };; //:----------------------------------://
                 
 
+            #undef  ACT_TILOP_1
             };;};;};;};;};;
             #endif //:-----------------------------------://
             //:###################################:IF_C99://
@@ -1640,7 +1684,9 @@
             #undef F_L_O_O_R
             };;
 
-            return( tiloper );
+            return(  
+                tilop_1 /** Tile_Internal_LOcal_PERcent **/ 
+            );;
 
         }
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
