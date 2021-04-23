@@ -31,14 +31,42 @@
     EVERYTHING IN THIS SECTION USES THE SAME EXAMPLE PROBLEM!
     @VID_IID[ 0267 ]TIME[ 02:02:23 ]
 
+    Variable Names:
 
+
+    Variable Mistakes/Typos:
+
+        coc_pix ------> coc_pic
+        coc_CTO_pix --> coc_CTO_pic
+        pic_san ------> PIC_SAN (define_alias[ coc_CTO_pix ])
+
+    #_CLU_SAN_ALN_##############################################
+        #CLU_SAN_ALN: Cluster_Span_Alignment
+
+            clu_san == 3 ( so the period is 3 offscreen tiles )
+                         ( aka: 3 vp1 pixels.                 )
+
+        |   clu_san   ||   clu_san   ||   clu_san   ||.......|
+        [ 0 ][ 1 ][ 2 ][ 3 ][ 4 ][ 5 ][ 6 ][ 7 ][ 8 ][ 9 ]
+        [cug][cug][cug][cug][cug][cug][cug][cug][cug][cug]
+        [ 0 ]
+          ^
+          |
+      +---+--------------------------------------------------+
+      | ClusterSpan(clu_san)always is aligned to [ 0 ].      |
+      | @VID_IID[ 0269 ]TIME[ 00:06:00 ]#CLU_SAN_ALIGNMENT#  |
+      +------------------------------------------------------+
+
+    ##############################################_CLU_SAN_ALN_#
     #_DIA_2021_04_21_AYE_#-------------------------------------#
         @VID_IID[ 0267 ]TIME[ 01:09:12 ]
+        @VID_IID[ 0269 ]TIME[ 00:03:13 ]CUG_INFORMATION
         Here is an example problem that is giving us trouble.
 
         clu_san==( 3 )
         
-        cug ==[ 3 to 8 ]
+        cug ==[ 3 to 8 ]IN_DIAGRAM
+        cug ==[ 5 to 6 ]INSIDE_BOUNDS_OF[ vp1 ]
         cug : ClUster_Global(Coordinate)
     
                                 vp1_b_0 == 5
@@ -104,10 +132,10 @@
     #-------------------------------------#_DIA_2021_04_21_BEE_#
     #_DIA_COC_PIC_##############################################
     
-        COC_SAN     : Define for[ coc_CTO_pix ]that makes you
+        COC_SAN     : Define for[ coc_CTO_pic ]that makes you
                       think of it as a length rather than
                       a conversion scale factor.
-        coc_CTO_pix : Longhanded_for[ coc_pix / COC_PIX ]
+        coc_CTO_pic : Longhanded_for[ coc_pic / COC_PIC ]
         COC_PIC: coc_CTO_pic
                  coc ConvertTO pic 
                  Where CTO is a scalefactor.
@@ -130,6 +158,7 @@
             |  vp1_pix  | |  vp1_pix  | |  vp1_pix  |
             +-----------+ +-----------+ +-----------+
 
+            |<-coc_pic->| |<-coc_pic->| |<-coc_pic->|
             +---+---+---+ +---+---+---+ +---+---+---+
             | 0 | 1 | 2 | | 0 | 1 | 2 | | 0 | 1 | 2 |
             |pic|pic|pic| |pic|pic|pic| |pic|pic|pic|
@@ -137,9 +166,21 @@
             |                                       |
             |<----------- vp0_san == 9 ------------>|
 
-            coc_pix = ( vp0_san / vp1_san );
-            coc_pix = (    9    /    3    );
-            coc_pix = (         3         );
+            coc_pic = ( vp0_san / vp1_san );
+            coc_pic = (    9    /    3    );
+            coc_pic = (         3         );
+
+        +-- pic_000 =( 0 );          
+        |   pic_111 =( coc_pic - 1 );
+        |        |
+        +-----+  +----+    AKA[ pic_min / pic_b_0 | pic_zer ]
+              |       |       [ pic_000 ]
+            +-V-+---+-V-+  
+            | 0 | 1 | 2 |  AKA[ pic_max / pic_b_1 | pic_m_i ]
+            |pic|pic|pic|     [ pic_111 ]
+            +---+---+---+ 
+            |<-coc_pic->|
+            |<-PIC_SAN->|
 
     ##############################################_DIA_COC_PIC_#
     ##_DIA_GLO_PIC_#############################################
@@ -199,7 +240,7 @@ local-> |***_***|***_***|bas_coc| |***_***|***_***|***_***|
             coc : Cluster_lOcal_Coordinate
         bas_coc : BASe___coc
         off_coc : OFFset_coc
-        tar_coc : TARget_coc
+        tar_coc : TARget_coc ( RANGE[ 0 -to- (clu_san-1) ] )
         
                                    bas_coc == 2
                                    off_coc == 1
@@ -226,7 +267,232 @@ local-> |***_***|***_***|bas_coc| |***_***|***_***|***_***|
 
 
     ###################################_DIA_LOCAL_SCREEN_PIXEL_#
+    #_CLUSTER_SPAN_PERCENTAGE_##################################
+                  
+    ============================================================
+        pic : Pixel_Internal_Coordiante (sub-divides[ coc ] )
 
+        sap : SpAn_Percentage (cluster span percentage )
+              From: 0.0 to 1.0
+
+    ============================================================
+                       (tilop_1) (tilop_1) (tilop_1) (tilop_1)
+                       ( -1.0  ) ( -0.333) ( +0.333) ( +1.0  )
+                           |         |         |         |
+                           |(tilop_1)|(tilop_1)|(tilop_1)|
+    |<----- vp1 ----->| |  |( -0.5  )|(  0.0  )|( +0.5  )|
+    +---+---+ +---+---+ |  |    |    |    |    |    |    |
+    |bas_coc| |tar_coc| |(sap)  |  (sap)  |  (sap)  |  (sap)
+    |   2   | |   0   | |(0/3)  |  (1/3)  |  (2/3)  |  (3/3)
+    |  coc  | |  coc  | |  |    |    |    |    |    |    |
+    +---+---+ +---+---+ |  V    V    V    V    V    V    V
+    |<----- vp0 ----->| |  +----+----+----+----+----+----+
+    +---+---+ +---+---+ |  | tar_coc | ***_*** | ***_*** |
+    | 0 | 1 | | 0 | 1 | |  |    0    |    1    |    2    |
+    |pic|pic| |pic|pic| |  |   coc   |   coc   |   coc   |
+    +---+---+ +---+---+ |  +----+----+----+----+----+----+
+                ^       |  |<--------- clu_san --------->|
+                |
+                +---( fraic_1 == 9 )(Fragment_Integer_Coord)
+                +---(     fic == 9 )(Fragment_Integer_Coord)
+
+    ============================================================
+                        
+        tilop_1 = ( sap * 2.0 ) - 1.0;
+
+        +-----+-------------------------------+---------+
+        | sap | tilop_1 = ( sap * 2.0 ) - 1.0 | tilop_1 |
+        +-----+-------------------------------+---------+
+        | 0/3 | tilop_1 = ( 0/3 * 2.0 ) - 1.0 |  -1.0   |
+        | 1/3 | tilop_1 = ( 1/3 * 2.0 ) - 1.0 |  -0.333 |
+        | 2/3 | tilop_1 = ( 2/3 * 2.0 ) - 1.0 |  +0.333 |
+        | 3/3 | tilop_1 = ( 3/3 * 2.0 ) - 1.0 |  +1.0   |
+        +-----+-------------------------------+---------+
+
+        @VID_IID[ 0269 ]TIME[ 00:38:42 ]
+        We need to further divide[ coc ]into cells and
+        keep the math discrete as we figure out the final
+        [ tilop_1 ]coordinate for the fragment[ fic ]
+        in question.
+        
+
+    ##################################_CLUSTER_SPAN_PERCENTAGE_#
+    #_pic_CTO_sap_##############################################
+
+            sap : cluster_SpAn_Percentage ( 0.0 -to- 1.0 )
+        tar_coc : TARget_coc ( 0 -to- (clu_san-1) )
+
+                  @IID[0269]T[03:46:13]#_CALC_N0_AND_N1_#
+            n_0 : Numerator_min ( n_0 = tar_coc + 0 )
+            n_1 : Numerator_max ( n_1 = tar_coc + 1 )
+
+            u_d : Uncommon_Denominator (u_d == clu_san        )
+            c_d : Common___Demominator (c_d ==(u_d*(PIC_SAN-1))
+    coc_CTO_pic : coc_ConvertTO_pic
+            coc : Cluster_lOcal_Coordinate
+            pic : Pixel_Internal_Coordiante (sub-divides[ coc ])
+        PIC_SAN : PIC_SpAN ( alias_for[ coc_CTO_pic ] )
+
+        c_d = ( u_d * PIC_SAN );
+      
+[n_0 == 0 ]&[n_1 == 1 ]WHEN[ tar_coc == 0 ]@IID[0269]T[04:15:13]
+  |          |
+  |   (sap)  |  (sap)     (sap)     (sap)
+  +-->(0/3)  +->(1/3)     (2/3)     (3/3)
+        |         |         |         |
+        V         V         V         V
+        +----+----+----+----+----+----+
+        | tar_coc | ***_*** | ***_*** |
+        |    0    |    1    |    2    |
+        |   coc   |   coc   |   coc   |
+        +----+----+----+----+----+----+
+
+                         |sap|sap|
+                         |0/3|1/3|  0 == n_0 (numerator_min)
+        +----+----+      +===+===+  1 == n_1 (numerator_max)
+        | tar_coc |      | 0 | 1 |  3 == u_d 
+        |    0    | ===> |pic|pic|       (UN_common_demominator)
+        |   coc   |      | 0 | 1 |
+        +----+----+      +===+===+
+                         |       |
+                         |PIC_SAN|
+
+                         |sap|   |sap|
+                         |0/3|   |1/3|
+        +----+----+      +===+===+===+
+        | tar_coc |      | 0 | 1 | 2 |
+        |    0    | ===> |pic|pic|pic|   
+        |   coc   |      | 0 | 1 | 2 |
+        +----+----+      +===+===+===+
+                         |           |
+                         |<-PIC_SAN->|
+
+                         |sap|       |sap|
+                         |0/3|       |1/3|
+        +----+----+      +===+===+===+===+
+        | tar_coc |      | 0 | 1 | 2 | 3 |
+        |    0    | ===> |pic|pic|pic|pic|   
+        |   coc   |      | 0 | 1 | 2 | 3 |
+        +----+----+      +===+===+===+===+
+                         |               |
+                         |<-- PIC_SAN -->|
+
+                         |sap|           |sap|
+                         |0/3|           |1/3|
+        +----+----+      +===+===+===+===+===+
+        | tar_coc |      | 0 | 1 | 2 | 3 | 4 |
+        |    0    | ===> |pic|pic|pic|pic|pic|   
+        |   coc   |      | 0 | 1 | 2 | 3 | 4 |
+        +----+----+      +===+===+===+===+===+
+                        /|                   |\
+                       / |<---- PIC_SAN ---->| \
+                      /  |<---- (  5  ) ---->|  \
+                     /                           \ 
+                    /                             \
+                   /                               \
+                  /                                 \
+                 /                                   \
+                +   pic =[ 0 | 1 | 2 | 3 | 4 ]        \
+                |   u_d =( clu_san )                   \
+                |   c_d =( 12 )                         +
+                |   c_d =( u_d * ( PIC_SAN - 1 )        |
+                |   sap =( pic / c_d )                  |
+                V                                       V
+( pic/c_d )==sap:   0/12|   1/12|   2/12    3/12|   4/12|
+             sap:    0/3| 0.25/3|  0.5/3| 0.75/3|    1/3|
+                +=======+=======+=======+=======+=======+ 
+                |   0   |   1   |   2   |   3   |   4   | 
+                |  pic  |  pic  |  pic  |  pic  |  pic  | 
+                |   0   |   1   |   2   |   3   |   4   | 
+                +=======+=======+=======+=======+=======+ 
+                |<-------------- PIC_SAN -------------->|
+                |<-------------- (  5  ) -------------->|
+
+    @VID_IID[ 0269 ]TIME[ 03:26:42 ]PIC_SAN_EQUAL_SEVEN_7
+    :PIC_SAN_EQUAL_SEVEN_7-------------------------------------:
+
+                    |sap|                   |sap|
+                    |0/3|                   |1/3|
+    +----+----+     +===+===+===+===+===+===+===+
+    | tar_coc |     | 0 | 1 | 2 | 3 | 4 | 5 | 6 |
+    |    0    | ===>|pic|pic|pic|pic|pic|pic|pic|   
+    |   coc   |     | 0 | 1 | 2 | 3 | 4 | 5 | 6 |
+    +----+----+ +---+===+===+===+===+===+===+===+-----------+
+               /    |<-------- PIC_SAN -------->|           |
+              /     |<-------- (  7  ) -------->|           |
+             /                                              |
+            /       pic =[ 0 | 1 | 2 | 3 | 4 | 5 | 6 ]      |
+    +------+        u_d =( clu_san )                        |
+    |               c_d =( u_d * ( PIC_SAN - 1 )            |
+    |               c_d =( 18 )                             |
+    |               sap =( pic / c_d )  (EXAMPLE: 6/18)     |  
+    |               #_DIA_C_D_AND_SAP_#                     |
+    V                                                       V
+sap:|   0/18|   1/18|  2/18 |   3/18|   4/18|   5/18|   6/18|
+sap:|    0/3|.1666/3|0.333/3|  0.5/3|0.666/3|.8333/3|    1/3|
+    +=======+=======+=======+=======+=======+=======+=======+ 
+    |   0   |   1   |   2   |   3   |   4   |   5   |   6   | 
+    |  pic  |  pic  |  pic  |  pic  |  pic  |  pic  |  pic  | 
+    |   0   |   1   |   2   |   3   |   4   |   5   |   6   | 
+    +=======+=======+=======+=======+=======+=======+=======+ 
+    |<---------------------- PIC_SAN ---------------------->|
+    |<---------------------- (  7  ) ---------------------->|
+
+
+    :-------------------------------------:PIC_SAN_EQUAL_SEVEN_7
+        
+               
+    ##############################################_pic_CTO_sap_#
+    #_MAKE_SURE_PIL_CALCULATED_CORRECTLY_#######################
+    @VID_IID[ 0269 ]TIME[ 04:21:21 ]MODIFYING_ORIGINAL_PROBLEM
+ 
+        vp1_san = ( vp1_b_1 - vp1_b_0 + 1 ) ==>(  4  )
+        vp0_san = ( vp0_b_1 - vp0_b_0 + 1 ) ==>( 12  )
+    coc_CTO_pic = ( vp0_san / vp1_san     ) ==>(  3  )
+        COC_SAN = ( vp0_san / vp1_san     ) ==>(  3  )
+         
+global:  
+    |<----------------------- vp1 ----------------------->|
+    | [vp1_b_0 == 23]                     [26 == vp1_b_1] | 
+    |     |                                         |     |
+    +-----V-----+ +-----------+ +-----------+ +-----V-----+
+    |  ***_***  | |  ***_***  | |  ***_***  | |  ***_***  |
+    |    023    | |    024    | |    025    | |    026    |
+    |    coc    | |    coc    | |    coc    | |    coc    |         
+    +-----------+ +-----------+ +-----------+ +-----------+         
+         
+local:
+    +-----------+ +-----------+ +-----------+ +-----------+
+    |  ***_***  | |  ***_***  | |  tar_coc  | |  ***_***  |
+    |     0     | |     1     | |     2     | |     3     |
+    |    coc    | |    coc    | |    coc    | |    coc    |
+    +-----------+ +-----------+ +-----------+ +-----------+
+    |<--------------------- vp1_san --------------------->|
+                
+    |<----------------------- vp0 ----------------------->|
+    | +--[ vp0_b_0 ]                       [ vp0_b_1 ]--+ |
+    | |                                                 | |
+    +-V-+---+---+ +---+---+---+ +---+---+---+ +---+---+-V-+
+    | 7 | 8 | 9 | |10 |11 |12 | |13 |14 |15 | |16 |17 |18 |
+    |pig|pig|pig| |pig|pig|pig| |pig|pig|pig| |pig|pig|pig|
+    +---+---+---+ +---+---+---+ +---+---+---+ +---+---+---+
+    +---+---+---+ +---+---+---+ +---+---+---+ +---+---+---+
+    | 0 | 1 | 2 | | 3 | 4 | 5 | | 6 | 7 | 8 | | 9 |10 |11 |
+    |pil|pil|pil| |pil|pil|pil| |pil|pil|pil| |pil|pil|pil|
+    +---+---+---+ +---+---+---+ +---+---+---+ +---+---+---+
+    +---+---+---+ +---+---+---+ +---+---+---+ +---+---+---+
+    | 0 | 1 | 2 | | 0 | 1 | 2 | | 0 | 1 | 2 | | 0 | 1 | 2 |
+    |pic|pic|pic| |pic|pic|pic| |pic|pic|pic| |pic|pic|pic|
+    +---+---+---+ +---+---+---+ +---+---+---+ +---+---+---+
+
+        coc_CTO_pic =( vp0_san / vp1_san ); //:<--[ SYNONYMS ]
+            COC_SAN =( vp0_san / vp1_san ); //:<--[ SYNONYMS ]
+
+        pil =( pig - vp0_b_0 );
+        pic =( pil % COC_SAN );
+
+    #_MAKE_SURE_PIL_CALCULATED_CORRECTLY_#######################
+                        
 #############################_RNG_1_D_DIAGRAMS_DATE_2021_04_22_#
 #######################_RNG_1_D_VERSION_003_LOCAL_CLUSTER_CELL_#
 #_RNG_1_D_VERSION_003_##########################################

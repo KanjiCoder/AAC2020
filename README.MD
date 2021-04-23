@@ -9,6 +9,7 @@
 ### 6: FUNCTION_NAME_INDEX
 ### 7: ITS_WRONG
 ### 8: LIBCHAN_AND_LIBCHAN_DIAGRAM
+### 9: ASCII_VALUES_IN_128_TO_255_RANGE
 
     //:ABOUT:================================================://
 
@@ -1522,6 +1523,36 @@
           |   |   |   X_0  X_1  |  Y_0  Y_1  | HEX[ 0x0F ]
           +---+---+
 
+
+        Use binary value to grab correct graphic based on
+        the decimal index the binary value evaluates to:
+        +---+---+---+---+---+---+---+---+
+        | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+        +---+---+---+---+---+---+---+---+
+
+        ....                +---+---+---+---+---+---+---+---+
+        ....                | 8 | 9 |10 |11 |12 |13 |14 |15 |
+        ....                +---+---+---+---+---+---+---+---+
+
+
+        @VID_IID[ 0269 ]TIME[ 02:04:42 ]
+        Figuring_Out_3D_With[ marksongs ]
+        2D: BIN[ 1111     ]DEC[ 15 ]
+        3D: BIN[ 1111  11 ]DEC[ 63 ]
+        +---|---+---|---+---|---+
+        |       |       |       |
+        |       |  y_0  |       |
+        |       |       |       |   
+        +---|---+---|---+---|---+   
+        |       |       |       |     
+        |  x_0  |  TIL  |  x_1  |
+        |       |       |       |
+        +---|---+---|---+---|---+
+        |       |       |       |
+        |       |  y_1  |       |
+        |       |       |       |
+        +---|---+---|---+---|---+
+
     //:||||||||||||||||||||||||||||||:DIAGRAMS:TOUCHING_VALUE://
     //:DIAGRAMS:CLUDMAP(ing):||||||||||||||||||||||||||||||||://
 
@@ -2267,6 +2298,13 @@
         //:---------------------------:DENSE_DEPENDENCY_GRAPH://
 
     //:==========================:LIBCHAN_AND_LIBCHAN_DIAGRAM://
+    //:ASCII_VALUES_IN_128_TO_255_RANGE:=====================://
+
+        magicaros: back in old MS DOS i would spend useless 
+        time to frame thing with "╔═╦╗║╝╩..." and oh hell i 
+        still remember the Alt+[ascii code] for it
+
+    //:=====================:ASCII_VALUES_IN_128_TO_255_RANGE://
     
     
     

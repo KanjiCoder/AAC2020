@@ -1570,8 +1570,10 @@
                 //:pixel.
                 tilop_1 = ( 0.0 );
             }else{
-            #define PIG      fraic_1
+            #define pig      fraic_1
             #define COC_SAN  coc_CTO_pic
+            #define PIC_SAN  coc_CTO_pic
+            #define u_d     ( clu_san )
   
                 #if defined( AAC2020_MACRO_THIS_IS_OPEN_GL )
                     #define F_L_O_O_R AAC2020_FRAGCOM_FLO_F32
@@ -1593,6 +1595,10 @@
                 F32 coc_CTO_pic ;//:AKA[sub_clu -PER- PIXEL]
                 F32         pil ;//:Pixel_Index____Local
                 F32         pic ;//:Pixel_Internal_Coord
+
+                F32         n_0 ;//:Numerator_Min ( n_0 / u_d )
+                F32         n_1 ;//:Numerator_Max ( n_1 / u_d )
+                F32         c_d ;//:Common_Denominator
                 
                 //:-------------------------:declare_vars://
 
@@ -1602,7 +1608,7 @@
                 //:     coc * coc_pic ==     pic  
                 //: num_coc * coc_pic == num_pic
                 coc_CTO_pic =MAK_F32( vp0_san / vp1_san );
-                        pil =MAK_F32( PIG - vp0_b_0 );
+                        pil =MAK_F32( pig - vp0_b_0 );
                         pic =(
                             pil
                         -   
@@ -1633,7 +1639,15 @@
                 ASS( pic > 0 && pic < (coc_CTO_pic -1) );
                 ASS( pic > 0 && pic < (COC_SAN     -1) );
             
-                if( tar_coc > 0.0 ){ /** NOOP **/ };
+                //:SEE_HASHTAG_DOCS[ #_CALC_N0_AND_N1_#  ]
+                //:@VID_IID[0269]TIME[04:12:32]EXPLAINED
+                n_0 =( tar_coc + 0 ); //:numerator_min
+                n_1 =( tar_coc + 1 ); //:numerator_max
+
+                //:SEE_HASHTAG_DOCS[ #_DIA_C_D_AND_SAP_# ]
+                c_d =( u_d *( PIC_SAN - 1 ) );
+                sap =( pic / c_d );
+                tilop_1 =( ( sap * 2.0 ) - 1.0 );
 
             //:IF_C99:###################################://
             #if !defined( AAC2020_MACRO_THIS_IS_OPEN_GL )
@@ -1679,9 +1693,11 @@
             #endif //:-----------------------------------://
             //:###################################:IF_C99://
 
-            #undef PIG
-            #undef COC_SAN
-            #undef F_L_O_O_R
+            #undef  pig       //:<--lowercase_macro : 01 ://
+            #undef  COC_SAN   //:-------------------: 02 ://
+            #undef  PIC_SAN   //:-------------------: 03 ://
+            #undef  u_d       //:<--lowercase_macro : 04 ://
+            #undef  F_L_O_O_R //:-------------------: 05 ://
             };;
 
             return(  
