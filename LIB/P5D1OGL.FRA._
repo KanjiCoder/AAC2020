@@ -1573,7 +1573,6 @@
             #define pig      fraic_1
             #define COC_SAN  coc_CTO_pic
             #define PIC_SAN  coc_CTO_pic
-            #define u_d     ( clu_san )
   
                 #if defined( AAC2020_MACRO_THIS_IS_OPEN_GL )
                     #define F_L_O_O_R AAC2020_FRAGCOM_FLO_F32
@@ -1596,9 +1595,11 @@
                 F32         pil ;//:Pixel_Index____Local
                 F32         pic ;//:Pixel_Internal_Coord
 
-                F32         n_0 ;//:Numerator_Min ( n_0 / u_d )
-                F32         n_1 ;//:Numerator_Max ( n_1 / u_d )
-                F32         c_d ;//:Common_Denominator
+                ///         n_0 ;//:@Numer_Min ( n_0 / u_d )
+                ///         n_1 ;//:@Numer_Max ( n_1 / u_d )
+                F32         u_d ;//:UN_Common_Denominator
+                F32         c_d ;//:Common____Denominator
+                F32         sap ;//:cluster_SpAn_Percentage
                 
                 //:-------------------------:declare_vars://
 
@@ -1607,8 +1608,13 @@
                 //: num_pic : NUMberof: PIxel___local_Coords
                 //:     coc * coc_pic ==     pic  
                 //: num_coc * coc_pic == num_pic
+                //: COC_SAN =MAK_F32( vp0_san / vp1_san );
                 coc_CTO_pic =MAK_F32( vp0_san / vp1_san );
-                        pil =MAK_F32( pig - vp0_b_0 );
+
+                    //: pil =MAK_F32(fraic_1 - vp0_b_0 );
+                        pil =MAK_F32(    pig - vp0_b_0 );
+
+                    //: pic =( pil % COC_SAN );
                         pic =(
                             pil
                         -   
@@ -1636,44 +1642,81 @@
                                                 *f32_clu )
                 );;
 
-                ASS( pic > 0 && pic < (coc_CTO_pic -1) );
-                ASS( pic > 0 && pic < (COC_SAN     -1) );
-            
-                //:SEE_HASHTAG_DOCS[ #_CALC_N0_AND_N1_#  ]
-                //:@VID_IID[0269]TIME[04:12:32]EXPLAINED
-                n_0 =( tar_coc + 0 ); //:numerator_min
-                n_1 =( tar_coc + 1 ); //:numerator_max
-
                 //:SEE_HASHTAG_DOCS[ #_DIA_C_D_AND_SAP_# ]
+                u_d =MAK_F32( clu_san );
                 c_d =( u_d *( PIC_SAN - 1 ) );
                 sap =( pic / c_d );
                 tilop_1 =( ( sap * 2.0 ) - 1.0 );
 
+                //:if_c99:#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#://
+                #if !defined(AAC2020_MACRO_THIS_IS_OPEN_GL)
+
+                    if( pic < 0 ){
+                        ERR(E_S([PIC_TOO_LOW_2021]));
+                    }else
+                    if( pic > ( COC_SAN     - 1 ) ){
+                        ERR(E_S([PIC_OOB_POS_2021]));
+                    }else
+                    if( pic > ( coc_CTO_pic - 1 ) ){
+                        ERR(E_S([PIC_OOB_WTF_2021]));
+                    };;
+
+                    ASS( pic >=0 && pic <=(coc_CTO_pic -1));
+                    ASS( pic >=0 && pic <=(COC_SAN     -1));
+
+                    //:SEE_HASHTAG_DOCS[#_CALC_N0_AND_N1_#]
+                    //:@VID_IID[0269]T[04:12:32]EXPLAINED
+                    F32 n_0 =( tar_coc + 0 ); //:@numer_min
+                    F32 n_1 =( tar_coc + 1 ); //:@numer_max
+                
+                    F32 sap_min=( n_0 / u_d );
+                    F32 sap_max=( n_1 / u_d );
+
+                    if( n_0 < 0 || n_1 < 1 || u_d < 1 ){
+                        ERR(E_S([BAD_FRACTIONAL_THINGS]));
+                    };;
+                    if( sap_max < sap_min ){
+                        ERR(E_S([OUT_OF_ORDER_BOUNDS]));
+                    };;
+                    if( sap < sap_min || sap > sap_max ){
+                        ERR(E_S([OOB_SAP_2021]));
+                    };;
+
+                #endif //:-------------------------------://
+                //:#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#:if_c99://
+
             //:IF_C99:###################################://
             #if !defined( AAC2020_MACRO_THIS_IS_OPEN_GL )
-            if( 3 == clu_san ){
-            if( 5 == vp1_b_0 ){
-            if( 6 == vp1_b_1 ){
-            if( 7 == vp0_b_0 ){
-            if(10 == vp0_b_1 ){
+            if( 3 == clu_san ){ //:DOC_H[#_DIA_KEY_001_#]://
+            if( 5 == vp1_b_0 ){ //:DOC_H[#_DIA_KEY_001_#]://
+            if( 6 == vp1_b_1 ){ //:DOC_H[#_DIA_KEY_001_#]://
+            if( 7 == vp0_b_0 ){ //:DOC_H[#_DIA_KEY_001_#]://
+            if(10 == vp0_b_1 ){ //:DOC_H[#_DIA_KEY_001_#]://
             #define ACT_TILOP_1 tilop_1
 
                 F32 itest_delta;
                 F32 EXP_tilop_1;
 
-                //:Test cases below based on diagrams:
-                //:#_RNG_1_D_DIAGRAMS_DATE_2021_04_22_#
+                //:--------------------------------------://
+                //:Test cases below based on diagrams:   ://
+                //:#_RNG_1_D_DIAGRAMS_DATE_2021_04_22_#  ://
+                //:@VID_IID[0269]TIME[06:25:50]EXPLAINING://
+                //:--------------------------------------://
 
                 if( 7 == fraic_1 ){
+                    //:#_ANS_KEY_001_#
                     EXP_tilop_1 =( +0.3333 );
                 };;
                 if( 8 == fraic_1 ){
+                     //:#_ANS_KEY_001_#
                     EXP_tilop_1 =( +1.0000 );
                 };;
                 if( 9 == fraic_1 ){
+                     //:#_ANS_KEY_001_#
                     EXP_tilop_1 =( -1.0000 );
                 };;
                 if(10 == fraic_1 ){
+                     //:#_ANS_KEY_001_#
                     EXP_tilop_1 =( -0.3333 );
                 };;
 
@@ -1682,7 +1725,6 @@
 
                 if( itest_delta > 0.0001 ){ //:----------://
 
-        
                     ERR(E_S([FAILED_INTERNAL_TEST_2021]));
 
                 };; //:----------------------------------://
@@ -1696,8 +1738,7 @@
             #undef  pig       //:<--lowercase_macro : 01 ://
             #undef  COC_SAN   //:-------------------: 02 ://
             #undef  PIC_SAN   //:-------------------: 03 ://
-            #undef  u_d       //:<--lowercase_macro : 04 ://
-            #undef  F_L_O_O_R //:-------------------: 05 ://
+            #undef  F_L_O_O_R //:-------------------: 04 ://
             };;
 
             return(  
