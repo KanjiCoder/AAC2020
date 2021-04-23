@@ -1545,15 +1545,6 @@
 
             F32 tilop_1 =( 0.0 ); /** tiloper , 1D **/
 
-
-
-            if( fraic_1 > 0 ){ /** NOOP **/ };
-            if( vp0_b_0 > 0 ){ /** NOOP **/ };
-            if( vp0_b_1 > 0 ){ /** NOOP **/ };
-            if( vp1_b_0 > 0 ){ /** NOOP **/ };
-            if( vp1_b_1 > 0 ){ /** NOOP **/ };
-            if( clu_san > 0 ){ /** NOOP **/ };
-
             //:SEE[ #_DIA_2021_04_21_AYE_# ]
 
             F32 vp1_san=(  
@@ -1678,8 +1669,23 @@
                     if( sap_max < sap_min ){
                         ERR(E_S([OUT_OF_ORDER_BOUNDS]));
                     };;
-                    if( sap < sap_min || sap > sap_max ){
-                        ERR(E_S([OOB_SAP_2021]));
+                    if( sap < sap_min ){  
+
+                        //:SEE[DOC_H[#_DIA_KEY_001_DEBUG_#]]
+                        LOI(E_S([INN:fraic_1]:%d),fraic_1);
+                        LOI(E_S([INN:vp0_b_0]:%d),vp0_b_0);
+                        LOI(E_S([INN:vp0_b_1]:%d),vp0_b_1);
+                        LOI(E_S([INN:vp1_b_0]:%d),vp1_b_0);
+                        LOI(E_S([INN:vp1_b_1]:%d),vp1_b_1);
+                        LOI(E_S([INN:clu_san]:%d),clu_san); 
+                
+                        LOF(E_S([____SAP]:%f),sap     );
+                        LOF(E_S([sap_min]:%f),sap_min );
+                        LOF(E_S([sap_max]:%f),sap_max );
+                        ERR(E_S([OOB_NEG_SAP_2021])   );
+                    };;
+                    if( sap > sap_max ){
+                        ERR(E_S([OOB_POS_SAP_2021]));
                     };;
 
                 #endif //:-------------------------------://
