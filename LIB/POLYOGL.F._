@@ -32,8 +32,8 @@
 #define F32   float                                   //: 09 ://
 #define ERR   aac2020_polyogl_Halt                    //: 10 ://
 
-    //:GLSL_POLYFILL:ABSOLUTE_VALUE:=========================://
-
+    //:GLSL_POLYFILL:MAX_MIN_ABS:============================://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
         F32
         AAC2020_POLYOGL_ABS_F32(
             F32 f32
@@ -48,10 +48,33 @@
             };;
 
             return( out_f32 );
-
         }
-
-    //:=========================:GLSL_POLYFILL:ABSOLUTE_VALUE://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+        F32
+        AAC2020_POLYOGL_MAX_F32(
+            F32 aye
+        ,   F32 bee
+        )
+        {
+            F32 f32=( 0 );
+            if( aye > bee ){ f32=( aye ); };
+            if( bee > aye ){ f32=( bee ); };
+            return( f32 );
+        }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+        I32
+        AAC2020_POLYOGL_MAX_I32(
+            I32 aye
+        ,   I32 bee
+        )
+        {
+            I32 i32=( 0 );
+            if( aye > bee ){ i32=( aye ); };
+            if( bee > aye ){ i32=( bee ); };
+            return( i32 );
+        }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    //:============================:GLSL_POLYFILL:MAX_MIN_ABS://
     //:GLSL_POLYFILL:FLOOR_ROUND_CEIL:=======================://
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
             //:GLSL_POLYFILL:FLOOR:==========================://
@@ -207,6 +230,15 @@
             return( (F32)0-666 );
         } 
     //:========================:GLSL_POLYFILL_Get_IResolution://
+    //:GLSL_POLYFILL_Get_iTime:==============================://
+
+        F32
+        AAC2020_POLYOGL_GET_iTime( void )
+        {
+            return( AAC2020_CPUNIFO_iTime );
+        }
+
+    //:==============================:GLSL_POLYFILL_Get_iTime://
     //:GLSL_POLYFILL_Get_IMouse:=============================://
     //:GLSL_POLYFILL_Get_iMouse:=============================://
     /** @VID_IID[ 0250 ]TIME[ 01:43:23 ]STUBBED_IN ********* **/
@@ -364,20 +396,41 @@
 
     //:==============================================:MODULUS://
     //:CONVERT_TO:(CTO_*):===================================://
+        //:Convert_To_DEPRECATED_Longhanded:-----------------://
 
-        F32
-        AAC2020_POLYOGL_U32_cto_F32(
-            U32 u32
-        ){
-            return( (F32)u32 );
-        }
+            F32
+            AAC2020_POLYOGL_U32_cto_F32( //#@DEPRECATED@#//
+                U32 u32
+            ){
+                return( (F32)u32 );
+            }
 
-        I32
-        AAC2020_POLYOGL_U32_cto_I32(
-            U32 u32
-        ){
-            return( (I32)u32 );
-        }
+            I32
+            AAC2020_POLYOGL_U32_cto_I32( //#@DEPRECATED@#//
+                U32 u32
+            ){
+                return( (I32)u32 );
+            }
+
+        //:-----------------:Convert_To_DEPRECATED_Longhanded://
+        //:Convert_To_Shorthanded:---------------------------://
+
+            U32
+            AAC2020_POLYOGL_I32_U32(
+            I32             i32
+            ){  return((U32)i32 ); }
+
+            I32
+            AAC2020_POLYOGL_U32_I32(    
+            U32             u32
+            ){  return((I32)u32 ); }
+
+            I32
+            AAC2020_POLYOGL_F32_I32(
+            F32             f32
+            ){  return((I32)f32 ); }
+
+        //:---------------------------:Convert_To_Shorthanded://
 
     //:===================================:(CTO_*):CONVERT_TO://
 

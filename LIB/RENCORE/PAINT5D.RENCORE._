@@ -1,4 +1,227 @@
         
+    //# DO_NOT_PUT_DOUBLE_OR_SINGLE_QUOTES_IN_THIS_FILE! #//
+    //[ The shader pipeline pre-processes this file by   ]//
+    //[ quoting it. Back slash characters can also lead  ]//
+    //[ to problems as wel. -John Mark Isaac Madison     ]//        
+    //# BACK_SLASHES_ARE_ALSO_A_VERY_BAD_IDEA_TOO!!!!!!! #//
+
+    /** ************************************************ ***
+    Specify how to blend together all 8 tile sizes that
+    are on a given layer. Any pixel on screen has 8 tiles
+    of 8 different sizes overlapping that [pixel/fragment].
+    *** ************************************************ **/
+    U32 AAC2020_PAINT5D_RENCORE_tilpixa_CTO_laypixu(
+    U32                         tilpixa[ 8 ]
+    )
+    {
+    #define B_Y_T_E_M_A_S_K MAK_U32( 0xFF )
+
+        U32 laypixu;
+
+        laypixu=( U32_000
+        |   ((( U32_000
+            + ( tilpixa[ 0 ]>>24 & B_Y_T_E_M_A_S_K )
+            + ( tilpixa[ 1 ]>>24 & B_Y_T_E_M_A_S_K )
+            + ( tilpixa[ 2 ]>>24 & B_Y_T_E_M_A_S_K )
+            + ( tilpixa[ 3 ]>>24 & B_Y_T_E_M_A_S_K )
+            + ( tilpixa[ 4 ]>>24 & B_Y_T_E_M_A_S_K )
+            + ( tilpixa[ 5 ]>>24 & B_Y_T_E_M_A_S_K )
+            + ( tilpixa[ 6 ]>>24 & B_Y_T_E_M_A_S_K )
+            + ( tilpixa[ 7 ]>>24 & B_Y_T_E_M_A_S_K )
+            ) / U32_008)    <<24 )
+        |   ((( U32_000
+            + ( tilpixa[ 0 ]>>16 & B_Y_T_E_M_A_S_K )
+            + ( tilpixa[ 1 ]>>16 & B_Y_T_E_M_A_S_K )
+            + ( tilpixa[ 2 ]>>16 & B_Y_T_E_M_A_S_K )
+            + ( tilpixa[ 3 ]>>16 & B_Y_T_E_M_A_S_K )
+            + ( tilpixa[ 4 ]>>16 & B_Y_T_E_M_A_S_K )
+            + ( tilpixa[ 5 ]>>16 & B_Y_T_E_M_A_S_K )
+            + ( tilpixa[ 6 ]>>16 & B_Y_T_E_M_A_S_K )
+            + ( tilpixa[ 7 ]>>16 & B_Y_T_E_M_A_S_K )
+            ) / U32_008)    <<16 )
+        |   ((( U32_000
+            + ( tilpixa[ 0 ]>> 8 & B_Y_T_E_M_A_S_K )
+            + ( tilpixa[ 1 ]>> 8 & B_Y_T_E_M_A_S_K )
+            + ( tilpixa[ 2 ]>> 8 & B_Y_T_E_M_A_S_K )
+            + ( tilpixa[ 3 ]>> 8 & B_Y_T_E_M_A_S_K )
+            + ( tilpixa[ 4 ]>> 8 & B_Y_T_E_M_A_S_K )
+            + ( tilpixa[ 5 ]>> 8 & B_Y_T_E_M_A_S_K )
+            + ( tilpixa[ 6 ]>> 8 & B_Y_T_E_M_A_S_K )
+            + ( tilpixa[ 7 ]>> 8 & B_Y_T_E_M_A_S_K )
+            ) / U32_008)    << 8 )
+
+        |   ( U32_255 << 0 ) //:Just set alpha to 100%
+        );;
+
+        return( laypixu );
+
+    #undef B_Y_T_E_M_A_S_K
+    }
+
+    /** ************************************************ ***
+    Specify how all 3 flattened layers are to be blended
+    together to create the final pixel color that will be
+    put onto screen.
+    *** ************************************************ **/
+    U32 AAC2020_PAINT5D_RENCORE_laypixa_CTO_plypix3(
+    U32                         laypixa[ 3 ]
+    )
+    {
+    #define B_Y_T_E_M_A_S_K MAK_U32( 0xFF )
+
+        U32 plypix3;
+
+        plypix3=( U32_000
+        |   ((( U32_000
+            + ( laypixa[ 0 ]>>24 & B_Y_T_E_M_A_S_K )
+            + ( laypixa[ 1 ]>>24 & B_Y_T_E_M_A_S_K )
+            + ( laypixa[ 2 ]>>24 & B_Y_T_E_M_A_S_K )
+            ) / U32_003)    <<24 )
+        |   ((( U32_000
+            + ( laypixa[ 0 ]>>16 & B_Y_T_E_M_A_S_K )
+            + ( laypixa[ 1 ]>>16 & B_Y_T_E_M_A_S_K )
+            + ( laypixa[ 2 ]>>16 & B_Y_T_E_M_A_S_K )
+            ) / U32_003)    <<16 )
+        |   ((( U32_000
+            + ( laypixa[ 0 ]>> 8 & B_Y_T_E_M_A_S_K )
+            + ( laypixa[ 1 ]>> 8 & B_Y_T_E_M_A_S_K )
+            + ( laypixa[ 2 ]>> 8 & B_Y_T_E_M_A_S_K )
+            ) / U32_003)    << 8 )
+
+        |   ( U32_255 << 0 ) //:Just set alpha to 100%
+        );;
+
+        return( plypix3 );
+
+    #undef B_Y_T_E_M_A_S_K
+    }
+
+    /** ************************************************ ***
+    @param aus_dex : AUtotileSet_inDEX
+                     Maybe you want to use a different
+                     pallet for different auto tile sets.
+                     aus_dex range: 0 to 15 inclusive
+
+    @param til_lay : TILe_LAYer
+                     There are 3 layers for an auto tile
+                     set design. [ 0 | 1 | 2 ]
+
+    @param til_exp : TILe_EXPonent
+                     A number[ 0 -to- 7 ]inclusive.
+                     Tells us the relative size of the tile.
+                     0 == 2^0 ==  1 (  1 pebble(s) in size)
+                     1 == 2^1 ==  2 (  2 pebble(s) in size)
+                     2 == 2^2 ==  4 (  4 pebble(s) in size)
+                     3 == 2^3 ==  8 (  8 pebble(s) in size)
+                     4 == 2^4 == 16 ( 16 pebble(s) in size)
+                     5 == 2^5 == 32 ( 32 pebble(s) in size)
+                     6 == 2^6 == 64 ( 64 pebble(s) in size)
+                     7 == 2^7 ==128 (128 pebble(s) in size)
+
+    @param til_val : TILe_VALue
+                     A number[ 0 -to- 3 ]inclusive.
+                     0 is used for[ nothingness ]by 
+                     convention. But nothing is stopping 
+                     you from doing something different
+                     with it. Value[ 0 ]will still auto
+                     tile like any other tile value.
+
+    @param tou_val : TOUching_VALue
+                     A number[ 0 -to- 15 ]inclusive.        
+                     Tells us what conceptual[ sub tile ]
+                     to grab. Since we are doing auto 
+                     tiling with shaders and __NOT__ with
+                     oldschool bitmap graphics... there is
+                     no physical sub tile to grab. But
+                     you still need this value if you 
+                     are implementing auto-tile style
+                     rendering for the different 
+                     tile values.
+
+    @param tilop_x : Tile_Internal_LOcal_Percentage_X
+                     A percent coorinate from -1.0 to +1.0
+                     used to map a fragment coordinate to
+                     the interior of tile being rendered.
+                     0.0 is the dead center.
+
+    @param tilop_y : Tile_Internal_LOcal_Percentage_Y
+                     Same as [ tilop_x ]but Y-axis.
+    
+                     IMPORTANT!!!:
+                     Graphical top-left origin.
+                     Top    of tile == -1.0
+                     Bottom of tile == +1.0
+
+    *** ************************************************ **/
+    U32 AAC2020_PAINT5D_RENCORE_tilodat_CTO_tilpixu(
+        I32 aus_dex //:AKA[ aus_dex / a_d ]
+    ,   I32 til_lay //:AKA[ til_lay / t_l ] 
+    ,   I32 til_exp //:AKA[ til_exp / t_e ] 
+
+    ,   U32 til_val //:AKA[ til_val / t_v ] 
+    ,   U32 tou_val //:AKA[ tou_val / tou ]
+
+    ,   F32 tilop_x //:AKA[ tilop_x / p_x ]
+    ,   F32 tilop_y //:AKA[ tilop_y / p_y ] 
+    )
+    {
+        if( aus_dex >       0  ){ /** NOOP **/ };
+        if( til_lay >       0  ){ /** NOOP **/ };
+        if( til_exp >       0  ){ /** NOOP **/ };
+
+        if( til_val > U32_000  ){ /** NOOP **/ };
+        if( tou_val > U32_000  ){ /** NOOP **/ };
+            
+        if( tilop_x >     0.0  ){ /** NOOP **/ };
+        if( tilop_y >     0.0  ){ /** NOOP **/ };
+
+        //: SQUARE_GRADIENT: max( abs( x ) , abs( y ) ) 
+
+        F32
+        f32_gra=( /** Float32_GRAdient **/
+        MAX_F32( ABS_F32( tilop_x ) , ABS_F32( tilop_y ) )
+        );;
+    
+        if( f32_gra > 1.0 ){ /** NOOP **/ };
+
+        /** Hackish little algorithm. **/
+        /** til_lay determines monochrome layer color **/
+        /** til_val determines monochrome lumonosity  **/
+        U32 tilpixu =( U32_255 ); //:100% alpha, BLACK
+        U32 lum_255 =( U32_085 * til_val );
+
+        F32 tim_cos =( 
+            AAC2020_FRAGCOM_COS_F32(
+            AAC2020_FRAGCOM_GET_iTime() ));;
+
+
+            lum_255 =(  
+            /**/    I32_U32(
+            /**/    MAX_I32( 
+            /**/        0
+            /**/    ,
+            /**/        (
+            /**/            U32_I32( lum_255                   )
+            /**/        -   F32_I32( f32_gra * 128.0 * tim_cos ) 
+            /**/        )
+            /**/    )));;
+
+
+
+        if( U32_000 == til_val ){
+            tilpixu =( U32_255 ); //:100% alpha, BLACK
+        }else{
+            tilpixu =( tilpixu 
+            |   ( ( lum_255 ) << ((til_lay+1)*8) )
+            );;
+        };;
+        
+    
+        return( tilpixu );
+    }
+
+        //:TODO: Delete this function once the new
+        //:      pipeline is established.
         U32
         AAC2020_PAINT5D_RENCORE(
         /**/I32  fic_i_x  //:<--FragIntCoord:X           ://
@@ -145,8 +368,8 @@
                 if( lum_all > UFF ){ lum_all = UFF; };
 
                 u32_pix=( 
-                    //   lum_all << 24
-                           U32_000 << 24
+                    lum_all << 24
+                       //    U32_000 << 24
                     |  lum_all << 16
                     |  lum_all <<  8
                     |  UFF     <<  0

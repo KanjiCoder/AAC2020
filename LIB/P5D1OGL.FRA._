@@ -93,6 +93,15 @@
         #define CUVIPIX struct AAC2020_P5D1OGL_CUVIPIX   ///
         #define TYP_F_C /** nothing **/            //| 8 |//
         #define INN_F_C /** nothing **/            //| 9 |//
+                                                   //|---|//
+        #define ABS_F32 AAC2020_FRAGCOM_ABS_F32    //|10 |//
+        #define MAX_I32 AAC2020_FRAGCOM_MAX_I32    //|11 |//
+        #define MAX_F32 AAC2020_FRAGCOM_MAX_F32    //|12 |//
+                                                   //|---|//
+        #define I32_U32 MAK_U32                    //|13 |//
+        #define U32_I32 MAK_I32                    //|14 |//
+        #define F32_I32 MAK_I32                    //|15 |//
+                                                   //|---|//
                                                    //| # |//
     #else                                          //| # |//
                                                    //| # |//
@@ -105,6 +114,15 @@
         #define CUVIPIX struct AAC2020_P5D1OGL_CUVIPIX   ///
         #define TYP_F_C struct AAC2020_POLYOGL_FV4 //| 8 |//
         #define INN_F_C F_C                        //| 9 |//
+                                                   //|---|//
+        #define ABS_F32 AAC2020_POLYOGL_ABS_F32    //|10 |//
+        #define MAX_I32 AAC2020_POLYOGL_MAX_I32    //|11 |//
+        #define MAX_F32 AAC2020_POLYOGL_MAX_F32    //|12 |//
+                                                   //|---|//
+        #define I32_U32 MAK_U32                    //|13 |//
+        #define U32_I32 MAK_I32                    //|14 |//
+        #define F32_I32 MAK_I32                    //|15 |//
+                                                   //|---|//
                                                    //| # |//
     #endif                                         //| # |//
     //:------------------------------:seven_letter_macros://
@@ -1402,7 +1420,20 @@
         ,   I32 clu_san //:Clustering_Of_vp0_units
         )
         {   
-        /** SEE[ README.MD ]DIAGRAM[ #_DIA_TILOPER_# ] **/
+        /** SEE[ README.MD ]DIAGRAM[ #_DIA_TILOPER_# ]   **/
+        /** ******************************************** ***
+        Originally AAC2020_P5D1OGL_CludMap_RNG_1_D was
+        supposed to call this[ CludMap_ZOF_1_D ]function,
+        but we tried TWICE and kept on failing our unit
+        tests. So now[ CludMap_ZOF_1_D ]no longer needs
+        to be in our code base. Not even sure it behaves
+        the way I want it to... Because we did a __LOT__
+        of diagramming for[ CludMap_RNG_1_D ]. And have
+        PIXEL_PERFECT_PREFERENCES for how the function
+        should be behaving. Those PIXEL_PERFECT_PREFERENCES
+        are what made it take 3_FUCKING_TRIES before we
+        settled on a final function design.
+        *** ******************************************** **/
 
             //:Convert_Inputs_To_Float32:----------------://
             F32 f32_fraic_1 = MAK_F32( fraic_1 );
@@ -1540,8 +1571,10 @@
         )
         {
         //:FIRST__DRAFT_IN_THE_TRASH[ DOC/000/TRASH/011._ ]
-        //:SECOND_DRAFT_IN_THE_TRASH[ DOC/000/TRASH/012._ ]
+        //:SECOND_DRAFT_IN_THE_TRASH[ DOC/000/TRASH/012._ ] 
         //:THIRD__DRAFT_NOTES[ #_RNG_1_D_VERSION_003_#    ]
+        //:MORE_NOTES[ #_UNIT_TEST_DEBUGGING_2021_04_23_# ]
+        //:MORE[ #_ONE_LAST_DIAGRAM_FOR_TESTS_2021_04_23_#]
 
             F32 tilop_1 =( 0.0 ); /** tiloper , 1D **/
 
@@ -1555,10 +1588,10 @@
                 MAK_F32( clu_san ) );
 
             if( (vp1_san / f32_clu) > vp0_san ){
-                //:More tiles than pixels, so just always
-                //:Assume we are in the dead center of 
-                //:whatever tile is associated with that
-                //:pixel.
+                //:More tiles than pixels, so just  -----://
+                //:always assume we are in the dead -----://
+                //:center of  whatever tile is      -----://
+                //:associated with that pixel.      -----://
                 tilop_1 = ( 0.0 );
             }else{
             #define pig      fraic_1
@@ -1798,16 +1831,34 @@
         {
         /** ******************************************** ***
         FUNC_NOTES[ #_CLUDMAP_FIC_VP0_VP1_CLU_EXPLAINED_# ]
+        ALSO_SEE[   #_LAST_DIAGRAM_FOR_TESTS_2021_04_23_# ]
         *** ******************************************** **/
 
             FV2 tiloper ;
-                tiloper.x =( 0.0 );
-                tiloper.y =( 0.0 );
 
-            if( fic.x       > 0 ){ /** NOOP **/ };          
-            if( p5d_vp0.x_0 > 0 ){ /** NOOP **/ };
-            if( p5d_vp1.x_0 > 0 ){ /** NOOP **/ };  
-            if( clu_san     > 0 ){ /** NOOP **/ };
+            tiloper.x=(
+                AAC2020_P5D1OGL_CludMap_RNG_1_D(
+                    fic.x       //:fraic_1
+                ,   p5d_vp0.x_0 //:vp0_b_0
+                ,   p5d_vp0.x_1 //:vp0_b_1
+
+                ,   p5d_vp1.x_0 //:vp1_b_0
+                ,   p5d_vp1.x_1 //:vp1_b_1
+                
+                ,   clu_san
+                ));;
+
+            tiloper.y=(
+                AAC2020_P5D1OGL_CludMap_RNG_1_D(
+                    fic.y       //:fraic_1
+                ,   p5d_vp0.y_0 //:vp0_b_0
+                ,   p5d_vp0.y_1 //:vp0_b_1
+
+                ,   p5d_vp1.y_0 //:vp1_b_0
+                ,   p5d_vp1.y_1 //:vp1_b_1
+                
+                ,   clu_san
+                ));;
 
             return( tiloper );
         }
@@ -1849,14 +1900,7 @@
             ,   p5d_vp1  //:BOUNDS_OF_FETCH[ cuv ]
             ,   til_peb  //:destination_unit_grouping_size
             ));;         //:[ til_peb == clu == ClusterSize ]
-
-
-
-            if( fic.x       > 0 ){ /** NOOP **/ };
-            if( p5d_vp0.x_0 > 0 ){ /** NOOP **/ };
-            if( p5d_vp1.x_0 > 0 ){ /** NOOP **/ };
-            if( til_exp     > 0 ){ /** NOOP **/ };
-            if( til_peb     > 0 ){ /** NOOP **/ };
+                         //:[ til_peb == clu_san ]::::::::://
 
             return( tiloper );
         }
@@ -1962,6 +2006,8 @@
             &&  fic.y <= p5d_vp0.y_1
             ){  //:IN_BOUNDS:
 
+                U32 u32_pix;
+
                 /** BETS ARE OFF WHEN MAPPING FROM **/
                 /** small range to larger range.   **/
                 IV2 cuv;
@@ -2058,10 +2104,55 @@
                 U32     tou ; //:<--[ tou_val :Touching_Value ]
                 FV2 tiloper ; //:<--[ tilop_x , tilop_y       ]
 
+                //:There are 8 different tile sizes on   ://
+                //:a single layer. We want to collect all://
+                //:the pixel colors into an array and    ://
+                //:allow the engine user to define a     ://
+                //:blending function to combine all 8    ://
+                //:uint32 colors.                        ://
+                U32 tilpixu ; //:[tilpixu]:TILe_PIXel_Uint32
+                U32 tilpixa[ 8 ]= ARR_U32( 8 )
+                ARR_BEG
+                /**/U32_000  //: til_exp == 0 ://
+                ,   U32_000  //: til_exp == 1 ://
+                ,   U32_000  //: til_exp == 2 ://
+                ,   U32_000  //: til_exp == 3 ://
+                ,   U32_000  //: til_exp == 4 ://
+                ,   U32_000  //: til_exp == 5 ://
+                ,   U32_000  //: til_exp == 6 ://
+                ,   U32_000  //: til_exp == 7 ://
+                ARR_END;
+
+                U32 laypixu ; //:[laypixu]:LAYer_PIXel_Uint32
+                U32 laypixa[ 3 ]= ARR_U32( 3 )
+                ARR_BEG
+                /**/U32_000  //: til_lay == 0 ://
+                ,   U32_000  //: til_lay == 1 ://
+                ,   U32_000  //: til_lay == 2 ://
+                ARR_END;
+
+                U32 plypix3 ;//: PLY_PIXels_3 
+                             //: ( laypixa composited )
+                             //: ( (plyed)   together )
+
+
                 for( I32 til_lay = ( 0 ) //:[ wrong:lay_dex ]
                 ;        til_lay <=(3-1) //:[ wrong:lay_dex ] 
                 ;        til_lay++       //:[ wrong:lay_dex ]
                 ){
+                    //:Not_Necessary to delete like    ::://
+                    //:this unless we are accumulating ::://
+                    //:over multiple layers for some   ::://
+                    //:reason.                         ::://
+                    tilpixa[ 0 ]=( U32_000 );
+                    tilpixa[ 1 ]=( U32_000 );
+                    tilpixa[ 2 ]=( U32_000 );
+                    tilpixa[ 3 ]=( U32_000 );
+                    tilpixa[ 4 ]=( U32_000 );
+                    tilpixa[ 5 ]=( U32_000 );
+                    tilpixa[ 6 ]=( U32_000 );
+                    tilpixa[ 7 ]=( U32_000 );
+
                 for( I32 til_exp = ( 0 )
                 ;        til_exp <=(8-1)
                 ;        til_exp++
@@ -2223,106 +2314,83 @@
                 //||||||||||||||:LOOP_SECTION:TOUCHING_VALUES|//
                 //|LOOP_SECTION:TILE_LOCAL_COORDS:||||||||||||//
 
-                    if( tiloper.x > 0 ){ /** NOOP **/ };
-
                     //:BASED_ON[ AAC2020_FRAGCOM_fic_MAP_cuv ]
-                    tiloper=(AAC2020_P5D1OGL_fic_MAP_tiloper(
-                    fic , p5d_vp0 , p5d_vp1 , til_exp
+                    tiloper=(AAC2020_P5D1OGL_fic_MAP_tiloper(  
+                        fic     //:<-- Pixel_On[     p5d:vp0 ]
+                    ,   p5d_vp0 //:<-- OnScreenPixels(   vp0 )
+                    ,   p5d_vp1 //:<-- OffScreenTileData(vp1 )
+                    ,   til_exp //:<-- determines[ clu_san   ]
                     ));;
 
                 //||||||||||||:LOOP_SECTION:TILE_LOCAL_COORDS|//
-                      
+                //|LOOP_SECTION:RENCORE_001|||||||||||||||||||//
+                #define TIL_VAL cen //:Center Tile Is Tile  1://
+                #define TOU_VAL tou //:Touching_Value[0-15] 2://
+                #define TILOP_X ( tiloper.x )          //:  3://
+                #define TILOP_Y ( tiloper.y )          //:  4://
+
+                    tilpixu=(
+                    AAC2020_PAINT5D_RENCORE_tilodat_CTO_tilpixu(
+                            aus_dex //:AKA[ aus_dex / a_d ]
+                        ,   til_lay //:AKA[ til_lay / t_l ] 
+                        ,   til_exp //:AKA[ til_exp / t_e ] 
+                        ,   TIL_VAL //:AKA[ til_val / t_v ] 
+                        ,   TOU_VAL //:AKA[ tou_val / tou ]
+                        ,   TILOP_X //:AKA[ tilop_x / p_x ]
+                        ,   TILOP_Y //:AKA[ tilop_y / p_y ] 
+                        ));;
+                    tilpixa[ til_exp ]=( tilpixu );
+                
+                #undef  TIL_VAL  //:--------------------: 01 ://
+                #undef  TOU_VAL  //:--------------------: 02 ://
+                #undef  TILOP_X  //:--------------------: 03 ://
+                #undef  TILOP_Y  //:--------------------: 04 ://
+                //|||||||||||||||||||LOOP_SECTION:RENCORE_001|//
+
+
                     
-                };;};; //:<--[ NEXT[ til_lay , til_exp ] ]
+                };; //:<--[ NEXT[ til_exp ] ]
+
+                    laypixu=(
+                    AAC2020_PAINT5D_RENCORE_tilpixa_CTO_laypixu(
+                                            tilpixa ) );;
+                
+                    laypixa[ til_lay ]=( laypixu );
+
+                };; //:<--[ NEXT[ til_lay ] ]
+
+
+                plypix3=(
+                AAC2020_PAINT5D_RENCORE_laypixa_CTO_plypix3(
+                /**/                    laypixa ));;
+
             //:---------:IDONT_KNOW_WHAT_TO_CALL_THIS_SECTION://
 
-
+            /** Eventually will be using this value as **/
+            /** the fragment output color.             **/ 
+            if( plypix3 > U32_000 ){ /** NOOP **/ }; //:<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Eventually We Need To Use This.
 
                 //:CORE_RENDERING_ALGORITHM:-------------://
 
-        ////    U32 c_b ; /** c_b : cuvbits         **/
-        ////    U32 t_v ; /** t_v : til_val         **/
-        ////    U32 tou ; /** tou : tou_val         **/
-        ////    U32 r_c ; /** r_c : RENCORE.corepix **/
-        ////    
-        ////    /** all pixels for a given layer **/
-        ////    U32 laypixa[ 8 ]= ARR_U32( 8 )
-        ////    ARR_BEG
-        ////    
-        ////    /**/U32_000 //: 01 :// 
-        ////    ,   U32_000 //: 02 :// 
-        ////    ,   U32_000 //: 03 :// 
-        ////    ,   U32_000 //: 04 :// 
-        ////    ,   U32_000 //: 05 :// 
-        ////    ,   U32_000 //: 06 :// 
-        ////    ,   U32_000 //: 07 :// 
-        ////    ,   U32_000 //: 08 :// 
-        ////
-        ////    ARR_END;
-        ////
-        ////    for( I32 t_l = 0 ; t_l <=(3-1) ; t_l ++ ){
-        ////
-        ////        U32 c_b=(
-        ////        AAC2020_P5D1OGL_cuvipix_CTO_cuvbits_Get( 
-        ////            cuv_i_x  //:AKA[ cuvipix.i_x ]   ///
-        ////        ,   cuv_i_y  //:AKA[ cuvipix.i_y ]   ///
-        ////        ,       t_l  //:AKA[ til_lay / t_l ] ///
-        ////        ,   aus_dex  //:AKA[ aus_dex ]       ///   
-        ////        ));;////////////////////////////////////
-        ////    
-        ////        for(I32 t_e = 0 ; t_e <=(8-1) ; t_e ++ ){
-        ////
-        ////            /**[c_b]packed little-endian. So **/
-        ////            /** larger tile values are in    **/
-        ////            /** more significant bit slots.  **/   
-        ////            t_v =( ( c_b >> (t_e*2) ) & B11 );;
-        ////
-        ////            tou =( U32_000 /** TODO:CALC **/ );
-        ////            p_x =( 0.0     /** TODO:CALC **/ );
-        ////            p_y =( 0.0     /** TODO:CALC **/ );
-        ////
-        ////            tilpixu=(
-        ////   AAC2020_PAINT5D_RENCORE_tilodat_CTO_tilpixu(
-        ////                aus_dex //:AKA[ aus_dex / a_d ]
-        ////            ,   t_l     //:AKA[ til_lay / t_l ] 
-        ////            ,   t_e     //:AKA[ til_exp / t_e ] 
-        ////            ,   t_v     //:AKA[ til_val / t_v ] 
-        ////            ,   tou     //:AKA[ tou_val / tou ]
-        ////            ,   p_x     //:AKA[ tilop_x / p_x ]
-        ////            ,   p_y     //:AKA[ tilop_y / p_y ] 
-        ////            ));;
-        ////
-        ////             
-        ////            tilpixa[ t_e ]=( tilpixu );
-        ////
-        ////        };;
-        ////
-        ////        laypixu=(
-        ////    AAC2020_PAINT5D_RENCORE_tilpixa_CTO_laypixu(
-        ////                            tilpixa ) );;
-        ////
-        ////        laypixa[ t_l ]=( laypixu );
-        ////
-        ////    };;
-        ////
-        ////    plypix3=(
-        ////    AAC2020_PAINT5D_RENCORE_laypixa_CTO_plypix3(
-        ////                    laypixa ));;
-        ////
-        ////    u32_pix=( plypix3 );
+                u32_pix=( plypix3 );
 
-                U32 u32_pix=(
-                    AAC2020_PAINT5D_RENCORE(
-                    /**/    fic.x  //:<--FragIntCoord:X
-                    ,       fic.y  //:<--FragIntCoord:Y
-                    ,     cuv_i_x  //:<--CanvasUserView
-                    ,     cuv_i_y  //:<--CanvasUserView
-                    ,     aus_dex  //:<--Auset_Index
-                    ,     u32_l_0  //:<--Layers
-                    ,     u32_l_1  //:<--Layers
-                    ,     u32_l_2  //:<--Layers
-                    ));;
 
+                if( u32_l_0 > U32_000 ){ /** NOOP **/ };
+                if( u32_l_1 > U32_000 ){ /** NOOP **/ };
+                if( u32_l_2 > U32_000 ){ /** NOOP **/ };
+
+        ////    u32_pix=(
+        ////        AAC2020_PAINT5D_RENCORE(
+        ////        /**/    fic.x  //:<--FragIntCoord:X
+        ////        ,       fic.y  //:<--FragIntCoord:Y
+        ////        ,     cuv_i_x  //:<--CanvasUserView
+        ////        ,     cuv_i_y  //:<--CanvasUserView
+        ////        ,     aus_dex  //:<--Auset_Index
+        ////        ,     u32_l_0  //:<--Layers
+        ////        ,     u32_l_1  //:<--Layers
+        ////        ,     u32_l_2  //:<--Layers
+        ////        ));;
+            
                 //:-------------:CORE_RENDERING_ALGORITHM://
  
 
@@ -2337,7 +2405,7 @@
                 //:OUT_OF_BOUNDS ==> YELLOW
                 uv4_pix.x =MAK_U32( 128 ); //:RED
                 uv4_pix.y =MAK_U32( 128 ); //:GREEN
-                uv4_pix.z =MAK_U32(   0 ); //:BLUE
+                uv4_pix.z =MAK_U32( 128 ); //:BLUE
                 uv4_pix.w =MAK_U32( 255 ); //:ALPHA
             };;
 
@@ -2456,12 +2524,22 @@
                                                    //[ x ]//
         #undef  MAK_FV4                            //[ 1 ]//
         #undef  MAK_IV2                            //[ 2 ]//
-        #undef  MAK_I32                            //[ 3 ]//
-        #undef  MAK_F32                            //[ 4 ]//
-        #undef  BIN_011                            //[ 5 ]//
-        #undef  CUVIPIX                            //[ 6 ]//
-        #undef  TYP_F_C                            //[ 7 ]//
-        #undef  INN_F_C                            //[ 8 ]//
+        #undef  MAK_U32                            //[ 3 ]//
+        #undef  MAK_I32                            //[ 4 ]//
+        #undef  MAK_F32                            //[ 5 ]//
+        #undef  BIN_011                            //[ 6 ]//
+        #undef  CUVIPIX                            //[ 7 ]//
+        #undef  TYP_F_C                            //[ 8 ]//
+        #undef  INN_F_C                            //[ 9 ]//
+                                                   //[---]//
+        #undef  ABS_F32                            //[10 ]//
+        #undef  MAX_I32                            //[11 ]//
+        #undef  MAX_F32                            //[12 ]//
+                                                   //[---]//
+        #undef  I32_U32                            //[13 ]//
+        #undef  U32_I32                            //[14 ]//
+        #undef  F32_I32                            //[15 ]//
+                                                   //[---]//
                                                    //[ x ]//
     //:------------------------------:seven_letter_macros://
     //:main_shim_macros:---------------------------------://

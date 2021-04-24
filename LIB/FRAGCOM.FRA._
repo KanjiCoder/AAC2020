@@ -209,6 +209,71 @@
         //:----------------------------:INTEGER_RECTANGLE://
 
     //:================:COMMON_DATA_TYPES_USED_IN_SHADERS://
+    //:TRIG_FUNCTIONS_COS_SIN_ETC:=======================://
+
+        F32
+        AAC2020_FRAGCOM_SIN_F32(
+        F32                 f32
+        ){
+            return( sin( f32 ) );
+        }
+
+        F32
+        AAC2020_FRAGCOM_COS_F32(
+        F32                 f32
+        ){
+            return( cos( f32 ) );
+        }
+
+    //:=======================:TRIG_FUNCTIONS_COS_SIN_ETC://
+    //:MAX_MIN_ABS:======================================://
+    //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        F32
+        AAC2020_FRAGCOM_ABS_F32(
+            F32 f32
+        )
+        {
+            #if defined( AAC2020_MACRO_THIS_IS_OPEN_GL )
+
+                return( abs( f32 ) );
+
+            #else
+                //:C99 Code Here
+                F32 f32_out;
+                if( f32 >= 0 ){
+                    f32_out =( 0 + f32 );
+                }else{
+                    f32_out =( 0 - f32 );
+                };;
+                return( f32_out );
+            #endif
+        }
+    //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        F32
+        AAC2020_FRAGCOM_MAX_F32(
+            F32 aye
+        ,   F32 bee
+        )
+        {
+            F32 f32=( 0 );
+            if( aye > bee ){ f32=( aye ); };
+            if( bee > aye ){ f32=( bee ); };
+            return( f32 );
+        }
+    //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        I32
+        AAC2020_FRAGCOM_MAX_I32(
+            I32 aye
+        ,   I32 bee
+        )
+        {
+            I32 i32=( 0 );
+            if( aye > bee ){ i32=( aye ); };
+            if( bee > aye ){ i32=( bee ); };
+            return( i32 );
+        }
+    //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+    //:======================================:MAX_MIN_ABS://
     //:Floor_Round_Ceil:---------------------------------://
         I32                                           //:://
         AAC2020_FRAGCOM_FLO_F32(                      //:://
@@ -503,6 +568,18 @@
             #endif
         }
         //:- - - - - - -:@VID_IID[ 0183 ]TIME[ 02:48:00 ]://
+        //:@VID_IID[ 0271 ]TIME[ 07:07:42 ]:- - - - - - -://
+        F32
+        AAC2020_FRAGCOM_GET_iTime( void )
+        {
+            #if defined( AAC2020_MACRO_THIS_IS_OPEN_GL )
+
+                return( iTime );
+            #else
+                return( AAC2020_POLYOGL_GET_iTime() );
+            #endif
+        }
+        //:- - - - - - -:@VID_IID[ 0271 ]TIME[ 07:07:42 ]://
         //:- - - - - - - - - - - -- - - - - - - - - - - -:// 
         IV2
         FRAGCOM_GET_mou_glo( void )
