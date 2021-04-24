@@ -1589,7 +1589,11 @@
                 ///         n_0 ;//:@Numer_Min ( n_0 / u_d )
                 ///         n_1 ;//:@Numer_Max ( n_1 / u_d )
                 F32         u_d ;//:UN_Common_Denominator
-                F32         c_d ;//:Common____Denominator
+                ///         c_d ;//:Common____Denominator
+                ///         c_n ;//:Common____Numerator  -//
+                F32         a_0 ;//:Anchor_percent_0(LEF)-//
+                F32         a_1 ;//:Anchor_percent_1(RIG)-//
+                F32         icp ;//:Internal_Cell_Percent-//
                 F32         sap ;//:cluster_SpAn_Percentage
                 
                 //:-------------------------:declare_vars://
@@ -1633,15 +1637,31 @@
                                                 *f32_clu )
                 );;
 
-                //:SEE_HASHTAG_DOCS[ #_DIA_C_D_AND_SAP_# ]
+        //[     //:SEE[DOC_H[[ #_DIA_C_D_AND_SAP_# ]]]//
+        //[     u_d =MAK_F32( clu_san );             ]//
+        //[ //- c_d =( u_d *( PIC_SAN - 1.0) ); -//  ]//
+        //[     c_d =((u_d *  PIC_SAN)- 1.0);        ]//
+        //[     c_n =((tar_coc*PIC_SAN)+pic);        ]//
+        //[ //- sap =( pic / c_d );            -//   ]//
+        //[     sap =( c_n / c_d );                  ]//
+
+                //:#_HOPEFULLY_LAST_DIAGRAM_2021_04_23_# ://
                 u_d =MAK_F32( clu_san );
-                c_d =( u_d *( PIC_SAN - 1 ) );
-                sap =( pic / c_d );
+                a_0 =( (tar_coc + 0.0) / u_d ); //:ANCHOR_0
+                a_1 =( (tar_coc + 1.0) / u_d ); //:ANCHOR_1
+                icp =( pic / (PIC_SAN - 1.0) ); //:I_P_C
+                sap =( a_0 + (icp*(a_1-a_0)) ); //:percent
+                                                          
                 tilop_1 =( ( sap * 2.0 ) - 1.0 );
+
+                //:if_c99:should_crash:##################://
+                #if !defined(AAC2020_MACRO_THIS_IS_OPEN_GL)
+                    I32 should_crash=( 0 );
+                #endif //:###########:if_c99:should_crash://
 
                 //:if_c99:#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#://
                 #if !defined(AAC2020_MACRO_THIS_IS_OPEN_GL)
-
+                
                     if( pic < 0 ){
                         ERR(E_S([PIC_TOO_LOW_2021]));
                     }else
@@ -1657,8 +1677,8 @@
 
                     //:SEE_HASHTAG_DOCS[#_CALC_N0_AND_N1_#]
                     //:@VID_IID[0269]T[04:12:32]EXPLAINED
-                    F32 n_0 =( tar_coc + 0 ); //:@numer_min
-                    F32 n_1 =( tar_coc + 1 ); //:@numer_max
+                    F32 n_0 =( tar_coc + 0.0 ); //:@numer_min
+                    F32 n_1 =( tar_coc + 1.0 ); //:@numer_max
                 
                     F32 sap_min=( n_0 / u_d );
                     F32 sap_max=( n_1 / u_d );
@@ -1670,22 +1690,12 @@
                         ERR(E_S([OUT_OF_ORDER_BOUNDS]));
                     };;
                     if( sap < sap_min ){  
-
-                        //:SEE[DOC_H[#_DIA_KEY_001_DEBUG_#]]
-                        LOI(E_S([INN:fraic_1]:%d),fraic_1);
-                        LOI(E_S([INN:vp0_b_0]:%d),vp0_b_0);
-                        LOI(E_S([INN:vp0_b_1]:%d),vp0_b_1);
-                        LOI(E_S([INN:vp1_b_0]:%d),vp1_b_0);
-                        LOI(E_S([INN:vp1_b_1]:%d),vp1_b_1);
-                        LOI(E_S([INN:clu_san]:%d),clu_san); 
-                
-                        LOF(E_S([____SAP]:%f),sap     );
-                        LOF(E_S([sap_min]:%f),sap_min );
-                        LOF(E_S([sap_max]:%f),sap_max );
-                        ERR(E_S([OOB_NEG_SAP_2021])   );
+                        should_crash=( 1 );
+                        LOG(E_S([OOB_NEG_SAP_2021]),0);
                     };;
                     if( sap > sap_max ){
-                        ERR(E_S([OOB_POS_SAP_2021]));
+                        should_crash=( 1 );
+                        LOG(E_S([OOB_POS_SAP_2021]),0);
                     };;
 
                 #endif //:-------------------------------://
@@ -1731,11 +1741,36 @@
 
                 if( itest_delta > 0.0001 ){ //:----------://
 
-                    ERR(E_S([FAILED_INTERNAL_TEST_2021]));
+                    should_crash=( 1 );
+                    LOG(E_S([FAILED_INTERNAL_TEST_2021]),0);
 
                 };; //:----------------------------------://
-                
 
+                if( should_crash >= 1 ){
+                    //:SEE[DOC_H[#_DIA_KEY_001_DEBUG_#]]
+                    LOI(E_S([INN:fraic_1]:%d),fraic_1);
+                    LOI(E_S([INN:vp0_b_0]:%d),vp0_b_0);
+                    LOI(E_S([INN:vp0_b_1]:%d),vp0_b_1);
+                    LOI(E_S([INN:vp1_b_0]:%d),vp1_b_0);
+                    LOI(E_S([INN:vp1_b_1]:%d),vp1_b_1);
+                    LOI(E_S([INN:clu_san]:%d),clu_san); 
+                
+                    LOF(E_S([VAR:::::pic]:%f),    pic);
+                    LOF(E_S([VAR:tar_coc]:%f),tar_coc);
+                    LOF(E_S([VAR:PIC_SAN]:%f),PIC_SAN);
+                //- LOF(E_S([VAR:::::c_n]:%f),    c_n); -//
+                //- LOF(E_S([VAR:::::c_d]:%f),    c_d); -//
+                    LOF(E_S([VAR:::::a_0]:%f),    a_0);
+                    LOF(E_S([VAR:::::a_1]:%f),    a_1);
+                    LOF(E_S([VAR:::::icp]:%f),    icp);
+                
+                    LOF(E_S([____SAP]:%f),sap     );
+                    LOF(E_S([sap_min]:%f),sap_min );
+                    LOF(E_S([sap_max]:%f),sap_max );
+
+                    ERR(E_S(SHOULD_CRASH_IS_TRUE_2021));    
+                };;
+                
             #undef  ACT_TILOP_1
             };;};;};;};;};;
             #endif //:-----------------------------------://

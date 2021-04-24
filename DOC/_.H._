@@ -9,6 +9,47 @@
     //[   VIDEO COMMENT TIMESTAMP EXAMPLE   ]//
 *** ******************************************************** ***
 
+#_ONE_LAST_DIAGRAM_FOR_TESTS_2021_04_23_########################
+@VID_IID[ 0270 ]TIME[ 03:27:27 ]WRITING_DIAGRAM_IN_SECTION
+@VID_IID[ 0270 ]TIME[ 04:05:50 ]UNIT_TESTS_LOOK_CORRECT
+
+    |<------ clu_san ----->|  |<------ clu_san ----->|
+    |                 |<---vp1--->|
+                      [06]=====[08]
+    [0][1][2][3][4][5][06][7]  [00][1][2][3][4][5][6][7]
+                      |           |
+                      |           |
+                      [23]=====[43]
+                      |<---vp0--->|
+                      |           |
+                    (6/8)       (1/8)
+
+
+                  (6/8)   (7/8)     (8/8)
+                    |       |         |
+                    [  06  ]===========[  08  ]  
+                    |<--------- vp1 --------->|
+                    [  06  ] [  007  ] [  00  ] 
+                                      |        |
+                                    (0/8)    (1/8)
+
+    I am sick of this and we already made one really detailed
+    test case that __IS__ passing. So instead of working out
+    all of the math... Let's just create test cases
+    with fraic_1 ==[ 23 -to- 43 ]and visually confirm
+    that the test output values are sensible... And then
+    just trust they are correct.
+
+    Hackish. But we still get the benifit of protecting
+    our code from accidential changes.
+
+    if( 23 == fraic_1)===>( ?? == sap )===>( ?? == tilop_1 )
+    if( 27 == fraic_1)===>( ?? == sap )===>( ?? == tilop_1 )
+    if( 33 == fraic_1)===>( ?? == sap )===>( ?? == tilop_1 )
+    if( 39 == fraic_1)===>( ?? == sap )===>( ?? == tilop_1 )
+    if( 43 == fraic_1)===>( ?? == sap )===>( ?? == tilop_1 )
+        
+########################_ONE_LAST_DIAGRAM_FOR_TESTS_2021_04_23_#
 #_UNIT_TEST_DEBUGGING_2021_04_23_###############################
     +--------------------+--------------+
     |  [INN:fraic_1]:7   | (AKA[ fic ]) |
@@ -29,16 +70,260 @@
         |       |       |       | |       |       |       |
         +---|---+---|---+---|---+ +---|---+---|---+---|---+
                         ^   ^   ^ ^   ^   ^
-                        |   |   | |   |   |
-#_ANS_KEY_001_DEBUG_#   .33 .66   1.0 .66 .33
-                        |   |   | |   |   |
+                        |   |   | |   |   |  ONE: -1  or  +1
+#_ANS_KEY_001_DEBUG_#  +.33+.66 ONE .66 .33  ONE: +1 LEF_SID
+                        |   |   | |   |   |  ONE: -1 RIG_SID
                         +---+---+ +---+---+ 
                         | 7 | 8 | | 9 |10 | 
-                        |fic|   | |   |   |
+     [ fraic_1 ] -----> |fic|   | |   |   |
                         +---+---+ +---+---+ 
                         |<----- vp0 ----->| 
-                                
+                        +---+---+ +---+---+ 
+                        | 0 | 1 | | 0 | 1 | 
+                        |pic|   | |   |   |
+                        +---+---+ +---+---+ 
+                        |PIC_SAN| |PIC_SAN| PIC_SAN==( 2 )
+                        +---|---+ +---|---+
+                        |  cug  | |  cug  | <--@_NOT_MODULATED_@
+    cug: [0][1][2][3][4]|   5   | |   6   | <--@_NOT_MODULATED_@
+          |  |  |  |  | |-------| |-------|     _             _@
+          |  |  |  |  | |  coc  | |  coc  | <--@_ISS_MODULATED_@
+    coc: [0][1][2][0][1]|   2   | |   0   | <--@_ISS_MODULATED_@
+                        |-------| +---|---+
+                        |tar_coc|
+                        |   2   | <--RANGE[ 0 -to- (clu_san-1) ]
+                        +---|---+
+                        +---+---+
+      fraic_1==( 7 )--> | 7 |   | <--fic==( 7 ); @CUR_EVA_VAL@
+      @CUR_EVA_VAL@     |fic|   |
+                        |-------|
+                        |2/3|   | <--[@EQUAL_BUT_NOT_COMPUTED@]
+                        |sap|   |
+                        +---+---+
+        |c_n|c_n|c_n|c_n|C_N|c_n|<-- c_n:Common_Numerator
+        | 0 | 1 | 2 | 3 | 4 | 5 |<-- c_n==(tar_coc*PIC_SAN)+pic
+          V   V   V   V   V   V                
+        +---|---+---|---+---|---+    c_n==( 4 ); @CUR_EXA_VAL@         
+        |  coc  |  coc  |  coc  |        
+        |   0   |   1   |   2   |    u_d==( clu_san );
+        | _____ | _____ |tar_coc|    c_d==((PIC_SAN*clu_san)-1)
+        +---|---+---|---+---|---+    c_d==((PIC_SAN*  u_d  )-1)
+        ^       ^       ^       ^
+        |       |       |       |
+      (0.0)   (0.3333)(0.6666)(1.0)
+      (0/3)---(1/3)---(2/3)---(3/3) <--FORMULA[ (coc/clu_san) ]
+                       ^ ^
+                       | |
+                       | +---[ clu_san ]
+                       +-----[ tar_coc ]
+
+    //:GOD_DAMNIT_THIS_IS_WRONG:-----------------------------://
+    @VID_IID[ 0270 ]TIME[ 01:42:23 ]WHY_IS_WRONG
+
+        CASE_001:
+            c_n==((tar_coc*PIC_SAN)+pic)
+            c_d==((PIC_SAN*clu_san)-1)  
+            FORMULA[ sap=( c_n / c_d )]
+            sap=( (4/5)==(0.8)==(sap) )
+
+                            +---+
+                            |fic|
+                            |(7)|
+                            |   |
+                            |sap|
+                            |0.8| <-- CASE_001
+                            |   |
+        [  0.0         0.5  |   |  1.0 ]<--RANGE_OF[ sap ]
+            |           |   |   |   |
+            V           V   |   |   V
+            |0/5|1/5|2/5|3/5|4/5|5/5| <--CASE_001
+            |   |   |   |   |   |   |  
+            +---|---+---|---+---|---+
+            |  coc  |  coc  |  coc  |
+            |   0   |   1   |   2   |
+            | _____ | _____ |tar_coc|
+            +---|---+---|---+---|---+   
+            ^   ^   ^   ^   ^   ^   ^
+            |   |   |   |   |   |   |
+        [ -1.0  |   |  0.0  |   | +1.0 ]<--RANGE_OF[ tilop_1 ] 
+                |   |       |   |
+        (-0.6666)(-0.3333)  |   +--( 0.6666 )(ADD:2/3)
+        (ADD:1/3)(ADD:2/3)  +------( 0.3333 )(ADD:1/3)
+
+    //:-----------------------------:GOD_DAMNIT_THIS_IS_WRONG://
+    //:THIS_IS_CORRECT_SNAPS_TO_SIDES:-----------------------://
+
+        //:Cell_Percentage_Math:-----------------------------://
+            
+            The pixel sub-divisions of a given
+            [ tar_coc / coc / cug ]cell need to be such
+            that the extreme left and right pixels on the
+            edge snap to the percentages associated with
+            infinitely thin lines partitions of 
+            the percentage space.
+            @VID_IID[ 0270 ]TIME[ 02:27:13 ]
+
+            clu_san== 3 in this example.
+            |0/12 |1/12 |2/12 |3/12 | 4/12| <--sap=(pic/c_d)
+            |
+            | sap |                 | sap |
+            | 0/3 |                 | 1/3 |
+            +=====+=====+=====+=====+=====+
+            |  0  |  1  |  2  |  3  |  4  |
+            | pic | pic | pic | pic | pic |
+            |  0  |  1  |  2  |  3  |  4  |
+            +=====+=====+=====+=====+=====+
+            |<--------- PIC_SAN --------->|  
+            |<------------ 5 ------------>|  
+            c_d=(  u_d   * (PIC_SAN-1.0) );
+            c_d=(clu_san * (PIC_SAN-1.0) );                               
+            c_d=( 12 ); <-- 12 in this diagram
+
+        //:-----------------------------:Cell_Percentage_Math://
+
+        @VID_IID[ 0270 ]TIME[ 01:55:00 ]
+        WHY_THIS_IS_THE_CORRECT_MODEL_OF_THE_PROBLEM
+        THE_TILES_MUST_FIT_TOGETHER_PIXEL_PERFECTLY
+        WHICH_DOES_MEAN_DUPLICATED_PERCENTAGE_COORDINATES
+        IN_TILES_LARGER_THAN_ONE_PEBBLE
+
+        |<-- 3 pixel -->||<-- 3 pixel -->|
+        +----==---==----++----==---==----+
+        |[-1 ][0.0][+1 ]||[-1 ][0.0][+1 ]|
+        |[   ][   ][   ]||[   ][   ][   ]| <-- 2 1X tiles
+        |[   ][   ][   ]||[   ][   ][   ]|   (1 pebble each)
+        |[   ][   ][   ]||[   ][   ][   ]|
+        +----==---==----++----==---==----+
+        +===============++===============+
+        |[-1 ][   ][0.0]  [0.0][   ][+1 ]| <-- 1 2X tile
+        |[   ][   ][   ]  [   ][   ][   ]|    (2 pebbles )
+        |[   ][   ][   ]  [   ][   ][   ]|
+        |[   ][   ][   ]  [   ][   ][   ]|
+        +===============++===============+
+        |<---------- 6 pixel ----------->|
+
+                            +---+
+                            |fic|
+                            |(7)|
+                            |   |
+                            |sap|
+                            |2/3| <-- 0.666 == 2/3
+                            |   |     sap snaps to LEFT_SIDE
+                            |   |     of[ tar_coc ]cell.
+                            |   |     @IID[ 0270 ]T[02:23:00]
+                            |   |
+          [0/3]   [1/3]   [2/3] | [3/3]
+            V       V       V   |   V
+        [  0.0      V  0.5  |   |  1.0 ]<--RANGE_OF[ sap ]
+            |       V   |   |   |   |
+            V       V   V   |   |   V
+            |?/?|?/?|?/?|?/?|?/?|?/?| <--HOW_DO_WE_DO_THIS?
+            |   |   |   |   |   |   |  
+            +---|---+---|---+---|---+
+            |  coc  |  coc  |  coc  |
+            |   0   |   1   |   2   |
+            | _____ | _____ |tar_coc|
+            +---|---+---|---+---|---+   
+            ^   ^   ^   ^   ^   ^   ^
+            |   |   |   |   |   |   |
+        [ -1.0  |   |  0.0  |   | +1.0 ]<--RANGE_OF[ tilop_1 ] 
+                |   |       |   |
+        (-0.6666)(-0.3333)  |   +--( 0.6666 )(ADD:2/3)
+        (ADD:1/3)(ADD:2/3)  +------( 0.3333 )(ADD:1/3)
+
+    //:-----------------------:THIS_IS_CORRECT_SNAPS_TO_SIDES://
+    //:PERCENT_OF_A_PERCENT:---------------------------------://
+    #_HOPEFULLY_LAST_DIAGRAM_2021_04_23_#
+    @VID_IID[ 0270 ]TIME[ 03:17:17 ]
+
+                          (a_0)   (a_1)
+                          [2/3] | [3/3]
+                            V   |   V
+                            +---|---+
+                            |  coc  |
+                            |   2   |
+                            |tar_coc|
+                            +---|---+
+                            |0/1|1/1| <-- icp=pic/(PIC_SAN-1.0)
+
+            icp=( pic / (PIC_SAN-1.0) )
+            icp:Internal_Cell_Percentage
+
+            a_0: Anchor Percentage 0 ( left  edge anchor )
+            a_1: Anchor Percentage 1 ( right edge anchor )
+
+            a_0 =( n_0 / clu_san );
+            a_1 =( n_1 / clu_san );
+
+            a_0 =( (tar_coc + 0.0) / u_d );
+            a_1 =( (tar_coc + 1.0) / u_d );
+
+            sap=(  a_0 + (icp*(a_1-a_0)) );
+
+    //:---------------------------------:PERCENT_OF_A_PERCENT://
+
+
+               
 ###############################_UNIT_TEST_DEBUGGING_2021_04_23_#
+@YESFORM@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@YES_FORMULA@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @YES_FORMULA@:
+        The correct formula in the code.
+        @VID_IID[ 0270 ]TIME[ 01:02:00 ]
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@YESFORM@ 
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@YES_FORMULA@
+@BADFORM@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@BAD_FORMULA@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @BAD_FORMULA:
+        The wrong formula in code, commented out.
+         @VID_IID[ 0270 ]TIME[ 01:02:00 ]
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@BADFORM@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@BAD_FORMULA@
+@CUR_EXA_VAL@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @_CUR_EXA_VAL_@:
+    @_CUREXAVAL_@:
+    @CUREVAVAL@:
+
+        Current Example Value.
+        The value in the comments is only true for the
+        current example being diagrammed in those comments.
+        @VID_IID[ 0270 ]TIME[ 00:46:50 ]
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@CUR_EXA_VAL@
+@EQUAL_BUT_NOT_COMPUTED@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    The value is equal to this. But it is not computed like
+    this. For example:
+        a == 2/3
+        But maybe it is computed as: ( 4 / 6 )
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@EQUAL_BUT_NOT_COMPUTED@
+@_NOT_MODULATED_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@VID_IID[ 0270 ]TIME[ 00:14:42 ]
+
+    @NOT_MODULATED@:
+        The number I am pointing to has not been modified
+        by modulo operator in order to repeat on a 
+        given [ interval / period ].
+    
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@_NOT_MODULATED_@
+@_IIS_MODULATED_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@VID_IID[ 0270 ]TIME[ 00:14:42 ]
+
+    @ISS_MODULATED@:
+        Is modulated. The value somehow repeats or wraps.
+        It is some type of input set of numbers that has
+        been transformed by a modulo operator. Example:
+
+        @NOT_MODULATED: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14
+        @ISS_MODULATED: 0 1 2 0 1 2 0 1 2 0  1  2  0  1  2
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@_ISS_MODULATED_@
 @_SC_MOD_WITHOUT_MOD_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @_C99_MODNOMOD_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
