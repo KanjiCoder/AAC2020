@@ -216,6 +216,20 @@
                 Avoid splitting files into multiple smaller
                 files only in the name of manigability.
 
+                UPDATE: I am a hypocrite and sometimes do this
+                        but try to avoid it. It always ends up
+                        making the code base HARDER to navigate.
+                    
+                        But sometimes splitting things into
+                        include files helps you focus when
+                        a certain feature gets really 
+                        difficult to figure out...
+        
+                        Maybe re-integrate the #include file
+                        into the main file once you have
+                        cracked the problem? Not sure.
+                        -John Mark (DATE:2021_04_24)
+
                 Every sub system should be composed of
                 exactly 2 files. A data file and a function
                 file. 
@@ -262,7 +276,7 @@
 
                 No matter how many tests we right, the
                 halting problem proves we can never
-                gaurantee the correctness of a programming.
+                gaurantee the correctness of a program.
     
                 So by lining stuff up meticulously, we
                 have one more line of defense in the

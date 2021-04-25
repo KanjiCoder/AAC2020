@@ -11,73 +11,119 @@
 #define I08  int8_t /** GCC: <stdint.h> **/
 
         struct AAC2020_SILENCE_LIBRARY_STRUCT{
-        
-        I08   SILENCE ; //:SPECIAL: Silences ALL if turned on.
-        U08   AACMAIN ; //:SPECIAL: #WHAT_IS_AAC_MAIN#
-            
-        U08   CALFROM ; //:[ Y ]://
-        U08   TODOMAN ; //:[ Y ]://
-        U08   GAMTICK ; //:[ * ]://
-        U08   FILEBOI ; //:[ Y ]://  Y: Has Silence Code Been
-        U08   PHEXDUM ; //:[ Y ]://
-        U08   HARDASS ; //:[ * ]://
-        U08   NATIKEY ; //:[ * ]://     added to this subsystem?
-        U08   NATIMOU ; //:[ Y ]://
-        U08   IKEYBOX ; //:[ * ]://
-        U08   IMOUBOX ; //:[ * ]://     Y == YES
-        U08   KEYBIND ; //:[ * ]://     _ == NO
-        U08   IKEYLIS ; //:[ _ ]://      
-        U08   IKEYCMD ; //:[ _ ]://      
-        U08   CEDITOR ; //:[ * ]://     * == Doesn't Talk
-        U08   GINAMOU ; //:[ Y ]://          No Code We Can Add
-        U08   GINAWIN ; //:[ Y ]://            
-        U08   NATIDUI ; //:[ Y ]://     ? == I don't know.
-        U08   GLEBIND ; //:[ Y ]://          Read the code.
-        U08   GLCONST ; //:[ * ]://
-        U08   CPUNIFO ; //:[ * ]://
-        U08   GRAQUAD ; //:[ Y ]://
-        U08   MOUTEMP ; //:[ * ]://
-        U08   FRAGBED ; //:[ Y ]://  
-        U08   PIXNAME ; //:[ * ]://
-        U08   PIXSAVE ; //:[ Y ]://
-        U08   PIXBACK ; //:[ Y ]://
-        U08   GPUDATA ; //:[ Y ]://
-        U08   PIXPUSH ; //:[ Y ]://
-        U08   PIXLOAD ; //:[ ? ]:// <<<<<<<<< LOOK AT THIS CODE!
-        U08   DUMPASS ; //:[ Y ]://
-        U08   GENTCOM ; //:[ Y ]://
-        U08   GENTDOW ; //:[ Y ]://
-        U08   GENTUPP ; //:[ Y ]://
-        U08   POLYOGL ; //:[ * ]://
-        U08   FRAGCOM ; //:[ Y ]://
-        U08   GPUWIRE ; //:[ Y ]://
-        U08   GPUVIEW ; //:[ Y ]://
-        U08   TAUDIRT ; //:[ Y ]://   
-        U08   TAUDEPO ; //:[ Y ]://
-        U08   TAUNAME ; //:[ Y ]:// TAUDEPO's TAU_CEL Names
-        U08   TAUTYPE ; //:[ Y ]://  
-        U08   TAUSYNC ; //:[ Y ]://   
-        U08   TAUDUMP ; //:[ Y ]://   
-        U08   TAUFRAG ; //:[ Y ]://   
-        U08   UIRECTS ; //:[ Y ]://   
-        U08   ZOOMCOM ; //:[ Y ]://   
-        U08   DRAGCOM ; //:[ Y ]://   
-        U08   CLICKOM ; //:[ Y ]://   
-        U08   EDITCAM ; //:[ Y ]://   
-        U08   GAMECAM ; //:[ Y ]://   
-        U08   UILISTS ; //:[ Y ]:// _UI_ For _ALL_ Editor(s)
-        U08   UISHARE ; //:[ Y ]://
-        U08   UIFRAGS ; //:[ Y ]://  
- 
-        U08   UICLICK         ; //:User Interface Click-&-Input
-        U08   UICLICK_PAINT5D ; //:<-- PAINT5D UI BUTTONS
+        //+KEY:==============================================+//
+        //[ Y: Silence Code Has Been Added To SubSystem      ]//
+        //[ _: Silence Code NOT_YET_ADDED  To SubSystem      ]//
+        //[ *: Doesn't talk, no code to add.                 ]//
+        //[ ?: Don't know if code added or not [Y/_]         ]//
+        //+==============================================:KEY+//
+        //:level_0_systems:----------------------------------://
 
-        U08   PAINT5D ; //:[ Y ]://
-        U08   P5D1OGL ; //:[ Y ]://
+            I08   SILENCE ; //:SPECIAL: Silences ALL if on.
+            U08   AACMAIN ; //:SPECIAL: #WHAT_IS_AAC_MAIN#
+
+        //:----------------------------------:level_0_systems://
+        //:level_1_systems:----------------------------------://
+
+            U08   CALFROM ; //:[ Y ]://
+            U08   KILTEST ; //:[ _ ]://
+            U08   REENUTR ; //:[ _ ]://
+            U08   TODOMAN ; //:[ Y ]://
+
+        //:----------------------------------:level_1_systems://
+        //:level_2_systems:----------------------------------://
+
+            U08   GAMTICK ; //:[ * ]://
+            U08   FILEBOI ; //:[ Y ]://   
+    
+        //:----------------------------------:level_2_systems://
+        //:level_3_systems:----------------------------------://
+        //:build_system_related:*****************************://
+
+            U08   RENCORE ; //:[ Y ]:  @_EXE_@     ----------://
+            U08   PHEXDUM ; //:[ Y ]:  @_EXE_@     ----------://
+            U08   EXTCODE ; //:[ Y ]:  @_STEWARD_@ ----------://
+
+        //:*****************************:build_system_related://
+        //:----------------------------------:level_3_systems://
+        //:UNSORTED_SUB_SYSTEMS:=============================://
+
+            U08   HARDASS ; //:[ * ]://     
+            U08   NATIKEY ; //:[ * ]://     
+            U08   NATIMOU ; //:[ Y ]://     
+            U08   IKEYBOX ; //:[ * ]://     
+            U08   IMOUBOX ; //:[ * ]://     
+            U08   KEYBIND ; //:[ * ]://     
+            U08   IKEYLIS ; //:[ _ ]://     
+            U08   IKEYCMD ; //:[ _ ]://     
+            U08   CEDITOR ; //:[ * ]://     
+            U08   GINAMOU ; //:[ Y ]://     
+            U08   GINAWIN ; //:[ Y ]://     
+            U08   NATIDUI ; //:[ Y ]://     
+            U08   GLEBIND ; //:[ Y ]://     
+            U08   GLCONST ; //:[ * ]://
+            U08   CPUNIFO ; //:[ * ]://
+            U08   GRAQUAD ; //:[ Y ]://
+            U08   MOUTEMP ; //:[ * ]://
+            U08   FRAGBED ; //:[ Y ]://  
+            U08   PIXNAME ; //:[ * ]://
+            U08   PIXSAVE ; //:[ Y ]://
+            U08   PIXBACK ; //:[ Y ]://
+            U08   GPUDATA ; //:[ Y ]://
+            U08   PIXPUSH ; //:[ Y ]://
+            U08   PIXLOAD ; //:[ ? ]://  
+            U08   DUMPASS ; //:[ Y ]://
+            U08   GENTCOM ; //:[ Y ]://
+            U08   GENTDOW ; //:[ Y ]://
+            U08   GENTUPP ; //:[ Y ]://
+            U08   POLYOGL ; //:[ * ]://
+            U08   FRAGCOM ; //:[ Y ]://
+            U08   GPUWIRE ; //:[ Y ]://
+            U08   GPUVIEW ; //:[ Y ]://
+            U08   TAUDIRT ; //:[ Y ]://   
+            U08   TAUDEPO ; //:[ Y ]://
+            U08   TAUNAME ; //:[ Y ]:// TAUDEPO's TAU_CEL Names
+            U08   TAUTYPE ; //:[ Y ]://  
+            U08   TAUSYNC ; //:[ Y ]://   
+            U08   TAUDUMP ; //:[ Y ]://   
+            U08   TAUFRAG ; //:[ Y ]://   
+            U08   UIRECTS ; //:[ Y ]://   
+            U08   ZOOMCOM ; //:[ Y ]://   
+            U08   DRAGCOM ; //:[ Y ]://   
+            U08   CLICKOM ; //:[ Y ]://   
+            U08   EDITCAM ; //:[ Y ]://   
+            U08   GAMECAM ; //:[ Y ]://   
+            U08   UILISTS ; //:[ Y ]:// _UI_ For _ALL_ Editor(s)
+            U08   UISHARE ; //:[ Y ]://
+            U08   UIFRAGS ; //:[ Y ]://  
+
+        //:=============================:UNSORTED_SUB_SYSTEMS://
+        //:UICLICK:==========================================://
+
+            //:User Interface Click-&-Input
+            //:<-- PAINT5D UI BUTTONS
+            U08   UICLICK         ; 
+            U08   UICLICK_PAINT5D ; 
+
+        //:==========================================:UICLICK://
+        //:EDITOR_PAINT5D:===================================://
+        /** ************************************************ ***
+        @VID_IID[ 0272 ]TIME[ 02:49:32 ]
+        In retrospect, splitting namespaces into a
+        CPU_CODE and GPU_CODE namespace like this was a 
+        @HORRIBLE_IDEA@... We are stuck with it now. Just
+        try not to do this in the future.
+        *** ************************************************ **/
+
+            U08   PAINT5D ; //:[ Y ]:// <-- CPU_SIDE_CODE
+            U08   P5D1OGL ; //:[ Y ]:// <-- GPU_SIDE_CODE
+
+        //:===================================:EDITOR_PAINT5D://
         
         }AAC2020_SILENCE={
         #define off ( 1 ) //:Dont show me messages
         #define O_N ( 0 ) //:Yes, show me messages.
+        #define NO_SILENCE_CODE_FOR_THIS_SYSTEM ( O_N )
 
         //[ ------------------------------------------------ ]//
         //[ poiriergaming: You could make that "state"       ]//
@@ -92,10 +138,17 @@
         ,   .AACMAIN = off //: #_WHAT_IS_AACMAIN_#           ://
         
         ,   .CALFROM = O_N //:Called_From_Where_Enums?
+        ,   .KILTEST = NO_SILENCE_CODE_FOR_THIS_SYSTEM
+        ,   .REENUTR = NO_SILENCE_CODE_FOR_THIS_SYSTEM
         ,   .TODOMAN = off //:Todo_Manager:VITAL_TODO,MAYBE_TODO
+
         ,   .GAMTICK = O_N 
         ,   .FILEBOI = off
+
+        ,   .RENCORE = O_N
         ,   .PHEXDUM = O_N
+        ,   .EXTCODE = O_N
+
         ,   .HARDASS = O_N
         ,   .NATIKEY = off
         ,   .IKEYBOX = off

@@ -1,0 +1,197 @@
+//:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=====================://
+    void 
+    aac2020_rencore_Halt( const char* msg_err )
+    {
+        printf("[FATAL_ERROR:aac2020_rencore]:%s\n", msg_err );
+        fflush(stdout);
+        exit( 189 );
+    }
+//:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+//:LOG_AFTER_HALT:===========================================://
+#define I32 int32_t /** GCC: <stdint.h> **/           //: 01 ://
+#define CHR const char                                //: 02 ://
+#define ERR aac2020_rencore_Halt                      //: 03 ://
+
+    void
+    aac2020_rencore_Info_any(
+        CHR*  str_fmt
+    ,   void* dat_any   
+    )
+    { 
+        I32 logging_is_on=( 0 - 1234 /**INVALID_VALUE**/ );
+        
+        #ifdef AAC2020_INCLUDE_SILENCE
+        /** Compiled as part of main AAC2020 engine. **/
+            
+            if( AAC2020_SILENCE.RENCORE <= 0 ){
+                logging_is_on=( 1 );
+            }else
+            if( AAC2020_SILENCE.RENCORE >= 1 ){
+                logging_is_on=( 0 );
+            }else{
+                ERR("[WTF_ARE_YOU_DOING?]");
+            };;
+
+            /** @VID_IID[ 0128 ]TIME[ 03:33:33 ]ORIGINAL *** **/
+            /** @VID_IID[ 0156 ]TIME[ 02:36:13 ]UPDATED **** **/
+            /** Override turns of logging for ALL SYSTEMS.   **/
+            if( AAC2020_SILENCE.SILENCE >=( 0+1 ) ){
+                logging_is_on=( 0 ); //:EVERYONE_SHUT_UP
+            }else
+            if( AAC2020_SILENCE.SILENCE <=( 0-1 ) ){
+                logging_is_on=( 1 ); //:EVERYBODY_SCREAM
+            };;
+
+        #else
+        /** Compiled as stand-alone command line utility. **/
+
+            logging_is_on =( 
+                AAC2020_RENCORE_STAND_ALONE_ONLY_LOGGING_ON );;
+
+        #endif
+
+        //: 
+        if( logging_is_on >= 1 ){
+            /** Same Line As Next Printf **/
+            printf("[rencore_log]....(   " ); fflush( stdout );
+            printf( str_fmt , dat_any      ); fflush( stdout );
+            printf(               "   )\n" ); fflush( stdout );
+        }else
+        if( 0 == logging_is_on ){
+            /** do nothing **/
+        }else{
+            ERR("[YOUR_LOGGING_CONFIG_LOGIC_SUCKS_2021]");
+        };;
+        
+    }
+
+#undef  I32  //:----------------------------------------: 01 ://
+#undef  CHR  //:----------------------------------------: 02 ://
+#undef  ERR  //:----------------------------------------: 03 ://
+//:===========================================:LOG_AFTER_HALT://
+//:INFO_PRINT_STRING:========================================://
+
+    /** DELETE ALL OF THIS IF YOU NEVER END UP USING IT **/
+    /** when the RENCORE system is finished. ********** **/
+
+//  #define CHR const char
+//  #define ERR aac2020_rencore_Halt
+//  
+//      void
+//      aac2020_rencore_Info_str( 
+//          CHR* msg_fmt /** Format String **/
+//      ,   CHR* msg_inf /** Information String **/
+//      )
+//      {
+//          if( ((CHR*)0) == msg_fmt ){ ERR("[NIL:msg_fmt]"); };
+//          if( ((CHR*)0) == msg_inf ){ ERR("[NIL:msg_inf]"); };
+//          
+//          aac2020_rencore_Info_any(
+//                     msg_fmt
+//          ,   (void*)msg_inf
+//          );;
+//      }
+//  
+//  #undef  CHR
+//  #undef  ERR
+//:========================================:INFO_PRINT_STRING://
+//:INIT_NONE:================================================://
+#define U32 uint32_t /** GCC: <stdint.h> **/
+        U32 AAC2020_RENCORE_InitNone( U32 u32 ){
+            if( u32 ){ }; return( 0x00 );   }
+#undef  U32
+//:================================================:INIT_NONE://
+//:MAIN_SECTION:=============================================://
+#define CHR  const char                          //:----: 01 ://
+#define U32  uint32_t /** GCC: <stdint.h> **/    //:----: 02 ://
+#define I32   int32_t /** GCC: <stdint.h> **/    //:----: 03 ://
+#define ERR  aac2020_rencore_Halt                //:----: 04 ://
+#define LOG  aac2020_rencore_Info_any            //:----: 05 ://
+#define EXT  extern                              //:----: 06 ://
+
+    I32 
+    AAC2020_RENCORE_StandAloneMain(
+        I32    arg_cou //:<--[ argument_count ]
+    ,   char** arg_arr //:<--[ argument_array ]
+    )
+    {
+    LOG("[main:BEG]",0);
+
+        //:LazyUnitTest:-------------------------------------://
+        if( aac2020_rencore_UTC_ror <= 0 ){
+        if( arg_cou                 <= 1 ){
+
+            /** Why are we only running unit tests if  ***** **/
+            /** no user supplied arguments (arg_cou<=1) are  **/
+            /** supplied? @VID_IID[ 0272 ]TIME[ 03:09:00 ]   **/
+
+            /** Only call unit test if test has not been *** **/
+            /** ran before. ror == "ran or running"      *** **/
+
+            EXT U32 AAC2020_RENCORE_UnitTest( U32  );
+                    AAC2020_RENCORE_UnitTest( 0x00 );
+
+            printf("[LAZY_UNIT_TEST_HAS_RAN]\n");
+            fflush(stdout);
+
+        };;};;
+        //:-------------------------------------:LazyUnitTest://
+        //:Declare_Vars:-------------------------------------://
+
+
+
+        //:-------------------------------------:Declare_Vars://
+        //:CORE_LOGIC:=======================================://
+
+
+
+
+        //:=======================================:CORE_LOGIC://
+
+    LOG("[main:END]",0);
+    };;
+
+#undef  CHR  //:----------------------------------------: 01 ://
+#undef  U32  //:----------------------------------------: 02 ://
+#undef  I32  //:----------------------------------------: 03 ://
+#undef  ERR  //:----------------------------------------: 04 ://
+#undef  LOG  //:----------------------------------------: 05 ://
+#undef  EXT  //:----------------------------------------: 06 ://
+//:=============================================:MAIN_SECTION://
+//:UNIT_TEST_SECTION:========================================://
+#define I32  int32_t  /** GCC: <stdint.h>     **/     //: 01 ://
+#define U32 uint32_t  /** GCC: <stdint.h>     **/     //: 02 ://
+#define U08  uint8_t  /** GCC: <stdint.h>     **/     //: 03 ://
+#define ERR aac2020_rencore_Halt                      //: 04 ://
+#define E_U extern U32                                //: 05 ://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    U32
+    AAC2020_RENCORE_UnitTest( U32 u32 )
+    {
+        if( aac2020_rencore_UTC_ror >= 1 ){
+            /** Ignore Call. **/
+            printf("[IGNORED:AAC2020_RENCORE_UnitTest]\n");
+            fflush(stdout);
+        }else{
+            aac2020_rencore_UTC_ror =( 1  );
+
+            E_U aac2020_rencore_UnitTest( U32 );
+                aac2020_rencore_UnitTest( u32 );
+        };;
+
+        return( 0x00 );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    U32
+    aac2020_rencore_UnitTest( U32 u32 )
+    {
+        AAC2020_TODOMAN_Vital("[RENCORE_TESTS]");
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+#undef  I32  //:----------------------------------------: 01 ://
+#undef  U32  //:----------------------------------------: 02 ://
+#undef  U08  //:----------------------------------------: 03 ://
+#undef  ERR  //:----------------------------------------: 04 ://
+#undef  E_U  //:----------------------------------------: 05 ://
+//:========================================:UNIT_TEST_SECTION://
