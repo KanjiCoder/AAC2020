@@ -115,8 +115,32 @@
         void
         aac2020_rencore_LoadExtensions_ByOrderFound()
         {
-            //:   [TODO]   <--- I never go back and look for these
-            AAC2020_TODOMAN_Vital("[aac2020_rencore_LoadExtensions_ByOrderFound]");
+            //[  THIS_FUNCTION_SHOULD_ALWAYS_CRASH_THE_CODE  ]//
+
+            //:----------------------------------------------://
+            //: WE WANT:                                     ://
+            //:     1: consistent   execution paths.         ://
+            //:     2: reduction of execution paths.         ://
+            //:                                              ://
+            //: So if an "EXT_ORD.TXT" list does not         ://
+            //: exist...                                     ://
+            //:                                              ://
+            //: 1: Build one by finding the different        ://
+            //:    extension projects in the folder.         ://
+            //:                                              ://
+            //: 2: Call[ rencore_LoadExtensions_UsingList ]  ://
+            //:    using that procedurally generated list.   ://
+            //:                                              ://
+            //: This makes the code take a                   ://
+            //: @DETOUR_AND_REJOIN_LATER@ rather than        ://
+            //: spin off a 100% different path of            ://
+            //: execution.                                   ://
+            //:                                              ://
+            //: -John Mark Isaac Madison                     ://
+            //:  DATE( 2021_04_25 )                          ://
+            //:                                              ://
+            //:----------------------------------------------://
+            ERR("[DO_NOT_DO_THIS:2021_04_25]");
         }
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
@@ -314,7 +338,15 @@
             /** __OPTIONAL__ build system component.   **/
             /** ************************************** **/
 
-            aac2020_rencore_LoadExtensions_ByOrderFound();
+        //[ @MINIMIZE_CODE_PATHS@/////////////////////////// ]//
+        //+ Minimize code paths by taking detour to build    +//
+        //+ extension list by reading file system, then      +//
+        //+ re-join path of normal execution by calling      +//
+        //+ aac2020_rencore_LoadExtensions_UsingList()       +//
+        //- aac2020_rencore_LoadExtensions_ByOrderFound();   -//
+            aac2020_rencore_Create_ext_arr_ByReadingFolders();
+            aac2020_rencore_LoadExtensions_UsingList();
+        //[ ///////////////////////////@MINIMIZE_CODE_PATHS@ ]//
         };;
     }
 
