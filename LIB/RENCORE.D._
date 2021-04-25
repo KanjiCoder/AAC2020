@@ -1,18 +1,47 @@
 //:RENCORE_DOCUMENTATION:====================================://
-
-
-    Manages[ EXTCODE ]for out compile-time plugin system.
-    EXTCODE means: "Extension Code"
-
-
+//|                                                          |//
+//|                                                          |//
+//|   Manages[ EXTCODE ]for out compile-time plugin system.  |//
+//|   EXTCODE means: "Extension Code"                        |//
+//|   @VID_IID[ 0273 ]TIME[ 00:35:32 ]EXPLAIN_AND_STUBBED    |//
+//|                                                          |//
+//|                                                          |//
 //:====================================:RENCORE_DOCUMENTATION://
+//:STRUCTS:==================================================://
+#define CHR const char                                //: 01 ://
+#define I32 int32_t /** GCC: <stdint.h> **/           //: 02 ://
+
+    struct
+    AAC2020_RENCORE_ext_ord{ //:<--Extension_Order(entry)
+
+        CHR ext_nam[8]; //:extension_name: 7 characters+NULL
+        I32 ext_ord   ; //:extension_order( 0==max priority )
+                        //:...............(<0:OFF | >0:ONN  )
+    };
+
+#undef  CHR  //:----------------------------------------: 01 ://
+#undef  I32  //:----------------------------------------: 02 ://
+//:==================================================:STRUCTS://
 //:DEFINES_AND_VARIABLES:====================================://
+#define U08 uint8_t /** GCC: <stdint.h> **/           //: 01 ://
+#define I32 int32_t /** GCC: <stdint.h> **/           //: 02 ://
+#define REO struct AAC2020_RENCORE_ext_ord            //: 03 ://
+#define CHR const char                                //: 04 ://
+
+    #define aac2020_rencore_ExtensionOrderList_Load "[@DNU@]"
 
     /** UTC_ror : UNIT_TEST_CODE:ran_or_running ?     **/
     /** 1. Prevent running unit tests more than once. **/
     /** 2. Prevent accidential recursion from tests.  **/
     U08 aac2020_rencore_UTC_ror =( 0 );
 
-
-
+    I32 aac2020_rencore_ext_err=(  0  );   //:Parsing_Error?
+    I32 aac2020_rencore_ext_noe=(  0  );   //:NumberOfElements
+    I32 aac2020_rencore_ext_cap=( 32  );   //:Capacity
+    REO aac2020_rencore_ext_arr[  32  ]=   //:Array_Itself
+                               { 0x00 };
+#undef  U08  //:----------------------------------------: 01 ://
+#undef  I32  //:----------------------------------------: 02 ://
+#undef  REO  //:----------------------------------------: 03 ://
+#undef  CHR  //:----------------------------------------: 04 ://
 //:====================================:DEFINES_AND_VARIABLES://

@@ -26,7 +26,7 @@ _Static_assert( AAC2020_INCLUDE_GAMTICK ==  6 ,        "6");
 //:==================================================:GAMTICK://
 //:CPUNIFO:==================================================://
 #if(            AAC2020_INCLUDE_CPUNIFO >=  1 )
-_Static_assert( AAC2020_INCLUDE_CPUNIFO == 23 ,        "23");
+_Static_assert( AAC2020_INCLUDE_CPUNIFO == 25 ,        "25");
 
     #define  FMACROS_CPUNIFO_LoopTick   AAC2020_CPUNIFO_LoopTick
 #endif
@@ -37,7 +37,7 @@ _Static_assert( AAC2020_INCLUDE_CPUNIFO == 23 ,        "23");
 //:==================================================:CPUNIFO://
 //:GRAQUAD:==================================================://
 #if(            AAC2020_INCLUDE_GRAQUAD >=  1 )
-_Static_assert( AAC2020_INCLUDE_GRAQUAD == 24 ,       "24");
+_Static_assert( AAC2020_INCLUDE_GRAQUAD == 26 ,       "26");
 
     #define  FMACROS_GRAQUAD_LoopTick   AAC2020_GRAQUAD_LoopTick
 #endif
@@ -48,7 +48,7 @@ _Static_assert( AAC2020_INCLUDE_GRAQUAD == 24 ,       "24");
 //:==================================================:GRAQUAD://
 //:TAUDEPO:==================================================://
 #if(            AAC2020_INCLUDE_TAUDEPO >=  1 )
-_Static_assert( AAC2020_INCLUDE_TAUDEPO == 42 ,       "42");
+_Static_assert( AAC2020_INCLUDE_TAUDEPO == 44 ,       "44");
 
     #define  FMACROS_TAUDEPO_LoopTick   AAC2020_TAUDEPO_LoopTick
 #endif
@@ -59,7 +59,7 @@ _Static_assert( AAC2020_INCLUDE_TAUDEPO == 42 ,       "42");
 //:==================================================:TAUDEPO://
 //:TAUSYNC:==================================================://
 #if(            AAC2020_INCLUDE_TAUSYNC >=  1 )
-_Static_assert( AAC2020_INCLUDE_TAUSYNC == 45 ,       "45");
+_Static_assert( AAC2020_INCLUDE_TAUSYNC == 47 ,       "47");
 
     #define  FMACROS_TAUSYNC_LoopTick   AAC2020_TAUSYNC_LoopTick
 #endif
@@ -70,7 +70,7 @@ _Static_assert( AAC2020_INCLUDE_TAUSYNC == 45 ,       "45");
 //:==================================================:TAUSYNC://
 //:UICLICK:==================================================://
 #if(            AAC2020_INCLUDE_UICLICK >=  1 )
-_Static_assert( AAC2020_INCLUDE_UICLICK == 57 ,       "57");
+_Static_assert( AAC2020_INCLUDE_UICLICK == 59 ,       "59");
 
     #define  FMACROS_UICLICK_LoopTick   AAC2020_UICLICK_LoopTick
 #endif
@@ -81,7 +81,7 @@ _Static_assert( AAC2020_INCLUDE_UICLICK == 57 ,       "57");
 //:==================================================:UICLICK://
 //:PAINT5D:==================================================://
 #if(            AAC2020_INCLUDE_PAINT5D >=  1 )
-_Static_assert( AAC2020_INCLUDE_PAINT5D == 58 ,       "58");
+_Static_assert( AAC2020_INCLUDE_PAINT5D == 60 ,       "60");
 
     #define  FMACROS_PAINT5D_LoopTick   AAC2020_PAINT5D_LoopTick
 #endif
@@ -116,7 +116,9 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 58 ,       "58");
     TODOMAN
     GAMTICK
     FILEBOI
+    RENCORE
     PHEXDUM
+    EXTCODE
     HARDASS
     NATIKEY
     NATIMOU
@@ -222,6 +224,14 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 58 ,       "58");
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:FILEBOI://
 
+//:InitNone:RENCORE:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_RENCORE >=  1 )
+#define      FMACROS_RENCORE_InitNone AAC2020_RENCORE_InitNone
+#endif
+#if( AAC2020_INCLUDE_RENCORE == 0 )
+#define      FMACROS_RENCORE_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:RENCORE://
 //:InitNone:PHEXDUM:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_PHEXDUM >=  1 )
 #define      FMACROS_PHEXDUM_InitNone AAC2020_PHEXDUM_InitNone
@@ -230,6 +240,14 @@ _Static_assert( AAC2020_INCLUDE_PAINT5D == 58 ,       "58");
 #define      FMACROS_PHEXDUM_InitNone(  DISCARDED_ARGUMENT )       
 #endif
 //:- - - - - - - - - - - - - - - - - - - - -:InitNone:PHEXDUM://
+//:InitNone:EXTCODE:- - - - - - - - - - - - - - - - - - - - -://
+#if( AAC2020_INCLUDE_EXTCODE >=  1 )
+#define      FMACROS_EXTCODE_InitNone AAC2020_EXTCODE_InitNone
+#endif
+#if( AAC2020_INCLUDE_EXTCODE == 0 )
+#define      FMACROS_EXTCODE_InitNone(  DISCARDED_ARGUMENT )       
+#endif
+//:- - - - - - - - - - - - - - - - - - - - -:InitNone:EXTCODE://
 
 //:InitNone:HARDASS:- - - - - - - - - - - - - - - - - - - - -://
 #if( AAC2020_INCLUDE_HARDASS >=  1 )
