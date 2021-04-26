@@ -28,18 +28,34 @@
 #define REO struct AAC2020_RENCORE_ext_ord            //: 03 ://
 #define CHR const char                                //: 04 ://
 
+    //! Error Check Inputs For This File? !//
+    #define aac2020_rencore_MACRO_eci ( 1 )
+
     #define aac2020_rencore_ExtensionOrderList_Load "[@DNU@]"
 
-    /** UTC_ror : UNIT_TEST_CODE:ran_or_running ?     **/
-    /** 1. Prevent running unit tests more than once. **/
-    /** 2. Prevent accidential recursion from tests.  **/
+    //:USE: aac2020_rencore_abspath_CTO_filhand
+    #define aac2020_rencore_OpenTextFileUsing_abspath "[DNU]"
+
+ 
+
+    //! Maximum Number Of Characters For Any Stack    !//
+    //! allocated char array (string)                 !//
+    #define aac2020_rencore_MACRO_max_noc ( 1024 )
+
+    //! UTC_ror : UNIT_TEST_CODE:ran_or_running ?     !//
+    //! 1. Prevent running unit tests more than once. !//
+    //! 2. Prevent accidential recursion from tests.  !//
     U08 aac2020_rencore_UTC_ror =( 0 );
 
-    I32 aac2020_rencore_ext_err=(  0  );   //:Parsing_Error?
-    I32 aac2020_rencore_ext_noe=(  0  );   //:NumberOfElements
-    I32 aac2020_rencore_ext_cap=( 32  );   //:Capacity
-    REO aac2020_rencore_ext_arr[  32  ]=   //:Array_Itself
+    //- aac2020_rencore_ext_err=(  0  );    ! @SIDE_FX_BAD@  -//
+    I32 aac2020_rencore_ext_noe=(  0  );  //!NumberOfElements!//
+    I32 aac2020_rencore_ext_cap=( 32  );  //!Capacity        !//
+    REO aac2020_rencore_ext_arr[  32  ]=  //!Array_Itself    !//
                                { 0x00 };
+
+    //! Global Error Message !//
+    CHR* aac2020_rencore_msg_err=("[UNSET_2021_04_25]");
+
 #undef  U08  //:----------------------------------------: 01 ://
 #undef  I32  //:----------------------------------------: 02 ://
 #undef  REO  //:----------------------------------------: 03 ://

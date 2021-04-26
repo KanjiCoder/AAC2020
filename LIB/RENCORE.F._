@@ -70,30 +70,35 @@
 #undef  ERR  //:----------------------------------------: 03 ://
 //:===========================================:LOG_AFTER_HALT://
 //:INFO_PRINT_STRING:========================================://
+#define CHR const char
+#define ERR aac2020_rencore_Halt
 
-    /** DELETE ALL OF THIS IF YOU NEVER END UP USING IT **/
-    /** when the RENCORE system is finished. ********** **/
+    /** **************************************************** **/
+    /** It is a bit annoying to have lots of specific   **** **/
+    /** logging functions like this when we could just  **** **/
+    /** have one[ aac2020_rencore_Info_any ]function... **** **/
+    /** But the casting nonsense you have to do with    **** **/
+    /** [ aac2020_rencore_Info_any ]annoys the hell out **** **/
+    /** of me. @VID_IID[ 0274 ]TIME[ 01:57:17 ]         **** **/
+    /** **************************************************** **/
 
-//  #define CHR const char
-//  #define ERR aac2020_rencore_Halt
-//  
-//      void
-//      aac2020_rencore_Info_str( 
-//          CHR* msg_fmt /** Format String **/
-//      ,   CHR* msg_inf /** Information String **/
-//      )
-//      {
-//          if( ((CHR*)0) == msg_fmt ){ ERR("[NIL:msg_fmt]"); };
-//          if( ((CHR*)0) == msg_inf ){ ERR("[NIL:msg_inf]"); };
-//          
-//          aac2020_rencore_Info_any(
-//                     msg_fmt
-//          ,   (void*)msg_inf
-//          );;
-//      }
-//  
-//  #undef  CHR
-//  #undef  ERR
+    void
+    aac2020_rencore_Info_str( 
+        CHR* msg_fmt /** Format String **/
+    ,   CHR* msg_inf /** Information String **/
+    )
+    {
+        if( ((CHR*)0) == msg_fmt ){ ERR("[NIL:msg_fmt]"); };
+        if( ((CHR*)0) == msg_inf ){ ERR("[NIL:msg_inf]"); };
+        
+        aac2020_rencore_Info_any(
+                msg_fmt
+        ,   (void*)msg_inf
+        );;
+    }
+
+#undef  CHR
+#undef  ERR
 //:========================================:INFO_PRINT_STRING://
 //:INIT_NONE:================================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
@@ -101,21 +106,150 @@
             if( u32 ){ }; return( 0x00 );   }
 #undef  U32
 //:================================================:INIT_NONE://
-//:MAIN_SECTION:=============================================://
-#define CHR  const char                          //:----: 01 ://
-#define U32  uint32_t /** GCC: <stdint.h> **/    //:----: 02 ://
-#define I32   int32_t /** GCC: <stdint.h> **/    //:----: 03 ://
-#define ERR  aac2020_rencore_Halt                //:----: 04 ://
-#define LOG  aac2020_rencore_Info_any            //:----: 05 ://
-#define EXT  extern                              //:----: 06 ://
-#define FIL  FILE                                //:----: 07 ://
+//:NON_STANDARD_TODOMAN_POLYFILL:============================://
+#define CHR const char                                //: 01 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 02 ://
+#define ERR aac2020_rencore_Halt                      //: 03 ://
+#define LOS aac2020_rencore_Info_str                  //: 04 ://
 
+    void
+    aac2020_rencore_todomsg(
+        CHR* msg
+    )
+    {
+        U32 cot=( 0 ); /** cot == "Crash_On_Todo(message)" **/
+
+        #if defined( AAC2020_INCLUDE_SILENCE )
+
+            //:Project Compiled As SubSystem Of AAC2020:
+            cot=( 0
+                | AAC2020_CRASH_ON_VITAL_TODO
+                | AAC2020_CRASH_ON_MAYBE_TODO
+                | AAC2020_CRASH_ON_NIAVE_CODE
+            );;
+
+        #else
+
+            //:Project Compiled As Stand Alone:
+            cot=(AAC2020_RENCORE_STAND_ALONE_ONLY_TODO_CRASH);
+
+        #endif
+
+        if( cot > 0 ){
+            printf("[aac2020_rencore_todomsg:msg]%s",msg);
+            ERR("[CONFIGED_TO_CRASH_ON_TODO_MESSAGE]");
+        }else{
+            LOS( "[aac2020_rencore_todomsg:msg]%s",msg);
+        };;
+    }
+
+#undef  CHR  //:----------------------------------------: 01 ://
+#undef  U32  //:----------------------------------------: 02 ://
+#undef  ERR  //:----------------------------------------: 03 ://
+#undef  LOS  //:----------------------------------------: 04 ://
+//:============================:NON_STANDARD_TODOMAN_POLYFILL://
+//:FILE_SYSTEM_ACCESS_HELPERS:===============================://
+#define     I32   int32_t /** GCC: <stdint.h> **/     //: 01 ://
+#define     CHR   const char                          //: 02 ://
+#define     NCC         char                          //: 03 ://
+#define     ERR   aac2020_rencore_Halt                //: 04 ://
+#define     LOS   aac2020_rencore_Info_str            //: 05 ://
+#define CWD_NOC ( aac2020_rencore_MACRO_max_noc )     //: 06 ://
+
+ 
+    I32
+    aac2020_rencore_GetCWD(
+        NCC* *BYREF_cwd_iov //:AKA[ cwd_buf | cwd_got ]
+    )
+    {
+        //:error_check_inputs:-------------------------------://
+    
+            if( ((NCC**)0) == BYREF_cwd_iov ){
+                ERR("[REFSCANNEVERBENULL:2021]");
+            };;
+            if( ((NCC* )0) ==*BYREF_cwd_iov ){
+                ERR("[BUFFER_MUST_BE_SUPPLIED:cwd_iov]");
+            };;
+
+        //:error_check_inputs:-------------------------------://
+        //:define_vars:--------------------------------------://
+
+            I32  o_k=( 0 /** Indeterminant State **/ );
+
+            NCC* cwd_buf=( *BYREF_cwd_iov );
+            NCC* cwd_got=((NCC*)0);
+
+        //:--------------------------------------:define_vars://
+        //:CORE_LOGIC:=======================================://
+
+            cwd_got=(
+                getcwd( cwd_buf , CWD_NOC ));;
+
+            if( ((NCC*)0) != cwd_got && cwd_got == cwd_buf ){
+                //:Good
+                o_k=( 0 + 777 );
+            }else
+            if( ((NCC*)0) == cwd_got ){
+                aac2020_rencore_msg_err=( "[NIL_cwd_got]" );
+                o_k=( 0 - 1 );
+            }else
+            if( ((NCC*)0) != cwd_got && cwd_got != cwd_buf ){
+                //:Not null, but got back a different pointer!
+                aac2020_rencore_msg_err=( "[DIF_cwd_got]" );
+                o_k=( 0 - 2 );
+            }else{
+                aac2020_rencore_msg_err=( "[UNKNOWN_ERR_001]" );
+                o_k=( 0 - 3 );
+            };;
+        
+        //:=======================================:CORE_LOGIC://
+        //:DEBUG_SECTION:====================================://
+        if( o_k >= 1 ){
+
+            LOS( "[CWD:cwd_got]:%s", cwd_got );
+
+        }else{
+
+            LOS( "[OH_NOO!]%s","[EVERYTHINGS_NOT_OKAY]");
+
+        };;
+        //:====================================:DEBUG_SECTION://
+        //:load_output_param:--------------------------------://
+
+            (*BYREF_cwd_iov)=( cwd_got );
+
+        //:--------------------------------:load_output_param://
+        return( o_k );
+    }
+
+#undef      I32  //:------------------------------------: 01 ://
+#undef      CHR  //:------------------------------------: 02 ://
+#undef      NCC  //:------------------------------------: 03 ://
+#undef      ERR  //:------------------------------------: 04 ://
+#undef      LOS  //:------------------------------------: 05 ://
+#undef  CWD_NOC  //:------------------------------------: 06 ://
+//:===============================:FILE_SYSTEM_ACCESS_HELPERS://
+//:MAIN_SECTION:=============================================://
+#define CHR       const char                     //:----: 01 ://
+#define NCC             char                     //:----: 02 ://
+#define U32       uint32_t /** GCC: <stdint.h>**///:----: 03 ://
+#define I32        int32_t /** GCC: <stdint.h>**///:----: 04 ://
+#define ERR       aac2020_rencore_Halt           //:----: 05 ://
+#define LOG       aac2020_rencore_Info_any       //:----: 06 ://
+#define EXT       extern                         //:----: 07 ://
+#define FIL       FILE                           //:----: 08 ://
+#define SIZ       size_t   /** GCC: <stddef.h>**///:----: 09 ://
+#define LOS       aac2020_rencore_Info_str       //:----: 10 ://
+#define ECI       aac2020_rencore_MACRO_eci      //:----: 11 ://
+#define E_M       aac2020_rencore_msg_err        //:----: 12 ://
+#define CWD_NOC ( aac2020_rencore_MACRO_max_noc )//:----: 13 ://
     //:LoadExtensions:---------------------------------------://
 
         void
         aac2020_rencore_LoadExtensions_ByOrderFound()
-        {
+        {           /** LoadExtensions_ByOrderFound **/
             //[  THIS_FUNCTION_SHOULD_ALWAYS_CRASH_THE_CODE  ]//
+            //[  @VID_IID[0274]TIME[00:03:00 ]               ]//
 
             //:----------------------------------------------://
             //: WE WANT:                                     ://
@@ -146,210 +280,417 @@
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
         void
+        aac2020_rencore_filesys_SET_ext_arr()
+        {
+        /** ************************************************ ***
+        CURRENT_NAME:
+            aac2020_rencore_filesys_SET_ext_arr
+            filesys: file_system (conceptual parameter)
+                SET: Side_Effect_TO (Like CTO, but missing args)
+            ext_arr: EXTension_ARRay
+        OLD_NAME:
+            aac2020_rencore_Create_ext_arr_ByReadingFolders
+        *** ************************************************ **/
+
+            aac2020_rencore_todomsg("[2021_04_25_913PM]");
+        }
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+        void
         aac2020_rencore_LoadExtensions_UsingList()
         {
     
-            AAC2020_TODOMAN_Vital("[aac2020_rencore_LoadExtensions_UsingList]");
+            aac2020_rencore_todomsg("[X_X:aac2020_rencore_LoadExtensions_UsingList]");
 
         }
 
     //:---------------------------------------:LoadExtensions://
     
-    void
+    I32 //:<--[ o_k variable return ]
     aac2020_rencore_ExtensionOrderList_Parse(
         FIL* filhand
     )   
     {
-        if( ((FIL*)0) == filhand ){
-            ERR("[NULL:filhand]");
-        };;
+        //:error_check_inputs:-------------------------------://
 
-        /** Set to 1 if errors found in EXT_ORD.TXT **/
-        aac2020_rencore_ext_err =( 1 );
+            if( ((FIL*)0) == filhand ){
+                ERR("[NULL:filhand]");
+            };;
 
-        
+        //:-------------------------------:error_check_inputs://
+        //:Declare_Vars:-------------------------------------://
 
+            I32 o_k =( 0 /** UndefinedState **/ );
+
+        //:-------------------------------------:Declare_Vars://
+        //:TODO: logic <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TODO
+
+        //:CORE_LOGIC:=======================================://
+
+            /** Set to FALSE if errors found in EXT_ORD.TXT **/
+            o_k=( 0 - 837 );
+
+        //:=======================================:CORE_LOGIC://
+
+        //:Important output is file scope var:
+        //:[ aac2020_rencore_ext_arr ]
+        return( o_k );
     }
 
-    void
+    I32 /** <-- found without errors is positive **/
     aac2020_rencore_parfold_relpath_CTO_abspath(
         CHR*    parfold       //:<--INN[ parent_folder    ]
     ,   CHR*    relpath       //:<--INN[ relative_path    ]
-
     ,   I32    *BYREF_f_found //:<--OUTPUT_PARAM[ f_found ]
-    ,   CHR*   *BYREF_abspath //:<--OUTPUT_PARAM[ abspath ]
+    ,   NCC*   *BYREF_abspath //:<--OUTPUT_PARAM[ abspath ]
     ){
         //:error_check_inputs:-------------------------------://
-
+            //:- - - - - - - - - - - -- - - - - - - - - - - -://
             if( ((CHR* )0) == parfold       ){
                 ERR("[NULL:parfold(parent_folder)]");
             };;
             if( ((CHR* )0) == relpath       ){
                 ERR("[NULL:relpath(relative_path)]");
             };;
-            if( ((I32* )0) == BYREF_f_found ){
-                ERR("[REFS_CAN_NEVER_BE_NULL:BYREF_f_found]");
+            //:- - - - - - - - - - - -- - - - - - - - - - - -://
+            if( ((I32* )0) ==( BYREF_f_found) ){
+                ERR("[NIL_REF:BYREF_f_found]");
             };;
-            if( ((CHR**)0) == BYREF_abspath ){
-                ERR("[REFS_CAN_NEVER_BE_NULL:BYREF_abspath]");
+            if( ((I32  )0) !=(*BYREF_f_found) ){
+                ERR("[EXPECT_TO_BE_ZEROED_OUT]");
+            };;
+            //:- - - - - - - - - - - -- - - - - - - - - - - -://
+            if( ((NCC**)0) ==( BYREF_abspath) ){
+                ERR("[NIL_REF:abspath]");
+            };;
+            if( ((NCC* )0) ==(*BYREF_abspath) ){
+                /**  Buffer must be provided because this **/
+                /**  function does __NOT__ allocate any   **/
+                /**  memory.                              **/
+                ERR("[NIL_STR:abspath]");
+            };;
+            //:- - - - - - - - - - - -- - - - - - - - - - - -://
+        //:-------------------------------:error_check_inputs://
+        //:declare_vars:-------------------------------------://
+
+            I32 o_k=( 0 /**UndefinedState**/ );
+
+        //:-------------------------------------:declare_vars://
+        //:CORE_LOGIC:=======================================://
+
+            aac2020_rencore_todomsg("[TODO_FINSIH_THIS_2021_04_25_339AM]");
+            o_k=( 0-666 /**FINISHTHIS**/ );
+
+        //:=======================================:CORE_LOGIC://
+
+        /** Positive[ o_k ]does not mean found. It just **/
+        /** means nothing went horribly wrong.          **/
+        return( o_k );
+    }
+        
+    I32 //:<-- o_k flag.
+    aac2020_rencore_abspath_CTO_filhand(
+        CHR*        abspath
+    ,   FIL* *BYREF_filhand
+    )
+    {
+        #if( ECI )//:########################################://
+
+            if( ((CHR*)0) == abspath ){ 
+                ERR("[NULL_ABSPATH]");
             };;
 
-            /** This is to prevent accidential memory **/
-            /** overwrites .                          **/
+            /** FIL** : expecting non-null    **/
+            /** FIL*    expecting     null    **/
 
-            if( (*BYREF_f_found) != 0 ){
-                ERR("[OUT_PARAM_MUST_BE_ZEROED_OUT]");
+            if( ((FIL**)0) ==( BYREF_filhand ) ){
+                ERR("[NIL_REF:filhand]");
+            }else
+            if( ((FIL* )0) !=(*BYREF_filhand ) ){
+                ERR("[EXP_NIL:filhand]");
             };;
-            if( (*BYREF_abspath) !=((CHR*)0) ){
-                ERR("[OUT_PARAM_MUST_BE_______NULL]");
+        #endif //:####################################( ECI )://
+        //:declare_vars:-------------------------------------://
+
+            I32  o_k =( 0 /** UndefinedState **/ );
+            FIL* filhand=((FIL*)0);
+
+        //:-------------------------------------:declare_vars://
+        //:CORE_LOGIC:=======================================://
+
+            o_k=( 0 - 666 );
+            aac2020_rencore_msg_err=("[FINISHTHIS:2021]");
+
+        //:=======================================:CORE_LOGIC://
+        //:return:byref:-------------------------------------://
+
+            (*BYREF_filhand)=( filhand );
+
+        //:-------------------------------------:return:byref://
+        //:return:byval:-------------------------------------://
+
+            return( o_k );
+    
+        //:-------------------------------------:return:byval://
+    }
+
+    I32
+    aac2020_rencore_FindParentFolderOf(
+        CHR*        chifold //:<--[ INN:child_folder  ]
+    ,   NCC* *BYREF_parfold //:<--[ OUT:parent_folder ]
+    )
+    {
+        //:error_check_inputs:-------------------------------://
+
+            if( 0 != strcmp( chifold , "AAC2020" ) ){
+                ERR("[REMOVE_IF_NO_LONGER_THE_ONLY_USE_CASE]");
+            };;
+
+            if( ((CHR*)0) == chifold ){
+                ERR("[NULL:chifold]");
+            };;
+
+            if( ((NCC**)0) ==  BYREF_parfold ){
+                ERR("[REFS_CAN_NEVER_BE_NULL]");
+            };;
+            if( ((NCC* )0) ==(*BYREF_parfold) ){
+                ERR("[PARENT_FOLDER_BUFFER_NOT_SUPPLIED]");
             };;
 
         //:-------------------------------:error_check_inputs://
-        //:CORE_LOGIC:=======================================://
+        //:declare_vars:-------------------------------------://
+        #define NOC ( aac2020_rencore_MACRO_max_noc )
 
-            AAC2020_TODOMAN_Vital("[TODO_FINSIH_THIS_2021_04_25_339AM]");
+            I32  o_k =( 1 ); //:JavaScript_Promise_Like_Syntax
 
-        //:=======================================:CORE_LOGIC://
-    }
         
-    FIL*
-    aac2020_rencore_OpenTextFileUsing_abspath(
-        CHR* abspath
-    )
-    {
-        if( ((CHR*)0) == abspath ){ 
-            ERR("[NULL_ABSPATH]");
+            NCC  cwd_buf[ NOC ]={0}; //!cwd_charbuffer       !//
+            NCC* cwd_str=&( cwd_buf[ 0 ] );
+
+            ///  cwd_got=((NCC* )0); //!cwd_gotten_charbuffer!//
+
+            
+        #undef  NOC
+        //:-------------------------------------:declare_vars://
+        
+        if( o_k >= 1 ){
+
+            o_k=(
+            aac2020_rencore_GetCWD(
+
+                //: (NCC**)&(cwd_buf) @IDKWTFID@
+                &( cwd_str )
+            ));;
+
+            if( ((NCC*)0) == cwd_buf ){
+                o_k =( 0-1 );
+                E_M =("[GetCWD_FAILED]");
+                LOS( "[X_X:E_M]:%s" , E_M );
+            }else
+            if( o_k <= 0 ){
+                o_k =( 0-2 );
+                /** RNN: Returned Non-Null       **/
+                /** BFF: But Flagged  as Failure **/
+                E_M=("[ERR_RNN_BFF]");
+                LOS( "[X_X:E_M]:%s" , E_M );
+            };;
+        };;
+        if( o_k >= 1 ){
+
+            LOS("[cwd_buf]:%s" , cwd_buf );
+
+            o_k=( 0-7 );    
+            E_M=("[FINISH_THIS_CODE_HERE]");
+            LOS( "[X_X:E_M]:%s" , E_M );
         };;
 
-        AAC2020_TODOMAN_Vital("[safjlsjflsjflaklsfjasdl]");
-
-        return( ((FIL*)0) );
-    }
-
-    CHR*
-    aac2020_rencore_FindParentFolderOf(
-        CHR* chifold //:<--[ child_folder ]
-    )
-    {
-        if( ((CHR*)0) == chifold ){
-            ERR("[NULL:chifold]");
-        };;
-
-        AAC2020_TODOMAN_Vital("[aac2020_rencore_FindParentFolderOf]");
-
-        return( ((CHR*)0) );
+        
+        return( o_k /** >= 1 if no errors **/ );
     }
 
     void
     aac2020_rencore_LOAD()
     {
+        //:declare_vars:-------------------------------------://
+        #define NOC ( aac2020_rencore_MACRO_max_noc )
 
-        I32  f_found=(   0   ); //:[ file_found ?          ]
-        CHR* abspath=((CHR*)0); //:[ absolute path to file ]
-        FIL* filhand=((FIL*)0); //:[ file_handle / fin_han ]
+            I32 o_k=( 1 ); //:<=0 if error somewhere.
 
-        
-        I32 extension_list_was_detected =( 0 );
-        I32 problems_with_extension_list=( 0 );
+            I32 f_found=( 0 ); //:flag_found
 
-        //:--------------------------------------------------://
-        //:Get the parent folder of the project folder.      ://
-        //:All extension projects are to be placed next      ://
-        //:to the main engine project (AAC2020).             ://
-        //:PARENT_FOLDER [-]                                 ://
-        //:               |                                  ://
-        //:               +---[ AAC2020                 ]    ://
-        //:               +---[ AAC2020_EXTCODE_MANDELA ]    ://
-        //:               +---[ AAC2020_EXTCODE_SHATTER ]    ://
-        //:               +---[ AAC2020_EXT_ORD         ]    ://
-        //:--------------------------------------------------://
-        CHR* parfold=(
-            aac2020_rencore_FindParentFolderOf(
-                "AAC2020" //:<--Project_folder
-            ));;
+            NCC  abspath[NOC]={ 0}; //:[ Absolute_Path         ]
+            NCC  parfold[NOC]={ 0}; //:[ AAC2020's parfold     ]
+            FIL* filhand=((FIL*)0); //:[ file_handle / fin_han ]
+
+            I32 extension_list_was_detected =( 0 );
+            I32 problems_with_extension_list=( 0 );
+
+        #undef  NOC
+        //:-------------------------------------:declare_vars://
+
+        if( o_k >= 1 ){ //:1111111111111111111111111111111111://
+
+            //:----------------------------------------------://
+            //:Get the parent folder of the project folder.  ://
+            //:All extension projects are to be placed next  ://
+            //:to the main engine project (AAC2020).         ://
+            //:PARENT_FOLDER [-]                             ://
+            //:               |                              ://
+            //:               +---[ AAC2020                 ]://
+            //:               +---[ AAC2020_EXTCODE_MANDELA ]://
+            //:               +---[ AAC2020_EXTCODE_SHATTER ]://
+            //:               +---[ AAC2020_EXT_ORD         ]://
+            //:----------------------------------------------://
+
+            NCC*  str_parfold=( &(    parfold[0]) );
+
+            o_k=(
+                aac2020_rencore_FindParentFolderOf(
             
-        //:[ aac2020_rencore_FromParent_FindFile / REL_CTO_FIL ]
-        aac2020_rencore_parfold_relpath_CTO_abspath(    
-            parfold //:<----------------------:parent_folder
-        ,   "./AAC2020_EXT_ORD/EXT_ORD.TXT" //:relpath
-        ,   &(f_found)
-        ,   &(abspath)
-        );;
+                    //:AAC2020 Game engine project folder:
+                    "AAC2020"  
 
-        if( ((CHR*)0) ==  abspath && (f_found <= 0) ){ //:NONE!
+                    //:AAC2020's parent folder:
+                ,  &(str_parfold)
 
-            extension_list_was_detected=( 0 );
-        }else
-        if( ((CHR*)0) !=  abspath && (f_found >= 1) ){ //:FOUND!
-            extension_list_was_detected=( 1 );
+                ));;
 
-            filhand=(
-            aac2020_rencore_OpenTextFileUsing_abspath(
-                                              abspath ));;
-            if( ((FIL*)0)==filhand){
-                    problems_with_extension_list=( 1 );
-            }else{
-                aac2020_rencore_ExtensionOrderList_Parse(
-                                                 filhand );;
-                if( aac2020_rencore_ext_err > 0 ){
-                    problems_with_extension_list=( 1 );
+        };; //:1111111111111111111111111111111111111111111111://
+        if( o_k >= 1 ){
+
+            o_k=(
+            aac2020_rencore_parfold_relpath_CTO_abspath(    
+                parfold //:<----------------------:parent_folder
+            ,   "./AAC2020_EXT_ORD/EXT_ORD.TXT" //:relpath
+            ,          &(f_found) //:Flag____Found
+            ,   (NCC**)&(abspath) //:Absolute_Path
+            ));;
+
+        };;
+        if( o_k >= 1 ){
+            if( ((CHR*)0) ==  abspath && (f_found <= 0) ){  
+                
+                extension_list_was_detected=( 0 - 666 );
+            }else
+            if( ((CHR*)0) !=  abspath && (f_found >= 1) ){  
+                extension_list_was_detected=( 0 + 777 );
+
+                o_k=(
+                aac2020_rencore_abspath_CTO_filhand(
+                                abspath  ,&(filhand) ));;
+
+                
+                if( o_k <= 0 || ((FIL*)0)==filhand){
+
+                        problems_with_extension_list=( 1 );
+                }else{
+
+                    I32 parse_success =(
+                    aac2020_rencore_ExtensionOrderList_Parse(
+                                          filhand ));;
+
+                    if( parse_success <= 0 ){
+                        problems_with_extension_list=( 1 );
+                    };;
                 };;
+
+            }else{
+                /** parfold_relpath_CTO_filhand              **/
+                /** returned values that don't agree with    **/
+                /** each other.                              **/
+                ERR("[MIS_MATCHING_FLAGS_FROM:REL_CTO_FIL]");
             };;
 
-        }else{
-            /** aac2020_rencore_parfold_relpath_CTO_filhand  **/
-            /** returned values that don't agree with        **/
-            /** each other.                                  **/
-            ERR("[MIS_MATCHING_FLAGS_FROM:REL_CTO_FIL]");
         };;
+        if( 1 == 1 /** ALWAYS RUN **/ ){
 
-        if( extension_list_was_detected  <= 0 ){
-        if( problems_with_extension_list >= 1 ){
-            /**@VID_IID[ 0273 ]TIME[ 02:18:00 ] **/
-            ERR("[CANT_HAVE_PROBLEMS_WITH_AN_UNFOUND_LIST]");
-        };;};;
+            if( extension_list_was_detected  <= 0 ){
+            if( problems_with_extension_list >= 1 ){
+                /**@VID_IID[ 0273 ]TIME[ 02:18:00 ] **/
+                ERR("[#_C_H_P_W_A_U_L_#]");
+            };;};;
 
-        if( problems_with_extension_list >= 1 ){
-        /** End up here if:                  **/
-        /** 1: Extension list does not exist.**/
-        /** 2: Extension list failed to open.**/
-        /** 3: Extension list was malformed. **/
+            if( 1
+            &&  extension_list_was_detected  >= 1
+            &&  problems_with_extension_list >= 1 
+            ){
+            /** End up here if:                   -----------**/
+            /** 1: Extension list does not exist. -----------**/
+            /** 2: Extension list failed to open. -----------**/
+            /** 3: Extension list was malformed.  -----------**/
 
-            aac2020_rencore_ext_noe =( 0 );
-        //: aac2020_rencore_ext_cap     ://
-        //: aac2020_rencore_ext_arr     ://
+                aac2020_rencore_ext_noe =( 0 );
+            //: aac2020_rencore_ext_cap     ://
+            //: aac2020_rencore_ext_arr     ://
 
-            /** Maybe a popup or something to notify user? **/
-            LOG("[EXTENSION_LOADING_ABORTED]",0);
+                /** **************************************** **/
+                /** Maybe popup to notify user?              **/
+                /** **************************************** **/
+                /** Possible bad situation with end user     **/
+                /** where adding of a MALFORMED extension    **/
+                /** list leads to extensions that were       **/
+                /** previously auto-loaded in the absense of **/
+                /** an "EXT_ORD.TXT" file to be 100%         **/
+                /** omitted. @VID_IID[ 0274 ]T[06:44:23]     **/
+                /** **************************************** **/
+                /** Another idea:                            **/
+                /** Default "Error Extension" can be loaded  **/
+                /** at this point. Like "SYN_ERR" shader.    **/
+                /** @VID_IID[ 0274 ]T[06:46:06 ]             **/
+                /** **************************************** **/
+                LOG("[EXTENSION_LOADING_ABORTED]",0);
 
-        }else
-        if( extension_list_was_detected >= 1 ){
-            aac2020_rencore_LoadExtensions_UsingList();
-        }else{
+            }else
+            if( 1
+            &&  extension_list_was_detected  >= 1 
+            &&  problems_with_extension_list <= 0 
+            ){
+                
+                aac2020_rencore_LoadExtensions_UsingList();
 
-            /** ************************************** **/
-            /** If no extension list is found, we auto **/
-            /** detect extensions and load them by the **/
-            /** order in which they are found.         **/
-            /** This means a deletion of "EXT_ORD.TXT" **/
-            /** could lead to __MORE__ extensions being**/
-            /** brought in rather than __LESS__        **/
-            /** The idea is that "EXT_ORD.TXT" is an   **/
-            /** __OPTIONAL__ build system component.   **/
-            /** ************************************** **/
+            }else
+            if( 1
+            && extension_list_was_detected  <= 0
+            && problems_with_extension_list <= 0
+            ){
 
-        //[ @MINIMIZE_CODE_PATHS@/////////////////////////// ]//
-        //+ Minimize code paths by taking detour to build    +//
-        //+ extension list by reading file system, then      +//
-        //+ re-join path of normal execution by calling      +//
-        //+ aac2020_rencore_LoadExtensions_UsingList()       +//
-        //- aac2020_rencore_LoadExtensions_ByOrderFound();   -//
-            aac2020_rencore_Create_ext_arr_ByReadingFolders();
-            aac2020_rencore_LoadExtensions_UsingList();
-        //[ ///////////////////////////@MINIMIZE_CODE_PATHS@ ]//
+                /** ************************************** **/
+                /** If no extension list is found, we auto **/
+                /** detect extensions and load them by the **/
+                /** order in which they are found.         **/
+                /** This means a deletion of "EXT_ORD.TXT" **/
+                /** could lead to __MORE__ extensions being**/
+                /** brought in rather than __LESS__        **/
+                /** The idea is that "EXT_ORD.TXT" is an   **/
+                /** __OPTIONAL__ build system component.   **/
+                /** ************************************** **/
+
+                //[ @MINIMIZE_CODE_PATHS@/////////////////// ]//
+                //+ Minimize code paths by taking detour to  +//
+                //+ build[ ext_arr ]by reading[ filesys ],   +//
+                //+ then re-join path of normal execution by +//
+                //+ calling rencore_LoadExtensions_UsingList +//
+                //+                                          +//
+                //+ ext_arr : Extension_List (array)         +//
+                //+ filesys : FileSystem (conceptual arg)    +//
+                //+                                          +//
+                //-         LoadExtensions_ByOrderFound();   -//
+                    aac2020_rencore_filesys_SET_ext_arr();
+                    aac2020_rencore_LoadExtensions_UsingList();
+                //[ ///////////////////@MINIMIZE_CODE_PATHS@ ]//
+            }else{
+                ERR("[@EDC@:2021_04_26]");
+            };;
         };;
     }
-
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    aac2020_rencore_Ping( void )
+    {
+        printf("[aac2020_rencore_Ping:I_EXIST!]\n");
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     I32 
     AAC2020_RENCORE_StandAloneMain(
         I32    arg_cou //:<--[ argument_count ]
@@ -390,9 +731,30 @@
 
         //:-------------------------------------:Declare_Vars://
         //:CORE_LOGIC:=======================================://
+    
+            I32 number_of_user_supplied_args =( arg_cou - 1 );
 
-            
+            if( 1 == number_of_user_supplied_args ){
 
+                if( 0 == strcmp( arg_arr[1] , "PING" )){
+
+                    aac2020_rencore_Ping( );
+
+                }else
+                if( 0 == strcmp( arg_arr[1] , "LOAD" )){
+
+                    aac2020_rencore_LOAD();
+
+                }else{
+                    printf("[COMMANDS_MUST_BE_UPPERCASE]\n");
+                };;
+
+            }else
+            if( 0 == number_of_user_supplied_args ){
+                printf("[FEED_ME_ARGUMENTS]\n");
+            }else{
+                printf("[INVALID_NUMBER_OF_ARGS]");
+            };;
 
         //:=======================================:CORE_LOGIC://
 
@@ -400,13 +762,19 @@
     return( 0 );
     }
 
-#undef  CHR  //:----------------------------------------: 01 ://
-#undef  U32  //:----------------------------------------: 02 ://
-#undef  I32  //:----------------------------------------: 03 ://
-#undef  ERR  //:----------------------------------------: 04 ://
-#undef  LOG  //:----------------------------------------: 05 ://
-#undef  EXT  //:----------------------------------------: 06 ://
-#undef  FIL  //:----------------------------------------: 07 ://
+#undef      CHR  //:------------------------------------: 01 ://
+#undef      NCC  //:------------------------------------: 02 ://
+#undef      U32  //:------------------------------------: 03 ://
+#undef      I32  //:------------------------------------: 04 ://
+#undef      ERR  //:------------------------------------: 05 ://
+#undef      LOG  //:------------------------------------: 06 ://
+#undef      EXT  //:------------------------------------: 07 ://
+#undef      FIL  //:------------------------------------: 08 ://
+#undef      SIZ  //:------------------------------------: 09 ://
+#undef      LOS  //:------------------------------------: 10 ://
+#undef      ECI  //:------------------------------------: 11 ://
+#undef      E_M  //:------------------------------------: 12 ://
+#undef  CWD_NOC  //:------------------------------------: 13 ://
 //:=============================================:MAIN_SECTION://
 //:UNIT_TEST_SECTION:========================================://
 #define I32  int32_t  /** GCC: <stdint.h>     **/     //: 01 ://
@@ -437,7 +805,7 @@
     {
         if( u32 ){ /** Reserved_For_Future_Use **/ };
 
-        AAC2020_TODOMAN_Vital("[RENCORE_TESTS]");
+        aac2020_rencore_todomsg("[RENCORE_TESTS]");
 
         return( 0x00 );
     }
