@@ -113,7 +113,7 @@
     )
     {
         if( ((CHR*)0) == msg_fmt ){ ERR("[NIL:msg_fmt:i32]"); };
-        if( ((I32 )0) == msg_inf ){ ERR("[NIL:msg_inf:i32]"); };
+    //- if( ((I32 )0) == msg_inf ) -//
         
         aac2020_rencore_Info_any(
                         msg_fmt
@@ -469,9 +469,120 @@
         //:-------------------------------------:declare_vars://
         //:CORE_LOGIC:=======================================://
 
-            aac2020_rencore_todomsg("[TODO_FINSIH_THIS_2021_04_25_339AM]");
-            o_k=( 0-666 /**FINISHTHIS**/ );
+            LOG("[FINDING_ABS_PATH_OF_PARFOLD]","[...]");
+            LOS("[parfold]:%s\n", parfold );
+            LOS("[relpath]:%s\n", relpath );
 
+            //:merge_paths_together:
+            I32 noc_parfold=( strlen( parfold ) );
+            I32 noc_relpath=( strlen( relpath ) );
+            I32 noc_abspath=( 0 /** unset **/   );
+
+            I32 dex_parfold=( 0 - 1);
+            I32 dex_relpath=( 0 - 1);
+            
+            //:Trim off trailing "\" from[ parfold ]( -1 -1 )
+            I32 m_i_parfold=( noc_parfold -1 -1 );
+            I32 m_i_relpath=( noc_relpath -1 +0 );
+
+            I32 phase=( 0 /**collection_phase**/ );
+
+            I32 max_abspath=( noc_parfold + noc_relpath );
+            NCC*    abspath=(*BYREF_abspath);
+           
+ 
+            //:get_first_slash_index:------------------------://
+            #define M_I (( noc_parfold - 1 )) 
+
+                I32 s_i_relpath=( 0 );
+                for( I32 s_i = 0 ; s_i <=( M_I ) ; s_i++ ){
+
+                    if( relpath[ s_i ] == '/' ){
+                        s_i_relpath=( s_i ); //:FORWARD_SLASH
+                        break;
+                    };;
+                    if( relpath[ s_i ] == '\\' ){
+                        s_i_relpath=( s_i ); //:BACK____SLASH
+                        break;
+                    };;
+                };;
+
+            #undef  M_I
+            //:------------------------:get_first_slash_index://
+            //:CONCAT_PATHS:---------------------------------://
+            //:abspath=parfold+relpath:----------------------://
+                for( I32 dex = 0 ; dex <=(max_abspath-1) ; dex++ ){
+
+                    if( 0 == phase /**collection_phase**/ ){
+                        dex_parfold++;
+                        abspath[ dex ]=( parfold[ dex_parfold ] );
+                        if( dex_parfold+1 > m_i_parfold ){
+                            phase=( 1 );
+                            dex_relpath=( s_i_relpath );
+                        };;
+                    }else
+                    if( 1 == phase /**Insert "/" phase**/ ){
+                        abspath[ dex ]=( '/' );
+                        phase=( 2 );
+                    }else
+                    if( 2 == phase /**collection_phase**/ ){
+                        dex_relpath++;
+                        abspath[ dex ]=( relpath[ dex_relpath ] );
+                        if( dex_relpath+1 > m_i_relpath ){
+                            phase=( 2 );
+                            noc_abspath=( dex + 1 );
+                            break;
+                        };;
+                    };;
+                };;
+            //:----------------------:abspath=parfold+relpath://
+            //:---------------------------------:CONCAT_PATHS://
+            //:Normalize_AbsPath:----------------------------://
+                
+                NCC b_slash=( '\\' );
+                NCC f_slash=( '/'  );
+
+                for( I32 i = 0 ; i <=( noc_abspath-1 ); i++ ){
+                    if( abspath[i] == b_slash ){
+                        abspath[i]  = f_slash ;
+                    };;
+                };;
+
+            //:----------------------------:Normalize_AbsPath://
+            //:Log_Absolute_Path_Created:--------------------://
+           
+                SPC( 3 );
+                LOI("[noc_abspath]:%d\n", noc_abspath );
+                LOS("[abspath]:%s\n"    ,     abspath );
+                SPC( 3 );
+
+            //:--------------------:Log_Absolute_Path_Created://
+            //:SKIP:Make_Sure_Path_Is_Valid:-----------------://
+                        
+                //[ UPDATE:@VID_IID[ 0276 ]TIME[02:38:10]]//
+                //[ Code needs to be written truthfully..]//
+                //[ do ___NOT___ skip this step.         ]//
+                /** ************************************ **/
+                /** @VID_IID[ 0276 ]TIME[ 02:34:23 ]     **/
+                /** Skip because it will be easier to do **/
+                /** this when we __TRY__ to open up the  **/
+                /** file pointed to by the absolute path.**/
+                /** ************************************ **/
+
+                    //:[   o_k ]: True if nothing catastrophic.
+                    //:[f_found]: True if able to open file.
+
+                FIL* fil = fopen( str_abspath , "r" );
+                if( ((FIL*)0) != fil ){
+                    (*BYREF_f_found)=(0 + 777  );
+                    o_k=(             0 + 777  );
+                    fclose( fil );
+                }else{
+                    (*BYREF_f_found)=(0 - 666  );
+                    o_k=(             0 + 777  );
+                };;
+
+            //:-----------------:Make_Sure_Path_Is_Valid:SKIP://
         //:=======================================:CORE_LOGIC://
 
         /** Positive[ o_k ]does not mean found. It just **/
@@ -597,7 +708,7 @@
             //:Loop backwards through string and match
             //:backwards to slash before "AAC2020"
             I32 noc_chi =(( strlen( chifold ) )  ); 
-            I32 noc_buf =(( strlen( cwd_buf ) )  );
+            /// noc_buf =(( strlen( cwd_buf ) )  );
 
             I32 dex_chi =(( strlen( chifold ) )  );//:OOB_BY_1
             I32 dex_buf =(( strlen( cwd_buf ) )  );//:OOB_BY_1
@@ -693,6 +804,9 @@
             NCC  parfold[NOC]={ 0}; //:[ AAC2020's parfold     ]
             FIL* filhand=((FIL*)0); //:[ file_handle / fin_han ]
 
+            /** Necessary Hack **/
+            NCC* str_abspath =&( abspath[ 0 ] );
+
             I32 extension_list_was_detected =( 0 );
             I32 problems_with_extension_list=( 0 );
 
@@ -734,21 +848,21 @@
                 parfold //:<----------------------:parent_folder
             ,   "./AAC2020_EXT_ORD/EXT_ORD.TXT" //:relpath
             ,          &(f_found) //:Flag____Found
-            ,   (NCC**)&(abspath) //:Absolute_Path
+            ,          &(str_abspath ) //:Absolute_Path
             ));;
 
         };;
         if( o_k >= 1 ){
-            if( ((CHR*)0) ==  abspath && (f_found <= 0) ){  
+            if( ((CHR*)0) !=  str_abspath && (f_found <= 0) ){  
                 
                 extension_list_was_detected=( 0 - 666 );
             }else
-            if( ((CHR*)0) !=  abspath && (f_found >= 1) ){  
+            if( ((CHR*)0) !=  str_abspath && (f_found >= 1) ){  
                 extension_list_was_detected=( 0 + 777 );
 
                 o_k=(
                 aac2020_rencore_abspath_CTO_filhand(
-                                abspath  ,&(filhand) ));;
+                            str_abspath  ,&(filhand) ));;
 
                 
                 if( o_k <= 0 || ((FIL*)0)==filhand){
@@ -769,6 +883,8 @@
                 /** parfold_relpath_CTO_filhand              **/
                 /** returned values that don't agree with    **/
                 /** each other.                              **/
+
+                LOI("[f_found]:%d\n", f_found );
                 ERR("[MIS_MATCHING_FLAGS_FROM:REL_CTO_FIL]");
             };;
 
@@ -824,6 +940,7 @@
             && extension_list_was_detected  <= 0
             && problems_with_extension_list <= 0
             ){
+                LOS("[extension_list_not_found]:%s\n","[...]");
 
                 /** ************************************** **/
                 /** If no extension list is found, we auto **/
