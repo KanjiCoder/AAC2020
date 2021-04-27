@@ -1,15 +1,16 @@
 # AAC2020 : Atomic Alice C11 2020
 
 ## INDEX:
-### 1: ABOUT
-### 2: DEVELOPER_TIME_COSTS
-### 3: CONCEPTUAL_TYPES
-### 4: DIAGRAMS
-### 5: VARIABLE_NAME_INDEX
-### 6: FUNCTION_NAME_INDEX
-### 7: ITS_WRONG
-### 8: LIBCHAN_AND_LIBCHAN_DIAGRAM
-### 9: ASCII_VALUES_IN_128_TO_255_RANGE
+### 01: ABOUT
+### 02: DEVELOPER_TIME_COSTS
+### 03: CONCEPTUAL_TYPES
+### 04: DIAGRAMS
+### 05: DIAGRAMS_UN_OFFICIAL (Brain storming)
+### 06: VARIABLE_NAME_INDEX
+### 07: FUNCTION_NAME_INDEX
+### 08: ITS_WRONG
+### 09: LIBCHAN_AND_LIBCHAN_DIAGRAM
+### 10: ASCII_VALUES_IN_128_TO_255_RANGE
 
     //:ABOUT:================================================://
 
@@ -1978,14 +1979,430 @@
         //:STILL_SOLVING_WITH_1D_RANGES:=====================://
 
     //:||||||||||||||||||||||||||||||||:DIAGRAMS:CLUDMAP(ing)://
-    //:DIAGRAMS:fic_MAP_tiloper:|||||||||||||||||||||||||||||://
+    //:DIAGRAMS:FAT_32_TILES:||||||||||||||||||||||||||||||||://
 
-        fic_MAP_tiloper ]WRAPS[ CLUDMAP ]function
-        Allows us to take the fragment integer coord on
-        screen and figure out the local interior
-        coordinates of the tile we want to render.
+        //:fat32_tiles_vocabulary:---------------------------://
 
+            AMCASET: AMmo_CAn_SET
+                     A type of [AUSET]that is drawn with
+                     our[ FAT_32 ]TILES.
+
+            ZER_CON: Zero Config.
+                     The zero tile slot will be used to store
+                     configuration information for tileset 
+                     rather than actual tileset data.
+
+            BITBUL4: Literally[ BIT BULLET 4 ]
+                    ( 4[cells/bullets]   )
+
+                     One of the 4 bits within a BITMAG4.
+                     Each BITBUL4 is a binary digit determining
+                     if a tile is turned on or off.
+
+            BITMAG4: Literally[ BIT MAGazine ]
+                     ( 4[stacks/magazines])
+
+            AMCAN32: Literally[ AMmo_CANister_32 ]
+                     (32 of them. They are the data sets that)
+                     (create 1 tile design in FAT_32_TILES)
+
+        //:---------------------------:fat32_tiles_vocabulary://
+        //:deprecated_terms:---------------------------------://
+
+            BITCEL4 (Bit  Cell)==> BITBUL4 (bit bullet  )
+            BITPIL4 (Bit  Pill)==> BITBUL4 (bit bullet  )
+
+            BITSTA4 (Bit Stack)==> BITMAG4 (bit magazine)
+            BITTOW4 (Bit Tower)==> BITMAG4 (bit magazine)
+
+            BLOK128 (Bit Block)==> AMCAN32 (32 ammo cans )
+            AMMOCAN (Ammo Can )==> AMCAN32 (32 ammo cans )
+
+        //:---------------------------------:deprecated_terms://
+
+        Originally I was thinking a 4X4X4 cube of data where
+        you have a total of 64 tiles.But going from 16 ausets
+        in the[ @TERMINAL_TILES@ (Paint5D) ]to 64 tiles seems
+        a bit too steep of an increase. ALSO...
+        4 layers of data for each tileset here seems better
+        to work with. We could do things like:
+
+
+            STEP_001: Alpha Blend the 4 BITBUL4 tiles
+                      to create a BITMAG4.
+
+            STEP_002: Alpha blend togeher all BITMAG4(s)
+                      Each[ BULLET/TILE ]in a BITMAG4 
+                      has a 25% influence over the final 
+                      output.
+               
+                      This creates a AMCAN32.
+                      (AMCAN32 == Ammo Can , 32 of them )
+
+        |<------------ 512 ------------>|
+        |<-128->|<-128->|<-128->|064|064|
+        +-------+-------+-------+---+---+ 
+        |       |       |       |   |   | \
+        |   0   |   1   |   2   +---3---+  \
+        |ZER_CON|       |       |   |   |   \
+        +-------+-------+-------+---+---+    +
+        |       |       |       |       |    |
+        |   4   |   5   |   6   |   7   |    |
+        |       |       |       |       |    |
+        +-------+-------+-------+-------+    +--[TOP_OF_CUBE]
+        |       |       |       |       |    |
+        |   8   |   9   |  10   |  11   |    |
+        |       |       |       |       |    |
+        +-------+-------+-------+-------+    +
+        |       |       |       |       |   /
+        |  12   |  13   |  14   |  15   |  /
+        |       |       |       |       | /
+        +===============================+  +---+---+ +---=---+
+        |       |       |       |       |  | 1 | 5 | |009|013|
+        |AMCAN32|AMCAN32|AMCAN32|AMCAN32|  | 2 | 6 | |010|014|
+        |  12   |  13   |  14   |  15   |  | 3 | 7 | |011|015|
+        |       |       |       |       |  | 4 | 8 | |012|016|
+        +---=---+---=---+---=---+---=---+  +-------+ +---=---+
+        |       |       |       |       |  |017|021| |025|029|
+        |AMCAN32|AMCAN32|AMCAN32|AMCAN32|  |018|022| |026|030|
+        |  28   |  29   |  30   |  31   |  |019|023| |027|031|
+        |       |       |       |       |  |020|024| |028|032|
+        +---=---+---=---+---=---+---=---+  +---=---+ +---=---+
+                                             ^
+                                             |
+                        +----------------> +-------+
+                        |  32 Ammo Cans    |017|021|
+           [AMCAN32]____|  (128x128)tile   |018|022|
+                        |  non-terminal    |019|023|
+                        |  AUSETS          |020|024|
+                        +----------------> +-------+
+                                             ^
+                                             |
+                        +----------------> +---+ =--+--=
+                        |   BITBUL4 -----> |017|    |
+           [BITMAG4]____|   BITBUL4 -----> |018| BITMAG4
+                        |   BITBUL4 -----> |019|    |
+                        |   BITBUL4 -----> |020|    |
+                        +----------------> +---+ =--+--=
+
+    //:||||||||||||||||||||||||||||||||:DIAGRAMS:FAT_32_TILES://
+    //:DIAGRAMS:AUTOMIX:|||||||||||||||||||||||||||||||||||||://
+    //:DIAGRAMS:AUTOLAT:|||||||||||||||||||||||||||||||||||||://
+    @VID_IID[ 0275 ]TIME[ 02:11:42 ]EXPLAINING_THIS_SECTION
+
+        AUTOMIX: AUTOmatic MIXing   (of tiles)
+        AUTOLAT: AUTOmatic LATching (of tiles)
+
+        --------------------------------------------------------
+        BOTH_USING_SAME_AUTOMIX_WITH_EACH_OTHER
+
+        +---+---+---+---+---+---+
+        |           |           |
+        +   +   +   +   +   +   +  AYE == No Action
+        |    AYE    |    BEE    |  BEE == No Action
+        +   +   +   +   +   +   +
+        |           |           |
+        +---+---+---+---+---+---+
+
+        +---+---+--+ +--+---+---+
+        |       ___| |___       |
+        +   +  |         |  +   +  AYE == AUTOMIX==DIVOTS
+        |    AYE         BEE    |  BEE == AUTOMIX==DIVOTS
+        +   +  |         |  +   +
+        |       ¯¯¯| |¯¯¯       |
+        +---+---+--+ +--+---+---+
+    
+        +---+---+---+---+---+---+
+        |           |           |
+        +   +   +===+===+   +   +  AYE == AUTOMIX==PRONGS
+        |    AYE|||||||||BEE    |  BEE == AUTOMIX==PRONGS
+        +   +   +===+===+   +   +  ( 50/50 alpha blend overlap )
+        |           |           |  @VID_IID[0275]T[02:47:32]
+        +---+---+---+---+---+---+
+        --------------------------------------------------------
+        +---+---+---+---+---+---+
+        |           |           |
+        +   +   +   +===+   +   +  AYE == AUTOMIX==PRONGS
+        |    AYE        |BEE    |  BEE == No Action
+        +   +   +   +===+   +   +
+        |           |           |
+        +---+---+---+---+---+---+
+
+        +---+---+---+---+---+---+
+        |           |           |
+        +   +   +===+   +   +   +  AYE == No Action
+        |    AYE|       |BEE    |  BEE == AUTOMIX==PRONGS
+        +   +   +===+   +   +   +
+        |           |           |
+        +---+---+---+---+---+---+
+        --------------------------------------------------------
+        +---+---+---++--+---+---+
+        |           ||___       |
+        +   +   +   +===+|  +   +  AYE == AUTOMIX==PRONGS
+        |    AYE        |BEE    |  BEE == AUTOMIX==DIVOTS
+        +   +   +   +===+|  +   +
+        |           ||¯¯¯       |
+        +---+---+---++--+---+---+
+
+        +---+---+--++---+---+---+
+        |       ___||           |
+        +   +  |+===+   +   +   +  AYE == AUTOMIX==DIVOTS
+        |    AYE|       |BEE    |  BEE == AUTOMIX==PRONGS
+        +   +  |+===+   +   +   +
+        |       ¯¯¯||           |
+        +---+---+--++---+---+---+
+        --------------------------------------------------------
+
+        When two tile types get close to each other, they
+        can interact with each other and change how they
+        render themselves. This makes the environment
+        look more intentionally "put together".
+        
+        Not sure which word I will settle on [AUTOMIX|AUTOLAT].
+        But the idea is that it is[ LIKE ]auto tiling but
+        determines how 1 tile will interact with another
+        tile when in proximity to another tile.
+
+        Background Material Tiles: (B_#:Material  B)
+        [ B_1 , B_2 , B_3 , B_4 , B_5 , B_6 , B_7 , B_8 ]
+
+        Foreground Material Tiles: (F_#:Material  F)
+        [ F_1 , F_2 , F_3 , F_4 ]
+
+        Tangent Material Tiles:    (T_#:Material  T)
+
+        +---+---+---+---+---+---+---+---+---+ <---+
+        |           |           |           |     |
+        +   +   +   +   +   +   +   +   +   +     |
+        |    B_1    |    B_2    |    B_3    |     |
+        +   +   +   +   +   +   +   +   +   +     |
+        |           |           |           |     |
+        +---+---+---+---+---+---+---+---+---+     |
+        |           |           |           |     |
+        +   +   +   +   +   +   +   +   +   +     |
+        |    B_4    |    B_5    |    B_6    |     +--[3x3_TILES]
+        +   +   +   +   +   +   +   +   +   +     |
+        |           |           |           |     |
+        +---+---+---+---+---+---+---+---+---+     |
+        |           |           |           |     |
+        +   +   +   +   +   +   +   +   +   +     |
+        |    B_7    |    B_8    |    B_9    |     |
+        +   +   +   +   +   +   +   +   +   +     |
+        |           |           |           |     |
+        +-----------+-----------+-----------+ <---+
+
+
+        +---+---+---+---+---+---+---+---+---+
+        |           |           |           |
+        +   +   +   +   +---+   +   +   +   +
+        |           |   | S |   |           |
+        +   +   +   +   +   +   +   +   +   +
+        |           |   |   |   |           |
+        +---+---+---+---+   +---+---+---+---+ SURROUNDED:
+        |           |           |           | [B_6]detects[F_1]
+        +   +---+---+   +   +   +---+---+   + and renders prongs
+        |   |B_F         F_1         B_F|   | [B_F]of material
+        +   +---+---+   +   +   +---+---+   + type[ F ].
+        |           |    B_5    |    B_6    |
+        +---+---+---+ - - - - - +---+---+---+ INNER_TANGENT:
+        |           |           |           | [B_9] detects[F_2]
+        +   +   + +-+   +   +   +-+ +   +   + and renders 
+        |         |B_F   F_2   B_F|  B_9    | prongs[B_F]of
+        +   +   + +-+   +   +   +-+ +   +   + material type[ F ]
+        |           |           |           |
+        +-----------+---+   +---+-----------+   
+                    |+--|   |--+|     +------------------------+
+                    ||  +   +  ||     [ OUTER_TANGENT ]:       |
+                    ||  |T_F|  || <-- [ T_1 ]tile detects      |
+                    ||  +---+  ||     |      adjacent[ F_2 ]   |
+                    ||   T_1   ||     |      tile.             |
+                    +|--+---+--|+     |                        |
+                    ||         ||     |    [F_2]tile is _NOT_  |
+                    ||         ||     |    set here. But[T_1]  |
+                    ||   T_2   ||     |    renders[F_2]tile as |
+                    ||         ||     |    if it [GREW/SNAPPED]|
+                    ||_________||     |    into[ T_1 ]         |
+                    +-----------+     |                        |
+                                      |    This creates:       |
+                                      |    PRONG_T( T_F )      |
+                                      |    T == CURRENT___MAT  |
+                                      |    F == PULLED_IN_MAT  |
+                                      |(MAT==Material)         |
+                                      +------------------------+
+
+        SURROUNDED:
+            AUTOMIXING that happens when current tile
+            detect's an adjacent tile (TOP|LEF|RIG|BOT)
+            where it's material type is 100% surrounding
+            another tile type. The other tile type can then
+            be[ pulled into ]the current tile to create
+            automatic latching effects.
+            ( By convention, BIGGER latches than INNER_TANGENT )
+
+        INNER_TANGENT:
+            Like[ SURROUNDED ]but the[ other_tile ]is less than
+            100% surrounded. But the[ other_tile ]__IS__
+            overlapping the current tile type.
+
+        OUTER_TANGENT:
+            The current tile detects another tile type as
+            its[ TOP | LEF | RIG | BOT ]neighbor, but
+            there is NO OVERLAP between the two tile types
+            on the current tile cell being rendered.
+
+
+    //:|||||||||||||||||||||||||||||||||||||:DIAGRAMS:AUTOMIX://
+    //:|||||||||||||||||||||||||||||||||||||:DIAGRAMS:AUTOLAT://
+    //:DIAGRAMS:DAMAGED_SPACE_TILES:|||||||||||||||||||||||||://
+    @VID_IID[ 0275 ]TIME[ 03:00:42 ]EXPLAINED_FOR_VIEWER
+    @VID_IID[ 0275 ]TIME[ 03:04:04 ]DONE_EXPLAINING_TO_VIEWER
+
+        //:vocab_section:------------------------------------://
+
+            DAMSPAT: DAMaged_SPAce_Tile  
+                    The hidden tile used as a damage mask
+                    that tells us.
+        
+                    1. What tiles to __NOT__ render because
+                       they have been blown up.
+
+                    2. What tiles to render with damage effects
+                       because they TANGENT a[ DAMSPAT ].
+        
+            DAMTILE: DAMaged_TILE
+                    The actual tile that is rendering damage
+                    effects because it TANGENTS a[ DAMSPAT ]
+
+        //:------------------------------------:vocab_section://
+
+        Instead of having only _ONE_ type of [ ZERO ]tile...
+        We could have a whole map of different kinds of
+        [ ZERO ] tiles.
+
+        These tiles are used as a mask to tell us[ HOW ]
+        parts of the level were destroyed.
+
+        For example:
+            A tile[ deleted/destroyed ] by a [ FIRE_BOMB ] 
+            may leave a different type of graphic behind 
+            than a tile[ deleted/destroyed ]by 
+            an[ ELECTRIC_BOMB ].
+
+            ELECTRIC_DAMAGE_TILE: 
+                Might leave MELTED EDGE EFFECTS on
+                tiles adjacent to it's overlap site.
+
+            FIRE_____DAMAGE_TILE:
+                Might leave CHARRED BURNT COAL EFFECTS
+                on tiles adjacent to it's overlap site.
+
+
+            Two bombs go off with a square blast radius
+            on this 7x7 chunk of tiles:
+
+            +---+---+---+---+---+---+---+
+            |   |   |ELE|ELE|ELE|   |   |
+            +---+---+---+---+---+---+---+
+            |   |   |ELE|ELE|ELE|   |   |
+            +---+---+---+---+---+---+---+
+            |   |   |ELE|ELE|ELE|   |   |
+            +---+---+---+---+---+---+---+
+            |   |   |   |   |   |   |   |
+            +---+---+---+---+---+---+---+
+            |   |   |FIR|FIR|FIR|   |   |
+            +---+---+---+---+---+---+---+
+            |   |   |FIR|FIR|FIR|   |   |
+            +---+---+---+---+---+---+---+
+            |   |   |FIR|FIR|FIR|   |   |
+            +---+---+---+---+---+---+---+
+
+            @VID_IID[ 0275 ]TIME[ 02:59:13 ]
+            The 3X3 blocks of[ ELE ]and[ FIR ] tiles
+            STILL_EXIST below, but are not visible
+            to the player of the game. They are what
+            control what damage effects show up.
+
+            +---+---+           +---+---+
+            |   |_M_|           |_M_|   | _M_ : Melted effects
+            +---+---+           +---+---+       on these tiles.
+            |   |_M_|           |_M_|   |
+            +---+---+           +---+---+
+            |   |_M_|           |_M_|   |
+            +---+---+---+---+---+---+---+
+            |   |DAM|DAM|DAM|DAM|DAM|   | DAM : Combined 
+            +---+---+---+---+---+---+---+       damage effects.
+            |   |_C_|           |_C_|   |
+            +---+---+           +---+---+
+            |   |_C_|           |_C_|   | _C_ : Chared effects
+            +---+---+           +---+---+       on these tiles.
+            |   |_C_|           |_C_|   |
+            +---+---+           +---+---+
+
+    //:|||||||||||||||||||||||||:DIAGRAMS:DAMAGED_SPACE_TILES://
     //:=============================================:DIAGRAMS://
+    //:DIAGRAMS_UN_OFFICIAL:=================================://
+    //:DIAGRAMS:PIPELINED_512_X_512_DATASETS:||||||||||||||||://
+
+        THIS_IS_NOT_OFFICIAL. JUST_A_ROUGH_IDEA.
+        Thinking that each time we create a non-terminal
+        auto tile set, it should have some other feature that
+        gives it a new behavior.
+
+        Structure the pipeline in a sensible way so that
+        the workflow is fun and exciting.
+
+        Arrow denotes the flow of data. 
+        What feeds into what.
+     
+                  +---+
+                  |P5D| Terminal Auto Tiles (PAINT5D Editor)
+                  +---+
+                    |
+                    V
+                  +---+
+                  |FAT| 64 Fractal Auto Tiles
+          +---+---+---+---+---+
+          |                   |  
+          V                   V
+        +---+               +---+ Decals:
+        |LAM| 128           |DEC| 32 positive (addative  )
+        +---+               +---+ 32 negative (sutractive)
+        
+        LAM: "Latch And Mix" tiles.
+        Uses "Automixing" / "AutoLatching"
+        Which tells us how a tile should modify
+        itself when overlapping or next to 
+        another tile.
+         
+        ---------------------------------------------------
+        With fractal auto tiling? How will we decide where
+        do draw the line between a tileset and a level map?
+        ---------------------------------------------------
+
+            @_NOT_OFFICIAL_JUST_A_ROUGH_THOUGHT_@
+            How to combine different maps together into
+            the final level.
+
+            BAS: Base  Level maps
+            DEM: Decal  Map (addative+subtractive)
+            CUG: Composite_Undamaged_Geometry(map)
+            DAM: Damage Map (using damage tiles)
+            FIN: Final Level Map
+
+            +---+
+            |BAS|----+
+            +---+    |   +---+
+                     +---|CUG|---+
+            +---+    |   +---+   |
+            |DEM|----+           |   +---+
+            +---+                +---|FIN|
+                                 |   +---+
+                         +---+   |
+                         |DAM|---+ 
+                         +---+
+
+    //:||||||||||||||||:DIAGRAMS:PIPELINED_512_X_512_DATASETS://
+    //:=================================:DIAGRAMS_UN_OFFICIAL://
     //:VARIABLE_NAME_INDEX:==================================://
     
         sub_dex : Ambgious, choose[ suv_dex | ast_dex ]
