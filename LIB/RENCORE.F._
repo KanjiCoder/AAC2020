@@ -100,6 +100,93 @@
 #undef  CHR
 #undef  ERR
 //:========================================:INFO_PRINT_STRING://
+//:INFO_PRINT_SIGNED_32_BIT_INT:=============================://
+#define CHR const char                                //: 01 ://
+#define I32  int32_t /** GCC: <stdint.h> **/          //: 02 ://
+#define I_P intmax_t /** GCC: <stdint.h> **/          //: 03 ://
+#define ERR aac2020_rencore_Halt                      //: 04 ://
+
+    void
+    aac2020_rencore_Info_i32( 
+        CHR* msg_fmt /** Format String **/
+    ,   I32  msg_inf /** Information String **/
+    )
+    {
+        if( ((CHR*)0) == msg_fmt ){ ERR("[NIL:msg_fmt:i32]"); };
+        if( ((I32 )0) == msg_inf ){ ERR("[NIL:msg_inf:i32]"); };
+        
+        aac2020_rencore_Info_any(
+                        msg_fmt
+        ,   (void*)(I_P)msg_inf
+        );;
+    }
+
+#undef  CHR  //:----------------------------------------: 01 ://
+#undef  I32  //:----------------------------------------: 02 ://
+#undef  I_P  //:----------------------------------------: 03 ://
+#undef  ERR  //:----------------------------------------: 04 ://
+//:=============================:INFO_PRINT_SIGNED_32_BIT_INT://
+//:PRINT_NEWLINE_SPACES:=====================================://
+#define I32 int32_t /** GCC: <stdint.h> **/
+#define ERR aac2020_rencore_Halt
+
+    void
+    aac2020_rencore_Info_spc(
+        I32 nos //:Number_Of_Spaces
+    )
+    {
+        I32 logging_is_on=( 0 - 1234 /**INVALID_VALUE**/ );
+        
+        #ifdef AAC2020_INCLUDE_SILENCE
+        /** Compiled as part of main AAC2020 engine. **/
+            
+            if( AAC2020_SILENCE.RENCORE <= 0 ){
+                logging_is_on=( 1 );
+            }else
+            if( AAC2020_SILENCE.RENCORE >= 1 ){
+                logging_is_on=( 0 );
+            }else{
+                ERR("[WTF_ARE_YOU_DOING?]");
+            };;
+
+            /** @VID_IID[ 0128 ]TIME[ 03:33:33 ]ORIGINAL *** **/
+            /** @VID_IID[ 0156 ]TIME[ 02:36:13 ]UPDATED **** **/
+            /** Override turns of logging for ALL SYSTEMS.   **/
+            if( AAC2020_SILENCE.SILENCE >=( 0+1 ) ){
+                logging_is_on=( 0 ); //:EVERYONE_SHUT_UP
+            }else
+            if( AAC2020_SILENCE.SILENCE <=( 0-1 ) ){
+                logging_is_on=( 1 ); //:EVERYBODY_SCREAM
+            };;
+
+        #else
+        /** Compiled as stand-alone command line utility. **/
+
+            logging_is_on =( 
+                AAC2020_RENCORE_STAND_ALONE_ONLY_LOGGING_ON );;
+
+        #endif
+
+        //: 
+        if( logging_is_on >= 1 ){
+            
+            I32 i = nos;
+            while( i-- ){
+                printf("[rencore_spc]\n"); 
+            };;
+            fflush( stdout );
+        }else
+        if( 0 == logging_is_on ){
+            /** do nothing **/
+        }else{
+            ERR("[YOUR_LOGGING_CONFIG_LOGIC_SUCKS_2021]");
+        };;
+
+    }
+
+#undef  I32  //:----------------------------------------: 01 ://
+#undef  ERR  //:----------------------------------------: 02 ://
+//:=====================================:PRINT_NEWLINE_SPACES://
 //:INIT_NONE:================================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/
         U32 AAC2020_RENCORE_InitNone( U32 u32 ){
@@ -236,13 +323,16 @@
 #define I32        int32_t /** GCC: <stdint.h>**///:----: 04 ://
 #define ERR       aac2020_rencore_Halt           //:----: 05 ://
 #define LOG       aac2020_rencore_Info_any       //:----: 06 ://
-#define EXT       extern                         //:----: 07 ://
-#define FIL       FILE                           //:----: 08 ://
-#define SIZ       size_t   /** GCC: <stddef.h>**///:----: 09 ://
-#define LOS       aac2020_rencore_Info_str       //:----: 10 ://
-#define ECI       aac2020_rencore_MACRO_eci      //:----: 11 ://
-#define E_M       aac2020_rencore_msg_err        //:----: 12 ://
-#define CWD_NOC ( aac2020_rencore_MACRO_max_noc )//:----: 13 ://
+#define LOI       aac2020_rencore_Info_i32       //:----: 07 ://
+#define SPC       aac2020_rencore_Info_spc       //:----: 08 ://
+#define EXT       extern                         //:----: 09 ://
+#define FIL       FILE                           //:----: 10 ://
+#define SIZ       size_t   /** GCC: <stddef.h>**///:----: 11 ://
+#define LOS       aac2020_rencore_Info_str       //:----: 12 ://
+#define ECI       aac2020_rencore_MACRO_eci      //:----: 13 ://
+#define E_M       aac2020_rencore_msg_err        //:----: 14 ://
+#define CWD_NOC ( aac2020_rencore_MACRO_max_noc )//:----: 15 ://
+#define MAX_NOC ( aac2020_rencore_MACRO_max_noc )//:----: 16 ://
     //:LoadExtensions:---------------------------------------://
 
         void
@@ -500,11 +590,91 @@
 
             LOS("[cwd_buf]:%s" , cwd_buf );
 
-            o_k=( 0-7 );    
-            E_M=("[FINISH_THIS_CODE_HERE]");
-            LOS( "[X_X:E_M]:%s" , E_M );
-        };;
+            //: o_k=( 0-7 );    
+            //: E_M=("[FINISH_THIS_CODE_HERE]");
+            //: LOS( "[X_X:E_M]:%s" , E_M );
 
+            //:Loop backwards through string and match
+            //:backwards to slash before "AAC2020"
+            I32 noc_chi =(( strlen( chifold ) )  ); 
+            I32 noc_buf =(( strlen( cwd_buf ) )  );
+
+            I32 dex_chi =(( strlen( chifold ) )  );//:OOB_BY_1
+            I32 dex_buf =(( strlen( cwd_buf ) )  );//:OOB_BY_1
+
+            I32 dex     =(( 0 - 1 )              );
+            I32 m_i     =(( strlen( cwd_buf ) )-1);
+            I32 t_f     =( 0 ); //:Total_Found
+            I32 s_i     =( 0 ); //:Slash_Index
+            I32 fou     =( 0 ); //:Found_Sub_String?
+
+            LOG("[ABOUT_TO_EXE_SUBSTR_SEARCH]:%s","[...]");
+            LOI("[m_i]:%d\n" , m_i );
+            for( dex = 0 ; dex <= m_i ; dex++ ){
+ 
+                dex_buf=( m_i - dex ); 
+                dex_chi--;
+
+                if( chifold[ dex_chi ] 
+                ==  cwd_buf[ dex_buf ] 
+                ){
+                        t_f++; //:total_found
+                    if( t_f == noc_chi ){
+                        s_i =( dex_buf - 1 );
+                        fou =(    0+777    );
+                        break;
+                    };;
+                }else{
+                    t_f=( 0 );
+                    dex_chi=( noc_chi );//:OOB_BY_1
+                };;
+            };;
+
+            if( fou <= 0 ){
+                o_k =( 0 );
+                LOS( "[NOT_FOUND:parfold]:%s" , "[...]" );
+            }else{
+                o_k =( 1 );
+                LOS( "[YES_FOUND:parfold]:%s" , "[...]" );
+                LOI( "[YES_FOUND:....s_i]:%d" ,   s_i   );
+            };;
+
+            //:Copy Sub String:
+            if( fou >= 1 && o_k >= 1 ){
+                NCC* parfold=(  *BYREF_parfold );
+                I32  parfold_noc=(   s_i + 1 );
+                if(  parfold_noc > MAX_NOC   ){
+                    o_k =( 0 ); //:Path_Too_Big
+                }else{
+                    
+                    //:Add null terminator to end of string.
+                    parfold[ parfold_noc + 0 ]=( 0 );
+
+                    //:Copy path into[ parfold ]:
+                    #define M_I ( parfold_noc - 1 ) //://////://
+                    for( I32 p = 0 ; p <= ( M_I ) ; p++ ){
+
+                        parfold[ p ]=( cwd_buf[ p ] );
+
+                    };;
+                    #undef  M_I //://////////////////////////://
+                };;
+            }else
+            if( fou <= 0 && o_k <= 0 ){
+                //:OKAY THIS CAN HAPPEN. DO NOTHING.
+            }else{
+                ERR("[@EDCL@:unexpected_state:2021]");
+            };;
+        };;
+        if( o_k >= 1 ){
+
+            //:Debug: Print out the sub path string:
+            LOS( "[about_to_print:parfold]:%s" , "[...]" );
+            NCC* parfold=(  *BYREF_parfold );
+            SPC(3);
+            LOS( "[parfold]:%s" ,  parfold );
+            SPC(3);
+        };;
         
         return( o_k /** >= 1 if no errors **/ );
     }
@@ -768,13 +938,16 @@
 #undef      I32  //:------------------------------------: 04 ://
 #undef      ERR  //:------------------------------------: 05 ://
 #undef      LOG  //:------------------------------------: 06 ://
-#undef      EXT  //:------------------------------------: 07 ://
-#undef      FIL  //:------------------------------------: 08 ://
-#undef      SIZ  //:------------------------------------: 09 ://
-#undef      LOS  //:------------------------------------: 10 ://
-#undef      ECI  //:------------------------------------: 11 ://
-#undef      E_M  //:------------------------------------: 12 ://
-#undef  CWD_NOC  //:------------------------------------: 13 ://
+#undef      LOI  //:------------------------------------: 07 ://
+#undef      SPC  //:------------------------------------: 08 ://
+#undef      EXT  //:------------------------------------: 09 ://
+#undef      FIL  //:------------------------------------: 10 ://
+#undef      SIZ  //:------------------------------------: 11 ://
+#undef      LOS  //:------------------------------------: 12 ://
+#undef      ECI  //:------------------------------------: 13 ://
+#undef      E_M  //:------------------------------------: 14 ://
+#undef  CWD_NOC  //:------------------------------------: 15 ://
+#undef  MAX_NOC  //:------------------------------------: 16 ://
 //:=============================================:MAIN_SECTION://
 //:UNIT_TEST_SECTION:========================================://
 #define I32  int32_t  /** GCC: <stdint.h>     **/     //: 01 ://
