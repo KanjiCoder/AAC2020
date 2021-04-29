@@ -9,6 +9,7 @@
 //:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
 //:NON_STANDARD_IS_LOGGING_ON_DETECTION:=====================://
 #define I32 int32_t /** GCC: <stdint.h> **/           //: 01 ://
+#define ERR aac2020_rencore_Halt                      //: 02 ://
 
     I32
     aac2020_rencore_GET_logison()
@@ -48,7 +49,8 @@
         return( logison );
     }
 
-#undef  I32
+#undef  I32  //:----------------------------------------: 01 ://
+#undef  ERR  //:----------------------------------------: 02 ://
 //:NON_STANDARD_IS_LOGGING_ON_DETECTION:=====================://
 //:LOG_AFTER_HALT:===========================================://
 #define I32 int32_t /** GCC: <stdint.h> **/           //: 01 ://
@@ -460,7 +462,7 @@
                     I32 dex ;//:Global_Character_Index
                     NCC chr ;//:Current_Character
 
-                    for( I32 dex = d_0 ; dex <= d_1 ; dex++ ){
+                    for( dex = d_0 ; dex <= d_1 ; dex++ ){
                         if( loc >(7-1) ){
                             ERR("[YOU_WENT_OOB_007]");
                         };;
@@ -1193,9 +1195,26 @@
                 };;
 
             };;//:////////////////////////////////////[WHILE]://
+            //:out_of_memory:--------------------------------://
+            /**You are just looking for reasons to be unhappy**/
+            if( 3 == 3 /** ALWAYS_TRUE **/ ){
+
+                if( no_space_for_null_term >= 1 ){
+                    /** Without null terminator room,      * **/
+                    /** we bailed out of extenstion list   * **/
+                    /** processing early.... And extension * **/
+                    /** list may contain strings without   * **/
+                    /** proper null termination.           * **/
+                    /** @VID_IID[ 0280 ]TIME[ 00:18:42 ]   * **/
+                    o_k=( 0 - 606 );
+                };;
+
+            };;
+            //:--------------------------------:out_of_memory://
             //:print_loaded_extension_list:------------------://
             #define NOE aac2020_rencore_ext_noe
             #define ARR aac2020_rencore_ext_arr
+            if( o_k >= 1 ){
 
                 aac2020_rencore_Sort_ext_arr();
                 aac2020_rencore_Print_ext_arr();
@@ -1212,6 +1231,7 @@
 
                 aac2020_rencore_Print_ext_arr();
 
+            };;
             #undef  NOE
             #undef  ARR
             //:------------------:print_loaded_extension_list://
