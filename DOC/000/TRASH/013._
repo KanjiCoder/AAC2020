@@ -1,0 +1,49 @@
+    
+    @VID_IID[ 0276 ]TIME[ 03:05:42 ]
+    Just use FOPEN and FCLOSE
+
+    I32 //:<-- o_k flag.
+    aac2020_rencore_abspath_CTO_filhand(
+        CHR*        abspath
+    ,   FIL* *BYREF_filhand
+    )
+    {
+        #if( ECI )//:########################################://
+
+            if( ((CHR*)0) == abspath ){ 
+                ERR("[NULL_ABSPATH]");
+            };;
+
+            /** FIL** : expecting non-null    **/
+            /** FIL*    expecting     null    **/
+
+            if( ((FIL**)0) ==( BYREF_filhand ) ){
+                ERR("[NIL_REF:filhand]");
+            }else
+            if( ((FIL* )0) !=(*BYREF_filhand ) ){
+                ERR("[EXP_NIL:filhand]");
+            };;
+        #endif //:####################################( ECI )://
+        //:declare_vars:-------------------------------------://
+
+            I32  o_k =( 0 /** UndefinedState **/ );
+            FIL* filhand=((FIL*)0);
+
+        //:-------------------------------------:declare_vars://
+        //:CORE_LOGIC:=======================================://
+
+            o_k=( 0 - 666 );
+            aac2020_rencore_msg_err=("[FINISHTHIS:2021]");
+
+        //:=======================================:CORE_LOGIC://
+        //:return:byref:-------------------------------------://
+
+            (*BYREF_filhand)=( filhand );
+
+        //:-------------------------------------:return:byref://
+        //:return:byval:-------------------------------------://
+
+            return( o_k );
+    
+        //:-------------------------------------:return:byval://
+    }

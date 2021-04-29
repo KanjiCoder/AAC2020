@@ -9,24 +9,30 @@
 //:====================================:RENCORE_DOCUMENTATION://
 //:STRUCTS:==================================================://
 #define CHR const char                                //: 01 ://
-#define I32 int32_t /** GCC: <stdint.h> **/           //: 02 ://
+#define NCC       char                                //: 02 ://
+#define I32 int32_t /** GCC: <stdint.h> **/           //: 03 ://
 
     struct
     AAC2020_RENCORE_ext_ord{ //:<--Extension_Order(entry)
 
-        CHR ext_nam[8]; //:extension_name: 7 characters+NULL
+        NCC ext_nam[8]; //:extension_name: 7 characters+NULL
         I32 ext_ord   ; //:extension_order( 0==max priority )
                         //:...............(<0:OFF | >0:ONN  )
     };
 
 #undef  CHR  //:----------------------------------------: 01 ://
-#undef  I32  //:----------------------------------------: 02 ://
+#undef  NCC  //:----------------------------------------: 02 ://
+#undef  I32  //:----------------------------------------: 03 ://
 //:==================================================:STRUCTS://
 //:DEFINES_AND_VARIABLES:====================================://
 #define U08 uint8_t /** GCC: <stdint.h> **/           //: 01 ://
 #define I32 int32_t /** GCC: <stdint.h> **/           //: 02 ://
 #define REO struct AAC2020_RENCORE_ext_ord            //: 03 ://
 #define CHR const char                                //: 04 ://
+
+    /** Strict Parsing Of File or we fail. **/
+    I32  aac2020_rencore_STRICT =( 1 );     /**Strict_Parsing**/
+    CHR* aac2020_rencore_REASON =("NONE");  /**AbortionReason**/
 
     //! Error Check Inputs For This File? !//
     #define aac2020_rencore_MACRO_eci ( 1 )
@@ -36,8 +42,9 @@
     //:USE: aac2020_rencore_abspath_CTO_filhand
     #define aac2020_rencore_OpenTextFileUsing_abspath "[DNU]"
 
+    //:USE: fopen & fclose , don't get so fancy!
+    #define aac2020_rencore_abspath_CTO_filhand "[@_D_N_U_@]"
  
-
     //! Maximum Number Of Characters For Any Stack    !//
     //! allocated char array (string)                 !//
     #define aac2020_rencore_MACRO_max_noc ( 1024 )

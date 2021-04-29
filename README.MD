@@ -11,6 +11,7 @@
 ### 08: ITS_WRONG
 ### 09: LIBCHAN_AND_LIBCHAN_DIAGRAM
 ### 10: ASCII_VALUES_IN_128_TO_255_RANGE
+### 11: EXTENSION_IDEAS
 
     //:ABOUT:================================================://
 
@@ -2736,6 +2737,31 @@
         still remember the Alt+[ascii code] for it
 
     //:=====================:ASCII_VALUES_IN_128_TO_255_RANGE://
+    //:EXTENSION_IDEAS:======================================://
+
+        1: Fractal_Face
+           Take a 256x256 image and overlay it over the 
+           [canvas_user_view (cuv)] and then set all sized
+           tiles by color sampling and averaging.
+
+           Then use the AAC2020_EXTCODE_SHATTER rendering
+           code to animate it.
+
+           Result: Cool effects you can apply to any
+                   256x256 [ image / photo ].
+
+           Maybe shamelessly use a source photo that is
+           #N_S_F_W# in order to get views. Remember, the
+           fitness function of an idea has __NOTHING__ to
+           do with how good of an idea it is, so playing
+           dirty should be overlooked.
+
+           Better idea.... Don Ho cringe face.
+
+           Find library that will allow us to export to
+           animated gif.
+
+    //:======================================:EXTENSION_IDEAS://
     
     
     

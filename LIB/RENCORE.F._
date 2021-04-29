@@ -7,6 +7,49 @@
         exit( 189 );
     }
 //:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+//:NON_STANDARD_IS_LOGGING_ON_DETECTION:=====================://
+#define I32 int32_t /** GCC: <stdint.h> **/           //: 01 ://
+
+    I32
+    aac2020_rencore_GET_logison()
+    {
+        I32 logison=( 0 - 1234 /**INVALID_VALUE**/ );
+        
+        #ifdef AAC2020_INCLUDE_SILENCE
+        /** Compiled as part of main AAC2020 engine. **/
+            
+            if( AAC2020_SILENCE.RENCORE <= 0 ){
+                logison=( 1 );
+            }else
+            if( AAC2020_SILENCE.RENCORE >= 1 ){
+                logison=( 0 );
+            }else{
+                ERR("[WTF_ARE_YOU_DOING?]");
+            };;
+
+            /** @VID_IID[ 0128 ]TIME[ 03:33:33 ]ORIGINAL *** **/
+            /** @VID_IID[ 0156 ]TIME[ 02:36:13 ]UPDATED **** **/
+            /** Override turns of logging for ALL SYSTEMS.   **/
+            if( AAC2020_SILENCE.SILENCE >=( 0+1 ) ){
+                logison=( 0 ); //:EVERYONE_SHUT_UP
+            }else
+            if( AAC2020_SILENCE.SILENCE <=( 0-1 ) ){
+                logison=( 1 ); //:EVERYBODY_SCREAM
+            };;
+
+        #else
+        /** Compiled as stand-alone command line utility. **/
+
+            logison =( 
+                AAC2020_RENCORE_STAND_ALONE_ONLY_LOGGING_ON );;
+
+        #endif
+
+        return( logison );
+    }
+
+#undef  I32
+//:NON_STANDARD_IS_LOGGING_ON_DETECTION:=====================://
 //:LOG_AFTER_HALT:===========================================://
 #define I32 int32_t /** GCC: <stdint.h> **/           //: 01 ://
 #define CHR const char                                //: 02 ://
@@ -18,46 +61,17 @@
     ,   void* dat_any   
     )
     { 
-        I32 logging_is_on=( 0 - 1234 /**INVALID_VALUE**/ );
-        
-        #ifdef AAC2020_INCLUDE_SILENCE
-        /** Compiled as part of main AAC2020 engine. **/
-            
-            if( AAC2020_SILENCE.RENCORE <= 0 ){
-                logging_is_on=( 1 );
-            }else
-            if( AAC2020_SILENCE.RENCORE >= 1 ){
-                logging_is_on=( 0 );
-            }else{
-                ERR("[WTF_ARE_YOU_DOING?]");
-            };;
-
-            /** @VID_IID[ 0128 ]TIME[ 03:33:33 ]ORIGINAL *** **/
-            /** @VID_IID[ 0156 ]TIME[ 02:36:13 ]UPDATED **** **/
-            /** Override turns of logging for ALL SYSTEMS.   **/
-            if( AAC2020_SILENCE.SILENCE >=( 0+1 ) ){
-                logging_is_on=( 0 ); //:EVERYONE_SHUT_UP
-            }else
-            if( AAC2020_SILENCE.SILENCE <=( 0-1 ) ){
-                logging_is_on=( 1 ); //:EVERYBODY_SCREAM
-            };;
-
-        #else
-        /** Compiled as stand-alone command line utility. **/
-
-            logging_is_on =( 
-                AAC2020_RENCORE_STAND_ALONE_ONLY_LOGGING_ON );;
-
-        #endif
+        I32 logison=(
+            aac2020_rencore_GET_logison() );
 
         //: 
-        if( logging_is_on >= 1 ){
+        if( logison >= 1 ){
             /** Same Line As Next Printf **/
             printf("[rencore_log]....(   " ); fflush( stdout );
             printf( str_fmt , dat_any      ); fflush( stdout );
             printf(               "   )\n" ); fflush( stdout );
         }else
-        if( 0 == logging_is_on ){
+        if( 0 == logison ){
             /** do nothing **/
         }else{
             ERR("[YOUR_LOGGING_CONFIG_LOGIC_SUCKS_2021]");
@@ -135,40 +149,8 @@
         I32 nos //:Number_Of_Spaces
     )
     {
-        I32 logging_is_on=( 0 - 1234 /**INVALID_VALUE**/ );
-        
-        #ifdef AAC2020_INCLUDE_SILENCE
-        /** Compiled as part of main AAC2020 engine. **/
-            
-            if( AAC2020_SILENCE.RENCORE <= 0 ){
-                logging_is_on=( 1 );
-            }else
-            if( AAC2020_SILENCE.RENCORE >= 1 ){
-                logging_is_on=( 0 );
-            }else{
-                ERR("[WTF_ARE_YOU_DOING?]");
-            };;
-
-            /** @VID_IID[ 0128 ]TIME[ 03:33:33 ]ORIGINAL *** **/
-            /** @VID_IID[ 0156 ]TIME[ 02:36:13 ]UPDATED **** **/
-            /** Override turns of logging for ALL SYSTEMS.   **/
-            if( AAC2020_SILENCE.SILENCE >=( 0+1 ) ){
-                logging_is_on=( 0 ); //:EVERYONE_SHUT_UP
-            }else
-            if( AAC2020_SILENCE.SILENCE <=( 0-1 ) ){
-                logging_is_on=( 1 ); //:EVERYBODY_SCREAM
-            };;
-
-        #else
-        /** Compiled as stand-alone command line utility. **/
-
-            logging_is_on =( 
-                AAC2020_RENCORE_STAND_ALONE_ONLY_LOGGING_ON );;
-
-        #endif
-
-        //: 
-        if( logging_is_on >= 1 ){
+        I32 logison=( aac2020_rencore_GET_logison() );
+        if( logison >= 1 ){
             
             I32 i = nos;
             while( i-- ){
@@ -176,7 +158,7 @@
             };;
             fflush( stdout );
         }else
-        if( 0 == logging_is_on ){
+        if( 0 == logison ){
             /** do nothing **/
         }else{
             ERR("[YOUR_LOGGING_CONFIG_LOGIC_SUCKS_2021]");
@@ -316,6 +298,390 @@
 #undef      LOS  //:------------------------------------: 05 ://
 #undef  CWD_NOC  //:------------------------------------: 06 ://
 //:===============================:FILE_SYSTEM_ACCESS_HELPERS://
+//:STRING_PARSING_HELPERS:===================================://
+#define I32 int32_t /** GCC: <stdint.h> **/           //: 01 ://
+#define CHR const char                                //: 02 ://
+#define NCC       char                                //: 03 ://
+#define ERR aac2020_rencore_Halt                      //: 04 ://
+#define SPC aac2020_rencore_IsWhiteSpace              //: 05 ://
+#define LOS aac2020_rencore_Info_str                  //: 06 ://
+#define LOI aac2020_rencore_Info_i32                  //: 07 ://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    I32
+    aac2020_rencore_IsWhiteSpace(
+        CHR chr
+    )
+    {
+        I32 is_white=( 0 );
+        if( chr == '\n' ){ is_white = 1; };
+        if( chr == '\r' ){ is_white = 1; };
+        if( chr == '\t' ){ is_white = 1; };
+        if( chr == ' '  ){ is_white = 1; };
+        return( is_white );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    aac2020_rencore_TrimInPlace(
+        NCC*  *BYREF_str //:String(char array)
+    ,   I32   *BYREF_noc //:number_of_characters
+    )
+    {
+        if( ((NCC**)0) ==( BYREF_str)){ ERR("[NILREF_001]"); };
+        if( ((I32* )0) ==( BYREF_noc)){ ERR("[NILREF_002]"); };
+        if( ((NCC* )0) ==(*BYREF_str)){ ERR("[NILSTR_!!!]"); };
+        if( ((I32  )0) ==(*BYREF_noc)){ ERR("[NILNOC_!!!]"); };
+
+        printf("[*BYREF_str]:%s\n",*BYREF_str);
+
+        NCC* str = (*BYREF_str);
+        I32  noc = (*BYREF_noc);
+        NCC  tmp_arr[8]={0};
+        I32  tmp_noc=(   0);
+
+        //:HACK: Just take first 7 non-whitespace
+        //:      characters. We don't need to do
+        //:      a perfect trim.
+        for( I32 i = 0 ; i <= (noc-1) ; i++ ){
+            if( SPC( str[i] ) <= 0 ){
+                tmp_arr[ tmp_noc ]=( str[i] );
+                         tmp_noc++;
+                if(      tmp_noc >= 7 ){
+                tmp_arr[    7    ]=(0);//:NULL_TERM
+                break;
+                };;
+            };;
+        };;
+
+        //:Copy over the collected 7 letters to output:
+        for( I32 k = 0 ; k <=(7-1) ; k++ ){
+            str[ k ]=( tmp_arr[ k ] );
+        };;
+        str[ 7 ]=( 0 );
+
+        //:set_output_params:--------------------------------://
+
+            (*BYREF_noc)=(  7  );
+            (*BYREF_str)=( str );
+
+        //:--------------------------------:set_output_params://
+
+        LOS("[TRIMMED]:%s",str);
+        //:LOS("[TRIMMED]:%s",*BYREF_str);
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    I32
+    aa2020_rencore_man_BeginsWith_sub(
+        CHR* man /** EXAMPLE: "AAC2020_EXTCODE_MANDELA" **** **/
+    ,   CHR* sub /** EXAMPLE: "AAC2020_EXTCODE_"        **** **/
+
+    ,   NCC* *BYREF_postfix //:POSTFIX: String
+    ,   I32  *BYREF_postnoc //:POSTFIX: Number_Of_Characters
+    )
+    {
+        //:check_inputs:-------------------------------------://
+        #define FIX BYREF_postfix
+        #define NOC BYREF_postnoc
+
+            if( ((CHR* )0) ==( man) ){ ERR("[MAN:2021]"); };
+            if( ((CHR* )0) ==( sub) ){ ERR("[SUB:2021]"); };
+
+            if( ((NCC**)0) ==( FIX) ){ ERR("[_FIX:2021]"); };
+            if( ((I32* )0) ==( NOC) ){ ERR("[_NOC:2021]"); };
+
+            //- ((CHR* )0) !=(*FIX) ){ ERR("[*FIX:2021]"); };-//
+            if( ((I32  )0) !=(*NOC) ){ ERR("[*NOC:2021]"); };
+
+        #undef  FIX
+        #undef  NOC
+        //:-------------------------------------:check_inputs://
+        I32 yes_if_positive=( 0 );
+
+        I32  man_noc=( strlen( man ) ); //:MainString:NOC://
+        I32  sub_noc=( strlen( sub ) ); //:SubString::NOC://
+    
+        NCC* postfix=( *BYREF_postfix );
+        I32  postnoc=(       0        );
+
+        //:string_matching:----------------------------------://
+
+            if( man_noc < sub_noc ){
+                yes_if_positive=( 0 - 101 );
+            }else{
+                yes_if_positive=( 777 /**InnocentTillGuilty**/ );
+                for( I32 i = 0 ; i <=( sub_noc -1 ) ; i++ ){
+
+                    if( sub[ i ] //:<--[ SUB_STRING_PREFIX ]://
+                    !=  man[ i ] //:<--[ MAIN_______STRING ]://
+                    ){
+                        yes_if_positive=( 0 - 404 );
+                        break;
+                    };;
+
+                };;
+            };;
+
+        //:----------------------------------:string_matching://
+        //:extract_extension_name_postfix:-------------------://
+
+            if( yes_if_positive >= 1 ){
+
+                I32 d_0 = ( sub_noc + 0 ); //:START_DEX
+                I32 d_1 = ( man_noc - 1 ); //:END___DEX
+
+                postnoc =( d_1 - d_0 + 1 );
+                LOI("[postnoc]:%d",postnoc );
+
+                if(postnoc < 7 ){
+                    //:postfix is too short to fill
+                    //:our 7 character buffer.
+                    postfix[ 0 ]=( '1' );
+                    postfix[ 1 ]=( '2' );
+                    postfix[ 2 ]=( '3' );
+                    postfix[ 3 ]=( '4' );
+                    postfix[ 4 ]=( '5' );
+                    postfix[ 5 ]=( '6' );
+                    postfix[ 6 ]=( '7' );
+                    postfix[ 7 ]=(  0  );
+                }else
+                if(postnoc > 7 ){
+                    //:postfix is too big for 
+                    //:our 7 character buffer.
+                    postfix[ 0 ]=( '9' );
+                    postfix[ 1 ]=( '9' );
+                    postfix[ 2 ]=( '9' );
+                    postfix[ 3 ]=( '9' );
+                    postfix[ 4 ]=( '9' );
+                    postfix[ 5 ]=( '9' );
+                    postfix[ 6 ]=( '9' );
+                    postfix[ 7 ]=(  0  );
+                }else{
+
+                    I32 loc ;//:Local__Character_Index
+                    I32 dex ;//:Global_Character_Index
+                    NCC chr ;//:Current_Character
+
+                    for( I32 dex = d_0 ; dex <= d_1 ; dex++ ){
+                        if( loc >(7-1) ){
+                            ERR("[YOU_WENT_OOB_007]");
+                        };;
+
+                                         chr=( man[ dex ] );
+                        postfix[ loc ]=( chr );
+                                 loc++;
+                    };;
+                    postfix[ 7 ]=( 0 /**NullTerminator**/ );
+                };;
+                    
+                (*BYREF_postnoc)=(   postnoc     );
+                (*BYREF_postfix)=( &(postfix[0]) );
+            };;
+
+        //:-------------------:extract_extension_name_postfix://
+
+        return( yes_if_positive );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+#undef  I32  //:----------------------------------------: 01 ://
+#undef  CHR  //:----------------------------------------: 02 ://
+#undef  NCC  //:----------------------------------------: 03 ://
+#undef  ERR  //:----------------------------------------: 04 ://
+#undef  SPC  //:----------------------------------------: 05 ://
+#undef  LOS  //:----------------------------------------: 06 ://
+#undef  LOI  //:----------------------------------------: 07 ://
+//:===================================:STRING_PARSING_HELPERS://
+//:PRINT_EXTENSION_ARRAY:====================================://
+#define NOE aac2020_rencore_ext_noe                   //: 01 ://
+#define ARR aac2020_rencore_ext_arr                   //: 02 ://
+#define REO struct AAC2020_RENCORE_ext_ord            //: 03 ://
+#define I32 int32_t /** GCC: <stdint.h> **/           //: 04 ://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    aac2020_rencore_Print_ext_ord( 
+        REO* ext_ord
+    )
+    {
+        printf("[ext_ord.ext_nam]:%s\n" , 
+                 ext_ord -> ext_nam );;
+
+        printf("[ext_ord.ext_ord]:%d\n" , 
+                 ext_ord -> ext_ord );;
+
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    aac2020_rencore_Print_ext_arr( void )
+    {
+        printf("\n\n");
+        for( I32 i = 0 ; i <=( NOE-1 ); i++ ){
+            aac2020_rencore_Print_ext_ord( 
+                &( ARR[ i ] )
+            );;
+        };;
+        printf("\n\n");
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+#undef  NOE  //:----------------------------------------: 01 ://
+#undef  ARR  //:----------------------------------------: 02 ://
+#undef  REO  //:----------------------------------------: 03 ://
+#undef  I32  //:----------------------------------------: 04 ://
+//:====================================:PRINT_EXTENSION_ARRAY://
+//:SORT_EXTENSION_ARRAY:=====================================://
+#define NOE aac2020_rencore_ext_noe                   //: 01 ://
+#define ARR aac2020_rencore_ext_arr                   //: 02 ://
+#define REO struct AAC2020_RENCORE_ext_ord            //: 03 ://
+#define I32 int32_t /** GCC: <stdint.h> **/           //: 04 ://
+#define CHR const char                                //: 05 ://
+#define ERR aac2020_rencore_Halt                      //: 06 ://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    aac2020_rencore_Swap(
+        REO* t_1
+    ,   REO* t_2
+    )
+    {
+        REO aye =(*t_1);
+        REO bee =(*t_2);
+
+        (*t_1)=( bee );
+        (*t_2)=( aye );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    aac2020_rencore_Sort_ext_arr( void )
+    {
+
+        I32 swapp_happened_this_time=( 0 );
+
+        //:Larger sorted to top of list.
+        //:So:  ARR[ 0 ] == BIG   NUMBER
+        //:     ARR[ 1 ] == SMALL NUMBER
+        while( 1 == 1 ){
+            swapp_happened_this_time=( 0 );
+
+            for( I32 i = 0 ; i <= ( NOE - 2 ) ; i++ ){
+                
+                if( ARR[ i + 0].ext_ord < 
+                    ARR[ i + 1].ext_ord
+                ){
+                    swapp_happened_this_time=( 1 );
+                    aac2020_rencore_Swap(
+                        &( ARR[ i + 0 ] )
+                    ,   &( ARR[ i + 1 ] )
+                    );;
+                };;
+
+            };;
+
+            if( swapp_happened_this_time <= 0 ){ break; };
+        };;
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    I32
+    aac2020_rencore_LexoLessThan_ext_nam(
+        CHR* ext_nam_001 //:1st ext_nam
+    ,   CHR* ext_nam_002 //:2nd ext_nam
+    )
+    {
+    /** **************************************************** ***
+    IS: [ ext_nam_001 < ext_nam_002 ]LEXOGRAPHICALLY?
+    @VID_IID[ 0279 ]TIME[ 03:07:00]
+    *** **************************************************** **/
+
+        I32 less_than=( 0 /** INDETERMINANT **/ );
+
+        if( strlen(ext_nam_001) != 7 ){ ERR("[WTF7_001]"); };
+        if( strlen(ext_nam_002) != 7 ){ ERR("[WTF7_002]"); };
+
+        for( I32 i = 0 ; i <=(7-1) ; i++ ){
+
+            if( ext_nam_001[i] //:LESS____THAN?
+             <  ext_nam_002[i] //:LESS____THAN?
+            ){
+                less_than=( 0 + 1 );
+                break;
+            }else
+            if( ext_nam_001[i] //:GREATER_THAN?
+             >  ext_nam_002[i] //:GREATER_THAN?
+            ){
+                less_than=( 0 - 1 );
+                break;
+            }else{
+                less_than=(   0   /**INDETERMINANT**/ );
+                //:#DONT_BREAK_KEEP_GOING_ASSHOLE#://
+            };;
+
+        };;
+
+        return( less_than );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    aac2020_rencore_LexographicSort( void )
+    {
+    /** **************************************************** ***
+    Sorts extensions lexographically and then assigns numbers
+    counting down to ZERO for [ ext_ord ] values.
+    @VID_IID[ 0279 ]TIME[ 02:53:32 ]
+    *** **************************************************** **/
+
+        I32 less_than=( 0 );
+        I32 swapp_happened_this_time=( 0 );
+
+        //:LOOP_001_OF_002:SORTING:==========================://
+
+            //:Larger sorted to top of list.
+            //:So:  ARR[ 0 ] == BIG   NUMBER
+            //:     ARR[ 1 ] == SMALL NUMBER
+            while( 1 == 1 ){
+                swapp_happened_this_time=( 0 );
+
+                for( I32 i = 0 ; i <= ( NOE - 2 ) ; i++ ){
+
+                    less_than=(
+                        aac2020_rencore_LexoLessThan_ext_nam(
+                            ARR[ i + 0].ext_nam
+                        ,   ARR[ i + 1].ext_nam
+                        ));;
+                    
+                    /** [0]ext_nam < [1]ext_nam **/
+                    if( less_than >= 1 /** TRUE **/ ){
+
+                        swapp_happened_this_time=( 1 );
+                        aac2020_rencore_Swap(
+                            &( ARR[ i + 0 ] )
+                        ,   &( ARR[ i + 1 ] )
+                        );;
+                    };;
+
+                };;
+
+                if( swapp_happened_this_time <= 0 ){ break; };
+            };;
+
+        //:==========================:LOOP_001_OF_002:SORTING://
+        //:LOOP_002_OF_002:EXT_ORD:==========================://
+
+            I32 e_i ; //:Extension_Index(withinarray)
+
+            for( e_i = 0 ; e_i <= (NOE-1) ; e_i++ ){
+
+                /** Top of list gets highest number while ** **/
+                /** last element in list gets ZERO.       ** **/
+
+                ARR[ e_i ].ext_ord=( (NOE-1) - e_i );
+            };;
+
+        //:==========================:LOOP_002_OF_002:EXT_ORD://
+
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+#undef  NOE  //:----------------------------------------: 01 ://
+#undef  ARR  //:----------------------------------------: 02 ://
+#undef  REO  //:----------------------------------------: 03 ://
+#undef  I32  //:----------------------------------------: 04 ://
+#undef  CHR  //:----------------------------------------: 05 ://
+#undef  ERR  //:----------------------------------------: 06 ://
+//:=====================================:SORT_EXTENSION_ARRAY://
 //:MAIN_SECTION:=============================================://
 #define CHR       const char                     //:----: 01 ://
 #define NCC             char                     //:----: 02 ://
@@ -331,8 +697,9 @@
 #define LOS       aac2020_rencore_Info_str       //:----: 12 ://
 #define ECI       aac2020_rencore_MACRO_eci      //:----: 13 ://
 #define E_M       aac2020_rencore_msg_err        //:----: 14 ://
-#define CWD_NOC ( aac2020_rencore_MACRO_max_noc )//:----: 15 ://
-#define MAX_NOC ( aac2020_rencore_MACRO_max_noc )//:----: 16 ://
+#define REO       struct AAC2020_RENCORE_ext_ord //:----: 15 ://
+#define CWD_NOC ( aac2020_rencore_MACRO_max_noc )//:----: 16 ://
+#define MAX_NOC ( aac2020_rencore_MACRO_max_noc )//:----: 17 ://
     //:LoadExtensions:---------------------------------------://
 
         void
@@ -369,8 +736,10 @@
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
-        void
-        aac2020_rencore_filesys_SET_ext_arr()
+        I32
+        aac2020_rencore_filesys_SET_ext_arr(
+            CHR* str_parfold
+        )
         {
         /** ************************************************ ***
         CURRENT_NAME:
@@ -381,27 +750,134 @@
         OLD_NAME:
             aac2020_rencore_Create_ext_arr_ByReadingFolders
         *** ************************************************ **/
+        #define D_E struct dirent 
 
+            I32 o_k=( 0 /**undefined**/      );
+            I32 yes=( 0 /**For_Temp_Bools**/ );
+
+            printf("[str_parfold]:%s\n",str_parfold);
             aac2020_rencore_todomsg("[2021_04_25_913PM]");
-        }
+
+            D_E* d_e=((D_E*)0);
+            DIR* dir=( opendir( str_parfold ) );
+
+            CHR* foldnam="[UNSET]"; //:Folder:NAME
+            ///  foldnoc=( 0-666 ); //:Folder:NumberOfCharacters
+
+            NCC      postfix[8]={  0 }; //:POSTFIX on folder
+            I32      postnoc=(0 - 404); //:POSTIFX NumberOfChars
+            NCC* str_postfix=&(postfix[0]);
+
+            if( ((DIR*)0) == dir ){
+                o_k=( 0 - 111 );
+            }else{
+                o_k=( 0 + 777 );
+            };;
+
+            if( o_k >= 1 ){
+
+                while( (d_e = readdir(dir)) != ((D_E*)0) ){
+
+                    if( aac2020_rencore_GET_logison() >= 1 ){
+                        printf("\n\n");
+                    };;
+
+                    foldnam=( d_e -> d_name );
+                //- foldnoc=( strlen( foldnam ) ); -//
+                    postnoc=(    0    );//:ZERO_IT_OUT
+
+                    yes=(aa2020_rencore_man_BeginsWith_sub(
+                        foldnam  //:<-------- man: MAIN_STRING
+                    ,   "AAC2020_EXTCODE_" //:sub: SUB__STRING
+                    , &(str_postfix) //:<------ postfix string
+                    , &(    postnoc) //:<------ postfix:NOC
+                    ));;
+
+                    if( yes <= 0 ){
+                        /** Some other folder that we **/
+                        /** have no interest in.      **/
+                    }else
+                    if( yes >= 1 ){
+                        if( postnoc != 7 ){
+                            printf("%s\n", foldnam );
+                            printf("[EXTFOLD_POSTFIX_NOT_7]");
+                        }else{
+                        #define ARR aac2020_rencore_ext_arr
+                        #define NOE aac2020_rencore_ext_noe
+                        #define FIX postfix
+
+                            printf("%s\n", foldnam );
+                            printf("[is_extension_folder]\n");
+
+                            printf("[NAM]:%s\n",    postfix);
+                            printf("[NAM]:%s\n",str_postfix);
+
+                            ARR[ NOE ].ext_nam[0]=FIX[0];
+                            ARR[ NOE ].ext_nam[1]=FIX[1];
+                            ARR[ NOE ].ext_nam[2]=FIX[2];
+                            ARR[ NOE ].ext_nam[3]=FIX[3];
+                            ARR[ NOE ].ext_nam[4]=FIX[4];
+                            ARR[ NOE ].ext_nam[5]=FIX[5];
+                            ARR[ NOE ].ext_nam[6]=FIX[6];
+                            ARR[ NOE ].ext_nam[7]=(   0 );
+                                 NOE =( 0 + NOE + 0 );
+
+                            /** @VID_IID[0279]TIME[02:41:42] **/
+                            /** All same priority. ********* **/
+                            /** Will assign number later when**/
+                            /** lexographically sorting by   **/
+                            /** [ ext_nam ]. *************** **/
+                            ARR[ NOE ].ext_ord=( 0 );
+                                 NOE =( 0 + NOE + 0 );
+
+                            /** Get Ready To Load Next **/
+                            NOE++;
+
+                        #undef  ARR
+                        #undef  NOE
+                        #undef  FIX
+                        };;
+                        
+                    }else{
+                        ERR("[@EDCL@:2021_04_28_1128PM]");
+                    };;
+
+                };; //:[while]<<<<<<<<<<<<<<<<<<<<<<<<[while]://
+            };;//:<<<<<[o_k]<<<<<<<<<<<<<<<<<<<<<<<<<<<<[o_k]://
+
+            return( o_k );
+
+        #undef D_E
+        }//:[aac2020_rencore_filesys_SET_ext_arr]:<<<<<<<<<<<://
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
-        void
+        I32
         aac2020_rencore_LoadExtensions_UsingList()
         {
-    
-            aac2020_rencore_todomsg("[X_X:aac2020_rencore_LoadExtensions_UsingList]");
+            I32 extension_loading_method_pass=( 0 );
 
+            ERR("[TO_FUCKING_DO_MY_PAL]");
+
+
+            return( extension_loading_method_pass );
         }
 
     //:---------------------------------------:LoadExtensions://
     
     I32 //:<--[ o_k variable return ]
     aac2020_rencore_ExtensionOrderList_Parse(
-        FIL* filhand
+        FIL* filhand //:<--[file_already_open_by_this_point]
     )   
     {
+    #define CAP ( 256     /** Capacity      **/ )     //: 01 ://
+    #define M_I ( 256 - 1 /** Maximum Index **/ )     //: 02 ://
+    #define NOC ( textwin_noc )                       //: 03 ://
+    #define W_S aac2020_rencore_IsWhiteSpace          //: 04 ://
+    /** **************************************************** ***
+    @VID_IID[ 0277 ]TIME[ 02:41:23 ]HALF_OF_FUNCTION_FINISHED
+    *** **************************************************** **/
+
         //:error_check_inputs:-------------------------------://
 
             if( ((FIL*)0) == filhand ){
@@ -411,21 +887,348 @@
         //:-------------------------------:error_check_inputs://
         //:Declare_Vars:-------------------------------------://
 
-            I32 o_k =( 0 /** UndefinedState **/ );
+            //:Only set to not okay if we hit a malformed line.
+            //:An EMPTY file is okay.
+            I32 o_k =( 0 + 747 /**InnocentUntilProvenGuilty**/);
+
+            //:One Line In The File Being Parsed.
+            //: textwin == "text window"
+            I32 textwin_noc=( 0 /** Meaningful characters **/ );
+            NCC textwin_arr[CAP]={0}; //:256 character scrolling
+                                      //:text window.
+            //:Extension Name:
+            I32  extname_noc=( 0 );
+            NCC  extname_arr[CAP]={0};
+            NCC* extname_str =((NCC*)0); //:<--&(extname_arr[0])
+
+            //:Extension[ rank / priority / number ]:
+            I32 extrank_noc     =( 0 );
+            NCC extrank_arr[CAP]={ 0 };
+            I32 extrank_i32     =( 0 ); //:atoi( extrank_arr )
+
+            I32 un_parsed_character_loaded=( 0 );
+            I32 hashtag_counter       =( 0 );
+            I32 done_collecting       =( 0 );
+            I32 stopped_at            =( 0 ); //:Why we stopped 
+                                              //:    collecting?
+            I32 at_end_of_file        =( 0 );
+            I32 no_space_for_null_term=( 0 ); //:NoMoreMemory
+            I32 line_has_non_white    =( 0 );
+
+            I32     phase             =( 0 ); //:outer_loop
+            I32 line_phase            =( 0 ); //:inner_loop
+
+            NCC  chr; //:current_character
+            REO* ext; //:current_extension_slot
+
+            I32 h_a_s_h           =( 1 ); /**Hackish_Enum**/
+            I32 n_e_w_l_i_n_e     =( 2 ); /**Hackish_Enum**/
+            I32 e_n_d_o_f_f_i_l_e =( 3 ); /**Hackish_Enum**/
+
+            I32 i_m_i =( 0 /** i max index **/ );
 
         //:-------------------------------------:Declare_Vars://
-        //:TODO: logic <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TODO
-
         //:CORE_LOGIC:=======================================://
+            
+            while( 1 == 1 /**Infinite_Loop**/ ){  
+
+                if( 0 == phase /** collect line phase **/ ){
+
+                    //:Phase #3 may have already fetched   ::://
+                    //:a character that has yet to be      ::://
+                    //:examined. @VID_IID[0277]T[01:34:00] ::://
+
+                    //:get_next_char:------------------------://
+                    if( un_parsed_character_loaded >= 1 ){
+                        un_parsed_character_loaded=( 0 );
+                    }else{ 
+                        chr=( fgetc( filhand ) );
+                        if( chr < 0 ){      
+                            at_end_of_file=( 1 );
+                            if( textwin_noc <= 0 ){ break; };
+
+                        }else{
+                        //:@NEXTCHAR@:-----------------------://
+                            textwin_arr[ textwin_noc  ]=( chr );
+                                         textwin_noc++;
+                            if( textwin_noc >= (CAP - 1) ){
+                                no_space_for_null_term=( 1 );
+                                break;
+                            };;
+                        //:-----------------------:@NEXTCHAR@://
+                        };;
+                    };;
+                    //:------------------------:get_next_char://
+                    //:enables_empty_line_skip:--------------://
+
+                        if( W_S(chr) <= 0 /**NOT_WHITE**/ ){
+                            line_has_non_white++;
+                        };;
+                
+                    //:--------------:enables_empty_line_skip://
+                    //:collection_end_cases:-----------------://
+
+                        //:End of file stops collection:
+                        if( at_end_of_file >= 1 ){
+                            done_collecting=( 1 );
+                            hashtag_counter=( 0 );
+                            stopped_at=( e_n_d_o_f_f_i_l_e );
+                        };;
+
+                        //:Two sucessive "#" is comment "##"
+                        if( chr == '#' ){ 
+                            hashtag_counter++; 
+                            if( hashtag_counter >= 2 ){
+
+                                done_collecting=( 1 );
+                                hashtag_counter=( 0 );
+                                stopped_at=( h_a_s_h );
+
+                                //:Back_Off_The[ "##" ]Comment.
+                                textwin_noc=( textwin_noc - 2 );
+                                line_has_non_white=(
+                                line_has_non_white - 2 );
+
+                            };;
+                        }else{
+                            hashtag_counter=( 0 );
+                        };;
+
+                        //:Newline Or Carriage Return Means
+                        //:we are done collecting current line.
+                        if( chr == '\n' || chr == '\r' ){
+                            done_collecting=( 1 );
+                            hashtag_counter=( 0 );
+                            stopped_at=( n_e_w_l_i_n_e );
+
+                            //:Back_Off_The[ \n ]OR[ \r ]:
+                            textwin_noc=( textwin_noc - 1 );
+                            line_has_non_white=(
+                            line_has_non_white - 1 );
+
+                        };;
+
+                    //:-----------------:collection_end_cases://
+                    //:done_collecting:----------------------://
+
+                        if( done_collecting >= 1 ){
+                            phase =( 1 ); //:@LINE_PARSE_PHASE@
+                            
+                            //:Add null terminator to be safe:
+                            textwin_arr[ textwin_noc ]=( 0 );
+                        };;
+
+                    //:----------------------:done_collecting://
+                }else //:PHASE_001
+                if( 1 == phase /** @LINE_PARSE_PHASE@ **/ ){
+                //:line_processing_phase:--------------------://
+
+                    //:Line_Is_Empty:------------------------://
+                    if( line_has_non_white <= 0 ){ //:-------://
+
+
+                        //:printf("[SKIP_EMPTY_LINE]\n");
+
+
+                    };; //:----------------------------------://
+                    //:------------------------:Line_Is_Empty://
+                    //:Line_Has_Content:---------------------://
+                    if( line_has_non_white >= 1 ){ //:-------://
+
+                        //:print_line:-----------------------://
+                        /** Print Out Line Being Processed * **/
+                      
+                            LOS("[textwin_arr]:%s"
+                            ,     textwin_arr );
+
+                        //:-----------------------:print_line://
+                        //:LINE_PROCESSING_LOOP:=============:// 
+                        i_m_i=( textwin_noc - 1 );
+                        line_phase=( 0 );
+                        for( I32 i = 0 ; i <=(i_m_i) ; i++ ){
+
+                            if( ':' == textwin_arr[ i ] ){
+                                line_phase=( 1 );
+                            }else
+                            if( 0 == line_phase ){
+                                extrank_arr[ extrank_noc ]=(
+                                textwin_arr[      i      ] );
+                                             extrank_noc++;
+                            }else
+                            if( 1 == line_phase ){
+                                extname_arr[ extname_noc ]=(
+                                textwin_arr[      i      ] );
+                                             extname_noc++;
+                            };;
+
+                        };; //:NEXT[ i ]/////////////////////://
+                        //:=============:LINE_PROCESSING_LOOP://
+                        //:READ_EXTRANK_EXTNAME:=============://
+                        if( 0
+                        || (!( 1 == line_phase  ))
+                        || (!( extrank_noc >= 1 ))
+                        || (!( extname_noc >= 1 ))
+                        ){
+                       
+                            /** SKIPPING MALFORMED LINE **/
+                            LOS("[skipping_malformed_line]%s","[...]");
+    
+                            /** If strict mode is on, parsing**/
+                            /** Has failed. But hey, Imma let**/
+                            /** you finish anyways. -Kanye   **/
+                            if( aac2020_rencore_STRICT >= 1 ){
+                                aac2020_rencore_REASON=(
+                                    "[BAD_LINE_IN:EXT_ORD.TXT]"
+                                );;
+                                o_k =( 0 - 6006 );
+                                //# DO __NOT__ BREAK ........#//
+                                //# DO __NOT__ CONTINUE .....#//
+                            };;
+
+                        }else{
+                        #define ORD ext_ord
+                        #define NAM ext_nam
+                        #define ARR extname_arr
+                        
+                        
+                            //:Add null terminators:
+                            extrank_arr[ extrank_noc ]=( 0 );
+                            extname_arr[ extname_noc ]=( 0 );
+
+                            printf("[extrank_arr]:%s\n"
+                            ,        extrank_arr );;
+
+                            printf("[extname_arr]:%s\n"
+                            ,        extname_arr );;
+
+                            extrank_i32=( atoi( extrank_arr ) );
+                            printf("[extrank_i32]:%d\n"
+                            ,        extrank_i32 );;
+
+                            extname_str=&( extname_arr[0] );
+                            aac2020_rencore_TrimInPlace(
+                                &( extname_str )
+                            ,   &( extname_noc )
+                            );;
+                        //: LOS("[arr]:%s",ARR);
+
+                            ext=(&( aac2020_rencore_ext_arr[
+                                    aac2020_rencore_ext_noe]));;
+                    
+                            //:[extname_arr]must be trimmed 
+                            //:before this will work.
+                            ext -> NAM[ 0 ]=( ARR[ 0 ] );
+                            ext -> NAM[ 1 ]=( ARR[ 1 ] );
+                            ext -> NAM[ 2 ]=( ARR[ 2 ] );
+                            ext -> NAM[ 3 ]=( ARR[ 3 ] );
+                            ext -> NAM[ 4 ]=( ARR[ 4 ] );
+                            ext -> NAM[ 5 ]=( ARR[ 5 ] );
+                            ext -> NAM[ 6 ]=( ARR[ 6 ] );
+                            ext -> NAM[ 7 ]=(      0   );
+
+                            ext -> ORD =( extrank_i32 );
+
+                            aac2020_rencore_ext_noe++;
+                            
+                        #undef  ORD
+                        #undef  NAM
+                        #undef  ARR
+                        };;
+                        //:=============:READ_EXTRANK_EXTNAME://
+                        //:RESET_EXTRANK_EXTNAME:============://
+
+                            extrank_noc=( 0 );
+                            extname_noc=( 0 );
+
+                        //:============:RESET_EXTRANK_EXTNAME://
+                    };; //:----------------------------------://
+                    //:---------------------:Line_Has_Content://
+                    //:OUTSIDE_loop:-------------------------://
+
+                        if( at_end_of_file >= 1 ){ break; };
+                        phase=( 2 /** @FIND_NEXT_LINE@ **/ );
+
+                    //:-------------------------:OUTSIDE_loop://
+
+                //:--------------------:line_processing_phase://
+                }else
+                if( 2 == phase /** @FIND_NEXT_LINE@ **/ ){
+
+                    chr=( fgetc( filhand ) );
+                    if( chr < 0 ){ break; };
+                ////printf("[phase_3:chr]:%c\n",chr);  
+
+                    //:@NEXTCHAR@----------------------------://
+                    textwin_arr[ textwin_noc  ]=( chr );
+                                 textwin_noc++;
+                    if( textwin_noc >= (CAP - 1) ){
+                        no_space_for_null_term=( 1 );
+                        break;
+                    };;
+                    //:---------------------------:@NEXTCHAR@://
+
+                    if( (0+n_e_w_l_i_n_e+0) == stopped_at ){
+                        if( chr != '\n' && chr != '\r' ){
+                            //:RESET_FOR_NEXT_LINE:==========://
+                                un_parsed_character_loaded=(1);
+                                textwin_noc               =(1);
+                                textwin_arr[0]=(chr);
+                            //:- - - - - - - -- - - - - - - -://
+                                phase             =( 0 );
+                                stopped_at        =( 0 );
+                                done_collecting   =( 0 );
+                                hashtag_counter   =( 0 );
+                                line_has_non_white=( 0 );
+                            //:==========:RESET_FOR_NEXT_LINE://
+                        };;
+                    }else
+                    if( (0+h_a_s_h+0) == stopped_at ){
+                        if( chr == '\n' || chr == '\r' ){
+                            stopped_at=n_e_w_l_i_n_e;
+                        };;
+                    }else{
+                        ERR("[invalid_stopped_at_code]");
+                    };;
+
+                };;
+
+            };;//:////////////////////////////////////[WHILE]://
+            //:print_loaded_extension_list:------------------://
+            #define NOE aac2020_rencore_ext_noe
+            #define ARR aac2020_rencore_ext_arr
+
+                aac2020_rencore_Sort_ext_arr();
+                aac2020_rencore_Print_ext_arr();
+
+                //:truncate_sorted_ext_arr:------------------://
+
+                    for( I32 dex = 0 ; dex <=(NOE-1) ; dex++ ){
+                        if( ARR[dex].ext_ord < 0 ){
+                            NOE=( (dex+1)-1 );
+                        };;
+                    };;
+
+                //:------------------:truncate_sorted_ext_arr://
+
+                aac2020_rencore_Print_ext_arr();
+
+            #undef  NOE
+            #undef  ARR
+            //:------------------:print_loaded_extension_list://
 
             /** Set to FALSE if errors found in EXT_ORD.TXT **/
-            o_k=( 0 - 837 );
+            o_k=( 0 + o_k + 0 /**ALREADY_SET**/ );
 
         //:=======================================:CORE_LOGIC://
 
         //:Important output is file scope var:
         //:[ aac2020_rencore_ext_arr ]
         return( o_k );
+
+    #undef  CAP  //:------------------------------------: 01 ://
+    #undef  M_I  //:------------------------------------: 02 ://
+    #undef  NOC  //:------------------------------------: 03 ://
+    #undef  W_S  //:------------------------------------: 04 ://
     }
 
     I32 /** <-- found without errors is positive **/
@@ -470,8 +1273,8 @@
         //:CORE_LOGIC:=======================================://
 
             LOG("[FINDING_ABS_PATH_OF_PARFOLD]","[...]");
-            LOS("[parfold]:%s\n", parfold );
-            LOS("[relpath]:%s\n", relpath );
+            LOS("[parfold]:%s", parfold );
+            LOS("[relpath]:%s", relpath );
 
             //:merge_paths_together:
             I32 noc_parfold=( strlen( parfold ) );
@@ -552,8 +1355,8 @@
             //:Log_Absolute_Path_Created:--------------------://
            
                 SPC( 3 );
-                LOI("[noc_abspath]:%d\n", noc_abspath );
-                LOS("[abspath]:%s\n"    ,     abspath );
+                LOI("[noc_abspath]:%d", noc_abspath );
+                LOS("[abspath]:%s"    ,     abspath );
                 SPC( 3 );
 
             //:--------------------:Log_Absolute_Path_Created://
@@ -572,12 +1375,14 @@
                     //:[   o_k ]: True if nothing catastrophic.
                     //:[f_found]: True if able to open file.
 
-                FIL* fil = fopen( str_abspath , "r" );
+                FIL* fil = fopen( abspath , "r" );
                 if( ((FIL*)0) != fil ){
+                    LOS("[OPENED:ABSPATH]:%s",abspath);
                     (*BYREF_f_found)=(0 + 777  );
                     o_k=(             0 + 777  );
                     fclose( fil );
                 }else{
+                    LOS("[noopen:abspath]:%s",abspath);
                     (*BYREF_f_found)=(0 - 666  );
                     o_k=(             0 + 777  );
                 };;
@@ -590,51 +1395,7 @@
         return( o_k );
     }
         
-    I32 //:<-- o_k flag.
-    aac2020_rencore_abspath_CTO_filhand(
-        CHR*        abspath
-    ,   FIL* *BYREF_filhand
-    )
-    {
-        #if( ECI )//:########################################://
-
-            if( ((CHR*)0) == abspath ){ 
-                ERR("[NULL_ABSPATH]");
-            };;
-
-            /** FIL** : expecting non-null    **/
-            /** FIL*    expecting     null    **/
-
-            if( ((FIL**)0) ==( BYREF_filhand ) ){
-                ERR("[NIL_REF:filhand]");
-            }else
-            if( ((FIL* )0) !=(*BYREF_filhand ) ){
-                ERR("[EXP_NIL:filhand]");
-            };;
-        #endif //:####################################( ECI )://
-        //:declare_vars:-------------------------------------://
-
-            I32  o_k =( 0 /** UndefinedState **/ );
-            FIL* filhand=((FIL*)0);
-
-        //:-------------------------------------:declare_vars://
-        //:CORE_LOGIC:=======================================://
-
-            o_k=( 0 - 666 );
-            aac2020_rencore_msg_err=("[FINISHTHIS:2021]");
-
-        //:=======================================:CORE_LOGIC://
-        //:return:byref:-------------------------------------://
-
-            (*BYREF_filhand)=( filhand );
-
-        //:-------------------------------------:return:byref://
-        //:return:byval:-------------------------------------://
-
-            return( o_k );
-    
-        //:-------------------------------------:return:byval://
-    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
     I32
     aac2020_rencore_FindParentFolderOf(
@@ -720,7 +1481,7 @@
             I32 fou     =( 0 ); //:Found_Sub_String?
 
             LOG("[ABOUT_TO_EXE_SUBSTR_SEARCH]:%s","[...]");
-            LOI("[m_i]:%d\n" , m_i );
+            LOI("[m_i]:%d" , m_i );
             for( dex = 0 ; dex <= m_i ; dex++ ){
  
                 dex_buf=( m_i - dex ); 
@@ -806,9 +1567,13 @@
 
             /** Necessary Hack **/
             NCC* str_abspath =&( abspath[ 0 ] );
+            NCC* str_parfold =&( parfold[ 0 ] );
 
             I32 extension_list_was_detected =( 0 );
             I32 problems_with_extension_list=( 0 );
+
+            CHR* extension_loading_method_used=("NOT_SET");
+            I32  extension_loading_method_pass=((I32 )0);
 
         #undef  NOC
         //:-------------------------------------:declare_vars://
@@ -855,15 +1620,19 @@
         if( o_k >= 1 ){
             if( ((CHR*)0) !=  str_abspath && (f_found <= 0) ){  
                 
+                LOS("[extension_list__NOT__on_disk]%s","[-]");
                 extension_list_was_detected=( 0 - 666 );
             }else
             if( ((CHR*)0) !=  str_abspath && (f_found >= 1) ){  
                 extension_list_was_detected=( 0 + 777 );
+                LOS("[extension_list_found_on_disk]%s","[+]");
 
-                o_k=(
-                aac2020_rencore_abspath_CTO_filhand(
-                            str_abspath  ,&(filhand) ));;
-
+            //- o_k=(                                    - - -//
+            //- aac2020_rencore_abspath_CTO_filhand(     - - -//
+            //-             str_abspath  ,&(filhand) ));;- - -//
+                filhand=fopen( str_abspath , "r" );
+                if( ((FIL*)0)==filhand ){ o_k =( 0 - 666 ); };
+                if( ((FIL*)0)!=filhand ){ o_k =( 0 + 777 ); };
                 
                 if( o_k <= 0 || ((FIL*)0)==filhand){
 
@@ -877,6 +1646,9 @@
                     if( parse_success <= 0 ){
                         problems_with_extension_list=( 1 );
                     };;
+    
+                    fclose( filhand ); //:@BAL_
+                            filhand=((FIL*)0);
                 };;
 
             }else{
@@ -926,21 +1698,27 @@
                 /** @VID_IID[ 0274 ]T[06:46:06 ]             **/
                 /** **************************************** **/
                 LOG("[EXTENSION_LOADING_ABORTED]",0);
+                LOS("[REASON_FOR_ABORTION]:%s",
+                    aac2020_rencore_REASON );;
 
             }else
             if( 1
             &&  extension_list_was_detected  >= 1 
             &&  problems_with_extension_list <= 0 
             ){
-                
-                aac2020_rencore_LoadExtensions_UsingList();
+            #define LEX aac2020_rencore_LoadExtensions_UsingList
 
+                extension_loading_method_used=("EXT_ORD");
+                extension_loading_method_pass=LEX();
+
+            #undef  LEX
             }else
             if( 1
             && extension_list_was_detected  <= 0
             && problems_with_extension_list <= 0
             ){
-                LOS("[extension_list_not_found]:%s\n","[...]");
+            #define LEX aac2020_rencore_LoadExtensions_UsingList
+                LOS("[extension_list_not_found]:%s","[...]");
 
                 /** ************************************** **/
                 /** If no extension list is found, we auto **/
@@ -963,12 +1741,50 @@
                 //+ filesys : FileSystem (conceptual arg)    +//
                 //+                                          +//
                 //-         LoadExtensions_ByOrderFound();   -//
-                    aac2020_rencore_filesys_SET_ext_arr();
-                    aac2020_rencore_LoadExtensions_UsingList();
+                //+         LoadExtensions_UsingList <--YES  +//
+
+                    //:SET == "Side_Effect_To"
+            
+                    SPC(3);
+                    LOG("[LETS_TRY:folders_CTO_ext_arr]",0);
+                    LOG("[AKA:Build:ext_arr:From_FileSys]",0);
+                    SPC(3);
+                
+                    /** Builds extension list from filesys**/
+
+                        aac2020_rencore_filesys_SET_ext_arr(
+                            str_parfold
+                        );;
+
+                    /** Before we load the extension list    **/
+                    /** we just created, we need to          **/
+                    /** lexographically sort it.             **/
+
+                        aac2020_rencore_LexographicSort();
+
+                    /** Confirm Extension List Sorted ****** **/
+            
+                        aac2020_rencore_Print_ext_arr();
+
+                    /** LoadExtensions_UsingList *********** **/
+
+                    extension_loading_method_used=("FOL_SYS");
+                    extension_loading_method_pass=LEX( );
+
                 //[ ///////////////////@MINIMIZE_CODE_PATHS@ ]//
+            #undef  LEX
             }else{
                 ERR("[@EDC@:2021_04_26]");
             };;
+        };;
+        if( 2 == 2 /** ALWAYS RUN **/ ){
+
+            LOS( "[extension_loading_method_used]:%s"
+                  ,extension_loading_method_used );;
+
+            LOI( "[extension_loading_method_pass]:%d"
+                  ,extension_loading_method_pass );;
+
         };;
     }
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
@@ -1063,8 +1879,9 @@
 #undef      LOS  //:------------------------------------: 12 ://
 #undef      ECI  //:------------------------------------: 13 ://
 #undef      E_M  //:------------------------------------: 14 ://
-#undef  CWD_NOC  //:------------------------------------: 15 ://
-#undef  MAX_NOC  //:------------------------------------: 16 ://
+#undef      REO  //:------------------------------------: 15 ://
+#undef  CWD_NOC  //:------------------------------------: 16 ://
+#undef  MAX_NOC  //:------------------------------------: 17 ://
 //:=============================================:MAIN_SECTION://
 //:UNIT_TEST_SECTION:========================================://
 #define I32  int32_t  /** GCC: <stdint.h>     **/     //: 01 ://
