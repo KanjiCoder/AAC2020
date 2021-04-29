@@ -4,9 +4,6 @@ const char* AAC2020_PAINT5D_DEFAULT_001=( //:////////////////://
 "#version 330 core                           \n"//://////////://
 "#define AAC2020_MACRO_THIS_IS_OPEN_GL (1)   \n"//://////////://
 //://////////////////////////////////////////////////////////://
-//|Everything Below Is Cut+Pasted From       |////://////////://
-//|The C99 File: P5D_OGL._                   |////://////////://
-//://////////////////////////////////////////////////////////://
 
     //:COMMON_FRAG_SHADER_CODE:------------------------------://
 
@@ -23,21 +20,10 @@ const char* AAC2020_PAINT5D_DEFAULT_001=( //:////////////////://
         //:EXTENDABLE_CODE_SECTION:--------------------------://
         #include "../RENCORE.TOP.STRING._"
 
-        //: #if( AAC2020_EXTCODE_PAINT5D_laypixa_CTO_plypix3 > 0 )
-
-            #if( AAC2020_INCLUDE_EXTCODE_PAINT5D > 0 ) //:###://
-            /** ******************************************** **/
-            /** Highest priority extension will auto         **/
-            /** generate it's ".string" file LAST.           **/
-            /** As all extensions will create override files **/
-            /** with the same names if they are overriding   **/
-            /** the same editors or systems.                 **/
-            /** ******************************************** **/
-
-                #include "../AUTOGEN/PAINT5D.RENCORE.STRING._"
-            #else
-                #include "../RENCORE/PAINT5D.RENCORE.STRING._"
-            #endif
+            /** If extension code is detected, we copy the   **/
+            /** functions from the[ EXTCODE ]otherwise we    **/
+            /** copy the default code from[ RENCORE ]        **/
+            #include "RENCORE_OR_EXTCODE._"
 
         #include "../RENCORE.BOT.STRING._"
         //:--------------------------:EXTENDABLE_CODE_SECTION://

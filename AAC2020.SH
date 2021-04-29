@@ -140,9 +140,22 @@
             ## PROJECT[ AAC2020_EXTCODE_MANDELA ] ::::::::::: ##
             ## :::::::::::::::::::::::::::::::::::::::::::::: ##
 
-            INN="./LIB/RENCORE/PAINT5D.RENCORE._"
-            OUT="./LIB/RENCORE/PAINT5D.RENCORE.STRING._"
-            awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT
+        ##  INN="./LIB/RENCORE/PAINT5D.RENCORE._"
+        ##  OUT="./LIB/RENCORE/PAINT5D.RENCORE.STRING._"
+        ##  awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT
+
+
+            I="./LIB/RENCORE/PAINT5D/tilodat_CTO_tilpixu._"
+            O="./LIB/RENCORE/PAINT5D/tilodat_CTO_tilpixu.STR._"
+            awk 'NF { print "\""$0"\\""n""\""}' $I > $O
+
+            I="./LIB/RENCORE/PAINT5D/tilpixa_CTO_laypixu._"
+            O="./LIB/RENCORE/PAINT5D/tilpixa_CTO_laypixu.STR._"
+            awk 'NF { print "\""$0"\\""n""\""}' $I > $O
+
+            I="./LIB/RENCORE/PAINT5D/laypixa_CTO_plypix3._"
+            O="./LIB/RENCORE/PAINT5D/laypixa_CTO_plypix3.STR._"
+            awk 'NF { print "\""$0"\\""n""\""}' $I > $O
 
         ##:---------------------------------------:RENCORE(S):##
 
