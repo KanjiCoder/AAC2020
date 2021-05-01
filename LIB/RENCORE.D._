@@ -7,6 +7,18 @@
 //|                                                          |//
 //|                                                          |//
 //:====================================:RENCORE_DOCUMENTATION://
+//:DEBUG_FLAGS:==============================================://
+
+    /** When done developing this code, turn this flag off.  **/
+    #define AAC2020_RENCORE_are_developing_fail_faster ( 1 )
+
+    /** When actively developing the code, turn this on  *** **/
+    /** so we don't accidentially recursively delete our *** **/
+    /** hard drive or something.                         *** **/
+    /** @VID_IID[ 0281 ]TIME[ 06:01:10 ]                 *** **/
+    #define AAC2020_RENCORE_file_delete_safety_on ( 1 )
+
+//:==============================================:DEBUG_FLAGS://
 //:STRUCTS:==================================================://
 #define CHR const char                                //: 01 ://
 #define NCC       char                                //: 02 ://
@@ -24,6 +36,102 @@
 #undef  NCC  //:----------------------------------------: 02 ://
 #undef  I32  //:----------------------------------------: 03 ://
 //:==================================================:STRUCTS://
+//:OVERRIDABLE__FUNCS:=======================================://
+//:RENCORE_OR_EXTCODE:=======================================://
+/** ******************************************************** ***
+    This section is needed to help us create a[ INCLUDE._ ]
+    file that will put #defines such as this into it:
+    @VID_IID[ 0281 ]TIME[ 00:43:42 ]
+
+    The[ TODO_02 -&- TODO_03 ]Entries are to establish a
+    pattern that will make it easier to understand where
+    to put code in the future.
+
+    AAC2020_INCLUDE_EXTCODE_PAINT5D_tilodat_CTO_tilpixu ( 1 )
+    AAC2020_INCLUDE_EXTCODE_PAINT5D_tilpixa_CTO_laypixu ( 1 )
+    AAC2020_INCLUDE_EXTCODE_PAINT5D_laypixa_CTO_plypix3 ( 1 )
+
+*** ******************************************************** **/
+#define CHR const char                                //: 01 ://
+#define I08 int8_t /** GCC: <stdint.h> **/            //: 02 ://
+
+    //:EDITOR:PAINT5D:=======================================://
+    //:MAP: As in mapping
+    //:NOP: Number Of Pairs
+    #define aac2020_rencore_MAP_paint5d_NOP ( 3 ) //:////////://
+    CHR*    aac2020_rencore_MAP_paint5d[          //:////////://
+            aac2020_rencore_MAP_paint5d_NOP*( 2 ) //:////////://
+    ]={
+    /**/                                "tilodat_CTO_tilpixu"
+    ,   "AAC2020_INCLUDE_EXTCODE_PAINT5D_tilodat_CTO_tilpixu"
+
+    ,                                   "tilpixa_CTO_laypixu"
+    ,   "AAC2020_INCLUDE_EXTCODE_PAINT5D_tilpixa_CTO_laypixu"
+
+    ,                                   "laypixa_CTO_plypix3"
+    ,   "AAC2020_INCLUDE_EXTCODE_PAINT5D_laypixa_CTO_plypix3"
+                                        
+    }; 
+    //:=======================================:EDITOR:PAINT5D://
+    //:EDITOR:TODO_02:=======================================://
+    #define aac2020_rencore_MAP_todo_02_NOP ( 3 ) //:////////://
+    CHR*    aac2020_rencore_MAP_todo_02[          //:////////://
+            aac2020_rencore_MAP_todo_02_NOP*( 2 ) //:////////://
+    ]={
+    /**/                                "pcfunc2_CTO_pcfunc2"
+    ,   "AAC2020_INCLUDE_EXTCODE_TODO_02_pcfunc2_CTO_pcfunc2"
+
+    ,                                   "pcfunc2_CTO_pcfunc2"
+    ,   "AAC2020_INCLUDE_EXTCODE_TODO_02_pcfunc2_CTO_pcfunc2"
+
+    ,                                   "pcfunc2_CTO_pcfunc2"
+    ,   "AAC2020_INCLUDE_EXTCODE_TODO_02_pcfunc2_CTO_pcfunc2"
+                                        
+    }; 
+    //:=======================================:EDITOR:TODO_02://
+    //:EDITOR:TODO_03:=======================================://
+    #define aac2020_rencore_MAP_todo_03_NOP ( 3 ) //:////////://
+    CHR*    aac2020_rencore_MAP_todo_03[          //:////////://
+            aac2020_rencore_MAP_todo_03_NOP*( 2 ) //:////////://
+    ]={
+    /**/                                "pcfunc3_CTO_pcfunc3"
+    ,   "AAC2020_INCLUDE_EXTCODE_TODO_03_pcfunc3_CTO_pcfunc3"
+
+    ,                                   "pcfunc3_CTO_pcfunc3"
+    ,   "AAC2020_INCLUDE_EXTCODE_TODO_03_pcfunc3_CTO_pcfunc3"
+
+    ,                                   "pcfunc3_CTO_pcfunc3"
+    ,   "AAC2020_INCLUDE_EXTCODE_TODO_03_pcfunc3_CTO_pcfunc3"
+                                        
+    }; 
+    //:=======================================:EDITOR:TODO_03://
+    //:[CHECKLIST]///////////////////////////////////////////://
+    /** **************************************************** ***
+    INC_NAMES[ aac2020_rencore_INC_******* ]
+    MAP_NAMES[ aac2020_rencore_MAP_******* ]
+    "INC" vars are paired with "MAP" to create a checklist
+    of which includes should be turned on when building
+    the[ INCLUDE._ ]file that controls extension loading
+    in the main engine[ AAC2020 ]code base.
+    @VID_IID[ 0282 ]TIME[ 04:08:50 ]
+    @VID_IID[ 0282 ]TIME[ 04:13:32 ]127_MAX_EXTENSIONS_PER_SYS
+    *** **************************************************** **/
+
+        I08 aac2020_rencore_INC_paint5d[
+            aac2020_rencore_MAP_paint5d_NOP ]={0};
+
+        I08 aac2020_rencore_INC_todo_02[
+            aac2020_rencore_MAP_todo_02_NOP ]={0};
+
+        I08 aac2020_rencore_INC_todo_03[
+            aac2020_rencore_MAP_todo_03_NOP ]={0};
+
+    //:///////////////////////////////////////////[CHECKLIST]://
+
+#undef  CHR  //:----------------------------------------: 01 ://
+#undef  I08  //:----------------------------------------: 02 ://
+//:=======================================:RENCORE_OR_EXTCODE://
+//:=======================================:OVERRIDABLE__FUNCS://
 //:DEFINES_AND_VARIABLES:====================================://
 #define U08 uint8_t /** GCC: <stdint.h> **/           //: 01 ://
 #define I32 int32_t /** GCC: <stdint.h> **/           //: 02 ://
@@ -34,7 +142,7 @@
     I32  aac2020_rencore_STRICT =( 1 );     /**Strict_Parsing**/
     CHR* aac2020_rencore_REASON =("NONE");  /**AbortionReason**/
 
-    //! Error Check Inputs For This File? !//
+    //! ECI : Error Check Inputs For This File? !//
     #define aac2020_rencore_MACRO_eci ( 1 )
 
     #define aac2020_rencore_ExtensionOrderList_Load "[@DNU@]"
@@ -68,3 +176,14 @@
 #undef  REO  //:----------------------------------------: 03 ://
 #undef  CHR  //:----------------------------------------: 04 ://
 //:====================================:DEFINES_AND_VARIABLES://
+//:FILE_ACCESS_STUFF:========================================://
+    
+    /** These values directly copied from PHEXDUM **/
+    /** @VID_IID[ 0281 ]TIME[ 04:06:02 ] ******** **/
+    enum  AAC2020_RENCORE_payload_file_type /**( P_T )**/ {
+          AAC2020_RENCORE_P_T_INVALID = 0
+    ,     AAC2020_RENCORE_P_T_ANYTEXT
+    ,     AAC2020_RENCORE_P_T_PNGFILE
+    };
+
+//:========================================:FILE_ACCESS_STUFF://
