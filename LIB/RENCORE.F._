@@ -20,12 +20,14 @@
     aac2020_rencore_MakeOneDirectory
     aac2020_rencore_mkdir
 
+    aac2020_rencore_HasFold //: <-- FolderExists ? ::::::::::://
+    aac2020_rencore_HasFile //: <-- FileExists   ? ::::::::::://
     AAC2020_RENCORE_TouchFile
     AAC2020_RENCORE_SaveFile_TXT
-    AAC2020_RENCORE_SaveFile_U08
+    aac2020_rencore_SaveFile_U08
     AAC2020_RENCORE_SaveFile_PNG
-    AAC2020_RENCORE_LoadFileIfExists
-    AAC2020_RENCORE_LoadFile_U08
+    aac2020_rencore_LoadFileIfExists
+    aac2020_rencore_LoadFile_U08
 
 //:STRING_PARSING:
     aac2020_rencore_IsWhiteSpace
@@ -331,10 +333,10 @@ SECTION_INDEX:
 
     AAC2020_RENCORE_TouchFile
     AAC2020_RENCORE_SaveFile_TXT
-    AAC2020_RENCORE_SaveFile_U08
+    aac2020_rencore_SaveFile_U08
     AAC2020_RENCORE_SaveFile_PNG
-    AAC2020_RENCORE_LoadFileIfExists
-    AAC2020_RENCORE_LoadFile_U08
+    aac2020_rencore_LoadFileIfExists
+    aac2020_rencore_LoadFile_U08
 
 *** ******************************************************** **/
     //:------------------------------------------------------://
@@ -421,6 +423,41 @@ SECTION_INDEX:
         }
 
     //:======================:PRIVATE:RECURIVE_MAKE_DIRECTORY://
+    //:FOLDER_EXISTS:========================================://
+        I32
+        aac2020_rencore_HasFold(
+            CHR* fol
+        )
+        {
+            I32 has=( 0 );
+
+            struct stat s_o = {0}; //:s_o:Stat_Object
+
+            if(!stat(fol, &s_o)){
+                if( (s_o.st_mode & S_IFDIR) ){
+                    has=(0+1); //:Is[directory/folder].
+                }else{
+                    has=(0-1); //:File,not directory.
+                };;
+            }else{
+              perror("stat()");
+            };;
+            return( has );
+        }
+    //:========================================:FOLDER_EXISTS://
+    //:FILE_EXISTS:==========================================://
+        I32
+        aac2020_rencore_HasFile(
+            CHR* fil //:<--[ fil == file(path) ]
+        )
+        {
+            I32 has=( 0 );
+            if( access( fil , 0x00 /** F_OK **/ ) != -1 ) {
+                has=( 1 );
+            };;
+            return( has );
+        };;
+    //:==========================================:FILE_EXISTS://
     //:TOUCH_FILE:===========================================://
 
         U32
@@ -673,7 +710,7 @@ SECTION_INDEX:
         //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
 
         I32
-        AAC2020_RENCORE_SaveFile_U08(
+        aac2020_rencore_SaveFile_U08(
             CHR* nof_wex /** NameOfFile__WithEXtension   ....**/
         ,   U08* arr_u08 /** String To Save To Disk .........**/
         ,   U32  arr_len /** Num Chars In chr_arr   .........**/
@@ -870,14 +907,20 @@ SECTION_INDEX:
         /** PHEXDUM@VID_IID[ 01:46:50 ] ******************** **/
         /** PHEXDUM@VID_IID[ 02:04:50 ] ******************** **/
 
-        U32 
-        AAC2020_RENCORE_LoadFileIfExists(
+        I32 
+        aac2020_rencore_LoadFileIfExists(
             CHR*         fip_inn //:EX:FRAGBED_001.frag
         ,   P_T          bin_txt //: 1 == binary is ascii text
         ,   U08*  *BYREF_fil_mem //:DESTINATION
         ,   I32   *BYREF_fil_nob //:Number_Of_Bytes_In:fil_mem
         )
         {
+        /** ************************************************ ***
+        @VID_IID[ 0283 ]TIME[ 09:16:23 ]
+        Fixed up things that are STILL WRONG
+        in the[ FILEBOI ]and[ PHEXDUM ]versions of this
+        function.
+        *** ************************************************ **/
             //:check_inputs:---------------------------------://
 
                 /** References Can Never Be Null **/
@@ -896,8 +939,8 @@ SECTION_INDEX:
             //:declare_variables:----------------------------://
 
                 U08* fil_mem     =((void*)0 );
-                int  fil_nob     =( 0 - 808 ); //: TrapValue
-                int  file_exists =( 0       ); //: 0 ==undefined 
+                I32  fil_nob     =( 0 - 808 ); //: TrapValue
+                I32  file_exists =( 0       ); //: 0 ==undefined 
 
             //:----------------------------:declare_variables://
             //:DOES_THE_FILE_EXIST_ON_DISK:?:----------------://
@@ -1010,22 +1053,22 @@ SECTION_INDEX:
                     };;
 
                 }else{
-                    /** For some reason, this should never   **/
-                    /** happen? @VID_IID[0281]TIME[04:31:32] **/
-                    ERR("[WTF_AM_I_DOING:2021_04_30]");
+                    /** @VID_IID[0281]T[04:31:32]ORIGINAL **/
+                    /** @VID_IID[0283]T[09:18:55]REVISIT  **/
+                    //:ERR("[TEMP_DEBUG_CODE_ONLY:2021_04_30]");
                 };;
 
             #undef BYREF_BOI
             //:-----------------------:ASSERT_NULL_TERMINATOR://
 
-            return( 0x00 );
+            return( file_exists );
         }
        
     //:==================================:LOAD_FILE_IF_EXISTS://
     //:FILE_ACCESS_WRAPPER_METHODS:==========================://
 
         U32
-        AAC2020_RENCORE_LoadFile_U08(
+        aac2020_rencore_LoadFile_U08(
             CHR*         nof_wex //:AKA[ fip_inn ]
         ,   U08*  *BYREF_u08_arr //:DESTINATION
         ,   I32   *BYREF_u08_len //:Number_Of_Bytes_In:fil_mem
@@ -1041,8 +1084,8 @@ SECTION_INDEX:
             assert( ((I32  )0) ==(*BYREF_u08_len ) );
             //:---------------------------------:check_inputs://
             //:load_file:------------------------------------://
-                U32 un_used_return_value=(
-                AAC2020_RENCORE_LoadFileIfExists(
+                I32 file_exists=(
+                aac2020_rencore_LoadFileIfExists(
                           nof_wex //: AKA[ fip_inn       ]
                 ,             BIN //: Loading Binary File
                 ,   BYREF_u08_arr //: AKA[ BYREF_fil_mem ]
@@ -1051,7 +1094,7 @@ SECTION_INDEX:
         
             //:------------------------------------:load_file://
 
-            return( un_used_return_value );
+            return( file_exists );
         }
 
     //:==========================:FILE_ACCESS_WRAPPER_METHODS://
@@ -2457,9 +2500,13 @@ creating folders. So I put the [ FCH ] section below the
                   BYREF_chararr));;
 
         //:GenerateSubFolderViaConcatInPlace
+        if(0!=strcmp("AAC2020_AUTOGEN_EXTCODE_RENCORE"
+                    ,aac2020_rencore_local_folder_name)
+        ){ ERR("[OH_NOOOS_2021]"); };;
+
         o_k=(
         aac2020_rencore_ConcatPathsInPlace( 
-            BYREF_chararr,"AAC2020_AUTOGEN_RENCORE_EXTCODE"));;
+            BYREF_chararr,aac2020_rencore_local_folder_name));;
 
         return( o_k );
     }
@@ -2554,7 +2601,7 @@ creating folders. So I put the [ FCH ] section below the
     aac2020_rencore_MakFold_AUTOGEN_RENCORE_EXTCODE( )
     {
     /** **************************************************** ***
-    CREATES FOLDER: "AAC2020_AUTOGEN_RENCORE_EXTCODE"
+    CREATES FOLDER: "AAC2020_AUTOGEN_EXTCODE_RENCORE"
     Within the PARENT FOLDER of[ AAC2020 ]engine folder.
     Also creates all of the sub folders needed too.
     The goal is to create all files needed for the loaded
@@ -2564,7 +2611,7 @@ creating folders. So I put the [ FCH ] section below the
     confirm everything looks good. Then we can just do a 
     mass move of files over to the mirror directory.
     
-        Local  Dir ==[ PARFOLD/AAC2020_AUTOGEN_RENCORE_EXTCODE ]
+        Local  Dir ==[ PARFOLD/AAC2020_AUTOGEN_EXTCODE_RENCORE ]
         Mirror Dir ==[ PARFOLD/AAC2020/LIB/AUTOGEN]
     
         Where[ PARFOLD ]is the folder that contains both
@@ -2839,19 +2886,20 @@ creating folders. So I put the [ FCH ] section below the
 #define U32       uint32_t /** GCC: <stdint.h>**///:----: 03 ://
 #define I32        int32_t /** GCC: <stdint.h>**///:----: 04 ://
 #define I08         int8_t /** GCC: <stdint.h>**///:----: 05 ://
-#define ERR       aac2020_rencore_Halt           //:----: 06 ://
-#define LOG       aac2020_rencore_Info_any       //:----: 07 ://
-#define LOI       aac2020_rencore_Info_i32       //:----: 08 ://
-#define SPC       aac2020_rencore_Info_spc       //:----: 09 ://
-#define EXT       extern                         //:----: 10 ://
-#define FIL       FILE                           //:----: 11 ://
-#define SIZ       size_t   /** GCC: <stddef.h>**///:----: 12 ://
-#define LOS       aac2020_rencore_Info_str       //:----: 13 ://
-#define ECI       aac2020_rencore_MACRO_eci      //:----: 14 ://
-#define E_M       aac2020_rencore_msg_err        //:----: 15 ://
-#define REO       struct AAC2020_RENCORE_ext_ord //:----: 16 ://
-#define CWD_NOC ( aac2020_rencore_MACRO_max_noc )//:----: 17 ://
-#define MAX_NOC ( aac2020_rencore_MACRO_max_noc )//:----: 18 ://
+#define U08        uint8_t /** GCC: <stdint.h>**///:----: 06 ://
+#define ERR       aac2020_rencore_Halt           //:----: 07 ://
+#define LOG       aac2020_rencore_Info_any       //:----: 08 ://
+#define LOI       aac2020_rencore_Info_i32       //:----: 09 ://
+#define SPC       aac2020_rencore_Info_spc       //:----: 10 ://
+#define EXT       extern                         //:----: 11 ://
+#define FIL       FILE                           //:----: 12 ://
+#define SIZ       size_t   /** GCC: <stddef.h>**///:----: 13 ://
+#define LOS       aac2020_rencore_Info_str       //:----: 14 ://
+#define ECI       aac2020_rencore_MACRO_eci      //:----: 15 ://
+#define E_M       aac2020_rencore_msg_err        //:----: 16 ://
+#define REO       struct AAC2020_RENCORE_ext_ord //:----: 17 ://
+#define CWD_NOC ( aac2020_rencore_MACRO_max_noc )//:----: 18 ://
+#define MAX_NOC ( aac2020_rencore_MACRO_max_noc )//:----: 19 ://
     //:LoadExtensions:---------------------------------------://
 
         void
@@ -3004,7 +3052,7 @@ creating folders. So I put the [ FCH ] section below the
 
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
-        void
+        I32
         aac2020_rencore_CEF_and_MCL( //:CEF:CopyEditorFiles
                                      //:MCL:ModifyChecklist
         /**/CHR* str_autogen //:EX[ *_AUTOGEN_RENCORE_EXTCODE ]
@@ -3021,7 +3069,7 @@ creating folders. So I put the [ FCH ] section below the
         @VID_IID[ 0283 ]TIME[ 03:10:10 ]
         Copy from the extension folder to local AUTOGEN folder.     
         EXAMPLE:
-              TO: R:/AAC/AAC2020_AUTOGEN_RENCORE_EXTCODE
+              TO: R:/AAC/AAC2020_AUTOGEN_EXTCODE_RENCORE
             FROM: R:/AAC/AAC2020_EXTCODE_MANDELA
               
         *** ************************************************ **/
@@ -3035,22 +3083,38 @@ creating folders. So I put the [ FCH ] section below the
             I32   ok2 =( 0 ); //:ForMultipleCallsInSameScope
 
             /**@VID_IID[ 0283 ]TIME[03:29:50 ]VARS_EXPLAINED **/
+            /**@VID_IID[ 0283 ]TIME[08:04:00 ]EXPLAIN__AGAIN **/
             I08*  inc =((I08* )0); //:Include Check List
             I32   nop =((I32  )0); //:Number_Of____PAIRS
             CHR** map =((CHR**)0); //:FileName_To_IncludeName
             CHR*  sub =((CHR* )0); //:Sub_Folder
+            I32   dex =( 0-666  ); //:File_Index
 
             //:EXTENSION source code path:
             NCC              car_ext[MAX_NOC]; 
             NCC*  str_ext=(&(car_ext[0])    );
+            I32   has_ext=( 0 /**Folder_Exists?**/ );
 
             //:LOCAL folder path:( local AUTOGEN folder )
             NCC              car_loc[MAX_NOC]; 
             NCC*  str_loc=(&(car_loc[0])    );
+            I32   has_loc=( 0 /**Folder_Exists?**/ );
 
             //:ENGINE folder path:( global AUTOGEN folder )
             NCC              car_eng[MAX_NOC];
             NCC*  str_eng=(&(car_eng[0])    );
+            ///   has_eng( 0 /**Folder_Exists?**/ );
+
+            //:SOURCE FILE PATH: ( pof_src ):
+            NCC              car_src[MAX_NOC]; 
+            NCC*  pof_src=(&(car_src[0])    );
+            I32   has_src=( 0 /**FILE_EXISTS?**/ );
+
+            //:DEST   FILE PATH: ( pof_dst ):
+            NCC              car_dst[MAX_NOC]; 
+            NCC*  pof_dst=(&(car_dst[0])    );
+            I32   has_dst=( 0 /**FILE_EXISTS?**/ );
+            
 
             if( o_k >= 1 ){
 
@@ -3094,19 +3158,91 @@ creating folders. So I put the [ FCH ] section below the
             if( o_k >= 1 ){
             
                 SPC(1);
-                LOS("[str_ext]:%s\n",str_ext);
-                LOS("[str_loc]:%s\n",str_loc);
+                LOS("[str_ext]:%s\n",str_ext); //:<--FROM__SRC
+                LOS("[str_loc]:%s\n",str_loc); //:<--TARG_DEST
                 SPC(1);
+        
+                /** Do the folders exist on file system? **/
+                has_ext =( aac2020_rencore_HasFold( str_ext ));
+                has_loc =( aac2020_rencore_HasFold( str_loc ));        
+            
+                if( has_ext <= 0 ){ /**AllowedToNotExist**/ }; 
+                if( has_loc <= 0 ){ o_k =( 0 ); };
 
-                ERR("[TODO:FileCopying]");
-
+                if( has_ext ){ LOG("[has_ext:YES]",0); };
+                if( has_loc ){ LOG("[has_loc:YES]",0); };
+                if(!has_ext ){ LOG("[has_ext:nay]",0); };
+                if(!has_loc ){ LOG("[has_loc:nay]",0); };
             
             }else{ ERR("[WTF_IS_GOING_ON_MY_MAN_2021]"); };
-                
-        
-            
-            ERR("[ADD_THE_REST_OF_THE_LOGIC_HERE]");
+            if( o_k >= 0 && has_ext >= 0 ){
 
+                /**  dex == file index **/
+                for( dex = 0 ; dex <=(nop-1) ; dex ++ ){
+
+                    //:SOURCE_FILE:--------------------------://
+                    aac2020_rencore_ConcatToTarget(
+                        str_ext    //:<--Current[EXTCODE]Folder
+                    ,   map[dex*2] //:[0,1] ,[2,3] , [4,5]
+                    , &(pof_src)   //:<--PathOfFile:SouRCe
+                    );;
+                    aac2020_rencore_ConcatPathsInPlace(
+                      &(pof_src), "._" );; //:AddFileExt
+                    //:--------------------------:SOURCE_FILE://
+                    //:DEST_FILE:----------------------------://
+                    aac2020_rencore_ConcatToTarget(
+                        str_loc    //:<--Local[ AUTOGEN ]Folder
+                    ,   map[dex*2] //:[0,1] ,[2,3] , [4,5]
+                    , &(pof_dst)   //:<--PathOfFile:SouRCe
+                    );;
+                    aac2020_rencore_ConcatPathsInPlace(
+                      &(pof_dst) , "._" );; //:AddFileExt
+                    //:----------------------------:DEST_FILE://
+    
+                    if( aac2020_rencore_HasFile(pof_src) <= 0 ){
+                        LOS("[NOT_FOUND:pof_src]:%s",pof_src); //:<<<<<<<<<<<<<<<<<<<<<<<<[TODO:FIX:pof_src:CREATION]<<<<
+                    }else{ //:File_Exists:
+                        LOS("[was_found:pof_src]:%s",pof_src);
+
+                        I32  u08_has=((I32 )0);//:FileLoaded?
+                        U08* u08_arr=((U08*)0);//:Binary_Data
+                        I32  u08_len=((I32 )0);//:AKA[u08_nob]
+
+                        u08_has=(
+                        aac2020_rencore_LoadFile_U08(
+                              pof_src //:AKA[fip_inn / nof_wex]
+                        ,   &(u08_arr)//:Array__Of_Bytes
+                        ,   &(u08_len)//:Number_Of_Bytes
+                        ));;
+                        if(u08_has >= 1 && ((U08*)0)!=u08_arr){
+
+                            aac2020_rencore_SaveFile_U08(
+                                pof_dst
+                            ,   u08_arr
+                            ,   u08_len
+                            );;
+                            free( u08_arr );
+                                  u08_arr=((U08*)0);
+
+                            //:update_checklist:-------------://
+                    
+                                /**Currently,not IDEMPOTENT  **/
+                                /**@VID_IID[0283]T[09:34:23] **/
+                                inc[dex]=( 1 );
+
+                            //:-------------:update_checklist://
+                        }else
+                        if( u08_has <= 0 &&((U08*)0)==u08_arr){
+                            LOG("[Warning:FileNotFound]",0);
+                        }else{
+                            ERR("[Serious_Problem_John_Mark]");
+                        };;
+
+                    };; //:HasFile(pof_src)<<<<<<<<<<<<<<<<<<://
+                };; //:NEXT[ dex ]<<<<<<<<<<<<<<<<<<<<<<<<<<<://
+            };; //:[o_k?]:<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<://
+
+            return( o_k );
         #undef  P_0
         #undef  P_1
         }
@@ -3156,10 +3292,10 @@ creating folders. So I put the [ FCH ] section below the
         {
         /** ************************************************ ***
         At this point all of the folders in:
-        "AAC2020_AUTOGEN_RENCORE_EXTCODE" should exist
+        "AAC2020_AUTOGEN_EXTCODE_RENCORE" should exist
         and we are now going to copy over the relevant
         files to that folder. THEN we mass copy over all
-        files in[ AAC2020_AUTOGEN_RENCORE_EXTCODE ]to
+        files in[ AAC2020_AUTOGEN_EXTCODE_RENCORE ]to
         the[ AAC2020/LIB/AUTOGEN ]folder.
         @VID_IID[ 0283 ]TIME[ 01:52:00 ]
         *** ************************************************ **/
@@ -3196,7 +3332,10 @@ creating folders. So I put the [ FCH ] section below the
                 //:Build_Path_To_Local_AutoGen_Folder:
                 aac2020_rencore_ConcatToTarget(
                     str_basfold        //:BASE:folder
-                ,   "AAC2020_AUTOGEN_EXTCODE_RENCORE"
+
+                //: "AAC2020_AUTOGEN_EXTCODE_RENCORE"
+                ,aac2020_rencore_local_folder_name
+
                 , &(str_autogen)       //: AUT:folder(output)
                 );;
             };;
@@ -3229,12 +3368,18 @@ creating folders. So I put the [ FCH ] section below the
                     //:CopyEditorFilesAndModifyChecklist
                     //:CEF:CopyEditorFiles
                     //:MCL:ModifyChecklist
+                    o_k=(
                     aac2020_rencore_CEF_and_MCL(
                     /**/str_autogen //:<--[@_StableToVolatile]
                     ,   str_extfold //:<--[@_StableToVolatile]
                     ,       dex_edi 
-                    );;
+                    ));;
                     
+                    if( o_k <= 0 ){
+                        /**Bail_From_Loop_On_Problem.**/
+                        LOG("[PROBLEM_IN:CEF_and_MCL]",0);
+                        break;
+                    };;
                 };;
                 
             };;};;//:NEXT[ dex ]:<<<<<<<<<<<<<<<<<<<<<<<<<<<<://
@@ -3662,7 +3807,7 @@ creating folders. So I put the [ FCH ] section below the
             /** will prevent you from deleting files.        **/
 
             //:@EXA[ "R:/AAC/AAC2020/LIB/AUTOGEN"             ]
-            //:@EXA[ "R:/AAC/AAC2020_AUTOGEN_RENCORE_EXTCODE" ]
+            //:@EXA[ "R:/AAC/AAC2020_AUTOGEN_EXTCODE_RENCORE" ]
             //: Re-build local[ AAC/AAC2020_AUTOGEN_* ]folder.
             //: __NOT__ project[ AAC2020/LIB/AUTOGEN ]folder.
             /** DelFold: Deletes all files and folders.  **/
@@ -3927,19 +4072,20 @@ creating folders. So I put the [ FCH ] section below the
 #undef      U32  //:------------------------------------: 03 ://
 #undef      I32  //:------------------------------------: 04 ://
 #undef      I08  //:------------------------------------: 05 ://
-#undef      ERR  //:------------------------------------: 06 ://
-#undef      LOG  //:------------------------------------: 07 ://
-#undef      LOI  //:------------------------------------: 08 ://
-#undef      SPC  //:------------------------------------: 09 ://
-#undef      EXT  //:------------------------------------: 10 ://
-#undef      FIL  //:------------------------------------: 11 ://
-#undef      SIZ  //:------------------------------------: 12 ://
-#undef      LOS  //:------------------------------------: 13 ://
-#undef      ECI  //:------------------------------------: 14 ://
-#undef      E_M  //:------------------------------------: 15 ://
-#undef      REO  //:------------------------------------: 16 ://
-#undef  CWD_NOC  //:------------------------------------: 17 ://
-#undef  MAX_NOC  //:------------------------------------: 18 ://
+#undef      U08  //:------------------------------------: 06 ://
+#undef      ERR  //:------------------------------------: 07 ://
+#undef      LOG  //:------------------------------------: 08 ://
+#undef      LOI  //:------------------------------------: 09 ://
+#undef      SPC  //:------------------------------------: 10 ://
+#undef      EXT  //:------------------------------------: 11 ://
+#undef      FIL  //:------------------------------------: 12 ://
+#undef      SIZ  //:------------------------------------: 13 ://
+#undef      LOS  //:------------------------------------: 14 ://
+#undef      ECI  //:------------------------------------: 15 ://
+#undef      E_M  //:------------------------------------: 16 ://
+#undef      REO  //:------------------------------------: 17 ://
+#undef  CWD_NOC  //:------------------------------------: 18 ://
+#undef  MAX_NOC  //:------------------------------------: 19 ://
 //:=============================================:MAIN_SECTION://
 //:STAND_ALONE_MAIN:=========================================://
 //:AND_________PING:=========================================://
