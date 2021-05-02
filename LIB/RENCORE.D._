@@ -173,9 +173,21 @@
 //:=======================================:OVERRIDABLE__FUNCS://
 //:DEFINES_AND_VARIABLES:====================================://
 #define U08 uint8_t /** GCC: <stdint.h> **/           //: 01 ://
-#define I32 int32_t /** GCC: <stdint.h> **/           //: 02 ://
-#define REO struct AAC2020_RENCORE_ext_ord            //: 03 ://
-#define CHR const char                                //: 04 ://
+#define I08  int8_t /** GCC: <stdint.h> **/           //: 02 ://
+#define I32 int32_t /** GCC: <stdint.h> **/           //: 03 ://
+#define REO struct AAC2020_RENCORE_ext_ord            //: 04 ://
+#define CHR const char                                //: 05 ://
+    
+    //:------------------------------------------------------://
+    //:Maximum usable editor index. We may have "dummy"    ::://
+    //:editors or "dummy" arrays of data stubbed into      ::://
+    //:the code base, but this number represents what      ::://
+    //:is actually in production.                          ::://
+    //:For example: 1 means: [TAUDEPO/GPUVIEW](0)          ::://
+    //:                      & PAINT5D(1) are our editors. ::://
+    //:@VID_IID[ 0283 ]TIME[ 03:30:42 ]                    ::://
+    //:------------------------------------------------------://
+    #define AAC2020_RENCORE_MAX_USE_dex_edi ( 1 )
 
     /** Strict Parsing Of File or we fail. **/
     I32  aac2020_rencore_STRICT =( 1 );     /**Strict_Parsing**/
@@ -199,7 +211,8 @@
     //! UTC_ror : UNIT_TEST_CODE:ran_or_running ?     !//
     //! 1. Prevent running unit tests more than once. !//
     //! 2. Prevent accidential recursion from tests.  !//
-    U08 aac2020_rencore_UTC_ror =( 0 );
+    I08 aac2020_rencore_UTC_ror =( 0 ); //:RanOrRunning
+    I08 aac2020_rencore_UTC_ran =( 0 ); //:Running
 
     //- aac2020_rencore_ext_err=(  0  );    ! @SIDE_FX_BAD@  -//
     I32 aac2020_rencore_ext_noe=(  0  );  //!NumberOfElements!//
@@ -211,9 +224,10 @@
     CHR* aac2020_rencore_msg_err=("[UNSET_2021_04_25]");
 
 #undef  U08  //:----------------------------------------: 01 ://
-#undef  I32  //:----------------------------------------: 02 ://
-#undef  REO  //:----------------------------------------: 03 ://
-#undef  CHR  //:----------------------------------------: 04 ://
+#undef  I08  //:----------------------------------------: 02 ://
+#undef  I32  //:----------------------------------------: 03 ://
+#undef  REO  //:----------------------------------------: 04 ://
+#undef  CHR  //:----------------------------------------: 05 ://
 //:====================================:DEFINES_AND_VARIABLES://
 //:FILE_ACCESS_STUFF:========================================://
     
