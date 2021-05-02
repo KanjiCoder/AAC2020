@@ -2762,6 +2762,24 @@
            Find library that will allow us to export to
            animated gif.
 
+        2: Golang_Prototype_Renders_Of_Paint5D:
+
+           4 Smaller Tiles Set:
+
+           Typical Render Fills    2017 golang style prototype
+           The entire quad.        hugs the corners and stays
+                                   away from the center.
+                                   https://imgur.com/4Yrus3v
+           +---=---+---=---+       +---=--+++--=---+
+           |       |       |       |      |||      |
+           |       |       |       |      |||      |
+           |       |       |       +------+|+------+
+           +---=---+---=---+ ===>  +---=---+---=---+
+           |       |       |       +------+|+------+
+           |       |       |       |      |||      |
+           |       |       |       |      |||      |
+           +---=---+---=---+       +---=--+++--=---+
+
     //:======================================:EXTENSION_IDEAS://
     
     

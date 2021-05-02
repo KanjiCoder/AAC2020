@@ -48,6 +48,9 @@
     aac2020_rencore_DeleteListOfFiles
     aac2020_rencore_DeleteListOfFolders
 
+//:FILE_AND_FOLDER_MASS_CREATION:
+    aac2020_rencore_CreateListOfFolders
+
 //:EXTENSION LIST SORTING:
     aac2020_rencore_Swap
     aac2020_rencore_Sort_ext_arr
@@ -360,22 +363,46 @@ SECTION_INDEX:
         //: - - - - - - - - - - - ---- - - - - - - - - - - - ://
 
         I32
-        aac2020_rencore_mkdir(char* path) 
+        aac2020_rencore_mkdir(
+            NCC* path
+        )
         {
+        /** ************************************************ ***
+        This function edits the path in place to create the
+        sub-paths by inserting and removing null terminators.
+        When done executing, the original string, though
+        having been edited, should be in the original 
+        configation it has before entring[ mkdir ]function.
+        @VID_IID[ 0283 ]TIME[ 01:10:42 ]
+        *** ************************************************ **/
+
             I32 o_k=( 1 /**InnocentUntilProvenGuilty**/ );
 
-            if( ((char*)0) != strrchr(path, '\\' ) ){
+            if( ((NCC*)0) != strrchr(path, '\\' ) ){
                 ERR("BACK_SLASHES_NOT_SUPPORTED]");
             };;
 
-            char *sep = strrchr(path, '/');
-            if( ((char*)0) != sep ){
+            //:Edit string in place by placing a null over
+            //:the '/' to create the sub directories needed
+            //:in the correct order.
+            NCC* sep = strrchr(path, '/');
+            if( ((NCC*)0) != sep ){
 
-                *sep = 0;
+                *sep = 0; //:<--Overrides '/' with null
                 aac2020_rencore_mkdir(path);
                 *sep = '/';
+
+                //:   2   1    0
+                //:   |   |    |
+                //:   V   V    V
+                //: R:/THE/PATH/STRING
+                //: R:                 <-- touch  
+                //: R:/THE             <-- touch
+                //: R:/THE/PATH        <-- touch
+                //: R:/THE/PATH/STRING <-- touch
             };;
 
+            //:Where_Recursion_Stack_Starts_To_Unwind
             if(
                 aac2020_rencore_MakeOneDirectory(path) 
             && 
@@ -1964,7 +1991,30 @@ creating folders. So I put the [ FCH ] section below the
         return( o_k );
     }
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    I32
+    aac2020_rencore_TouchFolder(
+        CHR* abspath //:<--AbsolutPathToFolder
+    )
+    {
+        /** ************************************************ **/
+        /** mkdir edits the string in place, that is why     **/
+        /** it takes non const char(NCC).BUT!! String        **/
+        /** is returned to original state before exit.       **/
+        /** @VID_IID[ 0283 ]TIME[ 01:20:23 ] *************** **/
 
+        NCC      path_01[ MAX_NOC ]={ 0 };
+        NCC* str_path_01 =&( path_01[ 0 ] );
+
+        I32          noc =( strlen( abspath ) );
+
+        for( I32 i = 0 ; i <= (noc-1) ; i++ ){
+            path_01[ i ]=( abspath[ i ] );
+        };;
+
+        I32     o_k=( aac2020_rencore_mkdir( str_path_01 ) );
+        return( o_k );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 #undef      U32  //:------------------------------------: 01 ://
 #undef      I32  //:------------------------------------: 02 ://
 #undef      CHR  //:------------------------------------: 03 ://
@@ -2181,6 +2231,104 @@ creating folders. So I put the [ FCH ] section below the
         return( o_k );
     }
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    I32
+    aac2020_rencore_CreateListOfFolders(
+        CHR*        str_abspath //:Absolute/Base Folder
+    ,   CHR**       arr_subfold //:Array Of Relative(sub) paths
+    ,   I32         nos_subfold //:NumberOfStrings:subfold
+    ,   U32  *BYREF_nof_touched //:Number_Of_Files:CREATED
+    )                           //:AKA[  BYREF_nof_created ]
+    {                           //:AKA[        nof_created ]
+        #if( ECI >= 1 ) //:##################################://
+
+            if( ((CHR* )0)  ==str_abspath ){ ERR("[NIL_ABS]");};
+            if( ((CHR**)0)  ==arr_subfold ){ ERR("[NILLIST]");};
+            if( ((CHR* )0) != arr_subfold[ nos_subfold+0 ] ){
+                //:EXP_NTL:EXPected:NullTerminatedList
+                ERR("[@EXP_NTL@]");
+            };;
+            if( ((U32* )0) ==( BYREF_nof_touched)){
+                ERR("[NIL_REFERENCE:2021]");
+            };;
+            if( ((U32  )0) !=(*BYREF_nof_touched)){
+                ERR("[OUTPUT_PARAM_NOT_ZEROED_OUT:2021]");
+            };;
+        #endif //:###########################################://
+        //:Define_Vars:--------------------------------------://
+
+            //:comfold: Compound folder
+            //:subfold: Sub      folder
+            //:abspath: Absolute folder
+
+            I32  o_k=( 1 /**InnocentUntilProvenGuilty**/ );
+            I32  chk=( 0 /** Check_Value  **/ );
+            I32  dex=( 0 /** For Loop Dex **/ );
+            I32  was_touched=( 0 ); //:Was Deleted?
+            U32  nof_touched=( 0 ); //:NumOf_Folders:TOUCHED
+            NCC      comfold[NOC]={0};
+            NCC* str_comfold     =&( comfold[0] );
+            CHR* str_subfold     =((NCC*)0);
+            I32  noc_abspath     =(0);
+
+        //:--------------------------------------:Define_Vars://
+        //:out_of_memory_early_exit:-------------------------://
+
+            noc_abspath=( strlen( str_abspath ) );
+
+        //:-------------------------:out_of_memory_early_exit://
+        //:CORE_LOGIC:=======================================://
+        for( dex = 0 ; dex <=(nos_subfold-1) ; dex++ ){
+            if( o_k >= 1 ){
+                //:Get Current Relative Sub FOLDER.
+                str_subfold=arr_subfold[ dex ];
+                if( ((CHR*)0) == str_subfold ){
+                    /**@VID_IID[0282]TIME[04:49:13]**/
+                    ERR("[COPYRIGHT_KANJICODER_2021]");
+                };;
+
+                //:If we try to concat, is there enough memory
+                //:in our buffer to accomidate length of
+                //:both strings PLUS as "/" in the middle?
+                chk=( 1 + noc_abspath + strlen(str_subfold) );
+                if( chk > NOC ){
+                    o_k = ( 0 - 606 ); /**OutOfMemory**/
+                    LOG("[NO_MEMORY_TO_CONCAT:FOLDERNAME]",0);
+                };;
+            };;
+            if( o_k >= 1 ){
+                //:Create Absolute Path To Folder:
+                o_k=(
+                aac2020_rencore_ConcatToTarget(
+                     str_abspath  //:Base_Folder(@ABS_PATH@)
+                ,    str_subfold  //:Sub__Folder(@rel_path@)
+                ,  &(str_comfold) //:Sub__Folder(@ABS_PATH@)
+                ));;
+            };;
+            if( o_k >= 1 ){
+                //:If able to creat path to file, delete file:
+
+                //:Log deletion target to console:
+                LOS("[DEL_TAR:str_comfold]:%s\n",str_comfold);
+
+                was_touched=(
+                aac2020_rencore_TouchFolder(str_comfold));
+                if( was_touched >= 1 ){ nof_touched++; };
+            }else{
+                LOG("[CATFAIL:2021_05_01:436AM]",0);
+                //:@VID_IID[0282]TIME[04:45:23]
+                //:Serious problem. Exit quickly.
+                break;
+            };;
+        };;
+        //:=======================================:CORE_LOGIC://
+        //:return_via_output_param:--------------------------://
+
+            (*BYREF_nof_touched)=(nof_touched);
+
+        //:return_via_output_param:--------------------------://
+        return( o_k );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 #undef  I32  //:----------------------------------------: 01 ://
 #undef  U32  //:----------------------------------------: 02 ://
 #undef  CHR  //:----------------------------------------: 03 ://
@@ -2189,6 +2337,7 @@ creating folders. So I put the [ FCH ] section below the
 #undef  LOS  //:----------------------------------------: 06 ://
 #undef  ERR  //:----------------------------------------: 07 ://
 #undef  NOC  //:----------------------------------------: 08 ://
+//:===============================:CREATE_LIST_OF_SUB_FOLDERS://
 //:=================================:DELETE_LIST_OF_SUB_FILES://
 //:===============================:DELETE_LIST_OF_SUB_FOLDERS://
 //:HIGH_LEVEL_FOLDER_MANIPULATION:===========================://
@@ -2222,25 +2371,19 @@ creating folders. So I put the [ FCH ] section below the
     I32
     aac2020_rencore_DelFold_AUTOGEN_RENCORE_EXTCODE( )
     {
-    #define NUM_SUB_FILES    ( 3 )
-    #define NUM_SUB_FOLDERS  ( 3 )
+    #define NOS_SUBFILE  ( AAC2020_RENCORE_NOS_SUBFILE )
+    #define NOS_SUBFOLD  ( AAC2020_RENCORE_NOS_SUBFOLD )
 
         //:Data_I_Care_About_The_Most:-----------------------://
 
-            I32  nos_subpath=(NUM_SUB_FILES + 0 );
-            CHR* arr_subpath[ NUM_SUB_FILES + 1 ]={
-                "/PAINT5D/tilodat_CTO_tilpixu._"
-            ,   "/PAINT5D/tilpixa_CTO_laypixu._"
-            ,   "/PAINT5D/laypixa_CTO_plypix3._"
-            ,   0 //:<--@NULL_TERMINATED_LIST@
-            };;
-            I32  nos_subfold=(NUM_SUB_FOLDERS + 0 );
-            CHR* arr_subfold[ NUM_SUB_FOLDERS + 1 ]={
-                "/PAINT5D" //:<-- Editor #1
-            ,   "/TODO_02" //:<-- Editor #2
-            ,   "/TODO_03" //:<-- Editor #3
-            ,   0 //:<--@NULL_TERMINATED_LIST@
-            };;
+            //:EXAMPLE:SUBFILE:"/PAINT5D/tilodat_CTO_tilpixu._"
+            //:EXAMPLE:SUBFOLD:"/PAINT5D"
+
+            I32   nos_subpath=(NOS_SUBFILE + 0 );
+            I32   nos_subfold=(NOS_SUBFOLD + 0 );
+
+            CHR** arr_subpath=(AAC2020_RENCORE_arr_subpath);
+            CHR** arr_subfold=(AAC2020_RENCORE_arr_subfold);
 
         //:-----------------------:Data_I_Care_About_The_Most://
         //:All_Other_Variables:------------------------------://
@@ -2275,7 +2418,7 @@ creating folders. So I put the [ FCH ] section below the
             ,   nos_subpath //:Number_Of_Strings:arr_subpath
             , &(nof_deleted)//:Number_Of_Files_Deleted
             ));;
-            if( NUM_SUB_FILES == nof_deleted ){
+            if( NOS_SUBFILE == nof_deleted ){
                 printf("[All_Sub_Files_Found_And_Deleted]");
             };;
 
@@ -2291,7 +2434,7 @@ creating folders. So I put the [ FCH ] section below the
             ,   nos_subfold //:NumberOfStrings:arr_subfold
             , &(nof_deleted)//:Number_Of_Files_Deleted
             ));;
-            if( NUM_SUB_FOLDERS == nof_deleted ){
+            if( NOS_SUBFOLD == nof_deleted ){
                 printf("[All_Sub_Folders_Found_And_Deleted]");
             };;
 
@@ -2306,18 +2449,18 @@ creating folders. So I put the [ FCH ] section below the
 
         return( o_k );
 
-    #undef  NUM_SUB_FILES 
-    #undef  NUM_SUB_FOLDERS 
+    #undef  NOS_SUBFILE 
+    #undef  NOS_SUBFOLD 
     }
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
     I32
     aac2020_rencore_MakFold_AUTOGEN_RENCORE_EXTCODE( )
     {
-    #define NUM_SUB_FOLDERS ( 3 )
     /** **************************************************** ***
     CREATES FOLDER: "AAC2020_AUTOGEN_RENCORE_EXTCODE"
     Within the PARENT FOLDER of[ AAC2020 ]engine folder.
-    Also creates all of the sub folders needes too.
+    Also creates all of the sub folders needed too.
     The goal is to create all files needed for the loaded
     extensions here __FIRST__ and then copy and paste them
     into[ AAC2020/LIB/AUTOGEN ]. My reasoning is that we
@@ -2325,29 +2468,29 @@ creating folders. So I put the [ FCH ] section below the
     confirm everything looks good. Then we can just do a 
     mass move of files over to the mirror directory.
     
-        Local  Directory == [ PARENT_FOLDER/AUTOGEN ]
-        Mirror Directory == [ PARENT_FOLDER/AAC2020/LIB/AUTOGEN]
+        Local  Dir ==[ PARFOLD/AAC2020_AUTOGEN_RENCORE_EXTCODE ]
+        Mirror Dir ==[ PARFOLD/AAC2020/LIB/AUTOGEN]
     
-        Where[ PARENT_FOLDER ]is the folder that contains both
+        Where[ PARFOLD ]is the folder that contains both
         the[ AAC2020 ]engine repo and the[ EXTCODE ]repos.
     *** **************************************************** **/
+    #define NOS_SUBFOLD ( AAC2020_RENCORE_NOS_SUBFOLD )
 
-        //:care_about_most:----------------------------------://
+        //:Data_I_Care_About_The_Most:-----------------------://
+         
+            //:EXAMPLE:SUBFOLD:"/PAINT5D"
 
-            I32  nos_subfold=(NUM_SUB_FOLDERS + 0 );
-            CHR* arr_subfold[ NUM_SUB_FOLDERS + 1 ]={
-                "/PAINT5D" //:<-- Editor #1
-            ,   "/TODO_02" //:<-- Editor #2
-            ,   "/TODO_03" //:<-- Editor #3
-            ,   0 //:<--@NULL_TERMINATED_LIST@
-            };;
+            I32   nos_subfold=(NOS_SUBFOLD + 0 );
+            CHR** arr_subfold=(AAC2020_RENCORE_arr_subfold);
 
-        //:----------------------------------:care_about_most://
+        //:-----------------------:Data_I_Care_About_The_Most://
         //:declare_other_vars:-------------------------------://
 
             I32 o_k=( 1 /**InnocentUntilProovenGuilty**/ );
+            U32 nof_created=( 0 /**NumFoldersCreated**/ );
             NCC      autogen[NOC]={0};
             NCC* str_autogen=&( autogen[0] );
+        
 
         //:-------------------------------:declare_other_vars://
         //:CORE_LOGIC:=======================================://
@@ -2355,13 +2498,24 @@ creating folders. So I put the [ FCH ] section below the
             o_k=( 
             aac2020_rencore_AbsPath_AUTOGEN_RENCORE_EXTCODE(
                     &(str_autogen)));;
-            if(o_k <= 0 ){ ERR("[A_R_E:CREATE_FAIL]"); };
+            if(o_k <= 0 ){ 
+                ERR("[John_Mark_Fails:2021_05_02]");
+            }else{
+                LOS("[str_autogen]:%s",str_autogen);
+            };;
         };;
         if( o_k >= 1 ){
 
-            ERR("[TODO:FINISH_THIS_CODE_2021_05_01]"); //:<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<FINISH!
-
-            printf("[THEFOLDERIS_BEE]:%s\n",str_autogen);
+            LOS("[TRYING:CreateListOfFolders]:%s\n","[...]");
+            o_k=(
+            aac2020_rencore_CreateListOfFolders(
+                str_autogen //:AKA[ str_abspath ] 
+            ,   arr_subfold //:Array Of Relative(sub) paths
+            ,   nos_subfold //:NumberOfStrings:subpath
+            , &(nof_created)//:NumberOfFolders:Created
+            ));;
+            if( o_k >= 1 ){ LOG("[CLOF:PASS]",0); };
+            if( o_k <= 0 ){ LOG("[CLOF:FAIL]",0); };
         };;
         //:=======================================:CORE_LOGIC://
         //:IF_ACTIVELY_DEVELOPING:===========================://
@@ -2376,7 +2530,7 @@ creating folders. So I put the [ FCH ] section below the
 
         return( o_k );
 
-    #undef  NUM_SUB_FOLDERS
+    #undef  NOS_SUBFOLD
     }
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
 
