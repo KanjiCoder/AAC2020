@@ -34,7 +34,9 @@
     aac2020_rencore_WhiteSlash
     aac2020_rencore_IsSlash
     aac2020_rencore_TrimInPlace
+    aac2020_rencore_JoinToTarget
     aac2020_rencore_ConcatToTarget    //:<--BuildSubFolder
+    aac2020_rencore_ConcatIncludeFileEntry
     aac2020_rencore_ConcatPathsInPlace
     aac2020_rencore_man_BeginsWith_sub
 
@@ -1895,6 +1897,102 @@ creating folders. So I put the [ FCH ] section below the
 #define MAX_NOC ( aac2020_rencore_MACRO_max_noc )     //: 09 ://
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     I32
+    aac2020_rencore_JoinToTarget(
+        CHR*        str_001 //:First__String
+    ,   CHR*        str_002 //:Second_String
+    ,   NCC* *BYREF_str_out //:Output_String
+    )
+    {
+    /** **************************************************** ***
+    LIKE[ aac2020_rencore_ConcatToTarget ]But does __NOT__
+    place a "/" between the strings being joined.
+    *** **************************************************** **/
+
+        #if( ECI )//:########################################://
+        
+            if(((CHR* )0)==(       str_001)){ ERR("[JTT_1]");};                    
+            if(((CHR* )0)==(       str_002)){ ERR("[JTT_2]");};                    
+            if(((NCC**)0)==( BYREF_str_out)){ ERR("[JTT_3]");};        
+            if(((NCC* )0)==(*BYREF_str_out)){ ERR("[JTT_4]");};               
+                                         
+        #endif //:####################################( ECI )://
+
+        NCC* str_out =(*BYREF_str_out     );
+        I32  noc_001 =( strlen( str_001 ) );
+        I32  noc_002 =( strlen( str_002 ) );
+        I32    o_k=( 0 /**Undefined**/ );
+
+        if( (noc_001 + noc_002 + 1) > MAX_NOC ){
+            /**Error: Out of room to concat.**/
+            o_k=( 0-666);
+        }else{
+            o_k=( 0+777);
+
+            for( I32 i = 0 ; i <=(noc_001-1) ; i++ ){
+                str_out[i]=str_001[i];
+            };;
+            for( I32 i = 0 ; i <=(noc_002-1) ; i++ ){
+                str_out[(noc_001+0)+i]=str_002[i];
+            };;
+            str_out[ (noc_001+noc_002)+0 ]=( 0 );
+
+            if( strlen(str_out) !=(noc_001+noc_002) ){
+                ERR("[I_HAVE_BAD_LOGIC]");
+            };;
+
+            (*BYREF_str_out)=( str_out ); //:return_by_ref
+        };;
+
+        return( o_k /**Everything_Is_Okay**/ );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    I32 //:<--[ o_k ]variable
+    aac2020_rencore_ConcatIncludeFileEntry(
+        NCC* str_txt   //:<--String_To_Write_To
+    ,   I32  str_cap   //:<--Capacity_Of_String(NOT:str_noc)
+    ,   I32  dex_txt   //:<--First_Index_Slot_To_Write_To
+    
+    ,   CHR* str_001   //:<--[ STRINGS_TO_APPEND ]
+    ,   CHR* str_002   //:<--[ STRINGS_TO_APPEND ]
+    ,   CHR* str_003   //:<--[ STRINGS_TO_APPEND ]
+
+    ,   I32  *BYREF_dex_txt //:<--NEW[ dex_txt ]When_Done
+    )
+    {
+        #if( ECI )//:########################################://
+                  
+            if( ((NCC*)0) == str_txt   ){ ERR("[CIFE_01]"); };                                             
+            if( ((I32 )0) >  dex_txt   ){ ERR("[CIFE_02]"); };   
+            if( strlen(str_001) <= 0   ){ ERR("[CIFE_03]"); };
+            if( strlen(str_002) <= 0   ){ ERR("[CIFE_04]"); };
+            if( strlen(str_003) <= 0   ){ ERR("[CIFE_05]"); };
+        
+            if( ((I32*)0) == BYREF_dex_txt ){
+                ERR("[@RANN@:2021_05_02]");
+            };;
+                                           
+        #endif //:####################################( ECI )://
+        //:DECVAR:- - - - - - - - - - - - - - - - - - - - - -://
+
+            I32 o_k=( 1 /**InnocentUntilProvenGuilty**/ );
+
+        //::- - - - - - - - - - - - - - - - - - - - - -DECVAR://
+        if( o_k >= 1 ){
+            //:@VID_IID[0284]T[01:35:00]WHY[(dex_txt+3)]
+            if( (dex_txt+3)>(str_cap-1)){ o_k=( 0 - 101 ); };
+            if( ((I32 )0) >= str_cap   ){ o_k=( 0 - 202 ); };    
+        };;
+        if( o_k >= 1 ){
+
+            //:TODO
+    
+        };;
+        ERR("[TODO_MAKE_THIS_WRITE_TO_IN_MEMORY_FILE_FUNCTION]"); //:<<<<<<<<<<<<<<<<<<<<<<<<<<<<< FINISH!
+
+        return( o_k );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    I32
     aac2020_rencore_ConcatToTarget(
         CHR*        abspath //:Absolute_____Path_String
     ,   CHR*        subpath //:Relative_Sub_Path_String
@@ -3200,7 +3298,7 @@ creating folders. So I put the [ FCH ] section below the
                     //:----------------------------:DEST_FILE://
     
                     if( aac2020_rencore_HasFile(pof_src) <= 0 ){
-                        LOS("[NOT_FOUND:pof_src]:%s",pof_src); //:<<<<<<<<<<<<<<<<<<<<<<<<[TODO:FIX:pof_src:CREATION]<<<<
+                        LOS("[NOT_FOUND:pof_src]:%s",pof_src); //:<<<<<<<<<<<<<<<<<<<<<<<<[TODO:FIX:pof_src:CREATION]<<<<PATH_IS_WRONG
                     }else{ //:File_Exists:
                         LOS("[was_found:pof_src]:%s",pof_src);
 
@@ -3262,14 +3360,77 @@ creating folders. So I put the [ FCH ] section below the
         AAC2020_INCLUDE_EXTCODE_PAINT5D_laypixa_CTO_plypix3 (1)
         @VID_IID[0283]TIME[03:42:23]
         *** ************************************************ **/
+        #define CAP_TXT (( 64+2)*100)
 
             I32 o_k=( 0 );
 
+            /** Assume include file doesn't need more than   **/
+            /** 100 lines of text in it. ******************* **/
+            NCC  car_txt[CAP_TXT]={0};
+            NCC* str_txt=&(car_txt[0]);
+
+            //:@VID_IID[0284]T[00:36:23]HELPS_BUILD[INCLUDE._]
+            I08*  inc =((I08* )0); //:Include Check List
+            I32   nop =((I32  )0); //:Number_Of____PAIRS
+            CHR** map =((CHR**)0); //:FileName_To_IncludeName
+
+            I32   ioi =(       0); //:index_of_include
+            CHR*  nam =((CHR* )0); //:#define's name
+        
+            I32  dex_txt=(0-1);
+            I32  dex_edi=( 0 );
+            I32  m_i=( //:Max_Editor_Index_Usable
+                AAC2020_RENCORE_MAX_USE_dex_edi );;
+
+            for( dex_edi = 1 ; dex_edi <= m_i ; dex_edi++ ){
+                if( 1 == dex_edi ){
+                    inc=(aac2020_rencore_INC_paint5d);
+                    map=(aac2020_rencore_MAP_paint5d);
+                    nop=(aac2020_rencore_MAP_paint5d_NOP);
+                }else
+                if( 2 == dex_edi ){
+                    inc=(aac2020_rencore_INC_todo_02);
+                    map=(aac2020_rencore_MAP_todo_02);
+                    nop=(aac2020_rencore_MAP_todo_02_NOP);
+                }else
+                if( 3 == dex_edi ){
+                    inc=(aac2020_rencore_INC_todo_03);
+                    map=(aac2020_rencore_MAP_todo_03);
+                    nop=(aac2020_rencore_MAP_todo_03_NOP);
+                }else{
+                    ERR("[What_Editor_Is_This?]");
+                };;
+
+                dex_txt=(0-1 /**GetReadyForLoop**/);
+                for( ioi = 0 ; ioi <= nop ; ioi ++ ){
+
+                    /** Add Line To In Memory Include File **/
+                    o_k=(
+                    aac2020_rencore_ConcatIncludeFileEntry(
+                        str_txt   //:<--String_To_Write_To
+                    ,   CAP_TXT   //:<--Capacity_Of_String
+                    ,   dex_txt+1 //:<--index_into_txt
+
+                    ,   "#define "
+                    ,   map[ (ioi*2)+1 ]
+                    ,   inc[ioi] >= 1 ? " (1)\n" : " (0)\n"
+
+                    ,  &(dex_txt)
+                    ));;
+
+                    if( o_k <= 0 ){
+                        LOG("[OUT_OF_MEMORY_LIKELY]",0);
+                        break;
+                    };;
+                };;
+            };;
 
             ERR("[TODO_FINSH_THIS_sfjslfjsjdfsdflj_BLAH!]");
 
 
-            return( o_k );
+            return( o_k ); 
+
+        #undef  CAP_TXT
         }
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
         I32
@@ -3312,12 +3473,14 @@ creating folders. So I put the [ FCH ] section below the
             NCC      basfold[NOC]={0};
             NCC      autogen[NOC]={0};
             NCC      extfold[NOC]={0};
-            ///      extname[NOC]////;<--FetchedFromGlobalVars
+            NCC      extname[NOC]={0};
             
             NCC* str_basfold=&( basfold[0] );
             NCC* str_autogen=&( autogen[0] );
             NCC* str_extfold=&( extfold[0] );
-            NCC* str_extname=( ((NCC*)0)   );
+            NCC* str_extname=&( extname[0] );
+
+            CHR* ext_nam=((CHR*)0);
             
             o_k=(
             aac2020_rencore_FindParentFolderOf_AAC2020(
@@ -3347,14 +3510,26 @@ creating folders. So I put the [ FCH ] section below the
             if( o_k >= 1 ){
             for( dex = 0 ; dex <= M_I ; dex ++ ){
 
-                str_extname =( &((ARR[dex]).ext_nam[0]) );
+                //:EXAMPLE:"MANDELA"
+                ext_nam =( &((ARR[dex]).ext_nam[0]) );
 
-                //:Build_Target_Sub_Folder_Of_Extension_Code:
+                o_k=(
+                aac2020_rencore_JoinToTarget(
+                    "AAC2020_EXTCODE_"
+                ,   ext_nam
+                , &(str_extname)
+                ));;
+                if( o_k <= 0){
+                    ERR("[concatfail_john_mark]");
+                    break;
+                };;
+                  
+                //:Build_Target_Sub_Folder_Of_Ext_Code:
                 o_k=(
                 aac2020_rencore_ConcatToTarget(
-                    str_basfold        //:BASE:folder
-                ,   str_extname   //: SUB:folder
-                , &(str_extfold)       //: EXT:folder(output)
+                    str_basfold    //:BASE:folder
+                ,   str_extname    //: SUB:folder
+                , &(str_extfold)   //: EXT:folder(output)
                 ));;
                 if( o_k <= 0 ){ 
                     ERR("[str_extfold:CREATEPATHFAIL]");
