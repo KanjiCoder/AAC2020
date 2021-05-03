@@ -23,7 +23,7 @@
     aac2020_rencore_HasFold //: <-- FolderExists ? ::::::::::://
     aac2020_rencore_HasFile //: <-- FileExists   ? ::::::::::://
     AAC2020_RENCORE_TouchFile
-    AAC2020_RENCORE_SaveFile_TXT
+    aac2020_rencore_SaveFile_TXT
     aac2020_rencore_SaveFile_U08
     AAC2020_RENCORE_SaveFile_PNG
     aac2020_rencore_LoadFileIfExists
@@ -334,7 +334,7 @@ SECTION_INDEX:
     aac2020_rencore_mkdir
 
     AAC2020_RENCORE_TouchFile
-    AAC2020_RENCORE_SaveFile_TXT
+    aac2020_rencore_SaveFile_TXT
     aac2020_rencore_SaveFile_U08
     AAC2020_RENCORE_SaveFile_PNG
     aac2020_rencore_LoadFileIfExists
@@ -458,7 +458,7 @@ SECTION_INDEX:
                 has=( 1 );
             };;
             return( has );
-        };;
+        }
     //:==========================================:FILE_EXISTS://
     //:TOUCH_FILE:===========================================://
 
@@ -610,7 +610,7 @@ SECTION_INDEX:
     //:SAVE_C99_FILE_TO_DISK:================================://
 
         I32
-        AAC2020_RENCORE_SaveFile_TXT(
+        aac2020_rencore_SaveFile_TXT(
             CHR* nof_wex /** NameOfFile__WithEXtension   ....**/
         ,   CHR* chr_arr /** String To Save To Disk .........**/
         ,   U32  str_len /** Num Chars In chr_arr   .........**/
@@ -619,7 +619,7 @@ SECTION_INDEX:
         /** ************************************************ ***
         TXT == "TeXT" , TEX == "TEXture"
         *** ************************************************ **/
-            LOG("[AAC2020_RENCORE_SaveFile_TXT:BEG]",0);
+            LOG("[aac2020_rencore_SaveFile_TXT:BEG]",0);
             //:input_checks:---------------------------------://
             #define N_S ((CHR*)0)
 
@@ -705,7 +705,7 @@ SECTION_INDEX:
             #undef  MACRO_SEEK_SET
             //:----------------:write_text_using_binary_write://
 
-            LOG("[AAC2020_RENCORE_SaveFile_TXT:END]",0);
+            LOG("[aac2020_rencore_SaveFile_TXT:END]",0);
             return( 0x00 );
         }
 
@@ -724,7 +724,7 @@ SECTION_INDEX:
             CHR* chr_arr ;
             U32  str_len ;
             return_value_from_function=( 
-                AAC2020_RENCORE_SaveFile_TXT(
+                aac2020_rencore_SaveFile_TXT(
                          nof_wex /** NameOfFile__WithEXt **/
                 ,   ( chr_arr = ((CHR*)arr_u08 )  )
                 ,   ( str_len = (      arr_len )  )
@@ -1501,6 +1501,7 @@ https://stackoverflow.com/questions/5467725
     I32 aac2020_rencore_DeleteAllFilesInFolder( NCC* abspath ){
         //:@VID_IID[0282]TIME[00:14:14]://
         //:DONT_DO_THIS____KNOW_WHAT_YOU_ARE_DELETING
+        if( 0 == abspath ){ /**NOOP**/ };
         ERR("[USE:aac2020_rencore_DeleteOneFile]");
         return( 0-666 );
     }
@@ -1508,6 +1509,7 @@ https://stackoverflow.com/questions/5467725
     I32 aac2020_rencore_DelFold( NCC* path ){   
         //:@VID_IID[0282]TIME[00:01:00]
         //:DONT_DO_THIS____KNOW_WHAT_YOU_ARE_DELETING
+        if( 0 == path ){ /**NOOP**/ };
         ERR("[USE:aac2020_rencore_DeleteEmptyFolder]");
         return( 0-666 );
     }
@@ -1936,8 +1938,8 @@ creating folders. So I put the [ FCH ] section below the
             };;
             str_out[ (noc_001+noc_002)+0 ]=( 0 );
 
-            if( strlen(str_out) !=(noc_001+noc_002) ){
-                ERR("[I_HAVE_BAD_LOGIC]");
+            if( strlen(str_out) !=((U32)(noc_001+noc_002))){
+                ERR("[I_HAVE_BAD_LOGIC:2021_05_03]");
             };;
 
             (*BYREF_str_out)=( str_out ); //:return_by_ref
@@ -1959,6 +1961,13 @@ creating folders. So I put the [ FCH ] section below the
     ,   I32  *BYREF_dex_txt //:<--NEW[ dex_txt ]When_Done
     )
     {
+    /** **************************************************** ***
+    @VID_IID[0285]TIME[00:15:23]Concats 3 strings into a
+    text block representing a text file. Returns positive
+    I32 o_k value if no troubles. Returns the index of the
+    LAST_WRITTEN_CHARACTER via[ BYREF_dex_txt ]output param.
+    *** **************************************************** **/
+
         #if( ECI )//:########################################://
                   
             if( ((NCC*)0) == str_txt   ){ ERR("[CIFE_01]"); };                                             
@@ -1976,7 +1985,28 @@ creating folders. So I put the [ FCH ] section below the
 
             I32 o_k=( 1 /**InnocentUntilProvenGuilty**/ );
 
+            //:Markers that tell us when we've hit the
+            //:first character of a different string.
+            I32  m_1 ; //:<-- index_of_first_char_of[ str_001 ]
+            I32  m_2 ; //:<-- index_of_first_char_of[ str_002 ]
+            I32  m_3 ; //:<-- index_of_first_char_of[ str_003 ]
+                 
+            I32  dst ; //:<-- destination index
+            I32  d_0 ; //:<-- destination start
+            I32  d_1 ; //:<-- destination end
+
+            I32  src ; //:<-- source_index
+            CHR* css ; //:<-- Current_Source_String
+
+            I32  miD ; //:<-- max index of destination string
+            I32  mi1 ; //:<-- max index of m_1
+            I32  mi2 ; //:<-- max index of m_2
+            I32  mi3 ; //:<-- max index of m_3
+
+            I32  l_m ; //:<-- local max index. (css's max)
+
         //::- - - - - - - - - - - - - - - - - - - - - -DECVAR://
+        //:CORLOG:- - - - - - - - - - - - - - - - - - - - - -://
         if( o_k >= 1 ){
             //:@VID_IID[0284]T[01:35:00]WHY[(dex_txt+3)]
             if( (dex_txt+3)>(str_cap-1)){ o_k=( 0 - 101 ); };
@@ -1984,12 +2014,58 @@ creating folders. So I put the [ FCH ] section below the
         };;
         if( o_k >= 1 ){
 
-            //:TODO
-    
-        };;
-        ERR("[TODO_MAKE_THIS_WRITE_TO_IN_MEMORY_FILE_FUNCTION]"); //:<<<<<<<<<<<<<<<<<<<<<<<<<<<<< FINISH!
+            //:max indexes:
+            miD=(( str_cap         ) - 1 -1 ); //:@NULLMINUS@://
+            mi1=(( strlen(str_001) ) - 1 +0 );
+            mi2=(( strlen(str_002) ) - 1 +0 );
+            mi3=(( strlen(str_003) ) - 1 +0 );
 
-        return( o_k );
+            //:markers within destination[ dst ]index.
+            m_1=( dex_txt+(           0        ));
+            m_2=(   m_1  +( strlen(str_001)    ));
+            m_3=(   m_2  +( strlen(str_002)    ));
+
+            //:first and last indexes to write to in our
+            //:destination strings.
+            d_0=( dex_txt );
+            d_1=( dex_txt 
+                + strlen( str_001 )
+                + strlen( str_002 )
+                + strlen( str_003 )
+                - 1 //:MinusOneBecauseMaxIndex
+            );;
+
+            for( dst = d_0 ; dst <= d_1 ; dst ++ ){
+
+                if( dst > miD ){ ERR("[OOB_DST_MID]"); };
+
+                //:WouldBeReverseOrderIfUsed[ ELSE ]Statements:
+                //:@VID_IID[0285]TIME[00:11:32]
+                if( dst == m_1 ){ css = str_001; src=(0); };
+                if( dst == m_2 ){ css = str_002; src=(0); };
+                if( dst == m_3 ){ css = str_003; src=(0); };
+
+                if( dst == m_1 ){ l_m = mi1 ; };
+                if( dst == m_2 ){ l_m = mi2 ; };
+                if( dst == m_3 ){ l_m = mi3 ; };
+                
+                if( src > l_m ){ ERR("[OOB_L_M:2021]"); };
+
+                str_txt[ dst ]=css[ src ];
+                                    src++;
+            };;
+            str_txt[ dst ]=( 0 ); //:@SMACK_ON_NULL_TERM@://
+        };;
+        if( o_k >= 1 ){
+
+            LOG("[Lets_Try_And_Print_That_String]",0);
+            LOS("[str_txt]%s\n",str_txt);
+
+        };;
+        //::- - - - - - - - - - - - - - - - - - - - - -CORLOG://
+        //:returns:
+        (*BYREF_dex_txt)=( d_1 ); //:<--OuputParam
+        return( o_k ); //:<-------------ByValue
     }
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     I32
@@ -2030,7 +2106,7 @@ creating folders. So I put the [ FCH ] section below the
 
             I32  noc_abspath=( strlen( abspath ) );
             I32  noc_subpath=( strlen( subpath ) );
-            I32  noc_outpath=( 0 );
+            ///  noc_outpath=( 0 );
                                          
         //::- - - - - - - - - - - - - - - - -::declare_var(s)://
         //:OUT_OF_MEMORY_CHECK:==============================://
@@ -2633,11 +2709,11 @@ creating folders. So I put the [ FCH ] section below the
 
             //:Stack_Allocated_Strings:
             NCC      autogen[NOC]={0};
-            NCC      subpath[NOC]={0};
+            ///      subpath[NOC]={0};
 
             //:Necessary_Hack_On_Stack_Allocated_Strings:
             NCC* str_autogen=&( autogen[0] );
-            NCC* str_subpath=&( subpath[0] );
+            /// str_subpath=&( subpath[0] );
 
         //:------------------------------:All_Other_Variables://
         if( o_k >= 1 ){ //:create_root_path:-----------------://
@@ -3199,14 +3275,14 @@ creating folders. So I put the [ FCH ] section below the
             I32   has_loc=( 0 /**Folder_Exists?**/ );
 
             //:ENGINE folder path:( global AUTOGEN folder )
-            NCC              car_eng[MAX_NOC];
-            NCC*  str_eng=(&(car_eng[0])    );
+            ///              car_eng[MAX_NOC];
+            ///   str_eng=(&(car_eng[0])    );
             ///   has_eng( 0 /**Folder_Exists?**/ );
 
             //:SOURCE FILE PATH: ( pof_src ):
             NCC              car_src[MAX_NOC]; 
             NCC*  pof_src=(&(car_src[0])    );
-            I32   has_src=( 0 /**FILE_EXISTS?**/ );
+            ///   has_src=( 0 /**FILE_EXISTS?**/ );
 
             //:DEST   FILE PATH: ( pof_dst ):
             NCC              car_dst[MAX_NOC]; 
@@ -3298,9 +3374,11 @@ creating folders. So I put the [ FCH ] section below the
                     //:----------------------------:DEST_FILE://
     
                     if( aac2020_rencore_HasFile(pof_src) <= 0 ){
+                        //:has_src=( 0 );
                         LOS("[NOT_FOUND:pof_src]:%s",pof_src); //:<<<<<<<<<<<<<<<<<<<<<<<<[TODO:FIX:pof_src:CREATION]<<<<PATH_IS_WRONG
                     }else{ //:File_Exists:
                         LOS("[was_found:pof_src]:%s",pof_src);
+                        //:has_src=( 1 );
 
                         I32  u08_has=((I32 )0);//:FileLoaded?
                         U08* u08_arr=((U08*)0);//:Binary_Data
@@ -3313,6 +3391,12 @@ creating folders. So I put the [ FCH ] section below the
                         ,   &(u08_len)//:Number_Of_Bytes
                         ));;
                         if(u08_has >= 1 && ((U08*)0)!=u08_arr){
+
+                            has_dst=(
+                            aac2020_rencore_HasFile(pof_dst));;
+                            if( has_dst >= 1 ){
+                                LOS("[OverWriting]:%s",pof_dst);
+                            };;
 
                             aac2020_rencore_SaveFile_U08(
                                 pof_dst
@@ -3368,21 +3452,30 @@ creating folders. So I put the [ FCH ] section below the
             /** 100 lines of text in it. ******************* **/
             NCC  car_txt[CAP_TXT]={0};
             NCC* str_txt=&(car_txt[0]);
+            I32  str_len=( 0 /**LengthOf:str_txt**/ );
 
             //:@VID_IID[0284]T[00:36:23]HELPS_BUILD[INCLUDE._]
             I08*  inc =((I08* )0); //:Include Check List
             I32   nop =((I32  )0); //:Number_Of____PAIRS
             CHR** map =((CHR**)0); //:FileName_To_IncludeName
 
-            I32   ioi =(       0); //:index_of_include
-            CHR*  nam =((CHR* )0); //:#define's name
+            I32   ioi     =(       0); //:index_of_include
+            I32   ioi_m_i =(       0); //:ioi's max index.
+            ///   nam     =((CHR* )0); //:#define's name
         
             I32  dex_txt=(0-1);
             I32  dex_edi=( 0 );
             I32  m_i=( //:Max_Editor_Index_Usable
                 AAC2020_RENCORE_MAX_USE_dex_edi );;
+    
+            NCC  car_inc[MAX_NOC]={0}; //:[INCLUDE._]FOLDER
+            NCC* str_inc=&(car_inc[0]);//:[INCLUDE._]FOLDER
 
+            //:create_in_memory_include_file:----------------://
             for( dex_edi = 1 ; dex_edi <= m_i ; dex_edi++ ){
+                
+                LOI("[dex_edi]:%d\n" , dex_edi );
+
                 if( 1 == dex_edi ){
                     inc=(aac2020_rencore_INC_paint5d);
                     map=(aac2020_rencore_MAP_paint5d);
@@ -3402,7 +3495,10 @@ creating folders. So I put the [ FCH ] section below the
                 };;
 
                 dex_txt=(0-1 /**GetReadyForLoop**/);
-                for( ioi = 0 ; ioi <= nop ; ioi ++ ){
+                ioi_m_i=( nop - 1 /**NumberOfPairs-1**/ );
+                for( ioi = 0 ; ioi <= ioi_m_i ; ioi ++ ){
+
+                    LOI("[ioi]:%d\n",ioi);
 
                     /** Add Line To In Memory Include File **/
                     o_k=(
@@ -3424,6 +3520,25 @@ creating folders. So I put the [ FCH ] section below the
                     };;
                 };;
             };;
+            //:----------------:create_in_memory_include_file://
+            //:save_file_to_disk:----------------------------://
+
+                //:File_Path_To_Save_To:---------------------://
+                aac2020_rencore_AbsPath_AUTOGEN_RENCORE_EXTCODE(
+                              &(str_inc) );;
+
+                aac2020_rencore_ConcatPathsInPlace(
+                    &(str_inc) , "/INCLUDE.C11"  );;
+                //:---------------------:File_Path_To_Save_To://
+                
+                str_len=( strlen( str_txt ) );
+                aac2020_rencore_SaveFile_TXT(
+                    str_inc  //:[ nof_wex : With_EXtension  ]://
+                ,   str_txt  //:[ chr_arr : CHaRacter_ARRay ]://
+                ,   str_len  //:[ str_len/len_str/noc_str   ]://
+                );;
+
+            //:----------------------------:save_file_to_disk://
 
             ERR("[TODO_FINSH_THIS_sfjslfjsjdfsdflj_BLAH!]");
 
@@ -4495,6 +4610,7 @@ functions that actually exist. @VID_IID[0283]TIME[05:29:50]
     GUESS[ Create_Local_Target_Folder_Path      ]
     GUESS[ ConcatInPlace|CreateFolderPath       ]
     GUESS[ ConcatStringsInPlace                 ]
+    GUESS[ aac2020_rencore_ConcatInPlace        ]
     ---------------------------------------------
     VALID[ aac2020_rencore_ConcatToTarget       ]
     VALID[ aac2020_rencore_ConcatPathsInPlace   ]

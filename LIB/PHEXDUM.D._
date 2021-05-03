@@ -81,6 +81,7 @@
 #define U08       uint8_t /** GCC: <stdint.h> **/     //: 03 ://
 #define C32 const int32_t /** GCC: <stdint.h> **/     //: 04 ://
 #define I32       int32_t /** GCC: <stdint.h> **/     //: 05 ://
+#define P_T enum AAC2020_PHEXDUM_payload_file_type    //: 06 ://
 
     /** ror : ran or running ? **/
     /** Has unit test been ran before? **/
@@ -130,7 +131,6 @@
     };
 
     struct AAC2020_PHEXDUM_payload{
-    #define P_T enum AAC2020_PHEXDUM_payload_file_type
 
             P_T bin_txt ;  
 
@@ -161,8 +161,6 @@
         /** nol_u32: Number Of Literals: Format: Uint32  *** **/
 
             I32  anytext_nol_u32 ; /** AKA[ nof_hel ]*** *** **/
-
-    #undef PAY_TYP
     };
                                           
 #undef  CHR  //:----------------------------------------: 01 ://
@@ -170,6 +168,7 @@
 #undef  U08  //:----------------------------------------: 03 ://
 #undef  C32  //:----------------------------------------: 04 ://
 #undef  I32  //:----------------------------------------: 05 ://
+#undef  P_T  //:----------------------------------------: 06 ://
 //:============================================:MISC_WHATEVER://
 //:FUNCTION_POINTER_TYPES:===================================://
 #define CHR const char                                //: 01 ://
