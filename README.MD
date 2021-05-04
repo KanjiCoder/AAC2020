@@ -2132,7 +2132,7 @@
         +---+---+---+---+---+---+
         |           |           |
         +   +   +===+   +   +   +  AYE == No Action
-        |    AYE|       |BEE    |  BEE == AUTOMIX==PRONGS
+        |    AYE|        BEE    |  BEE == AUTOMIX==PRONGS
         +   +   +===+   +   +   +
         |           |           |
         +---+---+---+---+---+---+

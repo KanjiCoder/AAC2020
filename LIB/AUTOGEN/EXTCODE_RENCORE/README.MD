@@ -1,8 +1,15 @@
 
+    //:SUMMARY:==============================================://
 
+        1. DONT_USE_THIS_FOLDER 
+        2. TRY_LOOKING_IN:
+            2.1: "/LIB/AUTOGEN/<EDITOR_NAME>"
+            2.2: "<SOMEWHERE>/RENCORE_OR_EXTCODE._"
+            
+    //:==============================================:SUMMARY://
     //:CURRENT_VALID_NOTES:==================================://
 
-        Seeng how this file works:
+        See how this file works:
         AAC2020\LIB\PAINT5D_DEFAULT_SHADERS\RENCORE_OR_EXTCODE._
 
         I think the idea of using[ THIS FOLDER ]

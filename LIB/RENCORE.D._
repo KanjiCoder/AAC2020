@@ -9,14 +9,12 @@
 //:====================================:RENCORE_DOCUMENTATION://
 //:DEBUG_FLAGS:==============================================://
 
-    /** When done developing this code, turn this flag off.  **/
-    #define AAC2020_RENCORE_are_developing_fail_faster ( 1 )
+    /**@VID_IID[0286]T[02:40:40]SEE[ #RENCORE_DEBUG_FLAGS# ] **/
+    /** ALL_DEFINES_SHOULD_BE_OFF_WHEN_DONE_DEVELOPING_CODE  **/
 
-    /** When actively developing the code, turn this on  *** **/
-    /** so we don't accidentially recursively delete our *** **/
-    /** hard drive or something.                         *** **/
-    /** @VID_IID[ 0281 ]TIME[ 06:01:10 ]                 *** **/
-    #define AAC2020_RENCORE_file_delete_safety_on ( 1 )
+    #define AAC2020_RENCORE_are_developing_fail_faster ( 0 )
+    #define AAC2020_RENCORE_file_delete_safety_on      ( 0 )
+    #define AAC2020_RENCORE_copy_paste_dry_run_on      ( 0 )
 
 //:==============================================:DEBUG_FLAGS://
 //:WHERE_ARE_WE_PUTTING_THE_FILES_SON?=======================://
@@ -25,10 +23,26 @@
 #define I32 int32_t /**GCC:<stdint.h>**/  //:-----------: 01 ://
 #define CHR const char                    //:-----------: 02 ://
 
+    //:NAME_OF_GENERATED_INCLUDE_FILE:-----------------------://
+        
+        
+        //:             IFN:IncludeFileName
+        //:             ::::NOX:NO_eXtension
+        CHR*  //:       IFN_NOX:IncludeFileName_NO_eXtension
+        aac2020_rencore_IFN_NOX=( "INCLUDE_EXTCODE_RENCORE" );
+
+    //:-----------------------:NAME_OF_GENERATED_INCLUDE_FILE://
     //:NAME_OF_AUTOGEN_FOLDERS:------------------------------://
     
-    CHR* aac2020_rencore_local_folder_name=(
-        "AAC2020_AUTOGEN_EXTCODE_RENCORE"   );
+    /** AUTOGEN[ LOCAL ] **/
+
+        CHR* aac2020_rencore_local_folder_name=(
+            "AAC2020_AUTOGEN_EXTCODE_RENCORE"   );
+
+    /** AUTOGEN[ GLOBAL / ENGINE ] **/
+
+        CHR* aac2020_rencore_RELATIVE_aac2020_lib_autogen=(
+            "AAC2020/LIB/AUTOGEN" );
 
     //:NAME_OF_AUTOGEN_FOLDERS:------------------------------://
     //:FILE_AND_FOLDER_TARGETS:------------------------------://
@@ -42,6 +56,8 @@
         /** @VID_IID[ 0283 ]TIME[ 00:11:50 ]           **/
         /** ****************************************** **/
 
+        //# REMOVE THIS IN FAVOR OF:                 #########//
+        //# aac2020_rencore_MAP_paint5d <<<< BETTER  #########//
         I32  AAC2020_RENCORE_nos_subpath=(NOS_SUBFILE + 0 );
         CHR* AAC2020_RENCORE_arr_subpath[ NOS_SUBFILE + 1 ]={
             "/PAINT5D/tilodat_CTO_tilpixu._"
@@ -49,6 +65,7 @@
         ,   "/PAINT5D/laypixa_CTO_plypix3._"
         ,   0 //:<--@NULL_TERMINATED_LIST@
         };
+
         I32  AAC2020_RENCORE_nos_subfold=(NOS_SUBFOLD + 0 );
         CHR* AAC2020_RENCORE_arr_subfold[ NOS_SUBFOLD + 1 ]={
             "/PAINT5D" //:<-- Editor #1

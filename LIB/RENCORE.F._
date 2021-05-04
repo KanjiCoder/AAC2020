@@ -30,6 +30,7 @@
     aac2020_rencore_LoadFile_U08
 
 //:STRING_PARSING:
+    aac2020_rencore_NormalizeSlashes
     aac2020_rencore_IsWhiteSpace
     aac2020_rencore_WhiteSlash
     aac2020_rencore_IsSlash
@@ -70,7 +71,11 @@
     aac2020_rencore_LoadExtensions_UsingList
     aac2020_rencore_ExtensionOrderList_Parse
 
-//:HIGH_LEVEL_HELPERS:
+//:HIGH_LEVEL_HELPERS:- - - - - - - - - - - - - - - - - - - -://
+    aac2020_rencore_CopyPaste_StringWrap
+    aac2020_rencore_CopyPasteFile
+
+    aac2020_rencore_AbsPath_AAC2020_LIB_AUTOGEN
     aac2020_rencore_AbsPath_AUTOGEN_RENCORE_EXTCODE
     aac2020_rencore_DelFold_AUTOGEN_RENCORE_EXTCODE
     aac2020_rencore_MakFold_AUTOGEN_RENCORE_EXTCODE
@@ -496,19 +501,19 @@ SECTION_INDEX:
             *** ******************************************** **/
 
                 int nos = ( 0 );   /** nos: Number_Of_Slashes**/
-                int nod = ( 0 );   /** nod: Number_Of_Dots   **/
+            //- int nod = ( 0 );   /** nod: Number_Of_Dots   **/ -//
                 for( int i = 0; i < str_len; i++ ){
 
-                    if( fil_nam[i] == '.'  ){ nod++; };
+                //- if( fil_nam[i] == '.'  ){ nod++; };  ::::-//
                     if( fil_nam[i] == '\\' ){ nos++; };
                 };;
 
-                if( nod >   1  ){ ERR("[TOO_MANY_DOTS]"); }else
-                if( nod <=  0  ){ ERR("[ZERO_____DOTS]"); }else
-                if(  1  == nod ){ /** OKAY. NOOP **/      }else
-                {   //:EDCL:ExpectedDeadCodeLine
-                    ERR("[KANJICODER:WTF:EDCL:2021]");
-                };; 
+        //-     if( nod >   1  ){ ERR("[TOO_MANY_DOTS]"); }else  -//
+        //-     if( nod <=  0  ){ ERR("[ZERO_____DOTS]"); }else  -//
+        //-     if(  1  == nod ){ /** OKAY. NOOP **/      }else  -//
+        //-     {   //:EDCL:ExpectedDeadCodeLine                 -//
+        //-         ERR("[KANJICODER:WTF:EDCL:2021]");           -//
+        //-     };;                                              -//
 
                 /** USB: Un_Supported_Backslashes.Year 2021. **/
                 if( nos != 0 ){ ERR("[KANJICODER:USB:2021]");};
@@ -534,6 +539,9 @@ SECTION_INDEX:
                     dir_sus : DIRectory_SUb_String  
                     dex_las : dex_last_slash : IndexOfLastSlash
                     *** ************************************ **/
+                
+                    //:@VID_IID[0286]TIME[04:36:13]RE_WORKING
+                    //:"This/Should/Probably/Work/my.file._"
 
                         char dir_sus[ MML ] = {0};
                         for( int i = 0; i < dex_las; i++ ){
@@ -635,6 +643,7 @@ SECTION_INDEX:
 
                 FILE* fil_han =((FILE*)0 );
                 I32   fil_nob =( 0 - 747 );
+                I32       o_k =( 0 /**UNDEFINED**/ );
 
             //:----------------------------:declare_variables://
 
@@ -695,8 +704,9 @@ SECTION_INDEX:
                     ,   fil_han //:File We are writing into.
                     );;
                     fclose( fil_han );
-                
+                    o_k=( 0 + 777 );
                 }else{
+                    o_k=( 0 - 666 );
                     /** IDKWID: I_Dont_Know_What_Iam_Doing **/
                     printf("[SAVE_FAIL:nof_wex]:%s\n",nof_wex);
                     ERR("[FAIL_TO_SAVE_TEXT_FILE:WHY:IDKWID]");
@@ -706,7 +716,7 @@ SECTION_INDEX:
             //:----------------:write_text_using_binary_write://
 
             LOG("[aac2020_rencore_SaveFile_TXT:END]",0);
-            return( 0x00 );
+            return( o_k );
         }
 
         //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
@@ -1069,7 +1079,7 @@ SECTION_INDEX:
     //:==================================:LOAD_FILE_IF_EXISTS://
     //:FILE_ACCESS_WRAPPER_METHODS:==========================://
 
-        U32
+        I32
         aac2020_rencore_LoadFile_U08(
             CHR*         nof_wex //:AKA[ fip_inn ]
         ,   U08*  *BYREF_u08_arr //:DESTINATION
@@ -1237,12 +1247,16 @@ SECTION_INDEX:
     /** **************************************************** ***
     Use to debug string parsing. @VID_IID[0283]T[07:25:13]
     *** **************************************************** **/
-        I32 dex =( 0 );
-        for( dex = s_0 ; dex <= s_1 ; dex ++ ){
-            printf("[%c]",str[dex]);
+        if( aac2020_rencore_GET_logison() >= 1 ){
+
+            I32 dex =( 0 );
+            for( dex = s_0 ; dex <= s_1 ; dex ++ ){
+                printf("[%c]",str[dex]);
+            };;
+            printf("\n");
+            fflush(stdout);
+    
         };;
-        printf("\n");
-        fflush(stdout);
     }
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     I32
@@ -1899,6 +1913,55 @@ creating folders. So I put the [ FCH ] section below the
 #define MAX_NOC ( aac2020_rencore_MACRO_max_noc )     //: 09 ://
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     I32
+    aac2020_rencore_JoinInPlace(
+        NCC* *BYREF_str_tar //:Target_String (OUTPUT_PARAM)
+    ,   CHR*        takiton //:TAcK_IT_ON
+    )
+    {
+    /** **************************************************** ***
+    Like "ConcatInPlace" but doesn't insert a "/".
+    Just a regular join with no fancy stuff.
+    *** **************************************************** **/
+
+        if( ((NCC**)0)==( BYREF_str_tar )){ ERR("[NILREF]"); };
+        if( ((NCC* )0)==(*BYREF_str_tar )){ ERR("[NILTAR]"); };
+        if( ((CHR* )0)==(       takiton )){ ERR("[NILTAK]"); };
+
+        NCC* str_tar=(*BYREF_str_tar);
+
+        I32 o_k =( 1 /**InnocentTillGuilty**/ );
+        I32 dex =( 0 );
+        I32 l_1 =( strlen( str_tar ) );
+        I32 l_2 =( strlen( takiton ) );
+        if((l_1+l_2+1)>MAX_NOC){ 
+            LOG("[OUT_OF_MEMORY:2021_05_03]",0);
+            o_k=( 0 - 404 );
+        };;
+        if( o_k >= 1 ){
+            for( dex = 0 ; dex <=((l_1+l_2)-1); dex++ ){
+
+                if( dex <=((l_1    )-1)    ){
+                    str_tar[dex]=str_tar[dex]; //:Yes,Pointless.
+                }else
+                if( dex <=((l_1+l_2)-1)    ){
+                    str_tar[dex]=takiton[dex-l_1];
+                }else{
+                    ERR("[OOBBADLOGIC]");
+                };;
+            };;
+            /**@VID_IID[0286]TIME[01:08:42]**/
+            str_tar[ dex ]=( 0 /**InsertNullTerminator**/ );
+        };;
+        if( o_k >= 1 ){
+            /**Return output param.            **/
+            /**Pointless, but for consistency. **/
+            (*BYREF_str_tar)=(str_tar);
+        };;
+
+        return( o_k );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    I32
     aac2020_rencore_JoinToTarget(
         CHR*        str_001 //:First__String
     ,   CHR*        str_002 //:Second_String
@@ -2238,17 +2301,26 @@ creating folders. So I put the [ FCH ] section below the
 
             I32 o_k=( 77077 /**InnocentUntilGuilty**/ );
             NCC* chararr_str=(  *BYREF_chararr        );
-            I32  chararr_noc=( 0 - 666 );
+            ///  chararr_noc=( 0 - 666 );
             I32  rough_size_guess=( 0 );
 
-            I32 d_0; //:dex    START 
-            I32 d_1; //:dex      END
-            I32 dex; //:global index
-            I32 loc; //:local  index
+            I32 a_0; //:first  string start index
+            I32 a_1; //:first  string end   index
 
+            I32 b_0; //:second string start index
+            I32 b_1; //:second string end   index
+
+            I32 m_i; //:Max_Index_For[ dex ]In_Some_Loop
+            I32 soc; //:Sum_Of_Characters(AKA:toc)
+
+            I32 d_0; //:dex    START <--:GLOBAL/RESULT STRING://
+            I32 d_1; //:dex      END <--:GLOBAL/RESULT STRING://
+            I32 dex; //:global index
+            /// loc; //:local  index
+           
         //:--------------------------------------:var_declare://
         //:CORE_LOGIC:TACK_ON_SLASH:=========================://
-        if( o_k > 0 ){
+        if( o_k >= 1 ){
             rough_size_guess=( 0
                 + strlen( chararr_str )
                 + strlen(     tack_on )
@@ -2259,43 +2331,77 @@ creating folders. So I put the [ FCH ] section below the
                 o_k =( 0 - 666 ); //:NotEnoughRoomInBuffer
             };;
         };;
-        if( o_k > 0 ){
-            //:Assert "/" or "\" worry about slash 
-            //:normalization later after done concat.
-            chararr_noc=( strlen( chararr_str ) );
-            if( 0
-            &&  chararr_str[ chararr_noc-1 ] != '/'
-            &&  chararr_str[ chararr_noc-1 ] != '\\'
-            ){
-                chararr_str[ chararr_noc+0  ]=( '/' );
-                chararr_str[ chararr_noc+1  ]=(  0  );
+        if( o_k >= 1 ){
+            //:Get correct sub strings:
+            a_0=( 0 /**always zero **/ );//:Always_First_Char://
+            b_1=( strlen( tack_on ) -1 );//:Always_Last__Char://
+
+            dex=( strlen( chararr_str )+0 ); //:1_Out_Of_Bounds
+            while( dex >= 0 ){
+                   dex--; //:First_Use_Value_At_End_Of_String
+                if(
+                    aac2020_rencore_WhiteSlash( 
+                    chararr_str[dex] ) <=( 0 )
+                ){
+                    a_1=( dex );
+                    break;
+                };;
             };;
+
+            m_i=( strlen( tack_on )-1 );
+            dex=( 0 - 1 ); //:1_Out_Of_Bounds
+            while( dex <= m_i ){
+                   dex++; //:First_Use_Value_At_End_Of_String
+                if(
+                    aac2020_rencore_WhiteSlash( 
+                    tack_on[dex] ) <=( 0 )
+                ){
+                    b_0=( dex );
+                    break;
+                };;
+            };;
+
+            //: @VID_IID[0286]TIME[02:31:32]ForDebug  ://
+            //: aac2020_rencore_DebugPrintSubstring(  ://
+            //:     chararr_str , a_0 , a_1 );;       ://
+            //:                                       ://
+            //: aac2020_rencore_DebugPrintSubstring(  ://
+            //:         tack_on , b_0 , b_1 );;       ://
         };;
         //:=========================:CORE_LOGIC:TACK_ON_SLASH://
         //:CORE_LOGIC:=======================================://
-        if( o_k > 0 ){
-            //:concat paths:
-            d_0 = ( 0   + strlen( chararr_str ) + 0 );
-            d_1 = ( d_0 + strlen(     tack_on ) - 1 );
-            loc =( 0 );
-            for( dex = d_0 ; dex <= d_1 ; dex ++ ){
-                chararr_str[ dex ]=( tack_on[ loc ] );
-                                              loc++;
-            };;
-            chararr_str[ dex ]=(0 /**NULL**/);
+        if( o_k >= 1 ){
+           
+            /**@VID_IID[0286]TIME[02:03:23]**/
+            soc=( (a_1-a_0+1)+(b_1-b_0+1)+1 );
 
-            //:normalize slashes:
-            d_0 =( 0       );
-            d_1 =( dex - 1 );
-            for( dex = d_0 ; dex <= d_1 ; dex ++ ){
-                if( chararr_str[ dex ] == '\\' ){
-                    chararr_str[ dex ]  = '/'  ; //:forward
+            d_0=(       0 );
+            d_1=( soc - 1 );
+            for( dex = d_0 ; dex <=( d_1 ) ; dex ++ ){
+
+                if( (dex+1) <= (a_1-a_0+1) ){ //:<--MAGNITUDE +0
+                    /**On first string. No action.**/
+                //: @VID_IID[0286]TIME[02:12:23]
+                //: chararr_str[ a_0 + dex ]==(  <--Pointless
+                //: chararr_str[ a_0 + dex ]);   <--Pointless
+                }else
+                if( (dex+1) == (a_1-a_0+2) ){ //:<--MAGNITUDE +1
+                    /**On the slash, add it.**/
+                    chararr_str[ a_0 + dex ]=( '/' );
+                }else
+                if( (dex+1) >= (a_1-a_0+3) ){ //:<--MAGNITUDE +2
+                    chararr_str[dex]=(
+                        tack_on[ b_0 + (dex-(a_1-a_0+2)) ]);;
+                }else{
+                    ERR("[YOUDONEWRONGMYFRIEND]");
                 };;
             };;
+            chararr_str[dex]=( 0 /**TackOnNullTerminator**/ );
+            aac2020_rencore_NormalizeSlashes( chararr_str );
         };;
         //:=======================================:CORE_LOGIC://
         //:return_via_output_param:--------------------------://
-        if( o_k > 0 ){
+        if( o_k >= 1 ){
 
             (*BYREF_chararr)=(chararr_str);
 
@@ -2653,6 +2759,385 @@ creating folders. So I put the [ FCH ] section below the
 //:===============================:CREATE_LIST_OF_SUB_FOLDERS://
 //:=================================:DELETE_LIST_OF_SUB_FILES://
 //:===============================:DELETE_LIST_OF_SUB_FOLDERS://
+//:FILE_COPY_PASTE_HELPERS:==================================://
+#define U08 uint8_t /** GCC: <stdint.h> **/  //:--------: 01 ://
+#define I32 int32_t /** GCC: <stdint.h> **/  //:--------: 02 ://
+#define CHR const char                       //:--------: 03 ://
+#define NCC       char                       //:--------: 04 ://
+#define ERR aac2020_rencore_Halt             //:--------: 05 ://
+#define NOC aac2020_rencore_MACRO_max_noc    //:--------: 06 ://
+#define SPC aac2020_rencore_Info_spc         //:--------: 07 ://
+#define LOG aac2020_rencore_Info_any         //:--------: 08 ://
+#define LOS aac2020_rencore_Info_str         //:--------: 09 ://
+#define LOI aac2020_rencore_Info_i32         //:--------: 10 ://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    I32 
+    aac2020_rencore_CopyPaste_StringWrap(
+        CHR* src //:<--PathOfFolder:SOURCE
+    ,   CHR* dst //:<--PathOfFolder:DEST
+    ,   CHR* nam //:<--FileName(NO_EXTENSION)  
+
+    ,   CHR* ext_src //:<--File_Extension:SOURCE
+    ,   CHR* ext_dst //:<--File_Extension:DEST
+    )
+    {
+        I32  o_k =( 1 /**InnocentUntilProvenGuilty**/ );
+        NCC  car_src[NOC]={0};         
+        NCC  car_dst[NOC]={0};  
+       
+        NCC* str_src=(&(car_src[0]));  
+        NCC* str_dst=(&(car_dst[0]));  
+
+        U08* arr_bin=((U08*)0); //:Copy+Paste as BINARY data.
+        I32  nob_bin=(   0   ); //:Copy+Paste as BINARY data.
+
+        /**@VID_IID[0286]TIME[05:05:23]**/
+        U08* arr_bin_str=((U08*)0); //:STRINGIFIED_VERSION
+        I32  nob_bin_str=(   0   ); //:STRINGIFIED_VERSION
+    
+        //:concat_step_001:----------------------------------://
+        if( o_k >= 1 ){
+            o_k=(   aac2020_rencore_ConcatToTarget(
+            /**/    src,nam,&(str_src) ));;
+        };;
+        if( o_k >= 1 ){
+            o_k=(   aac2020_rencore_ConcatToTarget(
+            /**/    dst,nam,&(str_dst) ));;
+        };;
+        //:----------------------------------:concat_step_001://
+        //:concat_step_002:----------------------------------://
+        if( o_k >= 1 ){
+            o_k =(  aac2020_rencore_JoinInPlace(
+            /**/  &(str_src), ext_src ));;
+        };;
+        if( o_k >= 1 ){
+            o_k =(  aac2020_rencore_JoinInPlace(
+            /**/  &(str_dst), ext_dst ));;
+        };;
+        //:----------------------------------:concat_step_002://
+        //:load_file_into_ram:-------------------------------://
+        if( o_k >= 1 ){
+            o_k=(
+            aac2020_rencore_LoadFile_U08(
+            /**/    str_src //:<--String::::::::SOURCE
+            ,     &(arr_bin)//:<--Array ::::::::SOURCE(U08 data)
+            ,     &(nob_bin)//:<--NumberOfBytes:SOURCE
+            ));;
+            if( o_k <= 0 ){
+                LOG("[X_X:FAIL:CPF.LoadFile_U08]",0);
+            };;
+        };;
+        //:-------------------------------:load_file_into_ram://
+        //:CREATE_STRINGIFIED_TEXT:==========================://
+        if( o_k >= 1 ){
+        { //:<--[SCOPE]
+
+            I32 c_n=( 0 ); /** Count Of \n (newlines)     ---**/
+            I32 c_r=( 0 ); /** Count Of \r (returns )     ---**/
+            I32 m_l=( 0 ); /** Max Lines                  ---**/
+            I32 e_c=( 5 ); /** Extra_Characters(per line) ---**/
+            I32 e_b=(0-1); /** Extra Bytes To Allocate    ---**/
+            I32 t_b=(0-1); /** Total Bytes To Allocate    ---**/
+            I32 pad=(10 ); /** Even More Extra Padding Bytes **/
+
+            /**@VID_IID[0286]TIME[07:01:30] **************** **/
+            I32 col_lim=( 64 /**Target 64 Column Limit**/ );
+
+            I32 needs_closing_quote=( 0 );
+
+            //: TAKE_THIS[  some_line_of_code_stuff     ]
+            //: MAKE_THIS[ "some_line_of_code_stuff \n" ]
+            //:            ^                       ^ ^^
+            //:            |                       | ||
+            //:            +--------[ e_c ]--------+-++
+
+            //:Count Number Of Newlines:
+            for( I32 i = 0 ; i <=(nob_bin-1) ; i++ ){
+                if( arr_bin[i] == '\n' ){ c_n++; };
+                if( arr_bin[i] == '\r' ){ c_r++; };
+            };;
+
+            //:Be paranoid. @VID_IID[0286]T[05:26:10] :::::::://
+            m_l=( c_n + c_r ); 
+
+            //:@VID_IID[0286]TIME[05:33:55]PARANOID
+            //:@VID_IID[0286]TIME[06:52:30]MORE_EXTRA_PADDING
+            //:Calculate Number Of Extra Bytes To Allocate:
+            //:Plus one just in case for whatever odd reason
+            //:we find ourselves needing a null terminator.
+            e_b=( (m_l*e_c)+(m_l*col_lim) +  1  + pad );
+            t_b=(  nob_bin  + e_b );
+
+            //:Allocate enough memory for adding quotes
+            //:And newlines to the loaded file.
+            arr_bin_str = malloc( t_b );
+            nob_bin_str =(         0  ); //:<--[USED_BYTES]::://
+
+            if( 0 == arr_bin_str ){
+                LOG("[UNABLE_TO_MALLOC_MEMORY_2021]",0);
+                o_k =( 0 - 404 );
+            }else{
+                //:Copy Over Lines And Wrap In Quotes:
+                I32   s =( 0          ); //:SOURCE______INDEX
+                I32   d =( 0          ); //:DESTINATION_INDEX
+                CHR quo =( 0x22       ); //:Quote (double quote)
+                I32   m =( nob_bin - 1); //:Max_Index
+                for( s = 0 ; s <=( m ) ; s++ ){
+
+                    //:@VID_IID[0286]TIME[05:59:10]OUT_OF_MEM
+                    //:@VID_IID[0286]TIME[06:08:50]FIXED__BUG
+                    if( d >= t_b ){
+                        o_k=( 0 - 444);
+                        LOI("[...:..d]:%d\n",   d );
+                        LOI("[...:t_b]:%d\n", t_b );
+                        LOG("[ABOUT_TO(but_not)OOB_BUFFER]",0);
+                        break;
+                    };;
+                     
+                    if( s == 0 ){
+                        arr_bin_str[ d ]=( quo );
+                                     d++;
+                    };;//:<--NO_ELSE!
+
+                    if( 1
+                    &&  arr_bin[ s ] != '\n'
+                    &&  arr_bin[ s ] != '\r'
+                    ){
+                        //:Copy Non_Newline Character:
+                        needs_closing_quote=( 1 );
+                        arr_bin_str[ d ]=( arr_bin[ s ] );
+                                     d++;
+                    }else
+                    if( 0
+                    ||  arr_bin[ s ] == '\n' 
+                    ||  arr_bin[ s ] == '\r' 
+                    ){
+                        needs_closing_quote=( 0 );
+                        //:BEFORE_THE_NEWLINE_IS_COPIED:
+                        arr_bin_str[ d ]=(' ' ); //:SPACE
+                                     d++;
+                        arr_bin_str[ d ]=('\\'); //:Backslash
+                                     d++;
+                        arr_bin_str[ d ]=('n' ); //:'n' of "\n"
+                                     d++;
+                        arr_bin_str[ d ]=( quo  );
+                                     d++;
+                        
+                        //:COPY_THE_NEWLINE:
+                        arr_bin_str[ d ]=( arr_bin[ s ] );
+                                     d++;
+    
+                        //:BEGIN_QUOTE_ON_NEXT_LINE:
+                        //:(if more characters to come)
+                        arr_bin_str[ d ]=( quo );
+                                     d++;
+                  
+                    };;
+
+                };; //:NEXT[ s  ]<<<<<<<<<<<<<<<<<<<<<<<<<<<<://
+
+                if( needs_closing_quote >= 1 ){
+                        arr_bin_str[ d++ ]=( ' '  );
+                        arr_bin_str[ d++ ]=( '\\' );
+                        arr_bin_str[ d++ ]=( 'n'  );
+                        arr_bin_str[ d++ ]=(  quo ); 
+                    
+                    /**@VID_IID[0286]T[06:42:32]**/
+                    if( (d-1) >= t_b ){
+                        LOG("[MEMORY_STOMPING_2021]",0);
+                        o_k=( 0-666);
+                    };;
+                };;
+                    
+
+                /** @VID_IID[0286]TIME[06:11:30 ]*********** **/
+                /** "d" sits on unused index slot. Thus      **/
+                /** "d" when outside of loop is the USED     **/
+                /** number of[ bytes/chars ]in[ arr_bin_str ]**/
+                nob_bin_str=( d );
+
+                if( quo  == arr_bin_str[ d - 1 ]){
+                if( '\n' == arr_bin_str[ d - 2 ]
+                ||  '\r' == arr_bin_str[ d - 2 ]
+                ){
+                    //:Shave Off Trailing Quote
+                    nob_bin_str=( d - 1 ); 
+                };;};;
+
+            };; //:[Malloc_Okay?]<<<<<<<<<<<<<<<<<<<<<<<<<<<<://
+
+        } //:<--[SCOPE]
+        } //:<--[ o_k?]<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<://
+        //:==========================:CREATE_STRINGIFIED_TEXT://
+        //:save_file_to_disk:--------------------------------://
+        if( o_k >= 1 ){
+
+            if( AAC2020_RENCORE_copy_paste_dry_run_on >= 1 ){
+
+                /** When saftey is on. Check where we WOULD  **/
+                /** be copying files to. Is it correct?      **/
+                SPC(3);
+                LOG("[X_X:COPY_PASTE_SAFETY_IS_ON]",0);
+                LOS("[0_0:WOULD_COPYTO:str_dst]:%s\n", str_dst);
+            }else{
+                o_k=(
+                aac2020_rencore_SaveFile_U08(
+                /**/str_dst     //:[ nof_wex ]://
+                ,   arr_bin_str //:[ arr_u08 ]://
+                ,   nob_bin_str //:[ arr_len ]://
+                ));;
+                if( o_k <= 0 ){
+                    LOS("[X_X::::::str_dst]==(%s)",str_dst);
+                    LOI("[X_X::nob_bin_str]==(%d)",nob_bin);
+                    LOG("[X_X:FAIL:CPF.SaveFile_U08]",0);
+                };;
+            };;
+        };;
+        //:--------------------------------:save_file_to_disk://
+        //:FREE_MEMORY_IF_EXISTS:============================://
+
+            //:Original_File_Memory:-------------------------://
+            #define ARR arr_bin  //:--------------------: 01 ://
+            #define NOB nob_bin  //:--------------------: 02 ://
+
+                if( NOB >= 1 && ( ((U08*)0) != ARR ) ){
+                    free( ARR );ARR=( 0 );NOB=( 0 );
+                }else
+                if( NOB <= 0 && ( ((U08*)0) == ARR ) ){
+                    /** Nothing to free **/
+                }else{
+                    ERR("[BAD_SET_OF_STATE:2021_05_04:AYE]");
+                };;
+
+            #undef  ARR  //:----------------------------: 01 ://
+            #undef  NOB  //:----------------------------: 02 ://
+            //:-------------------------:Original_File_Memory://
+            //:Stringified_Memory:---------------------------://
+            #define ARR arr_bin_str //:-----------------: 01 ://
+            #define NOB nob_bin_str //:-----------------: 02 ://
+
+                if( NOB >= 1 && ( ((U08*)0) != ARR ) ){
+                    free( ARR );ARR=( 0 );NOB=( 0 );
+                }else
+                if( NOB <= 0 && ( ((U08*)0) == ARR ) ){
+                    /** Nothing to free **/
+                }else{
+                    ERR("[BAD_SET_OF_STATE:2021_05_04:BEE]");
+                };;
+
+            #undef  ARR  //:----------------------------: 01 ://
+            #undef  NOB  //:----------------------------: 02 ://
+            //:---------------------------:Stringified_Memory://
+
+        //:============================:FREE_MEMORY_IF_EXISTS://
+
+        return( o_k );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    I32
+    aac2020_rencore_CopyPasteFile(
+        CHR* src //:<--PathOfFolder:SOURCE
+    ,   CHR* dst //:<--PathOfFolder:DEST
+    ,   CHR* nam //:<--FileName(NO_EXTENSION)  
+    ,   CHR* ext //:<--File_Extension
+    )
+    {
+        I32  o_k =( 1 /**InnocentUntilProvenGuilty**/ );
+        NCC  car_src[NOC]={0};         
+        NCC  car_dst[NOC]={0};  
+       
+        NCC* str_src=(&(car_src[0]));  
+        NCC* str_dst=(&(car_dst[0]));  
+
+        U08* arr_bin=((U08*)0); //:Copy+Paste as BINARY data.
+        I32  nob_bin=(   0   ); //:Copy+Paste as BINARY data.
+    
+        //:concat_step_001:----------------------------------://
+        if( o_k >= 1 ){
+            o_k=(   aac2020_rencore_ConcatToTarget(
+            /**/    src,nam,&(str_src) ));;
+        };;
+        if( o_k >= 1 ){
+            o_k=(   aac2020_rencore_ConcatToTarget(
+            /**/    dst,nam,&(str_dst) ));;
+        };;
+        //:----------------------------------:concat_step_001://
+        //:concat_step_002:----------------------------------://
+        if( o_k >= 1 ){
+            o_k =(  aac2020_rencore_JoinInPlace(
+            /**/  &(str_src), ext ));;
+        };;
+        if( o_k >= 1 ){
+            o_k =(  aac2020_rencore_JoinInPlace(
+            /**/  &(str_dst), ext ));;
+        };;
+        //:----------------------------------:concat_step_002://
+        //:load_file_into_ram:-------------------------------://
+        if( o_k >= 1 ){
+            o_k=(
+            aac2020_rencore_LoadFile_U08(
+            /**/    str_src //:<--String::::::::SOURCE
+            ,     &(arr_bin)//:<--Array ::::::::SOURCE(U08 data)
+            ,     &(nob_bin)//:<--NumberOfBytes:SOURCE
+            ));;
+            if( o_k <= 0 ){
+                LOG("[FAIL:CPF.LoadFile_U08]",0);
+            };;
+        };;
+        //:-------------------------------:load_file_into_ram://
+        //:save_file_to_disk:--------------------------------://
+        if( o_k >= 1 ){
+
+            if( AAC2020_RENCORE_copy_paste_dry_run_on >= 1 ){
+
+                /** When saftey is on. Check where we WOULD  **/
+                /** be copying files to. Is it correct?      **/
+                SPC(3);
+                LOG("[COPY_PASTE_SAFETY_IS_ON]",0);
+                LOS("[WOULD_COPY_TO:str_dst]:%s\n", str_dst);
+            }else{
+                o_k=(
+                aac2020_rencore_SaveFile_U08(
+                /**/str_dst //:[ nof_wex ]://
+                ,   arr_bin //:[ arr_u08 ]://
+                ,   nob_bin //:[ arr_len ]://
+                ));;
+                if( o_k <= 0 ){
+                    LOS("[SAVE_DEST:str_dst]==(%s)",str_dst);
+                    LOI("[SAVE_DEST:nob_bin]==(%d)",nob_bin);
+                    LOG("[FAIL:CPF.SaveFile_U08]",0);
+                };;
+            };;
+        };;
+        //:--------------------------------:save_file_to_disk://
+        //:free_memory_if_exists:----------------------------://
+        if( nob_bin >= 1 && ( ((U08*)0) != arr_bin ) ){
+
+            free( arr_bin );
+                  arr_bin=( 0 );
+                  nob_bin=( 0 );
+        }else
+        if( nob_bin <= 0 && ( ((U08*)0) == arr_bin ) ){
+            /** Nothing to free **/
+        }else{
+            ERR("[BAD_SET_OF_STATE]");
+        };;
+        //:----------------------------:free_memory_if_exists://
+
+        return( o_k );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+#undef  U08  //:----------------------------------------: 01 ://
+#undef  I32  //:----------------------------------------: 02 ://
+#undef  CHR  //:----------------------------------------: 03 ://
+#undef  NCC  //:----------------------------------------: 04 ://
+#undef  ERR  //:----------------------------------------: 05 ://
+#undef  NOC  //:----------------------------------------: 06 ://
+#undef  SPC  //:----------------------------------------: 07 ://
+#undef  LOG  //:----------------------------------------: 08 ://
+#undef  LOS  //:----------------------------------------: 09 ://
+#undef  LOI  //:----------------------------------------: 10 ://
+//:==================================:FILE_COPY_PASTE_HELPERS://
 //:HIGH_LEVEL_FOLDER_MANIPULATION:===========================://
 #define I32  int32_t /** GCC: <stdint.h> **/          //: 01 ://
 #define U32 uint32_t /** GCC: <stdint.h> **/          //: 02 ://
@@ -2663,6 +3148,42 @@ creating folders. So I put the [ FCH ] section below the
 #define ERR aac2020_rencore_Halt                      //: 07 ://
 #define NOC aac2020_rencore_MACRO_max_noc             //: 08 ://   
 
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    I32
+    aac2020_rencore_AbsPath_AAC2020_LIB_AUTOGEN(
+        NCC* *BYREF_abspath
+    )
+    {
+        I32 o_k=( 1 /**InnocentUntilProvenGuilty**/ );
+
+        if( o_k >= 1 ){
+            o_k=( aac2020_rencore_FindParentFolderOf_AAC2020(
+                  BYREF_abspath));;
+        };;
+        if( o_k >= 1 ){
+            //:GenerateSubFolderViaConcatInPlace
+            if(0!=strcmp(                 "AAC2020/LIB/AUTOGEN"
+                 ,aac2020_rencore_RELATIVE_aac2020_lib_autogen)
+            ){ 
+                o_k=( 0 - 666 );
+                ERR("[OH_NOOOS_2021_05_03_355PM]"); 
+            };;
+        };;
+        if( o_k >= 1 ){
+            o_k=(
+                aac2020_rencore_ConcatPathsInPlace( 
+                    BYREF_abspath
+                ,   aac2020_rencore_RELATIVE_aac2020_lib_autogen
+                ));;
+        };;
+        if( o_k >= 1 ){
+        #define X_X aac2020_rencore_RELATIVE_aac2020_lib_autogen
+            LOS("[aac2020_lib_autogen]:%s",X_X);
+        #undef  X_X
+        };;
+
+        return( o_k );
+    }
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     I32
     aac2020_rencore_AbsPath_AUTOGEN_RENCORE_EXTCODE( 
@@ -3054,6 +3575,110 @@ creating folders. So I put the [ FCH ] section below the
 #undef  CHR  //:----------------------------------------: 05 ://
 #undef  ERR  //:----------------------------------------: 06 ://
 //:=====================================:SORT_EXTENSION_ARRAY://
+//:MAIN_SECTION_EDITOR_FILE_MAPPINGS:========================://
+#define I08  int8_t /** GCC: <stdint.h> **/ //:---------: 01 ://
+#define I32 int32_t /** GCC: <stdint.h> **/ //:---------: 02 ://
+#define CHR const char                      //:---------: 03 ://
+#define ECI aac2020_rencore_MACRO_eci       //:---------: 04 ://
+#define ERR aac2020_rencore_Halt            //:---------: 05 ://
+
+    /** **************************************************** **/
+    /** @VID_IID[0285]TIME[04:11:42]                      ** **/
+    /** The[MAIN_SECTION]is getting a bit too big for me, ** **/
+    /** so creating sub main sections that start with     ** **/
+    /** [ MAIN_SECTION_* ]to make this code more          ** **/
+    /** managable.                                        ** **/
+    /** (No: We are __NOT__ going to break this code into ** **/
+    /** more than two files. (.F & .D). We want coarse    ** **/
+    /** granularity with our files. --------------------- ** **/
+    /** **************************************************** **/
+
+    void
+    aac2020_rencore_dex_edi_CTO_inc_map_nop_sub(
+    /**/I32      dex_edi  //:<-- Editor Index In Focus
+    ,   I08*  *BYREF_inc  //:<-- Active Includes Checklist
+    ,   CHR** *BYREF_map  //:<-- Func-to-Include mapping
+    ,   I32   *BYREF_nop  //:<-- Pairs in[ map ]Elms in[ inc ]
+    ,   CHR*  *BYREF_sub 
+    )          
+    {
+        #if( ECI )//:########################################://
+                                           
+            if( dex_edi <= 0 ){ ERR("[DEF_INVALID]"); };
+
+            //:NR: Nill Reference
+            //:NZ: Not  Zeroed
+    
+            /** References Can __NEVER__ be null. **/
+            if( ((I08*  *)0) ==( BYREF_inc)){ ERR("[NR:inc]");};
+            if( ((CHR** *)0) ==( BYREF_map)){ ERR("[NR:map]");};
+            if( ((I32   *)0) ==( BYREF_nop)){ ERR("[NR:nop]");};
+            if( ((CHR*  *)0) ==( BYREF_sub)){ ERR("[NR:sub]");};
+
+            /** Make sure output params in zeroed out state. **/
+            /** Provision to avoid accidential memory stomps.**/
+            if( ((I08*   )0) !=(*BYREF_inc)){ ERR("[NZ:inc]");};
+            if( ((CHR**  )0) !=(*BYREF_map)){ ERR("[NZ:map]");};
+            if( ((I32    )0) !=(*BYREF_nop)){ ERR("[NZ:nop]");};
+            if( ((CHR*   )0) !=(*BYREF_sub)){ ERR("[NZ:sub]");};
+                                               
+        #endif //:####################################( ECI )://
+        //:Declare_Variables:--------------------------------://
+
+            /** ******************************************** **/
+            /** NOTE: All editors are subsystems, but not    **/
+            /**       all subsystems are editors.            **/
+            /**       Variable[ sub ]might be better named   **/
+            /**       as[ edi ]instead. Because that's what  **/
+            /**       it is . @VID_IID[0285]TIME[04:27:42]   **/
+            /** ******************************************** **/
+                   
+            I08*  inc ={0}; //:includes checklist
+            CHR** map ={0}; //:function to include name mapping
+            I32   nop ={0}; //:number of pairs in[ map ]
+            CHR*  sub ={0}; //:subsystem name( editor name )
+
+        //:--------------------------------:Declare_Variables://
+        //:configure_state:----------------------------------://
+
+            if( 1 == dex_edi ){
+                inc =  aac2020_rencore_INC_paint5d    ;
+                map =&(aac2020_rencore_MAP_paint5d[0]);
+                nop =  aac2020_rencore_MAP_paint5d_NOP;
+                sub =("PAINT5D"); //:<--EditorSubSystemName
+            }else
+            if( 2 == dex_edi ){
+                inc =  aac2020_rencore_INC_todo_02    ;
+                map =&(aac2020_rencore_MAP_todo_02[0]);
+                nop =  aac2020_rencore_MAP_todo_02_NOP;
+                sub =("TODO_02"); //:<--EditorSubSystemName
+            }else
+            if( 3 == dex_edi ){
+                inc =  aac2020_rencore_INC_todo_03    ;
+                map =&(aac2020_rencore_MAP_todo_03[0]);
+                nop =  aac2020_rencore_MAP_todo_03_NOP;
+                sub =("TODO_03"); //:<--EditorSubSystemName
+            }else{
+                ERR("[unsupported_index_my_friend]");
+            };;
+
+        //:----------------------------------:configure_state://
+        //:return_via_output_params:-------------------------://
+
+            (*BYREF_inc)=(inc);
+            (*BYREF_map)=(map);
+            (*BYREF_nop)=(nop);
+            (*BYREF_sub)=(sub);
+
+        //:-------------------------:return_via_output_params://
+    }
+
+#undef  I08  //:----------------------------------------: 01 ://
+#undef  I32  //:----------------------------------------: 02 ://
+#undef  CHR  //:----------------------------------------: 03 ://
+#undef  ECI  //:----------------------------------------: 04 ://
+#undef  ERR  //:----------------------------------------: 05 ://
+//:========================:MAIN_SECTION_EDITOR_FILE_MAPPINGS://
 //:MAIN_SECTION:=============================================://
 #define CHR       const char                     //:----: 01 ://
 #define NCC             char                     //:----: 02 ://
@@ -3072,8 +3697,9 @@ creating folders. So I put the [ FCH ] section below the
 #define ECI       aac2020_rencore_MACRO_eci      //:----: 15 ://
 #define E_M       aac2020_rencore_msg_err        //:----: 16 ://
 #define REO       struct AAC2020_RENCORE_ext_ord //:----: 17 ://
-#define CWD_NOC ( aac2020_rencore_MACRO_max_noc )//:----: 18 ://
-#define MAX_NOC ( aac2020_rencore_MACRO_max_noc )//:----: 19 ://
+#define NOC     ( aac2020_rencore_MACRO_max_noc )//:----: 18 ://
+#define CWD_NOC ( aac2020_rencore_MACRO_max_noc )//:----: 19 ://
+#define MAX_NOC ( aac2020_rencore_MACRO_max_noc )//:----: 20 ://
     //:LoadExtensions:---------------------------------------://
 
         void
@@ -3349,7 +3975,7 @@ creating folders. So I put the [ FCH ] section below the
                 if(!has_loc ){ LOG("[has_loc:nay]",0); };
             
             }else{ ERR("[WTF_IS_GOING_ON_MY_MAN_2021]"); };
-            if( o_k >= 0 && has_ext >= 0 ){
+            if( o_k >= 1 && has_ext >= 0 ){
 
                 /**  dex == file index **/
                 for( dex = 0 ; dex <=(nop-1) ; dex ++ ){
@@ -3360,7 +3986,7 @@ creating folders. So I put the [ FCH ] section below the
                     ,   map[dex*2] //:[0,1] ,[2,3] , [4,5]
                     , &(pof_src)   //:<--PathOfFile:SouRCe
                     );;
-                    aac2020_rencore_ConcatPathsInPlace(
+                    aac2020_rencore_JoinInPlace(
                       &(pof_src), "._" );; //:AddFileExt
                     //:--------------------------:SOURCE_FILE://
                     //:DEST_FILE:----------------------------://
@@ -3369,7 +3995,7 @@ creating folders. So I put the [ FCH ] section below the
                     ,   map[dex*2] //:[0,1] ,[2,3] , [4,5]
                     , &(pof_dst)   //:<--PathOfFile:SouRCe
                     );;
-                    aac2020_rencore_ConcatPathsInPlace(
+                    aac2020_rencore_JoinInPlace(
                       &(pof_dst) , "._" );; //:AddFileExt
                     //:----------------------------:DEST_FILE://
     
@@ -3528,7 +4154,14 @@ creating folders. So I put the [ FCH ] section below the
                               &(str_inc) );;
 
                 aac2020_rencore_ConcatPathsInPlace(
-                    &(str_inc) , "/INCLUDE.C11"  );;
+                    &(str_inc) 
+                ,   aac2020_rencore_IFN_NOX 
+                );;
+                aac2020_rencore_JoinInPlace(
+                    &(str_inc) 
+                ,   "._" //:Extension 
+                );;
+                LOS("[sftd:str_inc]:%s\n",str_inc);
                 //:---------------------:File_Path_To_Save_To://
                 
                 str_len=( strlen( str_txt ) );
@@ -3539,9 +4172,6 @@ creating folders. So I put the [ FCH ] section below the
                 );;
 
             //:----------------------------:save_file_to_disk://
-
-            ERR("[TODO_FINSH_THIS_sfjslfjsjdfsdflj_BLAH!]");
-
 
             return( o_k ); 
 
@@ -3556,9 +4186,191 @@ creating folders. So I put the [ FCH ] section below the
         Copy from local AUTOGEN folder to engine's AUTOGEN
         *** ************************************************ **/
 
-            I32 o_k=( 0 );
+            I32 o_k=( 1 /**InnocentUntilProvenGuilty**/ );
 
-            ERR("[TODO:CopyThemFiles]");
+            I32         dex_edi=( 0 );
+            I32 MAX_USE_dex_edi=( 
+                AAC2020_RENCORE_MAX_USE_dex_edi );;
+
+            NCC   car_src[NOC]={0}; //:CharARray:SouRCe
+            NCC   car_dst[NOC]={0}; //:CharARray:DeST
+            NCC   car_loc[NOC]={0}; //:LOCAL__EDITOR_FOLDER
+            NCC   car_glo[NOC]={0}; //:GLOBAL_EDITOR_FOLDER
+            ///   car_nam[---]={-}; //:CharARray:file_NAMe
+
+            NCC*  pof_src=(&(car_src[0])); //:PathOfFolder:SRC
+            NCC*  pof_dst=(&(car_dst[0])); //:PathOfFolder:DST
+            NCC*  pof_loc=(&(car_loc[0])); //:PathOfFolder:DST
+            NCC*  pof_glo=(&(car_glo[0])); //:PathOfFolder:DST
+            CHR*  fil_nam=((CHR*)0)      ; //:FILe_NAMe
+
+            I08*  inc=((I08* )0); //:includes checklist
+            CHR** map=((CHR**)0); //:FunctionToIncludeMapper
+            I32   nop=((I32  )0); //:inc[nop] & map[nop*2]
+            CHR*  sub=((CHR* )0); //:EditorSubSystemName
+
+            /** inc_nam: ----------------------------------- **/
+            /** Include File Name Without Extension          **/
+            /** Eventually other build systems might replace **/
+            /** other categories of code. Hence the namespace**/
+            /** of "EXTCODE_RENCORE" in this file file.      **/
+            /** @VID_IID[0285]TIME[05:27:23] --------------- **/
+            /** ******************************************** **/
+
+            //:   inc_nam[ "INCLUDE_EXTCODE_RENCORE"]
+            CHR*  inc_nam=( aac2020_rencore_IFN_NOX );
+            I32   dex_nam=( 0 /**inDEX of fil_nam**/);
+            I32       m_i=( 0 /**max_index**/       );
+
+            //:Source_And_Dest_Folders:----------------------://
+            if( o_k >= 1 ){
+
+                //:EX[ R:/AAC/AAC2020_AUTOGEN_RENCORE_EXTCODE ]
+                o_k=(
+                aac2020_rencore_AbsPath_AUTOGEN_RENCORE_EXTCODE(
+                              &(pof_src) ));;
+                if( o_k <= 0 ){ LOG("[FAIL:GET:pof_src]",0); };
+            };;
+            if( o_k >= 1 ){
+
+                //:EX[ R:/AAC/AAC2020/LIB/AUTOGEN ]
+                o_k=(
+                aac2020_rencore_AbsPath_AAC2020_LIB_AUTOGEN(
+                              &(pof_dst) ));;
+                if( o_k <= 0 ){ LOG("[FAIL:GET:pof_dst]",0); };
+            };;
+            //:----------------------:Source_And_Dest_Folders://
+            //:Copy_Main_Include_File:-----------------------://
+            if( o_k >= 1 ){
+
+                o_k=(
+                aac2020_rencore_CopyPasteFile(
+                    pof_src   //:<--PathOfFolder:SOURCE
+                ,   pof_dst   //:<--PathOfFolder:DEST
+                ,   inc_nam   //:<--FileName(NO_EXTENSION)  
+                ,   "._"      //:<--File_Extension
+                ));;
+                if( o_k <= 0 ){
+                    LOS("[pof_src]:%s",pof_src);
+                    LOS("[pof_dst]:%s",pof_dst);
+                    LOS("[inc_nam]:%s",inc_nam);
+                    LOG("[FAILED:CopyPasteFile]",0);
+                };
+            };;
+            //:-----------------------:Copy_Main_Include_File://
+
+            /** Skip editor index[ 0 ]because zero is    *** **/
+            /** not a modifiable editor like the others. *** **/
+            while( (++dex_edi)<=(MAX_USE_dex_edi) ){
+
+                if( o_k <= 0 ){
+                    LOG("[I_AM_NOT_OKAY_2021_05_03]",0);
+                    break;
+                };;
+
+                assert(dex_edi>=1 && dex_edi<=MAX_USE_dex_edi);
+
+                //:Configure_State:--------------------------://
+                if( o_k >= 1 ){
+                    /** @VID_IID[ 285 ]TIME[ 04:01:42 ]   ** **/
+                    /** Ive done this before in the code, ** **/
+                    /** time to make a function for it.   ** **/
+            
+                    //:Zero_Out_Output_Parameters:
+                    inc=((I08* )0); //:Includes Checklist
+                    map=((CHR**)0); //:Function_To_Include_Map
+                    nop=((I32  )0); //:Number_Of_Pairs_In_Map
+                    sub=((CHR* )0); //:EditorSubSystemNameString
+
+                    //:Fetch Settings For Editor (dex_edi):
+                    //:This function is __NOT__ allowed to fail.
+                    aac2020_rencore_dex_edi_CTO_inc_map_nop_sub(
+                     dex_edi //:<-- Editor Index In Focus
+                    ,&( inc) //:<-- Active Includes Checklist
+                    ,&( map) //:<-- Func-to-Include mapping
+                    ,&( nop) //: nop:Number Of Pairs in[ map ]
+                    ,&( sub) //:<-- EditorSubSystemName
+                    );;
+
+                    if( o_k <= 0 ){
+                        /**@VID_IID[0286]TIME[01:14:14]**/
+                        ERR("[I_NEVER_LOSE_2021_05_04]");
+                    };;
+                };;
+                //:--------------------------:Configure_State://
+                //:Create_Final_Folder_Paths:----------------://
+                if( o_k >= 1 ){
+                    //+--------------------------------------+//
+                    //|  EXAMPLE[                            |//
+                    //|       R:/AAC/                        |//
+                    //|       AAC2020_AUTOGEN_EXTCODE_RENCORE|//
+                    //|       /PAINT5D                       |//
+                    //|  ]EXAMPLE                            |//
+                    //+--------------------------------------+//
+                    o_k=(
+                    aac2020_rencore_ConcatToTarget(
+                        pof_src , sub , &(pof_loc) ));;
+                    if( o_k <= 0 ){ LOG("[FAIL:pof_loc]",0); };
+
+                    //+--------------------------------------+//
+                    //|  EXAMPLE[                            |//
+                    //|       R:/AAC/                        |//
+                    //|       AAC2020/LIB/AUTOGEN/           |//
+                    //|       /PAINT5D                       |//
+                    //|  ]EXAMPLE                            |//
+                    //+--------------------------------------+//
+                    o_k=(
+                    aac2020_rencore_ConcatToTarget(
+                        pof_dst , sub , &(pof_glo) ));;
+                    if( o_k <= 0 ){ LOG("[FAIL:pof_glo]",0); };
+
+                };;
+                //:----------------:Create_Final_Folder_Paths://
+                //:Copy_Editor_Files_Into_Engine:------------://
+                if( o_k >= 1 ){
+                m_i=(nop-1);
+                for(dex_nam = 0 ; dex_nam <=(m_i) ; dex_nam++){
+
+                    /** File in our include's checklist? **/
+                    if( inc[dex_nam] >= 1 ){
+
+                        /** File name without extension. **/
+                        fil_nam=map[dex_nam*2];
+                         
+                        //:- - - - - - - - -- - - - - - - - -://
+                        o_k=(
+                        aac2020_rencore_CopyPasteFile(
+                            pof_loc //:<--PathOfFolder:SOURCE
+                        ,   pof_glo //:<--PathOfFolder:DEST
+                        ,   fil_nam //:<--FileName(NO_EXTENSION)
+                        ,   "._"    //:<--File_Extension
+                        ));;
+
+                        if( o_k <= 0 ){
+                            LOG("[FAIL:dex_nam:CP_Loop:A]",0);
+                            break; //:CP_Loop:CopyPasteLoop
+                        };;
+                        //:- - - - - - - - -- - - - - - - - -://
+                        o_k=(
+                        aac2020_rencore_CopyPaste_StringWrap(
+                            pof_loc //:<--PathOfFolder:SOURCE
+                        ,   pof_glo //:<--PathOfFolder:DEST
+                        ,   fil_nam //:<--FileName(NO_EXTENSION)
+
+                        ,   "._"    //:<--File_Extension:SOURCE
+                        ,   ".STR._"//:<--File_Extension:DEST <<<<<<<<<<<<<<<<<<<<<<<< TOO MANY DOTS... Change "touchfile" code
+                        ));;
+
+                        if( o_k <= 0 ){
+                            LOG("[FAIL:dex_nam:CP_Loop:B]",0);
+                            break; //:CP_Loop:CopyPasteLoop
+                        };;
+                        //:- - - - - - - - -- - - - - - - - -://
+                    };;
+
+                };;};; //:NEXT[ dex_nam ]<<<<<<<<<<<<<<<<<<<<://
+                //:------------:Copy_Editor_Files_Into_Engine://
+            };;
 
             return( o_k );
         }
@@ -3692,7 +4504,13 @@ creating folders. So I put the [ FCH ] section below the
                 LOG("[FAILED:::LOAD_EXTENSIONS_INTO_BUILD]",0);
             };;
 
-            ERR("[FINISH_THIS_CODE_HERE]");
+            /**@VID_IID[0286]TIME[02:28:50]**/
+            /**RENCORE build system exe should run _AGAIN_ with a "RESTORE" command after **/
+            /**AAC2020.EXE is built, so that git version control never knows that any of  **/
+            /**the engine files were touched.                                             **/
+            /**(All we have to put back is the generated INCLUDE file by copying the      **/
+            /**include file in the[ AAC2020/LIB/AUTOGEN/DEFAULT ]folder.                  **/
+            printf("[TODO:Restore_Command_To_Run_After[AAC2020]Is_Built]");
 
             return( extension_loading_method_pass );
 
@@ -4374,8 +5192,9 @@ creating folders. So I put the [ FCH ] section below the
 #undef      ECI  //:------------------------------------: 15 ://
 #undef      E_M  //:------------------------------------: 16 ://
 #undef      REO  //:------------------------------------: 17 ://
-#undef  CWD_NOC  //:------------------------------------: 18 ://
-#undef  MAX_NOC  //:------------------------------------: 19 ://
+#undef      NOC  //:------------------------------------: 18 ://
+#undef  CWD_NOC  //:------------------------------------: 19 ://
+#undef  MAX_NOC  //:------------------------------------: 20 ://
 //:=============================================:MAIN_SECTION://
 //:STAND_ALONE_MAIN:=========================================://
 //:AND_________PING:=========================================://
@@ -4524,9 +5343,147 @@ creating folders. So I put the [ FCH ] section below the
             E_V aac2020_rencore_UTC_ConcatToTarget( void );
                 aac2020_rencore_UTC_ConcatToTarget(      );
 
+            /** If breaks, test it. @VID_IID[0286]T[00:28:55]**/
+            E_V aac2020_rencore_UTC_JoinInPlace( void );
+                aac2020_rencore_UTC_JoinInPlace(      );
+
+            /** @VID_IID[0286]TIME[01:33:50]:ABOUT_TO_RUN **/
+            E_V aac2020_rencore_UTC_ConcatPathsInPlace( void );
+                aac2020_rencore_UTC_ConcatPathsInPlace(      );
 
         //:--------------------------------------------------://
         return( 0x00 );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    aac2020_rencore_UTC_ConcatPathsInPlace( void )
+    {
+    #define NUM_TES ( 4 )  //:--------------------------: 01 ://
+    #define NUM_COL ( 3 )  //:--------------------------: 02 ://
+    LOG("[aac2020_rencore_UTC_ConcatPathsInPlace:BEG]",0);
+
+        NCC  car_tar[NOC]={0};        //: ChAR_ARray::TARget ://
+        NCC* str_tar = &(car_tar[0]); //: String::::::TARget ://
+        CHR* tak     =((CHR*)0);      //: TAcK_____IT_____ON ://
+
+        CHR* tar; //:Target     
+        CHR* exp; //:expected
+        I32  c_i; //:Copy_Index
+        I32  tio; //:tio:Test_Index:[ inn/out ]
+        I32  bos; //:bos:Base_Offset
+        I32  mit; //:mit:Max_Index_(of)_Test(AKA:MTI)
+        I32  noc; //:Number_Of_Characters
+
+        CHR*  tab_utc[ NUM_TES * NUM_COL ]={
+             "whatever"  , "whatever"  , "whatever/whatever"
+        ,         "aye/" , "/bee"      , "aye/bee"
+        ,         "cee/" ,  "dee"      , "cee/dee"
+        ,         "eee"  , "/eff"      , "eee/eff"
+        };;
+
+        mit=( NUM_TES - 1 );
+        for( tio = 0 ; tio <= mit ; tio ++ ){
+
+            //:Fetch Test Case:
+            bos =( tio * NUM_COL );
+            tar =( tab_utc[ bos + 0 ] );
+            tak =( tab_utc[ bos + 1 ] );
+            exp =( tab_utc[ bos + 2 ] );
+
+            /**Erase Previous[ str_tar ]**/
+            str_tar[0]=( 0 /**NullAtFrontEffectivelyErases**/);
+
+            /**Copy Current Target Into[ str_tar ]**/
+            noc=( strlen( tar ) );
+            for( c_i = 0 ; c_i <=(noc-1) ; c_i++ ){
+                str_tar[ c_i ]=( tar[ c_i ] );
+            };;
+            str_tar[ c_i ]=( 0 /**NullTerminator**/ );
+
+            LOS("[TEST_ARG_001:str_tar]:%s",str_tar );
+            LOS("[TEST_ARG_002:....tak]:%s",    tak );
+            aac2020_rencore_ConcatPathsInPlace(
+              &(str_tar)//:<--Copy_Of[ str_tar ]
+            ,       tak //:<--[        takiton ](TAK_IT_ON)
+            );;
+
+            if( 0 != strcmp(str_tar,exp) ){
+                LOI("[::::tio]:%d" ,     tio  ); //:TestIndex://
+                LOS("[::::exp]:%s" ,     exp  ); //:EXPECTED ://
+                LOS("[str_tar]:%s" , str_tar  ); //:ACTUAL   ://
+                ERR("[X_X:ConcatPathsInPlace]"); //:ERR_MSG  ://
+            };;
+        };;
+
+    LOG("[aac2020_rencore_UTC_ConcatPathsInPlace:END]",0);
+    #undef  NUM_TES  //:--------------------------------: 01 ://
+    #undef  NUM_COL  //:--------------------------------: 02 ://
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    aac2020_rencore_UTC_JoinInPlace( void )
+    {
+    #define NUM_TES ( 4 )  //:--------------------------: 01 ://
+    #define NUM_COL ( 3 )  //:--------------------------: 02 ://
+    LOG("[aac2020_rencore_UTC_JoinInPlace:BEG]",0);
+
+        NCC  car_tar[NOC]={0};        //: ChAR_ARray::TARget ://
+        NCC* str_tar = &(car_tar[0]); //: String::::::TARget ://
+        CHR* tak     =((CHR*)0);      //: TAcK_____IT_____ON ://
+
+        CHR* tar; //:Target     
+        CHR* exp; //:expected
+        I32  c_i; //:Copy_Index
+        I32  tio; //:tio:Test_Index:[ inn/out ]
+        I32  bos; //:bos:Base_Offset
+        I32  mit; //:mit:Max_Index_(of)_Test(AKA:MTI)
+        I32  noc; //:Number_Of_Characters
+
+        /** @VID_IID[0286]TIME[00:53:13]DOUBLE_POINTER_FIX **/
+        CHR*  tab_utc[ NUM_TES * NUM_COL ]={
+            "whatever_" , "whatever" , "whatever_whatever"
+        ,         "aye" , "_bee"     , "aye_bee"
+        ,         "/_/" , "/_/"      , "/_//_/"
+        ,         "0_0" , "X_X"      , "0_0X_X"
+        };;
+
+        mit=( NUM_TES - 1 );
+        for( tio = 0 ; tio <= mit ; tio ++ ){
+
+            //:Fetch Test Case:
+            bos =( tio * NUM_COL );
+            tar =( tab_utc[ bos + 0 ] );
+            tak =( tab_utc[ bos + 1 ] );
+            exp =( tab_utc[ bos + 2 ] );
+
+            /**Erase Previous[ str_tar ]**/
+            str_tar[0]=( 0 /**NullAtFrontEffectivelyErases**/);
+
+            /**Copy Current Target Into[ str_tar ]**/
+            noc=( strlen( tar ) );
+            for( c_i = 0 ; c_i <=(noc-1) ; c_i++ ){
+                str_tar[ c_i ]=( tar[ c_i ] );
+            };;
+            str_tar[ c_i ]=( 0 /**NullTerminator**/ );
+
+            LOS("[TEST_ARG_001:str_tar]:%s",str_tar );
+            LOS("[TEST_ARG_002:....tak]:%s",    tak );
+            aac2020_rencore_JoinInPlace(
+              &(str_tar)//:<--Copy_Of[ str_tar ]
+            ,       tak //:<--[        takiton ](TAK_IT_ON)
+            );;
+
+            if( 0 != strcmp(str_tar,exp) ){
+                LOI("[::::tio]:%d" ,     tio ); //:Test_Index://
+                LOS("[::::exp]:%s" ,     exp ); //:EXPECTED  ://
+                LOS("[str_tar]:%s" , str_tar ); //:ACTUAL    ://
+                ERR("[FAIL_JoinInPlace_TEST]"); //:ERR_MSG   ://
+            };;
+        };;
+
+    LOG("[aac2020_rencore_UTC_JoinInPlace:END]",0);
+    #undef  NUM_TES  //:--------------------------------: 01 ://
+    #undef  NUM_COL  //:--------------------------------: 02 ://
     }
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     void
