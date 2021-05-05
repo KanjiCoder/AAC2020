@@ -2770,6 +2770,393 @@ creating folders. So I put the [ FCH ] section below the
 #define LOG aac2020_rencore_Info_any         //:--------: 08 ://
 #define LOS aac2020_rencore_Info_str         //:--------: 09 ://
 #define LOI aac2020_rencore_Info_i32         //:--------: 10 ://
+#define C64 AAC2020_RENCORE_MACRO_C64        //:--------: 11 ://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    I32
+    aac2020_rencore_IsNewLine(
+        CHR  chr
+    )
+    {
+        I32 res=( 0 );
+        if( chr == '\n' ){ res = 1 ; };
+        if( chr == '\r' ){ res = 1 ; };
+        return( res );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    I32 //:<--[ fin : Finished ? True when >= 1 ]
+    aac2020_rencore_AWK(
+
+    //:Grouped_By[ src ]So[ "src_*" ]For_Param_Names:
+    /**/CHR* src_r_o //:<--Source:Read_Only
+    ,   I32  src_noc //:<--Source:NumberOfChars
+
+    //:Grouped_By[ dst ]So[ "dst_*" ]For_Param_Names:
+    ,   NCC* dst_w_o //:<--Dest:::Write_Only
+    ,   I32  dst_noc //:<--Dest:::NumberOfChars
+
+    //:Grouped_By_Index, so "dex" comes first here:
+    ,   I32  dex_src //:<--1st Read  Index: src_r_o[ dex_src ]
+    ,   I32  dex_dst //:<--1st Write Index: dst_w_o[ dex_dst ]
+
+    //:Output Index of last[ READ    ]chars[ dex_src ]
+    //:Output Index of last[ WRITTEN ]chars[ dex_dst ]
+    ,   I32  *BYREF_dex_src //:UPDATED[ dex_src ]
+    ,   I32  *BYREF_dex_dst //:UPDATED[ dex_dst ]
+    )
+    {
+    /** **************************************************** ***
+    @VID_IID[0287]TIME[00:08:13]Fake[AWK]Command
+    @VID_IID[0287]TIME[00:13:42]SUMMARY_OF_FUNCTION_FINISHED
+    Each invokation of[ AWK ]seeks through in-ram text file,
+    finds inclusive markers for first and last characters of
+    line (NOT INCLUDING NEWLINE CHARACTER) and wraps that line
+    like so[  "my line of source code \n" ].
+    Will attempt to keep each line to EXACTLY 64 character
+    column limit. WIll also attempt to NOT SHIFT THE ORIGINAL
+    source code. Which can only be done if the quote[ ＂ ]mark
+    and [ \n＂ ] are over-writing white space. If they are 
+    [ __NOT__ then we will have to shift the line over.
+
+    Implementation Conventions: @VID_IID[0287]T[03:14:50]
+    ------------------------------------------------------------
+    1. Before Call :
+        dex_src : rests on first slot I want to read.
+        dex_dst : rests on first empty slot I want to write to.
+    2. After  Call :
+        BYREF_dex_src : rests on LAST Character read.
+        BYREF_dex_dst : rests on LAST Character written.
+                        Or at very least, last valid occupied
+                        character slot on output buffer.
+    3. When Calling Function Again Setup Should Be:
+        dex_src = ( BYREF_dex_src + 1 );
+        dex_dst = ( BYREF_dex_dst + 1 );
+    ------------------------------------------------------------
+    *** **************************************************** **/
+        #if( ECI )//:########################################://
+        #define REF_SRC BYREF_dex_src //:--------------------://
+        #define REF_DST BYREF_dex_dst //:--------------------://
+
+            if( ((CHR*)0) == src_r_o ){ ERR("[src_r_o]"); };   
+            if( ((I32 )0) == src_noc ){ ERR("[src_noc]"); };   
+
+            if( ((NCC*)0) == dst_w_o ){ ERR("[dst_w_o]"); };   
+            if( ((I32 )0) == dst_noc ){ ERR("[dst_noc]"); };  
+
+            if( ((I32 )0) == dex_src ){ ERR("[dex_src]"); };   
+            if( ((I32 )0) == dex_dst ){ ERR("[dex_dst]"); }; 
+
+            if( ((I32*)0) == REF_SRC ){ ERR("[REF_SRC]"); };   
+            if( ((I32*)0) == REF_DST ){ ERR("[REF_DST]"); };   
+
+            /**@VID_IID[0287]TIME[01:53:32]************ **/
+            if( dex_src != (*REF_SRC)){ ERR("[N_E:SRC]"); };
+            if( dex_dst != (*REF_DST)){ ERR("[N_E:DST]"); };
+
+            //:bounds_check:---------------------------------://
+                
+                /** @VID_IID[0287]TIME[06:13:23]FVCKTHIS **/
+
+                if( dex_src > ( src_noc-1 ) ){
+                    ERR("[AWK_BOUNDS_CHECK_OOB:dex_src]");
+                };;
+                if( dex_dst > ( dst_noc-1 ) ){
+                    ERR("[AWK_BOUNDS_CHECK_OOB:dex_dst]");
+                };;
+
+                if( dex_src < 0 ){ ERR("[negdex_src]"); };
+                if( dex_dst < 0 ){ ERR("[negdex_dst]"); };
+
+            //:---------------------------------:bounds_check://
+                  
+        #undef  REF_SRC  //:---------------------------------://
+        #undef  REF_DST  //:---------------------------------://                    
+        #endif //:####################################( ECI )://
+        //:Declare_Vars:-------------------------------------://
+
+            //:UNSET_TO_START_WITH[ fin ]AND[ fin_def ]
+            I32  fin     =( 0 ); //:Finished. Nothing was done.
+            I32  fin_def =( 0 ); //:Finished. Deferred.
+                                 //:(Calling this function  )
+                                 //:(another time is useless)
+            
+            //:INITED_TO_TRAP_VALUES:
+            I32  m_i =( 0-832 ); //:Max_Index_For[ dex ]
+            I32  dex =( 0-606 ); //:Index_In_For_Loop
+            I32  i_0 =( 0-666 ); //:First Char Of Line
+            I32  i_1 =( 0-333 ); //:Last  Char Of Line(NOT "\n")
+            I32  s_p =( 0-222 ); //:Search_Phase
+            I32  t_w =( 0-101 ); //:Total_characters_Written
+            I32  lef =( 0-832 ); //:Can_Overwrite:Lef:chars?
+            I32  rig =( 0-352 ); //:Can_Overwrite:RIG:chars?
+            ///  //////////////: //:-------------------------://
+            NCC  src =(   0   ); //:Source_Character :-------://
+
+            //:INITED_TO_USEFUL_VALUES:
+            CHR  spc =( 0x20  ); //:Space__Character
+            CHR  quo =( 0x22  ); //:Quote__Character
+
+        //:-------------------------------------:Declare_Vars://
+        //:get_start_and_end_of_line:------------------------://
+        s_p=( 0 );
+        m_i=( src_noc - 1 );
+        for( dex = dex_src ; dex <=( m_i ) ; dex++ ){
+        #define N_L aac2020_rencore_IsNewLine
+
+            src=src_r_o[ dex ];
+
+            if( 0 == s_p ){
+                if( N_L( src ) <= 0 ){
+                    i_0 =( dex );
+                    s_p =(  1  );
+                }else
+                if( dex >= m_i ){
+                    i_0 =( 0-666 /**TRAP**/ );
+                    i_1 =( 0-666 /**TRAP**/ );
+                    s_p =( 2 );
+                    fin =( 1 ); //:FINISHED_AWK_COLLECTIONS
+                };;
+            }else
+            if( 1 == s_p ){
+                if( N_L( src ) >= 1 ){
+                    i_1 =( dex - 1 ); //:PREV_NON_NEWLINE_CHR
+                    s_p =(  2      );
+                }else
+                if( dex >= m_i ){
+                    i_1 =( dex + 0 ); //:DONT_BACK_UP!
+                    s_p =(  2      );
+                };;
+
+                //+ No longer makes sense now that looking for     +//
+                //+ a[ N_L ] rather than[ NOT N_L ]                +//
+                //-  //:If two consequitive newline characters,    -//
+                //-  //:make[ i_1 ]the new[ i_0 ]and reset search  -//
+                //-  //:phase to[ 1 ](looking for i_1)             -//
+                //-                                                -//
+                //-  //: [ "t" ][ \n  ]                            -//
+                //-  //: [ i_0 ][ i_1 ][ dex ]                     -//
+                //-  if( i_0 == ( i_1 - 1 ) ){ /**ADJACENT**/      -//
+                //-      s_p=(     1 );                            -//
+                //-      i_0=(   i_1 );                            -//
+                //-      i_1=( 0-404 );                            -//
+                //-  };;                                           -//
+            };;//:<--[ NO_ELSE ]://
+
+            if( 2 == s_p ){
+                break;
+            };;
+
+        #undef  N_L
+        };;
+        if( 0 == s_p ){ 
+            /** Could happen if a whole bunch of white space **/
+            /** and newlines at the end of the file.         **/
+            fin=( 1 ); 
+        }else
+        if( 1 == s_p ){
+            /** @VID_IID[0287]T[02:25:10] ******** **/
+            /** Happens when last line of input is **/
+            /** terminated by "END OF FILE" rather **/
+            /** than a newline character.          **/
+            i_1 = ( dex - 1 );
+            if( (dex - 1) != (src_noc - 1) ){
+                ERR("[YouHaveBadMath_2021]");
+            };;
+            //:finished_after_this_call_is_over=( 1 );
+            fin_def=( 1 /**Finish Deferred == 1 **/ );
+        }else
+        if( 2 == s_p ){
+            if( fin <= 0 || fin >= 1 ){ /**EITHER_IS_OKAY**/ };
+        }else{
+            ERR("[BAD_SELECTION_2021_05_05]");
+        };;
+        //:------------------------:get_start_and_end_of_line://
+        //:Decide_Which_Sides_Can_Be_OverWritten:------------://
+        if( fin <= 0 /** NOT finished. **/ ){
+
+            /**@VID_IID[0287]T[03:17:42]LEF_AND_RIG_EXPLAINED**/
+            lef=( 0-666 /**TRAP**/ ); /**Can_Overwrite_Chars?**/
+            rig=( 0-333 /**TRAP**/ ); /**Can_Overwrite_Chars?**/
+
+            if( spc == src_r_o[ i_0 ] ){
+                lef=( 1 ); //:Overwrite[ lef ]==TRUE
+            }else{
+                lef=( 0 );
+            };;
+
+            //:----------------1234-------------://
+            //:Enough room for[ \n＂]to add to end?
+            //: (1-lef) == extra char from lack of 
+            //: overwrite if[ lef ]is false.
+            if( (i_1-i_0+1)+(1-lef) <= (C64-4) ){
+                rig=( 1 );
+            }else{
+                if( 1
+                && ( spc == src_r_o[ i_1 - 0 ] ) //:[ 4 ]
+                && ( spc == src_r_o[ i_1 - 1 ] ) //:[ 3 ]
+                && ( spc == src_r_o[ i_1 - 2 ] ) //:[ 2 ]
+                && ( spc == src_r_o[ i_1 - 3 ] ) //:[ 1 ]
+                ){
+                    rig=( 1 );
+                }else{
+                    rig=( 0 );
+                };;
+            };;
+
+            if( 0 != rig && 1 != rig ){ ERR("[NOT_SET:rig]");};
+            if( 0 != lef && 1 != lef ){ ERR("[NOT_SET:lef]");};
+        
+        };; //:[fin?]:<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<://
+        //:------------:Decide_Which_Sides_Can_Be_OverWritten://
+        //:Write_All_Characters:-----------------------------://
+        if( fin <= 0 /** NOT finished. **/ ){
+
+            t_w=( 0 /**Total Chars Written == 0 **/ );
+
+            //:Opening_Quote:--------------------------------://
+
+                //:Read in overwriting quote[ ＂ ]If is one.
+                if( lef >= 1 ){
+                    dst_w_o[ dex_dst ]=( quo );
+                             dex_dst++; //:Slot__Written
+                             i_0++;     //:INPUT_OVERWRITE
+                             t_w++;     //:Total_Written++
+                             
+                }else
+                if( lef <= 0 ){
+                    dst_w_o[ dex_dst ]=( quo );
+                             dex_dst++; //:Slot__Written
+                         //: i_0        //:INPUT__KEEP
+                             t_w++;     //:Total_Written++
+                             
+                };;
+
+            //:--------------------------------:Opening_Quote://
+            //:copy_inclusive_range:-------------------------://
+            for( dex = i_0 ; dex <= i_1 ; dex ++ ){
+                
+                dst_w_o[ dex_dst ]=(
+                src_r_o[ dex     ]  );;
+                         dex_dst++; //:<--Slot__Written(used)
+                             t_w++; //:<--Total_Written++
+
+            };;
+            //:----------------------------------------------://
+            //:pad_until_at_least_64_chars_written:----------://
+            if( t_w < C64 ){
+                while( 1 == 1 ){
+                    dst_w_o[ dex_dst ]=( spc );
+                             dex_dst++;
+                                 t_w++;
+
+                    if( C64 == t_w ){ break; };
+                    if( t_w  > C64 ){ ERR("[OOB_C64]"); };
+                };;
+            };;
+            //:----------:pad_until_at_least_64_chars_written://
+            //:Error_Check_Padding:--------------------------://
+            if( rig >= 1 ){
+
+                if( 0
+                ||  spc != dst_w_o[ dex_dst - 1 ] //:PREVWRITTEN
+                ||  spc != dst_w_o[ dex_dst - 2 ] //:PREVWRITTEN
+                ||  spc != dst_w_o[ dex_dst - 3 ] //:PREVWRITTEN
+                ||  spc != dst_w_o[ dex_dst - 4 ] //:PREVWRITTEN
+                ){
+                    ERR("[Your_Padding_Has_Vanished]");
+                };;
+            };;
+            //:--------------------------:Error_Check_Padding://
+            //:Close_Off_Line:-------------------------------://
+            { //:<--[SCOPE]://
+
+                CHR c_1 =( spc ); //:Character #1
+                CHR c_2 =( '\\'); //:Character #2
+                CHR c_3 =( 'n' ); //:Character #3
+                CHR c_4 =( quo ); //:Character #4
+
+                if( rig >= 1 ){
+
+                    if( (dex_dst-4) < 0 ){
+                        ERR("[WTF_MY_MAN_2021_441PM]");
+                    };;
+
+                    //:Overwrite:[ _\n ]
+                    dst_w_o[ dex_dst - 4 ]=( c_1 );
+                    dst_w_o[ dex_dst - 3 ]=( c_2 );
+                    dst_w_o[ dex_dst - 2 ]=( c_3 );
+                    dst_w_o[ dex_dst - 1 ]=( c_4 );
+                }else{
+                    //:Append:[ _\n ]
+                    /** var++ is POST increment.             **/
+                    /** so original value is USED in array   **/
+                    /** lookup and __THEN__ is incremented.  **/
+                    /** @VID_IID[0287]TIME[03:30:42]EXPLAINED**/
+                    dst_w_o[ dex_dst  ++ ]=( c_1 ); t_w++;
+                    dst_w_o[ dex_dst  ++ ]=( c_2 ); t_w++;
+                    dst_w_o[ dex_dst  ++ ]=( c_3 ); t_w++;
+                    dst_w_o[ dex_dst  ++ ]=( c_4 ); t_w++;
+                        //:                          ^
+                        //:                          |
+                        //:NOTICE_ME_SENPAI----------+
+                };;
+
+            } //:<--[SCOPE]://
+            //:-------------------------------:Close_Off_Line://
+
+        };; //:[fin?]<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<://
+        //:-----------------------------:Write_All_Characters://
+        //:DONT_FORGET_THE_LITERAL_NEWLINE:==================://
+        if( fin <= 0 /** NOT FINISHED **/ ){
+
+            /**@VID_IID[0287]T[05:27:42]EXPLAINED**/
+
+            if( (dex_dst) > (dst_noc-1) ){
+                ERR("[OUT_OF_FUCKING_BOUNDS:2021:AYE]");
+            };;
+
+    ////    dst_w_o[ dex_dst ]=( '\n' );
+    ////    /**/     dex_dst++;
+    ////    /**/         t_w++;
+
+            if( (dex_dst-1) >= (dst_noc-1) ){
+                ERR("[OUT_OF_FUCKING_BOUNDS:2021:BEE]");
+            };;
+        };;
+        //:==================:DONT_FORGET_THE_LITERAL_NEWLINE://
+        //:Return_Output_Params:-----------------------------://
+        if( fin <= 0 /** NOT FINISHED **/ ){
+
+            //:Last read character slot:
+            (*BYREF_dex_src)=( i_1 );
+    
+            //:Last written character slot:                  ://
+            //:The backup by (-1) makes sense even if nothing://
+            //:was written. Because we want to exit where    ://
+            //:[BYREF_dex_dst]output is RESTING on a filled  ://
+            //:character slot. @VID_IID[0287]T[03:10:32]     ://
+            (*BYREF_dex_dst)=( dex_dst - 1 );
+
+        }else{
+            /** Nothing was written. Just return original    **/
+            /** inputs. We should __NOT__ call this function **/
+            /** again. @VID_IID[ 0287 ]TIME[ 02:29:32 ]      **/
+            //: (*BYREF_dex_src)=( dex_src ); UNCHANGED_VALS ://
+            //: (*BYREF_dex_dst)=( dex_dst ); UNCHANGED_VALS ://
+
+            /** @VID_IID[0287]TIME[ 02:39:30 ]    **/
+            /** Be safe, do not set output param. **/
+        };;
+        //:-----------------------------:Return_Output_Params://
+        //:Return_Is_Finished_Flag:--------------------------://
+            
+            /** @VID_IID[0287]TIME[02:31:05] ********* **/
+            /** fin >= 1 : We DONT want to call again. **/
+            /** fin <= 0 : We WILL _______ call again. **/
+            if( fin_def >= 1){ fin = 1; }; //:@VID_IID[ 0287]
+            return(            fin      ); //:@TIME[03:06:42]
+    
+        //:--------------------------:Return_Is_Finished_Flag://
+    }
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
     I32 
     aac2020_rencore_CopyPaste_StringWrap(
@@ -2794,6 +3181,10 @@ creating folders. So I put the [ FCH ] section below the
         /**@VID_IID[0286]TIME[05:05:23]**/
         U08* arr_bin_str=((U08*)0); //:STRINGIFIED_VERSION
         I32  nob_bin_str=(   0   ); //:STRINGIFIED_VERSION
+
+        /**@VID_IID[0287]TIME[06:43:43]**/
+        I32  DEBUG_M_I=( 0 /**WTF_AM_I_DOING!?**/ );
+        U08* ADDR_BACK=( arr_bin_str );
     
         //:concat_step_001:----------------------------------://
         if( o_k >= 1 ){
@@ -2835,13 +3226,13 @@ creating folders. So I put the [ FCH ] section below the
             I32 c_n=( 0 ); /** Count Of \n (newlines)     ---**/
             I32 c_r=( 0 ); /** Count Of \r (returns )     ---**/
             I32 m_l=( 0 ); /** Max Lines                  ---**/
-            I32 e_c=( 5 ); /** Extra_Characters(per line) ---**/
+            I32 e_c=( 6 ); /** Extra_Characters(per line) ---**/
             I32 e_b=(0-1); /** Extra Bytes To Allocate    ---**/
             I32 t_b=(0-1); /** Total Bytes To Allocate    ---**/
             I32 pad=(10 ); /** Even More Extra Padding Bytes **/
 
             /**@VID_IID[0286]TIME[07:01:30] **************** **/
-            I32 col_lim=( 64 /**Target 64 Column Limit**/ );
+            I32 col_lim=( C64 /**Target 64 Column Limit**/ );
 
             I32 needs_closing_quote=( 0 );
 
@@ -2858,112 +3249,199 @@ creating folders. So I put the [ FCH ] section below the
             };;
 
             //:Be paranoid. @VID_IID[0286]T[05:26:10] :::::::://
-            m_l=( c_n + c_r ); 
+            m_l=( c_n + c_r + 1 ); /**Last Line Has No "\n"**/
+
+            LOI("[arr_bin:c_n]:%d" , c_n );
+            LOI("[arr_bin:c_r]:%d" , c_r );
+            LOI("[arr_bin:m_l]:%d" , m_l );
 
             //:@VID_IID[0286]TIME[05:33:55]PARANOID
             //:@VID_IID[0286]TIME[06:52:30]MORE_EXTRA_PADDING
+            //:@VID_IID[0287]TIME[05:10:10]MORE_EXTRA_PADDING
+            //:@VID_IID[0287]TIME[05:34:10]MORE_EXTRA_PADDING
             //:Calculate Number Of Extra Bytes To Allocate:
             //:Plus one just in case for whatever odd reason
             //:we find ourselves needing a null terminator.
-            e_b=( (m_l*e_c)+(m_l*col_lim) +  1  + pad );
+            //:Another "1" because each line needs "\n" symbol.
+            //:Better to allocate a bit[ TOO_MUCH ]memory than
+            //:not enough.
+            //:(col_lim+1) : +1 is for '\n' on each line
+            //:  +2 : Because I don't know what I am doing...
+            e_b=( (m_l*e_c)+(m_l*(col_lim+2)) + 2 + pad );
             t_b=(  nob_bin  + e_b );
 
             //:Allocate enough memory for adding quotes
             //:And newlines to the loaded file.
-            arr_bin_str = malloc( t_b );
+            arr_bin_str = calloc( t_b , 1 );
             nob_bin_str =(         0  ); //:<--[USED_BYTES]::://
+           
+            arr_bin_str[ t_b-1 ]=(0); //:<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Shouldn't segfault.
+            DEBUG_M_I=(  t_b-1 );
+            ADDR_BACK=( arr_bin_str );
+            LOI("[DEBUG_M_I]%d",DEBUG_M_I);
 
-            if( 0 == arr_bin_str ){
+            if( 0 == arr_bin_str ){ //://////////////////////://
+
                 LOG("[UNABLE_TO_MALLOC_MEMORY_2021]",0);
                 o_k =( 0 - 404 );
-            }else{
-                //:Copy Over Lines And Wrap In Quotes:
-                I32   s =( 0          ); //:SOURCE______INDEX
-                I32   d =( 0          ); //:DESTINATION_INDEX
-                CHR quo =( 0x22       ); //:Quote (double quote)
-                I32   m =( nob_bin - 1); //:Max_Index
-                for( s = 0 ; s <=( m ) ; s++ ){
 
-                    //:@VID_IID[0286]TIME[05:59:10]OUT_OF_MEM
-                    //:@VID_IID[0286]TIME[06:08:50]FIXED__BUG
-                    if( d >= t_b ){
-                        o_k=( 0 - 444);
-                        LOI("[...:..d]:%d\n",   d );
-                        LOI("[...:t_b]:%d\n", t_b );
-                        LOG("[ABOUT_TO(but_not)OOB_BUFFER]",0);
+            }else{ //:///////////////////////////////////////://
+
+                I32 fin;  /** fin: Finished ? **/
+
+                //:Start at the beginning of both files:
+                I32 dex_src =( 0 );
+                I32 dex_dst =( 0 );
+
+                LOG("[AWK_LOOP:BEG]",0);
+                while( 1 == 1 /** INFINITE LOOP **/ ){
+            
+                    fin=(
+                    aac2020_rencore_AWK(
+                    /**/    arr_bin     //:AKA[ src_r_o ]
+                    ,       nob_bin     //:AKA[ src_noc ]
+                    ,       arr_bin_str //:AKA[ dst_w_o ]
+                    ,       t_b         //:AKA[ dst_noc ]
+                    //:  |  READ_FROM|WRITE_TO   |
+                    ,       dex_src  ,  dex_dst  
+                    ,     &(dex_src) ,&(dex_dst)  
+                    ));;
+            
+                    if( fin >= 1 ){ 
                         break;
-                    };;
-                     
-                    if( s == 0 ){
-                        arr_bin_str[ d ]=( quo );
-                                     d++;
-                    };;//:<--NO_ELSE!
-
-                    if( 1
-                    &&  arr_bin[ s ] != '\n'
-                    &&  arr_bin[ s ] != '\r'
-                    ){
-                        //:Copy Non_Newline Character:
-                        needs_closing_quote=( 1 );
-                        arr_bin_str[ d ]=( arr_bin[ s ] );
-                                     d++;
-                    }else
-                    if( 0
-                    ||  arr_bin[ s ] == '\n' 
-                    ||  arr_bin[ s ] == '\r' 
-                    ){
-                        needs_closing_quote=( 0 );
-                        //:BEFORE_THE_NEWLINE_IS_COPIED:
-                        arr_bin_str[ d ]=(' ' ); //:SPACE
-                                     d++;
-                        arr_bin_str[ d ]=('\\'); //:Backslash
-                                     d++;
-                        arr_bin_str[ d ]=('n' ); //:'n' of "\n"
-                                     d++;
-                        arr_bin_str[ d ]=( quo  );
-                                     d++;
-                        
-                        //:COPY_THE_NEWLINE:
-                        arr_bin_str[ d ]=( arr_bin[ s ] );
-                                     d++;
-    
-                        //:BEGIN_QUOTE_ON_NEXT_LINE:
-                        //:(if more characters to come)
-                        arr_bin_str[ d ]=( quo );
-                                     d++;
-                  
-                    };;
-
-                };; //:NEXT[ s  ]<<<<<<<<<<<<<<<<<<<<<<<<<<<<://
-
-                if( needs_closing_quote >= 1 ){
-                        arr_bin_str[ d++ ]=( ' '  );
-                        arr_bin_str[ d++ ]=( '\\' );
-                        arr_bin_str[ d++ ]=( 'n'  );
-                        arr_bin_str[ d++ ]=(  quo ); 
-                    
-                    /**@VID_IID[0286]T[06:42:32]**/
-                    if( (d-1) >= t_b ){
-                        LOG("[MEMORY_STOMPING_2021]",0);
-                        o_k=( 0-666);
+                    }else{
+                        //:[ AWK ]comman returns the last
+                        //:filled and read indexes. So move
+                        //:by 1 to get to next empty slot.
+                        dex_src++;
+                        dex_dst++;
                     };;
                 };;
-                    
+                LOG("[AWK_LOOP:END]",0);
 
-                /** @VID_IID[0286]TIME[06:11:30 ]*********** **/
-                /** "d" sits on unused index slot. Thus      **/
-                /** "d" when outside of loop is the USED     **/
-                /** number of[ bytes/chars ]in[ arr_bin_str ]**/
-                nob_bin_str=( d );
+                if(  dex_dst < 0 ){
+                    ERR("[WTF_FKN_HEL:2021]");
+                }else
+                if( (dex_dst+1) > (t_b-1) ){
+                    ERR("[NOT_ENOUGH_ROOM_TO_TACK_ON_NULL]");
+                };;
 
-                if( quo  == arr_bin_str[ d - 1 ]){
-                if( '\n' == arr_bin_str[ d - 2 ]
-                ||  '\r' == arr_bin_str[ d - 2 ]
-                ){
-                    //:Shave Off Trailing Quote
-                    nob_bin_str=( d - 1 ); 
-                };;};;
+                if( DEBUG_M_I != (t_b-1) ){
+                    ERR("[WHAT_THE_HELL_2021]");
+                };;
+                
+                if( ADDR_BACK != arr_bin_str ){
+                    ERR("[Change_of_Address]");
+                };;
 
+                arr_bin_str[ 0 ]=( 0 ); //:<<<<<<<<<<<<<<<<<<<<<<<<<<<< HACK
+                LOG("[About_To_Tack_On_Null_Terminator]...",0);
+
+                //:Tack on null terminator to the string that
+                //:was copied. Because I think we feed it into
+                //:a function that expects null terminator.
+                arr_bin_str[ dex_dst + 1 ]=( 0 );
+                nob_bin_str=(dex_dst );
+
+                LOG("[GETTING:strlen(arr_bin_str)]",0);
+                I32 l_n=( strlen( arr_bin_str ) );
+
+                if( l_n != nob_bin_str ){
+                    printf("[....dex_dst]:%s\n",    dex_dst);
+                    printf("[nob_bin_str]:%s\n",nob_bin_str);
+                    ERR("[Your_Math_Is_Off...Maybe?]");
+                }else{
+                    LOG("[l_n:Looks_Okay]",0);
+                };;
+
+        //--    //:Copy Over Lines And Wrap In Quotes:             --//
+        //--    I32   s =( 0          ); //:SOURCE______INDEX      --//
+        //--    I32   d =( 0          ); //:DESTINATION_INDEX      --//
+        //--    CHR quo =( 0x22       ); //:Quote (double quote)   --//
+        //--    I32   m =( nob_bin - 1); //:Max_Index              --//
+        //--    for( s = 0 ; s <=( m ) ; s++ ){                    --//
+        //--                                                       --//
+        //--        //:@VID_IID[0286]TIME[05:59:10]OUT_OF_MEM      --//
+        //--        //:@VID_IID[0286]TIME[06:08:50]FIXED__BUG      --//
+        //--        if( d >= t_b ){                                --//
+        //--            o_k=( 0 - 444);                            --//
+        //--            LOI("[...:..d]:%d\n",   d );               --//
+        //--            LOI("[...:t_b]:%d\n", t_b );               --//
+        //--            LOG("[ABOUT_TO(but_not)OOB_BUFFER]",0);    --//
+        //--            break;                                     --//
+        //--        };;                                            --//
+        //--                                                       --//
+        //--        if( s == 0 ){                                  --//
+        //--            arr_bin_str[ d ]=( quo );                  --//
+        //--                         d++;                          --//
+        //--        };;//:<--NO_ELSE!                              --//
+        //--                                                       --//
+        //--        if( 1                                          --//
+        //--        &&  arr_bin[ s ] != '\n'                       --//
+        //--        &&  arr_bin[ s ] != '\r'                       --//
+        //--        ){                                             --//
+        //--            //:Copy Non_Newline Character:             --//
+        //--            needs_closing_quote=( 1 );                 --//
+        //--            arr_bin_str[ d ]=( arr_bin[ s ] );         --//
+        //--                         d++;                          --//
+        //--        }else                                          --//
+        //--        if( 0                                          --//
+        //--        ||  arr_bin[ s ] == '\n'                       --//
+        //--        ||  arr_bin[ s ] == '\r'                       --//
+        //--        ){                                             --//
+        //--            needs_closing_quote=( 0 );                 --//
+        //--            //:BEFORE_THE_NEWLINE_IS_COPIED:           --//
+        //--            arr_bin_str[ d ]=(' ' ); //:SPACE          --//
+        //--                         d++;                          --//
+        //--            arr_bin_str[ d ]=('\\'); //:Backslash      --//
+        //--                         d++;                          --//
+        //--            arr_bin_str[ d ]=('n' ); //:'n' of "\n"    --//
+        //--                         d++;                          --//
+        //--            arr_bin_str[ d ]=( quo  );                 --//
+        //--                         d++;                          --//
+        //--                                                       --//
+        //--            //:COPY_THE_NEWLINE:                       --//
+        //--            arr_bin_str[ d ]=( arr_bin[ s ] );         --//
+        //--                         d++;                          --//
+        //--                                                       --//
+        //--            //:BEGIN_QUOTE_ON_NEXT_LINE:               --//
+        //--            //:(if more characters to come)            --//
+        //--            arr_bin_str[ d ]=( quo );                  --//
+        //--                         d++;                          --//
+        //--                                                       --//
+        //--        };;                                            --//
+        //--                                                       --//
+        //--    };; //:NEXT[ s  ]<<<<<<<<<<<<<<<<<<<<<<<<<<<<://   --//
+        //--                                                       --//
+        //--    if( needs_closing_quote >= 1 ){                    --//
+        //--            arr_bin_str[ d++ ]=( ' '  );               --//
+        //--            arr_bin_str[ d++ ]=( '\\' );               --//
+        //--            arr_bin_str[ d++ ]=( 'n'  );               --//
+        //--            arr_bin_str[ d++ ]=(  quo );               --//
+        //--                                                       --//
+        //--        /**@VID_IID[0286]T[06:42:32]**/                --//
+        //--        if( (d-1) >= t_b ){                            --//
+        //--            LOG("[MEMORY_STOMPING_2021]",0);           --//
+        //--            o_k=( 0-666);                              --//
+        //--        };;                                            --//
+        //--    };;                                                --//
+        //--                                                       --//
+        //--                                                       --//
+        //--    /** @VID_IID[0286]TIME[06:11:30 ]*********** **/   --//
+        //--    /** "d" sits on unused index slot. Thus      **/   --//
+        //--    /** "d" when outside of loop is the USED     **/   --//
+        //--    /** number of[ bytes/chars ]in[ arr_bin_str ]**/   --//
+        //--    nob_bin_str=( d );                                 --//
+        //--                                                       --//
+        //--    if( quo  == arr_bin_str[ d - 1 ]){                 --//
+        //--    if( '\n' == arr_bin_str[ d - 2 ]                   --//
+        //--    ||  '\r' == arr_bin_str[ d - 2 ]                   --//
+        //--    ){                                                 --//
+        //--        //:Shave Off Trailing Quote                    --//
+        //--        nob_bin_str=( d - 1 );                         --//
+        //--    };;};;                                             --//
+
+            //://////////////////////////////////////////////://
             };; //:[Malloc_Okay?]<<<<<<<<<<<<<<<<<<<<<<<<<<<<://
 
         } //:<--[SCOPE]
@@ -2980,6 +3458,8 @@ creating folders. So I put the [ FCH ] section below the
                 LOG("[X_X:COPY_PASTE_SAFETY_IS_ON]",0);
                 LOS("[0_0:WOULD_COPYTO:str_dst]:%s\n", str_dst);
             }else{
+                LOG("[SaveFile_U08]...",0);
+                LOI("[.nob_bin_str]:%d",nob_bin_str);
                 o_k=(
                 aac2020_rencore_SaveFile_U08(
                 /**/str_dst     //:[ nof_wex ]://
@@ -3137,6 +3617,7 @@ creating folders. So I put the [ FCH ] section below the
 #undef  LOG  //:----------------------------------------: 08 ://
 #undef  LOS  //:----------------------------------------: 09 ://
 #undef  LOI  //:----------------------------------------: 10 ://
+#undef  C64  //:----------------------------------------: 11 ://
 //:==================================:FILE_COPY_PASTE_HELPERS://
 //:HIGH_LEVEL_FOLDER_MANIPULATION:===========================://
 #define I32  int32_t /** GCC: <stdint.h> **/          //: 01 ://
@@ -3698,8 +4179,9 @@ creating folders. So I put the [ FCH ] section below the
 #define E_M       aac2020_rencore_msg_err        //:----: 16 ://
 #define REO       struct AAC2020_RENCORE_ext_ord //:----: 17 ://
 #define NOC     ( aac2020_rencore_MACRO_max_noc )//:----: 18 ://
-#define CWD_NOC ( aac2020_rencore_MACRO_max_noc )//:----: 19 ://
-#define MAX_NOC ( aac2020_rencore_MACRO_max_noc )//:----: 20 ://
+#define C64     ( AAC2020_RENCORE_MACRO_C64     )//:----: 19 :// 
+#define CWD_NOC ( aac2020_rencore_MACRO_max_noc )//:----: 20 ://
+#define MAX_NOC ( aac2020_rencore_MACRO_max_noc )//:----: 21 ://
     //:LoadExtensions:---------------------------------------://
 
         void
@@ -4070,7 +4552,7 @@ creating folders. So I put the [ FCH ] section below the
         AAC2020_INCLUDE_EXTCODE_PAINT5D_laypixa_CTO_plypix3 (1)
         @VID_IID[0283]TIME[03:42:23]
         *** ************************************************ **/
-        #define CAP_TXT (( 64+2)*100)
+        #define CAP_TXT (( C64 + 2)*100)
 
             I32 o_k=( 0 );
 
@@ -5193,8 +5675,9 @@ creating folders. So I put the [ FCH ] section below the
 #undef      E_M  //:------------------------------------: 16 ://
 #undef      REO  //:------------------------------------: 17 ://
 #undef      NOC  //:------------------------------------: 18 ://
-#undef  CWD_NOC  //:------------------------------------: 19 ://
-#undef  MAX_NOC  //:------------------------------------: 20 ://
+#undef      C64  //:------------------------------------: 19 ://
+#undef  CWD_NOC  //:------------------------------------: 20 ://
+#undef  MAX_NOC  //:------------------------------------: 21 ://
 //:=============================================:MAIN_SECTION://
 //:STAND_ALONE_MAIN:=========================================://
 //:AND_________PING:=========================================://
