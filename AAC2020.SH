@@ -8,17 +8,28 @@
         ## PNG_HEX_DUMPer Utility For Embedding PNG File Data ##
         ##----------------------------------------------------##
 
-        fip_inn="./LIB/EXE/PHEXDUM.C11" ## FIlePath:INNput    ##
-        fip_out="./LIB/EXE/PHEXDUM.exe" ## FIlePath:OUTput    ##
+        bs1_src="./LIB/EXE/PHEXDUM.C11" ## FIlePath:INNput    ##
+        bs1_exe="./LIB/EXE/PHEXDUM.exe" ## FIlePath:OUTput    ##
+
+        bs2_src="./LIB/EXE/RENCORE.C11" ## FIlePath:INNput    ##
+        bs2_exe="./LIB/EXE/RENCORE.exe" ## FIlePath:OUTput    ##
 
         ##----------------------------------------------------##
         gcc -x c                                               \
-            -c $fip_inn                                        \
-            -o phexdum_object_file.obj                         \
+            -c $bs1_src                                        \
+            -o  obj.___                                        \
             -std=c11                                           \
-            -m64 ###############################################
-            gcc -o $fip_out phexdum_object_file.obj 
-            rm              phexdum_object_file.obj
+            -m64 ##- - - - - - - - - - - - - - - - - - - - - -##
+            gcc -o $bs1_exe obj.___ 
+            rm              obj.___
+        ##----------------------------------------------------##
+        gcc -x c                                               \
+            -c $bs2_src                                        \
+            -o obj.___                                         \
+            -std=c11                                           \
+            -m64 ##- - - - - - - - - - - - - - - - - - - - - -##
+            gcc -o $bs2_exe obj.___ 
+            rm              obj.___
         ##----------------------------------------------------##
     ##:====================:_CREATE_BUILD_SYSTEM_EXECUTABLES_:##
     ##_GENERATE_HARDASS_PNG_ASSETS_#############################
@@ -60,6 +71,11 @@
         cd $original_directory
 
     #############################_GENERATE_HARDASS_PNG_ASSETS_##
+    ##_INVOKE_RENDER_CORE_BUILD_SYSTEM_#########################
+
+        ./LIB/EXE/RENCORE.exe LOAD
+
+    #########################_INVOKE_RENDER_CORE_BUILD_SYSTEM_##
     ##_OPTIONAL_:DELETE_OLD_SHADERS_FROM_MOD_FOLDER:############
 
         rm "./MOD/SHADER_000_GPUVIEW.FRAG"
@@ -184,7 +200,20 @@
             -m64 ###############################################
                                     ####                    ####
     gcc -o EXE.exe object_file.o    ####                    ####                
-    rm             object_file.o    ####                    ####     
+    rm             object_file.o    ####                    ####  
+    ############################################################
+    ##_LEAVE_NO_TRACE_##########################################
+
+        ## +-------------------------------------------------+
+        ## |Remove traces of RENCORE extension code(EXTCODE) |
+        ## +----------------------------------+--------------+
+        ##                                    |
+        ./LIB/EXE/RENCORE.exe UNDO ## <-------+
+
+    ##########################################_LEAVE_NO_TRACE_##
+    ############################################################
+    ## Run and then remove the engine executable.           ####
+    ##------------------------------====--------------------####
          ./EXE.exe                  ####                    ####
     rm     EXE.exe                  ####                    ####
                                     ####                    ####

@@ -501,7 +501,7 @@ SECTION_INDEX:
             *** ******************************************** **/
 
                 int nos = ( 0 );   /** nos: Number_Of_Slashes**/
-            //- int nod = ( 0 );   /** nod: Number_Of_Dots   **/ -//
+            //- int nod = ( 0 );       nod: Number_Of_Dots   -//
                 for( int i = 0; i < str_len; i++ ){
 
                 //- if( fil_nam[i] == '.'  ){ nod++; };  ::::-//
@@ -3234,7 +3234,7 @@ creating folders. So I put the [ FCH ] section below the
             /**@VID_IID[0286]TIME[07:01:30] **************** **/
             I32 col_lim=( C64 /**Target 64 Column Limit**/ );
 
-            I32 needs_closing_quote=( 0 );
+            //- I32 needs_closing_quote=( 0 ); -//
 
             //: TAKE_THIS[  some_line_of_code_stuff     ]
             //: MAKE_THIS[ "some_line_of_code_stuff \n" ]
@@ -3259,6 +3259,7 @@ creating folders. So I put the [ FCH ] section below the
             //:@VID_IID[0286]TIME[06:52:30]MORE_EXTRA_PADDING
             //:@VID_IID[0287]TIME[05:10:10]MORE_EXTRA_PADDING
             //:@VID_IID[0287]TIME[05:34:10]MORE_EXTRA_PADDING
+            //:@VID_IID[0288]TIME[00:20:30]ENEMY_OF_PROGRESS
             //:Calculate Number Of Extra Bytes To Allocate:
             //:Plus one just in case for whatever odd reason
             //:we find ourselves needing a null terminator.
@@ -3275,7 +3276,7 @@ creating folders. So I put the [ FCH ] section below the
             arr_bin_str = calloc( t_b , 1 );
             nob_bin_str =(         0  ); //:<--[USED_BYTES]::://
            
-            arr_bin_str[ t_b-1 ]=(0); //:<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Shouldn't segfault.
+            arr_bin_str[ t_b-1 ]=(0); 
             DEBUG_M_I=(  t_b-1 );
             ADDR_BACK=( arr_bin_str );
             LOI("[DEBUG_M_I]%d",DEBUG_M_I);
@@ -3298,9 +3299,9 @@ creating folders. So I put the [ FCH ] section below the
             
                     fin=(
                     aac2020_rencore_AWK(
-                    /**/    arr_bin     //:AKA[ src_r_o ]
+                      (CHR*)arr_bin     //:AKA[ src_r_o ]
                     ,       nob_bin     //:AKA[ src_noc ]
-                    ,       arr_bin_str //:AKA[ dst_w_o ]
+                    , (NCC*)arr_bin_str //:AKA[ dst_w_o ]
                     ,       t_b         //:AKA[ dst_noc ]
                     //:  |  READ_FROM|WRITE_TO   |
                     ,       dex_src  ,  dex_dst  
@@ -3334,8 +3335,8 @@ creating folders. So I put the [ FCH ] section below the
                     ERR("[Change_of_Address]");
                 };;
 
-        ////    arr_bin_str[ 0 ]=( 0 ); //:<<<<<<<<<<<<<<<<<<<<<<<<<<<< HACK
-        ////    LOG("[About_To_Tack_On_Null_Terminator]...",0);
+        //:     arr_bin_str[ 0 ]=( 0 ); //:<<<<<<<<<<<<<<<<<<<<<<<<<<<< HACK
+        //:     LOG("[About_To_Tack_On_Null_Terminator]...",0);
 
                 //:Tack on null terminator to the string that
                 //:was copied. Because I think we feed it into
@@ -3343,25 +3344,27 @@ creating folders. So I put the [ FCH ] section below the
                 arr_bin_str[ dex_dst + 1 ]=( 0 );
                 nob_bin_str=(dex_dst );
 
-        ////    LOG("[GETTING:strlen(arr_bin_str)]",0);
-        ////    aac2020_rencore_DebugPrintSubstring(
-        ////        arr_bin_str , 0,(dex_dst+1) );;
-        ////
-        ////    LOG("[and...strlen...]",0);
-        ////    CHR* test123_chr="123";
-        ////    I32  test123_len = strlen( test123_chr );
-        ////    printf("[test123_len]:%d\n",test123_len);
-        ////
-        ////    I32 l_n=( strlen( arr_bin_str ) );
-        ////
-        ////    if( l_n != nob_bin_str ){
-        ////        printf("[....dex_dst]:%s\n",    dex_dst);
-        ////        printf("[nob_bin_str]:%s\n",nob_bin_str);
-        ////        ERR("[Your_Math_Is_Off...Maybe?]");
-        ////    }else{
-        ////        LOG("[l_n:Looks_Okay]",0);
-        ////    };;
-
+        ////////////////////////////////////////////////////////
+        ////    LOG("[GETTING:strlen(arr_bin_str)]",0);          //:<-------- WHAT THE FUCKING HELL ?!
+        ////    aac2020_rencore_DebugPrintSubstring(             //:<-------- WHAT THE FUCKING HELL ?!
+        ////        arr_bin_str , 0,(dex_dst+1) );;              //:<-------- WHAT THE FUCKING HELL ?!
+        ////                                                     //:<-------- WHAT THE FUCKING HELL ?!
+        ////    LOG("[and...strlen...]",0);                      //:<-------- WHAT THE FUCKING HELL ?!
+        ////    CHR* test123_chr="123";                          //:<-------- WHAT THE FUCKING HELL ?!
+        ////    I32  test123_len = strlen( test123_chr );        //:<-------- WHAT THE FUCKING HELL ?!
+        ////    printf("[test123_len]:%d\n",test123_len);        //:<-------- WHAT THE FUCKING HELL ?!
+        ////                                                     //:<-------- WHAT THE FUCKING HELL ?!
+        ////    I32 l_n=( strlen( arr_bin_str ) );               //:<-------- WHAT THE FUCKING HELL ?!
+        ////    if( l_n > 0 ){ /** Noop **/ };                   //:<-------- WHAT THE FUCKING HELL ?!
+        ////                                                     //:<-------- WHAT THE FUCKING HELL ?!
+        ////    if( l_n != nob_bin_str ){                        //:<-------- WHAT THE FUCKING HELL ?!
+        ////        printf("[....dex_dst]:%s\n",    dex_dst);    //:<-------- WHAT THE FUCKING HELL ?!
+        ////        printf("[nob_bin_str]:%s\n",nob_bin_str);    //:<-------- WHAT THE FUCKING HELL ?!
+        ////        ERR("[Your_Math_Is_Off...Maybe?]");          //:<-------- WHAT THE FUCKING HELL ?!
+        ////    }else{                                           //:<-------- WHAT THE FUCKING HELL ?!
+        ////        LOG("[l_n:Looks_Okay]",0);                   //:<-------- WHAT THE FUCKING HELL ?!
+        ////    };;                                              //:<-------- WHAT THE FUCKING HELL ?!
+        ////////////////////////////////////////////////////////
         //--    //:Copy Over Lines And Wrap In Quotes:             --//
         //--    I32   s =( 0          ); //:SOURCE______INDEX      --//
         //--    I32   d =( 0          ); //:DESTINATION_INDEX      --//
@@ -4491,7 +4494,7 @@ creating folders. So I put the [ FCH ] section below the
     
                     if( aac2020_rencore_HasFile(pof_src) <= 0 ){
                         //:has_src=( 0 );
-                        LOS("[NOT_FOUND:pof_src]:%s",pof_src); //:<<<<<<<<<<<<<<<<<<<<<<<<[TODO:FIX:pof_src:CREATION]<<<<PATH_IS_WRONG
+                        LOS("[NOT_FOUND:pof_src]:%s",pof_src); 
                     }else{ //:File_Exists:
                         LOS("[was_found:pof_src]:%s",pof_src);
                         //:has_src=( 1 );
@@ -4848,7 +4851,7 @@ creating folders. So I put the [ FCH ] section below the
                         ,   fil_nam //:<--FileName(NO_EXTENSION)
 
                         ,   "._"    //:<--File_Extension:SOURCE
-                        ,   ".STR._"//:<--File_Extension:DEST <<<<<<<<<<<<<<<<<<<<<<<< TOO MANY DOTS... Change "touchfile" code
+                        ,   ".STR._"//:<--File_Extension:DEST 
                         ));;
 
                         if( o_k <= 0 ){
@@ -4994,14 +4997,7 @@ creating folders. So I put the [ FCH ] section below the
                 LOG("[FAILED:::LOAD_EXTENSIONS_INTO_BUILD]",0);
             };;
 
-            /**@VID_IID[0286]TIME[02:28:50]**/
-            /**RENCORE build system exe should run _AGAIN_ with a "RESTORE" command after **/
-            /**AAC2020.EXE is built, so that git version control never knows that any of  **/
-            /**the engine files were touched.                                             **/
-            /**(All we have to put back is the generated INCLUDE file by copying the      **/
-            /**include file in the[ AAC2020/LIB/AUTOGEN/DEFAULT ]folder.                  **/
-            printf("[TODO:Restore_Command_To_Run_After[AAC2020]Is_Built]");
-
+            extension_loading_method_pass =(  o_k );
             return( extension_loading_method_pass );
 
         #undef  M_I //:M_I:Max_Index :-----------------------://
@@ -5217,8 +5213,8 @@ creating folders. So I put the [ FCH ] section below the
                         || (!( extname_noc >= 1 ))
                         ){
                        
-                            /** SKIPPING MALFORMED LINE **/
-                            LOS("[skipping_malformed_line]%s","[...]");
+                            /** #SML#:SKIPPING_MALFORMED_LINE**/
+                            LOS("[#SML#]%s","[...]");
     
                             /** If strict mode is on, parsing**/
                             /** Has failed. But hey, Imma let**/
@@ -5687,6 +5683,109 @@ creating folders. So I put the [ FCH ] section below the
 #undef  CWD_NOC  //:------------------------------------: 20 ://
 #undef  MAX_NOC  //:------------------------------------: 21 ://
 //:=============================================:MAIN_SECTION://
+//:MAIN_SECTION_UNDO:========================================://
+#define I32 int32_t /** GCC: <stdint.h> **/           //: 01 ://
+#define CHR const char                                //: 02 ://
+#define NCC       char                                //: 03 ://
+#define LOS aac2020_rencore_Info_str                  //: 04 ://
+#define LOI aac2020_rencore_Info_i32                  //: 05 ://
+#define NOC aac2020_rencore_MACRO_max_noc             //: 06 ://
+
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void 
+    aac2020_rencore_UNDO_GetFolderPath_Backup( 
+        NCC* *BYREF_outfold //:<--OutputFolder
+    )
+    { 
+    /** Folder to[ COPYFROM ] to undo changes. **/
+    /** @VID_IID[ 0288 ]TIME[ 00:10:23 ]       **/
+
+        //:LOAD[ "R:/AAC2020/LIB/AUTOGEN" ]Into String.
+        //:Or wherever your[ AAC2020/LIB/AUTOGEN ]folder
+        //:is in terms of absolute path.
+        aac2020_rencore_AbsPath_AAC2020_LIB_AUTOGEN(
+            BYREF_outfold );;
+
+        //:Tack on[ /DEFAULT ]:
+        aac2020_rencore_ConcatPathsInPlace(
+            BYREF_outfold
+        ,   "DEFAULT"
+        );;
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void   
+    aac2020_rencore_UNDO_GetFolderPath_Restore( 
+        NCC* *BYREF_outfold //:<--OutputFolder
+    )
+    {
+    /** Folder to[ PASTETO ] to undo changes. **/
+    /** @VID_IID[ 0288 ]TIME[ 00:11:23 ]      **/
+
+        //:The restore folder is the root of the
+        //:[ AAC2020/LIB/AUTOGEN ]folder.
+        aac2020_rencore_AbsPath_AAC2020_LIB_AUTOGEN(
+            BYREF_outfold );;
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    aac2020_rencore_UNDO( void )
+    {
+    /** **************************************************** ***
+    We need to[ UNDO ]changes created by the extension build ***
+    system. (RENCORE). We only need to [ UNDO ]changes that  ***
+    are detected by git. Most files we pasted into the       ***
+    [ AAC2020/LIB/AUTOGEN ]folder are ignored by git.        ***
+    EXCEPT... the[ INCLUDE._ ]file... Which is called....    ***
+    [ INCLUDE_EXTCODE_RENCORE._ ].                           ***
+    We need to grab the version from the [DEFAULT] folder and***
+    copy it over. For now, that is the only thing we have    ***
+    to do. @VID_IID[0288]TIME[00:07:42]                      ***
+    *** **************************************************** **/
+    
+        I32  o_k=( 0 /**GuiltyUntilProvenInnocent**/ );
+
+        NCC  car_srcfold[NOC]={0};
+        NCC  car_dstfold[NOC]={0};
+        //-  car_include[NOC]  -//
+
+        NCC* str_srcfold =(&( car_srcfold[ 0 ] ));
+        NCC* str_dstfold =(&( car_dstfold[ 0 ] ));
+
+        //: "INCLUDE_EXTCODE_RENCORE" filename, no extension.
+        //:[ INCLUDE_EXTCODE_RENCORE._ ]@CTRL_F_HELP@
+        CHR* str_include =( aac2020_rencore_IFN_NOX );
+
+        aac2020_rencore_UNDO_GetFolderPath_Backup(
+            &( str_srcfold ) );;
+
+        aac2020_rencore_UNDO_GetFolderPath_Restore(
+            &( str_dstfold ) );;
+
+        //:  BACKUP_FOLDER: Where the backup file is.
+        //:  ACTIVE_FOLDER: Where code is ran from.
+        //:                 The folder that needs restoring.
+        LOS("[BACKUP_FOLDER:str_srcfold]:%s",str_srcfold);
+        LOS("[ACTIVE_FOLDER:str_dstfold]:%s",str_dstfold);
+
+        o_k=(
+            aac2020_rencore_CopyPasteFile(
+                str_srcfold //:[ src ]PathOfFolder:SOURCE
+            ,   str_dstfold //:[ dst ]PathOfFolder:DEST
+            ,   str_include //:[ nam ]FileName(NO_EXTENSION)  
+            ,   "._"        //:[ ext ]File_Extension
+            ));;
+
+        LOI("[Did_Undo_Run_Sucessfully?]:%d\n", o_k );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+#undef  I32  //:----------------------------------------: 01 ://
+#undef  CHR  //:----------------------------------------: 02 ://
+#undef  NCC  //:----------------------------------------: 03 ://
+#undef  LOS  //:----------------------------------------: 04 ://
+#undef  LOI  //:----------------------------------------: 05 ://
+#undef  NOC  //:----------------------------------------: 06 ://
+//:========================================:MAIN_SECTION_UNDO://
 //:STAND_ALONE_MAIN:=========================================://
 //:AND_________PING:=========================================://
 #define I32  int32_t /** GCC: <stdint.h> **/ //:--------: 01 ://
@@ -5757,6 +5856,11 @@ creating folders. So I put the [ FCH ] section below the
                 if( 0 == strcmp( arg_arr[1] , "LOAD" )){
 
                     aac2020_rencore_LOAD();
+
+                }else
+                if( 0 == strcmp( arg_arr[1] , "UNDO" )){
+
+                    aac2020_rencore_UNDO();
 
                 }else{
                     printf("[COMMANDS_MUST_BE_UPPERCASE]\n");
@@ -6057,6 +6161,7 @@ functions that actually exist. @VID_IID[0283]TIME[05:29:50]
     ---------------------------------------------
     GUESS[ Create_Local_Target_Folder_Path      ]
     GUESS[ ConcatInPlace|CreateFolderPath       ]
+    GUESS[ concatInPlace|createFolderPath       ]
     GUESS[ ConcatStringsInPlace                 ]
     GUESS[ aac2020_rencore_ConcatInPlace        ]
     ---------------------------------------------
