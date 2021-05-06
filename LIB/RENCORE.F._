@@ -82,6 +82,7 @@
 
 //:TOP_LEVEL:
     aac2020_rencore_LOAD
+    aac2020_rencore_UNDO  <<<<< Undo changes from[ LOAD ]
     aac2020_rencore_Ping
     aac2020_rencore_UnitTest
 
@@ -507,13 +508,6 @@ SECTION_INDEX:
                 //- if( fil_nam[i] == '.'  ){ nod++; };  ::::-//
                     if( fil_nam[i] == '\\' ){ nos++; };
                 };;
-
-        //-     if( nod >   1  ){ ERR("[TOO_MANY_DOTS]"); }else  -//
-        //-     if( nod <=  0  ){ ERR("[ZERO_____DOTS]"); }else  -//
-        //-     if(  1  == nod ){ /** OKAY. NOOP **/      }else  -//
-        //-     {   //:EDCL:ExpectedDeadCodeLine                 -//
-        //-         ERR("[KANJICODER:WTF:EDCL:2021]");           -//
-        //-     };;                                              -//
 
                 /** USB: Un_Supported_Backslashes.Year 2021. **/
                 if( nos != 0 ){ ERR("[KANJICODER:USB:2021]");};
@@ -2926,19 +2920,6 @@ creating folders. So I put the [ FCH ] section below the
                     s_p =(  2      );
                 };;
 
-                //+ No longer makes sense now that looking for     +//
-                //+ a[ N_L ] rather than[ NOT N_L ]                +//
-                //-  //:If two consequitive newline characters,    -//
-                //-  //:make[ i_1 ]the new[ i_0 ]and reset search  -//
-                //-  //:phase to[ 1 ](looking for i_1)             -//
-                //-                                                -//
-                //-  //: [ "t" ][ \n  ]                            -//
-                //-  //: [ i_0 ][ i_1 ][ dex ]                     -//
-                //-  if( i_0 == ( i_1 - 1 ) ){ /**ADJACENT**/      -//
-                //-      s_p=(     1 );                            -//
-                //-      i_0=(   i_1 );                            -//
-                //-      i_1=( 0-404 );                            -//
-                //-  };;                                           -//
             };;//:<--[ NO_ELSE ]://
 
             if( 2 == s_p ){
@@ -3335,122 +3316,13 @@ creating folders. So I put the [ FCH ] section below the
                     ERR("[Change_of_Address]");
                 };;
 
-        //:     arr_bin_str[ 0 ]=( 0 ); //:<<<<<<<<<<<<<<<<<<<<<<<<<<<< HACK
-        //:     LOG("[About_To_Tack_On_Null_Terminator]...",0);
-
                 //:Tack on null terminator to the string that
                 //:was copied. Because I think we feed it into
                 //:a function that expects null terminator.
                 arr_bin_str[ dex_dst + 1 ]=( 0 );
                 nob_bin_str=(dex_dst );
 
-        ////////////////////////////////////////////////////////
-        ////    LOG("[GETTING:strlen(arr_bin_str)]",0);          //:<-------- WHAT THE FUCKING HELL ?!
-        ////    aac2020_rencore_DebugPrintSubstring(             //:<-------- WHAT THE FUCKING HELL ?!
-        ////        arr_bin_str , 0,(dex_dst+1) );;              //:<-------- WHAT THE FUCKING HELL ?!
-        ////                                                     //:<-------- WHAT THE FUCKING HELL ?!
-        ////    LOG("[and...strlen...]",0);                      //:<-------- WHAT THE FUCKING HELL ?!
-        ////    CHR* test123_chr="123";                          //:<-------- WHAT THE FUCKING HELL ?!
-        ////    I32  test123_len = strlen( test123_chr );        //:<-------- WHAT THE FUCKING HELL ?!
-        ////    printf("[test123_len]:%d\n",test123_len);        //:<-------- WHAT THE FUCKING HELL ?!
-        ////                                                     //:<-------- WHAT THE FUCKING HELL ?!
-        ////    I32 l_n=( strlen( arr_bin_str ) );               //:<-------- WHAT THE FUCKING HELL ?!
-        ////    if( l_n > 0 ){ /** Noop **/ };                   //:<-------- WHAT THE FUCKING HELL ?!
-        ////                                                     //:<-------- WHAT THE FUCKING HELL ?!
-        ////    if( l_n != nob_bin_str ){                        //:<-------- WHAT THE FUCKING HELL ?!
-        ////        printf("[....dex_dst]:%s\n",    dex_dst);    //:<-------- WHAT THE FUCKING HELL ?!
-        ////        printf("[nob_bin_str]:%s\n",nob_bin_str);    //:<-------- WHAT THE FUCKING HELL ?!
-        ////        ERR("[Your_Math_Is_Off...Maybe?]");          //:<-------- WHAT THE FUCKING HELL ?!
-        ////    }else{                                           //:<-------- WHAT THE FUCKING HELL ?!
-        ////        LOG("[l_n:Looks_Okay]",0);                   //:<-------- WHAT THE FUCKING HELL ?!
-        ////    };;                                              //:<-------- WHAT THE FUCKING HELL ?!
-        ////////////////////////////////////////////////////////
-        //--    //:Copy Over Lines And Wrap In Quotes:             --//
-        //--    I32   s =( 0          ); //:SOURCE______INDEX      --//
-        //--    I32   d =( 0          ); //:DESTINATION_INDEX      --//
-        //--    CHR quo =( 0x22       ); //:Quote (double quote)   --//
-        //--    I32   m =( nob_bin - 1); //:Max_Index              --//
-        //--    for( s = 0 ; s <=( m ) ; s++ ){                    --//
-        //--                                                       --//
-        //--        //:@VID_IID[0286]TIME[05:59:10]OUT_OF_MEM      --//
-        //--        //:@VID_IID[0286]TIME[06:08:50]FIXED__BUG      --//
-        //--        if( d >= t_b ){                                --//
-        //--            o_k=( 0 - 444);                            --//
-        //--            LOI("[...:..d]:%d\n",   d );               --//
-        //--            LOI("[...:t_b]:%d\n", t_b );               --//
-        //--            LOG("[ABOUT_TO(but_not)OOB_BUFFER]",0);    --//
-        //--            break;                                     --//
-        //--        };;                                            --//
-        //--                                                       --//
-        //--        if( s == 0 ){                                  --//
-        //--            arr_bin_str[ d ]=( quo );                  --//
-        //--                         d++;                          --//
-        //--        };;//:<--NO_ELSE!                              --//
-        //--                                                       --//
-        //--        if( 1                                          --//
-        //--        &&  arr_bin[ s ] != '\n'                       --//
-        //--        &&  arr_bin[ s ] != '\r'                       --//
-        //--        ){                                             --//
-        //--            //:Copy Non_Newline Character:             --//
-        //--            needs_closing_quote=( 1 );                 --//
-        //--            arr_bin_str[ d ]=( arr_bin[ s ] );         --//
-        //--                         d++;                          --//
-        //--        }else                                          --//
-        //--        if( 0                                          --//
-        //--        ||  arr_bin[ s ] == '\n'                       --//
-        //--        ||  arr_bin[ s ] == '\r'                       --//
-        //--        ){                                             --//
-        //--            needs_closing_quote=( 0 );                 --//
-        //--            //:BEFORE_THE_NEWLINE_IS_COPIED:           --//
-        //--            arr_bin_str[ d ]=(' ' ); //:SPACE          --//
-        //--                         d++;                          --//
-        //--            arr_bin_str[ d ]=('\\'); //:Backslash      --//
-        //--                         d++;                          --//
-        //--            arr_bin_str[ d ]=('n' ); //:'n' of "\n"    --//
-        //--                         d++;                          --//
-        //--            arr_bin_str[ d ]=( quo  );                 --//
-        //--                         d++;                          --//
-        //--                                                       --//
-        //--            //:COPY_THE_NEWLINE:                       --//
-        //--            arr_bin_str[ d ]=( arr_bin[ s ] );         --//
-        //--                         d++;                          --//
-        //--                                                       --//
-        //--            //:BEGIN_QUOTE_ON_NEXT_LINE:               --//
-        //--            //:(if more characters to come)            --//
-        //--            arr_bin_str[ d ]=( quo );                  --//
-        //--                         d++;                          --//
-        //--                                                       --//
-        //--        };;                                            --//
-        //--                                                       --//
-        //--    };; //:NEXT[ s  ]<<<<<<<<<<<<<<<<<<<<<<<<<<<<://   --//
-        //--                                                       --//
-        //--    if( needs_closing_quote >= 1 ){                    --//
-        //--            arr_bin_str[ d++ ]=( ' '  );               --//
-        //--            arr_bin_str[ d++ ]=( '\\' );               --//
-        //--            arr_bin_str[ d++ ]=( 'n'  );               --//
-        //--            arr_bin_str[ d++ ]=(  quo );               --//
-        //--                                                       --//
-        //--        /**@VID_IID[0286]T[06:42:32]**/                --//
-        //--        if( (d-1) >= t_b ){                            --//
-        //--            LOG("[MEMORY_STOMPING_2021]",0);           --//
-        //--            o_k=( 0-666);                              --//
-        //--        };;                                            --//
-        //--    };;                                                --//
-        //--                                                       --//
-        //--                                                       --//
-        //--    /** @VID_IID[0286]TIME[06:11:30 ]*********** **/   --//
-        //--    /** "d" sits on unused index slot. Thus      **/   --//
-        //--    /** "d" when outside of loop is the USED     **/   --//
-        //--    /** number of[ bytes/chars ]in[ arr_bin_str ]**/   --//
-        //--    nob_bin_str=( d );                                 --//
-        //--                                                       --//
-        //--    if( quo  == arr_bin_str[ d - 1 ]){                 --//
-        //--    if( '\n' == arr_bin_str[ d - 2 ]                   --//
-        //--    ||  '\r' == arr_bin_str[ d - 2 ]                   --//
-        //--    ){                                                 --//
-        //--        //:Shave Off Trailing Quote                    --//
-        //--        nob_bin_str=( d - 1 );                         --//
-        //--    };;};;                                             --//
+                //:@VID_IID[0288]TIME[00:27:07]@KILLED_CODE@ ://
 
             //://////////////////////////////////////////////://
             };; //:[Malloc_Okay?]<<<<<<<<<<<<<<<<<<<<<<<<<<<<://
