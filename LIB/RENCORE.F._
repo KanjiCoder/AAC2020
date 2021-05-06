@@ -3114,9 +3114,9 @@ creating folders. So I put the [ FCH ] section below the
                 ERR("[OUT_OF_FUCKING_BOUNDS:2021:AYE]");
             };;
 
-    ////    dst_w_o[ dex_dst ]=( '\n' );
-    ////    /**/     dex_dst++;
-    ////    /**/         t_w++;
+            dst_w_o[ dex_dst ]=( '\n' );
+            /**/     dex_dst++;
+            /**/         t_w++;
 
             if( (dex_dst-1) >= (dst_noc-1) ){
                 ERR("[OUT_OF_FUCKING_BOUNDS:2021:BEE]");
@@ -3334,8 +3334,8 @@ creating folders. So I put the [ FCH ] section below the
                     ERR("[Change_of_Address]");
                 };;
 
-                arr_bin_str[ 0 ]=( 0 ); //:<<<<<<<<<<<<<<<<<<<<<<<<<<<< HACK
-                LOG("[About_To_Tack_On_Null_Terminator]...",0);
+        ////    arr_bin_str[ 0 ]=( 0 ); //:<<<<<<<<<<<<<<<<<<<<<<<<<<<< HACK
+        ////    LOG("[About_To_Tack_On_Null_Terminator]...",0);
 
                 //:Tack on null terminator to the string that
                 //:was copied. Because I think we feed it into
@@ -3343,16 +3343,24 @@ creating folders. So I put the [ FCH ] section below the
                 arr_bin_str[ dex_dst + 1 ]=( 0 );
                 nob_bin_str=(dex_dst );
 
-                LOG("[GETTING:strlen(arr_bin_str)]",0);
-                I32 l_n=( strlen( arr_bin_str ) );
-
-                if( l_n != nob_bin_str ){
-                    printf("[....dex_dst]:%s\n",    dex_dst);
-                    printf("[nob_bin_str]:%s\n",nob_bin_str);
-                    ERR("[Your_Math_Is_Off...Maybe?]");
-                }else{
-                    LOG("[l_n:Looks_Okay]",0);
-                };;
+        ////    LOG("[GETTING:strlen(arr_bin_str)]",0);
+        ////    aac2020_rencore_DebugPrintSubstring(
+        ////        arr_bin_str , 0,(dex_dst+1) );;
+        ////
+        ////    LOG("[and...strlen...]",0);
+        ////    CHR* test123_chr="123";
+        ////    I32  test123_len = strlen( test123_chr );
+        ////    printf("[test123_len]:%d\n",test123_len);
+        ////
+        ////    I32 l_n=( strlen( arr_bin_str ) );
+        ////
+        ////    if( l_n != nob_bin_str ){
+        ////        printf("[....dex_dst]:%s\n",    dex_dst);
+        ////        printf("[nob_bin_str]:%s\n",nob_bin_str);
+        ////        ERR("[Your_Math_Is_Off...Maybe?]");
+        ////    }else{
+        ////        LOG("[l_n:Looks_Okay]",0);
+        ////    };;
 
         //--    //:Copy Over Lines And Wrap In Quotes:             --//
         //--    I32   s =( 0          ); //:SOURCE______INDEX      --//
