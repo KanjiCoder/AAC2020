@@ -1,0 +1,122 @@
+
+//:STC: SubTileCoords
+
+
+//:  NAME_REFACTORING_LIST:
+//:
+//:  walgrad >>>> gradwal 
+//:  congrad >>>> gradcon 
+//:  invgrad >>>> gradinv
+//:  tougrad >>>> gradtou
+//:
+//:  wal_gra >>>> gradwal 
+//:  con_gra >>>> gradcon 
+//:  inv_gra >>>> gradinv
+//:  tou_gra >>>> gradtou
+//:
+//:  gra_wal >>>> gradwal 
+//:  gra_con >>>> gradcon 
+//:  gra_inv >>>> gradinv
+//:  gra_tou >>>> gradtou
+
+vec2 getSubTileCoords( vec2 f_c ){
+
+    //: Pretend the entire screen is one tile for this  -----://
+    //: example code. Center is at [0,0] , top left is  -----://
+    //: at [-1,-1] and bottom right is at [+1,+1]       -----://
+    vec2 uvc   = (f_c -0.5*iResolution.xy)/iResolution.y;
+         uvc.y =( 0.0 - uvc.y ); //:Invert Y axis
+
+//+----------------------------------------------------------+//
+//| What is the current wang-tile touching mask for          |//
+//| the tile you are drawing. In this example,               |//
+//| pretend the entire screen is one tile.                   |//
+//| TIL == Your One Tile                                     |//
+//|          +---+                                           |//
+//|          |y_0|                                           |//
+//|      +---+---+---+      0|1  0|1  |  0|1  0|1            |//
+//|      |x_0|TIL|x_1| -->  ___  ___  |  ___  ___            |//
+//|      +---+---+---+      X_0  X_1  |  Y_0  Y_1            |//
+//|          |y_1|                                           |//
+//|          +---+                                           |//
+//|                                                          |//
+//| toutang means : Touching Tangent                         |//
+//|                                                          |//
+//| [-1,-1]                                                  |//
+//|     +-------------+                                      |//
+//|     |             |                                      |//
+//|     |             |                                      |//
+//|     |     0.0     | <--[ TIL ] www.twitch.com/kanjicoder |//
+//|     |             |                                      |//
+//|     |             |                                      |//
+//|     +-------------+                                      |//
+//|                 [+1,+1]                                  |//
+//|                                                          |//
+//+----------------------------------------------------------+//
+
+    //:Animate the touching value of your tile.         -----://
+    //:Emulating all different combinations of which    -----://
+    //:neighbors can exist above,below,left,and right:  -----://
+
+    uint toutang=(uint(int(mod(iTime,16.0))));
+
+//+----------------------------------------------------------+//
+//|   +-----------------+ If( touself ==BINARY[ 1000 ] )THEN:|//
+//|   .\\     y_0     //.                                    |//
+//|   |  \\         //  |   We are in the x_0 pie slice.     |//
+//|   |    \\     //    |                                    |//
+//|   |      \\ //      | If( touself ==BINARY[ 1010 ] )THEN:|//
+//|   |x_0  ( 0.0 )  x_1|                                    |//
+//|   |      // \\      |   I fucked up the formula because  |//
+//|   |    //     \\    |   only ONE_BIT in touself should   |//
+//|   |  //         \\  |   have been set.                   |//
+//|   .//     y_1     \\.                                    |//
+//|   +-----------------+                                    |//
+//|   BITS[  0   0   0   0  ]                                |//
+//|   SIDE[ x_0 x_1 y_0 y_1 ]     www.twitch.com/kanjicoder  |//
+//|                                                          |//
+//|   touself means: "TOUching SELF"                         |//
+//+----------------------------------------------------------+//
+
+    //:Figure out which pie slice the pixel of  -------------://
+    //:your tile belongs to and set that bit:   -------------://
+    #define A abs
+    #define U uint
+    #define X uvc.x
+    #define Y uvc.y
+    U touself =( U(0)
+    | (( (X <= 0.0 && (A(X)>A(Y))) ? U(1) : U(0) ) << 3)
+    | (( (X >= 0.0 && (A(X)>A(Y))) ? U(1) : U(0) ) << 2)
+    | (( (Y <= 0.0 && (A(Y)>A(X))) ? U(1) : U(0) ) << 1)
+    | (( (Y >= 0.0 && (A(Y)>A(X))) ? U(1) : U(0) ) << 0)
+    );;
+    #undef A
+    #undef U
+    #undef X
+    #undef Y
+
+    //:If we are on a pie slice that is touching a           ://
+    //:neighbor, use the connected gradient(gradcon).        ://
+    //:If we are on a pie slice that is __NOT__              ://
+    //:touching a neighbor, use walled-off gradient(gradwal).://
+    float gradwal = float( max( abs(uvc.x),abs(uvc.y) ) );
+    float gradcon = float( min( abs(uvc.x),abs(uvc.y) ) );
+    float gradtou = (( touself & toutang )>=uint(1)) 
+                 ? gradcon   //:TRUE : Connected  Gradient
+                 : gradwal ; //:FALSE: Walled Off Gradient
+
+    float gradinv = (( touself & toutang )>=uint(1)) 
+                 ? gradwal   //:INVERTED_GRADIENT
+                 : gradcon ; //:INVERTED_GRADIENT
+
+    return( vec2( gradtou , gradinv ) );
+
+} //:[getSubTileCoords]:<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<://
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    vec2 col=getSubTileCoords( fragCoord );
+
+    // Output to screen
+    fragColor = vec4(col.x , col.y , ((col.x+col.y)/2.0) , 1.0);
+}

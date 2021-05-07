@@ -1,6 +1,46 @@
 
 TODOS:
 
+
+    TODO_2021_05_07:
+
+        1. Create a "clear canvas" button so you have something
+           you can easily draw on.
+
+        2. Stop using[ U32 ]for RGBA. It lacks bit depth and
+           we are getting artifacting. I know you want to be
+           efficient, but not at the cost of crappy
+           visual quality.
+
+    TODO_2021_05_06: 
+        Create mirrored drawer application.
+        NEED:
+            EDIOVER <-- EDItor Input OVERrides
+            1234567
+            When certain ones are set, PAINT5D differs it's
+            inputs to the overriding system. The overriding
+            system can decide to not do anything and give
+            control BACK to PAINT5D default input handlers.
+
+            PMIRROR <-- PAINT5D Mirroring brush overriding
+                        system. Added AFTER PAINT5D
+
+    TODO_2021_05_06:
+        Make "material functions" that can be extended.
+        The rendercore functions can call upon the material
+        functions to grab different procedurally generated
+        tile patterns. The material functions are designed
+        WITHOUT auto tiling in mind.
+
+        Material functions are designed in a way where we can
+        just CUT+PASTE from shadertoy most of the time and
+        the code will just work.
+
+        Make an extension system for this that works like
+        [RENCORE]system but does some token replacement of
+        shader code being copied over to assure it is 
+        compatible with our system.
+
     TODO_2021_05_05:
         Make: aac2020_rencore_CopyPaste_StringWrap
         Use a utility to make each line exactly 64 characters

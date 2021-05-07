@@ -22,23 +22,24 @@
         #define U32         uint    //:  02  ://   //| # |//
         #define I32          int    //:  03  ://   //| # |//
         #define IV2        ivec2    //:  04  ://   //| # |//
-        #define UV4        uvec4    //:  05  ://   //| # |//
-        #define T_F   texelFetch    //:  06  ://   //| # |//
-        #define TAU      taudepo    //:  07  ://   //| # |//
-        #define P5D      paint5d    //:  08  ://   //| # |//
-        #define SAM   usampler2D    //:  09  ://   //| # |//
-        #define UFF    uint(0xFF)   //:  10  ://   //| # |//
-        #define U00    uint( 0  )   //:  11  ://   //| # |//
-        #define I00     int( 0  )   //:  12  ://   //| # |//
-        #define U03    uint( 3  )   //:  13  ://   //| # |//
-        #define B_3    uint( 3  )   //:  14  ://   //| # |//
-        #define B11    uint( 3  )   //:  15  ://   //| # |//
-        #define H55    uint(0x55)   //:  16  ://   //| # |//
-        #define V_A                 //:  17  ://   //| # |//
-        #define FV4         vec4    //:  18  ://   //| # |//
-        #define ASS  /**NOTHING**/  //:  19  ://   //| # |//
-        #define ERR  /**NOTHING**/  //:  20  ://   //| # |//
-        #define TRU  trunc          //:  21  ://   //| # |//
+        #define FV2         vec2    //:  05  ://   //| # |//
+        #define UV4        uvec4    //:  06  ://   //| # |//
+        #define T_F   texelFetch    //:  07  ://   //| # |//
+        #define TAU      taudepo    //:  08  ://   //| # |//
+        #define P5D      paint5d    //:  09  ://   //| # |//
+        #define SAM   usampler2D    //:  10  ://   //| # |//
+        #define UFF    uint(0xFF)   //:  11  ://   //| # |//
+        #define U00    uint( 0  )   //:  12  ://   //| # |//
+        #define I00     int( 0  )   //:  13  ://   //| # |//
+        #define U03    uint( 3  )   //:  14  ://   //| # |//
+        #define B_3    uint( 3  )   //:  15  ://   //| # |//
+        #define B11    uint( 3  )   //:  16  ://   //| # |//
+        #define H55    uint(0x55)   //:  17  ://   //| # |//
+        #define V_A                 //:  18  ://   //| # |//
+        #define FV4         vec4    //:  19  ://   //| # |//
+        #define ASS  /**NOTHING**/  //:  20  ://   //| # |//
+        #define ERR  /**NOTHING**/  //:  21  ://   //| # |//
+        #define TRU  trunc          //:  22  ://   //| # |//
         #define REC  struct AAC2020_FRAGCOM_REC
     #else                                          //| # |//
                                                    //| # |//
@@ -48,21 +49,22 @@
         #define U32   uint32_t      //:  02  ://   //| # |//
         #define I32    int32_t      //:  03  ://   //| # |//
         #define IV2   struct AAC2020_POLYOGL_IV2   //| # |//
+        #define FV2   struct AAC2020_POLYOGL_FV2   //| # |//
         #define UV4   struct AAC2020_POLYOGL_UV4   //| # |//
         #define T_F   AAC2020_POLYOGL_tex_fet      //| # |//
-        #define TAU   ( 0 )         //:  07  ://   //| # |//
-        #define P5D   ( 1 )         //:  08  ://   //| # |//
-        #define SAM    int          //:  09  ://   //| # |//
-        #define UFF    0xFF         //:  10  ://   //| # |//
-        #define U00    0x00         //:  11  ://   //| # |//
-        #define I00   ( 0 )         //:  12  ://   //| # |//
-        #define U03   ( 3 )         //:  13  ://   //| # |//
-        #define B_3   ( 3 )         //:  14  ://   //| # |//
-        #define B11   ( 3 )         //:  15  ://   //| # |//
-        #define H55    0x55         //:  16  ://   //| # |//
-        #define V_A   void          //:  17  ://   //| # |//
+        #define TAU   ( 0 )         //:  08  ://   //| # |//
+        #define P5D   ( 1 )         //:  09  ://   //| # |//
+        #define SAM    int          //:  10  ://   //| # |//
+        #define UFF    0xFF         //:  11  ://   //| # |//
+        #define U00    0x00         //:  12  ://   //| # |//
+        #define I00   ( 0 )         //:  13  ://   //| # |//
+        #define U03   ( 3 )         //:  14  ://   //| # |//
+        #define B_3   ( 3 )         //:  15  ://   //| # |//
+        #define B11   ( 3 )         //:  16  ://   //| # |//
+        #define H55    0x55         //:  17  ://   //| # |//
+        #define V_A   void          //:  18  ://   //| # |//
         #define FV4   struct AAC2020_POLYOGL_FV4   //| # |//
-        #define ASS   assert        //:  19  ://   //| # |//
+        #define ASS   assert        //:  20  ://   //| # |//
         #define ERR   aac2020_p5d1ogl_Halt         //| # |//
         #define TRU   AAC2020_POLYOGL_Trunc        //| # |//
         #define REC   struct AAC2020_POLYOGL_REC
@@ -84,10 +86,12 @@
         #define ABS_F32 AAC2020_FRAGCOM_ABS_F32    //|10 |//
         #define MAX_I32 AAC2020_FRAGCOM_MAX_I32    //|11 |//
         #define MAX_F32 AAC2020_FRAGCOM_MAX_F32    //|12 |//
+        #define MIN_I32 AAC2020_FRAGCOM_MIN_I32    //|13 |//
+        #define MIN_F32 AAC2020_FRAGCOM_MIN_F32    //|14 |//
                                                    //|---|//
-        #define I32_U32 MAK_U32                    //|13 |//
-        #define U32_I32 MAK_I32                    //|14 |//
-        #define F32_I32 MAK_I32                    //|15 |//
+        #define I32_U32 MAK_U32                    //|15 |//
+        #define U32_I32 MAK_I32                    //|16 |//
+        #define F32_I32 MAK_I32                    //|17 |//
                                                    //|---|//
                                                    //| # |//
     #else                                          //| # |//
@@ -105,10 +109,12 @@
         #define ABS_F32 AAC2020_POLYOGL_ABS_F32    //|10 |//
         #define MAX_I32 AAC2020_POLYOGL_MAX_I32    //|11 |//
         #define MAX_F32 AAC2020_POLYOGL_MAX_F32    //|12 |//
+        #define MIN_I32 AAC2020_POLYOGL_MIN_I32    //|13 |//
+        #define MIN_F32 AAC2020_POLYOGL_MIN_F32    //|14 |//
                                                    //|---|//
-        #define I32_U32 AAC2020_POLYOGL_I32_U32    //|13 |//
-        #define U32_I32 AAC2020_POLYOGL_U32_I32    //|14 |//
-        #define F32_I32 AAC2020_POLYOGL_F32_I32    //|15 |//
+        #define I32_U32 AAC2020_POLYOGL_I32_U32    //|15 |//
+        #define U32_I32 AAC2020_POLYOGL_U32_I32    //|16 |//
+        #define F32_I32 AAC2020_POLYOGL_F32_I32    //|17 |//
                                                    //|---|//
                                                    //| # |//
     #endif                                         //| # |//

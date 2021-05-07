@@ -16,6 +16,11 @@
 #define SIL AAC2020_SILENCE                           //: 01 ://
 #define U32 uint32_t /** GCC: <stdint.h> **/          //: 02 ://
 #define P_F printf                                    //: 03 ://
+#define I32 int32_t /** GCC: <stdint.h> **/           //: 04 ://
+#define CHR const char                                //: 05 ://
+#define I_P intmax_t /** GCC: <stdint.h> **/          //: 06 ://
+#define ERR aac2020_rencore_Halt                      //: 07 ://
+
     //:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=================://
         void 
         aac2020_uiclick_Halt( const char* msg_err )
@@ -25,16 +30,27 @@
             exit( 123 );
         }
     //:=================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+    //:IS_LOGGING_ON:========================================://
+        I32
+        aac2020_uiclick_GET_logison( void )
+        {
+            I32 say=( 0 );
+
+            if( SIL.UICLICK <=(  0  ) ){ say=( 1 ); };
+            if( SIL.SILENCE <=( 0-1 ) ){ say=( 1 ); };
+            if( SIL.SILENCE >=( 0+1 ) ){ say=( 0 ); };
+
+            return( say /** say == logison **/ );
+        }
+    //:========================================:IS_LOGGING_ON://
     //:LOG_AFTER_HALT:=======================================://
         void
         aac2020_uiclick_Info_any( //:FUNC:::Info , OVERLOAD:any
             const char* str_fmt   //:GENERAL:str , SPECIFIC:fmt
         ,   void*       dat_any   //:GENERAL:dat , SPECIFIC:any
         )
-        {                            int say=( 0 );
-            if( SIL.UICLICK <=(  0  ) ){ say=( 1 ); };
-            if( SIL.SILENCE <=( 0-1 ) ){ say=( 1 ); };
-            if( SIL.SILENCE >=( 0+1 ) ){ say=( 0 ); };
+        {       
+            I32 say=( aac2020_uiclick_GET_logison() );
             if( say >= 1 ){
                 P_F("[uiclick_log]....(   " ); fflush( stdout );
                 P_F( str_fmt , dat_any      ); fflush( stdout );
@@ -42,6 +58,22 @@
             };;
         }
     //:=======================================:LOG_AFTER_HALT://
+    //:INFO_PRINT_SIGNED_32_BIT_INT:=========================://
+        void
+        aac2020_uiclick_Info_i32( 
+            CHR* msg_fmt /** Format String **/
+        ,   I32  msg_inf /** Information String **/
+        )
+        {
+            if( ((CHR*)0) == msg_fmt ){ ERR("[20210507]"); };
+        //- if( ((I32 )0) == msg_inf ) -//
+            
+            aac2020_uiclick_Info_any(
+                            msg_fmt
+            ,   (void*)(I_P)msg_inf
+            );;
+        }
+    //:=========================:INFO_PRINT_SIGNED_32_BIT_INT://
     //:INIT_NONE:============================================://
         U32
         AAC2020_UICLICK_InitNone( U32 u32 ){
@@ -52,6 +84,10 @@
 #undef  SIL  //:----------------------------------------: 01 ://
 #undef  U32  //:----------------------------------------: 02 ://
 #undef  P_F  //:----------------------------------------: 03 ://
+#undef  I32  //:----------------------------------------: 04 ://
+#undef  CHR  //:----------------------------------------: 05 ://
+#undef  I_P  //:----------------------------------------: 06 ://
+#undef  ERR  //:----------------------------------------: 07 ://
 //:===========================:AAC2020_SUBLIBRARY_BOILERPLATE://
 //:LOAD_GLOBAL_MOUSE_STATE_IF_NONE_PROVIDED:=================://
 #define MOU      struct AAC2020_MOUTEMP               //: 01 ://
@@ -307,9 +343,10 @@
 #define I32  int32_t /** GCC: <stdint.h> **/          //: 03 ://
 #define GET aac2020_uiclick_GetMouseState             //: 04 ://
 #define LOG aac2020_uiclick_Info_any                  //: 05 ://
-#define NCC char                                      //: 06 ://
-#define REC struct AAC2020_POLYOGL_REC                //: 07 ://
-#define ERR aac2020_uiclick_Halt                      //: 08 ://
+#define LOI aac2020_uiclick_Info_i32                  //: 06 ://
+#define NCC char                                      //: 07 ://
+#define REC struct AAC2020_POLYOGL_REC                //: 08 ://
+#define ERR aac2020_uiclick_Halt                      //: 09 ://
 
     void
     aac2020_uiclick_PAINT5D_uin_001(
@@ -437,11 +474,16 @@
 
             LOG("[NO_CLACKS_GIVEN]",0);
 
-                       LOG("[OOB:pix_m_x]%d",
-                (void*)(intmax_t)pix_m_y);
+            if( aac2020_uiclick_GET_logison() >= 1 ){
+                LOI("[OOB:pix_m_x]:%d", pix_m_x );
+                LOI("[OOB:pix_m_y]:%d", pix_m_y );
+            };;
 
-                       LOG("[OOB:pix_m_x]%d",
-                (void*)(intmax_t)pix_m_y);
+            //:          LOG("[OOB:pix_m_x]%d",
+            //:   (void*)(intmax_t)pix_m_y);
+            //:
+            //:          LOG("[OOB:pix_m_x]%d",
+            //:   (void*)(intmax_t)pix_m_y);
 
             /// #undef  L_I 
         };;
@@ -452,9 +494,10 @@
 #undef I32  //:-----------------------------------------: 03 ://
 #undef GET  //:-----------------------------------------: 04 ://
 #undef LOG  //:-----------------------------------------: 05 ://
-#undef NCC  //:-----------------------------------------: 06 ://
-#undef REC  //:-----------------------------------------: 07 ://
-#undef ERR  //:-----------------------------------------: 08 ://
+#undef LOI  //:-----------------------------------------: 06 ://
+#undef NCC  //:-----------------------------------------: 07 ://
+#undef REC  //:-----------------------------------------: 08 ://
+#undef ERR  //:-----------------------------------------: 09 ://
 //:=============================:UICLICK_FOR_SPECIFIC_EDITORS://
 //:UICLICK_LOOP_TICK:========================================://
 #define U32 uint32_t /** GCC: <stdint.h> **/          //: 01 ://

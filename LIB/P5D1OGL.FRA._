@@ -1915,31 +1915,6 @@
             //: U08 arr[ 3 ]=        { 1 , 2 , 3 }; //:C99
             //: U08 arr[ 3 ]=U08[ 3 ]( 1 , 2 , 3 ); //:OGL
 
-    ////    //:UNDEF_OR_DEF_U32_COLORS:------------------://
-    ////    #if( AAC2020_MACRO_THIS_IS_OPEN_GL >= 1 )  
-    ////    
-    ////        #define U32_000 ( uint(  0))//:[ U_000 ]://
-    ////        #define U32_001 ( uint(  1))//:[ U_001 ]://
-    ////        #define U32_008 ( uint(  8))//:[ U_008 ]://
-    ////        #define U32_016 ( uint( 16))//:[ U_016 ]://
-    ////        #define U32_032 ( uint( 32))//:[ U_032 ]://
-    ////        #define U32_048 ( uint( 48))//:[ U_048 ]://
-    ////        #define U32_064 ( uint( 64))//:[ U_064 ]://
-    ////        #define U32_096 ( uint( 96))//:[ U_096 ]://
-    ////        #define U32_128 ( uint(128))//:[ U_128 ]://
-    ////    #else         
-    ////        #define U32_000 ((U32)(  0))//:[ U_000 ]://
-    ////        #define U32_001 ((U32)(  1))//:[ U_001 ]://
-    ////        #define U32_008 ((U32)(  8))//:[ U_008 ]://
-    ////        #define U32_016 ((U32)( 16))//:[ U_016 ]://
-    ////        #define U32_032 ((U32)( 32))//:[ U_032 ]://
-    ////        #define U32_048 ((U32)( 48))//:[ U_048 ]://
-    ////        #define U32_064 ((U32)( 64))//:[ U_064 ]://
-    ////        #define U32_096 ((U32)( 96))//:[ U_096 ]://
-    ////        #define U32_128 ((U32)(128))//:[ U_128 ]://
-    ////    #endif
-    ////    //:------------------:UNDEF_OR_DEF_U32_COLORS://
-
             //:DECLARE_VARIABLES:------------------------://
              
                 /** @VID_IID[ 0093 ]TIME[ 00:21:10 ] **/
@@ -1971,7 +1946,7 @@
                     AAC2020_TAUFRAG_Get_REC_p5d_ur1() );;
 
             //:---------------:GET_VARS_STORED_IN_TEXTURE://    
-            //:GET:canvas_user_view:---------------------://
+            //:GET:fragment_integer_coord:---------------://
 
             IV2 fic; /** fic:Frag_INTEGER_coordinate **/
             fic.x =( MAK_I32( F_C.x - 0.5 ) );
@@ -1982,20 +1957,7 @@
                 )-0.5 
             ));;
 
-            //: I32 cuv_i_x = fic.x;
-            //: I32 cuv_i_y = fic.y;
-            //: if( cuv_i_x == 0 ){ /** NOOP **/ };
-            //: if( cuv_i_y == 0 ){ /** NOPP **/ };
-
-
-
-            //:---------------------:GET:canvas_user_view://
-
-    ////    UV4 uv4_p5d=(
-    ////        T_F( P5D , MAK_IV2(cuv_i_x,cuv_i_y),0 ));;
-
-
-
+            //:---------------:GET:fragment_integer_coord://
 
             UV4 uv4_pix;
 
