@@ -448,7 +448,10 @@ SECTION_INDEX:
                     has=(0-1); //:File,not directory.
                 };;
             }else{
-              perror("stat()");
+                if( aac2020_rencore_GET_logison() >= 1 ){
+                    LOS("[ProbablyNot:HasFold:fol]:%s",fol);
+                    perror("stat()");
+                };;
             };;
             return( has );
         }
@@ -1044,18 +1047,25 @@ SECTION_INDEX:
             #undef  FNAM
             //:----------------:DOES_THE_FILE_EXIST_ON_DISK:?://
             //:ASSERT_NULL_TERMINATOR:-----------------------://
-            #define BYREF_BOI BYREF_fil_mem
+            #define ANYTEXT   AAC2020_RENCORE_P_T_ANYTEXT //:://
+            #define BYREF_BOI BYREF_fil_mem               //:://
+            if( ANYTEXT == bin_txt ){ //:[@ASSNULTERM@]<<<<<<://
 
+                /** @VID_IID[0289]T[07:27:42]*************** **/
+                /** Null terminator only exists if we are    **/
+                /** loading the file as text.                **/
+                /** ( ANYTEXT == bin_txt )                   **/
+                /** **************************************** **/
                 /** ADDED[ DATE[ 2020_11_16 ] ] ************ **/
 
                 if( file_exists >= 1 ){
 
-                    if( '\0' != fil_mem[ fil_nob ] ){
-                        ERR("[DONE_FUCKED_UP:001]");
-                    };;
 
+                    if( '\0' != fil_mem[ fil_nob ] ){
+                        ERR("[@RENCORE_DFU:001]");
+                    };;
                     if( '\0' != (*BYREF_BOI)[ fil_nob ] ){
-                        ERR("[DONE_FUCKED_UP:002]");
+                        ERR("[@RENCORE_DFU:002]");
                     };;
 
                 }else{
@@ -1064,7 +1074,9 @@ SECTION_INDEX:
                     //:ERR("[TEMP_DEBUG_CODE_ONLY:2021_04_30]");
                 };;
 
-            #undef BYREF_BOI
+            };; //:[@ASSNULTERM@]<<<<<<<<<<<<<<<<<<<<<<<<<<<<://
+            #undef  BYREF_BOI   //:---------------------: 01 ://
+            #undef  ANYTEXT     //:---------------------: 02 ://
             //:-----------------------:ASSERT_NULL_TERMINATOR://
 
             return( file_exists );
@@ -1303,7 +1315,7 @@ SECTION_INDEX:
         if( ((NCC* )0) ==(*BYREF_str)){ ERR("[NILSTR_!!!]"); };
         if( ((I32  )0) ==(*BYREF_noc)){ ERR("[NILNOC_!!!]"); };
 
-        printf("[*BYREF_str]:%s\n",*BYREF_str);
+        //- P_R_I_N_T_F("[*BYREF_str]:%s\n",*BYREF_str);  ----//
 
         NCC* str = (*BYREF_str);
         I32  noc = (*BYREF_noc);
@@ -3621,7 +3633,7 @@ creating folders. So I put the [ FCH ] section below the
             , &(nof_deleted)//:Number_Of_Files_Deleted
             ));;
             if( NOS_SUBFILE == nof_deleted ){
-                printf("[All_Sub_Files_Found_And_Deleted]");
+                LOG("[All_Sub_Files_Found_And_Deleted]",0);
             };;
 
         };;//:------------------------------:delete_all_files://
@@ -3637,14 +3649,14 @@ creating folders. So I put the [ FCH ] section below the
             , &(nof_deleted)//:Number_Of_Files_Deleted
             ));;
             if( NOS_SUBFOLD == nof_deleted ){
-                printf("[All_Sub_Folders_Found_And_Deleted]");
+                LOG("[All_Sub_Folders_Found_And_Deleted]",0);
             };;
 
         };; //:---------------------------:delete_all_folders://
         if( o_k >= 1 ){ //:delete_root_folder:---------------://
 
             //:Delete The Target Folder Last:
-            printf("[ABOUT_TO_DELETE]:%s\n",str_autogen);
+            LOS("[ABOUT_TO_DELETE]:%s\n",str_autogen);
             aac2020_rencore_DeleteEmptyFolder( str_autogen );
 
         };; //:---------------------------:delete_root_folder://
@@ -5101,24 +5113,24 @@ creating folders. So I put the [ FCH ] section below the
                             };;
 
                         }else{
-                        #define ORD ext_ord
-                        #define NAM ext_nam
-                        #define ARR extname_arr
+                        #define ORD ext_ord     //:-----: 01 ://
+                        #define NAM ext_nam     //:-----: 02 ://
+                        #define ARR extname_arr //:-----: 03 ://
                         
                         
                             //:Add null terminators:
                             extrank_arr[ extrank_noc ]=( 0 );
                             extname_arr[ extname_noc ]=( 0 );
 
-                            printf("[extrank_arr]:%s\n"
-                            ,        extrank_arr );;
+                            LOS("[extrank_arr]:%s"
+                            ,     extrank_arr );;
 
-                            printf("[extname_arr]:%s\n"
-                            ,        extname_arr );;
+                            LOS("[extname_arr]:%s"
+                            ,     extname_arr );;
 
                             extrank_i32=( atoi( extrank_arr ) );
-                            printf("[extrank_i32]:%d\n"
-                            ,        extrank_i32 );;
+                            LOI("[extrank_i32]:%d"
+                            ,     extrank_i32 );;
 
                             extname_str=&( extname_arr[0] );
                             aac2020_rencore_TrimInPlace(
@@ -5145,9 +5157,9 @@ creating folders. So I put the [ FCH ] section below the
 
                             aac2020_rencore_ext_noe++;
                             
-                        #undef  ORD
-                        #undef  NAM
-                        #undef  ARR
+                        #undef  ORD  //:----------------: 01 ://
+                        #undef  NAM  //:----------------: 02 ://
+                        #undef  ARR  //:----------------: 03 ://
                         };;
                         //:=============:READ_EXTRANK_EXTNAME://
                         //:RESET_EXTRANK_EXTNAME:============://
@@ -5230,7 +5242,12 @@ creating folders. So I put the [ FCH ] section below the
             if( o_k >= 1 ){
 
                 aac2020_rencore_Sort_ext_arr();
+
+                //:Only print sorted and un-truncated list if
+                //:logging is on.@VID_IID[0289]T[07:42:00]
+                if( aac2020_rencore_GET_logison() >= 1 ){
                 aac2020_rencore_Print_ext_arr();
+                };;
 
                 //:truncate_sorted_ext_arr:------------------://
 
@@ -5242,6 +5259,8 @@ creating folders. So I put the [ FCH ] section below the
 
                 //:------------------:truncate_sorted_ext_arr://
 
+                //:For now, keep this one always on no 
+                //:matter if logging is on or off.
                 aac2020_rencore_Print_ext_arr();
 
             };;
@@ -5267,6 +5286,12 @@ creating folders. So I put the [ FCH ] section below the
     void
     aac2020_rencore_LOAD()
     {
+        //:ALWAYS_PRINT_THIS:--------------------------------://
+
+            printf("[CALLED:aac2020_rencore_LOAD()]");
+            fflush(stdout);
+
+        //:--------------------------------:ALWAYS_PRINT_THIS://
         //:Reset_Environment:--------------------------------://
 
             /** Do here before you get any file handles that **/
@@ -5613,6 +5638,12 @@ creating folders. So I put the [ FCH ] section below the
     copy it over. For now, that is the only thing we have    ***
     to do. @VID_IID[0288]TIME[00:07:42]                      ***
     *** **************************************************** **/
+    //:ALWAYS_LOG_THIS_MESSAGE:------------------------------://
+
+        printf("[CALLED:aac2020_rencore_UNDO()]");
+        fflush(stdout);
+
+    //:------------------------------:ALWAYS_LOG_THIS_MESSAGE://
     
         I32  o_k=( 0 /**GuiltyUntilProvenInnocent**/ );
 
@@ -5779,7 +5810,7 @@ creating folders. So I put the [ FCH ] section below the
     {
         if( aac2020_rencore_UTC_ror >= 1 ){
             /** Ignore Call. **/
-            printf("[IGNORED:AAC2020_RENCORE_UnitTest]\n");
+            LOG("[IGNORED:AAC2020_RENCORE_UnitTest]",0);
             fflush(stdout);
         }else{
             aac2020_rencore_UTC_ror =( 1  );

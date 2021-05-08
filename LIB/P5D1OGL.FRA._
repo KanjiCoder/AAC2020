@@ -1959,7 +1959,8 @@
 
             //:---------------:GET:fragment_integer_coord://
 
-            UV4 uv4_pix;
+        //- UV4 uv4_pix; @VID_IID[0289]T[05:55:23] --------- -//
+            FV4 fv4_pix;
 
             if( (1==1)
             &&  fic.x >= p5d_vp0.x_0
@@ -1968,7 +1969,7 @@
             &&  fic.y <= p5d_vp0.y_1
             ){  //:IN_BOUNDS:
 
-                U32 u32_pix;
+                
 
                 /** BETS ARE OFF WHEN MAPPING FROM **/
                 /** small range to larger range.   **/
@@ -2072,31 +2073,35 @@
                 //:allow the engine user to define a     ://
                 //:blending function to combine all 8    ://
                 //:uint32 colors.                        ://
-                U32 tilpixu ; //:[tilpixu]:TILe_PIXel_Uint32
-                U32 tilpixa[ 8 ]= ARR_U32( 8 )
+                FV4 tilpixu ; //:[tilpixu]:TILe_PIXel_Uint32
+                FV4 tilpixa[ 8 ]= ARR_FV4( 8 )
                 ARR_BEG
-                /**/U32_000  //: til_exp == 0 ://
-                ,   U32_000  //: til_exp == 1 ://
-                ,   U32_000  //: til_exp == 2 ://
-                ,   U32_000  //: til_exp == 3 ://
-                ,   U32_000  //: til_exp == 4 ://
-                ,   U32_000  //: til_exp == 5 ://
-                ,   U32_000  //: til_exp == 6 ://
-                ,   U32_000  //: til_exp == 7 ://
+                0   //: <--- Zero Init The Memory Maybe?
+                    //: til_exp == 0 ://
+                    //: til_exp == 1 ://
+                    //: til_exp == 2 ://
+                    //: til_exp == 3 ://
+                    //: til_exp == 4 ://
+                    //: til_exp == 5 ://
+                    //: til_exp == 6 ://
+                    //: til_exp == 7 ://
                 ARR_END;
 
-                U32 laypixu ; //:[laypixu]:LAYer_PIXel_Uint32
-                U32 laypixa[ 3 ]= ARR_U32( 3 )
+                FV4 laypixu ; //:[laypixu]:LAYer_PIXel_Uint32
+                FV4 laypixa[ 3 ]= ARR_FV4( 3 )
                 ARR_BEG
-                /**/U32_000  //: til_lay == 0 ://
-                ,   U32_000  //: til_lay == 1 ://
-                ,   U32_000  //: til_lay == 2 ://
+                0   //: <--- Zero Init The Memory Maybe?
+                    //: til_lay == 0 ://
+                    //: til_lay == 1 ://
+                    //: til_lay == 2 ://
                 ARR_END;
 
-                U32 plypix3 ;//: PLY_PIXels_3 
+                FV4 plypix3 ;//: PLY_PIXels_3 
                              //: ( laypixa composited )
                              //: ( (plyed)   together )
 
+                /** fv4_000 : FloatVec4:ERASER **/
+                FV4 fv4_000 =( MAK_FV4( 0.0,0.0,0.0,0.0 ) );
 
                 for( I32 til_lay = ( 0 ) //:[ wrong:lay_dex ]
                 ;        til_lay <=(3-1) //:[ wrong:lay_dex ] 
@@ -2106,14 +2111,14 @@
                     //:this unless we are accumulating ::://
                     //:over multiple layers for some   ::://
                     //:reason.                         ::://
-                    tilpixa[ 0 ]=( U32_000 );
-                    tilpixa[ 1 ]=( U32_000 );
-                    tilpixa[ 2 ]=( U32_000 );
-                    tilpixa[ 3 ]=( U32_000 );
-                    tilpixa[ 4 ]=( U32_000 );
-                    tilpixa[ 5 ]=( U32_000 );
-                    tilpixa[ 6 ]=( U32_000 );
-                    tilpixa[ 7 ]=( U32_000 );
+                    tilpixa[ 0 ]=( fv4_000 );
+                    tilpixa[ 1 ]=( fv4_000 );
+                    tilpixa[ 2 ]=( fv4_000 );
+                    tilpixa[ 3 ]=( fv4_000 );
+                    tilpixa[ 4 ]=( fv4_000 );
+                    tilpixa[ 5 ]=( fv4_000 );
+                    tilpixa[ 6 ]=( fv4_000 );
+                    tilpixa[ 7 ]=( fv4_000 );
 
                 for( I32 til_exp = ( 0 )
                 ;        til_exp <=(8-1)
@@ -2330,45 +2335,25 @@
 
             /** Eventually will be using this value as **/
             /** the fragment output color.             **/ 
-            if( plypix3 > U32_000 ){ /** NOOP **/ }; //:<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Eventually We Need To Use This.
+            if( plypix3.x > 0.0 ){ /** NOOP **/ }; //:<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Eventually We Need To Use This.
 
                 //:CORE_RENDERING_ALGORITHM:-------------://
-
-                u32_pix=( plypix3 );
 
 
                 if( u32_l_0 > U32_000 ){ /** NOOP **/ };
                 if( u32_l_1 > U32_000 ){ /** NOOP **/ };
                 if( u32_l_2 > U32_000 ){ /** NOOP **/ };
-
-        ////    u32_pix=(
-        ////        AAC2020_PAINT5D_RENCORE(
-        ////        /**/    fic.x  //:<--FragIntCoord:X
-        ////        ,       fic.y  //:<--FragIntCoord:Y
-        ////        ,     cuv_i_x  //:<--CanvasUserView
-        ////        ,     cuv_i_y  //:<--CanvasUserView
-        ////        ,     aus_dex  //:<--Auset_Index
-        ////        ,     u32_l_0  //:<--Layers
-        ////        ,     u32_l_1  //:<--Layers
-        ////        ,     u32_l_2  //:<--Layers
-        ////        ));;
             
                 //:-------------:CORE_RENDERING_ALGORITHM://
  
-
-                
-
                 //:INSIDE_VIEWPORT_BOUNDS ==> UNPACK_PIXEL:
-                uv4_pix.x = ( u32_pix >> 24 ) & UFF ;
-                uv4_pix.y = ( u32_pix >> 16 ) & UFF ;
-                uv4_pix.z = ( u32_pix >>  8 ) & UFF ;
-                uv4_pix.w = ( u32_pix >>  0 ) & UFF ;
+                fv4_pix=( plypix3 );
             }else{
                 //:OUT_OF_BOUNDS ==> YELLOW
-                uv4_pix.x =MAK_U32( 128 ); //:RED
-                uv4_pix.y =MAK_U32( 128 ); //:GREEN
-                uv4_pix.z =MAK_U32( 128 ); //:BLUE
-                uv4_pix.w =MAK_U32( 255 ); //:ALPHA
+                fv4_pix.x =MAK_F32( 128.0 / 255.0 ); //:RED
+                fv4_pix.y =MAK_F32( 128.0 / 255.0 ); //:GREEN
+                fv4_pix.z =MAK_F32( 128.0 / 255.0 ); //:BLUE
+                fv4_pix.w =MAK_F32( 255.0 / 255.0 ); //:ALPHA
             };;
 
 
@@ -2377,13 +2362,14 @@
             /** to GPU and we can SEE IT. Do this        **/
             /** BEFORE making more elaborate shader code.**/
             /** *******************************************/
-            FragColor = MAK_FV4(
-
-                MAK_F32( uv4_pix.x ) / 255.0
-            ,   MAK_F32( uv4_pix.y ) / 255.0
-            ,   MAK_F32( uv4_pix.z ) / 255.0
-            ,   1.0 //:Alpha
-            );;
+            //: FragColor = MAK_FV4(
+            //: 
+            //:     MAK_F32( uv4_pix.x ) / 255.0
+            //: ,   MAK_F32( uv4_pix.y ) / 255.0
+            //: ,   MAK_F32( uv4_pix.z ) / 255.0
+            //: ,   1.0 //:Alpha
+            //: );;
+            FragColor =( fv4_pix /**FloatVec4Pixel**/ );
 
             //:DRAW_USER_INTERFACE_OVER_WHATEVER:============://
             I32 p5d_vu1=( AAC2020_TAUFRAG_Get_I32_p5d_vu1( ));;

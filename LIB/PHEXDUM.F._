@@ -844,18 +844,26 @@
             //:----------------:DOES_THE_FILE_EXIST_ON_DISK:?://
             //:ASSERT_NULL_TERMINATOR:-----------------------://
             #define BYREF_BOI BYREF_fil_mem
+            
 
                 /** ADDED[ DATE[ 2020_11_16 ] ] ************ **/
 
                 if( file_exists >= 1 ){
+                
+                    //:ONLY_TEXT_HAS_NULLTERM:---------------://
+                    #define ANYTEXT AAC2020_PHEXDUM_P_T_ANYTEXT
+                    if( bin_txt == ANYTEXT ){
 
-                    if( '\0' != fil_mem[ fil_nob ] ){
-                        ERR("[DONE_FUCKED_UP:001]");
-                    };;
+                        if( '\0' != fil_mem[ fil_nob ] ){
+                            ERR("[@PHEXDUM_DFU:001]");
+                        };;
+                        if( '\0' != (*BYREF_BOI)[ fil_nob ] ){
+                            ERR("[@PHEXDUM_DFU:002]");
+                        };;
 
-                    if( '\0' != (*BYREF_BOI)[ fil_nob ] ){
-                        ERR("[DONE_FUCKED_UP:002]");
                     };;
+                    #undef ANYTEXT
+                    //:---------------:ONLY_TEXT_HAS_NULLTERM://
 
                 }else{
                 /** **************************************** ***

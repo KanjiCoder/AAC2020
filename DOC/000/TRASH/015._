@@ -1,5 +1,4 @@
 //:THIS_FILE[ tilodat_CTO_tilpixu._ ]
-//:U32_VERSION_IN_TRASH[ R:/AAC/AAC2020/DOC/000/TRASH/015._ ]
 
     //# DO_NOT_PUT_DOUBLE_OR_SINGLE_QUOTES_IN_THIS_FILE! #//
     //[ The shader pipeline pre-processes this file by   ]//
@@ -64,8 +63,7 @@
                      Bottom of tile == +1.0
 
     *** ************************************************ **/
-    FV4
-    AAC2020_PAINT5D_RENCORE_tilodat_CTO_tilpixu(
+    U32 AAC2020_PAINT5D_RENCORE_tilodat_CTO_tilpixu(
         I32 aus_dex //:AKA[ aus_dex / a_d ]
     ,   I32 til_lay //:AKA[ til_lay / t_l ] 
     ,   I32 til_exp //:AKA[ til_exp / t_e ] 
@@ -77,8 +75,6 @@
     ,   F32 tilop_y //:AKA[ tilop_y / p_y ] 
     )
     {
-        FV4 tilpixu;
-
         if( aus_dex >       0  ){ /** NOOP **/ };
         if( til_lay >       0  ){ /** NOOP **/ };
         if( til_exp >       0  ){ /** NOOP **/ };
@@ -89,70 +85,47 @@
         if( tilop_x >     0.0  ){ /** NOOP **/ };
         if( tilop_y >     0.0  ){ /** NOOP **/ };
 
+        //: SQUARE_GRADIENT: max( abs( x ) , abs( y ) ) 
+
         F32
         f32_gra=( /** Float32_GRAdient **/
         MAX_F32( ABS_F32( tilop_x ) , ABS_F32( tilop_y ) )
         );;
     
+        if( f32_gra > 1.0 ){ /** NOOP **/ };
+
+        /** Hackish little algorithm. **/
+        /** til_lay determines monochrome layer color **/
+        /** til_val determines monochrome lumonosity  **/
+        U32 tilpixu =( U32_255 ); //:100% alpha, BLACK
+        U32 lum_255 =( U32_085 * til_val );
+
+        F32 tim_cos =(AAC2020_FRAGCOM_COS_F32(
+            AAC2020_FRAGCOM_GET_iTime() / 2.0
+        ));;
+
+
+            lum_255 =(  
+            /**/    I32_U32(
+            /**/    MAX_I32( 
+            /**/        0
+            /**/    ,
+            /**/        (
+            /**/            U32_I32( lum_255                   )
+            /**/        -   F32_I32( f32_gra * 128.0 * tim_cos ) 
+            /**/        )
+            /**/    )));;
+
+
+
         if( U32_000 == til_val ){
-            //:Transparent Black Makes The Most Sense
-            //:for nothingness
-            tilpixu.x =( 0.0 );
-            tilpixu.y =( 0.0 );
-            tilpixu.z =( 0.0 );
-            tilpixu.w =( 0.0 );
+            tilpixu =( U32_255 ); //:100% alpha, BLACK
         }else{
-
-            //:Keep it simple. Lets do a different base
-            //:Color for each layer.
-            if( 0 == til_lay ){
-                //:Background is white or gray layer:
-                tilpixu.x =( 1.0 ); //:RED://
-                tilpixu.y =( 1.0 ); //:GRE://
-                tilpixu.z =( 1.0 ); //:BLU://
-                tilpixu.w =( 1.0 ); //:ALP://
-            }else
-            if( 1 == til_lay ){
-
-                //:EarthTone Red:
-                tilpixu.x =( 0.5 ); //:RED://
-                tilpixu.y =( 0.4 ); //:GRE://
-                tilpixu.z =( 0.4 ); //:BLU://
-                tilpixu.w =( 1.0 ); //:ALP://
-
-            }else
-            if( 2 == til_lay ){
-                //:Decently saturated orange:
-                tilpixu.x =( 1.0 ); //:RED://
-                tilpixu.y =( 0.5 ); //:GRE://
-                tilpixu.z =( 0.1 ); //:BLU://
-                tilpixu.w =( 1.0 ); //:ALP://
-            };;
-        };;
-
-        //: Add 0.25 red or blue for certain tile values:
-        if( U32_000 == til_val ){
-            /** Do nothing. Empty Space Tile **/
-        }else
-        if( U32_001 == til_val ){
-            /** Do nothing. Keep base color. **/
-        }else
-        if( U32_002 == til_val ){
-            tilpixu.z += 0.25 ;
-        }else
-        if( U32_003 == til_val ){
-            tilpixu.z += 0.50 ;
+            tilpixu =( tilpixu 
+            |   ( ( lum_255 ) << ((til_lay+1)*8) )
+            );;
         };;
         
-        //:Multiply with the auto tiling gradient to
-        //:get our gradient ramping effects:
-        //:TODO: We need TWO auto tile gradients...
-        //:      AUTO_GRAD_001: Defines shading.
-        //:      AUTO_GRAD_002: Defines alpha masking.
-        tilpixu.x =( f32_gra * tilpixu.x );
-        tilpixu.y =( f32_gra * tilpixu.y );
-        tilpixu.z =( f32_gra * tilpixu.z );
-        tilpixu.w =(   1.0   * tilpixu.w );
     
         return( tilpixu );
     }
