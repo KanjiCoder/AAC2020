@@ -62,16 +62,11 @@
 #define U32 uint32_t /** stdint.h **/
 
     //:FUNCTION:HALT(ALWAYS):================================://
-
     void aac2020_graquad_Halt( const char* err_msg ){
-
-        printf(
-        /**/"[aac2020_graquad_Halt]%s\n"
-        ,   err_msg
-        );;fflush(stdout);exit(666);
-
+        printf("[aac2020_graquad_Halt]%s\n", err_msg );;
+        fflush(stdout);
+        exit(232); //:USE[ 0 - 255 ]INCLUSIVE_FOR_EXIT_CODE
     }
-
     //:================================:FUNCTION:HALT(ALWAYS)://
     //:FUNCTION:HALT_OR_STATUS(HOS):=========================://
     #define HAS_FAILED_FAST  AAC2020_GRAQUAD_HAS_FAILED_FAST

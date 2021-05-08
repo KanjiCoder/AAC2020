@@ -513,12 +513,11 @@
             case 0x020A /** WM_MOUSEWHEEL  **/:
 
                 {
-
-            ////    AAC2020_GINAMOU_ReadNativeMouseEvent(
-            ////           Msg //: nat_msg //:Native: Message  
-            ////    ,   wParam //: nat_w_p //:Native: WParam
-            ////    ,   lParam //: nat_l_p //:Native: LParam
-            ////    );;
+                    AAC2020_GINAMOU_ReadNativeMouseEvent(
+                           Msg //: nat_msg //:Native: Message  
+                    ,   wParam //: nat_w_p //:Native: WParam
+                    ,   lParam //: nat_l_p //:Native: LParam
+                    );;
                 }
             break;
             //:--------------------------:GINAMOU_FALLTHROUGH://
@@ -943,7 +942,20 @@ aac2020_ginawin_TakeMessage(
         //:     aac2020_ginawin_LookMessage(    &M );
                 aac2020_ginawin_LookMessage( ptr_M );
 
-
+        //:ARE_YOU_A_QUITTER?:===============================://
+            if( wm_quit == (*ptr_M).message ){
+                //[ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ]//
+                //# @VID_IID[0290]T[01:25:10]                #//
+                //# DO NOT MAKE THIS A LOG FUNCTION BECAUSE  #//
+                //# EXITING WITH[ wm_quit ]WITHOUT SEEING LOG#//
+                //# MESSAGE IS A SOURCE OF MYSTERIOUS        #//
+                //# CONFUSION WHEN WE THINK THE PROGRAM IS   #//
+                //# CRASHING OR EXITING WHEN IT SHOULDNT!    #//
+                //[ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ]//
+                printf("[HOLY_CRAP_THE_WINDOW_IS_QUITTING]\n");
+                fflush(stdout);
+            };;
+        //:===============================:ARE_YOU_A_QUITTER?://
         //:WAS_MESSAGE_WHILE_LOOP_BEFORE_REFACTOR:-----------://
 
         #if( AAC2020_CRASH_ON_VITAL_TODO >= 1 ) //:##########://

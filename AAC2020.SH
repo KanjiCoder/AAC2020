@@ -214,12 +214,21 @@
     ############################################################
     ## Run and then remove the engine executable.           ####
     ##------------------------------====--------------------####
-         ./EXE.exe                  ####                    ####
-    rm     EXE.exe                  ####                    ####
-                                    ####                    ####
-    exit_status_of_exe=$?
-    echo "[EXE.exe:exit_status_of_exe]"
-    echo $exit_status_of_exe
+
+        ##001: CALL_EXE:
+
+             ./EXE.exe                 
+
+        ##002: GET_EXIT_STATUS:
+
+            exit_status_of_exe=$?
+            echo "[EXE.exe:exit_status_of_exe]"
+            echo $exit_status_of_exe
+
+        ##003: REMOVE_THE_EXE:
+
+            rm     EXE.exe                  
+                                                                  
     read -p "[ENTER_TO_EXIT]:"      ####                    ####
     ############################################################
 
