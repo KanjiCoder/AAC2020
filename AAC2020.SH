@@ -217,6 +217,9 @@
          ./EXE.exe                  ####                    ####
     rm     EXE.exe                  ####                    ####
                                     ####                    ####
+    exit_status_of_exe=$?
+    echo "[EXE.exe:exit_status_of_exe]"
+    echo $exit_status_of_exe
     read -p "[ENTER_TO_EXIT]:"      ####                    ####
     ############################################################
 

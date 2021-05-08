@@ -1068,16 +1068,21 @@ SECTION_INDEX:
                         ERR("[@RENCORE_DFU:002]");
                     };;
 
-                }else{
-                    /** @VID_IID[0281]T[04:31:32]ORIGINAL **/
-                    /** @VID_IID[0283]T[09:18:55]REVISIT  **/
-                    //:ERR("[TEMP_DEBUG_CODE_ONLY:2021_04_30]");
                 };;
 
             };; //:[@ASSNULTERM@]<<<<<<<<<<<<<<<<<<<<<<<<<<<<://
             #undef  BYREF_BOI   //:---------------------: 01 ://
             #undef  ANYTEXT     //:---------------------: 02 ://
             //:-----------------------:ASSERT_NULL_TERMINATOR://
+            //:TEMP_DEBUG_HACK:------------------------------://
+            if( file_exists <= 0 ){
+
+                /** @VID_IID[0281]T[04:31:32]ORIGINAL **/
+                /** @VID_IID[0283]T[09:18:55]REVISIT  **/
+                //:ERR("[TEMP_DEBUG_CODE_ONLY:2021_04_30]");
+
+            };;
+            //:------------------------------:TEMP_DEBUG_HACK://
 
             return( file_exists );
         }
