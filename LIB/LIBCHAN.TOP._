@@ -977,7 +977,10 @@
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_040 )
 
+        #include               "MAC/FRA/TOP._"
         #include               "FRAGCOM.FRA._"//:B4[FRAGCOM.F._]
+        #include               "MAC/FRA/BOT._"
+
         #include               "FRAGCOM.F._"  //:AFTER[**.FRA._] 
         #define AAC2020_INCLUDE_FRAGCOM (40 )
         #else   //:     INCLUDE_FRAGCOM ( - )
@@ -994,7 +997,10 @@
 
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_042 )
 
+        #include               "MAC/FRA/TOP._"
         #include               "GPUVIEW.FRA._" //:BEFORE[.F._  ]
+        #include               "MAC/FRA/BOT._"
+
         #include               "GPUVIEW.F._"   //: AFTER[.FRA._]
         #define AAC2020_INCLUDE_GPUVIEW (42 )
         #else   //:     INCLUDE_GPUVIEW ( - )
@@ -1055,7 +1061,9 @@
         //:THIS_FRAGMENT_SHADER_IS_JUST_DATA_AT_THE_MOMENT
         //:@VID_IID[ 0174 ]TIME[ 01:11:30 ]ORIGINAL_LOCATION
         //:@VID_IID[ 0174 ]TIME[ 02:06:00 ]MOVED_TO_FUNC_SECTION
+        #include               "MAC/FRA/TOP._"
         #include               "TAUFRAG.FRA._"
+        #include               "MAC/FRA/BOT._"
 
         #include               "TAUFRAG.F._"        
         #define AAC2020_INCLUDE_TAUFRAG (49 )
@@ -1122,7 +1130,9 @@
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_057 )
 
         //:@PATTERN_BREAKER@://
+        #include               "MAC/FRA/TOP._"
         #include             "./UISHARE.FRA._"
+        #include               "MAC/FRA/BOT._"
 
         #include               "UISHARE.F._"        
         #define AAC2020_INCLUDE_UISHARE (57 )
@@ -1133,8 +1143,10 @@
 #if( AAC2020_MAC_LIBCHAN_CUR >= AAC2020_MAC_LIBCHAN_058 )
 
         //[ @_PATTERN_BREAKER_@ ]//
-        #include             "./UIFRAGS.PAINT5D.FRA._"          
-                             //:1234567.1234567.123._://
+        #include               "MAC/FRA/TOP._"
+        #include             "./UIFRAGS.PAINT5D.FRA._"  
+        #include               "MAC/FRA/BOT._"
+        
         #include               "UIFRAGS.F._"        
         #define AAC2020_INCLUDE_UIFRAGS (58 )
         #else   //:     INCLUDE_UIFRAGS ( - )
@@ -1163,8 +1175,7 @@
 
         /**@VID_IID[ 0256 ]TIME[ 01:58:13 ]  **/
         /**Macros_Are_Getting_Out_Of_Control.**/
-        #include "MAC/FRA/TOP._"
-        #include "EDITOR_SHADER_MACROS.TOP._"
+////    #include "EDITOR_SHADER_MACROS.TOP._"
 
             //:@VID_IID[ 0103 ]TIME[ 02:18:30   ]
             //:FORMERLY_KNOWN_AS[   P5D_OGL.F._ ]
@@ -1172,22 +1183,27 @@
 
             //[@VID_IID[0 0255 ]TIME[ 02:29:00 ]]//
             //[WORKING_ON_MANDELA_EXTENSION.....]//
-            #include       "RENCORE.TOP._"
+    ////    #include       "RENCORE.TOP._"
 
             //:@VID_IID[0289]T[01:38:00]EXTENSION_SWITCHBOARD
             //: TODO: "./PAINT5D_SHA/RENCORE_OR_EXTCODE.C11._"
+            #include                                      "MAC/FRA/TOP._"
             #include "./PAINT5D_DEFAULT_SHADERS\RENCORE_OR_EXTCODE.C11._"
+            #include                                      "MAC/FRA/BOT._"
+
             ////////  "RENCORE/PAINT5D.RENCORE._" 
             ////////  "RENCORE/PAINT5D/tilodat_CTO_tilpixu._"
             ////////  "RENCORE/PAINT5D/tilpixa_CTO_laypixu._"
             ////////  "RENCORE/PAINT5D/laypixa_CTO_plypix3._"
 
-            #include       "RENCORE.BOT._"
+    ////    #include       "RENCORE.BOT._"
 
+            #include       "MAC/FRA/TOP._"
             #include       "P5D1OGL.FRA._"  
+            #include       "MAC/FRA/BOT._"
 
-        #include "EDITOR_SHADER_MACROS.BOT._"
-        #include "MAC/FRA/BOT._"
+////    #include "EDITOR_SHADER_MACROS.BOT._"
+        
  
         #include               "P5D1OGL.UTC._"    
         #define AAC2020_INCLUDE_P5D1OGL (61 )

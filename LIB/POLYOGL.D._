@@ -9,51 +9,9 @@
 #define U08 uint8_t /** GCC: <stdint.h> **/
 #define F32 float
 
-        /** ************************************************ **/
-        /** @VID_IID[ 0151 ]TIME[ 00:48:10 ] * * * * * * * * **/
-        /** Decided that even though rectangle is stored as  **/
-        /** uint32 values, it makes more sense for functions **/
-        /** returning rectangles to return SIGNED I32.       **/
-        /** ************************************************ **/
+    //:FUI_FLOAT_UINT_INT:===================================://
 
-            struct AAC2020_POLYOGL_REC{
-                //:X_BOUNDS:
-                I32 x_0 ; //:<--@_NEVER_NEGATIVE_@.
-                I32 x_1 ; //:   But use signed for ease of
-                          //:   use as well as underflow
-                          //:   detection.
-                          //:   @_SHOULD_NOT_BE_NEGATIVE_@
-        
-                //:Y_BOUNDS:
-                I32 y_0 ; //:<--@_NEVER_NEGATIVE_@.
-                I32 y_1 ; //:   But use signed for ease of
-                          //:   use as well as underflow
-                          //:   detection.
-                          //:   @_SHOULD_NOT_BE_NEGATIVE_@
-            };
-
-
-        /** Mocked up "ivec2" to store global [x,y] * * * *  **/
-        /** coordinates.                            * * * *  **/
-        /** @VID_IID[ 0092 ]TIME[ 00:27:55 ]        * * * *  **/
-
-            struct AAC2020_POLYOGL_IV2{
-                I32 x ;
-                I32 y ;
-            };
-
-        /** Needed to adapt the texel fetch polyfill.* * * * **/
-        /** AAC2020_POLYOGL_tex_fet             * * * * **/
-        /** @VID_IID[ 0092 ]TIME[ 00:26:45 ]         * * * * **/
-
-            struct AAC2020_POLYOGL_UV4{
-
-                U08 x ; //:RED
-                U08 y ; //:GREEN
-                U08 z ; //:BLUE
-                U08 w ; //:ALPHA
-
-            };
+        //:FV2_FV3_FV4:--------------------------------------://
 
             struct AAC2020_POLYOGL_FV2{
             //:@VID_IID[ 0116 ]T[ 00:20:23 ]ORIGINAL_COMMENT ://
@@ -74,9 +32,82 @@
                 F32 w ; //:ALPHA  output frag color.         ://
             };                                                
 
+        //:--------------------------------------:FV2_FV3_FV4://
+        //:UV2_UV3_UV4:--------------------------------------://
 
-            
+            /** Uint Vecs are probably 32 bits per component **/    
+            /** But best to assume LESS memory, not more.    **/
+            /** @VID_IID[ 0292 ]TIME[ 01:41:23 ]             **/
 
+            struct AAC2020_POLYOGL_UV2{
+                U08 x ; //: RED    ADDED_DATE[ 2021_05_09 ]  ://
+                U08 y ; //: GREEN  @VID_IID[ 0292 ]          ://
+                        //:        TIME[ 01:43:13 ]          ://
+            };    
+            struct AAC2020_POLYOGL_UV3{
+                U08 x ; //: RED    ADDED_DATE[ 2021_05_09 ]  ://
+                U08 y ; //: GREEN  @VID_IID[ 0292 ]          ://
+                U08 z ; //: BLUE   TIME[ 01:42:42 ]          ://
+            };                                               
+            struct AAC2020_POLYOGL_UV4{
+            /** @VID_IID[ 0092 ]TIME[ 00:26:45 ]TEXEL_FETCH  **/
+                U08 x ; //: RED   ---------------------------://
+                U08 y ; //: GREEN ---------------------------://
+                U08 z ; //: BLUE  ---------------------------://
+                U08 w ; //: ALPHA ---------------------------://
+            };
+
+        //:--------------------------------------:UV2_UV3_UV4://
+        //:IV2_IV3_IV4:--------------------------------------://
+
+            struct AAC2020_POLYOGL_IV2{
+                I32 x ; //:@VID_IID[ 0092 ]
+                I32 y ; //:TIME[ 00:27:55 ]
+            };
+            struct AAC2020_POLYOGL_IV3{
+                I32 x ; //:@VID_IID[ 0292 ]
+                I32 y ; //:TIME[ 01:46:23 ]
+                I32 z ;  
+            };
+            struct AAC2020_POLYOGL_IV4{
+                I32 x ; //:@VID_IID[ 0292 ]
+                I32 y ; //:TIME[ 01:46:23 ]
+                I32 z ;  
+                I32 w ;  
+            };
+
+        //:--------------------------------------:IV2_IV3_IV4://
+
+    //:===================================:FUI_FLOAT_UINT_INT://
+    //:STRUCT_TYPE_POLYFILLS:================================://
+    
+        /** @VID_IID[ 0292 ]T[01:53:32 ]STRUCTS_AFTER_PRIM * **/
+
+        //:RECTANGLE_STRUCT:---------------------------------://
+
+            struct AAC2020_POLYOGL_REC{     
+                 
+                /** @VID_IID[ 0151 ]REASON_WHY_SIGNED_INT    **/
+                /** TIME[ 00:48:10 ]REASON_WHY_SIGNED_INT    **/
+                /** @VID_IID[ 0292 ]TIME[ 01:48:23 ]         **/
+
+                //:X_BOUNDS:
+                I32 x_0 ; //:<--@_NEVER_NEGATIVE_@.
+                I32 x_1 ; //:   But use signed for ease of
+                          //:   use as well as underflow
+                          //:   detection.
+                          //:   @_SHOULD_NOT_BE_NEGATIVE_@
+        
+                //:Y_BOUNDS:
+                I32 y_0 ; //:<--@_NEVER_NEGATIVE_@.
+                I32 y_1 ; //:   But use signed for ease of
+                          //:   use as well as underflow
+                          //:   detection.
+                          //:   @_SHOULD_NOT_BE_NEGATIVE_@
+            };
+        //:---------------------------------:RECTANGLE_STRUCT://
+
+    //:================================:STRUCT_TYPE_POLYFILLS://
 
 #undef  I32
 #undef  U08

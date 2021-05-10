@@ -1,18 +1,281 @@
 
     //:FRAGMENT_SHADER_MACROS_MEGA_HEADER.TOP._
 
+    //:SAME_FOR_C99_AND_GLSL:============================://
+
+        #define            E_S_private( e_m ) #e_m //| # |//
+        #define E_S( e_m ) E_S_private( e_m )      //| # |//
+
+    //:============================:SAME_FOR_C99_AND_GLSL://
+    //:FUI_F32_U32_I32:==================================://
+    //:GLSL_OR_C99_DEPENDING:----------------------------://
     #if defined( AAC2020_MACRO_THIS_IS_OPEN_GL )
 
-    #define FV2 vec2
-    #define FV3 vec3
-    #define FV4 vec4
+    #define F32  float
+    #define U32   uint
+    #define I32    int
 
-    #else //:COMPILE_AS_C99_C11_CODE://
+    #define FV2   vec2
+    #define FV3   vec3
+    #define FV4   vec4
+
+    #define UV2  uvec2
+    #define UV3  uvec3
+    #define UV4  uvec4
+
+    #define IV2  ivec2
+    #define IV3  ivec3
+    #define IV4  ivec4
+
+    #else //:COMPILE_AS_C99_C11_CODE:====================://
+
+    #define F32 float
+    #define U32  uint32_t
+    #define I32   int32_t
 
     #define FV2 struct aac2020_polyogl_FV2
     #define FV3 struct aac2020_polyogl_FV3
     #define FV4 struct aac2020_polyogl_FV4
 
+    #define UV2 struct aac2020_polyogl_UV2
+    #define UV3 struct aac2020_polyogl_UV3
+    #define UV4 struct aac2020_polyogl_UV4
+
+    #define IV2 struct aac2020_polyogl_IV2
+    #define IV3 struct aac2020_polyogl_IV3
+    #define IV4 struct aac2020_polyogl_IV4
+
     #endif
+    //:----------------------------:GLSL_OR_C99_DEPENDING://
+    //:==================================:FUI_F32_U32_I32://
+    //:EDITOR_SHADER_MACROS:=============================://
+    //:UNDEF_OR_DEF_U32_COLORS:--------------------------://
+    #if( AAC2020_MACRO_THIS_IS_OPEN_GL >= 1 )  
     
+        //:powers_of_2:----------------------------------://
+
+            #define U32_000 ( uint(  0))//:[ U_000 ]: 01 ://
+            #define U32_001 ( uint(  1))//:[ U_001 ]: 02 ://
+            #define U32_002 ( uint(  2))//:[ U_002 ]: 03 ://
+            #define U32_004 ( uint(  4))//:[ U_004 ]: 04 ://
+            #define U32_008 ( uint(  8))//:[ U_008 ]: 05 ://
+            #define U32_016 ( uint( 16))//:[ U_016 ]: 06 ://
+            #define U32_032 ( uint( 32))//:[ U_032 ]: 07 ://
+            #define U32_064 ( uint( 64))//:[ U_064 ]: 08 ://
+            #define U32_128 ( uint(128))//:[ U_128 ]: 09 ://
+            #define U32_256 ( uint(256))//:[ U_256 ]: 10 ://
+
+        //:----------------------------------:powers_of_2://
+        //:All_Other_Numbers_Ascending:------------------://
+
+            #define U32_003 ( uint(  3))//:[ U_003 ]: 01 ://
+            #define U32_048 ( uint( 48))//:[ U_048 ]: 02 ://
+            #define U32_080 ( uint( 80))//:[ U_080 ]: 03 ://
+            #define U32_085 ( uint( 85))//:[ U_085 ]: 04 ://
+            #define U32_096 ( uint( 96))//:[ U_096 ]: 05 ://
+            #define U32_255 ( uint(255))//:[ U_255 ]: 06 ://
+
+        //:------------------:All_Other_Numbers_Ascending://
+    #else        
+
+        //:powers_of_2:----------------------------------://
+
+            #define U32_000 ((U32)(  0))//:[ U_000 ]: 01 ://
+            #define U32_001 ((U32)(  1))//:[ U_001 ]: 02 ://
+            #define U32_002 ((U32)(  2))//:[ U_002 ]: 03 ://
+            #define U32_004 ((U32)(  4))//:[ U_004 ]: 04 ://
+            #define U32_008 ((U32)(  8))//:[ U_008 ]: 05 ://
+            #define U32_016 ((U32)( 16))//:[ U_016 ]: 06 ://
+            #define U32_032 ((U32)( 32))//:[ U_032 ]: 07 ://
+            #define U32_064 ((U32)( 64))//:[ U_064 ]: 08 ://
+            #define U32_128 ((U32)(128))//:[ U_128 ]: 09 ://
+            #define U32_256 ((U32)(256))//:[ U_256 ]: 10 ://
+
+        //:----------------------------------:powers_of_2://
+        //:All_Other_Numbers_Ascending:------------------://
+
+            #define U32_003 ((U32)(  3))//:[ U_003 ]: 01 ://
+            #define U32_048 ((U32)( 48))//:[ U_048 ]: 02 ://
+            #define U32_080 ((U32)( 80))//:[ U_080 ]: 03 ://
+            #define U32_085 ((U32)( 85))//:[ U_085 ]: 04 ://
+            #define U32_096 ((U32)( 96))//:[ U_096 ]: 05 ://
+            #define U32_255 ((U32)(255))//:[ U_255 ]: 06 ://
+
+        //:------------------:All_Other_Numbers_Ascending://
+    #endif
+    //:--------------------------:UNDEF_OR_DEF_U32_COLORS://
+    //:ARR_XXX_MACROS:-----------------------------------://
+    #if( AAC2020_MACRO_THIS_IS_OPEN_GL >= 1 )  
+        #define ARR_BEG (  //:GLSL_ARRAY_INIT_BEG   : 01 ://
+        #define ARR_END )  //:GLSL_ARRAY_INIT_END   : 02 ://
+                                                  //: -- ://
+        #define ARR_FV4(n) FV4[n]                 //: 03 ://
+        #define ARR_U32(n) U32[n]                 //: 04 ://
+        #define ARR_I32(n) I32[n]                 //: 05 ://
+                                                  //: -- ://
+    #else                                         //: -- ://
+        #define ARR_BEG {  //:_C99_ARRAY_INIT_BEG   : 01 ://
+        #define ARR_END }  //:_C99_ARRAY_INIT_END   : 02 ://
+                                                  //: -- ://
+        #define ARR_FV4(n) //:ERASE_IT_IN_C99       : 03 ://
+        #define ARR_U32(n) //:ERASE_IT_IN_C99       : 04 ://
+        #define ARR_I32(n) //:ERASE_IT_IN_C99       : 05 ://
+        
+    #endif
+    //:-----------------------------------:ARR_XXX_MACROS://
+    //:=============================:EDITOR_SHADER_MACROS://
+    //:TEXTURE_MEMORY_MACROS:============================://
+    #if( AAC2020_MACRO_THIS_IS_OPEN_GL >= 1 )
+
+        #define T_F   texelFetch    
+        #define SAM   usampler2D 
+
+        #define TAU     taudepo                   
+        #define P5D     paint5d                   
+    #else
+        #define T_F   AAC2020_POLYOGL_tex_fet                                     
+        #define SAM    int 
+
+        #define TAU     (  0  ) //: SUB_TAU ://              
+        #define P5D     (  1  ) //: SUB_P5D ://              
+    #endif
+    //:============================:TEXTURE_MEMORY_MACROS://
+    //:STRUCT_MACROS:====================================://
+    #if( AAC2020_MACRO_THIS_IS_OPEN_GL >= 1 )
+
+        #define REC  struct AAC2020_FRAGCOM_REC     
+    #else
+        #define REC  struct AAC2020_POLYOGL_REC 
+    #endif
+    //:====================================:STRUCT_MACROS://
+    //:THREE_LETTER_MACROS:==============================://
+    #if( AAC2020_MACRO_THIS_IS_OPEN_GL >= 1 )
+
+        #define MF3     float /** AKA: MAK_F32 **/ 
+        #define MU3     uint  /** AKA: MAK_U32 **/
+        #define MI3     int   /** AKA: MAK_I32 **/ 
+        #define TRU     trunc /** Like Floor   **/ 
+                                                   
+        #define I00     int( 0  )     
+        #define U00    uint( 0  )
+        #define U03    uint( 3  )
+        #define B_3    uint( 3  )   
+        #define B11    uint( 3  )   
+
+        #define UFF    uint(0xFF)
+        #define H55    uint(0x55)  
+
+        #define VOD     void     
+        #define V_A                     
+        #define ASS     /**Nothing**/  
+
+    #else
+
+        #define MF3     AAC2020_POLYOGL_MAK_F32  
+        #define MU3     AAC2020_POLYOGL_MAK_U32
+        #define MI3     AAC2020_POLYOGL_MAK_I32   
+        #define TRU     AAC2020_POLYOGL_Trunc     
+                                                                         
+        #define I00   ( 0 ) 
+        #define U00   ( 0 )         
+        #define U03   ( 3 )         
+        #define B_3   ( 3 )         
+        #define B11   ( 3 )   
+
+        #define UFF   0xFF         
+        #define H55   0x55         
+           
+        #define VOD   void   
+        #define V_A   void                 
+        #define ASS   assert               
+                  
+    #endif
+    //:==============================:THREE_LETTER_MACROS://
+    //:SEVEN_LETTER_MAKER_MACROS:========================://
+    #if( AAC2020_MACRO_THIS_IS_OPEN_GL >= 1 )
+
+        #define MAK_F32     float
+        #define MAK_U32      uint  
+        #define MAK_I32       int   
+            
+        #define MAK_FV4      vec4   
+        #define MAK_FV3      vec3   
+        #define MAK_FV2      vec2   
+
+        #define MAK_UV4     uvec4                  
+        #define MAK_UV3     uvec3                  
+        #define MAK_UV2     uvec2    
+
+        #define MAK_IV4     ivec4                  
+        #define MAK_IV3     ivec3                  
+        #define MAK_IV2     ivec2        
+    #else
+        #define MAK_F32 AAC2020_POLYOGL_MAK_F32     
+        #define MAK_U32 AAC2020_POLYOGL_MAK_U32     
+        #define MAK_I32 AAC2020_POLYOGL_MAK_I32  
+
+        #define MAK_FV4 AAC2020_POLYOGL_MAK_FV4     
+        #define MAK_FV3 AAC2020_POLYOGL_MAK_FV3     
+        #define MAK_FV2 AAC2020_POLYOGL_MAK_FV2     
+    
+        #define MAK_UV4 AAC2020_POLYOGL_MAK_UV4     
+        #define MAK_UV3 AAC2020_POLYOGL_MAK_UV3     
+        #define MAK_UV2 AAC2020_POLYOGL_MAK_UV2   
+
+        #define MAK_IV4 AAC2020_POLYOGL_MAK_IV4     
+        #define MAK_IV3 AAC2020_POLYOGL_MAK_IV3     
+        #define MAK_IV2 AAC2020_POLYOGL_MAK_IV2    
+    #endif
+    //:========================:SEVEN_LETTER_MAKER_MACROS://
+    //:SEVEN_LETTER_FLOOR_ROUND_CEIL:====================://
+    #if( AAC2020_MACRO_THIS_IS_OPEN_GL >= 1 )
+
+        #define FLO_NAT floor                       
+        #define FLO_F32 AAC2020_FRAGCOM_FLO_F32     
+                                                    
+        #define ROU_NAT round /** round NATIVE **/  
+        #define ROU_F32 AAC2020_FRAGCOM_ROU_F32     
+                                                    
+        #define CEL_NAT ceil                        
+        #define CEL_F32 AAC2020_FRAGCOM_CEL_F32     
+        #define COF_F32 AAC2020_FRAGCOM_COF_F32  
+    #else
+
+        #define FLO_NAT AAC2020_POLYOGL_ROU_NAT         
+        #define FLO_F32 AAC2020_POLYOGL_ROU_F32     
+                                                    
+        #define ROU_NAT AAC2020_POLYOGL_ROU_NAT     
+        #define ROU_F32 AAC2020_POLYOGL_ROU_F32     
+                                                    
+        #define CEL_NAT AAC2020_POLYOGL_CEL_NAT     
+        #define CEL_F32 AAC2020_POLYOGL_CEL_F32     
+        #define COF_F32 AAC2020_POLYOGL_COF_F32     
+    #endif
+    //:====================:SEVEN_LETTER_FLOOR_ROUND_CEIL://
+    //:SEVEN_LETTER_MACROS_MISC:=========================://
+    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL            
+        #define BIN_011 uint( 3 )                   
+        #define TYP_F_C /** nothing **/             
+        #define INN_F_C /** nothing **/             
+    #else                                           
+        #define BIN_011 ((U32)3 )                   
+        #define TYP_F_C struct AAC2020_POLYOGL_FV4  
+        #define INN_F_C F_C                         
+    #endif                                          
+    //:=========================:SEVEN_LETTER_MACROS_MISC://
+
+
+                
+
+
+
+         
+      
+      
+
+   
+
+          
+
+       
 

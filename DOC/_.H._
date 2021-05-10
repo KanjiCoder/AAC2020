@@ -9,6 +9,178 @@
     //[   VIDEO COMMENT TIMESTAMP EXAMPLE   ]//
 *** ******************************************************** ***
 
+#FRAGCOM_SEVEN_LETTER_MACROS_CLEANUP############################
+@VID_IID[0292]TIME[02:54:32]CONSOLIDATING_7_LETTER_MACROS
+
+    //:seven_letter_macros:------------------------------://
+    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL           //| # |//
+                                                   //|---|//
+        #define MAK_FV4      vec4                  //| 1 |//
+        #define MAK_IV2     ivec2                  //| 2 |//
+        #define MAK_U32      uint                  //| 3 |//
+        #define MAK_I32       int                  //| 4 |//
+        #define MAK_F32     float                  //| 5 |//
+        #define BIN_011 uint( 3 )                  //| 6 |//
+        #define TYP_F_C /** nothing **/            //| 7 |//
+        #define INN_F_C /** nothing **/            //| 8 |//
+        //:-------------------------------------:////|---|//
+        #define FLO_NAT floor                      //| 9 |//
+        #define FLO_F32 AAC2020_FRAGCOM_FLO_F32    //|10 |//
+        #define ROU_NAT round /** round NATIVE **/ //|11 |//
+        #define ROU_F32 AAC2020_FRAGCOM_ROU_F32    //|12 |//
+        #define CEL_NAT ceil                       //|13 |//
+        #define CEL_F32 AAC2020_FRAGCOM_CEL_F32    //|14 |//
+        #define COF_F32 AAC2020_FRAGCOM_COF_F32    //|15 |//
+    #else                                          //|---|//
+        #define MAK_FV4 AAC2020_POLYOGL_MAK_FV4    //[ 1 ]//
+        #define MAK_IV2 AAC2020_POLYOGL_MAK_IV2    //[ 2 ]//
+        #define MAK_U32 AAC2020_POLYOGL_MAK_U32    //[ 3 ]//
+        #define MAK_I32 AAC2020_POLYOGL_MAK_I32    //[ 4 ]//
+        #define MAK_F32 AAC2020_POLYOGL_MAK_F32    //[ 5 ]//
+        #define BIN_011 ((U32)3 )                  //[ 6 ]//
+        #define TYP_F_C struct AAC2020_POLYOGL_FV4 //[ 7 ]//
+        #define INN_F_C F_C                        //[ 8 ]//
+        //:-------------------------------------:////[---]//
+        #define FLO_NAT AAC2020_POLYOGL_ROU_NAT    //[ 9 ]//      
+        #define FLO_F32 AAC2020_POLYOGL_ROU_F32    //[10 ]//
+        #define ROU_NAT AAC2020_POLYOGL_ROU_NAT    //[11 ]//
+        #define ROU_F32 AAC2020_POLYOGL_ROU_F32    //[12 ]//
+        #define CEL_NAT AAC2020_POLYOGL_CEL_NAT    //[13 ]//
+        #define CEL_F32 AAC2020_POLYOGL_CEL_F32    //[14 ]//
+        #define COF_F32 AAC2020_POLYOGL_COF_F32    //[15 ]//
+    #endif                                         //[---]//
+    //:------------------------------:seven_letter_macros://
+
+############################FRAGCOM_SEVEN_LETTER_MACROS_CLEANUP#
+#CONSOLIDATING_FRAGCOM_FRA_TYPE_MACROS##########################
+@VID_IID[ 0292 ]TIME[ 02:51:55 ]PASTED_TYPE_MACROS_BELOW
+
+    //:type_macros:--------------------------------------://
+    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL           //| # |//
+                                                   //| # |//
+        /** When Running As GLSL Code. **/         //| # |//
+                                                   //| # |//
+        #define F32        float    //:  01  ://   //| # |//
+        #define U32         uint    //:  02  ://   //| # |//
+        #define I32          int    //:  03  ://   //| # |//
+        #define IV2        ivec2    //:  04  ://   //| # |//
+        #define UV4        uvec4    //:  05  ://   //| # |//
+        #define T_F   texelFetch    //:  06  ://   //| # |//
+                                                   //| # |//
+        /** #_DOUBLE_SQUARE_BRACKET_MACROS_# **/   //| # |//
+        #define TAU    [[taudepo]]  //:  07  ://   //| # |//
+        #define P5D    [[paint5d]]  //:  08  ://   //| # |//
+                                                   //| # |//
+        #define SAM   usampler2D    //:  09  ://   //| # |//
+        #define UFF    uint(0xFF)   //:  10  ://   //| # |//
+        #define U00    uint( 0  )   //:  11  ://   //| # |//
+        #define I00     int( 0  )   //:  12  ://   //| # |//
+        #define U03    uint( 3  )   //:  13  ://   //| # |//
+        #define B_3    uint( 3  )   //:  14  ://   //| # |//
+        #define B11    uint( 3  )   //:  15  ://   //| # |//
+        #define H55    uint(0x55)   //:  16  ://   //| # |//
+        #define V_A                 //:  17  ://   //| # |//
+        #define FV4         vec4    //:  18  ://   //| # |//
+        #define ASS  /**NOTHING**/  //:  19  ://   //| # |//
+        #define ERR(e_m) /**BLANK**///:  20  ://   //| 20|//
+        #define TRU  trunc          //:  21  ://   //| 21|//
+        #define REC  struct AAC2020_FRAGCOM_REC    //| 22|//
+
+    #else                                          //| # |//
+                                                   //| # |//
+        /** When Running As C99/C11 Code. **/      //| # |//
+                                                   //| # |//
+        #define F32      float      //:  01  ://   //| # |//
+        #define U32   uint32_t      //:  02  ://   //| # |//
+        #define I32    int32_t      //:  03  ://   //| # |//
+        #define IV2   struct AAC2020_POLYOGL_IV2   //| # |//
+        #define UV4   struct AAC2020_POLYOGL_UV4   //| # |//
+        #define T_F   AAC2020_POLYOGL_tex_fet      //| # |//
+                                                   //| # |//
+        /** #_DOUBLE_SQUARE_BRACKET_MACROS_# **/   //| # |//
+        #define TAU   [[ 0 ]]       //:  07  ://   //| # |//
+        #define P5D   [[ 1 ]]       //:  08  ://   //| # |//
+                                                   //| # |//
+        #define SAM    int          //:  09  ://   //| # |//
+        #define UFF    0xFF         //:  10  ://   //| # |//
+        #define U00    0x00         //:  11  ://   //| # |//
+        #define I00   ( 0 )         //:  12  ://   //| # |//
+        #define U03   ( 3 )         //:  13  ://   //| # |//
+        #define B_3   ( 3 )         //:  14  ://   //| # |//
+        #define B11   ( 3 )         //:  15  ://   //| # |//
+        #define H55    0x55         //:  16  ://   //| # |//
+        #define V_A   void          //:  17  ://   //| # |//
+        #define FV4   struct AAC2020_POLYOGL_FV4   //| # |//
+        #define ASS   assert        //:  19  ://   //| # |//
+        #define ERR   aac2020_fragcom_Halt_FRAG    //| 20|//
+        #define TRU   AAC2020_POLYOGL_Trunc        //| 21|//
+        #define REC   struct AAC2020_POLYOGL_REC   //| 22|//
+        
+    #endif                                         //| # |//
+    //:--------------------------------------:type_macros://
+
+##########################CONSOLIDATING_FRAGCOM_FRA_TYPE_MACROS#
+#_0151_TIME_00_48_10_###########################################
+@VID_IID[0292]TIME[01:50:50]CLEANING_UP_COMMENT_CLUTTER
+
+        /** ************************************************ **/
+        /** @VID_IID[ 0151 ]TIME[ 00:48:10 ] * * * * * * * * **/
+        /** Decided that even though rectangle is stored as  **/
+        /** uint32 values, it makes more sense for functions **/
+        /** returning rectangles to return SIGNED I32.       **/
+        /** ************************************************ **/
+            struct AAC2020_POLYOGL_REC{     
+                 
+                /** @VID_IID[ 0151 ]REASON_WHY_SIGNED_INT    **/
+                /** TIME[ 00:48:10 ]REASON_WHY_SIGNED_INT    **/
+                /** @VID_IID[ 0292 ]TIME[ 01:48:23 ]         **/
+
+                //:X_BOUNDS:
+                I32 x_0 ; //:<--@_NEVER_NEGATIVE_@.
+                I32 x_1 ; //:   But use signed for ease of
+                          //:   use as well as underflow
+                          //:   detection.
+                          //:   @_SHOULD_NOT_BE_NEGATIVE_@
+        
+                //:Y_BOUNDS:
+                I32 y_0 ; //:<--@_NEVER_NEGATIVE_@.
+                I32 y_1 ; //:   But use signed for ease of
+                          //:   use as well as underflow
+                          //:   detection.
+                          //:   @_SHOULD_NOT_BE_NEGATIVE_@
+            };
+
+###########################################_0151_TIME_00_48_10_#
+#_0092_TIME_00_27_55_###########################################
+@VID_IID[ 0292 ]TIME[ 01:45:23 ]CLEANING_UP_COMMENT_CLUTTER
+
+        /** Mocked up "ivec2" to store global [x,y] * * * *  **/
+        /** coordinates.                            * * * *  **/
+        /** @VID_IID[ 0092 ]TIME[ 00:27:55 ]        * * * *  **/
+
+            struct AAC2020_POLYOGL_IV2{
+                I32 x ;
+                I32 y ;
+            };
+
+###########################################_0092_TIME_00_27_55_#
+#_0092_TIME_00_26_45_###########################################
+@VID_IID[ 0292 ]TIME[ 01:33:50 ]CLEANING_UP_COMMENT_CLUTTER
+
+        /** Needed to adapt the texel fetch polyfill.* * * * **/
+        /** AAC2020_POLYOGL_tex_fet                  * * * * **/
+        /** @VID_IID[ 0092 ]TIME[ 00:26:45 ]         * * * * **/
+        struct AAC2020_POLYOGL_UV4{
+        /** @VID_IID[ 0092 ]TIME[ 00:26:45 ]TEXEL_FETCH  **/
+        
+            U08 x ; //:RED
+            U08 y ; //:GREEN
+            U08 z ; //:BLUE
+            U08 w ; //:ALPHA
+        
+        };
+
+###########################################_0092_TIME_00_26_45_#
 #_0116_TIME_20_23_##############################################
 @VID_IID[ 0292 ]TIME[ 01:12:00 ]CLEANING_UP_CLUTTER
 
