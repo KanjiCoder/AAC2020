@@ -95,6 +95,16 @@
         ########################################################
         ##:COMMON_MACROS:------------------------------------:##
 
+            INN="./LIB/MAC/FRA/TOP._"
+            OUT="./LIB/MAC/FRA/TOP.STR._"
+            awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT
+
+            INN="./LIB/MAC/FRA/BOT._"
+            OUT="./LIB/MAC/FRA/BOT.STR._"
+            awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT
+
+            ##- - - - - - - - - - - ---- - - - - - - - - - - -##
+
             INN="./LIB/EDITOR_SHADER_MACROS.TOP._"
             OUT="./LIB/EDITOR_SHADER_MACROS.TOP.STRING._"
             awk 'NF { print "\""$0"\\""n""\""}' $INN > $OUT

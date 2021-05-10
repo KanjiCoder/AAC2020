@@ -55,30 +55,27 @@
 
             };
 
-        /** @VID_IID[ 0093 ]TIME[ 00:24:50 ]   * * * * * * * **/
-        /** Another Shim for float vectors for * * * * * * * **/
-        /** output frag color.                 * * * * * * * **/
-
-            struct AAC2020_POLYOGL_FV4{
-
-                F32 x ; //:RED
-                F32 y ; //:GREEN
-                F32 z ; //:BLUE
-                F32 w ; //:ALPHA
-            };
-
-        /** @VID_IID[ 0116 ]TIME[ 00:20:23 ] *************** **/
-        /** Added for:                                       **/
-        /** 1. AAC2020_POLYOGL_Get_iResolution   (DONT_USE)  **/
-        /** 2. AAC2020_POLYOGL_Get_iResolution_X (DONT_USE)  **/
-        /** 3. AAC2020_POLYOGL_Get_iResolution_Y (DONT_USE)  **/
-        /**    USE[ P5D1OGL_GET_res_wid ]                    **/
-        /**    USE[ P5D1OGL_GET_res_hig ] ****************** **/
             struct AAC2020_POLYOGL_FV2{
-
+            //:@VID_IID[ 0116 ]T[ 00:20:23 ]ORIGINAL_COMMENT ://
                 F32 x ; //:[ iResolution.x | iMouse.x ]
                 F32 y ; //:[ iResolution.y | iMouse.y ]
+                        //:EXAMPLE[ uvc.x ]@VID_IID[ 0292 ]
+                        //:EXAMPLE[ uvc.y ]TIME[ 00:14:23 ]
             };
+            struct AAC2020_POLYOGL_FV3{
+                F32 x ; //:ADDED_DATE[      2021_05_09  ]
+                F32 y ; //:@VID_IID[ 0292 ]T[ 00:15:15  ]
+                F32 z ; //:FOR[ AAC2020_EXTCODE_FIRETIL ]
+            };
+            struct AAC2020_POLYOGL_FV4{
+                F32 x ; //:RED    @VID_IID[ 0093 ]           ://
+                F32 y ; //:GREEN  TIME[ 00:24:50 ]           ://
+                F32 z ; //:BLUE   Shim for float vectors to  ://
+                F32 w ; //:ALPHA  output frag color.         ://
+            };                                                
+
+
+            
 
 
 #undef  I32
