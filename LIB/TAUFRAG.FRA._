@@ -251,25 +251,31 @@
             I32 p_y ; //: pixel_y: (GLOBAL, on 512x512)
 
             //:INDEX_TO_XY_GLSL:-------------------------://  
+            #define A MAK_I32 /**MI3**/ //:--------------://    
+            #define B TRU_F32 /**TRU**/ //:--------------://    
+            #define C MAK_F32 /**MF3**/ //:--------------://    
+            
+                //:SEE[ #DIA_TAU_CEL# ]IN[ TAUDEPO.D._ ] ://
+                #define D dex_tau      //:DEX_TAU_000_015://
+                t_y  =A( B( C(D) /  (C(     4 ))  ));   
+                t_x  = (  (   D  -  ( (t_y* 4 ))  ));                                   
+                #undef  D              //:DEX_TAU_000_015:// 
+                //:                                      ://
+                //:SEE[ #DIA_SUB_CEL# ]IN[ TAUDEPO.D._ ] ://
+                #define D dex_sub      //:DEX_SUB_000_015://
+                s_y  =A( B( C(D) /  (C(     4 ))  ));   
+                s_x  = (  (   D  -  ( (s_y* 4 ))  ));                                   
+                #undef  D              //:DEX_SUB_000_015://
+                //:                                      ://
+                //:SEE[ #DIA_VAR_CEL# ]IN[ TAUDEPO.D._ ] ://
+                #define D dex_var      //:DEX_VAR_000_255://
+                v_y  =A( B( C(D) /  (C(    16 ))  ));   
+                v_x  = (  (   D  -  ( (v_y*16 ))  ));                                   
+                #undef  D              //:DEX_VAR_000_255://
             //:                                          ://
-            //:SEE[ #DIA_TAU_CEL# ]IN[ LIB/TAUDEPO.D._ ] ://
-            #define D dex_tau          //:DEX_TAU_000_015://
-            t_y  =MI3( TRU( MF3(D) / MF3(   4 )));   
-            t_x  =(       (     D  -(t_y *  4 )));                                   
-            #undef  D                  //:DEX_TAU_000_015:// 
-            //:                                          ://
-            //:SEE[ #DIA_SUB_CEL# ]IN[ LIB/TAUDEPO.D._ ] ://
-            #define D dex_sub          //:DEX_SUB_000_015://
-            s_y  =MI3( TRU( MF3(D) / MF3(   4 )));   
-            s_x  =(       (     D  -(s_y *  4 )));                                   
-            #undef  D                  //:DEX_SUB_000_015://
-            //:                                          ://
-            //:SEE[ #DIA_VAR_CEL# ]IN[ LIB/TAUDEPO.D._ ] ://
-            #define D dex_var          //:DEX_VAR_000_255://
-            v_y  =MI3( TRU( MF3(D) / MF3(  16 )));   
-            v_x  =(       (     D  -(v_y * 16 )));                                   
-            #undef  D                  //:DEX_VAR_000_255://
-            //:                                          ://
+            #undef  A  //:-------------------------------://
+            #undef  B  //:-------------------------------://
+            #undef  C  //:-------------------------------://
             //:-------------------------:INDEX_TO_XY_GLSL://
 
             //:global_pixel_xy_on_512x512:---------------://
@@ -320,22 +326,29 @@
 
             
             //:INDEX_TO_XY_GLSL:-------------------------://                          
-            #define D pix_dex  //:GLOBAL:DEX             ://
-            #define G glo      //:GLOBAL:XY              ://
-            G.y  =MI3( TRU( MF3(D) /  MF3( 512)));   
-            G.x  =   (    (     D  - (G.y *512)));                                   
+            #define D pix_dex  //:GLOBAL:DEX          :::://
+            #define G glo      //:GLOBAL:XY           :::://
+            #define A MAK_I32 /**MI3**/               //:://
+            #define B TRU_F32 /**TRU**/               //:://
+            #define C MAK_F32 /**MF3**/               //:://
+            G.y  = A( B( C(D) /  (C(    512))  ));    //:://
+            G.x  =  (  (   D  -  ( (G.y*512))  ));    //:://                          
             #undef  D                 //:----------------://             
             #undef  G                 //:----------------://
+            #undef  A                 //:----------------://
+            #undef  B                 //:----------------://
+            #undef  C                 //:----------------://
             //:-------------------------:INDEX_TO_XY_GLSL://
 
                                                      
             U32 u32_var ;                            
-                                                           
+                    
+                                            
             u32_var =(                               
                 AAC2020_FRAGCOM_TexelFetch_U32(           
-                    TAU //:texture_to_sample    ://  
-                ,   glo //:integer_texel_coord  ://  
-                ,   I00 //:level_of_detail_zero ://  
+                    TAU  //:texture_to_sample    ://  
+                ,   glo  //:integer_texel_coord  ://  
+                ,  ( 0 ) //:level_of_detail_zero ://  
                 ));;                                 
            
             /** Return Value Encoded In Taudepo Memory ..**/
@@ -363,7 +376,7 @@
                     ,           SUB_P5D //:sub: PAINT5D 
                     ,           var_p5d //:var: P5D_*** 
                 ));;            val_i32=( 
-                           MI3( val_u32 ) );;
+                       MAK_I32( val_u32 ) );;
                 return(         val_i32   );
             }   
 
@@ -391,18 +404,27 @@
                 ));;
 
             
-            //:INDEX_TO_XY_GLSL:-------------------------://                          
-            #define D pix_dex  //:GLOBAL:DEX             ://
-            g_y  =MI3( TRU( MF3(D) / MF3( 512)));   
-            g_x  =(       (     D  -(g_y *512)));                                   
+            //:INDEX_TO_XY_GLSL:-------------------------://   
+            #define A MAK_I32 /**MI3**/             //:--://
+            #define B TRU_F32 /**TRU**/             //:--://
+            #define C MAK_F32 /**MF3**/             //:--://
+            #define D pix_dex  //:GLOBAL:DEX        //:--://
+            g_y  = A( B( C(D) / (   C( 512))  ));   //:--://
+            g_x  =  (  (   D  - ((g_y *512))  ));   //:--://                        
+            #undef  A                 //:----------------://             
+            #undef  B                 //:----------------://             
+            #undef  C                 //:----------------://             
             #undef  D                 //:----------------://             
             //:-------------------------:INDEX_TO_XY_GLSL://    
 
-                                                     
-            REC rec; /** I32 Rectangle **/                         
-                               
-            #define GET_U32 AAC2020_FRAGCOM_TexelFetch_U32XY        
-            #define GET_I32(a,b,c,d)  MI3(GET_U32(a,b,c,d))        
+                  
+            //:LOAD_PIXEL_DATA_INTO_RECTANGLE:-----------://
+            REC rec; /** I32 Rectangle **/       //:-----://                
+                                                 //:-----://
+            #define       C MAK_I32 /**C:CAST**/ //:-----://
+            #define GET_U32 AAC2020_FRAGCOM_TexelFetch_U32XY            
+            #define GET_I32(a,b,c,d)  C(GET_U32(a,b,c,d))   
+            #define       Z (0) /** Level_Of_Detail == 0 **/
 
             //:  LOCATION     DATA_STORED_AT_LOCATION
             //:  +---+---+    +---+---+  //:T_L ==> x_0
@@ -410,13 +432,16 @@
             //:  +---+---+    +---+---+  //:B_L ==> y_0
             //:  |B_L|B_R|    |y_0|y_1|  //:B_R ==> y_1
             //:  +---+---+    +---+---+
-            rec.x_0 =(GET_I32(TAU,g_x+0,g_y+0,I00)); //T_L//     
-            rec.x_1 =(GET_I32(TAU,g_x+1,g_y+0,I00)); //T_R//
-            rec.y_0 =(GET_I32(TAU,g_x+0,g_y+1,I00)); //B_L//
-            rec.y_1 =(GET_I32(TAU,g_x+1,g_y+1,I00)); //B_R//
+            rec.x_0 =(GET_I32(TAU,g_x+0,g_y+0, Z )); //T_L//         
+            rec.x_1 =(GET_I32(TAU,g_x+1,g_y+0, Z )); //T_R//
+            rec.y_0 =(GET_I32(TAU,g_x+0,g_y+1, Z )); //B_L//
+            rec.y_1 =(GET_I32(TAU,g_x+1,g_y+1, Z )); //B_R//
 
-            #undef  GET_U32
-            #undef  GET_I32
+            #undef        C  //:-------------------------://
+            #undef  GET_U32  //:-------------------------://
+            #undef  GET_I32  //:-------------------------://
+            #undef        Z  //:-------------------------://
+            //:-----------:LOAD_PIXEL_DATA_INTO_RECTANGLE://
             
            
             /** Return Value Encoded In Taudepo Memory ..**/
@@ -470,7 +495,7 @@
                 ,   SUB_P5D //:sub: PAINT5D 
                 ,   P5D_A_D //:var: P5D_A_D 
                 ));;
-                aus_dex=( MI3( aus_dex_u32 ) );
+                aus_dex=( MAK_I32( aus_dex_u32 ) );
                 return( aus_dex );
             }
             //:- - - - - - - - - - -- - - - - - - - - - -://
@@ -575,24 +600,10 @@
     //[========================:TAUFRAG_FUNCTIONS_GO_HERE]//
     //[TAUFRAG_DEFINES___GO_HERE:========================]//
 
-        /** Undefine Previous Defines From This File. **/
-        /** @VID_IID[ 0177 ]TIME[ 00:51:23 ] ******** **/
+        /** @VID_IID[ 0177 ]TIME[ 00:51:23 ]ORIGINAL**** **/
+        /** @VID_IID[ 0293 ]TIME[ 00:42:23 ]CLEAN_UP**** **/
 
-        #undef  ESP  //|----------------------------| 01 |//
-        #undef  E_S  //|----------------------------| 02 |//
-        #undef  I32  //[----------------------------[ 03 ]//
-        #undef  MF3  //[----------------------------[ 04 ]//
-        #undef  MI3  //[----------------------------[ 05 ]//
-        #undef  TRU  //[----------------------------[ 06 ]//
-        #undef  REC  //[----------------------------[ 07 ]//
-        #undef  ASS  //[----------------------------[ 08 ]//
-        #undef  IV2  //[----------------------------[ 09 ]//
-        #undef  U32  //[----------------------------[ 10 ]//
-        #undef  TAU  //[----------------------------[ 11 ]//
-        #undef  P5D  //[----------------------------[ 12 ]//
-        #undef  I00  //[----------------------------[ 13 ]//
-        #undef  VOD  //[----------------------------[ 14 ]//
-        #undef  ERR  //[----------------------------[ 15 ]//
+        #undef  ERR   
 
     //[========================:TAUFRAG_DEFINES___GO_HERE]//
     //:TAUDEPO_SHORTHAND_MACROS:UNDEF:-------------------://

@@ -48,23 +48,22 @@
     //[PASTE_INTO_FILE[ COM_001._ ]:=====================]//
     //:COM_001____AAC2020_FRAGCOM_DEFAULT_001:===========://
     //|SIM:Shim_Ifdef_Macros:|||||||||||||||||||||||||||||//
-    //:always_exists_error_string_macros:----------------://
-                                                 
-        /** @VID_IID[ 0112 ]T[ 00:56:50 ]ORIGINAL_COMMENT**/
-        /** @VID_IID[ 0292 ]T[ 02:53:23 ]GUTTED_THIS_CODE**/
-        //:SEE[ AAC2020/LIB/MAC/FRA/TOP._ ]
-         
-    //:----------------:always_exists_error_string_macros://
-    //:type_macros:--------------------------------------://
-
-        //:SEE[ AAC2020/LIB/MAC/FRA/TOP._ ]
-    
-    //:--------------------------------------:type_macros://
-    //:seven_letter_macros:------------------------------://
-
-        //:SEE[ AAC2020/LIB/MAC/FRA/TOP._ ]
-
-    //:------------------------------:seven_letter_macros://
+    //:FRAGCOM_FRA_FILE_MACROS:==========================://
+    /** @VID_IID[ 0112 ]T[ 00:56:50 ]ORIGINAL   **///:---://
+    /** @VID_IID[ 0292 ]T[ 02:53:23 ]GUTTED     **///:---://
+    /** SEE[ AAC2020/LIB/MAC/FRA/TOP._ ] ****** **///:---://
+    /** SEE[ AAC2020/LIB/MAC/FRA/BOT._ ]******* **///:---://
+                                                   //:---://
+    #if( AAC2020_MACRO_THIS_IS_OPEN_GL >= 1 )      //:---://
+        #define     ERR /** nothing **/            //:---://
+        #define TYP_F_C /** nothing **/            //:---://
+        #define INN_F_C /** nothing **/            //:---://
+    #else                                          //:---://
+        #define     ERR aac2020_fragcom_Halt_FRAG  //:---://
+        #define TYP_F_C struct AAC2020_POLYOGL_FV4 //:---://
+        #define INN_F_C F_C                        //:---://
+    #endif                                         //:---://
+    //:==========================:FRAGCOM_FRA_FILE_MACROS://
     //||||||||||||||||||||||||||||||SIM:Shim_Ifdef_Macros|//
     //+C99_FRAG_SHADER_ONLY:=============================+//
     #if !defined( AAC2020_MACRO_THIS_IS_OPEN_GL ) // NOTGLSL
@@ -445,7 +444,7 @@
                 #_EXT_COM_2021_03_13_313PM_#      //[ TF ]//
             *** **************************************TF **/ 
                                                   //[ TF ]//
-                u32_var=( U00 /** 0x00 **/        //[ TF ]//
+                u32_var=( U32_000                 //[ TF ]//
                 | ( uv4.x << 24 ) //: R ://       //[ TF ]//
                 | ( uv4.y << 16 ) //: G ://       //[ TF ]//
                 | ( uv4.z <<  8 ) //: B ://       //[ TF ]//
@@ -570,61 +569,18 @@
         }
  
         //:- - - - - - - - - - - -- - - - - - - - - - - -:// 
-    //:always_exists_error_string_macros:----------------://
-                                                   //[ x ]//
-        #undef  E_S_private                        //[ x ]//
-        #undef  E_S                                //[ x ]//
-                                                   //[ x ]//
-    //:----------------:always_exists_error_string_macros://
-    //:type_macros:--------------------------------------://
-                                                   //[ x ]//
-        #undef  F32      //:  01  ://              //[ x ]//
-        #undef  U32      //:  02  ://              //[ x ]//
-        #undef  I32      //:  03  ://              //[ x ]//
-        #undef  IV2      //:  04  ://              //[ x ]//
-        #undef  UV4      //:  05  ://              //[ x ]//
-        #undef  T_F      //:  06  ://              //[ x ]//
-        #undef  TAU      //:  07  ://              //[ x ]//
-        #undef  P5D      //:  08  ://              //[ x ]//
-        #undef  SAM      //:  09  ://              //[ x ]//
-        #undef  UFF      //:  10  ://              //[ x ]//
-        #undef  U00      //:  11  ://              //[ x ]//
-        #undef  I00      //:  12  ://              //[ x ]//
-        #undef  U03      //:  13  ://              //[ x ]//
-        #undef  B_3      //:  14  ://              //[ x ]//
-        #undef  B11      //:  15  ://              //[ x ]//
-        #undef  H55      //:  16  ://              //[ x ]//
-        #undef  V_A      //:  17  ://              //[ x ]//
-        #undef  FV4      //:  18  ://              //[ x ]//
-        #undef  ASS      //:  19  ://              //[ x ]//
-        #undef  ERR      //:  20  ://              //[ x ]//
-        #undef  TRU      //:  21  ://              //[ x ]//
-        #undef  REC      //:  22  ://              //[ x ]//
-                                                   //[ x ]//
-    //:--------------------------------------:type_macros://
-    //:seven_letter_macros:------------------------------://
-    /** @VID_IID[ 0093 ]TIME{ 00:31:40 ] *************** **/
-    /** Decided on [MAK] for [MAKE] as our constructor   **/
-    /** postfix ........................................ **/
-                                                   //[ x ]//
-        #undef  MAK_FV4                            //[ 1 ]//
-        #undef  MAK_IV2                            //[ 2 ]//
-        #undef  MAK_I32                            //[ 3 ]//
-        #undef  MAK_F32                            //[ 4 ]//
-        #undef  BIN_011                            //[ 5 ]//
-        #undef  CUVIPIX                            //[ 6 ]//
-        #undef  TYP_F_C                            //[ 7 ]//
-        #undef  INN_F_C                            //[ 8 ]//
-        //:----------------------------------------------://
-        #undef  FLO_NAT  //:.........................[ 9 ]//
-        #undef  FLO_F32  //:.........................[10 ]//
-        #undef  ROU_NAT  //:.........................[11 ]//
-        #undef  ROU_F32  //:.........................[12 ]//
-        #undef  CEL_NAT  //:.........................[13 ]//
-        #undef  CEL_F32  //:.........................[14 ]//
-        #undef  COF_F32  //:.........................[15 ]//
-                     
-    //:------------------------------:seven_letter_macros://
+    //:FRAGCOM_FRA_FILE_MACROS:==========================://
+    /**@VID_IID[ 0093 ]T[00:31:40]MAKE_FOR_MAKE**/ //: - ://
+    /**@VID_IID[ 0293 ]T[00:25:10]MACRO_GUTTING**/ //: - ://
+                                                   //: - ://
+        #undef      ERR                            //: - ://
+        #undef  TYP_F_C                            //: - ://
+        #undef  INN_F_C                            //: - ://
+                                                   //: - ://
+        /**SEE[ AAC2020/LIB/MAC/FRA/TOP._ ]** **/  //: - ://
+        /**SEE[ AAC2020/LIB/MAC/FRA/BOT._ ]** **/  //: - ://
+                                                   //: - ://
+    //:==========================:FRAGCOM_FRA_FILE_MACROS://
     //:===========:COM_001____AAC2020_FRAGCOM_DEFAULT_001://  
     //[=====================:PASTE_INTO_FILE[ COM_001._ ]]//
     //[======================:AAC2020_FRAGCOM_DEFAULT_001]//

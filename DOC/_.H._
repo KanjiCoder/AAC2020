@@ -9,6 +9,205 @@
     //[   VIDEO COMMENT TIMESTAMP EXAMPLE   ]//
 *** ******************************************************** ***
 
+@CONSTRUCTOR_CAST@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@VID_IID[0294]TIME[02:24:42]ADDED_EXPLANATION
+
+    @_CONSTRUCTOR_CAST_@
+        Using constructor syntax to make a cast.
+        Or rather, using function call style to
+        create a cast rather than C-style cast.
+
+        This is done often in GLSL because...
+        Because I have no clue but it's done a lot.
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@BUILD_CAST@
+@BUILD_CAST@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @BUILD_CAST@ : Synonym for @CONSTRUCTOR_CAST@
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@BUILD_CAST@
+@MACROS_MIGHT_POINT_TO_UNDEFINED_FUNCS@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    @MACROS_MIGHT_POINT_TO_UNDEFINED_FUNCS@
+    @_MACROS_MIGHT_POINT_TO_UNDEFINED_FUNCS_@
+
+    @VID_IID[0293]T[03:00:43]STARTED_COMMENT
+    @VID_IID[0293]T[03:02:00]DONE_WRITING_COMMENT
+
+    As I have been refactoring macros that are included in
+    fragment shader code, I am trying to make the files
+    more consistent. So I am filling in the holes with
+    certain macro names that should exist for 
+    consistency. This means that some macros may not resolve
+    to functions that exist anywhere. Fix this eventually.
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@MACROS_MIGHT_POINT_TO_UNDEFINED_FUNCS@
+@_PB_@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@VID_IID[0293]TIME[02:04:32]
+
+    @_PB_@ / @PB@ : Shorthand for @PATTERN_BREAKER@
+                    Means that the visual structure of
+                    the code somehow differs from the
+                    norm.
+
+                    Well... Visual formatting BECAUSE of
+                    something slightly logically different.
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@_PB_@
+#_USE_EXTENSION_CODE_###########################################
+#_RENCORE_OR_EXTENDED_RENCORE_##################################
+@VID_IID[ 0293 ]TIME[ 01:42:10 ]OFFBOARDED_COMMENT
+
+    /** If extension code is detected, we copy the   **/
+    /** functions from the[ EXTCODE ]otherwise we    **/
+    /** copy the default code from[ RENCORE ]        **/
+    #include "RENCORE_OR_EXTCODE._"
+
+##################################_RENCORE_OR_EXTENDED_RENCORE_#
+###########################################_USE_EXTENSION_CODE_#
+#_EXTRACTED_ON_2021_05_10_0809AM_###############################
+@VID_IID[0293]TIME[01:16:30]REMOVED_FROM[ UISHARE.FRA._ ]
+
+    //-  IV2                                             -//
+    //-  AAC2020_UISHARE_rec_uin_fic_glo_CTO_fic_loc **/ -//
+    //-  AAC2020_UISHARE_glo_CTO_loc                     -//
+    //-  (                                               -//
+    //-      REC rec_uin //:RECtangle:User_INterface     -//
+    //-  ,   IV2 fic_glo //:FragmentIntegerCoord:GLOBAL  -//
+    //-  )                                               -//
+    //-  {                                               -//
+    //-      IV2 fic_loc ;                               -//
+    //-          fic_loc.x =( fic_glo.x - rec_uin.x_0 ); -//
+    //-          fic_loc.y =( fic_glo.y - rec_uin.y_0 ); -//
+    //-                                                  -//
+    //-      return( fic_loc );                          -//
+    //-  }                                               -//
+    #define AAC2020_UISHARE_glo_CTO_loc E_S(DONT_20210408)
+    //+ @VID_IID[ 0250 ]TIME[ 02:13:23 ]DO_NOT_USE_FUNC! +//
+    //+ REASON:Do Everything In 1-Coord System(GLOBAL)   +//
+
+#_EXTRACTED_ON_2021_05_10_0809AM_###############################
+#_EXTRACTED_COMMENT_293_NET_BYTE_###############################
+
+            //: Network_Byte_Order. Shift_Out_Byte   ://
+            //: Within_Pixel_Storing_The_Ascii_Char  ://
+            //: That_We_Want_To_Look_at              ://
+            //: Up to 4 ascii values in each pixel.  ://
+            //: @VID_IID[ 0252 ]TIME[ 01:42:00 ]     ://
+            //:--------------------------------------://
+            //:GET_ASCII_VALUE_OF_GLYPH_CHARACTER:-------://
+            #define M MOD_I32
+            #define U U32_255 /**AKA:UXFF**/
+
+                asc_val=(U32_I32(
+                    //:@VID_IID[0293]T[01:11:11]@NET_BYTE@
+                    //:#_EXTRACTED_COMMENT_293_NET_BYTE_##
+                    (   asc_pix >> ((3 - M( b_x , 4 ))*8)  ) 
+                    
+                    //:Mask_Just_To_Be_Safe
+                    & ( U32_255 /**AKA:UxFF**/ )
+                ));;
+
+            #undef  M
+            #undef  U
+            //:-----:GET_ASCII_VALUE_OF_GLYPH_CHARACTER://
+
+###############################_EXTRACTED_COMMENT_293_NET_BYTE_#
+#UIFRAGS_MACROS_CLEANUP#########################################
+@VID_IID[0293]TIME[00:09:00]PASTED_HERE_IN_CASE_WE_SCREW_UP
+
+    //:always_exists_error_string_macros:----------------://
+                                                   //| # |//
+        //:#_ABOUT_E_S_MACROS_#://                 //| # |//
+                                                   //| # |//
+        #define            E_S_private( e_m ) #e_m //| # |//
+        #define E_S( e_m ) E_S_private( e_m )      //| # |//
+                                                   //| # |//
+    //:----------------:always_exists_error_string_macros://
+    //:type_macros:--------------------------------------://
+    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL           //| # |//
+                                                   //| # |//
+        /** When Running As GLSL Code. **/         //| # |//
+                                                   //| # |//
+        #define F32        float    //:  01  ://   //| # |//
+        #define U32         uint    //:  02  ://   //| # |//
+        #define I32          int    //:  03  ://   //| # |//
+        #define IV2        ivec2    //:  04  ://   //| # |//
+        #define UV4        uvec4    //:  05  ://   //| # |//
+        #define T_F   texelFetch    //:  06  ://   //| # |//
+        #define TAU      taudepo    //:  07  ://   //| # |//
+        #define P5D      paint5d    //:  08  ://   //| # |//
+        #define SAM   usampler2D    //:  09  ://   //| # |//
+        #define UFF    uint(0xFF)   //:  10  ://   //| # |//
+        #define U00    uint( 0  )   //:  11  ://   //| # |//
+        #define I00     int( 0  )   //:  12  ://   //| # |//
+        #define U03    uint( 3  )   //:  13  ://   //| # |//
+        #define B_3    uint( 3  )   //:  14  ://   //| # |//
+        #define B11    uint( 3  )   //:  15  ://   //| # |//
+        #define H55    uint(0x55)   //:  16  ://   //| # |//
+        #define V_A                 //:  17  ://   //| # |//
+        #define FV4         vec4    //:  18  ://   //| # |//
+        #define ASS  /**NOTHING**/  //:  19  ://   //| # |//
+        #define ERR  /**NOTHING**/  //:  20  ://   //| # |//
+        #define TRU  trunc          //:  21  ://   //| # |//
+        #define REC  struct AAC2020_FRAGCOM_REC
+    #else                                          //| # |//
+                                                   //| # |//
+        /** When Running As C99/C11 Code. **/      //| # |//
+                                                   //| # |//
+        #define F32      float      //:  01  ://   //| # |//
+        #define U32   uint32_t      //:  02  ://   //| # |//
+        #define I32    int32_t      //:  03  ://   //| # |//
+        #define IV2   struct AAC2020_POLYOGL_IV2   //| # |//
+        #define UV4   struct AAC2020_POLYOGL_UV4   //| # |//
+        #define T_F   AAC2020_POLYOGL_tex_fet      //| # |//
+        #define TAU   ( 0 )         //:  07  ://   //| # |//
+        #define P5D   ( 1 )         //:  08  ://   //| # |//
+        #define SAM    int          //:  09  ://   //| # |//
+        #define UFF    0xFF         //:  10  ://   //| # |//
+        #define U00    0x00         //:  11  ://   //| # |//
+        #define I00   ( 0 )         //:  12  ://   //| # |//
+        #define U03   ( 3 )         //:  13  ://   //| # |//
+        #define B_3   ( 3 )         //:  14  ://   //| # |//
+        #define B11   ( 3 )         //:  15  ://   //| # |//
+        #define H55    0x55         //:  16  ://   //| # |//
+        #define V_A   void          //:  17  ://   //| # |//
+        #define FV4   struct AAC2020_POLYOGL_FV4   //| # |//
+        #define ASS   assert        //:  19  ://   //| # |//
+        #define ERR   aac2020_uifrags_Halt         //| # |//
+        #define TRU   AAC2020_POLYOGL_Trunc        //| # |//
+        #define REC   struct AAC2020_POLYOGL_REC
+    #endif                                         //| # |//
+    //:--------------------------------------:type_macros://
+    //:seven_letter_macros:------------------------------://
+    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL           //| # |//
+                                                   //|---|//
+        #define MAK_FV4      vec4                  //| 1 |//
+        #define MAK_IV2     ivec2                  //| 2 |//
+        #define MAK_U32      uint                  //| 3 |//
+        #define MAK_I32       int                  //| 4 |//
+        #define MAK_F32     float                  //| 5 |//
+        #define BIN_011 uint( 3 )                  //| 6 |//
+        #define TYP_F_C      vec4                  //| 7 |//
+        #define INN_F_C       F_C                  //| 8 |//
+        #define MOD_I32 AAC2020_FRAGCOM_MOD_I32    //| 9 |//
+
+    #else                                          //|---|//
+        #define MAK_FV4 AAC2020_POLYOGL_MAK_FV4    //| 1 |//
+        #define MAK_IV2 AAC2020_POLYOGL_MAK_IV2    //| 2 |//
+        #define MAK_U32 AAC2020_POLYOGL_MAK_U32    //| 3 |//
+        #define MAK_I32 AAC2020_POLYOGL_MAK_I32    //| 4 |//
+        #define MAK_F32 AAC2020_POLYOGL_MAK_F32    //| 5 |//
+        #define BIN_011 ((U32)3 )                  //| 6 |//
+        #define TYP_F_C struct AAC2020_POLYOGL_FV4 //| 7 |//
+        #define INN_F_C F_C                        //| 8 |//
+        #define MOD_I32 AAC2020_POLYOGL_MOD_I32    //| 9 |//
+
+    #endif                                         //|---|//
+    //:------------------------------:seven_letter_macros://
+
+
+#########################################UIFRAGS_MACROS_CLEANUP#
 #FRAGCOM_SEVEN_LETTER_MACROS_CLEANUP############################
 @VID_IID[0292]TIME[02:54:32]CONSOLIDATING_7_LETTER_MACROS
 

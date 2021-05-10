@@ -10,7 +10,7 @@
     //:CURRENT_VALID_NOTES:==================================://
 
         See how this file works:
-        AAC2020\LIB\PAINT5D_DEFAULT_SHADERS\RENCORE_OR_EXTCODE._
+        AAC2020/LIB/MOR_PAINT5D/RENCORE_OR_EXTCODE._
 
         I think the idea of using[ THIS FOLDER ]
         ( LIB/AUTOGEN/EXTCODE_RENCORE )

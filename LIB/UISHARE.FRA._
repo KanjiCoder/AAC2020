@@ -1,67 +1,6 @@
 //:shader code file for UISHARE
 
 
- 
-    //:3_letter_macros:----------------------------------://
-    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL
-        
-        #define F32   float                         //:##://
-        #define U32   uint                          //:##://
-        #define I32    int                          //:##://
-        #define IV2    ivec2                        //:##://
-        #define FV4    vec4                         //:##://
-        #define REC    struct AAC2020_FRAGCOM_REC   //:##://
-        #define ASS(S) //:ASS_EVALS_TO_NOTHING://   //:##://
-        #define MI3      int                        //:##://
-        #define MF3    float                        //:##://
-        #define MF4     vec4                        //:##://
-        #define MOD    AAC2020_FRAGCOM_MOD_I32      //:##://
-        #define TRU    trunc                        //:##://
-
-    #else
-        #define F32    float                        //:##://
-        #define U32   uint32_t /*GCC:<stdint.h>*/   //:##://
-        #define I32    int32_t /*GCC:<stdint.h>*/   //:##://
-        #define IV2    struct AAC2020_POLYOGL_IV2   //:##://
-        #define FV4    struct AAC2020_POLYOGL_FV4   //:##://
-        #define REC    struct AAC2020_POLYOGL_REC   //:##://
-        #define ASS(S) assert( S )                  //:##://
-        #define MI3    AAC2020_POLYOGL_MAK_I32      //:##://
-        #define MF3    AAC2020_POLYOGL_MAK_F32      //:##://
-        #define MF4    AAC2020_POLYOGL_MAK_FV4      //:##://
-        #define MOD    AAC2020_POLYOGL_MOD_I32      //:##://
-        #define TRU    AAC2020_POLYOGL_Trunc        //:##://
-
-    #endif
-    //:----------------------------------:3_letter_macros://
-    //:4_letter_macros:----------------------------------://
-    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL
-
-        #define UxFF (uint(0xFF))
-        #define B_01 (uint(  1 ))
-
-    #else
-        
-        #define UxFF ((U32)0xFF )
-        #define B_01 ((U32)  1  )
-
-    #endif
-    //:----------------------------------:4_letter_macros://
-    //:11_letter_macros:---------------------------------://
-    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL                 
-                                                        
-        #define U32_cto_F32 float     
-        #define U32_cto_I32   int
-                                                        
-    #else                                                
-                                                        
-        #define U32_cto_F32 AAC2020_POLYOGL_U32_cto_F32  
-        #define U32_cto_I32 AAC2020_POLYOGL_U32_cto_I32  
-                                                        
-    #endif                                               
-    //:---------------------------------:11_letter_macros://
-
-
     //:Get_User_Interface_Rectangle_By_Enum:-------------://
     REC
     AAC2020_UISHARE_Get_REC_p5d( 
@@ -194,13 +133,19 @@
             //:2D_LOC:BUTTON_2X2_DATA:-------------------://
             #define DEX pix_dex  /**  1D_Index_Of_Pixel  **/
             #define WIP ( 512 )  /**  Width_In_Pixels    **/
+            #define  A  MAK_I32  /**  AKA:MI3 ...........**/
+            #define  B  TRU_F32  /**  AKA:TRU ...........**/
+            #define  C  MAK_F32  /**  AKA:MF3 ...........**/
 
                 //:Get Top Left Pixel Coord Of 2x2 cluster:
-                t_l.y  =MI3( TRU( MF3(DEX) /  MF3(   WIP)));   
-                t_l.x  =   (    (     DEX  - (t_l.y *WIP)));
+                t_l.y  =A( B( C(DEX) / (C(      WIP))  ));   
+                t_l.x  = (  (   DEX  - ( (t_l.y*WIP))  ));
 
             #undef  DEX  /** 1D Index Of Top Left Pixel  **/
             #undef  WIP  /** Width Of TAUDEPO in Pixels  **/
+            #undef   A   //:-----------------------------://
+            #undef   B   //:-----------------------------://
+            #undef   C   //:-----------------------------://
             //:-------------------:2D_LOC:BUTTON_2X2_DATA://
             //:GET_PIXEL_WITH_LETTER_OF_INTEREST:--------://
             //:GET_PIXEL_WITH_CHARACTER_OF_INTEREST:-----://
@@ -256,21 +201,23 @@
             //:-----:GET_PIXEL_WITH_CHARACTER_OF_INTEREST://
             //:--------:GET_PIXEL_WITH_LETTER_OF_INTEREST://
             //:GET_ASCII_VALUE_OF_GLYPH_CHARACTER:-------://
-            asc_val=(U32_cto_I32(
-                //: Network_Byte_Order. Shift_Out_Byte   ://
-                //: Within_Pixel_Storing_The_Ascii_Char  ://
-                //: That_We_Want_To_Look_at              ://
-                //: Up to 4 ascii values in each pixel.  ://
-                //: @VID_IID[ 0252 ]TIME[ 01:42:00 ]     ://
-                //:--------------------------------------://
-                (   asc_pix >> ((3 - MOD( b_x , 4 ))*8)  ) 
-                
-                //:Mask_Just_To_Be_Safe
-                & UxFF 
-            ));;
-            //:-----:GET_ASCII_VALUE_OF_GLYPH_CHARACTER://
-            //:CONVERT_ASC_TO_CHARACTER_CODE:----------://  
-            /** @VID_IID[ 0252 ]TIME[ 02:01:23 ] ***** **/
+            #define M MOD_I32  //:-----------------------://
+            #define U U32_255  //:-----------------------://
+
+                asc_val=(U32_I32(
+                    //:@VID_IID[0293]T[01:11:11]@NET_BYTE@
+                    //:#_EXTRACTED_COMMENT_293_NET_BYTE_##
+                    (   asc_pix >> ((3 - M( b_x , 4 ))*8) ) 
+                    
+                    //:Mask_Just_To_Be_Safe
+                    & ( U /**AKA:UxFF**/ )
+                ));;
+
+            #undef  M  //:-------------------------------://    
+            #undef  U  //:-------------------------------://    
+            //:-------:GET_ASCII_VALUE_OF_GLYPH_CHARACTER://
+            //:CONVERT_ASC_TO_CHARACTER_CODE:------------://  
+            /** @VID_IID[ 0252 ]TIME[ 02:01:23 ] ******* **/    
             #define ITS_A_CUSTOM_CHARACTER_CODE ( c_c )
 
                 if( asc_val >= '0' && asc_val <= '9' ){
@@ -285,8 +232,8 @@
                     c_c=( (8*8)-1 );
                 };;
 
-            #undef  ITS_A_CUSTOM_CHARACTER_CODE /** ** **/
-            //:----------:CONVERT_ASC_TO_CHARACTER_CODE://
+            #undef  ITS_A_CUSTOM_CHARACTER_CODE /******* **/
+            //:------------:CONVERT_ASC_TO_CHARACTER_CODE://    
             //:FETCH_GLYPH_PIXEL_USING_CHAR_CODE:============://
             #define GDX         (  0 ) //:TOP_LEF:UIRECTS:TEX  //:<<<<<<<<<<<<<<<<<< TODO: Remove This Hard Coding. GDX & GDY
             #define GDY         (  0 ) //:TOP_LEF:UIRECTS:TEX  //:<<<<<<<<<<<<<<<<<< TODO: Remove This Hard Coding. GDX & GDY
@@ -295,13 +242,21 @@
             #define PNG_BIT_DEX ( 31 ) //:<<<<<<<<<<<<<<<<<<<<<<<<<<< TODO:Un hard code this. uses value[ AAC2020_UIRECTS_64P_08G_PNG_bit_dex ]
             /** @VID_IID[ 0252 ]TIME[ 02:16:16 ] *********** **/
 
-            //:Convert Character Code[ c_c ]To a cell xy     ://
-            //:coordinate.[ c_c ] is just the 1D-index       ://
-            //:location of the character cell.               ://
-            //:INDEX_TO_XY_GLSL:-----------------------------://
-            c_y  =MI3( TRU( MF3(c_c) / MF3(UIR_WID)    ));
-            c_x  =(            (c_c -( c_y*UIR_WID )   ));
-            //:-----------------------------:INDEX_TO_XY_GLSL://
+                //:Convert Character Code[ c_c ]To a cell xy ://
+                //:coordinate.[ c_c ] is just the 1D-index   ://
+                //:location of the character cell.           ://
+                //:INDEX_TO_XY_GLSL:-------------------------://
+                #define A AAC2020_POLYOGL_MAK_I32
+                #define B AAC2020_POLYOGL_MAK_F32
+                #define C AAC2020_POLYOGL_Trunc
+
+                    c_y  =A( C( B(c_c) /(   B(UIR_WID))   ));
+                    c_x  = (     (c_c  -( c_y*UIR_WID )   ));
+
+                #undef  A  //:-------------------------------://
+                #undef  B  //:-------------------------------://
+                #undef  C  //:-------------------------------://
+                //:-------------------------:INDEX_TO_XY_GLSL://
             
                 //:Entire_Pixel_Of_Glyph:
                 gly_pix=(
@@ -309,10 +264,11 @@
                         GDX +( c_x * 8 )+( but_pix.x )
                     ,   GDY +( c_y * 8 )+( but_pix.y )
                     ));;
-            
-                gly_bit=(( gly_pix >> PNG_BIT_DEX ) & B_01 );
-            
-                gly_f32=( U32_cto_F32( gly_bit ) );
+                
+                gly_bit=(
+                ( gly_pix >> PNG_BIT_DEX ) & BIN_001 );;
+                
+                gly_f32=( U32_F32( gly_bit ) );
             
             #undef          GDX //:<--ORIGIN:Of_SUB_Texture_Area
             #undef          GDY //:<--ORIGIN:Of_SUB_Texture_Area
@@ -322,10 +278,10 @@
             //:============:FETCH_GLYPH_PIXEL_USING_CHAR_CODE://
             //:RENDER_FINAL_PIXEL_FOR_UI_CHARACTER_GLYPH:----://
 
-                I32 oex=( MOD( b_x , 2 ) );                                                             
-                I32 oey=( MOD( b_y , 2 ) );   
+                I32 oex=( MOD_I32( b_x , 2 ) );                                                             
+                I32 oey=( MOD_I32( b_y , 2 ) );   
 
-                FV4 rec_pix = MF4(
+                FV4 rec_pix = MAK_FV4(
                     ( gly_f32 * 255.0 * oex )
                 ,   ( gly_f32 * 255.0 * oey )
                 ,   ( gly_f32 * 255.0 )
@@ -340,56 +296,14 @@
     //:Get_Button_Pixel:---------------------------------://
 
     //:Global_To_Local:----------------------------------://
-    //-  IV2                                             -//
-    //-  AAC2020_UISHARE_rec_uin_fic_glo_CTO_fic_loc **/ -//
-    //-  AAC2020_UISHARE_glo_CTO_loc                     -//
-    //-  (                                               -//
-    //-      REC rec_uin //:RECtangle:User_INterface     -//
-    //-  ,   IV2 fic_glo //:FragmentIntegerCoord:GLOBAL  -//
-    //-  )                                               -//
-    //-  {                                               -//
-    //-      IV2 fic_loc ;                               -//
-    //-          fic_loc.x =( fic_glo.x - rec_uin.x_0 ); -//
-    //-          fic_loc.y =( fic_glo.y - rec_uin.y_0 ); -//
-    //-                                                  -//
-    //-      return( fic_loc );                          -//
-    //-  }                                               -//
+    /** @VID_IID[ 0293 ]T[01:17:42]EXTRACTED_JUNK_CODE   **/
+    /** #_EXTRACTED_ON_2021_05_10_0809AM_# ************* **/
     #define AAC2020_UISHARE_glo_CTO_loc E_S(DONT_20210408)
     //+ @VID_IID[ 0250 ]TIME[ 02:13:23 ]DO_NOT_USE_FUNC! +//
     //+ REASON:Do Everything In 1-Coord System(GLOBAL)   +//
     //:----------------------------------:Global_To_Local://
     //:CLEAN_UP_AFTER_YOURSELF:--------------------------://
-    //:3_letter_macros:----------------------------------://
-
-        #undef  F32  //:----------------------------: ## ://
-        #undef  U32  //:----------------------------: ## ://
-        #undef  I32  //:----------------------------: ## ://
-        #undef  IV2  //:----------------------------: ## ://
-        #undef  FV4  //:----------------------------: ## ://
-        #undef  REC  //:----------------------------: ## ://
-        #undef  ASS  //:----------------------------: ## ://
-        #undef  MI3  //:----------------------------: ## ://
-        #undef  MF3  //:----------------------------: ## ://
-        #undef  MF4  //:----------------------------: ## ://
-        #undef  MOD  //:----------------------------: ## ://
-        #undef  TRU  //:----------------------------: ## ://
-
-    //:----------------------------------:3_letter_macros://
-    //:4_letter_macros:----------------------------------://
-
-        #undef  UxFF //:uint(0xFF)
-        #undef  B_01 //:BINARY: 1
-
-    //:----------------------------------:4_letter_macros://
-    //:11_letter_macros:---------------------------------://
-
-        #undef  U32_cto_F32
-        #undef  U32_cto_I32
-
-    //:---------------------------------:11_letter_macros://
-    //:misc_macros:--------------------------------------://
 
         #undef  DO_NON_OPTIMIZED_CODE
 
-    //:----------------------------:DO_NON_OPTIMIZED_CODE://
     //:--------------------------:CLEAN_UP_AFTER_YOURSELF://

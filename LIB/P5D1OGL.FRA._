@@ -5,139 +5,31 @@
     //[PASTE_INTO_FILE[ P5D_001._ ]:=====================]//
     //:P5D_001____AAC2020_PAINT5D_DEFAULT_001:===========://
     //|SIM:Shim_Ifdef_Macros:|||||||||||||||||||||||||||||//
-    //:always_exists_error_string_macros:----------------://
-                                                   //| # |//
-        /** ******************************** ***   //| # |//
-        @VID_IID[ 0112 ]TIME[ 00:56:50 ]           //| # |//
-        Get rid of quote marks in the source       //| # |//
-        So we can wrap entire thing into a         //| # |//
-        very large multi-line string.              //| # |//
-        *** ******************************** **/   //| # |//
-                                                   //| # |//
-        #define            E_S_private( e_m ) #e_m //| # |//
-        #define E_S( e_m ) E_S_private( e_m )      //| # |//
-                                                   //| # |//
-    //:----------------:always_exists_error_string_macros://
-    //:type_macros:--------------------------------------://
-    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL           //| # |//
-                                                   //| # |//
-        /** When Running As GLSL Code. **/         //| # |//
-                                                   //| # |//
-        #define F32        float    //:  01  ://   //| # |//
-        #define U32         uint    //:  02  ://   //| # |//
-        #define I32          int    //:  03  ://   //| # |//
-        #define IV2        ivec2    //:  04  ://   //| # |//
-        #define UV4        uvec4    //:  05  ://   //| # |//
-        #define FV2         vec2    //:  06  ://
-        #define T_F   texelFetch    //:  07  ://   //| # |//
-        #define TAU      taudepo    //:  08  ://   //| # |//
-        #define P5D      paint5d    //:  09  ://   //| # |//
-        #define SAM   usampler2D    //:  10  ://   //| # |//
-        #define UFF    uint(0xFF)   //:  11  ://   //| # |//
-        #define U00    uint( 0  )   //:  12  ://   //| # |//
-        #define I00     int( 0  )   //:  13  ://   //| # |//
-        #define U03    uint( 3  )   //:  14  ://   //| # |//
-        #define B_3    uint( 3  )   //:  15  ://   //| # |//
-        #define B11    uint( 3  )   //:  16  ://   //| # |//
-        #define H55    uint(0x55)   //:  17  ://   //| # |//
-        #define V_A                 //:  18  ://   //| # |//
-        #define FV4         vec4    //:  19  ://   //| # |//
-        #define ASS  /**NOTHING**/  //:  20  ://   //| # |//
-        #define ERR  /**NOTHING**/  //:  21  ://   //| # |//
-        #define LOG  /**NOTHING**/  //:  22  ://   //| # |//
-        #define LOF  /**NOTHING**/  //:  23  ://   //| # |//
-        #define LOI  /**NOTHING**/  //:  24  ://   //| # |//
-        #define TRU  trunc          //:  25  ://   //| # |//
-        #define REC  struct AAC2020_FRAGCOM_REC
-    #else                                          //| # |//
-                                                   //| # |//
-        /** When Running As C99/C11 Code. **/      //| # |//
-                                                   //| # |//
-        #define F32      float      //:  01  ://   //| # |//
-        #define U32   uint32_t      //:  02  ://   //| # |//
-        #define I32    int32_t      //:  03  ://   //| # |//
-        #define IV2   struct AAC2020_POLYOGL_IV2   //| # |//
-        #define UV4   struct AAC2020_POLYOGL_UV4   //| # |//
-        #define FV2   struct AAC2020_POLYOGL_FV2
-        #define T_F   AAC2020_POLYOGL_tex_fet      //| # |//
-        #define TAU   ( 0 )         //:  08  ://   //| # |//
-        #define P5D   ( 1 )         //:  09  ://   //| # |//
-        #define SAM    int          //:  10  ://   //| # |//
-        #define UFF    0xFF         //:  11  ://   //| # |//
-        #define U00    0x00         //:  12  ://   //| # |//
-        #define I00   ( 0 )         //:  13  ://   //| # |//
-        #define U03   ( 3 )         //:  14  ://   //| # |//
-        #define B_3   ( 3 )         //:  15  ://   //| # |//
-        #define B11   ( 3 )         //:  16  ://   //| # |//
-        #define H55    0x55         //:  17  ://   //| # |//
-        #define V_A   void          //:  18  ://   //| # |//
-        #define FV4   struct AAC2020_POLYOGL_FV4   //| # |//
-        #define ASS   assert        //:  20  ://   //| # |//
-        #define ERR   aac2020_p5d1ogl_Halt         //| # |//
-        #define LOG   aac2020_p5d1ogl_Info_any     //| - |//
-        #define LOF   aac2020_p5d1ogl_Info_f32     //| - |//
-        #define LOI   aac2020_p5d1ogl_Info_i32     //| - |//
-        #define TRU   AAC2020_POLYOGL_Trunc        //| # |//
-        #define REC   struct AAC2020_POLYOGL_REC
-    #endif                                         //| # |//
-    //:--------------------------------------:type_macros://
-    //:seven_letter_macros:------------------------------://
-    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL           //| # |//
-                                                   //| # |//
-        #define MAK_FV4      vec4                  //| 1 |//
-        #define MAK_IV2     ivec2                  //| 2 |//
-        #define MAK_U32      uint                  //| 3 |//
-        #define MAK_I32       int                  //| 4 |//
-        #define MAK_F32     float                  //| 5 |//
-        #define BIN_011 uint( 3 )                  //| 6 |//
-        #define CUVIPIX struct AAC2020_P5D1OGL_CUVIPIX   ///
-        #define TYP_F_C /** nothing **/            //| 8 |//
-        #define INN_F_C /** nothing **/            //| 9 |//
-                                                   //|---|//
-        #define ABS_F32 AAC2020_FRAGCOM_ABS_F32    //|10 |//
-        #define MAX_I32 AAC2020_FRAGCOM_MAX_I32    //|11 |//
-        #define MAX_F32 AAC2020_FRAGCOM_MAX_F32    //|12 |//
-                                                   //|---|//
-        #define I32_U32 MAK_U32                    //|13 |//
-        #define U32_I32 MAK_I32                    //|14 |//
-        #define F32_I32 MAK_I32                    //|15 |//
-                                                   //|---|//
-                                                   //| # |//
-    #else                                          //| # |//
-                                                   //| # |//
-        #define MAK_FV4 AAC2020_POLYOGL_MAK_FV4    //| 1 |//
-        #define MAK_IV2 AAC2020_POLYOGL_MAK_IV2    //| 2 |//
-        #define MAK_U32 AAC2020_POLYOGL_MAK_U32    //| 3 |//
-        #define MAK_I32 AAC2020_POLYOGL_MAK_I32    //| 4 |//
-        #define MAK_F32 AAC2020_POLYOGL_MAK_F32    //| 5 |//
-        #define BIN_011 ((U32)3 )                  //| 6 |//
-        #define CUVIPIX struct AAC2020_P5D1OGL_CUVIPIX   ///
-        #define TYP_F_C struct AAC2020_POLYOGL_FV4 //| 8 |//
-        #define INN_F_C F_C                        //| 9 |//
-                                                   //|---|//
-        #define ABS_F32 AAC2020_POLYOGL_ABS_F32    //|10 |//
-        #define MAX_I32 AAC2020_POLYOGL_MAX_I32    //|11 |//
-        #define MAX_F32 AAC2020_POLYOGL_MAX_F32    //|12 |//
-                                                   //|---|//
-        #define I32_U32 MAK_U32                    //|13 |//
-        #define U32_I32 MAK_I32                    //|14 |//
-        #define F32_I32 MAK_I32                    //|15 |//
-                                                   //|---|//
-                                                   //| # |//
-    #endif                                         //| # |//
-    //:------------------------------:seven_letter_macros://
     //:main_shim_macros:---------------------------------://
     #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL           //| # |//
-                                                   //| # |//
-        #define RET_MAIN void /** <-- GLSL**/      //| # |//
-        #define FUN_MAIN main /** <-- GLSL**/      //| # |//
-                                                   //| # |//
-    #else                                          //| # |//
-                                                   //| # |//
-        #define RET_MAIN FV4 /** <-- [C99/C11]**/  //| # |//
-        #define FUN_MAIN AAC2020_P5D1OGL_Main      //| # |//
-                                                   //| # |//
-    #endif                                         //| # |//
+                                                   //[===]//
+        #define RET_MAIN void                      //| 0 |//
+        #define FUN_MAIN main                      //| 1 |//
+                                                   //| - |//
+        #define TYP_F_C /** nothing **/            //| 2 |//
+        #define INN_F_C /** nothing **/            //| 3 |//
+                                                   //| - |//
+        #define ERR     /** NOTHING **/            //| 4 |//
+        #define LOG     /** NOTHING **/            //| 5 |//
+        #define LOF     /** NOTHING **/            //| 6 |//
+        #define LOI     /** NOTHING **/            //| 7 |//            
+    #else                                          //[===]//                           
+        #define RET_MAIN FV4                       //| 0 |//
+        #define FUN_MAIN AAC2020_P5D1OGL_Main      //| 1 |//
+                                                   //| - |//
+        #define TYP_F_C struct AAC2020_POLYOGL_FV4 //| 2 |//
+        #define INN_F_C F_C                        //| 3 |//
+                                                   //| - |//
+        #define ERR   aac2020_p5d1ogl_Halt         //| 4 |//
+        #define LOG   aac2020_p5d1ogl_Info_any     //| 5 |//
+        #define LOF   aac2020_p5d1ogl_Info_f32     //| 6 |//
+        #define LOI   aac2020_p5d1ogl_Info_i32     //| 7 |//
+    #endif                                         //[===]//
     //:---------------------------------:main_shim_macros://
     //||||||||||||||||||||||||||||||SIM:Shim_Ifdef_Macros|//
     //:C99_AND_GLSL_STRUCTS:-----------------------------://
@@ -219,7 +111,6 @@
         ,   I32 aus_dex                            //[ x ]//
         )                                          //[ x ]//
         {                                          //[ x ]//
-        ASS( B_3 == BIN_011 );                     //[ x ]//
                                                    //[ x ]//
             U32 u32_var ;                          //[ x ]//
             U32 til_val ;                          //[ x ]//
@@ -228,7 +119,7 @@
                 AAC2020_P5D1OGL_TexelFetch_U32(    //[ x ]//          
                     P5D //:texture_to_sample    :////[ x ]//
                 ,   glo //:integer_texel_coord  :////[ x ]//
-                ,   I00 //:level_of_detail_zero :////[ x ]//
+                ,  ( 0 )//:level_of_detail_zero :////[ x ]//
                 ));;                               //[ x ]//
                                                    //[ x ]//
             til_val =(                             //[ x ]//
@@ -396,7 +287,7 @@
         {                                          //[ x ]//
         //:declare__variables: . . . . . . . . . . . . . ://
                                                    //[ x ]//
-            U32 til_val =( U00 );                  //[ x ]//
+            U32 til_val =( U32_000 );              //[ x ]//
                                                    //[ x ]//
             /** glo == glo_t_x & glo_t_y  **/      //[ x ]//
             IV2 glo    ;                           //[ x ]//
@@ -1221,7 +1112,7 @@
                     ,   A_D    //: I32 [ aus_dex / a_d ] ://                        
                     ));;                                 ///
                                                          ///
-                ASS( t_v <= U03 /** AKA: uint(4-1) **/ );///
+                ASS( t_v <= U32_003 /** uint(4-1) **/ ); ///
                 ASS( t_v == ( BIN_011 & t_v) );          ///
 
                 //||||||||||||||||||||||||||||||||||||||||//
@@ -1288,7 +1179,7 @@
                 //:UNSIGNED_FOR_BIT_PACKING:-------------://
                                                           //
                 /** Canvas_User_View:BITS  **/            //
-                U32 cuvbits =( U00 /** 0x00 **/ );        //
+                U32 cuvbits =( U32_000 );                 //
                                                           //
                 U32     t_v; /** [ t_v / til_val ] **/    //
                                                           //
@@ -1370,8 +1261,8 @@
                     ,   A_D    //: I32 [ aus_dex / a_d ] ://                        
                     ));;                                 ///
                                                          ///
-                ASS( t_v <= U03 /** AKA: uint(4-1) **/ );///
-                ASS( t_v == ( BIN_011 & t_v) );          ///
+                ASS( t_v <= U32_003 /**4-1**/  );        ///
+                ASS( t_v == ( BIN_011 & t_v)   );        ///
                 cuvbits=(                                ///
                 cuvbits |                                ///
                     (                                    ///
@@ -2429,72 +2320,19 @@
 
         }
         //:- - - - - - - - - - - -- - - - - - - - - - - -://
-    //:always_exists_error_string_macros:----------------://
-                                                   //[ x ]//
-        #undef  E_S_private                        //[ x ]//
-        #undef  E_S                                //[ x ]//
-                                                   //[ x ]//
-    //:----------------:always_exists_error_string_macros://
-    //:type_macros:--------------------------------------://
-                                                   //[ x ]//
-        #undef  F32      //:  01  ://              //[ x ]//
-        #undef  U32      //:  02  ://              //[ x ]//
-        #undef  I32      //:  03  ://              //[ x ]//
-        #undef  IV2      //:  04  ://              //[ x ]//
-        #undef  UV4      //:  05  ://              //[ x ]//
-        #undef  FV2      //:  06  ://              //[ x ]//
-        #undef  T_F      //:  07  ://              //[ x ]//
-        #undef  TAU      //:  08  ://              //[ x ]//
-        #undef  P5D      //:  09  ://              //[ x ]//
-        #undef  SAM      //:  10  ://              //[ x ]//
-        #undef  UFF      //:  11  ://              //[ x ]//
-        #undef  U00      //:  12  ://              //[ x ]//
-        #undef  I00      //:  13  ://              //[ x ]//
-        #undef  U03      //:  14  ://              //[ x ]//
-        #undef  B_3      //:  15  ://              //[ x ]//
-        #undef  B11      //:  16  ://              //[ x ]//
-        #undef  H55      //:  17  ://              //[ x ]//
-        #undef  V_A      //:  18  ://              //[ x ]//
-        #undef  FV4      //:  19  ://              //[ x ]//
-        #undef  ASS      //:  20  ://              //[ x ]//
-        #undef  ERR      //:  21  ://              //[ x ]//
-        #undef  LOG      //:  22  ://              //[ x ]//
-        #undef  LOF      //:  23  ://              //[ x ]//
-        #undef  LOI      //:  24  ://              //[ x ]//
-        #undef  TRU      //:  25  ://              //[ x ]//
-        #undef  REC      //:  26  ://              //[ x ]//
-                                                   //[ x ]//
-    //:--------------------------------------:type_macros://
-    //:seven_letter_macros:------------------------------://
-    /** @VID_IID[ 0093 ]TIME{ 00:31:40 ] *************** **/
-    /** Decided on [MAK] for [MAKE] as our constructor   **/
-    /** postfix ........................................ **/
-                                                   //[ x ]//
-        #undef  MAK_FV4                            //[ 1 ]//
-        #undef  MAK_IV2                            //[ 2 ]//
-        #undef  MAK_U32                            //[ 3 ]//
-        #undef  MAK_I32                            //[ 4 ]//
-        #undef  MAK_F32                            //[ 5 ]//
-        #undef  BIN_011                            //[ 6 ]//
-        #undef  CUVIPIX                            //[ 7 ]//
-        #undef  TYP_F_C                            //[ 8 ]//
-        #undef  INN_F_C                            //[ 9 ]//
-                                                   //[---]//
-        #undef  ABS_F32                            //[10 ]//
-        #undef  MAX_I32                            //[11 ]//
-        #undef  MAX_F32                            //[12 ]//
-                                                   //[---]//
-        #undef  I32_U32                            //[13 ]//
-        #undef  U32_I32                            //[14 ]//
-        #undef  F32_I32                            //[15 ]//
-                                                   //[---]//
-                                                   //[ x ]//
-    //:------------------------------:seven_letter_macros://
     //:main_shim_macros:---------------------------------://
-                                                   //[ x ]//
-        #undef  RET_MAIN                           //[ x ]//
-        #undef  FUN_MAIN                           //[ x ]//
-                                                   //[ x ]//
+                                                   //:---://
+        #undef  RET_MAIN                           //:---://
+        #undef  FUN_MAIN                           //:---://
+                                                   //:---://
+        #undef  TYP_F_C                            //:---://
+        #undef  INN_F_C                            //:---://
+                                                   //:---://
+        #undef  ERR                                //:---://
+        #undef  LOG                                //:---://
+        #undef  LOF                                //:---://
+        #undef  LOI                                //:---://
+                                                   //:---://
     //:---------------------------------:main_shim_macros://
     //:===========:P5D_001____AAC2020_PAINT5D_DEFAULT_001://  
     //[=====================:PASTE_INTO_FILE[ P5D_001._ ]]//
