@@ -53,10 +53,11 @@ l_A: LEVEL_A :- - - - - - - - - - - - - - - - - - - - - - - -://
                     +-------+   @cel_512@
     @LEVEL_B( l_B )@| 
 l_B: LEVEL_B :- - - | - - - - - - - - - - - - - - - - - - - -://
-                    |
-            +-------+-------+
-            | (   @sub@   ) |
-            V #DIA_SUB_CEL# V
+                    |           (NOTE: #DIA_EDI_CEL#           )
+            +-------+-------+   (When TAU_CEL == 15 , then     )
+            | (   @sub@   ) |   (     SUB_CEL is an EDI_CEL    )
+            | #DIA_SUB_CEL# |   (@VID_IID[0295]T[00:29:13]     )
+            V               V
     ------- +---+---+---+---+-------  0: TAUDEPO ( Common )
        |    | 0 | 1 | 2 | 3 |   |     1: PAINT5D TAU(s)             
        |    +---+---+---+---+   |     2: System #2 TAU(s)
