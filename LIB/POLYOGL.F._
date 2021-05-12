@@ -21,17 +21,85 @@
 #undef  U32
 //:================================================:INIT_NONE://
 //:DO_NOT_PASTE_INTO_GLSL_CODE:******************************://
-#define U08  uint8_t /** GCC: <stdint.h> **/          //: 01 ://
-#define U32 uint32_t /** GCC: <stdint.h> **/          //: 02 ://
-#define I32  int32_t /** GCC: <stdint.h> **/          //: 03 ://
-#define IV2   struct AAC2020_POLYOGL_IV2              //: 04 ://
-#define UV4   struct AAC2020_POLYOGL_UV4              //: 05 ://
-#define FV2   struct AAC2020_POLYOGL_FV2              //: 06 ://
-#define SAM      int /** IGNORED IN [C99/C11] **/     //: 07 ://
-#define FV4   struct AAC2020_POLYOGL_FV4              //: 08 ://
-#define F32   float                                   //: 09 ://
-#define ERR   aac2020_polyogl_Halt                    //: 10 ://
+#define     U08  uint8_t /** GCC: <stdint.h> **/      //: 01 ://
+                                                      //: -- ://
+#define     F32   float                               //: 02 ://
+#define     U32 uint32_t /** GCC: <stdint.h> **/      //: 03 ://
+#define     I32  int32_t /** GCC: <stdint.h> **/      //: 04 ://
+                                                      //: -- ://
+#define     FV2   struct AAC2020_POLYOGL_FV2          //: 05 ://
+#define     FV3   struct AAC2020_POLYOGL_FV3          //: 06 ://
+#define     FV4   struct AAC2020_POLYOGL_FV4          //: 07 ://
+                                                      //: -- ://
+#define     UV2   struct AAC2020_POLYOGL_UV2          //: 08 ://
+#define     UV3   struct AAC2020_POLYOGL_UV3          //: 09 ://
+#define     UV4   struct AAC2020_POLYOGL_UV4          //: 00 ://
+                                                      //: -- ://
+#define     IV2   struct AAC2020_POLYOGL_IV2          //: 01 ://
+#define     IV3   struct AAC2020_POLYOGL_IV3          //: 02 ://
+#define     IV4   struct AAC2020_POLYOGL_IV4          //: 03 ://
+                                                      //: -- ://
+#define FLO_F32   AAC2020_POLYOGL_FLO_F32             //: 04 ://
+#define ROU_F32   AAC2020_POLYOGL_ROU_F32             //: 05 ://
+#define CEL_F32   AAC2020_POLYOGL_CEL_F32             //: 06 ://
+#define COF_F32   AAC2020_POLYOGL_COF_F32             //: 07 ://                  
+                                                      //: -- ://
+#define     SAM      int /** IGNORED IN [C99/C11] **/ //: 08 ://
+#define     ERR   aac2020_polyogl_Halt                //: 09 ://
+            
+    //:LINEAR_ALGEBRA_FUNCTIONS:=============================://
 
+        F32
+        AAC2020_POLYOGL_DOT_FV2(
+            FV2 aye
+        ,   FV2 bee
+        )
+        {
+            F32 dot_f32 =( 0
+                    + (aye.x*bee.x) //:X_COMPONENTS
+                    + (aye.y*bee.y) //:Y_COMPONENTS
+                    );;
+            return( dot_f32 );
+        }
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        F32
+        AAC2020_POLYOGL_DOT_FV3(
+            FV3 aye
+        ,   FV3 bee
+        )
+        {
+            F32 dot_f32 =( 0
+                    + (aye.x*bee.x) //:X_COMPONENTS
+                    + (aye.y*bee.y) //:Y_COMPONENTS
+                    + (aye.z*bee.z) //:Z_COMPONENTS
+                    );;
+            return( dot_f32 );
+        }
+
+    //:=============================:LINEAR_ALGEBRA_FUNCTIONS://
+    //:TRIG_FUNCTIONS:=======================================://
+
+        //:PARAMETRIC_CIRCLE: @VID_IID[0296]TIME[00:07:32 ] :://
+        //:  x =( origin + ( cos(ang) * rad ) )             :://
+        //:  y =( origin + ( sin(ang) * rad ) )             :://
+
+        F32
+        AAC2020_POLYOGL_COS_F32( 
+            F32 f32
+        )
+        {
+            return( cosf( f32 ) );
+        }
+
+        F32
+        AAC2020_POLYOGL_SIN_F32(
+            F32 f32
+        )
+        {
+            return( sinf( f32 ) );
+        }
+
+    //:=======================================:TRIG_FUNCTIONS://
     //:GLSL_POLYFILL:MAX_MIN_ABS:============================://
     //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
         F32
@@ -183,8 +251,6 @@
 
     //:=======================:GLSL_POLYFILL:FLOOR_ROUND_CEIL://
     //:HACKISH_CEIL_OR_FLOOR_DEPENDING:======================://
-    #define CEL_F32  AAC2020_POLYOGL_CEL_F32  //:-------: 01 ://
-    #define FLO_F32  AAC2020_POLYOGL_FLO_F32  //:-------: 01 ://
 
         I32                                           //:://
         AAC2020_POLYOGL_COF_F32(                      //:://
@@ -203,13 +269,458 @@
             return( cof_res );                        //:://
         }                                             //:://
 
-    #undef  CEL_F32  //:--------------------------------: 01 :// 
-    #undef  FLO_F32  //:--------------------------------: 02 :// 
     //:======================:HACKISH_CEIL_OR_FLOOR_DEPENDING://
-    //:GLSL_POLYFILL_trunc:==================================://
-    
+    //:MULTIPLY_FUNCTIONS:===================================://
+        FV2
+        AAC2020_POLYOGL_MUL_FV2_FV2(
+            FV2 aye
+        ,   FV2 bee
+        ){
+            FV2 res ={ 0 };
+
+            res.x =( aye.x * bee.x );
+            res.y =( aye.y * bee.y );
+
+            return( res );
+        }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+        FV3
+        AAC2020_POLYOGL_MUL_FV3_FV3(
+            FV3 aye
+        ,   FV3 bee
+        ){
+            FV3 res ={ 0 };
+
+            res.x =( aye.x * bee.x );
+            res.y =( aye.y * bee.y );
+            res.z =( aye.z * bee.z );
+
+            return( res );
+        }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+        FV4
+        AAC2020_POLYOGL_MUL_FV4_FV4(
+            FV4 aye
+        ,   FV4 bee
+        ){
+            FV4 res ={ 0 };
+
+            res.x =( aye.x * bee.x );
+            res.y =( aye.y * bee.y );
+            res.z =( aye.z * bee.z );
+            res.w =( aye.w * bee.w );
+
+            return( res );
+        }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+        FV3
+        AAC2020_POLYOGL_MUL_FV3_F32(
+            FV3 fv3
+        ,   F32 f32
+        ){
+            FV3 res ={ 0 };
+
+            res.x =( fv3.x * f32 );
+            res.y =( fv3.y * f32 );
+            res.z =( fv3.z * f32 );
+
+            return( res );
+        }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+        FV3
+        AAC2020_POLYOGL_MUL_F32_FV3(
+            F32 f32
+        ,   FV3 fv3
+        ){
+            FV3 res ={ 0 };
+
+            res.x =( fv3.x * f32 );
+            res.y =( fv3.y * f32 );
+            res.z =( fv3.z * f32 );
+
+            return( res );
+        }
+    //:===================================:MULTIPLY_FUNCTIONS://
+    //:DIVIDE_FUNCTIONS:=====================================://
+        FV2
+        AAC2020_POLYOGL_DIV_FV2_FV2(
+            FV2 aye
+        ,   FV2 bee
+        ){
+            FV2 res ={ 0 };
+
+            res.x =( aye.x / bee.x );
+            res.y =( aye.y / bee.y );
+
+            return( res );
+        }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+        FV3
+        AAC2020_POLYOGL_DIV_FV3_FV3(
+            FV3 aye
+        ,   FV3 bee
+        ){
+            FV3 res ={ 0 };
+
+            res.x =( aye.x / bee.x );
+            res.y =( aye.y / bee.y );
+            res.z =( aye.z / bee.z );
+
+            return( res );
+        }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+        FV4
+        AAC2020_POLYOGL_DIV_FV4_FV4(
+            FV4 aye
+        ,   FV4 bee
+        ){
+            FV4 res ={ 0 };
+
+            res.x =( aye.x / bee.x );
+            res.y =( aye.y / bee.y );
+            res.z =( aye.z / bee.z );
+            res.w =( aye.w / bee.w );
+
+            return( res );
+        }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+        FV3
+        AAC2020_POLYOGL_DIV_FV3_F32(
+            FV3 fv3
+        ,   F32 f32
+        ){
+            FV3 res ={ 0 };
+
+            res.x =( fv3.x / f32 );
+            res.y =( fv3.y / f32 );
+            res.z =( fv3.z / f32 );
+
+            return( res );
+        }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+        FV3
+        AAC2020_POLYOGL_DIV_F32_FV3(
+            F32 f32
+        ,   FV3 fv3
+        ){
+            FV3 res ={ 0 };
+
+            res.x =( f32 / fv3.x );
+            res.y =( f32 / fv3.y );
+            res.z =( f32 / fv3.z );
+
+            return( res );
+        }
+    //:=====================================:DIVIDE_FUNCTIONS://
+    //:ADDITION_FUNCTIONS:===================================://
+        FV2
+        AAC2020_POLYOGL_ADD_FV2_FV2(
+            FV2 aye
+        ,   FV2 bee
+        ){
+            FV2 res ={ 0 };
+
+            res.x =( aye.x + bee.x );
+            res.y =( aye.y + bee.y );
+
+            return( res );
+        }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+        FV3
+        AAC2020_POLYOGL_ADD_FV3_FV3(
+            FV3 aye
+        ,   FV3 bee
+        ){
+            FV3 res ={ 0 };
+
+            res.x =( aye.x + bee.x );
+            res.y =( aye.y + bee.y );
+            res.z =( aye.z + bee.z );
+
+            return( res );
+        }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+        FV4
+        AAC2020_POLYOGL_ADD_FV4_FV4(
+            FV4 aye
+        ,   FV4 bee
+        ){
+            FV4 res ={ 0 };
+
+            res.x =( aye.x + bee.x );
+            res.y =( aye.y + bee.y );
+            res.z =( aye.z + bee.z );
+            res.w =( aye.w + bee.w );
+
+            return( res );
+        }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+        FV3
+        AAC2020_POLYOGL_ADD_FV3_F32(
+            FV3 fv3
+        ,   F32 f32
+        ){
+            FV3 res ={ 0 };
+
+            res.x =( fv3.x + f32 );
+            res.y =( fv3.y + f32 );
+            res.z =( fv3.z + f32 );
+
+            return( res );
+        }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+        FV3
+        AAC2020_POLYOGL_ADD_F32_FV3(
+            F32 f32
+        ,   FV3 fv3
+        ){
+            FV3 res ={ 0 };
+
+            res.x =( f32 + fv3.x );
+            res.y =( f32 + fv3.y );
+            res.z =( f32 + fv3.z );
+
+            return( res );
+        }
+    //:===================================:ADDITION_FUNCTIONS://
+    //:SUBTRACT_FUNCTIONS:===================================://
+        FV2
+        AAC2020_POLYOGL_SUB_FV2_FV2(
+            FV2 aye
+        ,   FV2 bee
+        ){
+            FV2 res ={ 0 };
+
+            res.x =( aye.x - bee.x );
+            res.y =( aye.y - bee.y );
+
+            return( res );
+        }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+        FV3
+        AAC2020_POLYOGL_SUB_FV3_FV3(
+            FV3 aye
+        ,   FV3 bee
+        ){
+            FV3 res ={ 0 };
+
+            res.x =( aye.x - bee.x );
+            res.y =( aye.y - bee.y );
+            res.z =( aye.z - bee.z );
+
+            return( res );
+        }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+        FV4
+        AAC2020_POLYOGL_SUB_FV4_FV4(
+            FV4 aye
+        ,   FV4 bee
+        ){
+            FV4 res ={ 0 };
+
+            res.x =( aye.x - bee.x );
+            res.y =( aye.y - bee.y );
+            res.z =( aye.z - bee.z );
+            res.w =( aye.w - bee.w );
+
+            return( res );
+        }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+        FV3
+        AAC2020_POLYOGL_SUB_FV3_F32(
+            FV3 fv3
+        ,   F32 f32
+        ){
+            FV3 res ={ 0 };
+
+            res.x =( fv3.x - f32 );
+            res.y =( fv3.y - f32 );
+            res.z =( fv3.z - f32 );
+
+            return( res );
+        }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+        FV3
+        AAC2020_POLYOGL_SUB_F32_FV3(
+            F32 f32
+        ,   FV3 fv3
+        ){
+            FV3 res ={ 0 };
+
+            res.x =( f32 - fv3.x );
+            res.y =( f32 - fv3.y );
+            res.z =( f32 - fv3.z );
+
+            return( res );
+        }
+    //:===================================:SUBTRACT_FUNCTIONS://
+    //:MISC_MATH_FUNCTIONS:==================================://
+
+        //:natural_eulers_exponent:--------------------------://
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+            F32
+            AAC2020_POLYOGL_EXP_F32(
+                F32 f32
+            ){
+                return( expf( f32 ) );
+            }
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+            FV2
+            AAC2020_POLYOGL_EXP_FV2(
+                FV2 fv2
+            ){
+                FV2 res={0};
+                    res.x=AAC2020_POLYOGL_EXP_F32( fv2.x );
+                    res.y=AAC2020_POLYOGL_EXP_F32( fv2.y );
+                return( res );
+            }
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+            FV3
+            AAC2020_POLYOGL_EXP_FV3(
+                FV3 fv3
+            ){
+                FV3 res={0};
+                    res.x=AAC2020_POLYOGL_EXP_F32( fv3.x );
+                    res.y=AAC2020_POLYOGL_EXP_F32( fv3.y );
+                    res.z=AAC2020_POLYOGL_EXP_F32( fv3.z );
+                return( res );
+            }
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+            FV4
+            AAC2020_POLYOGL_EXP_FV4(
+                FV4 fv4
+            ){
+                FV4 res={0};
+                    res.x=AAC2020_POLYOGL_EXP_F32( fv4.x );
+                    res.y=AAC2020_POLYOGL_EXP_F32( fv4.y );
+                    res.z=AAC2020_POLYOGL_EXP_F32( fv4.z );
+                    res.w=AAC2020_POLYOGL_EXP_F32( fv4.w );
+                return( res );
+            }
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        //:--------------------------:natural_eulers_exponent://
+        //:power_functions:----------------------------------://
+            F32
+            AAC2020_POLYOGL_POW_F32(
+                F32 bas
+            ,   F32 exp
+            ){
+                return( powf( bas , exp ) );
+            }
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+            FV2
+            AAC2020_POLYOGL_POW_FV2(
+                FV2 bas
+            ,   FV2 exp
+            ){
+                
+                FV2 res={0};
+                res.x=AAC2020_POLYOGL_POW_F32( bas.x , exp.x );
+                res.y=AAC2020_POLYOGL_POW_F32( bas.y , exp.y );
+                return( res );
+            }
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+            FV3
+            AAC2020_POLYOGL_POW_FV3(
+                FV3 bas
+            ,   FV3 exp
+            ){
+                
+                FV3 res={0};
+                res.x=AAC2020_POLYOGL_POW_F32( bas.x , exp.x );
+                res.y=AAC2020_POLYOGL_POW_F32( bas.y , exp.y );
+                res.z=AAC2020_POLYOGL_POW_F32( bas.z , exp.z );
+                return( res );
+            }
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+            FV4
+            AAC2020_POLYOGL_POW_FV4(
+                FV4 bas
+            ,   FV4 exp
+            ){
+                
+                FV4 res={0};
+                res.x=AAC2020_POLYOGL_POW_F32( bas.x , exp.x );
+                res.y=AAC2020_POLYOGL_POW_F32( bas.y , exp.y );
+                res.z=AAC2020_POLYOGL_POW_F32( bas.z , exp.z );
+                res.w=AAC2020_POLYOGL_POW_F32( bas.w , exp.w );
+                return( res );
+            }
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+            U32
+            AAC2020_POLYOGL_POW_U32(
+                U32 bas
+            ,   U32 exp
+            ){  /**@VID_IID[ 0296 ]TIME[ 07:25:00 ] ---------**/
+                /**NEVER_USE_THIS_FUNCTION_YOU_FOOL!         **/
+                /**thebookofshaders.com/glossary/?search=pow **/
+                ERR("[GLSL_HAS_NO_SUCH_OVERLOAD:POW_U32]");
+                if( bas + exp > 0 ){ /**NOOP**/ };
+            }
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+            I32
+            AAC2020_POLYOGL_POW_I32(
+                I32 bas
+            ,   I32 exp
+            ){  /**@VID_IID[ 0296 ]TIME[ 07:25:42 ] ---------**/
+                /**NEVER_USE_THIS_FUNCTION_YOU_FOOL!         **/
+                /**thebookofshaders.com/glossary/?search=pow **/
+                ERR("[GLSL_HAS_NO_SUCH_OVERLOAD:POW_I32]");
+                if( bas + exp > 0 ){ /**NOOP**/ };
+            }
+        //:----------------------------------:power_functions://
+        //:fractional_part_functions:------------------------://
+            //:- - - - - - - - - - - -- - - - - - - - - - - -://
+            F32
+            AAC2020_POLYOGL_FRA_F32( /** GLSL's[ fract ]Func **/
+                F32 f32_inn
+            ){
+            /** ************************************************
+            GLSL Documentation Says:
+            fract returns the fractional part of x. 
+            This is calculated as x - floor(x).
+            *** ***********************************************/
+
+                return( f32_inn - FLO_F32( f32_inn ) );
+            }
+            //:- - - - - - - - - - - -- - - - - - - - - - - -://
+            FV2
+            AAC2020_POLYOGL_FRA_FV2( /** GLSL's[ fract ]Func **/
+                FV2 fv2
+            ){
+                FV2 res ={ 0 };
+                    res.x =( AAC2020_POLYOGL_FRA_F32( fv2.x ));
+                    res.y =( AAC2020_POLYOGL_FRA_F32( fv2.y ));
+                return( res );
+            }
+            //:- - - - - - - - - - - -- - - - - - - - - - - -://
+            FV3
+            AAC2020_POLYOGL_FRA_FV3( /** GLSL's[ fract ]Func **/
+                FV3 fv3
+            ){
+                FV3 res ={ 0 };
+                    res.x =( AAC2020_POLYOGL_FRA_F32( fv3.x ));
+                    res.y =( AAC2020_POLYOGL_FRA_F32( fv3.y ));
+                    res.z =( AAC2020_POLYOGL_FRA_F32( fv3.z ));
+                return( res );
+            }
+            //:- - - - - - - - - - - -- - - - - - - - - - - -://
+            FV4
+            AAC2020_POLYOGL_FRA_FV4( /** GLSL's[ fract ]Func **/
+                FV4 fv4
+            ){
+                FV4 res ={ 0 };
+                    res.x =( AAC2020_POLYOGL_FRA_F32( fv4.x ));
+                    res.y =( AAC2020_POLYOGL_FRA_F32( fv4.y ));
+                    res.z =( AAC2020_POLYOGL_FRA_F32( fv4.z ));
+                    res.w =( AAC2020_POLYOGL_FRA_F32( fv4.w ));
+                return( res );
+            }
+            //:- - - - - - - - - - - -- - - - - - - - - - - -://
+        //:------------------------:fractional_part_functions://
+
         F32
-        AAC2020_POLYOGL_Trunc(
+        AAC2020_POLYOGL_Trunc( /** GLSL's[ trunc ]Func ------**/
             F32 f32_inn
         ){
             F32 f32_out; //:Float32_OUTPUT         
@@ -221,7 +732,8 @@
             return( f32_out );
         }
 
-    //:==================================:GLSL_POLYFILL_trunc://
+
+    //:==================================:MISC_MATH_FUNCTIONS://
     //:GLSL_POLYFILL_Get_IResolution:========================://
     
         //:@VID_IID[ 0116 ]TIME[ 00:12:32 ] **************** ://
@@ -344,8 +856,7 @@
         }
     //:=============================:GLSL_POLYFILL_TexelFetch://
     //:MAK_***:||||||||||||||||||||||||||||||||||||||||||||||://
-        //:GLSL_POLYFILL_MakeVec4:===========================://
-
+        //:MAKE_FV4_FV3_FV2:=================================://
             FV4
             AAC2020_POLYOGL_MAK_FV4(
                 F32 f_x
@@ -361,8 +872,33 @@
                 fv4.w = ( f_w );
                 return( fv4 );
             }
-
-        //:===========================:GLSL_POLYFILL_MakeVec4://
+            //:- - - - - - - - - - - -- - - - - - - - - - - -://
+            FV3
+            AAC2020_POLYOGL_MAK_FV3(
+                F32 f_x
+            ,   F32 f_y
+            ,   F32 f_z
+            )
+            {
+                FV3 fv3;
+                fv3.x = ( f_x );
+                fv3.y = ( f_y );
+                fv3.z = ( f_z );
+                return( fv3 );
+            }
+            //:- - - - - - - - - - - -- - - - - - - - - - - -://
+            FV2
+            AAC2020_POLYOGL_MAK_FV2(
+                F32 f_x
+            ,   F32 f_y
+            )
+            {
+                FV2 fv2;
+                fv2.x = ( f_x );
+                fv2.y = ( f_y );
+                return( fv2 );
+            }
+        //:=================================:MAKE_FV4_FV3_FV2://
         //:GLSL_POLYFILL_Make_IV2:===========================://
             IV2
             AAC2020_POLYOGL_MAK_IV2(
@@ -458,16 +994,31 @@
 
     //:===================================:(CTO_*):CONVERT_TO://
 
-#undef  U08                                           //: 01 ://
-#undef  U32                                           //: 02 ://
-#undef  I32                                           //: 03 ://
-#undef  IV2                                           //: 04 ://
-#undef  UV4                                           //: 05 ://
-#undef  FV2                                           //: 06 ://
-#undef  SAM                                           //: 07 ://
-#undef  FV4                                           //: 08 ://
-#undef  F32                                           //: 09 ://
-#undef  ERR                                           //: 10 ://
+#undef      U08  //:------------------------------------: 01 ://
+                 //:------------------------------------: -- ://
+#undef      F32  //:------------------------------------: 02 ://
+#undef      U32  //:------------------------------------: 03 ://
+#undef      I32  //:------------------------------------: 04 ://
+                 //:------------------------------------: -- ://
+#undef      FV2  //:------------------------------------: 05 ://
+#undef      FV3  //:------------------------------------: 06 ://
+#undef      FV4  //:------------------------------------: 07 ://
+                 //:------------------------------------: -- ://
+#undef      UV2  //:------------------------------------: 08 ://
+#undef      UV3  //:------------------------------------: 09 ://
+#undef      UV4  //:------------------------------------: 00 ://
+                 //:------------------------------------: -- ://
+#undef      IV2  //:------------------------------------: 01 ://
+#undef      IV3  //:------------------------------------: 02 ://
+#undef      IV4  //:------------------------------------: 03 ://
+                 //:------------------------------------: -- ://
+#undef  FLO_F32  //:------------------------------------: 04 ://
+#undef  ROU_F32  //:------------------------------------: 05 ://
+#undef  CEL_F32  //:------------------------------------: 06 ://
+#undef  COF_F32  //:------------------------------------: 07 ://                  
+                 //:------------------------------------: -- ://
+#undef      SAM  //:------------------------------------: 08 ://
+#undef      ERR  //:------------------------------------: 09 ://
 //:******************************:DO_NOT_PASTE_INTO_GLSL_CODE://
 //:*******************************************:GLSL_POLYFILLS://
 

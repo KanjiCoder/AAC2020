@@ -113,6 +113,290 @@
         //:----------------------------:INTEGER_RECTANGLE://
 
     //:================:COMMON_DATA_TYPES_USED_IN_SHADERS://
+    //:MULTIPLY_FUNCTIONS:===============================://
+        FV2
+        AAC2020_FRAGCOM_MUL_FV2_FV2(
+            FV2 aye
+        ,   FV2 bee
+        ){
+            FV2 res ={ 0 };
+
+            res.x =( aye.x * bee.x );
+            res.y =( aye.y * bee.y );
+
+            return( res );
+        }
+    //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        FV3
+        AAC2020_FRAGCOM_MUL_FV3_FV3(
+            FV3 aye
+        ,   FV3 bee
+        ){
+            FV3 res ={ 0 };
+
+            res.x =( aye.x * bee.x );
+            res.y =( aye.y * bee.y );
+            res.z =( aye.z * bee.z );
+
+            return( res );
+        }
+    //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        FV4
+        AAC2020_FRAGCOM_MUL_FV4_FV4(
+            FV4 aye
+        ,   FV4 bee
+        ){
+            FV4 res ={ 0 };
+
+            res.x =( aye.x * bee.x );
+            res.y =( aye.y * bee.y );
+            res.z =( aye.z * bee.z );
+            res.w =( aye.w * bee.w );
+
+            return( res );
+        }
+    //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        FV3
+        AAC2020_FRAGCOM_MUL_FV3_F32(
+            FV3 fv3
+        ,   F32 f32
+        ){
+            FV3 res ={ 0 };
+
+            res.x =( fv3.x * f32 );
+            res.y =( fv3.y * f32 );
+            res.z =( fv3.z * f32 );
+
+            return( res );
+        }
+    //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        FV3
+        AAC2020_FRAGCOM_MUL_F32_FV3(
+            F32 f32
+        ,   FV3 fv3
+        ){
+            FV3 res ={ 0 };
+
+            res.x =( fv3.x * f32 );
+            res.y =( fv3.y * f32 );
+            res.z =( fv3.z * f32 );
+
+            return( res );
+        }
+    //:===============================:MULTIPLY_FUNCTIONS://
+    //:DIVIDE_FUNCTIONS:=================================://
+        FV2
+        AAC2020_FRAGCOM_DIV_FV2_FV2(
+            FV2 aye
+        ,   FV2 bee
+        ){
+            FV2 res ={ 0 };
+
+            res.x =( aye.x / bee.x );
+            res.y =( aye.y / bee.y );
+
+            return( res );
+        }
+    //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        FV3
+        AAC2020_FRAGCOM_DIV_FV3_FV3(
+            FV3 aye
+        ,   FV3 bee
+        ){
+            FV3 res ={ 0 };
+
+            res.x =( aye.x / bee.x );
+            res.y =( aye.y / bee.y );
+            res.z =( aye.z / bee.z );
+
+            return( res );
+        }
+    //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        FV4
+        AAC2020_FRAGCOM_DIV_FV4_FV4(
+            FV4 aye
+        ,   FV4 bee
+        ){
+            FV4 res ={ 0 };
+
+            res.x =( aye.x / bee.x );
+            res.y =( aye.y / bee.y );
+            res.z =( aye.z / bee.z );
+            res.w =( aye.w / bee.w );
+
+            return( res );
+        }
+    //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        FV3
+        AAC2020_FRAGCOM_DIV_FV3_F32(
+            FV3 fv3
+        ,   F32 f32
+        ){
+            FV3 res ={ 0 };
+
+            res.x =( fv3.x / f32 );
+            res.y =( fv3.y / f32 );
+            res.z =( fv3.z / f32 );
+
+            return( res );
+        }
+    //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        FV3
+        AAC2020_FRAGCOM_DIV_F32_FV3(
+            F32 f32
+        ,   FV3 fv3
+        ){
+            FV3 res ={ 0 };
+
+            res.x =( f32 / fv3.x );
+            res.y =( f32 / fv3.y );
+            res.z =( f32 / fv3.z );
+
+            return( res );
+        }
+    //:=================================:DIVIDE_FUNCTIONS://
+    //:ADDITION_FUNCTIONS:===============================://    
+        FV2
+        AAC2020_FRAGCOM_ADD_FV2_FV2(
+            FV2 aye
+        ,   FV2 bee
+        ){
+            FV2 res ={ 0 };
+
+            res.x =( aye.x + bee.x );
+            res.y =( aye.y + bee.y );
+
+            return( res );
+        }
+    //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        FV3
+        AAC2020_FRAGCOM_ADD_FV3_FV3(
+            FV3 aye
+        ,   FV3 bee
+        ){
+            FV3 res ={ 0 };
+
+            res.x =( aye.x + bee.x );
+            res.y =( aye.y + bee.y );
+            res.z =( aye.z + bee.z );
+
+            return( res );
+        }
+    //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        FV4
+        AAC2020_FRAGCOM_ADD_FV4_FV4(
+            FV4 aye
+        ,   FV4 bee
+        ){
+            FV4 res ={ 0 };
+
+            res.x =( aye.x + bee.x );
+            res.y =( aye.y + bee.y );
+            res.z =( aye.z + bee.z );
+            res.w =( aye.w + bee.w );
+
+            return( res );
+        }
+    //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        FV3
+        AAC2020_FRAGCOM_ADD_FV3_F32(
+            FV3 fv3
+        ,   F32 f32
+        ){
+            FV3 res ={ 0 };
+
+            res.x =( fv3.x + f32 );
+            res.y =( fv3.y + f32 );
+            res.z =( fv3.z + f32 );
+
+            return( res );
+        }
+    //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        FV3
+        AAC2020_FRAGCOM_ADD_F32_FV3(
+            F32 f32
+        ,   FV3 fv3
+        ){
+            FV3 res ={ 0 };
+
+            res.x =( f32 + fv3.x );
+            res.y =( f32 + fv3.y );
+            res.z =( f32 + fv3.z );
+
+            return( res );
+        }
+    //:===============================:ADDITION_FUNCTIONS://    
+    //:SUBTRACT_FUNCTIONS:===============================://
+        FV2
+        AAC2020_FRAGCOM_SUB_FV2_FV2(
+            FV2 aye
+        ,   FV2 bee
+        ){
+            FV2 res ={ 0 };
+
+            res.x =( aye.x - bee.x );
+            res.y =( aye.y - bee.y );
+
+            return( res );
+        }
+    //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        FV3
+        AAC2020_FRAGCOM_SUB_FV3_FV3(
+            FV3 aye
+        ,   FV3 bee
+        ){
+            FV3 res ={ 0 };
+
+            res.x =( aye.x - bee.x );
+            res.y =( aye.y - bee.y );
+            res.z =( aye.z - bee.z );
+
+            return( res );
+        }
+    //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        FV4
+        AAC2020_FRAGCOM_SUB_FV4_FV4(
+            FV4 aye
+        ,   FV4 bee
+        ){
+            FV4 res ={ 0 };
+
+            res.x =( aye.x - bee.x );
+            res.y =( aye.y - bee.y );
+            res.z =( aye.z - bee.z );
+            res.w =( aye.w - bee.w );
+
+            return( res );
+        }
+    //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        FV3
+        AAC2020_FRAGCOM_SUB_FV3_F32(
+            FV3 fv3
+        ,   F32 f32
+        ){
+            FV3 res ={ 0 };
+
+            res.x =( fv3.x - f32 );
+            res.y =( fv3.y - f32 );
+            res.z =( fv3.z - f32 );
+
+            return( res );
+        }
+    //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        FV3
+        AAC2020_FRAGCOM_SUB_F32_FV3(
+            F32 f32
+        ,   FV3 fv3
+        ){
+            FV3 res ={ 0 };
+
+            res.x =( f32 - fv3.x );
+            res.y =( f32 - fv3.y );
+            res.z =( f32 - fv3.z );
+
+            return( res );
+        }
+    //:===============================:SUBTRACT_FUNCTIONS://
     //:TRIG_FUNCTIONS_COS_SIN_ETC:=======================://
 
         F32

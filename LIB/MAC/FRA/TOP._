@@ -28,6 +28,8 @@
         #define U32_cto_F32 [[[TOO_TERSE_21]]]    //: 21 ://
         #define U32_cto_I32 [[[TOO_TERSE_22]]]    //: 22 ://
 
+        #define DOT_F32     [YOU_MEAN:DOT_FV3]    //: 23 ://
+
     //:=====================:MACROS_WE_SHOULD_JUST_REMOVE://           
     //:SAME_FOR_C99_AND_GLSL:============================://
 
@@ -351,6 +353,52 @@
         #define TRU_F32 AAC2020_POLYOGL_Trunc        
     #endif
     //:==============================:FLO_ROU_CEL_MOD_TRU://
+    //:SEVEN_LETTER_MATH_MACROS:=========================://
+    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL  
+
+        #define DOT_FV2   dot  //: 01 :------------------://
+        #define DOT_FV3   dot  //: 02 :------------------://
+                               //: -- :------------------://
+        #define FRA_F32 fract  //: 03 :------------------://
+        #define FRA_FV2 fract  //: 04 :------------------://
+        #define FRA_FV3 fract  //: 05 :------------------://
+        #define FRA_FV4 fract  //: 06 :------------------://
+
+        #define POW_F32   pow  //: 07 :------------------://
+        #define POW_U32   pow  //: 08 :------------------://
+        #define POW_I32   pow  //: 09 :------------------://
+
+        #define POW_FV2   pow  //: 10 :------------------://
+        #define POW_FV3   pow  //: 11 :------------------://
+        #define POW_FV4   pow  //: 12 :------------------://
+
+        #define EXP_F32   exp  //: 13 :------------------://
+        #define EXP_FV2   exp  //: 14 :------------------://
+        #define EXP_FV3   exp  //: 15 :------------------://
+        #define EXP_FV4   exp  //: 16 :------------------://
+    #else
+        #define DOT_FV2 AAC2020_POLYOGL_DOT_FV2   //: 01 ://
+        #define DOT_FV3 AAC2020_POLYOGL_DOT_FV3   //: 02 ://
+                                                  //: -- ://
+        #define FRA_F32 AAC2020_POLYOGL_FRA_F32   //: 03 ://
+        #define FRA_FV2 AAC2020_POLYOGL_FRA_FV2   //: 04 ://
+        #define FRA_FV3 AAC2020_POLYOGL_FRA_FV3   //: 05 ://
+        #define FRA_FV4 AAC2020_POLYOGL_FRA_FV4   //: 06 ://
+
+        #define POW_F32 AAC2020_POLYOGL_POW_F32   //: 07 ://
+        #define POW_U32 AAC2020_POLYOGL_POW_U32   //: 08 ://
+        #define POW_I32 AAC2020_POLYOGL_POW_I32   //: 09 ://
+
+        #define POW_FV2 AAC2020_POLYOGL_POW_FV2   //: 10 ://
+        #define POW_FV3 AAC2020_POLYOGL_POW_FV3   //: 11 ://
+        #define POW_FV4 AAC2020_POLYOGL_POW_FV4   //: 12 ://
+
+        #define EXP_F32 AAC2020_POLYOGL_EXP_F32   //: 13 ://
+        #define EXP_FV2 AAC2020_POLYOGL_EXP_FV2   //: 14 ://
+        #define EXP_FV3 AAC2020_POLYOGL_EXP_FV3   //: 15 ://
+        #define EXP_FV4 AAC2020_POLYOGL_EXP_FV4   //: 16://
+    #endif
+    //:=========================:SEVEN_LETTER_MATH_MACROS://
     //:SEVEN_LETTER_MACROS_MISC:=========================://
     /** ************************************************ ***
     @VID_IID[0294]TIME[02:31:13]BOTH_SAME_NAMESPACE      ***
@@ -367,13 +415,65 @@
     //:=========================:SEVEN_LETTER_MACROS_MISC://
     //:11_LETTER_MACROS:=================================://
     #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL                 
-                                                        
-        //: NONE_AT_THIS_TIME ://
-                                                        
+        //:- - - - - - - - - - -- - - - - - - - - - -://                                    
+        #define MUL_FV4_FV4  AAC2020_FRAGCOM_MUL_FV4_FV4
+        #define MUL_FV3_FV3  AAC2020_FRAGCOM_MUL_FV3_FV3
+        #define MUL_FV2_FV2  AAC2020_FRAGCOM_MUL_FV2_FV2
+
+        #define MUL_FV3_F32  AAC2020_FRAGCOM_MUL_FV3_F32
+        #define MUL_F32_FV3  AAC2020_FRAGCOM_MUL_F32_FV3
+        //:- - - - - - - - - - -- - - - - - - - - - -:// 
+        #define DIV_FV4_FV4  AAC2020_FRAGCOM_DIV_FV4_FV4
+        #define DIV_FV3_FV3  AAC2020_FRAGCOM_DIV_FV3_FV3
+        #define DIV_FV2_FV2  AAC2020_FRAGCOM_DIV_FV2_FV2
+
+        #define DIV_FV3_F32  AAC2020_FRAGCOM_DIV_FV3_F32
+        #define DIV_F32_FV3  AAC2020_FRAGCOM_DIV_F32_FV3
+        //:- - - - - - - - - - -- - - - - - - - - - -:// 
+        #define ADD_FV4_FV4  AAC2020_FRAGCOM_ADD_FV4_FV4
+        #define ADD_FV3_FV3  AAC2020_FRAGCOM_ADD_FV3_FV3
+        #define ADD_FV2_FV2  AAC2020_FRAGCOM_ADD_FV2_FV2
+                                             
+        #define ADD_FV3_F32  AAC2020_FRAGCOM_ADD_FV3_F32
+        #define ADD_F32_FV3  AAC2020_FRAGCOM_ADD_F32_FV3
+        //:- - - - - - - - - - -- - - - - - - - - - -:// 
+        #define SUB_FV4_FV4  AAC2020_FRAGCOM_SUB_FV4_FV4
+        #define SUB_FV3_FV3  AAC2020_FRAGCOM_SUB_FV3_FV3
+        #define SUB_FV2_FV2  AAC2020_FRAGCOM_SUB_FV2_FV2
+
+        #define SUB_FV3_F32  AAC2020_FRAGCOM_SUB_FV3_F32
+        #define SUB_F32_FV3  AAC2020_FRAGCOM_SUB_F32_FV3
+        //:- - - - - - - - - - -- - - - - - - - - - -://                                              
     #else                                                
-                                                        
-        //: NONE_AT_THIS_TIME ://
-                                                        
+        //:- - - - - - - - - - -- - - - - - - - - - -://
+        #define MUL_FV4_FV4  AAC2020_POLYOGL_MUL_FV4_FV4
+        #define MUL_FV3_FV3  AAC2020_POLYOGL_MUL_FV3_FV3
+        #define MUL_FV2_FV2  AAC2020_POLYOGL_MUL_FV2_FV2
+
+        #define MUL_FV3_F32  AAC2020_POLYOGL_MUL_FV3_F32
+        #define MUL_F32_FV3  AAC2020_POLYOGL_MUL_F32_FV3
+        //:- - - - - - - - - - -- - - - - - - - - - -://
+        #define DIV_FV4_FV4  AAC2020_POLYOGL_DIV_FV4_FV4
+        #define DIV_FV3_FV3  AAC2020_POLYOGL_DIV_FV3_FV3
+        #define DIV_FV2_FV2  AAC2020_POLYOGL_DIV_FV2_FV2
+
+        #define DIV_FV3_F32  AAC2020_POLYOGL_DIV_FV3_F32
+        #define DIV_F32_FV3  AAC2020_POLYOGL_DIV_F32_FV3
+        //:- - - - - - - - - - -- - - - - - - - - - -://
+        #define ADD_FV4_FV4  AAC2020_POLYOGL_ADD_FV4_FV4
+        #define ADD_FV3_FV3  AAC2020_POLYOGL_ADD_FV3_FV3
+        #define ADD_FV2_FV2  AAC2020_POLYOGL_ADD_FV2_FV2
+                                             
+        #define ADD_FV3_F32  AAC2020_POLYOGL_ADD_FV3_F32
+        #define ADD_F32_FV3  AAC2020_POLYOGL_ADD_F32_FV3
+        //:- - - - - - - - - - -- - - - - - - - - - -://  
+        #define SUB_FV4_FV4  AAC2020_POLYOGL_SUB_FV4_FV4
+        #define SUB_FV3_FV3  AAC2020_POLYOGL_SUB_FV3_FV3
+        #define SUB_FV2_FV2  AAC2020_POLYOGL_SUB_FV2_FV2
+
+        #define SUB_FV3_F32  AAC2020_POLYOGL_SUB_FV3_F32
+        #define SUB_F32_FV3  AAC2020_POLYOGL_SUB_F32_FV3
+        //:- - - - - - - - - - -- - - - - - - - - - -://                                              
     #endif     
     //:=================================:11_LETTER_MACROS://
 
