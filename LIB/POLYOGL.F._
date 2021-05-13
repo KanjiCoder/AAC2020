@@ -33,19 +33,23 @@
                                                       //: -- ://
 #define     UV2   struct AAC2020_POLYOGL_UV2          //: 08 ://
 #define     UV3   struct AAC2020_POLYOGL_UV3          //: 09 ://
-#define     UV4   struct AAC2020_POLYOGL_UV4          //: 00 ://
+#define     UV4   struct AAC2020_POLYOGL_UV4          //: 10 ://
                                                       //: -- ://
-#define     IV2   struct AAC2020_POLYOGL_IV2          //: 01 ://
-#define     IV3   struct AAC2020_POLYOGL_IV3          //: 02 ://
-#define     IV4   struct AAC2020_POLYOGL_IV4          //: 03 ://
+#define     IV2   struct AAC2020_POLYOGL_IV2          //: 11 ://
+#define     IV3   struct AAC2020_POLYOGL_IV3          //: 12 ://
+#define     IV4   struct AAC2020_POLYOGL_IV4          //: 13 ://
                                                       //: -- ://
-#define FLO_F32   AAC2020_POLYOGL_FLO_F32             //: 04 ://
-#define ROU_F32   AAC2020_POLYOGL_ROU_F32             //: 05 ://
-#define CEL_F32   AAC2020_POLYOGL_CEL_F32             //: 06 ://
-#define COF_F32   AAC2020_POLYOGL_COF_F32             //: 07 ://                  
+#define     FM2   struct AAC2020_POLYOGL_FM2          //: 14 ://
+#define     FM3   struct AAC2020_POLYOGL_FM3          //: 15 ://
+#define     FM4   struct AAC2020_POLYOGL_FM4          //: 16 ://
                                                       //: -- ://
-#define     SAM      int /** IGNORED IN [C99/C11] **/ //: 08 ://
-#define     ERR   aac2020_polyogl_Halt                //: 09 ://
+#define FLO_F32   AAC2020_POLYOGL_FLO_F32             //: 17 ://
+#define ROU_F32   AAC2020_POLYOGL_ROU_F32             //: 18 ://
+#define CEL_F32   AAC2020_POLYOGL_CEL_F32             //: 19 ://
+#define COF_F32   AAC2020_POLYOGL_COF_F32             //: 20 ://                  
+                                                      //: -- ://
+#define     SAM      int /** IGNORED IN [C99/C11] **/ //: 21 ://
+#define     ERR   aac2020_polyogl_Halt                //: 22 ://
             
     //:LINEAR_ALGEBRA_FUNCTIONS:=============================://
 
@@ -718,6 +722,95 @@
             }
             //:- - - - - - - - - - - -- - - - - - - - - - - -://
         //:------------------------:fractional_part_functions://
+        //:distance_formulas:--------------------------------://
+        #define X_0 ( aye.x )
+        #define X_1 ( bee.x )
+        #define Y_0 ( aye.y )
+        #define Y_1 ( bee.y )
+        #define Z_0 ( aye.z )
+        #define Z_1 ( bee.z )
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+            F32
+            AAC2020_POLYOGL_DIS_FV2(
+                FV2 aye //:[ X_0 & Y_0 ]://
+            ,   FV2 bee //:[ X_1 & Y_1 ]://
+            ){
+                F32 dist_2d;
+                    dist_2d=(sqrtf( 0.0
+                          +powf((X_1-X_0),2.0)
+                          +powf((Y_1-Y_0),2.0)
+                        ));;
+                return( dist_2d );
+            }
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+            F32
+            AAC2020_POLYOGL_DIS_FV3(
+                FV3 aye //:[ X_0 & Y_0 & Z_0 ]://
+            ,   FV3 bee //:[ X_1 & Y_1 & Z_1 ]://
+            ){
+                F32 dist_3d;
+                    dist_3d=(sqrtf( 0.0
+                          +powf((X_1-X_0),2.0)
+                          +powf((Y_1-Y_0),2.0)
+                          +powf((Z_1-Z_0),2.0)
+                        ));;
+                return( dist_3d );
+            }
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        #undef  X_0  //:--------------------------------: 01 ://
+        #undef  X_1  //:--------------------------------: 02 ://
+        #undef  Y_0  //:--------------------------------: 03 ://
+        #undef  Y_1  //:--------------------------------: 04 ://
+        #undef  Z_0  //:--------------------------------: 05 ://
+        #undef  Z_1  //:--------------------------------: 06 ://
+        //:--------------------------------:distance_formulas://
+        //:normalization:------------------------------------://
+        #define DIS_FV2 AAC2020_POLYOGL_DIS_FV2 //:----------://
+        #define DIS_FV3 AAC2020_POLYOGL_DIS_FV3 //:----------://
+
+            FV3 
+            AAC2020_POLYOGL_NOR_FV3(
+                FV3 vec
+            ){
+                //: @VID_IID[0297]T[02:20:10]DISTANCE_FUNC  :://
+                //: IS_OVERKILL_BECAUSE_YOU_PRETEND_VECTOR  :://
+                //: IS_A_LINE_SEGMENT_AT_ORIGIN[ 0,0 ]      :://
+                F32 dist_3d;
+                    dist_3d=(sqrtf( 0.0
+                          +powf((vec.x),2.0)
+                          +powf((vec.y),2.0)
+                          +powf((vec.z),2.0)
+                        ));;
+
+                FV3 res={0};
+                    res.x=( vec.x / dist_3d );
+                    res.y=( vec.y / dist_3d );
+                    res.z=( vec.z / dist_3d );
+                return( res );
+            }
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+            FV2 
+            AAC2020_POLYOGL_NOR_FV2(
+                FV2 vec
+            ){
+                //: @VID_IID[0297]T[02:20:10]DISTANCE_FUNC  :://
+                //: IS_OVERKILL_BECAUSE_YOU_PRETEND_VECTOR  :://
+                //: IS_A_LINE_SEGMENT_AT_ORIGIN[ 0,0 ]      :://
+                F32 dist_2d;
+                    dist_2d=(sqrtf( 0.0
+                          +powf((vec.x),2.0)
+                          +powf((vec.y),2.0)
+                        ));;
+
+                FV2 res={0};
+                    res.x=( vec.x / dist_2d );
+                    res.y=( vec.y / dist_2d );
+                return( res );
+            }
+
+        #undef  DIS_FV2  //:---------------------------------://
+        #undef  DIS_FV3  //:---------------------------------://
+        //:------------------------------------:normalization://
 
         F32
         AAC2020_POLYOGL_Trunc( /** GLSL's[ trunc ]Func ------**/
@@ -942,7 +1035,117 @@
                 return( f32 );
             }
         //:===========================:GLSL_POLYFILL_Make_F32://
+        //:Make_Float_Matrixes:==============================://
+        /** ************************************************ ***
+        C99 NESTED ARRAY MEMORY LAYOUT:
+            beginnersbook.com/2014/01/2d-arrays-in-c-example/
+        *** ************************************************ **/
+            FM2
+            AAC2020_POLYOGL_MAK_FM2(
+                F32 a_1 //:Top    of first  column
+            ,   F32 a_2 //:Bottom of first  column
+
+            ,   F32 b_1 //:Top    of second column
+            ,   F32 b_2 //:Bottom of second column
+            )
+            {
+                FM2     fm2={0};
+
+                        fm2.col[0][0] =( a_1 );
+                        fm2.col[0][1] =( a_2 );
+
+                        fm2.col[1][0] =( b_1 );
+                        fm2.col[1][1] =( b_2 );
+                return( fm2 );
+            }
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+            FM3
+            AAC2020_POLYOGL_MAK_FM3(
+                F32 a_1   //:Top    of 1st  column
+            ,   F32 a_2   //:Middle of 1st  column
+            ,   F32 a_3   //:Bottom of 1st  column
+
+            ,   F32 b_1   //:Top    of 2nd  column
+            ,   F32 b_2   //:Middle of 2nd  column
+            ,   F32 b_3   //:Bottom of 2nd  column
+
+            ,   F32 c_1   //:Top    of 3rd  column
+            ,   F32 c_2   //:Middle of 3rd  column
+            ,   F32 c_3   //:Bottom of 3rd  column
+            )
+            {
+                FM3     fm3={0};
+
+                        fm3.col[0][0] =( a_1 );
+                        fm3.col[0][1] =( a_2 );
+                        fm3.col[0][2] =( a_3 );
+
+                        fm3.col[1][0] =( b_1 );
+                        fm3.col[1][1] =( b_2 );
+                        fm3.col[1][2] =( b_3 );
+
+                        fm3.col[2][0] =( c_1 );
+                        fm3.col[2][1] =( c_2 );
+                        fm3.col[2][2] =( c_3 );
+
+                return( fm3 );
+            }
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+            FM4
+            AAC2020_POLYOGL_MAK_FM4(
+                F32 a_1   //: 1st_Column
+            ,   F32 a_2   //: 1st_Column
+            ,   F32 a_3   //: 1st_Column
+            ,   F32 a_4   //: 1st_Column
+
+            ,   F32 b_1   //: 2nd_Column
+            ,   F32 b_2   //: 2nd_Column
+            ,   F32 b_3   //: 2nd_Column
+            ,   F32 b_4   //: 2nd_Column
+
+            ,   F32 c_1   //: 3rd_Column
+            ,   F32 c_2   //: 3rd_Column
+            ,   F32 c_3   //: 3rd_Column
+            ,   F32 c_4   //: 3rd_Column
+
+            ,   F32 d_1   //: 4th_Column
+            ,   F32 d_2   //: 4th_Column
+            ,   F32 d_3   //: 4th_Column
+            ,   F32 d_4   //: 4th_Column
+            )
+            {
+                FM4     fm4={0};
+
+                        fm4.col[0][0] =( a_1 );
+                        fm4.col[0][1] =( a_2 );
+                        fm4.col[0][2] =( a_3 );
+                        fm4.col[0][3] =( a_4 );
+
+                        fm4.col[1][0] =( b_1 );
+                        fm4.col[1][1] =( b_2 );
+                        fm4.col[1][2] =( b_3 );
+                        fm4.col[1][3] =( b_4 );
+
+                        fm4.col[2][0] =( c_1 );
+                        fm4.col[2][1] =( c_2 );
+                        fm4.col[2][2] =( c_3 );
+                        fm4.col[2][3] =( c_4 );
+
+                        fm4.col[3][0] =( d_1 );
+                        fm4.col[3][1] =( d_2 );
+                        fm4.col[3][2] =( d_3 );
+                        fm4.col[3][3] =( d_4 );
+
+                return( fm4 );
+            }
+        //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        //:==============================:Make_Float_Matrixes://
     //:||||||||||||||||||||||||||||||||||||||||||||||:MAK_***://
+    //:MATRIX_OPERATIONS:====================================://
+
+        
+
+    //:====================================:MATRIX_OPERATIONS://
     //:MODULUS:==============================================://
 
         I32
@@ -1006,19 +1209,24 @@
                  //:------------------------------------: -- ://
 #undef      UV2  //:------------------------------------: 08 ://
 #undef      UV3  //:------------------------------------: 09 ://
-#undef      UV4  //:------------------------------------: 00 ://
+#undef      UV4  //:------------------------------------: 10 ://
                  //:------------------------------------: -- ://
-#undef      IV2  //:------------------------------------: 01 ://
-#undef      IV3  //:------------------------------------: 02 ://
-#undef      IV4  //:------------------------------------: 03 ://
+#undef      IV2  //:------------------------------------: 11 ://
+#undef      IV3  //:------------------------------------: 12 ://
+#undef      IV4  //:------------------------------------: 13 ://
                  //:------------------------------------: -- ://
-#undef  FLO_F32  //:------------------------------------: 04 ://
-#undef  ROU_F32  //:------------------------------------: 05 ://
-#undef  CEL_F32  //:------------------------------------: 06 ://
-#undef  COF_F32  //:------------------------------------: 07 ://                  
+
+#undef      FM2  //:------------------------------------: 14 ://
+#undef      FM3  //:------------------------------------: 15 ://
+#undef      FM4  //:------------------------------------: 16 ://
+
+#undef  FLO_F32  //:------------------------------------: 17 ://
+#undef  ROU_F32  //:------------------------------------: 18 ://
+#undef  CEL_F32  //:------------------------------------: 19 ://
+#undef  COF_F32  //:------------------------------------: 20 ://                  
                  //:------------------------------------: -- ://
-#undef      SAM  //:------------------------------------: 08 ://
-#undef      ERR  //:------------------------------------: 09 ://
+#undef      SAM  //:------------------------------------: 21 ://
+#undef      ERR  //:------------------------------------: 22 ://
 //:******************************:DO_NOT_PASTE_INTO_GLSL_CODE://
 //:*******************************************:GLSL_POLYFILLS://
 

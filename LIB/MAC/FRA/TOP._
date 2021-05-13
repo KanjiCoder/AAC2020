@@ -57,6 +57,10 @@
     #define IV3  ivec3                      //: FUI__011 ://
     #define IV4  ivec4                      //: FUI__012 ://
                                             //:----------://
+    #define FM2   mat2                      //: FUI__013 ://
+    #define FM3   mat3                      //: FUI__014 ://
+    #define FM4   mat4                      //: FUI__015 ://
+                                            //:----------://
     #else //:COMPILE_AS_C99_C11_CODE:====================://
                                             //:----------://
     #define F32 float                       //: FUI__001 ://
@@ -74,6 +78,10 @@
     #define IV2 struct AAC2020_POLYOGL_IV2  //: FUI__010 ://
     #define IV3 struct AAC2020_POLYOGL_IV3  //: FUI__011 ://
     #define IV4 struct AAC2020_POLYOGL_IV4  //: FUI__012 ://
+                                            //:----------://
+    #define FM2 struct AAC2020_POLYOGL_FM2  //: FUI__013 ://
+    #define FM3 struct AAC2020_POLYOGL_FM3  //: FUI__014 ://
+    #define FM4 struct AAC2020_POLYOGL_FM4  //: FUI__015 ://
                                             //:----------://
     #endif                                  //:----------://
     //:----------------------------:GLSL_OR_C99_DEPENDING://
@@ -247,18 +255,22 @@
         #define MAK_F32     float    //: 01 :<<<<<<<<<<<://
         #define MAK_U32      uint    //: 02 :<<<<<<<<<<<://
         #define MAK_I32       int    //: 03 :<<<<<<<<<<<://
-                                     //: -- :<<<<<<<<<<<://
+                                     //:----------------://
         #define MAK_FV4      vec4    //: 04 :<<<<<<<<<<<://
         #define MAK_FV3      vec3    //: 05 :<<<<<<<<<<<://
         #define MAK_FV2      vec2    //: 06 :<<<<<<<<<<<://
-                                     //: -- :<<<<<<<<<<<://
+                                     //:----------------://
         #define MAK_UV4     uvec4    //: 07 :<<<<<<<<<<<://            
         #define MAK_UV3     uvec3    //: 08 :<<<<<<<<<<<://            
         #define MAK_UV2     uvec2    //: 09 :<<<<<<<<<<<://
-                                     //: -- :<<<<<<<<<<<://
+                                     //:----------------://
         #define MAK_IV4     ivec4    //: 10 :<<<<<<<<<<<://            
         #define MAK_IV3     ivec3    //: 11 :<<<<<<<<<<<://            
         #define MAK_IV2     ivec2    //: 12 :<<<<<<<<<<<://  
+                                     //:----------------://
+        #define MAK_FM4      mat4    //: 13 :<<<<<<<<<<<://
+        #define MAK_FM3      mat3    //: 14 :<<<<<<<<<<<://
+        #define MAK_FM2      mat2    //: 15 :<<<<<<<<<<<://
     #else
         #define MAK_F32 AAC2020_POLYOGL_MAK_F32  //: 01 ://
         #define MAK_U32 AAC2020_POLYOGL_MAK_U32  //: 02 ://
@@ -275,6 +287,10 @@
         #define MAK_IV4 AAC2020_POLYOGL_MAK_IV4  //: 10 ://
         #define MAK_IV3 AAC2020_POLYOGL_MAK_IV3  //: 11 ://
         #define MAK_IV2 AAC2020_POLYOGL_MAK_IV2  //: 12 ://
+                                                 //: -- ://
+        #define MAK_FM4 AAC2020_POLYOGL_MAK_FM4  //: 13 ://
+        #define MAK_FM3 AAC2020_POLYOGL_MAK_FM3  //: 14 ://
+        #define MAK_FM2 AAC2020_POLYOGL_MAK_FM2  //: 15 ://
     #endif
     //:========================:SEVEN_LETTER_MAKER_MACROS://
     //:SIN_COS:==========================================://
@@ -376,6 +392,13 @@
         #define EXP_FV2   exp  //: 14 :------------------://
         #define EXP_FV3   exp  //: 15 :------------------://
         #define EXP_FV4   exp  //: 16 :------------------://
+
+        #define DST_FV3  dist  //: 17 :------------------://
+        #define DST_FV2  dist  //: 18 :------------------://
+                               //:- - - - - - - - - - - -://
+        #define NOR_FV3  norm  //: 19 :------------------://
+        #define NOR_FV2  norm  //: 20 :------------------://
+
     #else
         #define DOT_FV2 AAC2020_POLYOGL_DOT_FV2   //: 01 ://
         #define DOT_FV3 AAC2020_POLYOGL_DOT_FV3   //: 02 ://
@@ -396,7 +419,13 @@
         #define EXP_F32 AAC2020_POLYOGL_EXP_F32   //: 13 ://
         #define EXP_FV2 AAC2020_POLYOGL_EXP_FV2   //: 14 ://
         #define EXP_FV3 AAC2020_POLYOGL_EXP_FV3   //: 15 ://
-        #define EXP_FV4 AAC2020_POLYOGL_EXP_FV4   //: 16://
+        #define EXP_FV4 AAC2020_POLYOGL_EXP_FV4   //: 16 ://
+
+        #define DST_FV3 AAC2020_POLYOGL_DST_FV3   //: 17 ://
+        #define DST_FV2 AAC2020_POLYOGL_DST_FV2   //: 18 ://
+                                               
+        #define NOR_FV3 AAC2020_POLYOGL_NOR_FV3   //: 19 ://
+        #define NOR_FV2 AAC2020_POLYOGL_NOR_FV2   //: 20 ://
     #endif
     //:=========================:SEVEN_LETTER_MATH_MACROS://
     //:SEVEN_LETTER_MACROS_MISC:=========================://
