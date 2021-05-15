@@ -2341,6 +2341,141 @@
             +---+---+           +---+---+
 
     //:|||||||||||||||||||||||||:DIAGRAMS:DAMAGED_SPACE_TILES://
+    //:DIAGRAMS:WHY_I_NEED_VULKAN_COMPUTE:|||||||||||||||||||://
+    @VID_IID[ 0302 ]TIME[ 00:00:42 ]EXPLAINING_THIS_SECTION
+
+    Rendering 1 pixel of terminal auto tiles:
+        1 self check + 4 neighbor checks
+
+    Rendering 1 pixel of 1-jump-from terminal auto tiles:
+        1 self check
+        4 neighbors to check, but each neighbor
+          has to compute previous level's auto tiling.
+
+          SO:( 1 ) : self check
+             (4*5) : Other checks.
+
+    This is exploding in some "hyper exponential" manner.
+    We need to cach the computed auto-tiled values on
+    temporary buffers if we want to be efficient.
+    
+    Below: Skematic/Tree showing the amount of checks needed
+           to render:
+           T_0: Terminal Auto_Tile in center tile.
+           T_1: 1 Jump Away Non-Terminal Auto_Tile
+
+    Corse of action?
+        1. Create an editor for T_1 tilesets.
+        2. From there start working on vulkan code to 
+           make better rendering technology.
+
+                            +---+
+                            |T_1|
+                            +---+
+                      +---+ +---+ +---+
+                      |T_1| |T_0| |T_1|
+                      +---+ +---+ +---+
+                            +---+
+                            |T_1|
+                            +---+
+                              |
+          +---+               |               +---+
+          |T_1|         +---+---+---+         |T_1|
+          +---+         |   |   |   |         +---+
+    +---+ +---+ +---+   +---+---+---+   +---+ +---+ +---+
+    |T_1| |T_0| |T_1|---|   |T_0|   |---|T_1| |T_0| |T_1|
+    +---+ +---+ +---+   +---+---+---+   +---+ +---+ +---+
+          +---+         |   |   |   |         +---+
+          |T_1|         +---+---+---+         |T_1|
+          +---+               |               +---+
+                              |
+                            +---+
+                            |T_1|
+                            +---+
+                      +---+ +---+ +---+
+                      |T_1| |T_0| |T_1|
+                      +---+ +---+ +---+
+                            +---+
+                            |T_1|
+                            +---+
+
+    ------------------------------------------------------------
+    www.youtube.com/watch?v=V-UvSKe8jW4&t=1m15s
+    The person who says he knows what he thinks
+    but cannot express it usually does not know
+    what he thinks.
+
+    MORTIMER ADLER, Philosopher
+    ------------------------------------------------------------
+
+    @VID_IID[ 0302 ]TIME[ 00:34:12 ]ATTEMPT_TO_EXPLAIN_AGAIN
+
+    For OUTERMOST Tile Level (T_1 currently)
+    5 checks:
+        1 left
+        2 right
+        3 up
+        4 down
+        5 self
+
+                      |<-- T_1 -->|
+                      |---- U --->|
+                      +---+---+---+
+                      |   |   |   |
+                      +---+---+---+
+                      |   |   |   |
+                      +---+---+---+
+                      |   |   |   |
+                      +---+---+---+
+    --- +---+---+---+ +---+---+---+ +---+---+---+ ---
+     |  |   |   |   | |   |   |[u]| |   |   |   |  | 
+     |  +---+---+---+ +---+---+---+ +---+---+---+  | 
+     L  |   |   |   | |   |[l]|T_0| |[r]|   |   |  R 
+     |  +---+---+---+ +---+---+---+ +---+---+---+  | 
+     |  |   |   |   | |   |   |[d]| |   |   |   |  | 
+    --- +---+---+---+ +---+---+---+ +---+---+---+ ---
+                      +---+---+---+
+                      |   |   |   |
+                      +---+---+---+
+                      |   |   |   |
+                      +---+---+---+
+                      |   |   |   |
+                      +---+---+---+
+                      |<--- D --->|
+
+    How many checks if tilemap contains 
+    (T_1) auto tiles that contain (T_0) auto tiles?
+
+        1: Need 5 checks to figure out what sub-tile graphic
+           T_0 is inside of, so we can figure out T_0's SELF
+           value.
+
+        2: Need 1 check to grab T_0's SELF value.
+
+        3: Need 5 checks to figure out what sub-tile graphic
+           [r] is inside of.
+
+        4: Need 1 check to grab [r]'s SELF value.
+
+        ....
+    
+        So basically:
+        [T_0] : 6 checks to find out self
+        [l]   : 6 checks to find out self
+        [r]   : 6 checks to find out self
+        [u]   : 6 checks to find out self
+        [d]   : 6 checks to find out self
+
+        [T_0] : 5 more checks to auto tile yourself by
+                looking at calculated neighbors.
+
+        @VID_IID[0302]T[00:39:42]IT_WILL_EXPLODE_EXPONENTIALLY
+        --------------------------------------------------------
+        So... 35 checks per tile every time we render a pixel
+        of a given tile.
+        --------------------------------------------------------
+
+    //:|||||||||||||||||||:DIAGRAMS:WHY_I_NEED_VULKAN_COMPUTE://
     //:=============================================:DIAGRAMS://
     //:DIAGRAMS_UN_OFFICIAL:=================================://
     //:DIAGRAMS:PIPELINED_512_X_512_DATASETS:||||||||||||||||://

@@ -83,7 +83,7 @@
         function from this code. We need to create one   ***
         in this file.                                    ***
         *** ******************************************** **/
-            printf( E_S([fragcom_Halt_FRAG]:%s\n),msg_err );
+            printf( E_S([fragcom_Halt_FRAG]:%s),msg_err );
             fflush(stdout);
             exit( 232 );
         }
@@ -114,12 +114,15 @@
 
     //:================:COMMON_DATA_TYPES_USED_IN_SHADERS://
     //:MULTIPLY_FUNCTIONS:===============================://
+        F32 AAC2020_FRAGCOM_MUL_F32_F32( F32 a , F32 b ){
+                                return(      a *     b );}
+    //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
         FV2
         AAC2020_FRAGCOM_MUL_FV2_FV2(
             FV2 aye
         ,   FV2 bee
-        ){
-            FV2 res ={ 0 };
+        ){          //:@VID_IID[0301]T[07:16:50]:::::::::://    
+            FV2 res;//:@_NO_ZERO_INIT_@::::::::::::::::::://
 
             res.x =( aye.x * bee.x );
             res.y =( aye.y * bee.y );
@@ -131,8 +134,8 @@
         AAC2020_FRAGCOM_MUL_FV3_FV3(
             FV3 aye
         ,   FV3 bee
-        ){
-            FV3 res ={ 0 };
+        ){          //:@VID_IID[0301]T[07:17:23]:::::::::://
+            FV3 res;//:@_NO_ZERO_INIT_@::::::::::::::::::://
 
             res.x =( aye.x * bee.x );
             res.y =( aye.y * bee.y );
@@ -145,8 +148,8 @@
         AAC2020_FRAGCOM_MUL_FV4_FV4(
             FV4 aye
         ,   FV4 bee
-        ){
-            FV4 res ={ 0 };
+        ){          //:@VID_IID[0301]T[07:17:42]:::::::::://
+            FV4 res;//:@_NO_ZERO_INIT_@::::::::::::::::::://
 
             res.x =( aye.x * bee.x );
             res.y =( aye.y * bee.y );
@@ -160,8 +163,8 @@
         AAC2020_FRAGCOM_MUL_FV3_F32(
             FV3 fv3
         ,   F32 f32
-        ){
-            FV3 res ={ 0 };
+        ){          //:@VID_IID[0301]T[07:18:10]:::::::::://
+            FV3 res;//:@_NO_ZERO_INIT_@::::::::::::::::::://
 
             res.x =( fv3.x * f32 );
             res.y =( fv3.y * f32 );
@@ -174,8 +177,8 @@
         AAC2020_FRAGCOM_MUL_F32_FV3(
             F32 f32
         ,   FV3 fv3
-        ){
-            FV3 res ={ 0 };
+        ){          //:@VID_IID[0301]T[07:18:42]:::::::::://
+            FV3 res;//:@_NO_ZERO_INIT_@::::::::::::::::::://
 
             res.x =( fv3.x * f32 );
             res.y =( fv3.y * f32 );
@@ -185,12 +188,15 @@
         }
     //:===============================:MULTIPLY_FUNCTIONS://
     //:DIVIDE_FUNCTIONS:=================================://
+        F32 AAC2020_FRAGCOM_DIV_F32_F32( F32 a , F32 b ){
+                                return(      a /     b );}
+    //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
         FV2
         AAC2020_FRAGCOM_DIV_FV2_FV2(
             FV2 aye
         ,   FV2 bee
-        ){
-            FV2 res ={ 0 };
+        ){          //:@VID_IID[0301]T[07:19:00]:::::::::://
+            FV2 res;//:@_NO_ZERO_INIT_@::::::::::::::::::://
 
             res.x =( aye.x / bee.x );
             res.y =( aye.y / bee.y );
@@ -202,8 +208,8 @@
         AAC2020_FRAGCOM_DIV_FV3_FV3(
             FV3 aye
         ,   FV3 bee
-        ){
-            FV3 res ={ 0 };
+        ){          //:@VID_IID[0301]T[07:19:23]:::::::::://
+            FV3 res;//:@_NO_ZERO_INIT_@::::::::::::::::::://
 
             res.x =( aye.x / bee.x );
             res.y =( aye.y / bee.y );
@@ -216,8 +222,8 @@
         AAC2020_FRAGCOM_DIV_FV4_FV4(
             FV4 aye
         ,   FV4 bee
-        ){
-            FV4 res ={ 0 };
+        ){          //:@VID_IID[0301]T[07:19:42]:::::::::://    
+            FV4 res;//:@_NO_ZERO_INIT_@::::::::::::::::::://
 
             res.x =( aye.x / bee.x );
             res.y =( aye.y / bee.y );
@@ -231,8 +237,8 @@
         AAC2020_FRAGCOM_DIV_FV3_F32(
             FV3 fv3
         ,   F32 f32
-        ){
-            FV3 res ={ 0 };
+        ){          //:@VID_IID[0301]T[07:20:00]:::::::::://
+            FV3 res;//:@_NO_ZERO_INIT_@::::::::::::::::::://
 
             res.x =( fv3.x / f32 );
             res.y =( fv3.y / f32 );
@@ -245,8 +251,8 @@
         AAC2020_FRAGCOM_DIV_F32_FV3(
             F32 f32
         ,   FV3 fv3
-        ){
-            FV3 res ={ 0 };
+        ){          //:@VID_IID[0301]T[07:20:23]:::::::::://
+            FV3 res;//:@_NO_ZERO_INIT_@::::::::::::::::::://
 
             res.x =( f32 / fv3.x );
             res.y =( f32 / fv3.y );
@@ -255,13 +261,16 @@
             return( res );
         }
     //:=================================:DIVIDE_FUNCTIONS://
-    //:ADDITION_FUNCTIONS:===============================://    
+    //:ADDITION_FUNCTIONS:===============================://  
+        F32 AAC2020_FRAGCOM_ADD_F32_F32( F32 a , F32 b ){
+                                return(      a +     b );}
+    //: - - - - - - - - - - - -- - - - - - - - - - - - - ://  
         FV2
         AAC2020_FRAGCOM_ADD_FV2_FV2(
             FV2 aye
         ,   FV2 bee
-        ){
-            FV2 res ={ 0 };
+        ){          //:@VID_IID[0301]T[07:20:42]:::::::::://
+            FV2 res;//:@_NO_ZERO_INIT_@::::::::::::::::::://
 
             res.x =( aye.x + bee.x );
             res.y =( aye.y + bee.y );
@@ -273,8 +282,8 @@
         AAC2020_FRAGCOM_ADD_FV3_FV3(
             FV3 aye
         ,   FV3 bee
-        ){
-            FV3 res ={ 0 };
+        ){          //:@VID_IID[0301]T[07:21:00]:::::::::://
+            FV3 res;//:@_NO_ZERO_INIT_@::::::::::::::::::://
 
             res.x =( aye.x + bee.x );
             res.y =( aye.y + bee.y );
@@ -287,8 +296,8 @@
         AAC2020_FRAGCOM_ADD_FV4_FV4(
             FV4 aye
         ,   FV4 bee
-        ){
-            FV4 res ={ 0 };
+        ){          //:@VID_IID[0301]T[07:21:13]:::::::::://
+            FV4 res;//:@_NO_ZERO_INIT_@::::::::::::::::::://
 
             res.x =( aye.x + bee.x );
             res.y =( aye.y + bee.y );
@@ -302,8 +311,8 @@
         AAC2020_FRAGCOM_ADD_FV3_F32(
             FV3 fv3
         ,   F32 f32
-        ){
-            FV3 res ={ 0 };
+        ){          //:@VID_IID[0301]T[07:21:30]:::::::::://
+            FV3 res;//:@_NO_ZERO_INIT_@::::::::::::::::::://
 
             res.x =( fv3.x + f32 );
             res.y =( fv3.y + f32 );
@@ -316,8 +325,8 @@
         AAC2020_FRAGCOM_ADD_F32_FV3(
             F32 f32
         ,   FV3 fv3
-        ){
-            FV3 res ={ 0 };
+        ){          //:@VID_IID[0301]T[07:21:42]:::::::::://
+            FV3 res;//:@_NO_ZERO_INIT_@::::::::::::::::::://
 
             res.x =( f32 + fv3.x );
             res.y =( f32 + fv3.y );
@@ -327,12 +336,15 @@
         }
     //:===============================:ADDITION_FUNCTIONS://    
     //:SUBTRACT_FUNCTIONS:===============================://
+        F32 AAC2020_FRAGCOM_SUB_F32_F32( F32 a , F32 b ){
+                                return(      a -     b );}
+    //: - - - - - - - - - - - -- - - - - - - - - - - - - :// 
         FV2
         AAC2020_FRAGCOM_SUB_FV2_FV2(
             FV2 aye
         ,   FV2 bee
-        ){
-            FV2 res ={ 0 };
+        ){          //:@VID_IID[0301]T[07:22:00]:::::::::://
+            FV2 res;//:@_NO_ZERO_INIT_@::::::::::::::::::://
 
             res.x =( aye.x - bee.x );
             res.y =( aye.y - bee.y );
@@ -344,8 +356,8 @@
         AAC2020_FRAGCOM_SUB_FV3_FV3(
             FV3 aye
         ,   FV3 bee
-        ){
-            FV3 res ={ 0 };
+        ){          //:@VID_IID[0301]T[07:22:12]:::::::::://
+            FV3 res;//:@_NO_ZERO_INIT_@::::::::::::::::::://
 
             res.x =( aye.x - bee.x );
             res.y =( aye.y - bee.y );
@@ -358,8 +370,8 @@
         AAC2020_FRAGCOM_SUB_FV4_FV4(
             FV4 aye
         ,   FV4 bee
-        ){
-            FV4 res ={ 0 };
+        ){          //:@VID_IID[0301]T[07:23:23]:::::::::://
+            FV4 res;//:@_NO_ZERO_INIT_@::::::::::::::::::://
 
             res.x =( aye.x - bee.x );
             res.y =( aye.y - bee.y );
@@ -373,8 +385,8 @@
         AAC2020_FRAGCOM_SUB_FV3_F32(
             FV3 fv3
         ,   F32 f32
-        ){
-            FV3 res ={ 0 };
+        ){          //:@VID_IID[0301]T[07:22:42]:::::::::://
+            FV3 res;//:@_NO_ZERO_INIT_@::::::::::::::::::://
 
             res.x =( fv3.x - f32 );
             res.y =( fv3.y - f32 );
@@ -387,8 +399,8 @@
         AAC2020_FRAGCOM_SUB_F32_FV3(
             F32 f32
         ,   FV3 fv3
-        ){
-            FV3 res ={ 0 };
+        ){          //:@VID_IID[0301]T[07:23:00]:::::::::://
+            FV3 res;//:@_NO_ZERO_INIT_@::::::::::::::::::://
 
             res.x =( f32 - fv3.x );
             res.y =( f32 - fv3.y );
@@ -518,6 +530,164 @@
         #define AAC2020_FRAGCOM_COF_F32 0000
 
     //:------------------------------------:Ceil_Or_Floor://
+    //|==================================================|//
+    //|MATRIX_OPERATIONS:|||||||||||||||||||||||||||||||||//
+    //+MATRIX_OPERATIONS:-------------------------------|+//
+        
+    //:MUL_SCA_MAT:--------------------------------------://
+        FM2
+        AAC2020_FRAGCOM_MUL_F32_FM2(
+            F32 sca //:SCA:Scalar
+        ,   FM2 mat //:MAT:Matrix
+        ){              //:@VID_IID[0301]T[07:14:23]:::::://
+            FM2     res;//:@_NO_ZERO_INIT_@::::::::::::::://
+    
+            #if defined( AAC2020_MACRO_THIS_IS_OPEN_GL )
+                    res=( sca * mat );
+            #else
+                    res.col[0][0]=( mat.col[0][0] * sca );
+                    res.col[0][1]=( mat.col[0][1] * sca );
+    
+                    res.col[1][0]=( mat.col[1][0] * sca );
+                    res.col[1][1]=( mat.col[1][1] * sca );
+            #endif
+
+            return( res );
+        }
+    //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        FM3
+        AAC2020_FRAGCOM_MUL_F32_FM3(
+            F32 sca //:SCA:Scalar
+        ,   FM3 mat //:MAT:Matrix
+        ){               //:@VID_IID[0301]T[07:14:42]::::::::://
+            FM3     res; //:@_NO_ZERO_INIT_@:::::::::::::::::://
+            #if defined( AAC2020_MACRO_THIS_IS_OPEN_GL )
+                    res=( sca * mat );
+            #else
+                    res.col[0][0]=( mat.col[0][0] * sca );
+                    res.col[0][1]=( mat.col[0][1] * sca );
+                    res.col[0][2]=( mat.col[0][2] * sca );
+    
+                    res.col[1][0]=( mat.col[1][0] * sca );
+                    res.col[1][1]=( mat.col[1][1] * sca );
+                    res.col[1][2]=( mat.col[1][2] * sca );
+    
+                    res.col[2][0]=( mat.col[2][0] * sca );
+                    res.col[2][1]=( mat.col[2][1] * sca );
+                    res.col[2][2]=( mat.col[2][2] * sca );
+            #endif
+            return( res );
+        }
+    //: - - - - - - - - - - - -- - - - - - - - - - - - - ://
+        FM4
+        AAC2020_FRAGCOM_MUL_F32_FM4(
+            F32 sca //:SCA:Scalar
+        ,   FM4 mat //:MAT:Matrix
+        ){              //:@VID_IID[0301]T[07:15:10]:::::://
+            FM4     res;//:@_NO_ZERO_INIT_@::::::::::::::://
+            #if defined( AAC2020_MACRO_THIS_IS_OPEN_GL )
+                    res=( sca * mat );
+            #else
+                #if !defined( AAC2020_MACRO_THIS_IS_C99 )
+                    #error JOHN_MARK_IS_KANJI_CODER_2021
+                #endif
+                if( sca          > 0 ){ /**NOOP**/  };
+                if( mat.col[0][0]> 0 ){ /**NOOP**/  };
+            #endif
+            return( res );
+        }
+    //:--------------------------------------:MUL_SCA_MAT://
+    //:MUL_MAT_SCA:--------------------------------------://
+    #define RET return  //:12345678901:------------------://
+        //:---------------:123_123_123:------------------://
+        FM2 AAC2020_FRAGCOM_MUL_FM2_F32( FM2 m , F32 s ){
+        RET(AAC2020_FRAGCOM_MUL_F32_FM2(     s ,     m ));}
+                    
+        FM3 AAC2020_FRAGCOM_MUL_FM3_F32( FM3 m , F32 s ){
+        RET(AAC2020_FRAGCOM_MUL_F32_FM3(     s ,     m ));}
+                    
+        FM4 AAC2020_FRAGCOM_MUL_FM4_F32( FM4 m , F32 s ){
+        RET(AAC2020_FRAGCOM_MUL_F32_FM4(     s ,     m ));}
+        //:---------------:123_123_123:------------------://
+    #undef  RET         //:12345678901:------------------://
+    //:--------------------------------------:MUL_MAT_SCA://
+    //:MUL_VEC_MAT:--------------------------------------://
+        FV2  
+        AAC2020_FRAGCOM_MUL_FV2_FM2(  
+            FV2 vec   //:--------------------------------://
+        ,   FM2 mat   //:              +---+---+         ://
+        ){            //:              | a | c |         ://
+                      //:              +---+---+<<[2x2]  ://
+                      //:              | b | d |         ://
+                      //:    [  1x2  ] +---+---+         ://
+                      //:    +---+---+ +---+---+         ://
+                      //: vec| x | y | | e | f |<<[1x2]  ://
+                      //:    +---+---+ +---+---+         ://
+                      //:--------------------------------://
+            FV2 res;  //:@VID_IID[0301]T[07:15:35]:::::::://
+                      //:@_NO_ZERO_INIT_@::::::::::::::::://
+            #if defined( AAC2020_MACRO_THIS_IS_OPEN_GL )
+                    res=( vec * mat );
+            #else
+            //:     res.e  ://
+            /**/    res.x=(( vec.x * mat.col[0][0] )
+            /**/          +( vec.y * mat.col[0][1] ));
+            //:     res.f  ://           
+            /**/    res.y=(( vec.x * mat.col[1][0] )
+            /**/          +( vec.y * mat.col[1][1] ));
+            #endif
+    
+            return( res );
+        }
+    //:--------------------------------------:MUL_VEC_MAT://
+    //:MUL_MAT_VEC:--------------------------------------://
+        FM4
+        AAC2020_FRAGCOM_MUL_FM2_FV2( //:[ 1_X_2 ]        ://
+            FM2 mat   //:               +---+---+        ://
+        ,   FV2 vec   //:               | x | y |        ://
+        ){  //:                         +---+---+        ://
+            //:               +---+---+ +---+---+        ://
+            //:               | 1 | 2 | | a | c |        ://
+            //:               +---+---+ +---+---+        ://
+            //:               | 3 | 4 | | b | d |        ://
+            //:               +---+---+ +---+---+        ://
+            //:               [ 2_X_2 ]                  ://
+            //:                                          ://
+            //:                 INVALID_OPERATION        ://
+            //:                        |                 ://
+            //:                     +--+--+              ://
+            //:                     |     |              ://
+            //:               [ 2_X_2 ]*[ 1_X_2 ]        ://
+            #if defined( AAC2020_MACRO_THIS_IS_OPEN_GL )
+                FM4     bogusvar  ;
+                return( bogusvar );
+            #else
+                if( mat.col[0][0] > 0 ){ /** NOOP **/ };
+                if( vec.x         > 0 ){ /** NOOP **/ };
+                ERR(E_S([INVALID_OPERATION:MUL_FM2_FV2]));        
+                FM4     bogusvar;
+                        bogusvar.col[0][0]=(0);
+                return( bogusvar );
+            #endif
+        }
+    //:MUL_MAT_VEC:--------------------------------------://
+    //+-------------------------------|:MATRIX_OPERATIONS+//
+    //|||||||||||||||||||||||||||||||||:MATRIX_OPERATIONS|//
+    //|==================================================|//
+    //:VECTOR_OPERATIONS:================================://
+
+        FV3
+        AAC2020_FRAGCOM_SWI_ZYX_FV3(
+            FV3 vec
+        ){              //:@VID_IID[0301]T[07:13:42]:::::://
+            FV3     res;//:@_NO_ZERO_INIT_@::::::::::::::://
+                    res.x=( vec.z );
+                    res.y=( vec.y );
+                    res.z=( vec.x );
+            return( res );
+        } 
+
+    //:VECTOR_OPERATIONS:================================://
 
         /** TRASHED: AAC2020_FRAGCOM_rv0_CTO_rv1         **/
         /** TRASHED: AAC2020_FRAGCOM_big_MAP_lit_ONE_AXE **/

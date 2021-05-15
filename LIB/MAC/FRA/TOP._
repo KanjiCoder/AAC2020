@@ -339,35 +339,40 @@
     #endif
     //:======================================:ABS_MAX_MIN://
     //:FLO_ROU_CEL_MOD_TRU:==============================://
-    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL  
-
+    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL          //: -- ://
+                                                  //: -- ://
         #define FLO_NAT floor                     //: 01 ://
         #define FLO_F32 AAC2020_FRAGCOM_FLO_F32   //: 02 ://
+        #define FLO_FV2 floor                     //: 03 ://
+        #define FLO_FV3 floor                     //: 04 ://
+        #define FLO_FV4 floor                     //: 05 ://
                                                   //: -- ://
-        #define ROU_NAT round /** round NATIVE **///: 03 ://
-        #define ROU_F32 AAC2020_FRAGCOM_ROU_F32   //: 04 ://
+        #define ROU_NAT round /**round NATIVE**/  //: 06 ://
+        #define ROU_F32 AAC2020_FRAGCOM_ROU_F32   //: 07 ://
                                                   //: -- ://
-        #define CEL_NAT ceil                      //: 05 ://
-        #define CEL_F32 AAC2020_FRAGCOM_CEL_F32   //: 06 ://
-        #define COF_F32 AAC2020_FRAGCOM_COF_F32   //: 07 ://
+        #define CEL_NAT ceil                      //: 08 ://
+        #define CEL_F32 AAC2020_FRAGCOM_CEL_F32   //: 09 ://
+        #define COF_F32 AAC2020_FRAGCOM_COF_F32   //: 10 ://
                                                   //: -- ://
-        #define MOD_I32 AAC2020_FRAGCOM_MOD_I32   //: 08 ://
-        #define TRU_F32 trunc                     //: 09 ://
-    #else
-
-        #define FLO_NAT AAC2020_POLYOGL_FLO_NAT         
-        #define FLO_F32 AAC2020_POLYOGL_FLO_F32     
-                                                    
-        #define ROU_NAT AAC2020_POLYOGL_ROU_NAT     
-        #define ROU_F32 AAC2020_POLYOGL_ROU_F32     
-                                                    
-        #define CEL_NAT AAC2020_POLYOGL_CEL_NAT     
-        #define CEL_F32 AAC2020_POLYOGL_CEL_F32     
-        #define COF_F32 AAC2020_POLYOGL_COF_F32    
-
-        #define MOD_I32 AAC2020_POLYOGL_MOD_I32   
-        #define TRU_F32 AAC2020_POLYOGL_Trunc        
-    #endif
+        #define MOD_I32 AAC2020_FRAGCOM_MOD_I32   //: 11 ://
+        #define TRU_F32 trunc                     //: 12 ://
+    #else                                         //[====]//
+        #define FLO_NAT AAC2020_POLYOGL_FLO_NAT   //: 01 ://
+        #define FLO_F32 AAC2020_POLYOGL_FLO_F32   //: 02 ://
+        #define FLO_FV2 AAC2020_POLYOGL_FLO_FV2   //: 03 ://
+        #define FLO_FV3 AAC2020_POLYOGL_FLO_FV3   //: 04 ://
+        #define FLO_FV4 AAC2020_POLYOGL_FLO_FV4   //: 05 ://
+                                                  //: -- ://
+        #define ROU_NAT AAC2020_POLYOGL_ROU_NAT   //: 06 ://
+        #define ROU_F32 AAC2020_POLYOGL_ROU_F32   //: 07 ://
+                                                  //: -- ://
+        #define CEL_NAT AAC2020_POLYOGL_CEL_NAT   //: 08 ://
+        #define CEL_F32 AAC2020_POLYOGL_CEL_F32   //: 09 ://
+        #define COF_F32 AAC2020_POLYOGL_COF_F32   //: 10 ://
+                                                  //: -- ://
+        #define MOD_I32 AAC2020_POLYOGL_MOD_I32   //: 11 ://
+        #define TRU_F32 AAC2020_POLYOGL_Trunc     //: 12 ://
+    #endif                                        //:----://
     //:==============================:FLO_ROU_CEL_MOD_TRU://
     //:SEVEN_LETTER_MATH_MACROS:=========================://
     #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL  
@@ -388,16 +393,24 @@
         #define POW_FV3   pow  //: 11 :------------------://
         #define POW_FV4   pow  //: 12 :------------------://
 
-        #define EXP_F32   exp  //: 13 :------------------://
-        #define EXP_FV2   exp  //: 14 :------------------://
-        #define EXP_FV3   exp  //: 15 :------------------://
-        #define EXP_FV4   exp  //: 16 :------------------://
+        #define SQR_F32   sqrt //: 13 :------------------://
+        #define SQR_FV2   sqrt //: 14 :------------------://
+        #define SQR_FV3   sqrt //: 15 :------------------://
+        #define SQR_FV4   sqrt //: 16 :------------------://
 
-        #define DST_FV3  dist  //: 17 :------------------://
-        #define DST_FV2  dist  //: 18 :------------------://
+        #define EXP_F32   exp  //: 17 :------------------://
+        #define EXP_FV2   exp  //: 18 :------------------://
+        #define EXP_FV3   exp  //: 19 :------------------://
+        #define EXP_FV4   exp  //: 20 :------------------://
+
+        #define DST_FV3  dist  //: 21 :------------------://
+        #define DST_FV2  dist  //: 22 :------------------://
                                //:- - - - - - - - - - - -://
-        #define NOR_FV3  norm  //: 19 :------------------://
-        #define NOR_FV2  norm  //: 20 :------------------://
+        #define NOR_FV3  normalize   //: 23 :------------://
+        #define NOR_FV2  normalize   //: 24 :------------://
+
+        #define DET_FM2  determinant //: 25 :------------://
+        #define CRO_FV3  cross       //: 26 :------------://
 
     #else
         #define DOT_FV2 AAC2020_POLYOGL_DOT_FV2   //: 01 ://
@@ -416,16 +429,25 @@
         #define POW_FV3 AAC2020_POLYOGL_POW_FV3   //: 11 ://
         #define POW_FV4 AAC2020_POLYOGL_POW_FV4   //: 12 ://
 
-        #define EXP_F32 AAC2020_POLYOGL_EXP_F32   //: 13 ://
-        #define EXP_FV2 AAC2020_POLYOGL_EXP_FV2   //: 14 ://
-        #define EXP_FV3 AAC2020_POLYOGL_EXP_FV3   //: 15 ://
-        #define EXP_FV4 AAC2020_POLYOGL_EXP_FV4   //: 16 ://
+        #define SQR_F32 AAC2020_POLYOGL_SQR_F32   //: 13 ://
+        #define SQR_FV2 AAC2020_POLYOGL_SQR_FV2   //: 14 ://
+        #define SQR_FV3 AAC2020_POLYOGL_SQR_FV3   //: 15 ://
+        #define SQR_FV4 AAC2020_POLYOGL_SQR_FV4   //: 16 ://
 
-        #define DST_FV3 AAC2020_POLYOGL_DST_FV3   //: 17 ://
-        #define DST_FV2 AAC2020_POLYOGL_DST_FV2   //: 18 ://
+        #define EXP_F32 AAC2020_POLYOGL_EXP_F32   //: 17 ://
+        #define EXP_FV2 AAC2020_POLYOGL_EXP_FV2   //: 18 ://
+        #define EXP_FV3 AAC2020_POLYOGL_EXP_FV3   //: 19 ://
+        #define EXP_FV4 AAC2020_POLYOGL_EXP_FV4   //: 20 ://
+
+        #define DST_FV3 AAC2020_POLYOGL_DST_FV3   //: 21 ://
+        #define DST_FV2 AAC2020_POLYOGL_DST_FV2   //: 22 ://
                                                
-        #define NOR_FV3 AAC2020_POLYOGL_NOR_FV3   //: 19 ://
-        #define NOR_FV2 AAC2020_POLYOGL_NOR_FV2   //: 20 ://
+        #define NOR_FV3 AAC2020_POLYOGL_NOR_FV3   //: 23 ://
+        #define NOR_FV2 AAC2020_POLYOGL_NOR_FV2   //: 24 ://
+
+        #define DET_FM2 AAC2020_POLYOGL_DET_FM2   //: 25 ://
+        #define CRO_FV3 AAC2020_POLYOGL_CRO_FV3   //: 26 ://
+
     #endif
     //:=========================:SEVEN_LETTER_MATH_MACROS://
     //:SEVEN_LETTER_MACROS_MISC:=========================://
@@ -443,7 +465,15 @@
     #endif                                          
     //:=========================:SEVEN_LETTER_MACROS_MISC://
     //:11_LETTER_MACROS:=================================://
-    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL                 
+    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL  
+
+        //:POINTLESS_MATH_WE_SHOULD_AVOID:-----------://
+        #define MUL_F32_F32  AAC2020_FRAGCOM_MUL_F32_F32
+        #define DIV_F32_F32  AAC2020_FRAGCOM_DIV_F32_F32
+        #define ADD_F32_F32  AAC2020_FRAGCOM_ADD_F32_F32
+        #define SUB_F32_F32  AAC2020_FRAGCOM_SUB_F32_F32
+        //:-----------:POINTLESS_MATH_WE_SHOULD_AVOID://
+        //:MUL_VEC_VEC:------------------------------://
         //:- - - - - - - - - - -- - - - - - - - - - -://                                    
         #define MUL_FV4_FV4  AAC2020_FRAGCOM_MUL_FV4_FV4
         #define MUL_FV3_FV3  AAC2020_FRAGCOM_MUL_FV3_FV3
@@ -472,8 +502,39 @@
 
         #define SUB_FV3_F32  AAC2020_FRAGCOM_SUB_FV3_F32
         #define SUB_F32_FV3  AAC2020_FRAGCOM_SUB_F32_FV3
-        //:- - - - - - - - - - -- - - - - - - - - - -://                                              
-    #else                                                
+        //:- - - - - - - - - - -- - - - - - - - - - -://  
+        //:------------------------------:MUL_VEC_VEC://
+        //:MUL_SCA_MAT:------------------------------://
+        //:MUL_MAT_SCA:------------------------------://
+        #define MUL_F32_FM2  AAC2020_FRAGCOM_MUL_F32_FM2
+        #define MUL_F32_FM3  AAC2020_FRAGCOM_MUL_F32_FM3
+        #define MUL_F32_FM4  AAC2020_FRAGCOM_MUL_F32_FM4
+        #define MUL_FM2_F32  AAC2020_FRAGCOM_MUL_FM2_F32
+        #define MUL_FM3_F32  AAC2020_FRAGCOM_MUL_FM3_F32
+        #define MUL_FM4_F32  AAC2020_FRAGCOM_MUL_FM4_F32
+        //:------------------------------:MUL_MAT_SCA://  
+        //:------------------------------:MUL_SCA_MAT:// 
+        //:MUL_MAT_VEC:------------------------------://
+        //:MUL_VEC_MAT:------------------------------://
+    
+        #define MUL_FM2_FV2  AAC2020_FRAGCOM_MUL_FM2_FV2
+        #define MUL_FV2_FM2  AAC2020_FRAGCOM_MUL_FV2_FM2
+           
+        //:------------------------------:MUL_MAT_VEC://
+        //:------------------------------:MUL_VEC_MAT://
+        //:SWIZZELS:---------------------------------://
+
+        #define SWI_ZYX_FV3  AAC2020_FRAGCOM_SWI_ZYX_FV3
+
+        //:---------------------------------:SWIZZELS://      
+    #else       
+        //:POINTLESS_MATH_WE_SHOULD_AVOID:-----------://
+        #define MUL_F32_F32  AAC2020_POLYOGL_MUL_F32_F32
+        #define DIV_F32_F32  AAC2020_POLYOGL_DIV_F32_F32
+        #define ADD_F32_F32  AAC2020_POLYOGL_ADD_F32_F32
+        #define SUB_F32_F32  AAC2020_POLYOGL_SUB_F32_F32
+        //:-----------:POINTLESS_MATH_WE_SHOULD_AVOID://   
+        //:MUL_VEC_VEC:------------------------------://                      
         //:- - - - - - - - - - -- - - - - - - - - - -://
         #define MUL_FV4_FV4  AAC2020_POLYOGL_MUL_FV4_FV4
         #define MUL_FV3_FV3  AAC2020_POLYOGL_MUL_FV3_FV3
@@ -502,8 +563,44 @@
 
         #define SUB_FV3_F32  AAC2020_POLYOGL_SUB_FV3_F32
         #define SUB_F32_FV3  AAC2020_POLYOGL_SUB_F32_FV3
-        //:- - - - - - - - - - -- - - - - - - - - - -://                                              
+        //:- - - - - - - - - - -- - - - - - - - - - -://  
+        //:MUL_SCA_MAT:------------------------------://
+        //:SCA_MUL_MAT:------------------------------://
+        #define MUL_F32_FM2  AAC2020_POLYOGL_MUL_F32_FM2
+        #define MUL_F32_FM3  AAC2020_POLYOGL_MUL_F32_FM3
+        #define MUL_F32_FM4  AAC2020_POLYOGL_MUL_F32_FM4
+        #define MUL_FM2_F32  AAC2020_POLYOGL_MUL_FM2_F32
+        #define MUL_FM3_F32  AAC2020_POLYOGL_MUL_FM3_F32
+        #define MUL_FM4_F32  AAC2020_POLYOGL_MUL_FM4_F32
+        //:------------------------------:MUL_SCA_MAT://
+        //:------------------------------:SCA_MUL_MAT://
+        //:MUL_MAT_VEC:------------------------------://
+        //:MUL_VEC_MAT:------------------------------://
+    
+        #define MUL_FM2_FV2  AAC2020_POLYOGL_MUL_FM2_FV2
+        #define MUL_FV2_FM2  AAC2020_POLYOGL_MUL_FV2_FM2
+           
+        //:------------------------------:MUL_MAT_VEC://
+        //:------------------------------:MUL_VEC_MAT://
+        //:SWIZZELS:---------------------------------://
+
+        #define SWI_ZYX_FV3  AAC2020_POLYOGL_SWI_ZYX_FV3
+
+        //:---------------------------------:SWIZZELS://                               
     #endif     
     //:=================================:11_LETTER_MACROS://
+    //:15_LETTER_MACROS:=================================://
+    #ifdef AAC2020_MACRO_THIS_IS_OPEN_GL //://///////////://
+
+    #define MIX_FV3_FV3_F32 mix
+    #define CLA_FV3_F32_F32 clamp
+
+    #else //:////////////////////////////////////////////://
+
+    #define MIX_FV3_FV3_F32 AAC2020_POLYOGL_MIX_FV3_FV3_F32
+    #define CLA_FV3_F32_F32 AAC2020_POLYOGL_CLA_FV3_F32_F32
+
+    #endif //:///////////////////////////////////////////://
+    //:=================================:15_LETTER_MACROS://
 
     //://////////////////FILESEC[ LIB/MAC/FRA/TOP.STR._ ]://
