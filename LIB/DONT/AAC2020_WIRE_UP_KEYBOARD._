@@ -4,21 +4,37 @@
     U32
     AAC2020_WIRE_UP_KEYBOARD( U32 u32 )
     {
-        AAC2020_VITAL_TODO("[REMOVE_THIS_FUNCTION:WUK]");
-
-
-        /** Only ONE keyboard handler should be registered   **/
-        /** at a time. More recent handlers in library chain **/
-        /** should override older handlers in library chain. **/
+    /** **************************************************** ***
+    @VID_IID[ 0303 ]TIME[ 01:14:23 ]
+    At one point in time I thought it was a good idea to 
+    "wire up" the keyboard. But that only really makes sense
+    in maybe an "event driven" programming langauge. Also
+    callbacks make it very hard to connect the dots in your
+    code. The also increase the amount of code you must
+    write. This function exists here only to say 
+    "DO NOT DO THIS".
+    *** **************************************************** **/
 
         if( u32 ){ /** NOOP: Reserved Future Use **/ };
 
-    //  #if( AAC2020_INCLUDE_FRAGBED >= 1 )
-    //
-    //      AAC2020_GINAWIN_SimpleKeyHandler_SetCallback(  
-    //              &( AAC2020_FRAGBED_KeyInn_Simple ) );;
-    //
-    //  #endif
+        printf("[ABOUT_TO_CRASH:2021_05_17:1048PM]\n");
+        fflush(stdout);
+        exit(48);
+
+    //- NO_LONGER_APPLICABLE: ------------------------------ -//
+    //- Only ONE keyboard handler should be registered       -//
+    //- at a time. More recent handlers in library chain     -//
+    //- should override older handlers in library chain.     -//
+    //- ---------------------------------------------------- -//
+
+    //- ---------------------------------------------------- -//
+    //- #if( AAC2020_INCLUDE_FRAGBED >= 1 )                  -//
+    //-                                                      -//
+    //-     AAC2020_GINAWIN_SimpleKeyHandler_SetCallback(    -//
+    //-             &( AAC2020_FRAGBED_KeyInn_Simple ) );;   -//
+    //-                                                      -//
+    //- #endif                                               -//
+    //- ---------------------------------------------------- -//
 
         return( 0x00 );
     }

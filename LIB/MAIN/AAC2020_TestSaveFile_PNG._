@@ -1,19 +1,35 @@
 //:MAIN_ENTRY_POINT.TEST_SAVE_PNG_FILE:======================://
-#define U32 uint32_t /** GCC: <stdint.h> **/
-
-    int
+#define U32  uint32_t /** GCC: <stdint.h> **/         //: 01 ://
+#define I32   int32_t /** GCC: <stdint.h> **/         //: 02 ://
+#define NCC      char                                 //: 03 ://
+#if( AAC2020_INCLUDE_FILEBOI <= 0 ) //:######################://
+    I32
+    AAC2020_TestSaveFile_PNG(){
+        printf("[OK:TestSaveFile_PNG:IS_EMPTY:NO:FILEBOI]\n");
+        fflush(stdout);
+        return( 0 /** SUCCESS_CODE **/ );
+    }
+#endif //:###################################################://
+#if( AAC2020_INCLUDE_FILEBOI >= 1 ) //:######################://
+    I32
     AAC2020_TestSaveFile_PNG()
     {
 
         /**  Try saving a 512x512 png image using the        **/
         /**  color picker value to set color of all pixels.  **/
 
-        /** Should probably malloc that 512x512 bitmap. **/
-        AAC2020_TODOMAN_Vital("[A_BIT_BIG_FOR_THE_STACK_2020]");
+        //:512_IS_A_BIT_BIG:=================================://
+        #if( AAC2020_CRASH_ON_VITAL_TODO >= 1 ) //:##########://
 
-        unsigned char pix_arr[512*512*4]; //:AKA[ image ]
-        unsigned int  pix_wid=( 512 );
-        unsigned int  pix_hig=( 512 );
+            /** Should malloc that 512x512 bitmap. **/
+            #error "[A_BIT_BIG_FOR_THE_STACK_2020]");
+    
+        #endif //:###########################################://
+        //:=================================:512_IS_A_BIT_BIG://
+
+        unsigned NCC  pix_arr[512*512*4]; //:AKA[ image ]
+        U32           pix_wid=( 512 );
+        U32           pix_hig=( 512 );
 
         //:Extract RGBA:
         #define HEX AAC2020_last_picked_color_hex
@@ -95,6 +111,8 @@
 
         return( result );
     } 
-
-#undef  U32
+#endif //:###################################################://
+#undef  U32  //:----------------------------------------: 01 ://
+#undef  I32  //:----------------------------------------: 02 ://
+#undef  NCC  //:----------------------------------------: 03 ://
 //:======================:MAIN_ENTRY_POINT.TEST_SAVE_PNG_FILE://

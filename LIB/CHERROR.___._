@@ -17,24 +17,36 @@
     void
     AAC2020_CHERROR_CrossCheckHeaders( void )
     {
+    /** **************************************************** ***
+    @VID_IID[ 0303 ]TIME[ 00:38:30 ]FIXING_LIBCHAN_ERROR
+    Was testing bisecting the library chain (LIBCHAN.TOP._)
+    and this crashed on me. Fixed with a compile time
+    check for[ AAC2020_INCLUDE_GLCONST ].
+    *** **************************************************** **/
 
-        if(   GL_UNPACK_ALIGNMENT 
-        !=   GLC.UNPACK_ALIGNMENT  ){ 
-        ERR("[GL_UNPACK_ALIGNMENT]");};;
+        #if( AAC2020_INCLUDE_GLCONST >= 1 )
 
-        if(   GL_UNPACK_ROW_LENGTH 
-        !=   GLC.UNPACK_ROW_LENGTH ){ 
-        ERR("[GL_UNPACK_ROW_LENGTH]");};;
+            if(   GL_UNPACK_ALIGNMENT 
+            !=   GLC.UNPACK_ALIGNMENT  ){ 
+            ERR("[GL_UNPACK_ALIGNMENT]");};;
 
-        if(   GL_TEXTURE0 
-        !=   GLC.TEXTURE0 ){ 
-        ERR("[GL_TEXTURE0]");};;
+            if(   GL_UNPACK_ROW_LENGTH 
+            !=   GLC.UNPACK_ROW_LENGTH ){ 
+            ERR("[GL_UNPACK_ROW_LENGTH]");};;
 
-        if(   GL_TEXTURE_2D 
-        !=   GLC.TEXTURE_2D ){ 
-        ERR("[GL_TEXTURE_2D]");};;
+            if(   GL_TEXTURE0 
+            !=   GLC.TEXTURE0 ){ 
+            ERR("[GL_TEXTURE0]");};;
+
+            if(   GL_TEXTURE_2D 
+            !=   GLC.TEXTURE_2D ){ 
+            ERR("[GL_TEXTURE_2D]");};;
        
+        #else
 
+            printf("[OK:CHERROR:IS_EMPTY]\n");
+    
+        #endif
 
     }
 

@@ -7,6 +7,37 @@
         exit( 222 );
     }
 //:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+//:IS_LOGGING_ON:============================================://
+#define I32 int32_t /** GCC: <stdint.h> **/
+
+    I32 aac2020_aacmain_logison( void ){
+
+        I32 logison=( 0 /**UNDEFINED**/ );
+
+        //:##################################################://
+        #if( AAC2020_INCLUDE_SILENCE <= 0 ) //:##############://
+
+            logison=( 0 - 404 /** Logging Off **/ );
+
+        #endif //:###########################################://
+        #if( AAC2020_INCLUDE_SILENCE >= 1 ) //:##############://
+
+            if( AAC2020_SILENCE.AACMAIN <=( 0 ) //:SILENCE__OFF
+            ||  AAC2020_SILENCE.SILENCE <=(0-1) //:EVERYONE_OFF
+            ){
+                logison=( 1 );
+            }else{
+                logison=( 0 );
+            };;
+
+        #endif //:###########################################://
+        //:##################################################://
+
+        return( logison );
+    }
+
+#undef  I32
+//:============================================:IS_LOGGING_ON://
 //:LOG_AFTER_HALT:===========================================://
 
     void
@@ -15,9 +46,7 @@
     ,   void*       dat_any   
     )
     { 
-        if( AAC2020_SILENCE.AACMAIN <=( 0 ) //:SILENCE__OFF
-        ||  AAC2020_SILENCE.SILENCE <=(0-1) //:EVERYONE_OFF
-        ){
+        if( aac2020_aacmain_logison() >= 1 ){
 
             /** Same Line As Next Printf **/
             printf("[aacmain_log]....(   " ); fflush( stdout );

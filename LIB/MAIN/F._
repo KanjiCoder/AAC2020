@@ -155,6 +155,7 @@
         #endif //:###########################################://
 
         //:BATCHED_KEYBOARD_HANDLERS:========================://
+        #if( AAC2020_INCLUDE_IKEYBOX >= 1 ) //:##############://
 
             //:BEFORE:MARK_CURRENT_KEY_DIRTY:================://
 
@@ -188,6 +189,7 @@
 
             //:================:DO__IT:MARK_CURRENT_KEY_DIRTY://
 
+        #endif //:###########################################://
         //:========================:BATCHED_KEYBOARD_HANDLERS://
         //:MOUSE_INPUT:======================================://
         #if( AAC2020_INCLUDE_MOUTEMP >= 1 ) //:##############://
@@ -507,10 +509,15 @@
 
 
         //:============:MAIN_SECTION:003:AFTER_INIT_CALLBACKS://
+        //:EXIT_WITHOUT_ERROR:===============================://
+        
+            /**@VID_IID[ 0303 ]TIME[ 00:51:10 ]EXIT_ZERO**/
 
-        printf("[LAST_LINE_OF_MAIN_FUNCTION]\n");
-        fflush(stdout);
-        return( 101 );
+            printf("[OK:LAST_LINE_OF_MAIN_FUNCTION]\n");
+            fflush(stdout);
+            return( 0 /**EXIT_ZERO:EXITED_WITHOUT_ERROR**/ );
+
+        //:===============================:EXIT_WITHOUT_ERROR://
     }
 
 #undef          U32  //:--------------------------------: 01 ://
