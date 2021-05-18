@@ -1274,3 +1274,37 @@
     #include "./CHERROR.___._"  //:CHeck_ERROR(checkforerrors)
 
 //:==========:MISC_STUFF_HID_HERE_TO_AVOID_COGNITIVE_OVERLOAD://
+//:META_01:==================================================://
+/** ******************************************************** ***
+@VID_IID[ 0304 ]TIME[ 00:56:23 ]META_LIBRARIES_IN_LIBCHAN
+Putting the meta libraries inside[ LIBCHAN ]file because
+it will make it easier to find where these systems are included
+if all sub system[ INCLUDES ] remain in the same file 
+despite having a slightly different organizational strategy.
+*** ******************************************************** **/
+
+    //:META_01:SYSTEMS_ALWAYS_EXIST:-------------------------://
+
+        #define AAC2020_INCLUDE_CONSOLE ( 1 )
+
+    //:-------------------------:META_01:SYSTEMS_ALWAYS_EXIST://
+    //:META_01:DATA:-----------------------------------------://
+        #include "./META_01/META_01.D._"
+
+        #if( META_01_usereal_CONSOLE >= 1 )
+            #include "./META_01/CONSOLE.R.D._" //:R:::REAL
+        #else
+            #include "./META_01/CONSOLE.U.D._" //:U:UNREAL(fake)
+        #endif
+    //:-----------------------------------------:META_01:DATA://
+    //:META_01:FUNC:-----------------------------------------://
+        #if( META_01_usereal_CONSOLE >= 1 )
+            #include "./META_01/CONSOLE.R.F._" //:R:::REAL
+        #else
+            #include "./META_01/CONSOLE.U.F._" //:U:UNREAL(fake)
+        #endif
+
+        #include "./META_01/META_01.F._"
+    //:-----------------------------------------:META_01:FUNC://
+ 
+//:==================================================:META_01://
