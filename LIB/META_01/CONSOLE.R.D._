@@ -1,1 +1,46 @@
 //: CONSOLE.R.D._ (R.D: Real.Data)
+
+//:CONSOLE_PRIVATE_DATA:=====================================://
+/** ******************************************************** ***
+@VID_IID[ 0304 ]TIME[ 05:24:42 ]SECTION_CREATED
+Private data should not have to be re-declared in the
+fake data file [ CONSOLE.U.D._ ] because no external systems
+should be referencing private data.
+*** ******************************************************** **/
+#define I32 int32_t /** GCC: <stdint.h> **/           //: 01 ://
+#define NCC    char                                   //: 02 ://
+#define CAP aac2020_console_CAP                       //: 03 ://
+#define F_D struct pollfd                             //: 04 ://
+
+//- struct aac2020_console_pollfd={                  ------- -//
+//-                                                  ------- -//
+//-     /** https://docs.microsoft.com/en-us/  **/   ------- -//
+//-     /** windows/win32/api/winsock2/        **/   ------- -//
+//-     /** ns-winsock2-wsapollfd              *//   ------- -//
+//-     SOCKET fd;                                   ------- -//
+//-     U16   events; //: SHORT  events ://          ------- -//
+//-     U16  revents; //: SHORT revents ://          ------- -//
+//-                                                  ------- -//
+//- }                                                ------- -//
+
+    /** buf: The actual buffer of characters       **/
+    /** len: The number of meaningful characters.  **/
+
+    #define aac2020_console_CAP ( 255 )   //:#://
+    NCC     aac2020_console_buf[ CAP + 1 ]={ 0 };
+    I32     aac2020_console_len=( 0 );
+    I32     aac2020_console_oom=( 0 /**OutOfMemoryFlag  **/ );
+    I32     aac2020_console_rrf=( 0 /**Read_Reset_Flag  **/ );
+    I32     aac2020_console_nic=( 0 /**Num_Ignored_Chars**/ );
+
+    #if( __posix ) //:#######################################://
+        /**FileDescriptorArray**/
+        F_D     aac2020_console_f_d[1]={0};
+    #endif //:###############################################://
+    
+
+#undef  I32  //:----------------------------------------: 01 ://
+#undef  NCC  //:----------------------------------------: 02 ://
+#undef  CAP  //:----------------------------------------: 03 ://
+#undef  F_D  //:----------------------------------------: 04 ://
+//:=====================================:CONSOLE_PRIVATE_DATA://

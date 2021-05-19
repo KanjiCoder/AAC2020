@@ -2,6 +2,7 @@
 #define SIL AAC2020_SILENCE                           //: 01 ://
 #define U32 uint32_t /** GCC: <stdint.h> **/          //: 02 ://
 #define P_F printf                                    //: 03 ://
+#define I32 int32_t /** GCC: <stdint.h> **/           //: 04 ://
     //:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=================://
         void 
         aac2020_console_Halt( const char* msg_err )
@@ -11,16 +12,25 @@
             exit( 123 );
         }
     //:=================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+    //:LOGISON:==============================================://
+        U32
+        AAC2020_CONSOLE_logison( void )
+        {
+                                     int say=( 0 );
+            if( SIL.CONSOLE <=(  0  ) ){ say=( 1 ); };
+            if( SIL.SILENCE <=( 0-1 ) ){ say=( 1 ); };
+            if( SIL.SILENCE >=( 0+1 ) ){ say=( 0 ); };
+            return( say );
+        }
+    //:==============================================:LOGISON://
     //:LOG_AFTER_HALT:=======================================://
         void
         aac2020_console_Info_any( //:FUNC:::Info , OVERLOAD:any
             const char* str_fmt   //:GENERAL:str , SPECIFIC:fmt
         ,   void*       dat_any   //:GENERAL:dat , SPECIFIC:any
         )
-        {                            int say=( 0 );
-            if( SIL.CONSOLE <=(  0  ) ){ say=( 1 ); };
-            if( SIL.SILENCE <=( 0-1 ) ){ say=( 1 ); };
-            if( SIL.SILENCE >=( 0+1 ) ){ say=( 0 ); };
+        {   
+            int say=( AAC2020_CONSOLE_logison() );
             if( say >= 1 ){
                 P_F("[console_log]....(   " ); fflush( stdout );
                 P_F( str_fmt , dat_any      ); fflush( stdout );
@@ -28,14 +38,322 @@
             };;
         }
     //:=======================================:LOG_AFTER_HALT://
-    //:INIT_NONE:============================================://
+    //:INFO_I32:=============================================://
+        void
+        aac2020_console_Info_i32( //:FUNC:::Info , OVERLOAD:any
+            const char* str_fmt   //:GENERAL:str , SPECIFIC:fmt
+        ,   I32         dat_i32   //:GENERAL:dat , SPECIFIC:any
+        )
+        {   
+        #define F_F fflush( stdout )
+
+            int logison=( AAC2020_CONSOLE_logison() );
+            if( logison >= 1 ){
+                printf("[console_log:I32]....(   " ); F_F ;
+                printf( str_fmt , dat_i32          ); F_F ;
+                printf(               "   )\n"     ); F_F ;
+            };;
+
+        #undef  F_F
+        }
+    //:=============================================:INFO_I32://
+    //:INIT_CONSOLE:=========================================://
         U32
-        AAC2020_CONSOLE_InitNone( U32 u32 ){
+        AAC2020_CONSOLE_Init( U32 u32 ){
             if( u32 ){ /** reserved for future use **/ };
+
+            #if( __posix ) //:###############################://
+
+                aac2020_console_f_d[0].fd =( STDIN_FILENO );
+                aac2020_console_f_d[0].events=( 0 );
+                aac2020_console_f_d[0].events =(
+                aac2020_console_f_d[0]
+                    |   POLLIN /** Incomming Data Ready? **/
+                );;
+
+            #endif //:#######################################://
+
             return( 0x00 );
         }
-    //:============================================:INIT_NONE://
+    //:=========================================:INIT_CONSOLE://
 #undef  SIL  //:----------------------------------------: 01 ://
 #undef  U32  //:----------------------------------------: 02 ://
 #undef  P_F  //:----------------------------------------: 03 ://
+#undef  I32  //:----------------------------------------: 04 ://
 //:===========================:AAC2020_SUBLIBRARY_BOILERPLATE://
+//:STRLEN___________FUNCTION:================================://
+//:CONSOLE_READLINE_FUNCTION:================================://
+//:CONSOLE_SCANLINE_FUNCTION:================================://
+#define NCC char /**NCC:Non_Const_Char     **/        //: 01 ://
+#define LOG aac2020_console_Info_any                  //: 02 ://
+#define LOI aac2020_console_Info_i32                  //: 03 ://
+#define I32 int32_t /** GCC: <stdint.h> **/           //: 04 ://
+#define ERR aac2020_console_Halt                      //: 05 ://
+#define BUF aac2020_console_buf                       //: 06 ://
+#define LEN aac2020_console_len                       //: 07 ://
+#define CAP aac2020_console_CAP                       //: 08 ://
+#define OOM aac2020_console_oom                       //: 09 ://
+#define NIC aac2020_console_nic                       //: 10 ://
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    I32
+    AAC2020_CONSOLE_StrLen(
+        NCC* str
+    )
+    {
+        I32 found=( 0 );
+        I32   dex=( 0 );
+
+        /**@VID_IID[ 0304 ]TIME[ 03:00:03 ] **/
+        for( dex = 0 ; dex <= (CAP+1-1) ; dex++ ){
+            if( 0 == str[dex] ){ 
+                found=( 1 );
+                break;
+            };
+        };;
+        if( found <= 0 ){
+            ERR("[STRING_TOO_LONG:2021_05_18]");
+        };;
+        return( dex /**Index_Of_Null == Length_Of_String **/ );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    AAC2020_CONSOLE_ReadLine(
+        NCC* str //:NULL_TERMINATED:Text_To_Parse
+    ,   I32  len //:Length_Of_That_String(AKA:noc)
+    )
+    {
+    /** **************************************************** ***
+    @VID_IID[ 0304 ]TIME[ 02:50:42 ]@FUNC_MADE@
+    Parses a console line command given to the engine while
+    the engine is running. __NOT__ a command-line startup arg.
+    *** **************************************************** **/
+        
+        if( AAC2020_CONSOLE_StrLen(str) != len ){
+            ERR("[DECLARED_LENGTH_MISMATCH:2021_05_18]");
+        };;
+
+        printf("[TODO:PARSE_COMMAND]:%s\n" , str );
+
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    I32
+    aac2020_console_NonBlockingRead(
+        I32  fil_han //:File_Descriptor_Handle
+    ,   NCC* buf_ptr //:buf_ptr = &(MY_BUFFER[EMPTY_SLOT])
+    ,   I32  noc_ask //:NumberOfChars:ASKing for
+    )
+    {
+    /** **************************************************** ***
+    @VID_IID[ 0304 ]TIME[ 07:22:23 ]
+    Returns number of characters read into[ buf_ptr ]
+    or returns negative if there was no data to be read.
+    TUTORIAL[   www.youtube.com/watch?v=UP6B324Qh5k       ]
+    MANUAL[     man7.org/linux/man-pages/man2/poll.2.html ]
+    *** **************************************************** **/
+    
+        #if defined( __posix ) //:LINUX #####################://
+
+            #define ARR_F_D aac2020_console_f_d
+
+            I32 pol_got=( 0 ); //:Gotten_Value_From[     poll ]
+            I32 noc_got=( 0 ); //:Num_Chars_Gotten_From[ read ]
+
+            pol_got =(
+            poll( 
+                ARR_F_D //:File_Descriptor:ARR(Array__Of)
+            ,   (  1  ) //:File_Descriptor:LEN(Number_Of)
+            ,   (  0  ) //:Zero_Timeout==Return_Immediately
+            ));;
+
+            if( 0 == pol_got /**TIMEOUT, don't read.**/ ){
+                noc_got=( 0 - 23 );
+            }else{
+                /** TODO: Make this call non-blocking. **/
+                noc_got = read( fil_han , buf_ptr , noc_ask );
+            };;
+
+            #undef  ARR_F_D
+
+        #else //:WINDOWS ####################################://
+
+            /** TODO: Make non blocking with select statement**/
+
+            I32 noc_got=( 0 ); //:Num_Chars_Gotten_From[ read ]
+            noc_got = read( fil_han , buf_ptr , noc_ask );
+
+        #endif //:###########################################://
+
+        return( noc_got );
+
+    
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    AAC2020_CONSOLE_ScanLine(
+        void
+    )
+    {
+    /** **************************************************** ***
+    @VID_IID[ 0304 ]TIME[ 02:38:32 ]@FIRST_DRAFTED@
+    @VID_IID[ 0304 ]TIME[ 06:53:23 ]FIRST_DRAFT_FINISHED
+
+    This function is @_NON_BLOCKING_@ and @_RE_ENTRANT_@.
+    One cannot simply use "getchar()" because it will block
+    the main thread until the "ENTER" key has been pressed.
+    Making your command line code [stall/pause] the engine.
+    *** **************************************************** **/
+    
+    //- NCC buf[CAP + 1]={0};       :+1 for null terminator  -//
+    //- I32 len         =(0);       :Current_Buffer_Length   -//
+        I32 m_i         =(CAP-1); //:Max_Valid_Character_Index
+    //- I32 i32         =(0);       :getchar() returns int   -//
+    //- I32 oom         =(0);       :out_of_memory?          -//
+    //- I32 nic         =(0);       :NumberOfIgnoredChars    -//
+        I32 inn         =( STDIN_FILENO );
+
+        NCC* buf_ptr=((NCC*)0);
+        I32  noc_got =( 0 /** NumberOfCharacters_Gotten **/ );
+
+        NCC  overflow_buf[ 2 ]={0}; /**1 char + null term **/
+        NCC* overflow_ptr=(&(overflow_buf[0]));
+
+        //:READ_RESET_FLAG(rrf):=============================://
+        /**@VID_IID[ 0304 ]TIME[ 05:52:23 ]***************** **/
+        if( aac2020_console_rrf >= 1 ){
+            aac2020_console_rrf=( 0 ); //:  Read_Reset_Flag  ://
+            aac2020_console_len=( 0 ); //:  Length_Of_String ://
+            aac2020_console_oom=( 0 ); //:  Out_Of_Memory?   ://
+            aac2020_console_nic=( 0 ); //:  NumIgnoredChars  ://
+
+            buf_ptr=(&(BUF[  0  ]));   //:<-Buffer_Pointer   ://
+        }else{
+            buf_ptr=(&(BUF[ LEN ]));   //:<-Buffer_Pointer   ://
+        };;
+        //:=============================:READ_RESET_FLAG(rrf)://
+        //:COLLECT_LINE_OF_INPUT:============================://
+        /** ************************************************ ***
+        @VID_IID[ 0304 ]TIME[ 06:46:23 ]SECTION_SUMMARY
+        Attempt to collect a line of input. Function may exit
+        without collecting an entire line if no '\n' character
+        is found. (enter key not yet pressed). Or it could
+        also[ IGNORE ]the line of input if the input line
+        is more characters than what fits in our line buffer.
+        *** ************************************************ **/
+
+        //:Certain negative CHR value is EOF, so just
+        //:assume negative means exit here.
+        while( 1 ){
+            
+            if( OOM <= 0 ){
+
+                /**@VID_IID[0304]TIME[02:47:23]100%_CAP_USE  **/
+                /**100% Capacity Use When Written This Way   **/
+
+                if( LEN > m_i /**len==IndexAboutToBeUsed**/ ){
+                    OOM=( 1 );
+                    /**DO_NOT_BREAK**/
+                }else{
+                    noc_got =( aac2020_console_NonBlockingRead( 
+                                inn , buf_ptr , 1   ));;
+
+                    if( 1 == noc_got ){
+                        LEN++;
+                        buf_ptr=( &(BUF[ LEN ] ) );
+    
+                        if( '\n' == BUF[ LEN - 1 ] ){
+                            /**End_Of_Line_Found**/
+                            break;
+                        };;
+                    }else
+                    if( noc_got > 1 ){
+                        ERR("[GOT_TOO_MANY_CHARS]");
+                    }else{
+                        /**Enter_Key_Has_Not_Yet_Been_Pressed**/
+                        break; //:EXIT, got nothing.
+                    };;
+                };;
+            }else
+            if( OOM >= 1 ){
+                noc_got =(aac2020_console_NonBlockingRead( 
+                    inn , overflow_ptr , 1 ));;
+
+                if( 1 == noc_got ){
+                    if( '\n' == overflow_ptr[ 0 ] ){
+                        break;
+                    }else{
+                        NIC++; //:Number_Ignored_Characters
+                    };;
+                }else
+                if( noc_got > 1 ){
+                    ERR("[GOT_TOO_MANY_CHARS]");
+                }else{
+                    /**Enter_Key_Has_Not_Yet_Been_Pressed**/
+                    break; //:Exit, no characters gotten.
+                };;
+            }else{
+                ERR("[EDCL_2021_05_18:824PM]");
+            };;
+        } //:[WHILE]:<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<[WHILE]://
+        //:============================:COLLECT_LINE_OF_INPUT://
+        //:FIND_NEWLINE:=====================================://
+            I32 newline_found=( 0 );
+
+            if( OOM >= 0 ){
+                if( '\n' == overflow_buf[0] ){
+                    newline_found=( 1 );
+                };;
+            }else
+            if( OOM <= 0 ){
+                if( '\n' ==  BUF[ LEN - 1 ] ){
+                    newline_found=( 1 );
+                };;
+            }else{
+                ERR("[EDCL:2021_05_18_OOM]");
+            };;
+        //:=====================================:FIND_NEWLINE://
+        //:PARSE_COMMAND_TEXT:===============================://
+            if( newline_found <= 0 ){
+
+                /** @VID_IID[ 0304 ]TIME[ 05:38:00 ] ******* **/
+                /** This is the non-blocking part. Do        **/
+                /** nothing and come back later to collect   **/
+                /** more data.                               **/
+                /** *******************************************/
+
+            }else
+            if( newline_found >= 1 ){
+
+                /** @VID_IID[ 0304 ]TIME[ 06:56:23 ] ******* **/
+                /** Start collecting NEXT line upon re-enter **/
+                aac2020_console_rrf=( 0 );
+
+                if( OOM >= 1 ){
+                    LOG("[IGNORING:TOO_MUCH_COMMAND_TEXT]",0);
+                    LOI("[NUM_IGNORED_CHARS(NIC)]:%d",NIC);
+                }else
+                if( 0 == OOM ){
+                    BUF[ LEN ]=( 0 /**ADD:NullTerminator**/ );
+                    NCC* str = &( BUF[0] );
+                    AAC2020_CONSOLE_ReadLine( str , LEN );
+                }else{
+                    ERR("[WTF:2021_05_18]");
+                };;
+            }else{
+                ERR("[@EDCL@:2021_05_18]");
+            };;
+        //:===============================:PARSE_COMMAND_TEXT://
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+#undef  NCC  //:----------------------------------------: 01 ://
+#undef  LOG  //:----------------------------------------: 02 ://
+#undef  LOI  //:----------------------------------------: 03 ://
+#undef  I32  //:----------------------------------------: 04 ://
+#undef  ERR  //:----------------------------------------: 05 ://
+#undef  CAP  //:----------------------------------------: 06 ://
+#undef  BUF  //:----------------------------------------: 07 ://
+#undef  LEN  //:----------------------------------------: 08 ://
+#undef  OOM  //:----------------------------------------: 09 ://
+#undef  NIC  //:----------------------------------------: 10 ://
+//:================================:CONSOLE_SCANLINE_FUNCTION://
+//:================================:CONSOLE_READLINE_FUNCTION://
+//:================================:STRLEN___________FUNCTION://

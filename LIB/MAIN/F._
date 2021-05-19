@@ -68,6 +68,11 @@
 
         if( u32 ){ /** Reserved For Future Use **/ };
 
+        /** @VID_IID[0304]TIME[03:20:30]            ******** **/
+        /** I think reading from console counts as  ******** **/
+        /** handling input, so put it here.         ******** **/
+        AAC2020_CONSOLE_ScanLine();
+
         /** AKA: ReadFromKeyboardPostOfficeBox(...) **/
 
         /** Keys 0-9 reserved for FRAGBED. FRAGBED should  * **/
@@ -414,8 +419,8 @@
         //:META_01:==========================================://
         #define X ( 0x00 )
 
-            AAC2020_META_01_Init(             X ); //: 0 ://
-            AAC2020_META_01_CONSOLE_InitNone( 0 ); //: 1 ://
+            AAC2020_META_01_Init(         X ); //: 0 ://
+            AAC2020_META_01_CONSOLE_Init( X ); //: 1 ://
 
         #undef  X
         //:==========================================:META_01://
@@ -502,7 +507,7 @@
                             };;
                     
                         #endif
-                };;
+                };; //:[WHILE]:<<<<<<<<<<<<<<<<<<<<<<:[WHILE]://
             };;
         #endif //:###########################################://
         #endif //:###########################################://
