@@ -131,24 +131,13 @@
 //:==============================================:INIT_SELECT://
 //:WSA_SELECT:===============================================://
 #define LIB_ERR aac2020_console_select_Halt           //: 01 ://
-//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
-#define PTR_DLL PEB2020_DLIB                          //: 02 ://
-#define PTR_FUN PEB2020_FUNC                          //: 03 ://
-//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
-#define GET_DLL PEB2020_LoadLibraryA                  //: 04 ://
-#define GET_FUN PEB2020_GetProcAddress                //: 05 ://
-//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
-#define DLL_NAM aac2020_console_select_dll_nam        //: 08 ://
-#define DLL_HAN aac2020_console_select_dll_han        //: 09 ://
+#define SEL_FUN aac2020_console_select_sel_fun        //: 02 ://
+#define     U08  uint8_t /** GCC: <stdint.h> **/      //: 03 ://
+#define     U16 uint16_t /** GCC: <stdint.h> **/      //: 04 ://
+#define     I32  int32_t /** GCC: <stdint.h> **/      //: 05 ://
 //: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
 
-//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
-#define     U08  uint8_t /** GCC: <stdint.h> **/      //: 12 ://
-#define     U16 uint16_t /** GCC: <stdint.h> **/      //: 13 ://
-#define     I32  int32_t /** GCC: <stdint.h> **/      //: 14 ://
-//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
-
-    I32 /**Return Positive If Ready**/
+    I32 /**Return Positive If File Data Is Ready**/
     aac2020_console_select( 
         void
     ){
@@ -167,6 +156,12 @@
         //:      SOCKET fd_array[FD_SETSIZE];    ://
         //:  };                                  ://
         //:--------------------------------------://
+
+        if( 0 == SEL_FUN ){
+            LIB_ERR("[NIL_SELECTION_FUNCTION_POINTER]");
+        };;
+
+        #error WHAT_IS_PARAM_TWO
                                                             
         SEL_FUN(
             1 //:<-- nfds:Number_Of_File_Descriptors
@@ -178,4 +173,10 @@
 
     }
 
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#undef  LIB_ERR  //:------------------------------------: 01 ://
+#undef  SEL_FUN  //:------------------------------------: 02 ://
+#undef      U08  //:------------------------------------: 03 ://
+#undef      U16  //:------------------------------------: 04 ://
+#undef      I32  //:------------------------------------: 05 ://
 //:WSA_SELECT:===============================================://
