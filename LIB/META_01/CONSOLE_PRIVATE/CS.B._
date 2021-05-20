@@ -1,0 +1,37 @@
+//:AAC2020_SUBLIBRARY_BOILERPLATE:===========================://
+#define SIL AAC2020_SILENCE                           //: 01 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 02 ://
+#define P_F printf                                    //: 03 ://
+#define F_F fflush(stdout)                            //: 04 ://
+    //:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=================://
+        void 
+        aac2020_console_select_Halt( const char* msg_err )
+        {
+            P_F("[aac2020_console_select_Halt]:%s\n", msg_err );
+            fflush(stdout);
+            exit( 123 );
+        }
+    //:=================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+    //:LOG_AFTER_HALT:=======================================://
+        void
+        aac2020_console_select_Info_any(  
+            const char* str_fmt    
+        ,   void*       dat_any    
+        )
+        {           
+                                     int say=( 0 );
+            if( SIL.CONSOLE <=(  0  ) ){ say=( 1 ); };
+            if( SIL.SILENCE <=( 0-1 ) ){ say=( 1 ); };
+            if( SIL.SILENCE >=( 0+1 ) ){ say=( 0 ); };
+            if( say >= 1 ){
+                P_F("[console_select_log]....(   " ); F_F ;
+                P_F( str_fmt , dat_any             ); F_F ;
+                P_F(               "   )\n"        ); F_F ;
+            };;
+        }
+    //:=======================================:LOG_AFTER_HALT://
+#undef  SIL  //:----------------------------------------: 01 ://
+#undef  U32  //:----------------------------------------: 02 ://
+#undef  P_F  //:----------------------------------------: 03 ://
+#undef  F_F  //:----------------------------------------: 04 ://
+//:===========================:AAC2020_SUBLIBRARY_BOILERPLATE://

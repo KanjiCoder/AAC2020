@@ -59,7 +59,18 @@
 
         /** @VID_IID[ 0304 ]TIME[ 07:36:00 ] *************** **/
         //- <poll.h>     FOR: aac2020_console_Read --------- -//
-        //+ DOES NOT EXIST ON WINDOWS !!!!!!!!!!!!!!!!!!!!!! +//
+        //+ DOES_NOT_EXIST_ON_WINDOWS !!!!!!!!!!!!!!!!!!!!!! +//
+
+        /** @VID_IID[ 0305 ]TIME[ 00:10:00 ] *************** **/
+        //- <sys/select.h> /** AlternateTo[ <poll.h> ]  **/  -//
+        //+ sys/select.h: No such file or directory          +//
+        //+ DOES_NOT_EXIST_ON_WINDOWS !!!!!!!!!!!!!!!!!!!!!! +//
+
+        #if defined( _WINDOWS_ ) //:#########################://
+
+            #error WINDOWS_H_SNUCK_IN_HERE_SOMEHOW
+
+        #endif //:###########################################://
 
     //:----------------:INCLUDE_DIRECTIVES:STANDARD_LIBRARIES://
 

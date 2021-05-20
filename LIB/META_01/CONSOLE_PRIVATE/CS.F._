@@ -1,0 +1,181 @@
+/** ******************************************************** ***
+    CS.F._ : CONSOLE.F.SELECT CODE:
+    Private Code To Get Window's Select Statement Working
+*** ******************************************************** **/
+//:INIT_SELECT_BOILERPLATE:==================================://
+
+    #include "./CS.B._" 
+
+//:==================================:INIT_SELECT_BOILERPLATE://
+//:INIT_SELECT:==============================================://
+#define LIB_ERR aac2020_console_select_Halt           //: 01 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#define PTR_DLL PEB2020_DLIB                          //: 02 ://
+#define PTR_FUN PEB2020_FUNC                          //: 03 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#define GET_DLL PEB2020_LoadLibraryA                  //: 04 ://
+#define GET_FUN PEB2020_GetProcAddress                //: 05 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#define VER_MAJ aac2020_console_select_ver_maj        //: 06 ://
+#define VER_MIN aac2020_console_select_ver_min        //: 07 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#define DLL_NAM aac2020_console_select_dll_nam        //: 08 ://
+#define DLL_HAN aac2020_console_select_dll_han        //: 09 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#define INI_NAM aac2020_console_select_ini_nam        //: 10 ://
+#define INI_FUN aac2020_console_select_ini_fun        //: 11 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#define SEL_NAM aac2020_console_select_sel_nam        //: 12 ://
+#define SEL_FUN aac2020_console_select_sel_fun        //: 13 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#define WSA_DAT WSADATA                               //: 14 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#define     U08  uint8_t /** GCC: <stdint.h> **/      //: 15 ://
+#define     U16 uint16_t /** GCC: <stdint.h> **/      //: 16 ://
+#define     I32  int32_t /** GCC: <stdint.h> **/      //: 17 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+
+    I32
+    aac2020_console_InitSelect( void )
+    {
+        I32 o_k=( 0 );
+
+        DLL_HAN = GET_DLL( DLL_NAM );
+        INI_FUN=( GET_FUN( DLL_HAN, INI_NAM) );
+
+        if( ((PTR_DLL)0) == DLL_HAN ){ LIB_ERR("[DLL_HAN]"); };
+        if( ((PTR_FUN)0) == INI_FUN ){ LIB_ERR("[INI_FUN]"); };
+
+        /** @VID_IID[ 0305 ]TIME[ 01:18:10 ]             *** **/
+        /** I don't know which byte is for major version *** **/
+        /** and which byte is for the minor version.     *** **/
+        /** ------------------------------------------------ **/
+        /** @VID_IID[ 0305 ]TIME[ 01:53:42 ] *************** **/
+        /** WSADATA structure is version 2.2 encoded         **/
+        /** with the major version number in the             **/
+        /** low-byte and the minor version number in         **/
+        /** the high-byte.                                   **/
+        U16 ver =( 0x00 /** Version 2.2 **/
+        |   VER_MAJ << 0 //: MAJOR_VERSION_IN_LOW_BYTE
+        |   VER_MIN << 8 //: MINOR_VERSION_IN_HIG_BYTE 
+        );;
+
+        /** @VID_IID[ 0305 ]TIME[01:48:08]NUMBER_1_HACKER ** **/
+        U08 wsa_dat[512] ={0}; //:408 bytes :WIN10:64bit  ** **/
+
+        //:CALL_WSAStartup:==================================://
+
+            I32 res = INI_FUN( ver , &(wsa_dat[0]) );
+            if(res != 0){
+                /* Tell the user that we could     */
+                /* not find a usable Winsock DLL.  */
+                printf("WSAStartup_FAIL:res: %d\n", res);
+                o_k=( 0 - 666 );
+            }else{
+                printf("[OK:WSAStartup:WORKED]\n");
+                o_k=( 0 + 777 );
+
+                /**@VID_IID[0305]T[02:07:23]EXPLAINED **/
+                U16* ptr_wVersion = (U16*)&(wsa_dat[0]);
+                U16  val_wVersion =(*ptr_wVersion);
+
+                U08  ver_maj =( val_wVersion >> 0 )&(0xFF);
+                U08  ver_min =( val_wVersion >> 8 )&(0xFF);
+
+                if( ver_maj != wsa_dat[1] ){ LIB_ERR("[1]"); };
+                if( ver_min != wsa_dat[0] ){ LIB_ERR("[0]"); };
+
+                if( ver_maj != VER_MAJ ){ LIB_ERR("[MAJ]"); };
+                if( ver_min != VER_MIN ){ LIB_ERR("[MAJ]"); };
+            };;
+        
+        //:==================================:CALL_WSAStartup://
+        //:GET_SELECT_FUNCTION:==============================://
+ 
+            SEL_FUN=( GET_FUN( DLL_HAN, SEL_NAM) );
+            if( ((PTR_FUN)0) == SEL_FUN ){ 
+                LIB_ERR("[SEL_FUN]"); 
+            };;
+
+        //:==============================:GET_SELECT_FUNCTION://
+
+        return( o_k );
+    }
+
+#undef  LIB_ERR  //:------------------------------------: 01 ://
+                 //:------------------------------------:
+#undef  PTR_DLL  //:------------------------------------: 02 ://
+#undef  PTR_FUN  //:------------------------------------: 03 ://
+                 //:------------------------------------:
+#undef  GET_DLL  //:------------------------------------: 04 ://
+#undef  GET_FUN  //:------------------------------------: 05 ://
+                 //:------------------------------------:
+#undef  VER_MAJ  //:------------------------------------: 06 ://
+#undef  VER_MIN  //:------------------------------------: 07 ://
+                 //:------------------------------------:
+#undef  DLL_NAM  //:------------------------------------: 08 ://
+#undef  DLL_HAN  //:------------------------------------: 09 ://
+                 //:------------------------------------:
+#undef  INI_NAM  //:------------------------------------: 10 ://
+#undef  INI_FUN  //:------------------------------------: 11 ://
+                 //:------------------------------------:
+#undef  SEL_NAM  //:------------------------------------: 12 ://
+#undef  SEL_FUN  //:------------------------------------: 13 ://
+                 //:------------------------------------:
+#undef  WSA_DAT  //:------------------------------------: 14 ://
+                 //:------------------------------------:
+#undef      U08  //:------------------------------------: 15 ://
+#undef      U16  //:------------------------------------: 16 ://
+#undef      I32  //:------------------------------------: 17 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+//:==============================================:INIT_SELECT://
+//:WSA_SELECT:===============================================://
+#define LIB_ERR aac2020_console_select_Halt           //: 01 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#define PTR_DLL PEB2020_DLIB                          //: 02 ://
+#define PTR_FUN PEB2020_FUNC                          //: 03 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#define GET_DLL PEB2020_LoadLibraryA                  //: 04 ://
+#define GET_FUN PEB2020_GetProcAddress                //: 05 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#define DLL_NAM aac2020_console_select_dll_nam        //: 08 ://
+#define DLL_HAN aac2020_console_select_dll_han        //: 09 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#define     U08  uint8_t /** GCC: <stdint.h> **/      //: 12 ://
+#define     U16 uint16_t /** GCC: <stdint.h> **/      //: 13 ://
+#define     I32  int32_t /** GCC: <stdint.h> **/      //: 14 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+
+    I32 /**Return Positive If Ready**/
+    aac2020_console_select( 
+        void
+    ){
+        //:--------------------------------------://
+        //: int WSAAPI select(                   ://
+        //: int           nfds,                  ://
+        //: fd_set        *readfds,              ://
+        //: fd_set        *writefds,             ://
+        //: fd_set        *exceptfds,            ://
+        //: const timeval *timeout               ://
+        //: );                                   ://
+        //:--------------------------------------://
+        //:                                      ://
+        //:  typedef struct fd_set {             ://
+        //:      u_int  fd_count;                ://
+        //:      SOCKET fd_array[FD_SETSIZE];    ://
+        //:  };                                  ://
+        //:--------------------------------------://
+                                                            
+        SEL_FUN(
+            1 //:<-- nfds:Number_Of_File_Descriptors
+        ,   0 //:<-- Figure out what this is.
+        ,   0 //:<-- NULL:writefds
+        ,   0 //:<-- NULL:exceptfds
+        ,   0 //:<-- ZERO:TIMEOUT (return immediately)
+        );;
+
+    }
+
+//:WSA_SELECT:===============================================://

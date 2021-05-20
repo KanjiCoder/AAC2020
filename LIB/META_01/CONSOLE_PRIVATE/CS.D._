@@ -1,0 +1,37 @@
+
+    //:CS.D._ : Private Data For Console Select Statement
+
+//:DATA:=====================================================://
+#define CHR const char
+#define VOI void
+#define DLL PEB2020_DLIB /** DLL Library  Reference **/
+#define FUN PEB2020_FUNC /** Function Pointer       **/
+#define U08      uint8_t /** GCC: <stdint.h>        **/
+
+    //:------------------------------------------------------://
+    //: han     : Handle (DONT USE)                          ://
+    //: dll     : DLL handle                                 ://
+    //: fun     : function pointer pulled from dll           ://
+    //: ini     : Initializer Function                       ://
+    //: nam     : name of DLL or Function                    ://
+    //: dll_nam : dll name                                   ://
+    //: dll_han : dll handle                                 ://
+    //: ini_nam : Name of initializer function in DLL        ://
+    //: ini_fun : Pointer to initializer function            ://
+    //:------------------------------------------------------://
+
+    U08 aac2020_console_select_ver_maj  =( 2 );      
+    U08 aac2020_console_select_ver_min  =( 2 );      
+
+    CHR* aac2020_console_select_dll_nam =( "Ws2_32.dll" );
+    DLL  aac2020_console_select_dll_han =((DLL)0);
+
+    CHR* aac2020_console_select_ini_nam =("WSAStartup");
+    FUN  aac2020_console_select_ini_fun =((FUN)0);
+
+#undef  CHR
+#undef  VOI
+#undef  DLL
+#undef  FUN
+#undef  U08
+//:=====================================================:DATA://

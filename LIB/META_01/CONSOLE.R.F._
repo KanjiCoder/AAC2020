@@ -1,3 +1,8 @@
+//:PRIVATE_SELECT_CODE:======================================://
+
+    #include "./CONSOLE_PRIVATE/CS.F._"
+
+//:======================================:PRIVATE_SELECT_CODE://
 //:AAC2020_SUBLIBRARY_BOILERPLATE:===========================://
 #define SIL AAC2020_SILENCE                           //: 01 ://
 #define U32 uint32_t /** GCC: <stdint.h> **/          //: 02 ://
@@ -70,6 +75,10 @@
                 aac2020_console_f_d[0]
                     |   POLLIN /** Incomming Data Ready? **/
                 );;
+
+            #else //:########################################://
+
+                aac2020_console_InitSelect();
 
             #endif //:#######################################://
 
