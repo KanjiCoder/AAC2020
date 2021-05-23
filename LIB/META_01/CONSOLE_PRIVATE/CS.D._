@@ -1,12 +1,17 @@
 
     //:CS.D._ : Private Data For Console Select Statement
 
+    //:#include <winsock2.h> //:for: SOCKET , fd_set, DEBUGONLY
+
 //:DATA:=====================================================://
-#define CHR const char
-#define VOI void
-#define DLL PEB2020_DLIB /** DLL Library  Reference **/
-#define FUN PEB2020_FUNC /** Function Pointer       **/
-#define U08      uint8_t /** GCC: <stdint.h>        **/
+#define CHR const char                                //: 01 ://
+#define VOI void                                      //: 02 ://
+#define DLL PEB2020_DLIB /** DLL Library  Reference**///: 03 ://
+#define FUN PEB2020_FUNC /** Function Pointer      **///: 04 ://
+#define U08      uint8_t /** GCC: <stdint.h>       **///: 05 ://
+#define U32     uint32_t /** GCC: <stdint.h>       **///: 06 ://
+#define U64     uint64_t /** GCC: <stdint.h>       **///: 07 ://
+#define I32      int32_t /** GCC: <stdint.h>       **///: 08 ://
 
     //:------------------------------------------------------://
     //: han     : Handle (DONT USE)                          ://
@@ -20,21 +25,75 @@
     //: ini_fun : Pointer to initializer function            ://
     //:------------------------------------------------------://
 
+    #if defined( FD_SETSIZE )
+        #define aac2020_console_select_FD_SETSIZE FD_SETSIZE
+    #else
+        #define aac2020_console_select_FD_SETSIZE (   64   )
+        ///////                        FD_SETSIZE (   64   )
+
+        /** 64 is the default. So probably the safest value  **/
+        /** to use. Though the documentation says[ fd_set ]  **/
+        /** is a "variable length struct"                    **/
+        /** @VID_IID[ 0307 ]TIME[ 01:56:00 ]-----------------**/
+
+    #endif
+        
+    struct aac2020_console_select_fd_set { 
+        /**@VID_IID[0307]TIME[01:42:50]**/
+        U32 fd_count;                    
+        U64 fd_array[ aac2020_console_select_FD_SETSIZE ];        
+    };     
+
+    _Static_assert( 520 == 
+    sizeof(struct aac2020_console_select_fd_set) 
+    , "[FD_SET_IS_NOT_520_BYTES]" );
+
+    struct aac2020_console_select_timeval {
+        /**@VID_IID[0307]TIME[03:50:05]CREATED_TIMEVAL**/
+        I32  tv_sec ; //:4bytes (__LONG32 , not actually long)
+        I32  tv_usec; //:4bytes (__LONG32 , not actually long)
+    };
+
+    /**@VID_IID[0307]TIME[05:39:42]sel_typ**/
+    typedef 
+        I32 
+        (__stdcall  *aac2020_console_select_sel_typ)
+        (   
+            I32 nfds
+        ,  struct aac2020_console_select_fd_set*         readfds
+        ,  struct aac2020_console_select_fd_set*        writefds
+        ,  struct aac2020_console_select_fd_set*       exceptfds
+        ,  const  struct aac2020_console_select_timeval* timeval
+        );
+
     U08  aac2020_console_select_ver_maj =( 2 );      
     U08  aac2020_console_select_ver_min =( 2 );      
 
     CHR* aac2020_console_select_dll_nam =( "Ws2_32.dll" );
     DLL  aac2020_console_select_dll_han =((DLL)0);
-
+    
     CHR* aac2020_console_select_ini_nam =("WSAStartup");
     FUN  aac2020_console_select_ini_fun =((FUN)0);
 
     CHR* aac2020_console_select_sel_nam =("select");
-    FUN  aac2020_console_select_sel_fun =((FUN)0);
+    aac2020_console_select_sel_typ
+    aac2020_console_select_sel_fun =( 0 );
+   
+         
+ 
 
-#undef  CHR
-#undef  VOI
-#undef  DLL
-#undef  FUN
-#undef  U08
+    CHR* aac2020_console_select_err_nam =("WSAGetLastError");
+    FUN  aac2020_console_select_err_fun =((FUN)0);
+
+    /** Atleast_One_Success :@VID_IID[0307]TIME[04:52:00]**/
+    I32  aac2020_console_select_AOS=( 0 );
+
+#undef  CHR  //:----------------------------------------: 01 ://
+#undef  VOI  //:----------------------------------------: 02 ://
+#undef  DLL  //:----------------------------------------: 03 ://
+#undef  FUN  //:----------------------------------------: 04 ://
+#undef  U08  //:----------------------------------------: 05 ://
+#undef  U32  //:----------------------------------------: 06 ://
+#undef  U64  //:----------------------------------------: 07 ://
+#undef  I32  //:----------------------------------------: 08 ://
 //:=====================================================:DATA://

@@ -27,12 +27,16 @@
 //: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
 #define SEL_NAM aac2020_console_select_sel_nam        //: 12 ://
 #define SEL_FUN aac2020_console_select_sel_fun        //: 13 ://
+#define SEL_TYP aac2020_console_select_sel_typ        //: 14 ://
 //: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
-#define WSA_DAT WSADATA                               //: 14 ://
+#define ERR_NAM aac2020_console_select_err_nam        //: 15 ://
+#define ERR_FUN aac2020_console_select_err_fun        //: 16 ://
 //: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
-#define     U08  uint8_t /** GCC: <stdint.h> **/      //: 15 ://
-#define     U16 uint16_t /** GCC: <stdint.h> **/      //: 16 ://
-#define     I32  int32_t /** GCC: <stdint.h> **/      //: 17 ://
+#define WSA_DAT WSADATA                               //: 17 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+#define     U08  uint8_t /** GCC: <stdint.h> **/      //: 18 ://
+#define     U16 uint16_t /** GCC: <stdint.h> **/      //: 19 ://
+#define     I32  int32_t /** GCC: <stdint.h> **/      //: 20 ://
 //: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
 
     I32
@@ -92,12 +96,31 @@
         //:==================================:CALL_WSAStartup://
         //:GET_SELECT_FUNCTION:==============================://
  
-            SEL_FUN=( GET_FUN( DLL_HAN, SEL_NAM) );
-            if( ((PTR_FUN)0) == SEL_FUN ){ 
+            SEL_FUN=(SEL_TYP)( GET_FUN( DLL_HAN, SEL_NAM) );
+            if( ((SEL_TYP)0) == SEL_FUN ){ 
                 LIB_ERR("[SEL_FUN]"); 
             };;
 
         //:==============================:GET_SELECT_FUNCTION://
+        //:GET_ERROR_FUNCTION:===============================://
+
+            ERR_FUN=( GET_FUN( DLL_HAN, ERR_NAM) );
+            if( ((PTR_FUN)0) == ERR_FUN ){ 
+                LIB_ERR("[ERR_FUN]"); 
+            };;
+
+        //:===============================:GET_ERROR_FUNCTION://
+        //:VALIDATE_INITIALIZATION_WORKED:===================://
+
+            /** Errored upon initialization. **/
+            I32 socket_error_code=( ERR_FUN() );
+            if( 0 != socket_error_code ){ 
+                printf("[socket_error_code]:%d\n"
+                        ,socket_error_code);;
+                LIB_ERR("[ERR_2021_05_22]");
+            };;
+
+        //:===================:VALIDATE_INITIALIZATION_WORKED://
 
         return( o_k );
     }
@@ -121,26 +144,46 @@
                  //:------------------------------------:
 #undef  SEL_NAM  //:------------------------------------: 12 ://
 #undef  SEL_FUN  //:------------------------------------: 13 ://
+#undef  SEL_TYP  //:------------------------------------: 14 ://
+                 //:------------------------------------:    ://
+#undef  ERR_NAM  //:------------------------------------: 15 ://
+#undef  ERR_FUN  //:------------------------------------: 16 ://
                  //:------------------------------------:
-#undef  WSA_DAT  //:------------------------------------: 14 ://
+#undef  WSA_DAT  //:------------------------------------: 17 ://
                  //:------------------------------------:
-#undef      U08  //:------------------------------------: 15 ://
-#undef      U16  //:------------------------------------: 16 ://
-#undef      I32  //:------------------------------------: 17 ://
+#undef      U08  //:------------------------------------: 18 ://
+#undef      U16  //:------------------------------------: 19 ://
+#undef      I32  //:------------------------------------: 20 ://
 //: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
 //:==============================================:INIT_SELECT://
 //:WSA_SELECT:===============================================://
 #define LIB_ERR aac2020_console_select_Halt           //: 01 ://
 #define SEL_FUN aac2020_console_select_sel_fun        //: 02 ://
-#define     U08  uint8_t /** GCC: <stdint.h> **/      //: 03 ://
-#define     U16 uint16_t /** GCC: <stdint.h> **/      //: 04 ://
-#define     I32  int32_t /** GCC: <stdint.h> **/      //: 05 ://
+#define SEL_TYP aac2020_console_select_sel_typ        //: 03 ://
+#define F_D_SET struct aac2020_console_select_fd_set  //: 04 ://
+#define ERR_FUN aac2020_console_select_err_fun        //: 05 ://
+#define     T_V struct aac2020_console_select_timeval //: 06 ://
+#define     U08  uint8_t /** GCC: <stdint.h> **/      //: 07 ://
+#define     U16 uint16_t /** GCC: <stdint.h> **/      //: 08 ://
+#define     I32  int32_t /** GCC: <stdint.h> **/      //: 09 ://
+#define     U64 uint64_t /** GCC: <stdint.h> **/      //: 10 ://
 //: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
 
-    I32 /**Return Positive If File Data Is Ready**/
+    I32 
     aac2020_console_select( 
-        void
+        I32 fil_han //:<-- file handle. Should be STDIN
     ){
+        /**Return Positive If File Data Is Ready     ******* **/
+        /**Return Negatie  If File Data Is NOT Ready ******* **/
+        I32 res=( 0 /**UNDEFINED**/ );
+
+        if( fil_han != STDIN_FILENO/**unistd.h**/ ){
+            /**Hard coded. Do not remove unless one day**/
+            /**we use this for something besides STDIN **/
+            /**@VID_IID[0307]TIME[05:13:13]  ********* **/
+            LIB_ERR("[NOT_THE_INPUT_FILE_HANDLE]");
+        };;
+
         //:--------------------------------------://
         //: int WSAAPI select(                   ://
         //: int           nfds,                  ://
@@ -156,27 +199,101 @@
         //:      SOCKET fd_array[FD_SETSIZE];    ://
         //:  };                                  ://
         //:--------------------------------------://
+        //:                                      ://
+        //:  sizeof( fd_set ) == 520 bytes       ://
+        //:  ( Windows 10 , GCC , 64Bit )        ://
+        //:  ( U32 * 1 )+( U64 * 64 )            ://
+        //:  (   4 * 1 )+(   8 * 64 ) == 516     ://
+        //:  (The first member takes up 4 bytes) ://
+        //:  (but must be aligned to 8 bytes   ) ://
+        //:  @VID_IID[0307]TIME[01:35:23]        ://
+        //:                                      ://
+        //:  typedef struct JohnMarks_fd_set {   ://
+        //:      U32 fd_count;                   ://
+        //:      U64 fd_array[FD_SETSIZE];       ://
+        //:  };                                  ://
+        //:--------------------------------------://
 
-        if( 0 == SEL_FUN ){
-            LIB_ERR("[NIL_SELECTION_FUNCTION_POINTER]");
-        };;
+            
 
-        #error WHAT_IS_PARAM_TWO
-                                                            
+        //:#_N_S_F_P_# : NIL_SELECTION_FUNCTION_POINTER ://
+        if( 0 == SEL_FUN ){ LIB_ERR("[#_N_S_F_P_#]"); };
+
+        //:f_i:F[ file descriptor set ]I[ input / stdin ]
+        //:544 because divisible by 32. In case in the future
+        //:we get machines with a bigger word size than 8.
+        F_D_SET f_i={0};
+            /** fd_count is actually highest file descriptor **/
+            /** value plus one. STACKOVERFLOW/5825748/       **/
+            f_i.fd_count=( fil_han + 1 );  
+            f_i.fd_array[  0 ]=( (U64)fil_han );
+ 
+            if( sizeof( F_D_SET ) != 520 ){
+                /** Cross Checked With GCC Source **/
+                /** @VID_IID[0307]TIME[02:47:42]  **/
+                LIB_ERR("[INVALID_F_SET_STRUCT]");
+            };;
+
+        /** @VID_IID[ 0307 ]TIME[ 04:03:55 ]HACKING          **/
+        /** Giving it 16 bytes instead of 8 just in case.    **/
+        //: U08 t_v[2]={0}; //:<-- super hack
+            T_V t_v   ={0}; //:<-- less hackish
+            _Static_assert( sizeof(T_V)==8 , "[SIZ:T_V]" );
+                   
+        //:fflush(stdout); //:<--GUESS@VID_IID[0307]T[05:25:50]
+
+        I32 norsock=( /**norsock:NumberOfReady_SOCKets**/
         SEL_FUN(
-            1 //:<-- nfds:Number_Of_File_Descriptors
-        ,   0 //:<-- Figure out what this is.
-        ,   0 //:<-- NULL:writefds
-        ,   0 //:<-- NULL:exceptfds
-        ,   0 //:<-- ZERO:TIMEOUT (return immediately)
-        );;
+        (I32)1      //:<-- nfds:Num_File_Descriptors(IGNORED)
+        ,&(f_i)    //:<-- USED:readfds  (stdin goes here?)
+        ,   0      //:<-- NULL:writefds
+        ,   0      //:<-- NULL:exceptfds
+        ,&(t_v)    //:<-- ZERO:TIMEOUT (return immediately)
+        ));;
 
+        if( 1 == norsock ){ 
+            res = ( 1 ); 
+            /**AOS:Atleast_One_Success**/
+            aac2020_console_select_AOS=( 1 );
+        }else
+        if( 0 == norsock ){ 
+            res = (0-1); 
+            /**AOS:Atleast_One_Success**/
+            aac2020_console_select_AOS=( 1 );
+        }else{
+            /** sel_err: Selection Function Error Code **/      
+            printf("[norsock_was_negative...]\n");
+            fflush(stdout);
+            I32 sel_err=(  ERR_FUN( ) );
+            printf("[aac2020_console_select_AOS]:%d\n"
+                    ,aac2020_console_select_AOS );;
+            printf("[norsock:sel_err]:%d\n", sel_err);
+            if( sel_err == 10038 ){
+                /** @VID_IID[0307]TIME[02:44:00] ***** **/
+                printf("\n\n\n");
+                printf("[STDIN_FILENO:IS_NOT_A_SOCKET?]\n");
+                printf("\n\n\n");
+            };;
+            if( sel_err == 10022 ){
+                /** @VID_IID[0307]TIME[04:41:23] *********** **/
+                printf("\n\n\n");
+                printf("[WSAEINVAL:SELECT_GOT_BAD_ARGS]\n");
+                printf("\n\n\n");
+            };;
+            LIB_ERR("[NORSOCK_NOT_1_OR_0]"); 
+        };;
+        return( res );
     }
 
 //: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
 #undef  LIB_ERR  //:------------------------------------: 01 ://
 #undef  SEL_FUN  //:------------------------------------: 02 ://
-#undef      U08  //:------------------------------------: 03 ://
-#undef      U16  //:------------------------------------: 04 ://
-#undef      I32  //:------------------------------------: 05 ://
+#undef  SEL_TYP  //:------------------------------------: 03 ://
+#undef  F_D_SET  //:------------------------------------: 04 ://
+#undef  ERR_FUN  //:------------------------------------: 05 ://
+#undef      T_V  //:------------------------------------: 06 ://
+#undef      U08  //:------------------------------------: 07 ://
+#undef      U16  //:------------------------------------: 08 ://
+#undef      I32  //:------------------------------------: 09 ://
+#undef      U64  //:------------------------------------: 10 ://
 //:WSA_SELECT:===============================================://

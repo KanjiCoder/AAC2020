@@ -1,0 +1,87 @@
+//:AAC2020_SUBLIBRARY_BOILERPLATE:===========================://
+#define SIL AAC2020_SILENCE                           //: 01 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 02 ://
+#define P_F printf                                    //: 03 ://
+#define I32 int32_t /** GCC: <stdint.h> **/           //: 04 ://
+    //:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=================://
+        void 
+        aac2020_console_Halt( const char* msg_err )
+        {
+            P_F("[FATAL_ERROR:aac2020_console]:%s\n", msg_err );
+            fflush(stdout);
+            exit( 123 );
+        }
+    //:=================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+    //:LOGISON:==============================================://
+        U32
+        AAC2020_CONSOLE_logison( void )
+        {
+                                     int say=( 0 );
+            if( SIL.CONSOLE <=(  0  ) ){ say=( 1 ); };
+            if( SIL.SILENCE <=( 0-1 ) ){ say=( 1 ); };
+            if( SIL.SILENCE >=( 0+1 ) ){ say=( 0 ); };
+            return( say );
+        }
+    //:==============================================:LOGISON://
+    //:LOG_AFTER_HALT:=======================================://
+        void
+        aac2020_console_Info_any( //:FUNC:::Info , OVERLOAD:any
+            const char* str_fmt   //:GENERAL:str , SPECIFIC:fmt
+        ,   void*       dat_any   //:GENERAL:dat , SPECIFIC:any
+        )
+        {   
+            int say=( AAC2020_CONSOLE_logison() );
+            if( say >= 1 ){
+                P_F("[console_log]....(   " ); fflush( stdout );
+                P_F( str_fmt , dat_any      ); fflush( stdout );
+                P_F(               "   )\n" ); fflush( stdout );
+            };;
+        }
+    //:=======================================:LOG_AFTER_HALT://
+    //:INFO_I32:=============================================://
+        void
+        aac2020_console_Info_i32( //:FUNC:::Info , OVERLOAD:any
+            const char* str_fmt   //:GENERAL:str , SPECIFIC:fmt
+        ,   I32         dat_i32   //:GENERAL:dat , SPECIFIC:any
+        )
+        {   
+        #define F_F fflush( stdout )
+
+            int logison=( AAC2020_CONSOLE_logison() );
+            if( logison >= 1 ){
+                printf("[console_log:I32]....(   " ); F_F ;
+                printf( str_fmt , dat_i32          ); F_F ;
+                printf(               "   )\n"     ); F_F ;
+            };;
+
+        #undef  F_F
+        }
+    //:=============================================:INFO_I32://
+    //:INIT_CONSOLE:=========================================://
+        U32
+        AAC2020_CONSOLE_Init( U32 u32 ){
+            if( u32 ){ /** reserved for future use **/ };
+
+            #if( __posix ) //:###############################://
+
+                aac2020_console_f_d[0].fd =( STDIN_FILENO );
+                aac2020_console_f_d[0].events=( 0 );
+                aac2020_console_f_d[0].events =(
+                aac2020_console_f_d[0]
+                    |   POLLIN /** Incomming Data Ready? **/
+                );;
+
+            #else //:########################################://
+
+                aac2020_console_InitSelect();
+
+            #endif //:#######################################://
+
+            return( 0x00 );
+        }
+    //:=========================================:INIT_CONSOLE://
+#undef  SIL  //:----------------------------------------: 01 ://
+#undef  U32  //:----------------------------------------: 02 ://
+#undef  P_F  //:----------------------------------------: 03 ://
+#undef  I32  //:----------------------------------------: 04 ://
+//:===========================:AAC2020_SUBLIBRARY_BOILERPLATE://
