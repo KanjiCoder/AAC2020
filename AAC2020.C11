@@ -91,12 +91,32 @@
 
 //:==============================:LIBRARY_CHAIN_ORDER:SUMMARY://
 //:META_LIBRARIES_LEVEL_01:==================================://
+/** ******************************************************** ***
+These systems ALWAYS exist. But when set to[ 0 ]they are
+stubb functions that do nothing. META_LIBRARIES_LEVEL_01
+should NOT reference each other. If you need a meta library
+to reference a META_LIBRARIES_LEVEL_01 , then you will need
+to stack on a  META_LIBRARIES_LEVEL_02 section.
+*** ******************************************************** **/
 
-    #define META_01_usereal_CONSOLE ( 1 )
+    #define META_01_usereal_CONSOLE ( 0 )
     
 
     
 //:==================================:META_LIBRARIES_LEVEL_01://
+//:SUBSYSTEM_OPTINS:=========================================://
+/** ******************************************************** ***
+Features that you can opt into using. The source code for this
+is in the [ /LIB/FEATURE/<SUB_SYS> ] folder.
+Example: PAINT5D_feature_MIBRUSH should be in:
+          [ /LIB/FEATURE/PAINT5D/MIBRUSH.[D|F]._ ]
+*** ******************************************************** **/
+
+    //:------------:1234567_1234567
+    #define PAINT5D_feature_MIBRUSH ( 1 ) //:Mirror_Brush
+
+
+//:=========================================:SUBSYSTEM_OPTINS://
 
 //:DEBUG_CONFIGURATION:======================================://
 
