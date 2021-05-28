@@ -1,3 +1,8 @@
+#if( AAC2020_CRASH_ON_VITAL_TODO >= 1 ) //:##################://
+
+    #error WRITE_UNIT_TESTS_FOR_MIBRUSH_FILE
+
+#endif //:###################################################://
 //:----------------------------------------------------------://
 //:  Flat is better than nested. So let's not nest features  ://
 //:  too deep in folder structure. This file name is a bit   ://
@@ -46,15 +51,345 @@
 #define ERR paint5d_mibrush_Halt             //:--------: 01 ://
 #define LOG paint5d_mibrush_Info_any         //:--------: 02 ://
 #define I32 int32_t /** GCC: <stdint.h> **/  //:--------: 03 ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+//: @VID_IID[ 0313 ]TIME[ 00:05:50 ]CREATED_OVERVIEW         ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+//:                                                          ://
+//: 01 Put     : The entry point, first function called.     ://
+//:              Extracts brush parameters.                  ://
+//:                                                          ://
+//: 02 PutSeed : Takes extracted point on canvas and mirrors ://
+//:              it on X , Y , +45 , -45. These mirrored     ://
+//:              locations are where we put seeds.           ://
+//:                                                          ://
+//: 03 MirSeed : Used to mirror the seed from PutSeed        ://
+//:                                                          ://
+//: 04 GrowOut : Takes one of the mirrored seed              ://
+//:            | locations and does some sudo                ://
+//:            | random painting.                            ://
+//:            |                                             ://
+//:            : 04.1 : GetRandomTileSizeExponent            ://
+//:            : 04.2 : GetRandomLayerIndex                  ://
+//:            : 04.3 : GetRandomTileValue                   ://
+//:            : 04.4 : sowtile_CTO_quadloc                  ://
+//:                                                          ://
+//: 05 PutTile : Finally, put tile into the auset.           ://
+//:                                                          ://
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+
+    <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TODO: Review all code in this file
+    <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<       before compiling/running.
 
     void
-    paint5d_mibrush_PutTile( 
-        void
+    paint5d_mibrush_PutTile(
+        I32 qua  //:<--painpix.[ til_qua / qua ]   
+    ,   I32 exp  //:<--painpix.[ til_exp / exp ]   
+    ,   I32 lay  //:<--painpix.[ til_lay / lay ]
+          
+    ,   I32 l_x  //:<--painpix.[ loc_t_x / l_x ]( ~BRUSH.x~ )
+    ,   I32 l_y  //:<--painpix.[ loc_t_y / l_y ]( ~BRUSH.y~ )
+          
+    ,   I32 val  //:<--[ TILE VALUE ]
     )
     {
+        I32 u_1 ; //:Unused_Variable_Stored_In_Pixel#01
+        I32 u_2 ; //:Unused_Variable_Stored_In_Pixel#02
+        I32 u_3 ; //:Unused_Variable_Stored_In_Pixel#03
 
-        LOG("[TODO:paint5d_mibrush_PutTile]", 0 );
+        U32 aus=( //:aus == auset == auto tile set (index)
+            AAC2020_TAUDEPO_Get( 
+                AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+            ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+            ,   AAC2020_TAUDEPO.P5D_A_D //:DEX_VAR : aus_dex
+            ,  &(aus),&(u_1),&(u_2),&(u_3)
+            );;
+        );;
 
+        AAC2020_PAINT5D_Put(
+           (U08)qua    /** Auset Tile Sub Quadrant Index     **/
+        ,  (U08)exp    /** TileExponent (TileSizeEnum)    ...**/
+        ,  (U08)lay    /** TileLayer .................    ...**/
+                       
+        ,  (U08)l_x    /** Local Tile X Coord / b_x       ...**/
+        ,  (U08)l_y    /** Local Tile Y Coord / b_y       ...**/
+                       
+        ,  (U08)aus    /** AUSet_inDEX (AutoTileSetIndex) ...**/
+        ,  (U08)val    /** [ val_cur / til_val ]          ...**/
+        //[ SAME_PARAM_ORDER_AS[ PAINT5D_Put_BrushState ]    ]//
+        //[ @VID_IID[ 0076 ]TIME[ 6H 00M 00S ]               ]//
+        );;
+    }
+
+    paint5d_mibrush_sowtile_CTO_quadloc(
+        I32 sownt_x //:[ sowtile.x / cuv_i_x ]<-----[  INN  ]://
+    ,   I32 sownt_y //:[ sowtile.y / cuv_i_y ]<-----[  INN  ]://
+    
+    ,   I32 exp //:[ sowtile.exp / quadloc.exp ] ( INN/OUT ) ://
+    
+        //:OUTPUT_PARAMETERS:
+    ,   I32 *BYREF_qua //:quadloc.qua                 
+    ,   I32 *BYREF_l_x //:quadloc.l_x (local tile x)  
+    ,   I32 *BYREF_l_y //:quadloc.l_y (local tile y)  
+    )
+    {
+    /** **************************************************** ***
+    @VID_IID[ 0313 ]TIME[02:06:00]FUNCTION_CREATED
+    Converts[ 
+    *** **************************************************** **/
+
+        I32 qua=( 0 - 111 ):
+        I32 l_x=( 0 - 222 ):
+        I32 l_y=( 0 - 333 ):
+
+        //:Canvas user view is 256x256 pebbles so dividing   ://
+        //:the sown tile coordinate, we will get what        ://
+        //:quardrant we are inside of.                       ://
+        //:@VID_IID[ 0313 ]TIME[ 02:45:23 ]                  ://
+        I32 q_x=( sownt_x / 128 );
+        I32 q_y=( sownt_y / 128 );
+        assert( q_x >= 0 && q_x <= 1 );
+        assert( q_y >= 0 && q_y <= 1 );
+        qua = q_x + ( q_y * 2 );
+        assert( qua >= 0 && <=(4-1) );
+
+        I32 lpx=( sownt_x - q_x ); //:Local_Pebble_X 
+        I32 lpy=( sownt_y - q_y ); //:Local_Pebble_Y 
+        assert( lpx >= 0 && <=(128-1) );
+        assert( lpy >= 0 && <=(128-1) );
+
+        //:peb: Number Of Pebbles.
+        //:     The size in pebble(s) of the current  
+        //:     tile size exponent( exp ) in play.
+        assert( exp >= 0 && exp <=(8-1) );
+        I32 peb=(I32)(
+            /**AKA[ AAC2020_PAINT5D_exp_CTO_peb ]**/
+            aac2020_paint5d_til_exp_CTO_til_peb(
+                           (U08)exp ));;
+        assert( peb >= 1 && peb <= 128 );
+
+        l_x =( lpx / peb );
+        l_y =( lpy / peb );
+        assert( l_x >= 0 && l_x <= (128-1) );
+        assert( l_y >= 0 && l_y <= (128-1) );
+        if( (8-1) == exp ){
+            assert( 0 == l_x );
+            assert( 0 == l_y );
+        };;
+        assert( l_x <= ( (128/peb)-1 ) );
+        assert( l_y <= ( (128/peb)-1 ) );
+
+        (*BYREF_qua)=(qua);
+        (*BYREF_l_x)=(l_x);
+        (*BYREF_l_y)=(l_y);
+    }
+
+    void 
+    paint5d_mibrush_GrowOut(
+        I32 sownt_x
+    ,   I32 sownt_y
+    )
+    {
+        if( sownt_x < 0 || sownt_x > (256-1) ){ ERR("[007]"); };
+        if( sownt_y < 0 || sownt_y > (256-1) ){ ERR("[008]"); };
+
+        exp =( paint5d_mibrush_GetRandomTileSizeExponent() );
+        lay =( paint5d_mibrush_GetRandomLayerIndex()       );
+        val =( paint5d_mibrush_GetRandomTileValue( )       );
+
+        if( 1 == 1 ){
+            //:sowtile: 
+            //:     1. sownt_x (sewn pebble x)
+            //:     2. sownt_y (sewn pebble y)
+            //:     #. [ t_e / exp / tile size exponent ]
+
+            //:quadloc: A quadrant local tile
+            //:     #. exp : Tile Size Exponent
+            //:     1. qua : Quadrant index
+            //:     2. l_x : Local    X
+            //:     3. l_y : Local    Y
+
+            paint5d_mibrush_sowtile_CTO_quadloc(
+                sownt_x //:sowtile.x
+            ,   sownt_y //:sowtile.y
+
+            ,       exp //:[ sowtile.exp / quadloc.exp ]
+             
+            ,     &(qua) //:quadloc.qua
+            ,     &(l_x) //:quadloc.l_x (local tile x)
+            ,     &(l_y) //:quadloc.l_y (local tile y)
+            );;
+
+
+            //:AKA[ paint5d_mibrush_PutTile_USE_painpix_lay_val]
+            //:AKA[ paint5d_mibrush_SowTile ]
+            paint5d_mibrush_PutTile(
+                qua  //:<--painpix.[ til_qua / qua ]   
+            ,   exp  //:<--painpix.[ til_exp / exp ]   
+            ,   lay  //:<--painpix.[ til_lay / lay ]
+   
+            ,   l_x  //:<--painpix.[ loc_t_x / l_x ]  
+            ,   l_y  //:<--painpix.[ loc_t_y / l_y ]
+   
+            ,   val      //:<--[ TILE VALUE ]
+            );;
+        };;
+
+    }
+//: - - - - - - - - - - - - - ---- - - - - - - - - - - - - - ://
+    void 
+    paint5d_mibrush_MirSeed(
+        I32           stile_x //:seed tile x (cuvipix.x)
+    ,   I32           stile_y //:seed tile y (cuvipix.y)
+    ,   I32           stile_m //:seed tile mirroring code
+
+    ,   I32    *BYREF_sownt_x //:sown_tile_x (output)
+    ,   I32    *BYREF_sownt_y //:sown_tile_y (output)
+    )
+    {
+    /** **************************************************** ***
+    @VID_IID[ 0313 ]TIME[ 00:22:23 ]FUNCTION_CREATED
+    Mirrors the initial seed location taken from your
+    mouse. (Indirectly from your mouse coords)
+    +---+---+---+---+---+  
+    | \ | 3 |   | 2 | / |  1 : NOOP___then___NOOP       
+    +---+---+---+---+---+  4 : NOOP___then___MO_X      
+    |[4]| \ |   | / |[1]|  8 : NOOP___then___MO_Y      
+    +---+---+---+---+---+  5 : NOOP___then___MO_B (BOTH)
+    |   |   | / |   |   |          ___    ___             
+    +---+---+---+---+---+  2 : 45_M___then___NOOP       
+    |[5]| / |   | \ |[8]|  3 : 45_M___then___MO_X      
+    +---+---+---+---+---+  7 : 45_M___then___MO_Y      
+    | / | 6 |   | 7 | \ |  6 : 45_M___then___MO_B (BOTH)
+    +---+---+---+---+---+
+    *** **************************************************** **/
+
+        if( stile_x < 0 || stile_x > (256-1) ){ ERR("[003]"); };
+        if( stile_y < 0 || stile_y > (256-1) ){ ERR("[004]"); };
+
+        I32 sownt_x=( 0 );
+        I32 sownt_y=( 0 );
+
+        switch( stile_m ){
+        case PAINT5D_MIBRUSH_stile_1:{  //:NOOP___then___NOOP://
+            sownt_x=(         stile_x );
+            sownt_y=(         stile_y );
+        };;break;;
+        case PAINT5D_MIBRUSH_stile_4:{  //:NOOP___then___MO_X://
+            sownt_x=( (256-1)-stile_x );
+            sownt_y=(         stile_y );
+        };;break;;
+        case PAINT5D_MIBRUSH_stile_8:{  //:NOOP___then___MO_Y://
+            sownt_x=(         stile_x );
+            sownt_y=( (256-1)-stile_y );
+        };;break;;
+        case PAINT5D_MIBRUSH_stile_5:{  //:NOOP___then___MO_B://
+            sownt_x=( (256-1)-stile_x );
+            sownt_y=( (256-1)-stile_y );
+        };;break;;
+        case PAINT5D_MIBRUSH_stile_2:{  //:45_M___then___NOOP://
+
+            //:Swap on x & y:
+            sownt_x=(         stile_y ); 
+            sownt_y=(         stile_x ); 
+
+            //:Mirror on Both:
+            sownt_x=( (256-1)-sownt_x );
+            sownt_y=( (256-1)-sownt_y );
+            
+        };;break;;
+        case PAINT5D_MIBRUSH_stile_3:{  //:45_M___then___MO_X://
+
+            //:Swap on x & y:
+            sownt_x=(         stile_y ); 
+            sownt_y=(         stile_x ); 
+
+            //:Mirror on Y:
+            sownt_x=(         sownt_x );
+            sownt_y=( (256-1)-sownt_y );
+
+        };;break;;
+        case PAINT5D_MIBRUSH_stile_7:{  //:45_M___then___MO_Y://
+
+            //:Swap on x & y:
+            sownt_x=(         stile_y ); 
+            sownt_y=(         stile_x ); 
+
+            //:Mirror on X:
+            sownt_x=( (256-1)-sownt_x );
+            sownt_y=(         sownt_y );
+
+        };;break;;
+        case PAINT5D_MIBRUSH_stile_6:{  //:45_M___then___MO_B://
+            sownt_x=(         stile_y );//:<<<<<<<SWAP_X_AND_Y
+            sownt_y=(         stile_x );//:<<<<<<<SWAP_X_AND_Y
+        };;break;;
+        default:{
+            ERR("[INVALID_STILE_2021]");
+        };;};;
+
+        if( sownt_x < 0 || sownt_x > (256-1) ){ ERR("[005]"); };
+        if( sownt_y < 0 || sownt_y > (256-1) ){ ERR("[006]"); };
+
+        (*BYREF_sownt_x)=(sownt_x);
+        (*BYREF_sownt_y)=(sownt_y);
+        return;
+    }
+
+    void
+    paint5d_mibrush_PutSeed(
+    //: 1234567
+        stile_x //:Seed_TILE_x( AKA: cuv_i_x )
+    ,   stile_y //:Seed_TILE_y( AKA: cuv_i_y )
+    )
+    {
+        //: For why upper bound is 255.
+        //: SEE_FILE[ MOR_PAINT5D\P5D.D._ ]
+        //: SEE_DIAG[ #CANVAS_USER_VIEW#  ]
+        if( stile_x < 0 || stile_x > (256-1) ){ ERR("[001]"); };
+        if( stile_y < 0 || stile_y > (256-1) ){ ERR("[002]"); };
+
+        I32 sownt_x =( 0 ); //: sown tile x
+        I32 sownt_y =( 0 ); //: sown tile y
+
+        //:Loop Through Mirroring Indexes
+        for( I32 stile_m = 1 ; stile_m <= 8 ; stile_m ++ ){
+
+            paint5d_mibrush_MirSeed(
+                stile_x  //:seed tile x (cuvipix.x)
+            ,   stile_y  //:seed tile y (cuvipix.y)
+            ,   stile_m  //:seed tile mirroring code
+
+            , &(sownt_x) //:sown_tile_x (output)
+            , &(sownt_y) //:sown_tile_y (output)
+            );;
+
+            //:This sets tiles of various sizes.          :::://
+            //:No hard and fast rule. Just something that :::://
+            //:will look good enough for now.             :::://
+            paint5d_mibrush_GrowOut(
+                sownt_x
+            ,   sownt_y
+            );;
+
+        };;
+    }
+
+    void
+    paint5d_mibrush_Put( 
+        I32 cuv_i_x
+    ,   I32 cuv_i_y
+    )
+    {
+        //:VAR_DEF[cuv_i_x]: Canvas_User_View__integer_X
+        //:VAR_DEF[cuv_i_y]: Canvas_User_View__integer_Y
+
+        //:VAR_DEF[stile_x]: Seed_TILE_x
+        //:VAR_DEF[stile_y]: Seed_TILE_y
+
+        paint5d_mibrush_PutSeed(
+            cuv_i_x //: stile_x 
+        ,   cuv_i_y //: stile_y
+        );;
     }
 
 #undef  ERR  //:----------------------------------------: 01 ://

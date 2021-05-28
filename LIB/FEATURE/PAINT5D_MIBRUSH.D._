@@ -6,10 +6,53 @@
 //:  fits together kind of nicely.                           ://
 //:  @VID_IID[0312]TIME[00:19:00 ]                           ://
 //:----------------------------------------------------------://
+//:MIRRORING_ENUM_DIAGRAM:===================================://
+/** ******************************************************** ***
+
+        1 : DO_NOTHING -then- DO_NOTHING          [ stile_1 ]
+        4 : DO_NOTHING -then- MIRROR_ON_X         [ stile_4 ]
+        8 : DO_NOTHING -then- MIRROR_ON_Y         [ stile_8 ]
+        5 : DO_NOTHING -then- MIRROR_ON_X_AND_Y   [ stile_5 ]
+                                                  [ ------- ]
+        2 : 45Mirror   -then- DO_NOTHING          [ stile_2 ]
+        3 : 45Mirror   -then- MIRROR_ON_X         [ stile_3 ]
+        7 : 45Mirror   -then- MIRROR_ON_Y         [ stile_7 ]
+        6 : 45Mirror   -then- MIRROR_ON_X_AND_Y   [ stile_6 ]
+
+        +---+---+---+---+---+
+        | \ | 3 |   | 2 | / |
+        +---+---+---+---+---+
+        |[4]| \ |   | / |[1]|
+        +---+---+---+---+---+
+        |   |   | / |   |   |
+        +---+---+---+---+---+
+        |[5]| / |   | \ |[8]|
+        +---+---+---+---+---+
+        | / | 6 |   | 7 | \ |
+        +---+---+---+---+---+
+
+*** ******************************************************** **/
+//:===================================:MIRRORING_ENUM_DIAGRAM://
 //:FEATURE_DATA:=============================================://
 #define I08 int8_t /** GCC: <stdint.h> **/
 
+
     I08 PAINT5D_MIBRUSH_active =( 0 - 1 );
+
+    //: @VID_IID[ 0313 ]TIME[ 00:27:32 ] ::::::::::::::::::::://
+    //: All of the 8 possible mirroring locations.    :::::::://
+    //: Going in a parametric circle from 0 degrees   :::::::://
+    //: to the full... (360/8)*7 degrees or whatever. :::::::://
+    //: DO NOT USE RADIAL OFFSET THOUGH! THAT WILL GET A ::::://
+    //: SPIRAL DESIGN.:::::::::::::::::::::::::::::::::::::::://
+    #define PAINT5D_MIBRUSH_stile_1 ( 1 )
+    #define PAINT5D_MIBRUSH_stile_2 ( 2 )
+    #define PAINT5D_MIBRUSH_stile_3 ( 3 )
+    #define PAINT5D_MIBRUSH_stile_4 ( 4 )
+    #define PAINT5D_MIBRUSH_stile_5 ( 5 )
+    #define PAINT5D_MIBRUSH_stile_6 ( 6 )
+    #define PAINT5D_MIBRUSH_stile_7 ( 7 )
+    #define PAINT5D_MIBRUSH_stile_8 ( 8 )
 
 #undef  I08
 //:=============================================:FEATURE_DATA://

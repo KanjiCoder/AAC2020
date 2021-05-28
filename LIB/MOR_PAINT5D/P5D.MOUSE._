@@ -138,15 +138,21 @@
 
             //:-----------:Get_RECTANGLE_Vars_From_CPU_Bitmap://
             //:Get_Brush_til_exp:----------------------------://
-            if( using_mirror_brush >= 1 ){
+            
+            //+@VID_IID[0313]TIME[02:22:42]TOO_HACKY +++++++++//
+            //- if( using_mirror_brush >= 1 ){               -//
+            //-                                              -//
+            //-  @VID_IID[ 0312 ]TIME[03:22:50 ] ********    -//
+            //-  Smallest precision tile size will    ***    -//
+            //-  be the best for randomizing our strokes.    -//
+            //-                                              -//
+            //-          til_exp=( 0 );                      -//
+            //- };;                                          -//
 
-                /** @VID_IID[ 0312 ]TIME[03:22:50 ] ******** **/
-                /** Smallest precision tile size will    *** **/
-                /** be the best for randomizing our strokes. **/
-
-                     til_exp=( 0 );
-            }else
-            if( using_mirror_brush <= 0 ){
+            if(
+                using_mirror_brush <= 0  //:Either_Way
+            ||  using_mirror_brush >= 1  //:Either_Way
+            ){
 
                 AAC2020_TAUDEPO_Get( 
                     AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
@@ -250,7 +256,15 @@
                 if( using_mirror_brush >= 1 ){
                 #if( FEATURE_PAINT5D_MIBRUSH >= 1 ) //:######://
 
-                    paint5d_mibrush_PutTile();
+                    //: @VID_IID[ 0313 ]TIME[ 02:21:42 ]     ://
+                    //: Mirror brush will do whatever it     ://
+                    //: feels like. Some calculations from   ://
+                    //: earlier in this function are         ://
+                    //: now completely discarded.            ://
+                    paint5d_mibrush_Put(
+                        cuv_i_x
+                    ,   cuv_i_y
+                    );;
             
                 #else
         

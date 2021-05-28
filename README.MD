@@ -12,6 +12,7 @@
 ### 09: LIBCHAN_AND_LIBCHAN_DIAGRAM
 ### 10: ASCII_VALUES_IN_128_TO_255_RANGE
 ### 11: EXTENSION_IDEAS
+### 12: DISORGANIZED_THOUGHTS
 
     //:ABOUT:================================================://
 
@@ -3000,8 +3001,17 @@
            +---=---+---=---+       +---=--+++--=---+
 
     //:======================================:EXTENSION_IDEAS://
-    
-    
+    //:DISORGANIZED_THOUGHTS:================================://
+
+        The 3 layers of the terminal auto tile set could be 
+        different levels of destruction applied to the
+        tiles.
+
+        Gives us a way to keep the tilesets from having
+        too much data in them. And also gives us less
+        to render.
+
+    //:================================:DISORGANIZED_THOUGHTS://
     
     
     
