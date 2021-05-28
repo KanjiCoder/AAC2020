@@ -97,6 +97,7 @@
             //: - - - - - - - - - - - -- - - - - - - - - - - ://
             CHR xxxxxxx  ;  //: #LAX_COMMA_HACK#
             //: - - - - - - - - - - - -- - - - - - - - - - - ://
+            CHR p5d_mir      ;  //: Mirror Mode Toggle Button
             CHR p5d_del      ;  //: Delete ENTIRE AUSET PACK!
             CHR p5d_bug      ;  //: Invoke Debugging Variable
             //: - - - - - - - - - - - -- - - - - - - - - - - ://
@@ -135,11 +136,12 @@
             CHR p5d_l_n  ;  //: LAYER_INDEX_0_TO_2          NEXT
             CHR p5d_l_b  ;  //: LAYER_INDEX_0_TO_2          BACK
             //: - - - - - - - - - - - -- - - - - - - - - - - ://
-            /** Next to layer key... I am thinking somehow   **/
-            /** layer related or maybe editing some type     **/
-            /** of display or rendering mode for             **/
-            /** the paint5d editor.                          **/
-            CHR p5d_a_key_not_used_but_i_want_to ;
+
+    //-     /** Next to layer key... I am thinking somehow   **/  -//
+    //-     /** layer related or maybe editing some type     **/  -//
+    //-     /** of display or rendering mode for             **/  -//
+    //-     /** the paint5d editor.                          **/  -//
+    //-       p5d_a_key_not_used_but_i_want_to ;                  -//
             //: - - - - - - - - - - - -- - - - - - - - - - - ://
 
 
@@ -171,8 +173,10 @@
     ,   .PAINT5D={
              .xxxxxxx =( 0 )  //:#_PAINT5D_BINDING_CHOICES_#://
 
+                ,.p5d_mir = 'M'   //:Mirror_Brush
+
             /** @VID_IID[ 0172 ]TIME[ 00:01:00 ] **/
-                ,.p5d_del = 'M'   //:Erase All Data
+                ,.p5d_del = 'A'   //:Erase All Data
 
             /** @VID_IID[ 0135 ]TIME[ 01:17:00 ]DEBUG_VARS   **/
                 ,.p5d_bug = 'U'   //: p5d_d_1
@@ -267,7 +271,7 @@
                 ,.p5d_l_n = 'Q' /** lay_nex **/
                 ,.p5d_l_b = 'Z' /** lay_bak **/
 
-                ,.p5d_a_key_not_used_but_i_want_to = 'A'
+            //- ,.p5d_a_key_not_used_but_i_want_to = 'A'     -//
         }
     ,   .TODO_02={
             .xxxxxxx =( 0 )

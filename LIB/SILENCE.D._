@@ -125,6 +125,11 @@
             U08   CONSOLE ; //:<-- Console Meta System
 
         //:M1M1M1M1M1M1M1M1M1M1M1M1M1M1M1M1M1M1M1M1M1:META_01://
+        //:FEATURE:FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF://
+
+            U08   PAINT5D_MIBRUSH ; //:Mirror_Brush
+
+        //:FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF:FEATURE://
         }AAC2020_SILENCE={
         #define off ( 1 ) //:Dont show me messages
         #define O_N ( 0 ) //:Yes, show me messages.
@@ -136,31 +141,31 @@
         //[ between multiple configs?                        ]//
         //[ ------------------------------------------------ ]//
 
-            .SILENCE =(0-1) //: ( 0-1 ):NO_ONE_IS_SILENCED
+            .SILENCE =( 0 ) //: ( 0-1 ):NO_ONE_IS_SILENCED
                             //: (  0  ):NO_EFFECT/NO_OVERRID
                             //: ( 0+1 ):EVERYONE_IS_SILENCED
 
         ,   .AACMAIN = off //: #_WHAT_IS_AACMAIN_#           ://
         
-        ,   .CALFROM = O_N //:Called_From_Where_Enums?
+        ,   .CALFROM = off //:Called_From_Where_Enums?
         ,   .KILTEST = NO_SILENCE_CODE_FOR_THIS_SYSTEM
         ,   .REENUTR = NO_SILENCE_CODE_FOR_THIS_SYSTEM
         ,   .TODOMAN = off //:Todo_Manager:VITAL_TODO,MAYBE_TODO
 
-        ,   .GAMTICK = O_N 
+        ,   .GAMTICK = off 
         ,   .FILEBOI = off
 
-        ,   .RENCORE = O_N
-        ,   .PHEXDUM = O_N
-        ,   .EXTCODE = O_N
+        ,   .RENCORE = off
+        ,   .PHEXDUM = off
+        ,   .EXTCODE = off
 
-        ,   .HARDASS = O_N
+        ,   .HARDASS = off
         ,   .NATIKEY = off
         ,   .IKEYBOX = off
         ,   .IMOUBOX = off
         ,   .KEYBIND = off
-        ,   .IKEYLIS = O_N //:<-- TODO: Hidden Console Stuff
-        ,   .IKEYCMD = O_N //:<-- TODO: Hidden Console Stuff
+        ,   .IKEYLIS = off //:<-- TODO: Hidden Console Stuff
+        ,   .IKEYCMD = off //:<-- TODO: Hidden Console Stuff
         ,   .CEDITOR = off
         ,   .GINAWIN = off
         ,   .NATIDUI = off
@@ -168,49 +173,54 @@
         ,   .GLCONST = off   
         ,   .CPUNIFO = off   
         ,   .GRAQUAD = off   
-        ,   .MOUTEMP = O_N   
-        ,   .FRAGBED = O_N   
+        ,   .MOUTEMP = off   
+        ,   .FRAGBED = off   
         ,   .PIXNAME = off   
         ,   .PIXSAVE = off
         ,   .PIXBACK = off
         ,   .GPUDATA = off   
         ,   .PIXPUSH = off  
         ,   .PIXLOAD = off
-        ,   .DUMPASS = O_N
-        ,   .GENTCOM = O_N
-        ,   .GENTDOW = O_N
-        ,   .GENTUPP = O_N
+        ,   .DUMPASS = off
+        ,   .GENTCOM = off
+        ,   .GENTDOW = off
+        ,   .GENTUPP = off
         ,   .POLYOGL = off
-        ,   .FRAGCOM = O_N
-        ,   .GPUWIRE = O_N //:<--AKA[ GPUINIT / PIXINIT  ]
-        ,   .GPUVIEW = O_N       //:[         / PIXWIRE  ]
+        ,   .FRAGCOM = off
+        ,   .GPUWIRE = off //:<--AKA[ GPUINIT / PIXINIT  ]
+        ,   .GPUVIEW = off       //:[         / PIXWIRE  ]
         ,   .TAUDIRT = off   
         ,   .TAUDEPO = off   
-        ,   .TAUNAME = O_N   
-        ,   .TAUTYPE = O_N   
+        ,   .TAUNAME = off   
+        ,   .TAUTYPE = off   
         ,   .TAUSYNC = off   
-        ,   .TAUDUMP = O_N   
-        ,   .TAUFRAG = O_N   
-        ,   .UIRECTS = O_N //:<<<< UserInterfaceRECTangleS
-        ,   .ZOOMCOM = O_N   
-        ,   .DRAGCOM = O_N   
-        ,   .CLICKOM = O_N   
-        ,   .EDITCAM = O_N   
-        ,   .GAMECAM = O_N   
-        ,   .UILISTS = O_N   
-        ,   .UISHARE = O_N //:UserInterfaceShare_FragShaderCode
-        ,   .UIFRAGS = O_N   
+        ,   .TAUDUMP = off   
+        ,   .TAUFRAG = off   
+        ,   .UIRECTS = off //:<<<< UserInterfaceRECTangleS
+        ,   .ZOOMCOM = off   
+        ,   .DRAGCOM = off   
+        ,   .CLICKOM = off   
+        ,   .EDITCAM = off   
+        ,   .GAMECAM = off   
+        ,   .UILISTS = off   
+        ,   .UISHARE = off //:UserInterfaceShare_FragShaderCode
+        ,   .UIFRAGS = off   
 
-        ,   .UICLICK         = O_N //:CLICKS & INPUT 4 UI
-        ,   .UICLICK_PAINT5D = O_N //:PAINT5D ONLY
+        ,   .UICLICK         = off //:CLICKS & INPUT 4 UI
+        ,   .UICLICK_PAINT5D = off //:PAINT5D ONLY
 
-        ,   .PAINT5D = off   
-        ,   .P5D1OGL = O_N
+        ,   .PAINT5D = O_N   
+        ,   .P5D1OGL = off
         //:META_01:M1M1M1M1M1M1M1M1M1M1M1M1M1M1M1M1M1M1M1M1M1://
 
         ,   .CONSOLE = O_N
 
         //:M1M1M1M1M1M1M1M1M1M1M1M1M1M1M1M1M1M1M1M1M1:META_01://
+        //:FEATURE:FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF://
+
+        ,   .PAINT5D_MIBRUSH = O_N
+
+        //:FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF:FEATURE://
         #undef off
         #undef O_N
         };

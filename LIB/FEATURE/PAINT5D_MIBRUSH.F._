@@ -1,0 +1,63 @@
+//:----------------------------------------------------------://
+//:  Flat is better than nested. So let's not nest features  ://
+//:  too deep in folder structure. This file name is a bit   ://
+//:  big for my tastes. But if we name like this then we can ://
+//:  use the filename as a namespace and everything          ://
+//:  fits together kind of nicely.                           ://
+//:  @VID_IID[0312]TIME[00:19:42 ]                           ://
+//:----------------------------------------------------------://
+//:AAC2020_SUBLIBRARY_BOILERPLATE:===========================://
+#define SIL AAC2020_SILENCE                           //: 01 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 02 ://
+#define P_F printf                                    //: 03 ://
+#define F_F fflush( stdout )                          //: 04 ://
+    //:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION:=================://
+        void 
+        paint5d_mibrush_Halt( const char* msg_err )
+        {
+            P_F("[FATAL_ERROR:paint5d_mibrush]:%s\n", msg_err );
+            fflush(stdout);
+            exit( 123 );
+        }
+    //:=================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
+    //:LOG_AFTER_HALT:=======================================://
+        void
+        paint5d_mibrush_Info_any( //:FUNC:::Info , OVERLOAD:any
+            const char* str_fmt   //:GENERAL:str , SPECIFIC:fmt
+        ,   void*       dat_any   //:GENERAL:dat , SPECIFIC:any
+        )
+        {                                    int say=( 0 );
+            if( SIL.PAINT5D_MIBRUSH <=(  0  ) ){ say=( 1 ); };
+            if( SIL.SILENCE         <=( 0-1 ) ){ say=( 1 ); };
+            if( SIL.SILENCE         >=( 0+1 ) ){ say=( 0 ); };
+            if( say >= 1 ){
+                P_F("[paint5d_mibrush_log]....(   " ); F_F ;
+                P_F( str_fmt , dat_any              ); F_F ;
+                P_F(               "   )\n"         ); F_F ;
+            };;
+        }
+    //:=======================================:LOG_AFTER_HALT://
+#undef  SIL  //:----------------------------------------: 01 ://
+#undef  U32  //:----------------------------------------: 02 ://
+#undef  P_F  //:----------------------------------------: 03 ://
+#undef  F_F  //:----------------------------------------: 04 ://
+//:===========================:AAC2020_SUBLIBRARY_BOILERPLATE://
+//:ALL_MIBRUSH_FEATURE_FUNCTIONS:============================://
+#define ERR paint5d_mibrush_Halt             //:--------: 01 ://
+#define LOG paint5d_mibrush_Info_any         //:--------: 02 ://
+#define I32 int32_t /** GCC: <stdint.h> **/  //:--------: 03 ://
+
+    void
+    paint5d_mibrush_PutTile( 
+        void
+    )
+    {
+
+        LOG("[TODO:paint5d_mibrush_PutTile]", 0 );
+
+    }
+
+#undef  ERR  //:----------------------------------------: 01 ://
+#undef  LOG  //:----------------------------------------: 02 ://
+#undef  I32  //:----------------------------------------: 03 ://
+//:============================:ALL_MIBRUSH_FEATURE_FUNCTIONS://

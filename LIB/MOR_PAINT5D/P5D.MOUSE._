@@ -1,0 +1,609 @@
+//:MOUSE_INPUT_HANDLER:(MouInn):=============================://
+#define I08   int8_t /** GCC: <stdint.h> **/          //: 01 ://
+#define U08  uint8_t /** GCC: <stdint.h> **/          //: 02 ://
+#define U32 uint32_t /** GCC: <stdint.h> **/          //: 03 ://
+#define I32  int32_t /** GCC: <stdint.h> **/          //: 04 ://
+#define I_P intmax_t /** GCC: <stdint.h> **/          //: 05 ://
+#define L_I  void*)(I_P /**Logging_Cast : INTEGER**/  //: 06 ://
+#define MOU struct AAC2020_MOUTEMP                    //: 07 ://
+#define REC struct AAC2020_POLYOGL_REC                //: 08 ://
+#define IV2 struct AAC2020_POLYOGL_IV2                //: 09 ://
+#define ASS assert                                    //: 10 ://
+#define LOG aac2020_paint5d_Info_any                  //: 11 :// 
+#define ERR aac2020_paint5d_Halt                      //: 12 ://  
+
+
+    I32
+    aac2020_paint5d_MouInn_OMC_InBoundCheck(
+        MOU* mou
+    )
+    {
+    #define CLK_C_X ( mou -> clk_c_x )
+    #define CLK_C_Y ( mou -> clk_c_y )
+
+        //:OMC: On_Mouse_Click / OnMouseClick
+
+        I32 is_click_within_canvas_user_view_bounds=( 0 );
+
+        U32 x_0 ;
+        U32 x_1 ;
+        U32 y_0 ;
+        U32 y_1 ;
+
+        AAC2020_TAUDEPO_Get( 
+            AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+        ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+        ,   AAC2020_TAUDEPO.P5D_VP0 //:DEX_VAR
+        ,  &(x_0),&(x_1),&(y_0),&(y_1)
+        );;
+
+        if( 1==1
+        &&  CLK_C_X >= x_0 && CLK_C_X <= x_1
+        &&  CLK_C_Y >= y_0 && CLK_C_Y <= y_1
+        ){
+            is_click_within_canvas_user_view_bounds =( 1 );
+        }else{
+            is_click_within_canvas_user_view_bounds =( 0 );
+
+            LOG("[mou->clk_c_x]:%d\n",(void*)(I_P)mou->clk_c_x);
+            LOG("[mou->clk_c_y]:%d\n",(void*)(I_P)mou->clk_c_y);
+            LOG("[CLICK_NOT_IN_CANVAS_USER_VIEW_BOUNDS]",0);
+        };;
+         
+        return( 
+            is_click_within_canvas_user_view_bounds
+        );;
+    #undef CLK_C_X
+    #undef CLK_C_Y
+    }
+
+    I32
+    aac2020_paint5d_MouInn_OMC_InBoundActions(
+        MOU* mou
+    )
+    {
+        //:toggle_tile_at_mouse_position:--------------------://
+         
+        LOG("[PAINT5D:IN_BOUND_MOUSE_CLICK]" , ((void*)0) );
+                
+            //:Declare_Variables:----------------------------://
+        
+                I08 using_mirror_brush =( 0 );
+
+                //:UNUSED_VARS:
+                U32 u_1 ; 
+                U32 u_2 ; 
+                U32 u_3 ; 
+                          
+                U32 x_0 ;
+                U32 x_1 ;
+                U32 y_0 ;
+                U32 y_1 ;
+
+                REC p5d_vp0;
+                REC p5d_vp1;
+
+                U32 til_exp; //:AKA[ p5d_exp | t_e ]
+                             //:[ til_exp == TileSizeExponent ]
+
+                U08 u08_t_q ;  //: TILE_QUADRANT_1D_LOCATION ://
+                U08 u08_b_x ;  //: BRUSH_PIXEL_LOCATION: X   ://
+                U08 u08_b_y ;  //: BRUSH_PIXEL_LOCATION: Y   ://
+
+                U32 p5d_t_q ;  //: TILE_QUADRANT_1D_LOCATION ://
+                U32 p5d_b_x ;  //: BRUSH_PIXEL_LOCATION: X   ://
+                U32 p5d_b_y ;  //: BRUSH_PIXEL_LOCATION: Y   ://
+
+                IV2 fic ; //:Fragment_Integer_Coordinate
+                IV2 cuv ; //:cuv: Canvas_User_View://
+                        //:SEE_FILE[ PAINT5D.D._           ]
+                        //:SEE_DIAGRAM[ #CANVAS_USER_VIEW# ]
+                
+                U32 cuv_i_x; //:cuvipix.x
+                U32 cuv_i_y; //:cuvipix.y
+
+            //:----------------------------:Declare_Variables://
+            //:Are_We_Using_Mirror_Brush:--------------------://
+            #if( FEATURE_PAINT5D_MIBRUSH >= 1 ) //:##########://
+                using_mirror_brush=( PAINT5D_MIBRUSH_active );
+            #else
+                using_mirror_brush=(            0           );
+            #endif //:#######################################://
+            //:--------------------:Are_We_Using_Mirror_Brush://
+            //:Get_RECTANGLE_Vars_From_CPU_Bitmap:-----------://
+
+                //:- - - - - - - - - - -- - - - - - - - - - -://
+                AAC2020_TAUDEPO_Get( 
+                    AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+                ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+                ,   AAC2020_TAUDEPO.P5D_VP0 //:DEX_VAR
+                ,  &(x_0),&(x_1),&(y_0),&(y_1)
+                );;
+                p5d_vp0.x_0 = ( x_0 );
+                p5d_vp0.x_1 = ( x_1 );
+                p5d_vp0.y_0 = ( y_0 );
+                p5d_vp0.y_1 = ( y_1 );
+                //:- - - - - - - - - - -- - - - - - - - - - -://
+                AAC2020_TAUDEPO_Get( 
+                    AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+                ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+                ,   AAC2020_TAUDEPO.P5D_VP1 //:DEX_VAR
+                ,  &(x_0),&(x_1),&(y_0),&(y_1)
+                );;
+                p5d_vp1.x_0 = ( x_0 );
+                p5d_vp1.x_1 = ( x_1 );
+                p5d_vp1.y_0 = ( y_0 );
+                p5d_vp1.y_1 = ( y_1 );
+                //:- - - - - - - - - - -- - - - - - - - - - -://
+
+            //:-----------:Get_RECTANGLE_Vars_From_CPU_Bitmap://
+            //:Get_Brush_til_exp:----------------------------://
+            if( using_mirror_brush >= 1 ){
+
+                /** @VID_IID[ 0312 ]TIME[03:22:50 ] ******** **/
+                /** Smallest precision tile size will    *** **/
+                /** be the best for randomizing our strokes. **/
+
+                     til_exp=( 0 );
+            }else
+            if( using_mirror_brush <= 0 ){
+
+                AAC2020_TAUDEPO_Get( 
+                    AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+                ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+                ,   AAC2020_TAUDEPO.P5D_T_E //:DEX_VAR
+                ,  &(til_exp),&(u_1),&(u_2),&(u_3)
+                );;
+
+            }else{
+                ERR("[WTF_2021_05_28]");
+            };;
+            //:----------------------------:Get_Brush_til_exp://
+            //:MouseFrag_CTO_CanvasUserView:-----------------://
+
+                fic.x =( mou -> clk_c_x );
+                fic.y =( mou -> clk_c_y );
+
+                cuv=(AAC2020_FRAGCOM_fic_MAP_cuv(
+                    fic , p5d_vp0 , p5d_vp1
+                ));;
+                if(  1==1
+                &&   cuv.x >=0 && cuv.x <= (256-1)     
+                &&   cuv.y >=0 && cuv.y <= (256-1)  
+                ){
+                    /** Do nothing. Valid Range. **/
+                }else{
+                    printf("[*******************]\n\n");
+                    printf("[fic.x]:%d\n", fic.x );
+                    printf("[fic.y]:%d\n", fic.y );
+                    printf("[cuv.x]:%d\n", cuv.x );
+                    printf("[cuv.y]:%d\n", cuv.y );
+                    printf("[*******************]\n\n");
+                    ERR("[CANVAS_USER_VIEW_OOB:YEAR_2021]");
+                };;
+                cuv_i_x=( (U08)( cuv.x ) );
+                cuv_i_y=( (U08)( cuv.y ) );
+          
+            //:-----------------:MouseFrag_CTO_CanvasUserView://
+            //:CanvasUserView_CTO_BrushPixelCoord:-----------://
+
+                //:[ loc_t_x ===( b_x | brushpix.x ) ]
+                //:[ loc_t_y ===( b_y | brushpix.y ) ]
+
+                AAC2020_PAINT5D_cuvipix_CTO_painqab(
+                    cuv_i_x  //:Canvas_User_View:cuvipix: X 
+                ,   cuv_i_y  //:Canvas_User_View:cuvipix: Y 
+                ,   til_exp  //:TileSizeExponent:til_exp
+
+                , &(u08_t_q) //:TileQuadrant/til_qua/P5D_T_Q
+                , &(u08_b_x) //:Brush_X:OUTPUT_PARAM/P5D_B_X
+                , &(u08_b_y) //:BRUSH_Y:OUTPUT_PARAM/P5D_B_Y
+                );;
+                p5d_t_q=( (U32)u08_t_q );
+                p5d_b_x=( (U32)u08_b_x );
+                p5d_b_y=( (U32)u08_b_y );
+
+                //:Pretty sure this is wrong...
+                //:Because it is not local to tile quadrant.
+                LOG("[p5d_b_x]:%d\n", (L_I)p5d_b_x);
+                LOG("[p5d_b_y]:%d\n", (L_I)p5d_b_y);
+
+            //:-----------:CanvasUserView_CTO_BrushPixelCoord://
+            //:Store_Brush_Coord_In_Texture:-----------------://
+            /** ******************************************** ***
+            @VID_IID[ 0153 ]TIME[ 01:36:32 ]
+            The [ p5d_b_x , p5d_b_y ] coordinate is LOCAL
+            to the TileQuadrant( t_q / til_qua ) so we
+            MUST SET the[ p5d_t_q ]as well here for the
+            toggle tile to function properly.
+            *** ******************************************** **/
+
+                AAC2020_TAUDEPO_Put( 
+                    AAC2020_TAUDEPO.TAU_015        //:DEX_TAU
+                ,   AAC2020_TAUDEPO.PAINT5D        //:DEX_SUB
+                ,   AAC2020_TAUDEPO.P5D_T_Q        //:DEX_VAR
+                ,   (p5d_t_q), (u_1), (u_2), (u_3) //:<-- OUT
+                );;
+
+                AAC2020_TAUDEPO_Put( 
+                    AAC2020_TAUDEPO.TAU_015        //:DEX_TAU
+                ,   AAC2020_TAUDEPO.PAINT5D        //:DEX_SUB
+                ,   AAC2020_TAUDEPO.P5D_B_X        //:DEX_VAR
+                ,   (p5d_b_x), (u_1), (u_2), (u_3) //:<-- OUT
+                );;
+        
+                AAC2020_TAUDEPO_Put( 
+                    AAC2020_TAUDEPO.TAU_015        //:DEX_TAU
+                ,   AAC2020_TAUDEPO.PAINT5D        //:DEX_SUB
+                ,   AAC2020_TAUDEPO.P5D_B_Y        //:DEX_VAR
+                ,   (p5d_b_y), (u_1), (u_2), (u_3) //:<-- OUT
+                );;
+
+            //:-----------------:Store_Brush_Coord_In_Texture://
+            //:Statefull_Toggle_Tile_Function:---------------://
+            
+                if( using_mirror_brush <= 0 ){
+
+                    aac2020_paint5d_ToggleTile();
+
+                }else
+                if( using_mirror_brush >= 1 ){
+                #if( FEATURE_PAINT5D_MIBRUSH >= 1 ) //:######://
+
+                    paint5d_mibrush_PutTile();
+            
+                #else
+        
+                    /** @VID_IID[ 0312 ]TIME[ 03:31:00 ]     **/
+                    /** Dont allow any way to turn on mirror **/
+                    /** brush if that feature was not        **/
+                    /** compiled into the source.            **/
+
+                    ERR("[MIBRUSH_SHOULD_NOT_BE_ON]");
+
+                #endif
+                };;
+
+            //:---------------:Statefull_Toggle_Tile_Function://
+    
+        //:--------------------:toggle_tile_at_mouse_position://
+
+        return( 0 );
+    }
+
+    //:
+    I32                //: OMS:On_Mouse_Scroll
+    aac2020_paint5d_MouInn_OMS_OuterMain( 
+        MOU* mou 
+    )
+    {
+        //:@CTRL_F_HELP@: aac2020_paint5d_MouInn_OnMouseScroll
+
+        //:ZoomCamera:---------------------------------------://
+        //- MWN AAC2020_IMOUBOX_mwn  /**MouseWheelNotches**/ -//
+        /** ************************************************ ***
+        @VID_IID[ 0159 ]TIME[ 02:52:42 ] 
+        DONT USE[ AAC2020_IMOUBOX_mwn ]here. While[ mou ]
+        object is create at the moment by copying from
+        the filescope[ AAC2020_IMOUBOX_mwn ]variable. That
+        will NOT always be the case. The whole idea of having
+        a temporary[ MOU / AAC2020_MOUTEMP ]struct is to
+        DE-COUPLE the filescope state from this function.
+        *** ************************************************ **/
+
+        //[ ME: TWARD:           ]//
+        //[ luuncho: towards lol ]//
+
+            //: mou -> whe_mwn <===> AAC2020_IMOUBOX_mwn
+        
+            if( 
+                //: chr_key == KEY_P5D.p5d_vp1_z_o 
+                mou -> whe_mwn < 0 //:NEG/TWARD_USER
+            ){
+            //: aac2020_paint5d_ZoomCamera( 0 - 1 ); //:NEG==OUT
+            //- aac2020_paint5d_ZoomCamera(  MWN  );         -//
+                aac2020_paint5d_ZoomCamera_USE_editcam( 0 - 1 );
+            }else                                     
+            if( 
+                //: chr_key == KEY_P5D.p5d_vp1_z_i 
+                mou -> whe_mwn > 0 //:POS/AWAY_USER
+            ){         
+            //: aac2020_paint5d_ZoomCamera( 0 + 1 ); //:POS==INN
+            //- aac2020_paint5d_ZoomCamera(  MWN  );         -//
+                aac2020_paint5d_ZoomCamera_USE_editcam( 0 + 1 );
+            };;
+        
+        //- #undef MWN -//
+        //:---------------------------------------:ZoomCamera://
+
+        return( 0 );
+    }
+
+    I32
+    aac2020_paint5d_MouInn_OMC_OuterMain(
+        MOU* mou
+    )
+    {
+        //:::::::::::::::::::::::::OMC:OnMouseClick::::::::::://
+        if( aac2020_paint5d_MouInn_OMC_InBoundCheck(   mou )>0){
+            aac2020_paint5d_MouInn_OMC_InBoundActions( mou );
+            //:@VID_IID[ 0252 ]TIME[ 03:50:00 ]              ://
+            //:IN_BOUNDS_IS_ONLY_THE_MAIN_VIEWPORT_RECTANGLE ://
+            printf("[YOOOOO!]\n");
+            printf("[mou->pix_m_x]:%d\n",mou->pix_m_x);
+        };;
+
+        //:BOUNDS_OF_MAIN_VIEWPORT_DOES_NOT_INCLUDE_UI:------://
+        //:call_centralized_ui_click_handler:----------------://
+
+            AAC2020_UICLICK_LoopTick(
+                AAC2020_CALFROM_paint5d
+            );;
+
+        //:----------------:call_centralized_ui_click_handler://
+        //:------:BOUNDS_OF_MAIN_VIEWPORT_DOES_NOT_INCLUDE_UI://
+
+        return( 0x00 );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+
+    I32                 //:OD2:On_Down_2 (2 == RIGHT_MOUSE_BTN)
+    aac2020_paint5d_MouInn_OD2_OuterMain(
+        MOU* mou
+    )
+    {
+        //:printf("[OD2...]\n"); fflush(stdout);
+
+        if( ( (mou -> iss_m2d)+0 ) <= 0 ){
+            /**This function should only be called when **/
+            /**the non-primary mouse button is down.    **/
+            ERR("[OD2==OnDown2==OnMouseLeftButtonDown]");
+        };;
+
+        U32 x_0;
+        U32 x_1;
+        U32 y_0;
+        U32 y_1;
+
+        //:STORE_DRAGSTART_STATE:============================://
+        if( 1 == mou -> iss_m2d  /** FIRST MOUSE DOWN **/ ){
+
+            LOG("[FIRST_MOUSE_DOWN]",0);
+
+            //:OFFSCREEN_DATA_VIEWPORT:======================://
+            //:AKA:CAMERA_____VIEWPORT:======================://
+        
+
+                //:[ P5D_VP1 ]>>>>>>>[ P5D_VD1 ]://
+
+                //: VP1:Viewport_One(1): 
+                //:(Offscreen/Source/TileMapDataBitmap Viewport)
+                AAC2020_TAUDEPO_Get( 
+                    AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+                ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+                ,   AAC2020_TAUDEPO.P5D_VP1 //:DEX_VAR
+                ,  &(x_0),&(x_1),&(y_0),&(y_1)
+                );;
+
+                AAC2020_TAUDEPO_Put( 
+                    AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+                ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+                ,   AAC2020_TAUDEPO.P5D_VD1 //:DEX_VAR
+                ,   (x_0), (x_1), (y_0), (y_1)
+                );;
+
+            //:======================:OFFSCREEN_DATA_VIEWPORT://
+            //:======================:AKA:CAMERA_____VIEWPORT://
+            //:STORE_MOUSE_DOWN_COORDS:======================://
+
+                //[ GINAMOU: Should have already done this.  ]//
+                //[ MOU* mou , should already have this.     ]//
+            
+                /** *********************************** **/
+                /** @VID_IID[ 0163 ]TIME[ 02:03:13 ]    **/
+                /** Assert Valid Configuration upon     **/
+                /** the mouse-down state being entered. **/
+                /** *********************************** **/
+
+                /** TEST ONLY VALID IF IT IS DRAGSTART ***** **/
+                /** @VID_IID[ 0163 ]TIME[ 06:41:52 ]   ***** **/
+                /** @VID_IID[ 0165 ]TIME[ 00:41:23 ]DS2_BUGGY**/
+            /// if(      mou -> iss_ds2 ){ //:DRAG_START_2
+                if( 1 == mou -> iss_m2d ){ //:FIRST_MOUSE_DOWN
+                #define P_F printf
+
+                    if( mou -> dow_d2x != mou -> pix_m2x
+                    ||  mou -> dow_d2y != mou -> pix_m2y
+                    ){
+                        P_F("\n\n");
+                        P_F("[dow_d2x]:%d\n", mou -> dow_d2x);
+                        P_F("[pix_m2x]:%d\n", mou -> pix_m2x);
+                        
+                        P_F("\n\n");
+                        P_F("[dow_d2y]:%d\n", mou -> dow_d2y);
+                        P_F("[pix_m2y]:%d\n", mou -> pix_m2y);
+                        
+                        P_F("\n\n");
+                        //:"[DOWNSTATE_!_SYNCED_WITH_CURPOS]"://
+                        ERR("[pix_NOT_dow_YEAR_2021]");
+                    };;
+
+                #undef  P_F
+                };; //:FIRST_MOUSE_DOWN
+            /// };; //:DRAG_START_2
+
+            //:======================:STORE_MOUSE_DOWN_COORDS://
+
+        };; /** Is_Drag_Start ? **/
+        //:============================:STORE_DRAGSTART_STATE://
+        //:PERFORM_DRAGGING_PANNING_OF_CAMERA:===============://
+        if( mou -> iss_m2d >= 2 ){
+
+            LOG("[DRAGGIN]",0);
+
+            AAC2020_DRAGCOM_Drag(
+
+                //:LOCATE_YOUR_CAMERA_RECTANGLES:
+            /**/AAC2020_TAUDEPO.TAU_015
+            ,   AAC2020_TAUDEPO.PAINT5D
+            ,   AAC2020_TAUDEPO.P5D_VD1 //:DOWNSTATE:CAMERA
+            ,   AAC2020_TAUDEPO.P5D_VP1 //:  CURRENT:CAMERA
+            ,   AAC2020_TAUDEPO.P5D_VP0 //:   SCREEN:RECT
+
+            ,   mou -> dow_d2x  //:INITIAL_MOUSE_DOWN_COORD
+            ,   mou -> dow_d2y  //:INITIAL_MOUSE_DOWN_COORD
+
+            ,   mou -> pix_m2x  //:CURRENT_MOUSE______COORD
+            ,   mou -> pix_m2y  //:CURRENT_MOUSE______COORD
+
+            ,   256 //:<-- MAX_WINDOWS_SIZE 
+            );;
+
+        };;
+        //:===============:PERFORM_DRAGGING_PANNING_OF_CAMERA://
+
+        return( 0 );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    I32                //: OU2:On_Upp_2 (2==RIGHT_MOUSE_BUTTON)
+    aac2020_paint5d_MouInn_OU2_OuterMain(
+        MOU* mou
+    )
+    {
+        if( ((MOU*)0) == mou ){ /** NOOP **/ };
+
+        //:RESOLVE_DRAG_STATE:===============================://
+
+            //[ -------------------------------------------- ]//
+            //[ Do nothing because click+drag should have    ]//
+            //[ been continually updating the whole time     ]//
+            //[ the RIGHT( Non-primary )MOUSE button was     ]//
+            //[ down.                                        ]//
+            //[ -------------------------------------------- ]//
+
+        //:===============================:RESOLVE_DRAG_STATE://
+             
+
+        return( 0 );
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    I32
+    aac2020_paint5d_MouInn_NoMirrorBrush( 
+        MOU* mou 
+    )
+    {
+    #define OMC aac2020_paint5d_MouInn_OMC_OuterMain  //: 01 ://
+    #define OMS aac2020_paint5d_MouInn_OMS_OuterMain  //: 02 ://
+    #define OD2 aac2020_paint5d_MouInn_OD2_OuterMain  //: 03 ://
+    #define OU2 aac2020_paint5d_MouInn_OU2_OuterMain  //: 04 ://
+        
+        //: OMC: On Mouse Click ?
+        //: OMS: On Mouse Scroll
+        //: OD2: On Down  2 (Right Mouse Button)
+        //: OU2: On Up    2 (Right Mouse Button)
+        
+        if( mou -> iss_m_c ){ OMC( mou ); };
+        if( mou -> iss_m_s ){ OMS( mou ); };
+        if( mou -> iss_m2d ){ OD2( mou ); };
+        if( mou -> iss_m2u ){ OU2( mou ); };
+        
+        return( 0 );
+
+    #undef  OMC  //:------------------------------------: 01 ://
+    #undef  OMS  //:------------------------------------: 02 ://
+    #undef  OD2  //:------------------------------------: 03 ://
+    #undef  OU2  //:------------------------------------: 04 ://
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    I32
+    aac2020_paint5d_MouInn_UseMirrorBrush( 
+        MOU* mou 
+    )
+    {
+    #define OMC aac2020_paint5d_MouInn_OMC_OuterMain  //: 01 ://
+    #define OMS aac2020_paint5d_MouInn_OMS_OuterMain  //: 02 ://
+    #define OD2 aac2020_paint5d_MouInn_OD2_OuterMain  //: 03 ://
+    #define OU2 aac2020_paint5d_MouInn_OU2_OuterMain  //: 04 ://
+        
+        //: OMC: On Mouse Click ?
+        //: OMS: On Mouse Scroll
+        //: OD2: On Down  2 (Right Mouse Button)
+        //: OU2: On Up    2 (Right Mouse Button)
+        
+        if( mou -> iss_m_c ){ OMC( mou ); };
+        if( mou -> iss_m_s ){ OMS( mou ); };
+        if( mou -> iss_m2d ){ OD2( mou ); };
+        if( mou -> iss_m2u ){ OU2( mou ); };
+        
+        return( 0 );
+        
+    #undef  OMC  //:------------------------------------: 01 ://
+    #undef  OMS  //:------------------------------------: 02 ://
+    #undef  OD2  //:------------------------------------: 03 ://
+    #undef  OU2  //:------------------------------------: 04 ://
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    I32
+    aac2020_paint5d_MouInn(
+        MOU* mou
+    )
+    {
+        if( ((mou -> gam_tik)+0) != AAC2020_GAMTICK_gam_tik ){
+
+            /** @VID_IID[ 0155 ]TIME[ 02:27:13 ] ******** **/
+            /** Window code might not sync with events... **/
+            /**                                           **/
+            /** Don't do this way... Object can easily be **/
+            /** out of lock step with window code.        **/
+            /** Do nothing. Object Is Expired.            **/
+            /** ***************************************** **/
+        }
+
+        if( 
+            mou -> iss_exp >= 1 
+        //- mou -> expired >= 1 -//
+        ){
+
+            /** Object Flagged As Expired. **/
+            /** Do not use it.             **/
+        
+        }else{
+            #if( FEATURE_PAINT5D_MIBRUSH >= 1 ) //:##########://
+
+                if( PAINT5D_MIBRUSH_active >= 1 ){
+
+                    aac2020_paint5d_MouInn_UseMirrorBrush(mou);
+
+                }else
+                if( PAINT5D_MIBRUSH_active <= 1 ){
+
+                    aac2020_paint5d_MouInn_NoMirrorBrush(mou);
+        
+                }else{
+                    ERR("[NOT_VALID_MIBRUSH_VALUE]");
+                };;
+
+            #endif //:#######################################://
+            #if( FEATURE_PAINT5D_MIBRUSH <= 0 ) //:##########://
+
+                aac2020_paint5d_MouInn_UseMirrorBrush(mou);
+
+            #endif //:#######################################://
+        };;
+
+        return( 0 );
+    }
+
+#undef  I08  //:----------------------------------------: 01 ://
+#undef  U08  //:----------------------------------------: 02 ://
+#undef  U32  //:----------------------------------------: 03 ://
+#undef  I32  //:----------------------------------------: 04 ://
+#undef  I_P  //:----------------------------------------: 05 ://
+#undef  L_I  //:----------------------------------------: 06 ://
+#undef  MOU  //:----------------------------------------: 07 ://
+#undef  REC  //:----------------------------------------: 08 ://
+#undef  IV2  //:----------------------------------------: 09 ://
+#undef  ASS  //:----------------------------------------: 10 ://
+#undef  LOG  //:----------------------------------------: 11 ://
+#undef  ERR  //:----------------------------------------: 12 ://
+//:=============================:MOUSE_INPUT_HANDLER:(MouInn)://

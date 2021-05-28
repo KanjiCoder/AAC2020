@@ -74,6 +74,30 @@
         #undef  D_4  //:--------------------------------: 07 ://
         #undef  INN  //:--------------------------------: 08 ://
         //:------------------------------:DEBUG_VARIABLE_TEST://
+        //:MIRROR_MODE:--------------------------------------://
+        if( chr_key == KEY_P5D.p5d_mir ){
+        
+            #if( FEATURE_PAINT5D_MIBRUSH >= 1 ) 
+        
+                  PAINT5D_MIBRUSH_active=(
+                0-PAINT5D_MIBRUSH_active  );;
+
+                if( PAINT5D_MIBRUSH_active >=(0+1) ){
+                    LOG("[OK:MIBRUSH_ONN]\n",0);
+                }else
+                if( PAINT5D_MIBRUSH_active <=(0-1) ){
+                    LOG("[OK:MIBRUSH_OFF]\n",0);
+                }else{
+                    ERR("[MIBRUSH_STATE_UNDEFINED(0)]");
+                };;
+
+            #endif
+            #if( FEATURE_PAINT5D_MIBRUSH <= 0 ) 
+                LOG("[OK:FEATURE_PAINT5D_MIBRUSH:0]\n",0);
+            #endif
+        
+        };;
+        //:-------------------------------------------------
         //:SAVE_PAINT5D_SYSTEM_DATA_TO_DISK_AS_PNG_FILE:-----://
 
             if( chr_key == KEY_P5D.p5d_out ){

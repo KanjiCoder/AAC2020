@@ -83,7 +83,7 @@ PEB2020_DLIB
 PEB2020_WRAP_LoadLibraryA(
     const char* name
 ){
-    printf("[WLLA...]\n");fflush(stdout);
+    //- printf("[WLLA...]\n");fflush(stdout); -//
 
     if(NULL==dll_LoadLibraryA){
         printf("[FORGOT:PEB2020_Init()?](LLA)\n");
@@ -99,7 +99,7 @@ PEB2020_WRAP_GetProcAddress(
     PEB2020_DLIB   dlib
 ,   const char* name
 ){
-    printf("[WGPA...]\n");fflush(stdout);
+    //- printf("[WGPA...]\n");fflush(stdout); -//
 
     if(NULL==dll_GetProcAddress){
         printf("[FORGOT:PEB2020_Init()?](GPA)\n");
@@ -126,7 +126,7 @@ PEB2020_DLIB
 PEB2020_LoadLibraryA(
     const char* name
 ){
-    printf("[LLA...]\n"); fflush(stdout);
+    //- printf("[LLA...]\n"); fflush(stdout); -//
 
     PEB2020_Init(); //:LazyInit
 
@@ -153,7 +153,7 @@ PEB2020_GetProcAddress(
     PEB2020_DLIB   dlib
 ,   const char* name
 ){
-    printf("[GPA...]\n");fflush(stdout);
+    //- printf("[GPA...]\n");fflush(stdout); -//
 
     PEB2020_Init(); //:LazyInit
 
