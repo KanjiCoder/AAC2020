@@ -9,6 +9,9 @@
 //:MIRRORING_ENUM_DIAGRAM:===================================://
 /** ******************************************************** ***
 
+        @VID_IID[ 0314 ]TIME[ 01:13:32 ]
+        MIRROR_ON[ __ ]MEANS_FLIP_VALUE[ __ ]
+
         1 : DO_NOTHING -then- DO_NOTHING          [ stile_1 ]
         4 : DO_NOTHING -then- MIRROR_ON_X         [ stile_4 ]
         8 : DO_NOTHING -then- MIRROR_ON_Y         [ stile_8 ]
@@ -34,8 +37,10 @@
 *** ******************************************************** **/
 //:===================================:MIRRORING_ENUM_DIAGRAM://
 //:FEATURE_DATA:=============================================://
-#define I08 int8_t /** GCC: <stdint.h> **/
+#define I08  int8_t  /** GCC: <stdint.h> **/
+#define I32 int32_t  /** GCC: <stdint.h> **/
 
+    #define paint5d_mibrush_ECI ( 1 ) //:ECI:Error_Check_Inputs?
 
     I08 PAINT5D_MIBRUSH_active =( 0 - 1 );
 
@@ -54,5 +59,15 @@
     #define PAINT5D_MIBRUSH_stile_7 ( 7 )
     #define PAINT5D_MIBRUSH_stile_8 ( 8 )
 
+    /** Random value will include zero. Which means our **** **/
+    /** mirroring brush will erase about 1/4th of the   **** **/
+    /** time as it is being used.                       **** **/
+    /** @VID_IID[ 0314 ]TIME[ 00:31:23 ]******************** **/
+
+    I32 paint5d_mibrush_RAND_lay =( 0 );
+    I32 paint5d_mibrush_RAND_exp =( 0 );
+    I32 paint5d_mibrush_RAND_val =( 0 ); //:[ 0 | 1 | 2 | 3 ]://
+
 #undef  I08
+#undef  I32
 //:=============================================:FEATURE_DATA://

@@ -11,61 +11,14 @@
 #define ASS assert                                    //: 10 ://
 #define LOG aac2020_paint5d_Info_any                  //: 11 :// 
 #define ERR aac2020_paint5d_Halt                      //: 12 ://  
+#define LOI aac2020_paint5d_Info_i32                  //: 13 ://
 
-
-    I32
-    aac2020_paint5d_MouInn_OMC_InBoundCheck(
-        MOU* mou
+    void
+    aac2020_paint5d_MousePaintWhatever(
+        I32 mou_fic_x //:Mouse_Fragment_Integer_Coord:X
+    ,   I32 mou_fic_y //:Mouse_Fragment_Integer_Coord:Y
     )
     {
-    #define CLK_C_X ( mou -> clk_c_x )
-    #define CLK_C_Y ( mou -> clk_c_y )
-
-        //:OMC: On_Mouse_Click / OnMouseClick
-
-        I32 is_click_within_canvas_user_view_bounds=( 0 );
-
-        U32 x_0 ;
-        U32 x_1 ;
-        U32 y_0 ;
-        U32 y_1 ;
-
-        AAC2020_TAUDEPO_Get( 
-            AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
-        ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
-        ,   AAC2020_TAUDEPO.P5D_VP0 //:DEX_VAR
-        ,  &(x_0),&(x_1),&(y_0),&(y_1)
-        );;
-
-        if( 1==1
-        &&  CLK_C_X >= x_0 && CLK_C_X <= x_1
-        &&  CLK_C_Y >= y_0 && CLK_C_Y <= y_1
-        ){
-            is_click_within_canvas_user_view_bounds =( 1 );
-        }else{
-            is_click_within_canvas_user_view_bounds =( 0 );
-
-            LOG("[mou->clk_c_x]:%d\n",(void*)(I_P)mou->clk_c_x);
-            LOG("[mou->clk_c_y]:%d\n",(void*)(I_P)mou->clk_c_y);
-            LOG("[CLICK_NOT_IN_CANVAS_USER_VIEW_BOUNDS]",0);
-        };;
-         
-        return( 
-            is_click_within_canvas_user_view_bounds
-        );;
-    #undef CLK_C_X
-    #undef CLK_C_Y
-    }
-
-    I32
-    aac2020_paint5d_MouInn_OMC_InBoundActions(
-        MOU* mou
-    )
-    {
-        //:toggle_tile_at_mouse_position:--------------------://
-         
-        LOG("[PAINT5D:IN_BOUND_MOUSE_CLICK]" , ((void*)0) );
-                
             //:Declare_Variables:----------------------------://
         
                 I08 using_mirror_brush =( 0 );
@@ -167,8 +120,8 @@
             //:----------------------------:Get_Brush_til_exp://
             //:MouseFrag_CTO_CanvasUserView:-----------------://
 
-                fic.x =( mou -> clk_c_x );
-                fic.y =( mou -> clk_c_y );
+                fic.x =( mou_fic_x ); //: mou -> clk_c_x ://
+                fic.y =( mou_fic_y ); //: mou -> clk_c_y ://
 
                 cuv=(AAC2020_FRAGCOM_fic_MAP_cuv(
                     fic , p5d_vp0 , p5d_vp1
@@ -250,6 +203,11 @@
             
                 if( using_mirror_brush <= 0 ){
 
+                    //:@VID_IID[0314]T[02:10:00] ::::::::::::://
+                    //:IMPORTANT:aac2020_paint5d_Put_UsingBrush
+                    //:SEEMS_TO_BE_USED_NOWHERE_IN_CODE_BASE!
+                    //:(But_It_Has_Been_Tested)::::::::::::::://
+                    
                     aac2020_paint5d_ToggleTile();
 
                 }else
@@ -261,7 +219,7 @@
                     //: feels like. Some calculations from   ://
                     //: earlier in this function are         ://
                     //: now completely discarded.            ://
-                    paint5d_mibrush_Put(
+                    PAINT5D_MIBRUSH_Put(
                         cuv_i_x
                     ,   cuv_i_y
                     );;
@@ -279,6 +237,68 @@
                 };;
 
             //:---------------:Statefull_Toggle_Tile_Function://
+    }
+
+    I32
+    aac2020_paint5d_MouInn_ANY_InBoundCheck(
+        U32 m_x //:Mouse_X //:Click,MouseDown,MouseUp,ETC
+    ,   U32 m_y //:Mouse_Y //:Click,MouseDown,MouseUp,ETC
+    )
+    {
+        I32 mib=( 0 ); /** mib: mouse in bounds ? **/
+
+        U32 x_0 ;
+        U32 x_1 ;
+        U32 y_0 ;
+        U32 y_1 ;
+
+        AAC2020_TAUDEPO_Get( 
+            AAC2020_TAUDEPO.TAU_015 //:DEX_TAU
+        ,   AAC2020_TAUDEPO.PAINT5D //:DEX_SUB
+        ,   AAC2020_TAUDEPO.P5D_VP0 //:DEX_VAR
+        ,  &(x_0),&(x_1),&(y_0),&(y_1)
+        );;
+
+        if( 1==1
+        &&  m_x >= x_0 && m_x <= x_1
+        &&  m_y >= y_0 && m_y <= y_1
+        ){
+            mib =( 1 );
+        }else{
+            mib =( 0 );
+        };;
+         
+        return(  mib  );
+    }
+
+    I32
+    aac2020_paint5d_MouInn_OMC_InBoundCheck(
+        MOU* mou
+    )
+    {
+        //:OMC: On_Mouse_Click / OnMouseClick
+        I32 mib; /** mib: mouse in bounds **/
+        mib=( 
+            aac2020_paint5d_MouInn_ANY_InBoundCheck( 
+                mou -> clk_c_x
+            ,   mou -> clk_c_y 
+            ));;
+        return( mib );
+    }
+
+    I32
+    aac2020_paint5d_MouInn_OMC_InBoundActions(
+        MOU* mou
+    )
+    {
+        //:toggle_tile_at_mouse_position:--------------------://
+         
+        LOG("[PAINT5D:IN_BOUND_MOUSE_CLICK]" , ((void*)0) );
+                
+        aac2020_paint5d_MousePaintWhatever(
+            mou -> clk_c_x
+        ,   mou -> clk_c_y
+        );;
     
         //:--------------------:toggle_tile_at_mouse_position://
 
@@ -345,6 +365,7 @@
             //:IN_BOUNDS_IS_ONLY_THE_MAIN_VIEWPORT_RECTANGLE ://
             printf("[YOOOOO!]\n");
             printf("[mou->pix_m_x]:%d\n",mou->pix_m_x);
+            printf("[mou->pix_m_y]:%d\n",mou->pix_m_y);
         };;
 
         //:BOUNDS_OF_MAIN_VIEWPORT_DOES_NOT_INCLUDE_UI:------://
@@ -544,7 +565,32 @@
         //: OD2: On Down  2 (Right Mouse Button)
         //: OU2: On Up    2 (Right Mouse Button)
         
-        if( mou -> iss_m_c ){ OMC( mou ); };
+        //: if( mou -> iss_m_c ){ OMC( mou ); };
+
+        LOI("[UMB:iss_m_d]:%d\n", mou -> iss_m_d );
+
+        //[HACK: When using the mirror brush, use the :::::::]//
+        //:      click function whenever the mouse is :::::::://
+        //:      detected to be down so we can make   :::::::://
+        //:      brush strokes rather than painfully  :::::::://
+        //:      click all over the place.            :::::::://
+        //:      @VID_IID[ 0314 ]TIME[03:07:23]       :::::::://
+        if( mou -> iss_m_d ){
+
+            //: OMC( mou ); //:<-- yes, click func.
+
+            I32 mib=( aac2020_paint5d_MouInn_ANY_InBoundCheck(
+                mou -> pix_m_x
+            ,   mou -> pix_m_y ));;
+
+            if( mib >= 1 ){
+                aac2020_paint5d_MousePaintWhatever(
+                    mou -> pix_m_x  
+                ,   mou -> pix_m_y  
+                );;
+            };;
+        };;
+
         if( mou -> iss_m_s ){ OMS( mou ); };
         if( mou -> iss_m2d ){ OD2( mou ); };
         if( mou -> iss_m2u ){ OU2( mou ); };
@@ -620,4 +666,5 @@
 #undef  ASS  //:----------------------------------------: 10 ://
 #undef  LOG  //:----------------------------------------: 11 ://
 #undef  ERR  //:----------------------------------------: 12 ://
+#undef  LOI  //:----------------------------------------: 13 ://
 //:=============================:MOUSE_INPUT_HANDLER:(MouInn)://

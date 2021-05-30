@@ -15,23 +15,6 @@
     }
 
 //:=====================:HALT_IS_TYPICALLY_THE_FIRST_FUNCTION://
-//:LOG_AFTER_HALT:===========================================://
-    void
-    aac2020_paint5d_Info_any( //:FUNC:::Info , OVERLOAD:any
-        const char* str_fmt   //:GENERAL:str , SPECIFIC:fmt
-    ,   void*       dat_any   //:GENERAL:dat , SPECIFIC:any
-    )
-    {                                        int say=( 0 );
-        if( AAC2020_SILENCE.PAINT5D <=(  0  ) ){ say=( 1 ); };
-        if( AAC2020_SILENCE.SILENCE <=( 0-1 ) ){ say=( 1 ); };
-        if( AAC2020_SILENCE.SILENCE >=( 0+1 ) ){ say=( 0 ); };
-        if( say >= 1 ){
-            printf("[paint5d_log]....("    ); fflush( stdout );
-            printf( str_fmt , dat_any      ); fflush( stdout );
-            printf(                  ")\n" ); fflush( stdout );
-        };;
-    }
-//:===========================================:LOG_AFTER_HALT://
 //:ARE_WE_ALLOWED_TO_SPEAK:==================================://
 #define U08 uint8_t /** GCC: <stdint.h> **/
     U08
@@ -45,6 +28,41 @@
     }
 #undef  U08
 //:==================================:ARE_WE_ALLOWED_TO_SPEAK://
+//:LOG_AFTER_HALT:===========================================://
+#define U08 uint8_t /** GCC: <stdint.h> **/  //:--------: 01 ://
+#define I32 int32_t /** GCC: <stdint.h> **/  //:--------: 02 ://
+
+    void
+    aac2020_paint5d_Info_any( //:FUNC:::Info , OVERLOAD:any
+        const char* str_fmt   //:GENERAL:str , SPECIFIC:fmt
+    ,   void*       dat_any   //:GENERAL:dat , SPECIFIC:any
+    )
+    {
+        U08 say=( aac2020_paint5d_AllowedToSpeak() );
+        if( say >= 1 ){
+            printf("[paint5d_log]....("    ); fflush( stdout );
+            printf( str_fmt , dat_any      ); fflush( stdout );
+            printf(                  ")\n" ); fflush( stdout );
+        };;
+    }
+    //: - - - - - - - - - - - - ---- - - - - - - - - - - - - ://
+    void
+    aac2020_paint5d_Info_i32( //:FUNC:::Info , OVERLOAD:any
+        const char* str_fmt   //:GENERAL:str , SPECIFIC:fmt
+    ,   I32         dat_i32   //:GENERAL:i32 , SPECIFIC:i32
+    )
+    {
+        U08 say=( aac2020_paint5d_AllowedToSpeak() );
+        if( say >= 1 ){
+            printf("[paint5d_LOI]....("    ); fflush( stdout );
+            printf( str_fmt , dat_i32      ); fflush( stdout );
+            printf(                  ")\n" ); fflush( stdout );
+        };;
+    }
+
+#undef  U08  //:----------------------------------------: 01 ://
+#undef  I32  //:----------------------------------------: 02 ://
+//:===========================================:LOG_AFTER_HALT://
 //:OKAY_STATUS_INFO_MESSAGE:=================================://
     void
     aac2020_paint5d_Okay( const char* msg_o_k )
