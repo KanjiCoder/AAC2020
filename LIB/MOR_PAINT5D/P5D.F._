@@ -3042,20 +3042,39 @@
             /** an error in our logic.                       **/
             /** ******************************************** **/
 
-            assert( vpc_x_0 >= 0 );
-            assert( vpc_x_1 >= 0 );
-            assert( vpc_y_0 >= 0 );
-            assert( vpc_y_1 >= 0 );
+            if( 0
+            ||  !( vpc_x_0 >= 0 ) 
+            ||  !( vpc_x_1 >= 0 ) 
+            ||  !( vpc_y_0 >= 0 ) 
+            ||  !( vpc_y_1 >= 0 ) 
 
-            assert( vp0_x_0 >= 0 );
-            assert( vp0_x_1 >= 0 );
-            assert( vp0_y_0 >= 0 );
-            assert( vp0_y_1 >= 0 );
+            ||  !( vp0_x_0 >= 0 )
+            ||  !( vp0_x_1 >= 0 )
+            ||  !( vp0_y_0 >= 0 )
+            ||  !( vp0_y_1 >= 0 )
 
-            assert( vp1_x_0 >= 0 );
-            assert( vp1_x_1 >= 0 );
-            assert( vp1_y_0 >= 0 );
-            assert( vp1_y_1 >= 0 );
+            ||  !( vp1_x_0 >= 0 )
+            ||  !( vp1_x_1 >= 0 )
+            ||  !( vp1_y_0 >= 0 )
+            ||  !( vp1_y_1 >= 0 )
+            ){
+                printf("[vpc_x_0]:%d\n", vpc_x_0 );
+                printf("[vpc_x_1]:%d\n", vpc_x_1 );
+                printf("[vpc_y_0]:%d\n", vpc_y_0 );
+                printf("[vpc_y_1]:%d\n", vpc_y_1 );
+
+                printf("[vp0_x_0]:%d\n", vp0_x_0 );
+                printf("[vp0_x_1]:%d\n", vp0_x_1 );
+                printf("[vp0_y_0]:%d\n", vp0_y_0 );
+                printf("[vp0_y_1]:%d\n", vp0_y_1 );
+
+                printf("[vp1_x_0]:%d\n", vp1_x_0 );
+                printf("[vp1_x_1]:%d\n", vp1_x_1 );
+                printf("[vp1_y_0]:%d\n", vp1_y_0 );
+                printf("[vp1_y_1]:%d\n", vp1_y_1 );
+
+                ERR("[VIEWPORTS_NOT_NON_NEG]");
+            };;
 
             /** ******************************************** **/
             /** Don't check upper bounds. Checked in the     **/
